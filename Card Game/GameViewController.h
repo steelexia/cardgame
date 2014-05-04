@@ -1,5 +1,5 @@
 //
-//  AppDelegate.h
+//  ViewController.h
 //  Card Game
 //
 //  Created by Steele Xia
@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GameModel.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface GameViewController : UIViewController
 
-@property (strong, nonatomic) UIWindow *window;
+@property (strong) GameModel* gameModel;
 
 @end

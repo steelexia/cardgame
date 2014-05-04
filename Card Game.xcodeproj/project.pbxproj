@@ -15,13 +15,19 @@
 		90F352A7191595C200601130 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352A6191595C200601130 /* AppDelegate.m */; };
 		90F352AA191595C200601130 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90F352A8191595C200601130 /* Main_iPhone.storyboard */; };
 		90F352AD191595C200601130 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90F352AB191595C200601130 /* Main_iPad.storyboard */; };
-		90F352B0191595C200601130 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352AF191595C200601130 /* ViewController.m */; };
+		90F352B0191595C200601130 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352AF191595C200601130 /* GameViewController.m */; };
 		90F352B2191595C200601130 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90F352B1191595C200601130 /* Images.xcassets */; };
 		90F352B9191595C200601130 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90F352B8191595C200601130 /* XCTest.framework */; };
 		90F352BA191595C200601130 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90F35296191595C200601130 /* Foundation.framework */; };
 		90F352BB191595C200601130 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90F3529A191595C200601130 /* UIKit.framework */; };
 		90F352C3191595C300601130 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 90F352C1191595C300601130 /* InfoPlist.strings */; };
 		90F352C5191595C300601130 /* Card_GameTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352C4191595C300601130 /* Card_GameTests.m */; };
+		90F352CF191595F400601130 /* card_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F352CE191595F400601130 /* card_background.png */; };
+		90F352D21915961C00601130 /* CardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352D11915961C00601130 /* CardView.m */; };
+		90F352D519159A0300601130 /* CardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352D419159A0300601130 /* CardModel.m */; };
+		90F352D81915C8DB00601130 /* GameModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352D71915C8DB00601130 /* GameModel.m */; };
+		90F352DB1916B48A00601130 /* MonsterCardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352DA1916B48A00601130 /* MonsterCardModel.m */; };
+		90F352DE1916BB9300601130 /* SpellCardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352DD1916BB9300601130 /* SpellCardModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,14 +53,25 @@
 		90F352A6191595C200601130 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		90F352A9191595C200601130 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		90F352AC191595C200601130 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
-		90F352AE191595C200601130 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		90F352AF191595C200601130 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		90F352AE191595C200601130 /* GameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
+		90F352AF191595C200601130 /* GameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
 		90F352B1191595C200601130 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		90F352B7191595C200601130 /* Card GameTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Card GameTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		90F352B8191595C200601130 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		90F352C0191595C300601130 /* Card GameTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Card GameTests-Info.plist"; sourceTree = "<group>"; };
 		90F352C2191595C300601130 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		90F352C4191595C300601130 /* Card_GameTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Card_GameTests.m; sourceTree = "<group>"; };
+		90F352CE191595F400601130 /* card_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_background.png; sourceTree = "<group>"; };
+		90F352D01915961C00601130 /* CardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardView.h; sourceTree = "<group>"; };
+		90F352D11915961C00601130 /* CardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardView.m; sourceTree = "<group>"; };
+		90F352D319159A0300601130 /* CardModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardModel.h; sourceTree = "<group>"; };
+		90F352D419159A0300601130 /* CardModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardModel.m; sourceTree = "<group>"; };
+		90F352D61915C8DB00601130 /* GameModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameModel.h; sourceTree = "<group>"; };
+		90F352D71915C8DB00601130 /* GameModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameModel.m; sourceTree = "<group>"; };
+		90F352D91916B48A00601130 /* MonsterCardModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MonsterCardModel.h; sourceTree = "<group>"; };
+		90F352DA1916B48A00601130 /* MonsterCardModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonsterCardModel.m; sourceTree = "<group>"; };
+		90F352DC1916BB9300601130 /* SpellCardModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpellCardModel.h; sourceTree = "<group>"; };
+		90F352DD1916BB9300601130 /* SpellCardModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpellCardModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,13 +131,17 @@
 		90F3529C191595C200601130 /* Card Game */ = {
 			isa = PBXGroup;
 			children = (
+				90F352CE191595F400601130 /* card_background.png */,
 				90F352A5191595C200601130 /* AppDelegate.h */,
 				90F352A6191595C200601130 /* AppDelegate.m */,
 				90F352A8191595C200601130 /* Main_iPhone.storyboard */,
 				90F352AB191595C200601130 /* Main_iPad.storyboard */,
-				90F352AE191595C200601130 /* ViewController.h */,
-				90F352AF191595C200601130 /* ViewController.m */,
+				90F352AE191595C200601130 /* GameViewController.h */,
+				90F352AF191595C200601130 /* GameViewController.m */,
+				90F352D61915C8DB00601130 /* GameModel.h */,
+				90F352D71915C8DB00601130 /* GameModel.m */,
 				90F352B1191595C200601130 /* Images.xcassets */,
+				90F352DF1916BBCC00601130 /* Cards */,
 				90F3529D191595C200601130 /* Supporting Files */,
 			);
 			path = "Card Game";
@@ -153,6 +174,21 @@
 				90F352C1191595C300601130 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		90F352DF1916BBCC00601130 /* Cards */ = {
+			isa = PBXGroup;
+			children = (
+				90F352D91916B48A00601130 /* MonsterCardModel.h */,
+				90F352DA1916B48A00601130 /* MonsterCardModel.m */,
+				90F352DC1916BB9300601130 /* SpellCardModel.h */,
+				90F352DD1916BB9300601130 /* SpellCardModel.m */,
+				90F352D319159A0300601130 /* CardModel.h */,
+				90F352D419159A0300601130 /* CardModel.m */,
+				90F352D01915961C00601130 /* CardView.h */,
+				90F352D11915961C00601130 /* CardView.m */,
+			);
+			name = Cards;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -235,6 +271,7 @@
 				90F352B2191595C200601130 /* Images.xcassets in Resources */,
 				90F352AA191595C200601130 /* Main_iPhone.storyboard in Resources */,
 				90F352A1191595C200601130 /* InfoPlist.strings in Resources */,
+				90F352CF191595F400601130 /* card_background.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,9 +290,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				90F352B0191595C200601130 /* ViewController.m in Sources */,
+				90F352B0191595C200601130 /* GameViewController.m in Sources */,
+				90F352D81915C8DB00601130 /* GameModel.m in Sources */,
+				90F352DB1916B48A00601130 /* MonsterCardModel.m in Sources */,
 				90F352A7191595C200601130 /* AppDelegate.m in Sources */,
+				90F352D21915961C00601130 /* CardView.m in Sources */,
 				90F352A3191595C200601130 /* main.m in Sources */,
+				90F352DE1916BB9300601130 /* SpellCardModel.m in Sources */,
+				90F352D519159A0300601130 /* CardModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
