@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>0B6D42AF-B3DA-42E6-943B-2A2C9234DCCB</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Card Game</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>F76E05F3-7F69-4A83-83CE-C52A86F89426</key>
+		<string>https://github.com/steelexia/cardgame</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Card Game.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>F76E05F3-7F69-4A83-83CE-C52A86F89426</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/steelexia/cardgame</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>F76E05F3-7F69-4A83-83CE-C52A86F89426</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F76E05F3-7F69-4A83-83CE-C52A86F89426</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Card Game</string>
+		</dict>
+	</array>
+</dict>
+</plist>
