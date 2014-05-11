@@ -31,9 +31,9 @@
     return self;
 }
 
-/** cost can be negative (gain resource for deploying) */
+/* must be 0 or higher */
 -(void)setCost:(int)cost{
-    _cost = cost;
+    _cost = cost < 0 ? 0 : cost;
 }
 
 -(int)cost{

@@ -28,7 +28,7 @@
 
 //----------------Card battle stats values----------------//
 
-/** Amount of resources it costs to deploy the card */
+/** Amount of resources it costs to deploy the card. 0 or higher */
 @property int cost;
 
 //----------------Functions----------------//
