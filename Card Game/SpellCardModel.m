@@ -10,6 +10,19 @@
 
 @implementation SpellCardModel
 
-//TODO
+@synthesize abilities = _abilities;
+
+/** constructor with id number, all other fields will be defaut values */
+-(instancetype)initWithIdNumber: (long)idNumber
+{
+    self = [super initWithIdNumber:idNumber];
+    
+    if (self)
+    {
+        
+    }
+    
+    return self;
+}
 
 @end

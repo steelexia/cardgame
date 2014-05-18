@@ -10,6 +10,7 @@
 #import "CardModel.h"
 #import "MonsterCardModel.h"
 #import "SpellCardModel.h"
+#import "Ability.h"
 
 /**
  Handles the view aspect of the card. Draws the card based on the model object.
@@ -21,7 +22,7 @@
 @property (strong) CardModel *cardModel;
 
 /** Labels displayed on the cards (somewhat temporary for now) */
-@property (strong) UILabel *nameLabel, *costLabel, *attackLabel, *lifeLabel, *cooldownLabel;
+@property (strong) UILabel *nameLabel, *costLabel, *attackLabel, *lifeLabel, *cooldownLabel, *baseAbilityLabel, *addedAbilityLabel;
 
 /** Overwritten center */
 @property CGPoint center;
@@ -40,6 +41,9 @@
 
 /** Updates its view after values are updated (i.e. lost life) */
 -(void)updateView;
+
+/** Refreshes its transformations by setting its cardView state to itself */
+-(void)resetTransformations;
 
 @end
 

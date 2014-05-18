@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "90F35292191595C200601130"
                BuildableName = "Card Game.app"
-               BlueprintName = "Card Game"
-               ReferencedContainer = "container:Card Game.xcodeproj">
+               BlueprintName = "cardgame"
+               ReferencedContainer = "container:cardgame.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -34,8 +34,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "90F352B6191595C200601130"
                BuildableName = "Card GameTests.xctest"
-               BlueprintName = "Card GameTests"
-               ReferencedContainer = "container:Card Game.xcodeproj">
+               BlueprintName = "cardgameTests"
+               ReferencedContainer = "container:cardgame.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -44,8 +44,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "90F35292191595C200601130"
             BuildableName = "Card Game.app"
-            BlueprintName = "Card Game"
-            ReferencedContainer = "container:Card Game.xcodeproj">
+            BlueprintName = "cardgame"
+            ReferencedContainer = "container:cardgame.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -63,8 +63,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "90F35292191595C200601130"
             BuildableName = "Card Game.app"
-            BlueprintName = "Card Game"
-            ReferencedContainer = "container:Card Game.xcodeproj">
+            BlueprintName = "cardgame"
+            ReferencedContainer = "container:cardgame.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -81,8 +81,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "90F35292191595C200601130"
             BuildableName = "Card Game.app"
-            BlueprintName = "Card Game"
-            ReferencedContainer = "container:Card Game.xcodeproj">
+            BlueprintName = "cardgame"
+            ReferencedContainer = "container:cardgame.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

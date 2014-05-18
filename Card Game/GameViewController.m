@@ -7,6 +7,7 @@
 //
 
 #import "GameViewController.h"
+#import "GameViewController+Animation.h"
 #import "CardView.h"
 #import "MonsterCardModel.h"
 
@@ -19,12 +20,15 @@
 @implementation GameViewController
 
 @synthesize gameModel = _gameModel;
+@synthesize handsView, fieldView, uiView, backgroundView;
 
 /** Screen dimension for convinience */
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 /** current side's turn, i.e. current player */
 int currentSide;
+
+const float FIELD_CENTER_Y_RATIO = 3/8.f;
 
 /** label for showing the current player */
 UILabel *currentSideLabel;
@@ -34,6 +38,8 @@ UILabel *attackLine;
 
 /** stores array of two label for showing the current player's resource */
 NSArray *resourceLabels;
+
+UIImageView *playerFieldHighlight, *opponentFieldHighlight, *playerFieldEdge, *opponentFieldEdge;
 
 /** Stores the current UI action being performed */
 enum GameControlState gameControlState;
@@ -58,20 +64,6 @@ CardModel* currentCard;
     
     gameControlState = gameControlStateNone;
     
-    currentSide = PLAYER_SIDE;//TODO not always player begins later
-    currentSideLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 20, 150, 20)];
-    currentSideLabel.text = @"Player's turn"; //TODO
-    
-    [self.view addSubview: currentSideLabel];
-    
-    attackLine = [[UILabel alloc] initWithFrame:CGRectMake(0,0,0, 0)];
-    attackLine.backgroundColor = [UIColor redColor];
-    
-    //TODO positions are temporary
-    resourceLabels = @[[[UILabel alloc] initWithFrame: CGRectMake(SCREEN_WIDTH - 20, SCREEN_HEIGHT - 100, 50, 20)], [[UILabel alloc] initWithFrame: CGRectMake(SCREEN_WIDTH - 20,  40, 50, 20)]];
-    [self.view addSubview:resourceLabels[PLAYER_SIDE]];
-    [self.view addSubview:resourceLabels[OPPONENT_SIDE]];
-    
     //variable setups TODO probably move elsewhere
     //card's size is determined based on screen width, assuming height>width TODO: NOT the case for ipad in landscape
     CARD_WIDTH = ((SCREEN_WIDTH / 5) * 0.9);
@@ -80,22 +72,18 @@ CardModel* currentCard;
     CARD_FULL_WIDTH = CARD_WIDTH/CARD_DEFAULT_SCALE;
     CARD_FULL_HEIGHT = CARD_HEIGHT/CARD_DEFAULT_SCALE;
     
+    currentSide = PLAYER_SIDE; //TODO not always player begins later
+    
+    //inits the game model storing the game's data
     self.gameModel = [[GameModel alloc] initWithViewController:(self)];
     
-    //TODO end turn button gotta move to a function
-    UIImage* endTurnImage = [UIImage imageNamed:@"end_turn_button_up.png"];
-    UIButton* endTurnButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    endTurnButton.frame = CGRectMake(0, 0, 60, 60);
-    //[button setTitle:@"test" forState:UIControlStateNormal];
-    [endTurnButton setTitleColor: [UIColor blackColor] forState:UIControlStateNormal];
-    [endTurnButton setBackgroundImage:endTurnImage forState:UIControlStateNormal];
-    [endTurnButton addTarget:self action:@selector(endTurnButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-    endTurnButton.center = CGPointMake(SCREEN_WIDTH - 40, SCREEN_HEIGHT - 40);
-    [self.view addSubview: endTurnButton];
+    //contains most of the code for initialzing and positioning the UI objects
+    [self setupUI];
     
     //TODO player 1 begins with one extra resource (because starts first)
     PlayerModel *player = self.gameModel.players[currentSide];
-    player.resource++;
+    player.maxResource++;
+    player.resource = player.maxResource;
     
     //add all cards onto screen
     [self updateHandsView: PLAYER_SIDE];
@@ -104,8 +92,85 @@ CardModel* currentCard;
     [self updateResourceView: OPPONENT_SIDE];
 }
 
--(void) endTurnButtonPressed{
+/** Purely for organization, called once when the view is first set up */
+-(void) setupUI
+{
+    //----Main view layers used to group relevant objects together----//
+    handsView = [[ViewLayer alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    fieldView = [[ViewLayer alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    uiView = [[ViewLayer alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    backgroundView = [[ViewLayer alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
     
+    handsView.bounds = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    fieldView.bounds = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    uiView.bounds = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    backgroundView.bounds = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    
+    [self.view addSubview:backgroundView];
+    [self.view addSubview:fieldView];
+    [self.view addSubview:handsView];
+    [self.view addSubview:uiView];
+    
+    //TODO temporary side label
+    currentSideLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 20, 150, 20)];
+    currentSideLabel.text = @"Player's turn"; //TODO
+    
+    [self.uiView addSubview: currentSideLabel];
+    
+    //----set up the attack line----//
+    attackLine = [[UILabel alloc] initWithFrame:CGRectMake(0,0,0, 0)];
+    attackLine.backgroundColor = [UIColor redColor];
+    
+    //----set up the resource labels----//
+    //TODO positions are temporary
+    resourceLabels = @[[[UILabel alloc] initWithFrame: CGRectMake(SCREEN_WIDTH - 30, SCREEN_HEIGHT - 100, 50, 20)], [[UILabel alloc] initWithFrame: CGRectMake(SCREEN_WIDTH - 30,  40, 50, 20)]];
+    [self.uiView addSubview:resourceLabels[PLAYER_SIDE]];
+    [self.uiView addSubview:resourceLabels[OPPONENT_SIDE]];
+    
+    //----set up the field highlights----//
+    playerFieldHighlight = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"field_highlight"]];
+    opponentFieldHighlight = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"field_highlight"]];
+    
+    playerFieldEdge = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"field_edge"]];
+    opponentFieldEdge = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"field_edge"]];
+    
+    playerFieldHighlight.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - SCREEN_HEIGHT * FIELD_CENTER_Y_RATIO) ;
+    playerFieldHighlight.bounds = CGRectMake(0,0,(CARD_WIDTH * 5)  + CARD_HEIGHT * 0.1, CARD_HEIGHT + CARD_HEIGHT * 0.1);
+    
+    playerFieldEdge.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - SCREEN_HEIGHT * FIELD_CENTER_Y_RATIO) ;
+    playerFieldEdge.bounds = CGRectMake(0,0,(CARD_WIDTH * 5)  + CARD_HEIGHT * 0.1, CARD_HEIGHT + CARD_HEIGHT * 0.1);
+    
+    playerFieldHighlight.alpha = 0;
+    
+    [self.backgroundView addSubview:playerFieldHighlight];
+    [self.backgroundView addSubview:playerFieldEdge];
+    
+    opponentFieldHighlight.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT * FIELD_CENTER_Y_RATIO) ;
+    opponentFieldHighlight.bounds = CGRectMake(0,0,(CARD_WIDTH * 5)  + CARD_HEIGHT * 0.1, CARD_HEIGHT + CARD_HEIGHT * 0.1);
+    
+    opponentFieldEdge.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT * FIELD_CENTER_Y_RATIO) ;
+    opponentFieldEdge.bounds = CGRectMake(0,0,(CARD_WIDTH * 5)  + CARD_HEIGHT * 0.1, CARD_HEIGHT + CARD_HEIGHT * 0.1);
+    
+    opponentFieldHighlight.alpha = 0;
+    
+    [self.backgroundView addSubview:opponentFieldHighlight];
+    [self.backgroundView addSubview:opponentFieldEdge];
+    
+    //----end turn button----//
+    UIImage* endTurnImage = [UIImage imageNamed:@"end_turn_button_up.png"];
+    UIButton* endTurnButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    endTurnButton.frame = CGRectMake(0, 0, 60, 60);
+    //[button setTitle:@"test" forState:UIControlStateNormal];
+    [endTurnButton setTitleColor: [UIColor blackColor] forState:UIControlStateNormal];
+    [endTurnButton setBackgroundImage:endTurnImage forState:UIControlStateNormal];
+    [endTurnButton addTarget:self action:@selector(endTurnButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    endTurnButton.center = CGPointMake(SCREEN_WIDTH - 40, SCREEN_HEIGHT - 40);
+    [self.uiView addSubview: endTurnButton];
+}
+
+-(void) endTurnButtonPressed{
+    //tell the gameModel to end turn
+    [self.gameModel endTurn: currentSide];
     
     //switch player after turn's over
     if (currentSide == PLAYER_SIDE)
@@ -119,20 +184,11 @@ CardModel* currentCard;
         currentSideLabel.text = @"Player's turn";
     }
     
-    //new turn effects to all cards (e.g. deduct cooldown)
-    for (MonsterCardModel* monsterCard in self.gameModel.battlefield[currentSide])
-    {
-        [self.gameModel cardNewTurn:monsterCard];
-        [monsterCard.cardView updateView];
-    }
+    //tell the gameModel a new turn has started
+    [self.gameModel newTurn: currentSide];
     
-    //draws another card
-    [self.gameModel drawCard:currentSide];
+    //update views after the turn end
     [self updateHandsView:currentSide];
-    
-    //add a resource and update it
-    PlayerModel *player = self.gameModel.players[currentSide];
-    player.resource++;
     [self updateResourceView: currentSide];
 }
 
@@ -153,26 +209,45 @@ CardModel* currentCard;
     //iterate through all player's hand's cards and set their views correctly
     for (int i = 0; i < hand.count; i++)
     {
+        float distanceFromCenter;
+        
+        if (hand.count % 2 == 0)
+            distanceFromCenter = i - handCenterIndex + 0.5;
+        else
+            distanceFromCenter = i - handCenterIndex;
+        
         CardModel *card = hand[i];
+        
+        //positions the hand by laying them out from the center TODO use up available space!
+        CGPoint newCenter = CGPointMake((i-handCenterIndex+0.5) * CARD_WIDTH/2 + ((hand.count+1)%2 * CARD_WIDTH/4) + SCREEN_WIDTH/2, height + abs(distanceFromCenter) * 3);
         
         //if card has no view, create one
         if (card.cardView == nil)
         {
             CardView *cardView = [[CardView alloc] initWithModel:card];
             card.cardView = cardView;
-            [self.view addSubview:card.cardView];
+            [self.handsView addSubview:card.cardView];
+            
+            //assuming new cards are always drawn from the deck (TODO: NOT ACTUALLY TRUE! May be summoned from ability etc)
+            if(side == PLAYER_SIDE)
+                card.cardView.center = CGPointMake(SCREEN_WIDTH + CARD_WIDTH, SCREEN_HEIGHT-CARD_HEIGHT);
+            else if (side == OPPONENT_SIDE)
+                card.cardView.center = CGPointMake(SCREEN_WIDTH + CARD_WIDTH, CARD_HEIGHT) ;
         }
         
-        //positions the hand by laying them out from the center TODO no need to collapse when has enough space
-        card.cardView.center = CGPointMake((i-handCenterIndex) * CARD_WIDTH/2 + ((hand.count+1)%2 * CARD_WIDTH/4) + SCREEN_WIDTH/2, height);
+        [card.cardView resetTransformations];
+        
+        //if (hand.count != 1)
+        card.cardView.transform = CGAffineTransformConcat(card.cardView.transform, CGAffineTransformMakeRotation(M_PI_4/8 * distanceFromCenter));
+        
+        //slerp to the position
+        [self animateMoveToWithBounce:card.cardView toPosition:newCenter inDuration:0.25];
     }
 }
 
 -(void)updateBattlefieldView: (int)side
 {
     NSArray *field = self.gameModel.battlefield[side];
-    
-    //TODO probably make the cards line up in a curve
     
     float battlefieldCenterIndex = field.count/2; //for positioning the cards
     
@@ -189,25 +264,31 @@ CardModel* currentCard;
     {
         CardModel *card = field[i];
         
+        //positions the hand by laying them out from the center
+        CGPoint newCenter = CGPointMake((i-battlefieldCenterIndex) * CARD_WIDTH + ((field.count+1)%2 * CARD_WIDTH/2) + SCREEN_WIDTH/2, height);
+        
         //if card has no view, create one
         if (card.cardView == nil)
         {
             CardView *cardView = [[CardView alloc] initWithModel:card];
             card.cardView = cardView;
-            [self.view addSubview:card.cardView];
+            [self.fieldView addSubview:card.cardView];
+            
+            card.cardView.center = newCenter; //TODO
         }
-        
-        //positions the hand by laying them out from the center TODO no need to collapse when has enough space
-        card.cardView.center = CGPointMake((i-battlefieldCenterIndex) * CARD_WIDTH + ((field.count+1)%2 * CARD_WIDTH/2) + SCREEN_WIDTH/2, height);
+        else
+        {
+            //slerp to the position
+            [self animateMoveToWithBounce:card.cardView toPosition:newCenter inDuration:0.25];
+        }
     }
-    
 }
 
 /** update the corresponding resource label with the number of resource the player has */
 -(void)updateResourceView: (int)side
 {
     PlayerModel *player = self.gameModel.players[side];
-    [resourceLabels[side] setText:[NSString stringWithFormat:@"%d", player.resource]];
+    [resourceLabels[side] setText:[NSString stringWithFormat:@"%d/%d", player.resource, player.maxResource]];
 }
 
 
@@ -219,7 +300,6 @@ CardModel* currentCard;
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    NSLog(@"began");
     UITouch *touch = [touches anyObject];
     
     //touched a hands card
@@ -229,6 +309,7 @@ CardModel* currentCard;
         
         if ([touch view] == cardView)
         {
+            
             cardView.cardViewState = cardViewStateDragging;
             //cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, DEFAULT_SCALE, DEFAULT_SCALE);
             
@@ -236,9 +317,10 @@ CardModel* currentCard;
             currentCard = cardView.cardModel;
             
             //saves the index in the view before bringing it to the front
-            cardView.previousViewIndex = [self.view.subviews indexOfObject:cardView];
-            [self.view bringSubviewToFront:cardView];
-            cardView.center = [touch locationInView: self.view];
+            cardView.previousViewIndex = [self.handsView.subviews indexOfObject:cardView];
+            [self.handsView bringSubviewToFront:cardView];
+            cardView.center = [touch locationInView: self.handsView];
+            
             
             return; //TODO this is assuming nothing will be done after this
         }
@@ -260,9 +342,9 @@ CardModel* currentCard;
                 currentCard = cardView.cardModel;
                 
                 attackLine.frame = CGRectMake(0,0,0,0);
-                attackLine.center = [touch locationInView:self.view];
-                [self.view addSubview:attackLine];
-                [self.view bringSubviewToFront:attackLine];
+                attackLine.center = [touch locationInView:self.uiView];
+                [self.uiView addSubview:attackLine];
+                [self.uiView bringSubviewToFront:attackLine];
             }
             
             break; //break even if cannot attack
@@ -273,11 +355,38 @@ CardModel* currentCard;
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UITouch *touch = [touches anyObject];
+    CGPoint currentPoint = [touch locationInView: self.view];
     
     //hand card follows drag
     if (gameControlState == gameControlStateDraggingHandCard)
     {
-        currentCard.cardView.center = [touch locationInView: self.view];
+        //above certain height is dragging card to field
+        //if (currentPoint.y < SCREEN_HEIGHT-CARD_HEIGHT/2)
+        //{
+        currentCard.cardView.center = currentPoint;
+        
+        //TODO remove this if once game no longer allows controlling both players
+        if (currentSide == PLAYER_SIDE)
+            [self scaleDraggingCard:currentCard.cardView atPoint:currentPoint];
+        
+        //highlight field only if can summon the card
+        if ([self.gameModel canSummonCard:currentCard side:currentSide])
+        {
+            //TODO!!! These are only temporary while two-player is enabled, don't need it afterwards
+            UIImageView *fieldHighlight;
+            if(currentSide == PLAYER_SIDE)
+                fieldHighlight =  playerFieldHighlight;
+            else
+                fieldHighlight = opponentFieldHighlight;
+            
+            CGPoint relativePoint = [fieldHighlight convertPoint:currentPoint fromView:self.view];
+            
+            //when dragging on top of the field, highlight it
+            if (CGRectContainsPoint(fieldHighlight.bounds, relativePoint))
+                [self fadeIn:fieldHighlight inDuration:0.2];
+            else if (fieldHighlight.alpha != 0) //fade out if not
+                [self fadeOut:fieldHighlight inDuration:0.2];
+        }
     }
     //field card drags a line for targetting
     else if (gameControlState == gameControlStateDraggingFieldCard)
@@ -293,19 +402,16 @@ CardModel* currentCard;
     }
 }
 
+
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    NSLog(@"cancelled");
-    
-    //TODO these are not the right stuff yet
-    
     //dragging card from hand, reverts action
     if (gameControlState == gameControlStateDraggingHandCard)
     {
         currentCard.cardView.cardViewState = cardViewStateNone;
         gameControlState = gameControlStateNone;
         [currentCard.cardView removeFromSuperview];
-        [self.view insertSubview:currentCard.cardView atIndex:currentCard.cardView.previousViewIndex];
+        [self.handsView insertSubview:currentCard.cardView atIndex:currentCard.cardView.previousViewIndex];
         currentCard = nil;
     }
     //dragging card from field, reverts action
@@ -316,6 +422,9 @@ CardModel* currentCard;
         currentCard.cardView.cardViewState = cardViewStateNone;
         currentCard = nil;
     }
+    
+    //Put the card back to position
+    [self updateHandsView:currentSide];
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
@@ -327,24 +436,43 @@ CardModel* currentCard;
     if (gameControlState == gameControlStateDraggingHandCard)
     {
         //if dragged into deployment rect TODO temp position
-        if (currentPoint.y > SCREEN_HEIGHT/4 && currentPoint.y < SCREEN_HEIGHT - SCREEN_HEIGHT/4)
+        
+        //TODO!!! These are only temporary while two-player is enabled, don't need it afterwards
+        UIImageView *fieldRect;
+        if(currentSide == PLAYER_SIDE)
+            fieldRect =  playerFieldHighlight;
+        else
+            fieldRect = opponentFieldHighlight;
+        
+        CGPoint relativePoint = [fieldRect convertPoint:currentPoint fromView:self.view];
+        
+        //is possible to summon card as touchesStart checks the possibility
+        //must be able to summon this card (e.g. enough space, enough resource)
+        if (CGRectContainsPoint(fieldRect.bounds, relativePoint) && [self.gameModel canSummonCard:currentCard side:currentSide])
         {
-            //attempts to summon card and see if is successful
-            if ([self.gameModel summonCard: currentCard side: currentSide])
-            {
-                //summon successful, update views
-                [self updateBattlefieldView:currentSide];
-                [self updateResourceView: currentSide];
-            }
+            [self.gameModel summonCard: currentCard side: currentSide];
+            
+            //summon successful, update views
+            [self updateBattlefieldView: currentSide];
+            [self updateResourceView: currentSide];
+            
+            currentCard.cardView.cardViewState = cardViewStateNone;
+            gameControlState = gameControlStateNone;
+            
+            [self fadeOut:playerFieldHighlight inDuration:0.2];
+            [self fadeOut:opponentFieldHighlight inDuration:0.2];
+            
         }
-        
-        //revert the states
-        currentCard.cardView.cardViewState = cardViewStateNone;
-        gameControlState = gameControlStateNone;
-        
-        //re-insert the card back at its original index in the view
-        [currentCard.cardView removeFromSuperview];
-        [self.view insertSubview:currentCard.cardView atIndex:currentCard.cardView.previousViewIndex];
+        else
+        {
+            //revert the states
+            currentCard.cardView.cardViewState = cardViewStateNone;
+            gameControlState = gameControlStateNone;
+            
+            //re-insert the card back at its original index in the view
+            [currentCard.cardView removeFromSuperview];
+            [self.handsView insertSubview:currentCard.cardView atIndex:currentCard.cardView.previousViewIndex];
+        }
         
         currentCard = nil;
         
@@ -369,31 +497,52 @@ CardModel* currentCard;
             {
                 //attack it
                 MonsterCardModel* targetCard = (MonsterCardModel*) cardView.cardModel;
-                [self.gameModel attackCard:currentCard fromSide:currentSide target:targetCard];
+                
+                //deal the damage and return it to animate
+                int damage = [self.gameModel attackCard:currentCard fromSide:currentSide target:targetCard];
+
+                //animate the damage effects, if card dies, death animation is played
+                [self animateCardDamage:card.cardView forDamage:damage fromSide:oppositeSide];
                 
                 //update views after the attack
                 [currentCard.cardView updateView];
                 [cardView updateView];
-                
-                //target died, update field view and remove it from screen
-                if (targetCard.dead)
-                {
-                    [targetCard.cardView removeFromSuperview];
-                    [self updateBattlefieldView:oppositeSide];
-                }
-                
                 break;
             }
         }
         
-        //remove the attack line form view and revert states
+        //remove the attack line from view and revert states
         [attackLine removeFromSuperview];
         gameControlState = gameControlStateNone;
         currentCard.cardView.cardViewState = cardViewStateNone;
         currentCard = nil;
     }
+}
+
+
+/** Since the opponent is not meant to be controlled, this method must only be called for the player side */
+-(void) scaleDraggingCard: (CardView*) card atPoint: (CGPoint) point
+{
+    float scale = CARD_DRAGGING_SCALE;
     
+    //Scales between two ends at a and b
+    float a = SCREEN_HEIGHT - SCREEN_HEIGHT*FIELD_CENTER_Y_RATIO;
+    float b = SCREEN_HEIGHT - CARD_HEIGHT * 1.5;
     
+    if (point.y < a)
+        scale = CARD_DEFAULT_SCALE;
+    else if (point.y > b)
+        scale = CARD_DRAGGING_SCALE;
+    else
+    {
+        //slerp x from a to b, used as the scale
+        float x = (currentCard.cardView.center.y-a)/(b-a);
+        
+        //use only [0,pi/2] of the function for a better effect
+        scale =  (1 - cos(x*M_PI_2)) * (CARD_DRAGGING_SCALE-CARD_DEFAULT_SCALE) + CARD_DEFAULT_SCALE;
+    }
+    
+    currentCard.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, scale, scale);
 }
 
 //apparently there's no built-in function for operations on points

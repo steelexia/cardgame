@@ -14,14 +14,14 @@
 @synthesize center = _center;
 @synthesize cardViewState = _cardViewState;
 @synthesize originalPosition = _originalPosition;
-@synthesize nameLabel, costLabel, attackLabel, lifeLabel, cooldownLabel;
+@synthesize nameLabel, costLabel, attackLabel, lifeLabel, cooldownLabel, baseAbilityLabel, addedAbilityLabel;
 @synthesize previousViewIndex;
 
 const int CARD_WIDTH_RATIO = 5;
 const int CARD_HEIGHT_RATIO = 8;
 
 const float CARD_DEFAULT_SCALE = 0.4f;
-const float CARD_DRAGGING_SCALE = 0.8f;
+const float CARD_DRAGGING_SCALE = 1.0f;
 
 /** Dummy initial values, will be changed in setup */
 int CARD_WIDTH = 50, CARD_HEIGHT = 80;
@@ -29,7 +29,7 @@ int CARD_FULL_WIDTH = 50, CARD_FULL_HEIGHT = 80;
 
 -(instancetype)initWithModel:(CardModel *)cardModel
 {
-    UIImage* backgroundImage = [UIImage imageNamed:@"card_background"];
+    UIImage* backgroundImage = [UIImage imageNamed:@"card_background_front"];
     self = [super initWithImage:backgroundImage];
     
     if (self != nil)
@@ -62,6 +62,19 @@ int CARD_FULL_WIDTH = 50, CARD_FULL_HEIGHT = 80;
         self.costLabel.font = [UIFont fontWithName:@"Verdana" size:15];
         
         [self addSubview: costLabel];
+        
+        CGRect abilityBound = CGRectMake(self.bounds.origin.x + 5, self.bounds.origin.y + self.bounds.size.height/2 - 5, self.bounds.size.width - 10, self.bounds.size.height/2);
+        
+        self.baseAbilityLabel = [[UILabel alloc] initWithFrame:abilityBound];
+        //self.baseAbilityLabel.center = CGPointMake(CARD_FULL_WIDTH/2 + 5, 145);
+        self.baseAbilityLabel.textAlignment = NSTextAlignmentLeft;
+        self.baseAbilityLabel.textColor = [UIColor blackColor];
+        self.baseAbilityLabel.numberOfLines = 0;
+        self.baseAbilityLabel.backgroundColor = [UIColor clearColor];
+        self.baseAbilityLabel.font = [UIFont fontWithName:@"Verdana-Italic" size:10];
+        
+        
+        [self addSubview: baseAbilityLabel];
 
         //draws specific card elements for monster card
         if ([cardModel isKindOfClass:[MonsterCardModel class]])
@@ -118,9 +131,30 @@ int CARD_FULL_WIDTH = 50, CARD_FULL_HEIGHT = 80;
     if ([self.cardModel isKindOfClass:[MonsterCardModel class]])
     {
         MonsterCardModel* monsterCard = (MonsterCardModel*) self.cardModel;
-        self.attackLabel.text = [NSString stringWithFormat:@"Damage: %d", monsterCard.damage];
-        self.lifeLabel.text = [NSString stringWithFormat:@"Health: %d", monsterCard.life];
-        self.cooldownLabel.text = [NSString stringWithFormat:@"Cooldown: %d", monsterCard.cooldown];
+        
+        if (monsterCard.damage != monsterCard.baseDamage)
+            self.attackLabel.textColor = [UIColor redColor];
+        else
+            self.attackLabel.textColor = [UIColor blackColor];
+        
+        self.attackLabel.text = [NSString stringWithFormat:@"D: %d", monsterCard.damage];
+        
+        if (monsterCard.life > monsterCard.maximumLife)
+            self.lifeLabel.textColor = [UIColor redColor];
+        else
+            self.lifeLabel.textColor = [UIColor blackColor];
+        
+        
+        self.lifeLabel.text = [NSString stringWithFormat:@"L: %d", monsterCard.life];
+        self.cooldownLabel.text = [NSString stringWithFormat:@"CD: %d", monsterCard.cooldown];
+        
+        self.baseAbilityLabel.text = @"";
+        for (Ability *ability in self.cardModel.abilities)
+        {
+            self.baseAbilityLabel.text = [NSString stringWithFormat:@"%@%@\n", self.baseAbilityLabel.text, [Ability getDescription:ability fromCard:self.cardModel]];
+        }
+        
+        //TODO: need a special need to show both current and max values
     }
     else if ([self.cardModel isKindOfClass:[SpellCardModel class]])
     {
@@ -196,6 +230,11 @@ int CARD_FULL_WIDTH = 50, CARD_FULL_HEIGHT = 80;
     }
     
     _cardViewState = cardViewState;
+}
+
+-(void)resetTransformations
+{
+    self.cardViewState = self.cardViewState; //this causes the setCardViewState to be called again
 }
 
 @end

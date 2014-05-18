@@ -26,10 +26,21 @@
 /** Name of the card, can have duplicate with other cards? */
 @property (strong) NSString* name;
 
+/** Rarity of the card. Affects its appearance and possible abilites */
+@property enum CardRarity rarity;
+
+/** The technical type of the card (i.e. if it is a temporary card from an ability, or if it's the card representing the player). Card types such as cardTypeTemporary's idNumber would have no purpose.
+    NOT to be confused with card types such as MonsterCard and SpellCard.
+ */
+@property enum CardType type;
+
 //----------------Card battle stats values----------------//
 
 /** Amount of resources it costs to deploy the card. 0 or higher */
 @property int cost;
+
+/** Stores all of the Ability's the card is currently holding. For MonsterCards, it is equivalent to all "enchantments" applied to it, which (IMPORTANT!) also includes debuffs. For SpellCards, it is simply the effects it will give when summoned.  */
+@property (strong) NSMutableArray* abilities;
 
 //----------------Functions----------------//
 
@@ -37,3 +48,18 @@
 -(instancetype)initWithIdNumber: (long)idNumber;
 
 @end
+
+enum CardRarity{
+    cardRarityCommon,
+    cardRarityUncommon,
+    cardRarityRare,
+    cardRarityEpic, //not sure about this yet
+    cardRarityLegendary,
+};
+
+enum CardType{
+    cardTypeStandard,
+    cardTypeTemporary,
+    cardTypePlayer,
+    cardTypeSinglePlayer
+};

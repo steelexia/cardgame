@@ -13,6 +13,8 @@
 @synthesize idNumber = _idNumber;
 @synthesize name = _name;
 @synthesize cost = _cost;
+@synthesize rarity = _rarity;
+@synthesize abilities = _abilities;
 
 /** constructor with id number, all other fields will be defaut values */
 -(instancetype)initWithIdNumber: (long)idNumber
@@ -26,6 +28,8 @@
         //default values
         self.name = [NSString stringWithFormat:@"Card %ld", idNumber]; //TODO temp
         self.cost = 0;
+        
+        self.abilities = [NSMutableArray array]; //default no ability
     }
     
     return self;
@@ -41,3 +45,4 @@
 }
 
 @end
+

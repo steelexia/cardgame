@@ -8,14 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "CardModel.h"
+#import "CardView.h"
 #import "MonsterCardModel.h"
 #import "SpellCardModel.h"
 #import "PlayerModel.h"
 #import "DeckModel.h"
+#import "Ability.h"
 
-/** 
- Main class of the game that handles the view and controls
- */
 @class GameViewController;
 
 /** maximum number of cards that can be placed per battlefield */
@@ -64,6 +63,12 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 /** Initialies the GameModel with an attached controller for drawing */
 -(instancetype)initWithViewController: (GameViewController*) gameViewController;
 
+/** Informs models that a new turn has started, and performs any necessary actions */
+-(void)newTurn:(int)side;
+
+/** Ends the turn and performs any necessary actions */
+-(void)endTurn:(int)side;
+
 /**
  Checks if possible and draws a card from hand
  */
@@ -71,16 +76,20 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 
 /** 
  Adds a monster card to the battlefield with the specified side. side must be either PLAYER_SIDE or OPPONENT_SIDE.
- If successful, sets the card's deployed variable to YES
- Returns NO if battlefield reached maximum size, or if the card's deployed variable is YES.
+ Assumes canSummonCard returns YES
  NOTE: should use summonCard for general purposes
  */
--(BOOL)addCardToBattlefield: (MonsterCardModel*)monsterCard side:(char)side;
+-(void)addCardToBattlefield: (MonsterCardModel*)monsterCard side:(char)side;
 
 /**
- Attempts to summon a card. If the card is a MonsterCardModel, it will attempt to place it on the battlefield. If the card is a SpellCardModel, it will attempt to use it.
- Returns NO if it does not successfuly summons it, such as if addCardToBattleField returns false, or if the player summoning does not have sufficient resources */
--(BOOL)summonCard: (CardModel*)card side:(char)side;
+ Checks if a card can be summoned. If the card is a MonsterCardModel, it means to place it on the battlefield. If the card is a SpellCardModel, it means to use it.
+ Returns NO if it can not summon it, such as if addCardToBattleField returns false, or if the player summoning does not have sufficient resources */
+-(BOOL)canSummonCard: (CardModel*)card side:(char)side;
+
+/**
+ Summon a card. If the card is a MonsterCardModel, it will attempt to place it on the battlefield. If the card is a SpellCardModel, it will attempt to use it.
+ Assumes canSummonCard: card side:side returns YES */
+-(void)summonCard: (CardModel*)card side:(char)side;
 
 /**
  Adds a card to the hand of the specified player. side must be either PLAYER_SIDE or OPPONENT_SIDE.
@@ -91,7 +100,10 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 -(BOOL)addCardToHand: (CardModel*)card side:(char)side;
 
 /** perform any new turn effects on a monsterCard, such as deducting cooldown, using abilities etc */
--(void)cardNewTurn: (MonsterCardModel*) monsterCard;
+-(void)cardNewTurn: (MonsterCardModel*) monsterCard fromSide: (int)side;
+
+/** Called when card ends its turn. Casts all castOnEndOfTurn effects */
+-(void)cardEndTurn: (MonsterCardModel*) monsterCard fromSide: (int)side;
 
 /**
  Calculates and returns the amount of damage dealt by an attacker MonsterCardModel to a target MonsterCardModel. It does not actually deal the damage. NOTE that this should not be used for most attack purposes. Use attackCard instead
@@ -100,8 +112,9 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 
 /** 
  Performs the attack on target. Uses calculateDamage for the damage, but also performs other functions such as reflected damage or cooldown reset. The model will also remove cards that are dead. Note that attacker may be both spell card and monster card.
+    Returns number of damage dealt.
  */
--(void)attackCard: (CardModel*) attacker fromSide: (int)side target: (MonsterCardModel*)target;
+-(int)attackCard: (CardModel*) attacker fromSide: (int)side target: (MonsterCardModel*)target;
 
 /**
  Checks if a monsterCard can attack. Conditions for NO can be monsterCard's cooldown not being 0, or if it has no attack value, or if it is under some status ailment.
@@ -114,5 +127,7 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 
 /** Performs actions needed for a card's death. This moves it to the graveyard, and performs any abilities that casts on death */
 -(void)cardDies: (CardModel*) card fromSide: (int) side;
+
+-(void)castAbility: (Ability*) ability byMonsterCard: (MonsterCardModel*) attacker toMonsterCard: (MonsterCardModel*) target fromSide: (int)side;
 
 @end

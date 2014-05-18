@@ -22,8 +22,12 @@
 /** Amount of resource a player currently has. Used to summon cards */
 @property int resource;
 
+/** Maximum amount of resource a player can currently have */
+@property int maxResource;
+
 /** Initializes with a monster card representing itself */
 -(instancetype)initWithPlayerMonster: (MonsterCardModel*) playerMonster;
+
 
 @end
 
