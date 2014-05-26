@@ -21,15 +21,18 @@ const char PLAYER_SIDE = 0, OPPONENT_SIDE = 1;
 @synthesize hands = _hands;
 @synthesize players = _players;
 @synthesize decks = _decks;
+@synthesize gameOver = _gameOver;
+@synthesize aiPlayer = _aiPlayer;
 
 //TEMPORARY
 int cardIDCount = 0;
 
--(instancetype)initWithViewController:(GameViewController *)gameViewController
+-(instancetype)initWithViewController:(GameViewController *)gameViewController matchType: (enum MatchType)matchType
 {
     self = [super init];
     
     if (self){
+        self.matchType = matchType;
         self.gameViewController = gameViewController;
         
         //initialize battlefield and hands to be two arrays
@@ -42,17 +45,19 @@ int cardIDCount = 0;
         [self fillDecks];
         
         //temporary players are hardcoded
-        MonsterCardModel *playerMonsterCard = [[MonsterCardModel alloc] initWithIdNumber:999];
-        playerMonsterCard.life = 20000;
-        PlayerModel *player = [[PlayerModel alloc] initWithPlayerMonster: playerMonsterCard];
+        MonsterCardModel *playerHeroModel = [[MonsterCardModel alloc] initWithIdNumber:0];
+        [playerHeroModel setupAsPlayerHero:@"Player 1" onSide:PLAYER_SIDE];
+        PlayerModel *player = [[PlayerModel alloc] initWithPlayerMonster: playerHeroModel];
         //player.resource = 9;
         
-        MonsterCardModel *opponentMonsterCard = [[MonsterCardModel alloc] initWithIdNumber:998];
-        opponentMonsterCard.life = 20000;
-        PlayerModel *opponent = [[PlayerModel alloc] initWithPlayerMonster: opponentMonsterCard];
+        MonsterCardModel *opponentHeroModel = [[MonsterCardModel alloc] initWithIdNumber:0];
+        [opponentHeroModel setupAsPlayerHero:@"Player 2" onSide:OPPONENT_SIDE];
+        PlayerModel *opponent = [[PlayerModel alloc] initWithPlayerMonster: opponentHeroModel];
         //opponent.resource = 9;
         
         self.players = @[player, opponent];
+        
+        self.aiPlayer = [[AIPlayer alloc] initWithPlayerModel:opponent gameViewController:gameViewController gameModel: self];
         
         //start a new game, each player draws three cards
         [self startGame];
@@ -71,7 +76,7 @@ int cardIDCount = 0;
     {
         DeckModel *deck = self.decks[side];
         //shuffle deck
-        //[deck shuffleDeck]; //TODO!!!!!!!!!!!!
+        [deck shuffleDeck]; //TURN THIS ON/OFF FOR DEBUGGING
         
         //draw 3 cards
         for (int i = 0; i < 3; i++)
@@ -83,6 +88,11 @@ int cardIDCount = 0;
 
 -(void)newTurn:(int)side
 {
+    //add a resource and update it
+    PlayerModel *player = self.players[side];
+    player.maxResource++;
+    player.resource = player.maxResource;
+    
     //new turn effects to all cards (e.g. deduct cooldown)
     for (MonsterCardModel* monsterCard in self.battlefield[side])
     {
@@ -92,12 +102,6 @@ int cardIDCount = 0;
     
     //draws another card
     [self drawCard:side];
-    
-    
-    //add a resource and update it
-    PlayerModel *player = self.players[side];
-    player.maxResource++;
-    player.resource = player.maxResource;
 }
 
 -(void) endTurn: (int) side
@@ -108,9 +112,6 @@ int cardIDCount = 0;
         [self cardEndTurn:monsterCard fromSide: side];
         [monsterCard.cardView updateView];
     }
-    
-    
-    
 }
 
 -(BOOL)drawCard:(int)side
@@ -131,12 +132,59 @@ int cardIDCount = 0;
 /** TODO this is a temporary function used to fill decks up with random cards for testing */
 -(void)fillDecks
 {
+    self.decks = @[ [SinglePlayerCards getDeckOne], [SinglePlayerCards getDeckOne]];
+    
+    /*
     for (int side = 0; side < 2; side++)
     {
-        //add 20 random cards
+        //add 10 random spell cards
+        for (int i = 0; i < 3; i++)
+        {
+            SpellCardModel *card = [[SpellCardModel alloc] initWithIdNumber:cardIDCount++];
+            card.name = @"No Name";
+            
+            card.cost = 1;
+            
+            Ability *ability;
+            
+            int random = arc4random_uniform(4);
+            
+            if (random == 0)
+            {
+                ability = [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1000]];
+                card.cost = 2;
+            }
+            else if (random == 1){
+                card.cost = 2;
+                ability = [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]];
+            }
+            else if (random == 2){
+                card.cost = 3;
+                ability = [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1]];}
+            else if (random == 3){
+                ability = [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetOneRandomFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:3000]];}
+            else if (random == 4){
+                ability = [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneRandomFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:2000]];}
+            
+            //if (i == 0)
+            //{
+                ability = [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneRandomMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1]];
+                
+                //Ability *ability = [[Ability alloc] initWithType:abilityAddCooldown castType:castOnDamaged targetType:targetAttacker withDuration:durationInstant withValue:[NSNumber numberWithInt:2]];
+                
+            //}
+            
+            [card.abilities addObject:ability];
+            
+            [self.decks[side] addCard:card];
+        }
+        
+        //add 20 random monster cards
         for (int i = 0; i < 20; i++)
         {
             MonsterCardModel *card = [[MonsterCardModel alloc] initWithIdNumber:cardIDCount++];
+            
+            card.name = @"No Name";
             
             card.cost = arc4random_uniform(6);
             card.cost -= 2; //just for a little bit of fake distribution
@@ -157,64 +205,83 @@ int cardIDCount = 0;
             //for (int j = 0; j < card.cost; j++)
             //{
             
-            //TODO just some temporary tests
-            /*
-             int abilityType = abilityNil + 1 + arc4random_uniform(9);
-             int castType = castNil + 1 + arc4random_uniform(3);
-             int targetType = targetNil + 1 + arc4random_uniform(13);
-             int durationType = durationNil + 1 + arc4random_uniform(3);
-             int value = 0;
-             
-             if (abilityType == abilityLoseCooldown || abilityType == abilityLoseMaxCooldown || abilityType == abilityAddCooldown || abilityType == abilityAddMaxCooldown)
-             {
-             value = 1 + arc4random_uniform(3);
-             }
-             else
-             value = arc4random_uniform(200) * 50;
-             
-             Ability *ability = [[Ability alloc] initWithType:abilityType castType:castType targetType:targetType withDuration:durationType withValue:[NSNumber numberWithInt:value]];
-             */
+
             
             if (i == 0)
             {
-                Ability *ability = [[Ability alloc] initWithType:abilityAddLife castType:castOnHit targetType:targetAllMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:500]];
-            
+                Ability *ability = [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]];
+
+                                    
                 [card.abilities addObject:ability];
             }
-            
+        
             [self.decks[side] addCard:card];
         }
     }
+     */
 }
 
 -(void)addCardToBattlefield: (MonsterCardModel*)monsterCard side:(char)side
 {
-    
     [self.battlefield[side] addObject:monsterCard];
+    monsterCard.side = side;
     monsterCard.deployed = YES;
 }
 
 -(BOOL) canSummonCard: (CardModel*)card side:(char)side
 {
-    if ([card isKindOfClass: [MonsterCardModel class]])
+    PlayerModel *player = (PlayerModel*) self.players[side];
+    
+    //checks if player can afford this first before caring about card type
+    if (player.resource >= card.cost)
     {
-        MonsterCardModel *monsterCard = (MonsterCardModel*) card;
-        
-        PlayerModel *player = (PlayerModel*) self.players[side];
-        
-        //checks if player can afford this
-        if (player.resource >= monsterCard.cost)
+        if ([card isKindOfClass: [MonsterCardModel class]])
         {
+            MonsterCardModel *monsterCard = (MonsterCardModel*) card;
+            
             //has space for more cards
             if ([self.battlefield[side] count] < MAX_BATTLEFIELD_SIZE && !monsterCard.deployed)
-            {
                 return YES;
-            }
         }
-    }
-    else if ([card isKindOfClass: [SpellCardModel class]])
-    {
-        //TODO
+        else if ([card isKindOfClass: [SpellCardModel class]])
+        {
+            SpellCardModel *spellCard = (SpellCardModel*) card;
+            
+            NSArray *friendlyField = self.battlefield[side];
+            NSArray *enemyField = self.battlefield[side == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE];
+            
+            //check if has valid target. If one ability has no valid target then card is invalid (e.g. targets enemy hero & all enemy minions but no enemy minions on field then invalid)
+            for (Ability *ability in spellCard.abilities)
+            {
+                enum TargetType targetType = ability.targetType;
+                
+                //if targets friendly minion but none on field, not allowed
+                if (targetType == targetOneRandomFriendlyMinion ||
+                    targetType == targetAllFriendlyMinions ||
+                    targetType == targetOneRandomFriendlyMinion)
+                {
+                    if ([friendlyField count] == 0)
+                        return NO;
+                }
+                else if(targetType == targetOneRandomEnemyMinion ||
+                        targetType == targetAllEnemyMinions ||
+                        targetType == targetOneRandomEnemyMinion)
+                {
+                    if ([enemyField count] == 0)
+                        return NO;
+                }
+                else if (targetType == targetAllMinion ||
+                         targetType == targetOneRandomMinion)
+                {
+                    if ([friendlyField count] == 0 && [enemyField count] == 0)
+                        return NO;
+                }
+                
+                //TODO additional goes here
+            }
+            
+            return YES;
+        }
     }
     
     return NO;
@@ -222,15 +289,13 @@ int cardIDCount = 0;
 
 -(void)summonCard: (CardModel*)card side:(char)side
 {
+    PlayerModel *player = (PlayerModel*) self.players[side];
+    
     if ([card isKindOfClass: [MonsterCardModel class]])
     {
         MonsterCardModel *monsterCard = (MonsterCardModel*) card;
         
-        PlayerModel *player = (PlayerModel*) self.players[side];
         [self addCardToBattlefield:monsterCard side:side];
-        
-        player.resource -= monsterCard.cost;
-        [self.hands[side] removeObject:card];
         
         //CastType castOnSummon is casted here
         for (Ability *ability in monsterCard.abilities)
@@ -239,8 +304,14 @@ int cardIDCount = 0;
     }
     else if ([card isKindOfClass: [SpellCardModel class]])
     {
-        //TODO
+        for (Ability *ability in card.abilities)
+            if (ability.castType == castOnSummon)
+                [self castAbility:ability byMonsterCard:nil toMonsterCard:nil fromSide:side];
     }
+    
+    //remove card and use up cost
+    [self.hands[side] removeObject:card];
+    player.resource -= card.cost;
 }
 
 -(BOOL)addCardToHand: (CardModel*)card side:(char)side
@@ -285,10 +356,11 @@ int cardIDCount = 0;
     //remove abilities that durationUntilEndOfTurn
     NSMutableArray *removedAbilities = [NSMutableArray array];
     
+    //cast type must also be always since that means it's already casted
     for (Ability *ability in monsterCard.abilities)
-        if (ability.durationType == durationUntilEndOfTurn)
+        if (ability.durationType == durationUntilEndOfTurn && ability.castType == castAlways)
             [removedAbilities addObject:ability];
-
+    
     for (Ability *removedAbility in removedAbilities)
         [monsterCard.abilities removeObject:removedAbility];
     
@@ -304,41 +376,54 @@ int cardIDCount = 0;
     
     
     //additional modifiers, especially from defender
-    
-    
-    
-    
     return damage;
 }
 
--(int)attackCard: (CardModel*) attacker fromSide: (int) side target: (MonsterCardModel*)target
+-(NSArray*)attackCard: (CardModel*) attacker fromSide: (int) side target: (MonsterCardModel*)target
 {
     if ([attacker isKindOfClass:[MonsterCardModel class]])
     {
         MonsterCardModel *attackerMonsterCard = (MonsterCardModel*)attacker;
         
-        int damage = [self calculateDamage:attackerMonsterCard fromSide:side dealtTo:target];
-        [target loseLife: damage];
+        int oppositeSide = side == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE;
+        
+        int attackerDamage = [self calculateDamage:attackerMonsterCard fromSide:side dealtTo:target];
+        [target loseLife: attackerDamage];
+        
+        int defenderDamage = [self calculateDamage:target fromSide:oppositeSide dealtTo:attackerMonsterCard];
+        [attackerMonsterCard loseLife: defenderDamage];
         
         //CastType castOnDamaged is casted here by defender
         for (Ability *ability in target.abilities)
             if (ability.castType == castOnDamaged)
-                [self castAbility:ability byMonsterCard:target toMonsterCard:attackerMonsterCard fromSide:side == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE];
+                [self castAbility:ability byMonsterCard:target toMonsterCard:attackerMonsterCard fromSide:oppositeSide];
         
         //CastType castOnHit is casted here by attacker
         for (Ability *ability in attackerMonsterCard.abilities)
             if (ability.castType == castOnHit)
                 [self castAbility:ability byMonsterCard:attackerMonsterCard toMonsterCard:target fromSide:side];
-    
-        attackerMonsterCard.cooldown = attackerMonsterCard.maximumCooldown;
         
-        int oppositeSide = side == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE;
+        //CastType castOnDamaged is casted here by attacker
+        for (Ability *ability in attackerMonsterCard.abilities)
+            if (ability.castType == castOnDamaged)
+                [self castAbility:ability byMonsterCard:attackerMonsterCard toMonsterCard:target fromSide:side];
+        
+        //CastType castOnHit is casted here by defender
+        for (Ability *ability in target.abilities)
+            if (ability.castType == castOnHit)
+                [self castAbility:ability byMonsterCard:target toMonsterCard:attackerMonsterCard fromSide:oppositeSide];
+        
+        attackerMonsterCard.cooldown = attackerMonsterCard.maximumCooldown;
         
         //target dies
         if (target.dead)
             [self cardDies:target destroyedBy:attackerMonsterCard fromSide:oppositeSide];
         
-        return damage;
+        //attacker dies
+        if (attackerMonsterCard.dead)
+            [self cardDies:attackerMonsterCard destroyedBy:target fromSide:side];
+        
+        return @[[NSNumber numberWithInt:attackerDamage],[NSNumber numberWithInt:defenderDamage]];
     }
     
     return 0;
@@ -398,7 +483,8 @@ int cardIDCount = 0;
  The core method for handing all abilities that are casted. attacker and target can be nil if targetType is applicable (e.g. targetOneAny, targetAll can omit target)
  CastType is not relevant since it is already called in the correct place.
  DurationType is not as relevant either since it is not handed here.
- AbilityType and TargetType is main concern here
+ AbilityType and TargetType is main concern here.
+ Notes: If target is not nil for the picked targetTypes such as targetOneAny, it is assume that target is the chosen target. Otherwise target should always be nil for that targetType, as it should only be used with castOnSummon, which does not have a target.
  */
 -(void)castAbility: (Ability*) ability byMonsterCard: (MonsterCardModel*) attacker toMonsterCard: (MonsterCardModel*) target fromSide: (int)side
 {
@@ -421,15 +507,77 @@ int cardIDCount = 0;
     }
     else if (ability.targetType == targetOneAny)
     {
-        //TODO pick one
+        if (target != nil)
+            targets = @[target];
+        else
+        {
+            if (side == PLAYER_SIDE)
+            {
+                //NOTE: change here for any future abilities that makes a target immune
+                
+                for (MonsterCardModel *monster in self.battlefield[PLAYER_SIDE])
+                    if (monster != attacker) //cannot target self
+                        monster.cardView.cardHighlightType = cardHighlightTarget;
+                
+                PlayerModel *player = self.players[PLAYER_SIDE];
+                player.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
+                
+                for (MonsterCardModel *monster in self.battlefield[OPPONENT_SIDE])
+                    monster.cardView.cardHighlightType = cardHighlightTarget;
+                
+                PlayerModel *opponent = self.players[OPPONENT_SIDE];
+                opponent.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
+                
+                [self.gameViewController pickAbilityTarget:ability];
+            }
+            
+            //does not actually cast it immediately since it requires the player to pick a target
+            return;
+        }
     }
     else if (ability.targetType == targetOneFriendly)
     {
-        //TODO
+        if (target != nil)
+            targets = @[target];
+        else
+        {
+            if (side == PLAYER_SIDE)
+            {
+                for (MonsterCardModel *monster in self.battlefield[PLAYER_SIDE])
+                    if (monster != attacker) //cannot target self
+                        monster.cardView.cardHighlightType = cardHighlightTarget;
+                
+                PlayerModel *player = self.players[PLAYER_SIDE];
+                player.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
+                
+                [self.gameViewController pickAbilityTarget:ability];
+            }
+            
+            //does not actually cast it immediately since it requires the player to pick a target
+            return;
+        }
     }
     else if (ability.targetType == targetOneEnemy)
     {
-        //TODO
+        if (target != nil)
+            targets = @[target];
+        else
+        {
+            if (side == PLAYER_SIDE)
+            {
+                for (MonsterCardModel *monster in self.battlefield[OPPONENT_SIDE])
+                    monster.cardView.cardHighlightType = cardHighlightTarget;
+                
+                PlayerModel *opponent = self.players[OPPONENT_SIDE];
+                opponent.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
+                
+                [self.gameViewController pickAbilityTarget:ability];
+            }
+            
+            //does not actually cast it immediately since it requires the player to pick a target
+            return;
+        }
+        
     }
     else if (ability.targetType == targetAll)
     {
@@ -523,15 +671,32 @@ int cardIDCount = 0;
     }
     else if (ability.targetType == targetHeroAny)
     {
-        //TODO
+        if (target != nil)
+            targets = @[target];
+        else
+        {
+            if (side == PLAYER_SIDE)
+            {
+                PlayerModel *player = self.players[PLAYER_SIDE];
+                player.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
+                
+                PlayerModel *opponent = self.players[OPPONENT_SIDE];
+                opponent.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
+                
+                [self.gameViewController pickAbilityTarget:ability];
+            }
+            
+            //does not actually cast it immediately since it requires the player to pick a target
+            return;
+        }
     }
     else if (ability.targetType == targetHeroFriendly)
     {
-        //TODO
+        targets = @[self.players[side]];
     }
     else if (ability.targetType == targetHeroEnemy)
     {
-        //TODO
+        targets = @[self.players[oppositeSide]];
     }
     
     //apply the effect to the targets NOTE: this loop is inefficient but saves a lot of lines
@@ -573,8 +738,9 @@ int cardIDCount = 0;
     }
     else if (ability.abilityType == abilityKill)
     {
+        int lifeLost = monster.life;
         [monster loseLife:monster.life];
-        [self.gameViewController animateCardDamage:monster.cardView forDamage:3000 fromSide:monster.side];
+        [self.gameViewController animateCardDamage:monster.cardView forDamage:lifeLost fromSide:monster.side];
     }
     else if (ability.abilityType == abilitySetCooldown)
         monster.cooldown = [ability.value intValue];
@@ -590,6 +756,36 @@ int cardIDCount = 0;
     
     if (monster.dead)
         [self cardDies:monster destroyedBy:nil fromSide:monster.side];
+}
+
+-(void) checkForGameOver
+{
+    PlayerModel *player = self.players[PLAYER_SIDE];
+    PlayerModel *enemy = self.players[OPPONENT_SIDE];
+    
+    if (player.playerMonster.dead && enemy.playerMonster.dead)
+    {
+        NSLog(@"Game ended in a draw!");
+        self.gameOver = YES;
+    }
+    else if (player.playerMonster.dead)
+    {
+        NSLog(@"Player 1 lost!");
+        self.gameOver = YES;
+    }
+    else if (enemy.playerMonster.dead)
+    {
+        NSLog(@"Player 2 lost!");
+        self.gameOver = YES;
+    }
+    
+    if (self.gameOver)
+    {
+        [self.gameViewController.backgroundView setUserInteractionEnabled:NO];
+        [self.gameViewController.handsView setUserInteractionEnabled:NO];
+        [self.gameViewController.fieldView setUserInteractionEnabled:NO];
+        [self.gameViewController.uiView setUserInteractionEnabled:NO];
+    }
 }
 
 @end

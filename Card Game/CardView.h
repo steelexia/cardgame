@@ -21,6 +21,14 @@
 /** Attached model for storing data of the card */
 @property (strong) CardModel *cardModel;
 
+/** Unique image of the card */
+@property (strong) UIImageView *cardImage;
+
+/** Highlight of the card */
+@property (strong) UIImageView *highlight;
+
+@property enum CardHighlightType cardHighlightType;
+
 /** Labels displayed on the cards (somewhat temporary for now) */
 @property (strong) UILabel *nameLabel, *costLabel, *attackLabel, *lifeLabel, *cooldownLabel, *baseAbilityLabel, *addedAbilityLabel;
 
@@ -37,7 +45,7 @@
 @property int previousViewIndex;
 
 /** Initializes with attached CardModel, which should be one of its child classes */
--(instancetype)initWithModel: (CardModel*)cardModel;
+-(instancetype)initWithModel: (CardModel*)cardModel cardImage:(UIImageView*)cardImage;
 
 /** Updates its view after values are updated (i.e. lost life) */
 -(void)updateView;
@@ -45,18 +53,27 @@
 /** Refreshes its transformations by setting its cardView state to itself */
 -(void)resetTransformations;
 
+/** Loads images for drawing cards ahead of time */
++(void) loadResources;
+
 @end
 
 /** Dimension of the card in its default state (i.e. on the field, in hand, etc.)*/
 extern int CARD_WIDTH, CARD_HEIGHT;
+
 /** Dimension of the card at its maximum zoom */
 extern int CARD_FULL_WIDTH, CARD_FULL_HEIGHT;
+
+/** Dimension of the hero card */
+extern int PLAYER_HERO_WIDTH, PLAYER_HERO_HEIGHT;
 
 /** Scales of the card during different states */
 extern const float CARD_DEFAULT_SCALE, CARD_DRAGGING_SCALE;
 
 /** Dimensions' ratio */
 extern const int  CARD_WIDTH_RATIO, CARD_HEIGHT_RATIO;
+
+extern const float CARD_IMAGE_RATIO;
 
 /** State of the card's view for positioning */
 enum CardViewState{
@@ -65,3 +82,10 @@ enum CardViewState{
     cardViewStateSelected,
     cardViewStateDragging
 } ;
+
+enum CardHighlightType
+{
+    cardHighlightNone,
+    cardHighlightSelect,
+    cardHighlightTarget,
+};

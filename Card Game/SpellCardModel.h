@@ -11,6 +11,5 @@
 /** A card that performs an action and is destroyed afterwards */
 @interface SpellCardModel : CardModel
 
-@property NSArray *abilities;
 
 @end

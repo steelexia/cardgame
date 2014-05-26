@@ -62,6 +62,14 @@ enum AbilityType
     abilityTaunt, //enemy must attack this. Spells are ignored
     abilityFracture, //split into ~1-3 monsters with 60%, 25%, and 10% original stats
     abilityDrawCard, //draw x number of cards, instant effect
+    abilityFaceDown, //card is placed faced down until it attacks or is attacked (REALLY cool)
+    abilityHideLife, //hide a card's health (or maybe only hero), only a visual effect
+    abilityKillIfBelowHealth, //kill a card if its health is below x. Good for low number such as below 1000 to kill off monsters that would have died if damage/life were 1000 times smaller.
+    abilityReflect, //reflect x% of damage deal by the attacker instead of its attack
+    abilityRemoveAbility, //target abilities become useless and prevents target from receiving more
+    abilitySpellImmunity, //might be only for single player, target is immune to all spells and abilities
+    /** Extra damage dealt to a destroyed enemy is dealt to the enemy hero.  */
+    abilityCrushingBlow,
 };
 
 /** TargetType determines where the ability is applied to. targetSelf is automatically used by the card with the effect, while most others are casted explicitly.
@@ -93,6 +101,11 @@ enum TargetType
     targetHeroFriendly,
     targetHeroEnemy,
     
+    //TODO
+    targetOneEnemyMinion,
+    targetOneFriendlyMinion,
+    targetOneAnyMinion,
+    
     //additional possibilities
     targetOneTaunt,
     targetEnemyMostLife,
@@ -103,13 +116,20 @@ enum TargetType
 enum CastType
 {
     castNil,
-    castOnSummon, //all spell cards
-    castAlways, //this effect is always on. use for abilities that has already been applied. CANNOT be used with selectable target
+    /** As soon as the card is summoned. All spellCard's abilities MUST use this type. */
+    castOnSummon,
+    /** This effect is always on. Or this ability that has already been applied. CANNOT be used with selectable target */
+    castAlways,
     castOnHit, //effect applied on the monster it hits. CANNOT be used with selectable target
     castOnDamaged, //effect applied on the monster that attacks it. CANNOT be used with selectable target
     castOnMove, //whenever its cooldown reaches 0. CANNOT be used with selectable target
     castOnEndOfTurn, //whenever the turn ends, even if cooldown is not 0, note that this does not mean it disappears after turn is over, that is DurationType. CANNOT be used with selectable target
     castOnDeath, //CANNOT be used with selectable target
+    
+    //future
+    castOnAnyMinionDeath,
+    castOnFriendlyMinionDeath,
+    castOnEnemyMininoDeath,
 };
 
 /** DurationType determines when it is removed */

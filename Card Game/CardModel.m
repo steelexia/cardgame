@@ -15,6 +15,7 @@
 @synthesize cost = _cost;
 @synthesize rarity = _rarity;
 @synthesize abilities = _abilities;
+@synthesize type = _type;
 
 /** constructor with id number, all other fields will be defaut values */
 -(instancetype)initWithIdNumber: (long)idNumber
@@ -30,6 +31,19 @@
         self.cost = 0;
         
         self.abilities = [NSMutableArray array]; //default no ability
+        self.type = cardTypeStandard;
+    }
+    
+    return self;
+}
+
+-(instancetype)initWithIdNumber:(long)idNumber type:(enum CardType) type
+{
+    self = [self initWithIdNumber:idNumber];
+    
+    if (self)
+    {
+        self.type = type;
     }
     
     return self;

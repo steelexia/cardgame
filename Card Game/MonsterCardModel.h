@@ -30,7 +30,7 @@
 @property int maximumCooldown;
 
 /** readonly, checks if card is dead, i.e. health is 0 */
-@property (getter = isDead, readonly) BOOL dead;
+@property BOOL dead;
 
 /** keeps track if the card is currently deployed (i.e. on the battlefield) */
 @property BOOL deployed;
@@ -57,6 +57,8 @@
 /** Returns the unmodified damage from this card */
 -(int)baseDamage;
 
+/** Sets up the values for the card to become a hero card */
+-(void) setupAsPlayerHero: (NSString*) name onSide:(int) side;
 
 /** Creates another copy of ability and add it to its abilities. The ability's target type is then set to targetSelf */
 -(void) applyAbility: (Ability*) ability;

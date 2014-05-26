@@ -84,6 +84,15 @@
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{view.center = target;}
                      completion:nil];
+    
+    //older than iOS 7 use this:
+    /*
+    [UIView animateWithDuration:duration
+                          delay:delay
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{view.center = target;}
+                     completion:nil];
+     */
 }
 
 /** Card flies up while fading out. On finish it is removed from superview and the battlefield is updated */
@@ -111,7 +120,11 @@
 
 -(void) animateCardDamage: (CardView*) cardView forDamage: (int) damage fromSide: (int) side
 {
-    float power = (damage / 1000.f) + (damage / 1000.f) * arc4random_uniform(100) * 0.01/5 ;
+    //no animation if no damage
+    if (damage == 0)
+        return;
+    
+    float power = (damage / 1000.f) + (damage / 1000.f) * arc4random_uniform(100) * 0.01/5 + 1;
     
     CGPoint originalPoint = cardView.center;
     CGPoint targetPoint = cardView.center;
@@ -155,6 +168,24 @@
                          [self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
                      }
      ];
+    
+    //older than iOS 7 use this:
+    /*
+    [UIView animateWithDuration:0.125 * power + 0.1
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{cardView.center = targetPoint;}
+                     completion:^(BOOL finished){
+                         //target died, update field view and remove it from screen
+                         if (((MonsterCardModel*)cardView.cardModel).dead)
+                             [self animateCardDestruction:cardView fromSide:side withDelay: 0.5];
+                         //not dead, move back to position
+                         else
+                             [self animateMoveToWithBounce:cardView toPosition:originalPoint inDuration:0.1 withDelay:0.5];
+                         [self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
+                     }
+     ];
+     */
 }
 
 -(void) animateCardHeal: (CardView*) cardView forLife: (int) life

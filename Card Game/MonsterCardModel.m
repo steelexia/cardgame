@@ -18,6 +18,7 @@
 @synthesize deployed = _deployed;
 @synthesize additionalDamage = _additionalDamage;
 @synthesize side = _side;
+@synthesize dead = _dead;
 
 /** constructor with id number, all other fields will be defaut values */
 -(instancetype)initWithIdNumber: (long)idNumber
@@ -31,6 +32,18 @@
         self.cooldown = self.maximumCooldown = 1;
         self.deployed = NO;
         self.side = -1;
+    }
+    
+    return self;
+}
+
+-(instancetype)initWithIdNumber:(long)idNumber type:(enum CardType) type
+{
+    self = [self initWithIdNumber:idNumber];
+    
+    if (self)
+    {
+        self.type = type;
     }
     
     return self;
@@ -66,6 +79,8 @@
 
 /** life can be above maximumHealth, and negative numbers become 0. For healing use healLife */
 -(void)setLife:(int)life{
+    if (life <= 0)
+        self.dead = YES;
     _life = life > 0 ? life : 0;
 }
 
@@ -110,11 +125,6 @@
     return totalCooldown;
 }
 
-/** Checks if the card is dead (i.e. life = 0) */
--(BOOL)isDead{
-    return self.life <= 0 ? YES : NO;
-}
-
 -(void) loseLife: (int) amount{
     self.life = self.life - amount;
 }
@@ -138,6 +148,20 @@
         _life = 0;
 }
 
+
+-(void) setupAsPlayerHero: (NSString*) name onSide:(int) side;
+{
+    self.name = name;
+    self.type = cardTypePlayer;
+    self.maximumLife = 20000;
+    self.life = 20000;
+  
+    self.damage = 0;
+    self.cooldown = 0;
+    self.side = side;
+}
+
+//TODO not used
 -(void)applyAbility: (Ability*) ability
 {
     Ability* abilityCopy = [[Ability alloc] initWithType:ability.abilityType castType:ability.castType targetType:targetSelf withDuration:ability.durationType withValue:ability.value  withOtherValues:ability.otherValues]; //NOTE ability.otherValues is immutable so this is fine?

@@ -14,7 +14,9 @@
 #import "PlayerModel.h"
 #import "DeckModel.h"
 #import "Ability.h"
-
+#import "SinglePlayerCards.h"
+#import "AIPlayer.h"
+@class AIPlayer;
 @class GameViewController;
 
 /** maximum number of cards that can be placed per battlefield */
@@ -60,8 +62,15 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
  */
 @property NSArray* decks;
 
+@property AIPlayer* aiPlayer;
+
+@property enum MatchType matchType;
+
+/** Stores if the game has ended */
+@property bool gameOver;
+
 /** Initialies the GameModel with an attached controller for drawing */
--(instancetype)initWithViewController: (GameViewController*) gameViewController;
+-(instancetype)initWithViewController: (GameViewController*) gameViewController matchType: (enum MatchType)matchType;
 
 /** Informs models that a new turn has started, and performs any necessary actions */
 -(void)newTurn:(int)side;
@@ -82,7 +91,7 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 -(void)addCardToBattlefield: (MonsterCardModel*)monsterCard side:(char)side;
 
 /**
- Checks if a card can be summoned. If the card is a MonsterCardModel, it means to place it on the battlefield. If the card is a SpellCardModel, it means to use it.
+ Checks if a card can be summoned. It first checks if the player can afford the cost. If the card is a MonsterCardModel, it means to place it on the battlefield. If the card is a SpellCardModel, it means to use it.
  Returns NO if it can not summon it, such as if addCardToBattleField returns false, or if the player summoning does not have sufficient resources */
 -(BOOL)canSummonCard: (CardModel*)card side:(char)side;
 
@@ -112,9 +121,9 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 
 /** 
  Performs the attack on target. Uses calculateDamage for the damage, but also performs other functions such as reflected damage or cooldown reset. The model will also remove cards that are dead. Note that attacker may be both spell card and monster card.
-    Returns number of damage dealt.
+    Returns array of the two damages deal. Attacker is stored in index 0, defender is stored in index 1
  */
--(int)attackCard: (CardModel*) attacker fromSide: (int)side target: (MonsterCardModel*)target;
+-(NSArray*)attackCard: (CardModel*) attacker fromSide: (int)side target: (MonsterCardModel*)target;
 
 /**
  Checks if a monsterCard can attack. Conditions for NO can be monsterCard's cooldown not being 0, or if it has no attack value, or if it is under some status ailment.
@@ -126,8 +135,20 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 -(BOOL)validAttack: (CardModel*) attacker target: (MonsterCardModel*)target;
 
 /** Performs actions needed for a card's death. This moves it to the graveyard, and performs any abilities that casts on death */
--(void)cardDies: (CardModel*) card fromSide: (int) side;
+-(void)cardDies: (CardModel*) card destroyedBy: (CardModel*) attacker fromSide: (int) side;
 
 -(void)castAbility: (Ability*) ability byMonsterCard: (MonsterCardModel*) attacker toMonsterCard: (MonsterCardModel*) target fromSide: (int)side;
 
+
+/** Checks if game is over */
+-(void) checkForGameOver;
+
 @end
+
+enum MatchType
+{
+    /** A match against AI. */
+    matchSinglePlayer,
+    /** A random match against a human player. */
+    matchRandomHuman,
+};

@@ -134,11 +134,11 @@
     else if (targetType == targetAttacker)
         return [NSString stringWithFormat:@"attacker"];
     else if (targetType == targetOneAny)
-        return [NSString stringWithFormat:@"any minion"];
+        return [NSString stringWithFormat:@"any character"];
     else if (targetType == targetOneFriendly)
-        return [NSString stringWithFormat:@"any friendly minion"];
+        return [NSString stringWithFormat:@"any friendly character"];
     else if (targetType == targetOneEnemy)
-        return [NSString stringWithFormat:@"any enemy minion"];
+        return [NSString stringWithFormat:@"any enemy character"];
     else if (targetType == targetAll)
         return [NSString stringWithFormat:@"all characters"];
     else if (targetType == targetAllMinion)

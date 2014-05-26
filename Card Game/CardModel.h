@@ -47,6 +47,9 @@
 /** Initializes an empty card with only an id */
 -(instancetype)initWithIdNumber: (long)idNumber;
 
+/** Initializes an empty card with id and card type */
+-(instancetype)initWithIdNumber:(long)idNumber type:(enum CardType) type;
+
 @end
 
 enum CardRarity{
@@ -58,8 +61,8 @@ enum CardRarity{
 };
 
 enum CardType{
-    cardTypeStandard,
-    cardTypeTemporary,
-    cardTypePlayer,
-    cardTypeSinglePlayer
+    cardTypeStandard, //regular cards that are created by players
+    cardTypeTemporary, //temporary cards that are summoned by other cards etc.
+    cardTypePlayer, //cards used to represent the player hero
+    cardTypeSinglePlayer //cards used by AI during single player
 };
