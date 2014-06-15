@@ -80,7 +80,8 @@ enum CardViewState{
     cardViewStateNone,
     cardViewStateHighlighted,
     cardViewStateSelected,
-    cardViewStateDragging
+    cardViewStateDragging,
+    cardViewStateMaximize
 } ;
 
 enum CardHighlightType

@@ -38,6 +38,11 @@
 
 @property (strong) UIButton* endTurnButton;
 
+/** The card that has currently been maximized for viewing. While this is open, all other actions are disabled. This not only shows the card in large but also all the applied abilities that don't fit on the card. */
+@property (strong) CardView* viewingCardView;
+@property (strong) CardModel* viewingCardStart;
+@property CGPoint touchStartPoint;
+
 /** updates the position of all hands with the gameModel, adding views to cards that don't have one yet */
 //-(void)updateHandsView;
 
@@ -47,8 +52,11 @@
 /** Updates the views of the cards in field */
 -(void)updateBattlefieldView: (int)side;
 
-/** Informed by the model to pick a target for all the abilities. This adds the ability to currentAbilities and sets the UI model to selecting target so it can be called several times by a single card. */
--(void)pickAbilityTarget: (Ability*) ability;
+/** Updates the resource lable */
+-(void)updateResourceView: (int)side;
+
+/** Informed by the model to pick a target for all the abilities. This adds the ability to currentAbilities and sets the UI model to selecting target so it can be called several times by a single card. Note that this cannot be used by the AI, and only by the Player. caster should be the MonsterCardModel or SpellCardModel that is casting the ability. */
+-(void)pickAbilityTarget: (Ability*) ability castedBy:(CardModel*)caster;
 
 /** Called to perform the views necessary to summon the card. Calls GameModel's summon card method. */
 -(void)summonCard: (CardModel*)card fromSide: (int)side;
@@ -59,5 +67,9 @@
 -(void) attackCard: (CardModel*) card target:(MonsterCardModel*)targetCard fromSide: (int) side;
 
 -(void) attackHero: (CardModel*) card target:(MonsterCardModel*)targetCard fromSide: (int) side;
+
+- (void)performBlock:(void (^)())block;
+
+- (void)performBlock:(void (^)())block afterDelay:(NSTimeInterval)delay;
 
 @end

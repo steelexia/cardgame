@@ -12,7 +12,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    [Parse setApplicationId:@"yekARh373R6T7z42RzFD8R1ywZVYELpOS1gCVD5C"
+                  clientKey:@"Y46eRRr2QOFIu9kJGmmJldxV0xbPdtdbC6DJ7Q53"];
+    
+    //TODO should be in main screen
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     return YES;
 }
 							

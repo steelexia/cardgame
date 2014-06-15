@@ -16,6 +16,8 @@
 #import "Ability.h"
 #import "SinglePlayerCards.h"
 #import "AIPlayer.h"
+#import <Parse/Parse.h>
+#import "AbilityWrapper.h"
 @class AIPlayer;
 @class GameViewController;
 
@@ -52,7 +54,7 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 @property NSArray* graveyard;
 
 /** 
- Stores two players. Access the index using PLAYER_SIDE and OPPONENT_SIDE
+ Stores two PlayerModel's. Access the index using PLAYER_SIDE and OPPONENT_SIDE
  */
 @property NSArray* players;
 
@@ -94,6 +96,9 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
  Checks if a card can be summoned. It first checks if the player can afford the cost. If the card is a MonsterCardModel, it means to place it on the battlefield. If the card is a SpellCardModel, it means to use it.
  Returns NO if it can not summon it, such as if addCardToBattleField returns false, or if the player summoning does not have sufficient resources */
 -(BOOL)canSummonCard: (CardModel*)card side:(char)side;
+
+/** Checks if an ability has valid targets. caster can be nil, if casted by SpellCard. */
+-(BOOL)abilityHasValidTargets: (Ability*)ability castedBy:(CardModel*)caster side:(int)side;
 
 /**
  Summon a card. If the card is a MonsterCardModel, it will attempt to place it on the battlefield. If the card is a SpellCardModel, it will attempt to use it.

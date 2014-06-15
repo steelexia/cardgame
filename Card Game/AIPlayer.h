@@ -22,6 +22,9 @@
 
 @property (weak) GameViewController* gameViewController;
 
+/** When AI casts a spell that requires targetting, it will set it to this variable. */
+@property (weak) MonsterCardModel* currentTarget;
+
 -(instancetype)initWithPlayerModel: (PlayerModel*) playerModel gameViewController:(GameViewController*)gameViewController gameModel:(GameModel*) gameModel;
 
 /** Tells the AI that a new turns has begun, and it will start to make moves */

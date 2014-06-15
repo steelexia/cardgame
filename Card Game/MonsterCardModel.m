@@ -16,7 +16,6 @@
 @synthesize cooldown = _cooldown;
 @synthesize maximumCooldown = _maximumCooldown;
 @synthesize deployed = _deployed;
-@synthesize additionalDamage = _additionalDamage;
 @synthesize side = _side;
 @synthesize dead = _dead;
 
@@ -27,7 +26,7 @@
     
     if (self)
     {
-        self.damage = self.additionalDamage = 0 ;
+        self.damage = 0 ;
         self.life = self.maximumLife = 1;
         self.cooldown = self.maximumCooldown = 1;
         self.deployed = NO;
@@ -55,12 +54,12 @@
 }
 
 -(int)damage{
-    int damage = _damage + self.additionalDamage;
+    int damage = _damage;
     
     for (Ability *ability in self.abilities)
     {
         //add and lose damage work when target is self and ability is always. For other cast types, they incrementally add damage
-        if (ability.targetType == targetSelf && (ability.castType == castAlways))
+        if (!ability.expired && ability.targetType == targetSelf && (ability.castType == castAlways))
         {
             if (ability.abilityType == abilityAddDamage)
                 damage += [ability.value intValue];
@@ -80,7 +79,10 @@
 /** life can be above maximumHealth, and negative numbers become 0. For healing use healLife */
 -(void)setLife:(int)life{
     if (life <= 0)
+    {
         self.dead = YES;
+        self.deployed = NO; //undeployed
+    }
     _life = life > 0 ? life : 0;
 }
 
@@ -97,7 +99,7 @@
     int totalLife = _maximumLife;
     
     for (Ability *ability in self.abilities)
-        if (ability.abilityType == abilityAddMaxLife && ability.targetType == targetSelf)
+        if (!ability.expired && ability.abilityType == abilityAddMaxLife && ability.targetType == targetSelf)
             if (ability.castType == castAlways)
                 totalLife += [ability.value intValue];
     
@@ -109,11 +111,22 @@
     _cooldown = cooldown > 0 ? cooldown : 0;
 }
 
--(int)cooldown{
-    int totalCooldown = _cooldown;
+-(int)cooldown
+{
+    return _cooldown;
+}
+
+
+-(void)setMaximumCooldown:(int)maximumCooldown
+{
+    _maximumCooldown = maximumCooldown > 0 ? maximumCooldown : 0;
+}
+
+-(int)maximumCooldown{
+    int totalCooldown = _maximumCooldown;
     
     for (Ability *ability in self.abilities){
-        if (ability.castType == castAlways)
+        if (!ability.expired && ability.castType == castAlways)
         {
             if (ability.abilityType == abilityAddMaxCooldown && ability.targetType == targetSelf)
                 totalCooldown += [ability.value intValue];
@@ -123,6 +136,11 @@
     }
     
     return totalCooldown;
+}
+
+-(int) baseMaxCooldown
+{
+    return _maximumCooldown;
 }
 
 -(void) loseLife: (int) amount{
@@ -137,15 +155,14 @@
         self.life = self.maximumLife;
 }
 
--(void) addDamage:(int)damage
-{
-    self.additionalDamage += damage;
-}
-
 -(void) addLife: (int)amount{
     _life += amount;
     if (_life < 0)
         _life = 0;
+}
+
+-(int) baseMaxLife{
+    return _maximumLife;
 }
 
 
@@ -159,6 +176,33 @@
     self.damage = 0;
     self.cooldown = 0;
     self.side = side;
+    self.deployed = YES;
+}
+
+-(void)resetAllStats
+{
+    //remove all abilities that are not the removeAbility itself
+    //delete this way to prevent concurrent mod
+    for (int i = 0; i < [self.abilities count];)
+    {
+        Ability*ability = self.abilities[i];
+        
+        //skip all abilityRemoveAbility that targets itself
+        if (ability.isBaseAbility == YES)
+        {
+            ability.expired = NO;
+            i++;
+        }
+        else
+        {
+            [self.abilities removeObjectAtIndex:i];
+        }
+    }
+    
+    self.life = self.maximumLife;
+    self.cooldown = self.maximumCooldown;
+    self.deployed = NO;
+    self.dead = NO;
 }
 
 //TODO not used

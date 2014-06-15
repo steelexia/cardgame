@@ -35,6 +35,8 @@ int cardIDCount = 0;
         self.matchType = matchType;
         self.gameViewController = gameViewController;
         
+        [AbilityWrapper loadAllAbilities];
+        
         //initialize battlefield and hands to be two arrays
         self.battlefield = @[[NSMutableArray array],[NSMutableArray array]];
         self.graveyard = @[[NSMutableArray array],[NSMutableArray array]];
@@ -79,11 +81,32 @@ int cardIDCount = 0;
         [deck shuffleDeck]; //TURN THIS ON/OFF FOR DEBUGGING
         
         //draw 3 cards
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 4; i++)
         {
-            [self drawCard:side];
+            [self.gameViewController performBlock:^{
+                [self drawCard:side];
+                [self.gameViewController updateHandsView:side];
+            } afterDelay:0.5*(i+1)];
         }
     }
+    
+    //add a card to player hand for quick testing
+    
+    NSMutableArray* hand = self.hands[PLAYER_SIDE];
+    
+    /*
+    MonsterCardModel*monster;
+    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster.name = @"Monster";
+    monster.life = monster.maximumLife = 2200;
+    monster.damage = 1800;
+    monster.cost = 0;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [monster.abilities addObject: [[Ability alloc] initWithType:abilityReturnToHand castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1000]]];
+    
+    [hand addObject:monster];
+     */
 }
 
 -(void)newTurn:(int)side
@@ -132,7 +155,30 @@ int cardIDCount = 0;
 /** TODO this is a temporary function used to fill decks up with random cards for testing */
 -(void)fillDecks
 {
-    self.decks = @[ [SinglePlayerCards getDeckOne], [SinglePlayerCards getDeckOne]];
+    //self.decks = @[ [SinglePlayerCards getDeckOne], [SinglePlayerCards getDeckOne]];
+    //[SinglePlayerCards uploadPlayerDeck];
+    
+    DeckModel *aiDeck = [SinglePlayerCards getDeckOne];
+    
+    [aiDeck shuffleDeck];
+    while ([aiDeck count] > 20) //limit to 20 cards
+        [aiDeck removeCardAtIndex:0];
+    
+    self.decks = @[[[DeckModel alloc] init], aiDeck];
+    
+    
+    DeckModel *playerDeck = self.decks[PLAYER_SIDE];
+    
+    //temporary function that grabs 20 cards from Parse database.
+    PFQuery *query = [PFQuery queryWithClassName:@"Card"];
+    query.limit = 20;
+    NSArray* result = [query findObjects];
+    for (PFObject *cardPF in result)
+    {
+        [playerDeck addCard:[CardModel createCardFromPFObject:cardPF]];
+    }
+    
+    NSLog(@"loaded %d cards for player.", [playerDeck count]);
     
     /*
     for (int side = 0; side < 2; side++)
@@ -240,44 +286,21 @@ int cardIDCount = 0;
             MonsterCardModel *monsterCard = (MonsterCardModel*) card;
             
             //has space for more cards
-            if ([self.battlefield[side] count] < MAX_BATTLEFIELD_SIZE && !monsterCard.deployed)
+            NSArray *field = self.battlefield[side];
+            if ([field count] < MAX_BATTLEFIELD_SIZE && !monsterCard.deployed)
                 return YES;
         }
         else if ([card isKindOfClass: [SpellCardModel class]])
         {
             SpellCardModel *spellCard = (SpellCardModel*) card;
             
-            NSArray *friendlyField = self.battlefield[side];
-            NSArray *enemyField = self.battlefield[side == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE];
+            
             
             //check if has valid target. If one ability has no valid target then card is invalid (e.g. targets enemy hero & all enemy minions but no enemy minions on field then invalid)
             for (Ability *ability in spellCard.abilities)
             {
-                enum TargetType targetType = ability.targetType;
-                
-                //if targets friendly minion but none on field, not allowed
-                if (targetType == targetOneRandomFriendlyMinion ||
-                    targetType == targetAllFriendlyMinions ||
-                    targetType == targetOneRandomFriendlyMinion)
-                {
-                    if ([friendlyField count] == 0)
-                        return NO;
-                }
-                else if(targetType == targetOneRandomEnemyMinion ||
-                        targetType == targetAllEnemyMinions ||
-                        targetType == targetOneRandomEnemyMinion)
-                {
-                    if ([enemyField count] == 0)
-                        return NO;
-                }
-                else if (targetType == targetAllMinion ||
-                         targetType == targetOneRandomMinion)
-                {
-                    if ([friendlyField count] == 0 && [enemyField count] == 0)
-                        return NO;
-                }
-                
-                //TODO additional goes here
+                if (![self abilityHasValidTargets:ability castedBy:nil side:side])
+                    return NO;
             }
             
             return YES;
@@ -285,6 +308,49 @@ int cardIDCount = 0;
     }
     
     return NO;
+}
+
+-(BOOL)abilityHasValidTargets: (Ability*)ability castedBy:(CardModel*)caster side:(int)side
+{
+    NSArray *friendlyField = self.battlefield[side];
+    NSArray *enemyField = self.battlefield[side == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE];
+    
+    enum TargetType targetType = ability.targetType;
+    
+    //if targets friendly minion but none on field, not allowed
+    if (targetType == targetOneRandomFriendlyMinion ||
+        targetType == targetAllFriendlyMinions ||
+        targetType == targetOneFriendlyMinion)
+    {
+        for (MonsterCardModel*monster in friendlyField)
+            if (monster != caster)
+                return YES;
+        
+        return NO;
+    }
+    else if(targetType == targetOneRandomEnemyMinion ||
+            targetType == targetAllEnemyMinions ||
+            targetType == targetOneEnemyMinion)
+    {
+        if ([enemyField count] == 0)
+            return NO;
+    }
+    else if (targetType == targetAllMinion ||
+             targetType == targetOneRandomMinion ||
+             targetType == targetOneAnyMinion)
+    {
+        if ([enemyField count] > 0)
+            return YES;
+        
+        for (MonsterCardModel*monster in friendlyField)
+            if (monster != caster)
+                return YES;
+        
+        return NO;
+    }
+    
+    //TODO additional goes here
+    return YES;
 }
 
 -(void)summonCard: (CardModel*)card side:(char)side
@@ -298,15 +364,21 @@ int cardIDCount = 0;
         [self addCardToBattlefield:monsterCard side:side];
         
         //CastType castOnSummon is casted here
-        for (Ability *ability in monsterCard.abilities)
+        for (int i = 0; i < [monsterCard.abilities count]; i++) //castAbility may insert objects in end
+        {
+            Ability*ability = monsterCard.abilities[i];
             if (ability.castType == castOnSummon)
                 [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:nil fromSide:side];
+        }
     }
     else if ([card isKindOfClass: [SpellCardModel class]])
     {
-        for (Ability *ability in card.abilities)
+        for (int i = 0; i < [card.abilities count]; i++) //castAbility may insert objects in end
+        {
+            Ability*ability = card.abilities[i];
             if (ability.castType == castOnSummon)
                 [self castAbility:ability byMonsterCard:nil toMonsterCard:nil fromSide:side];
+        }
     }
     
     //remove card and use up cost
@@ -317,13 +389,14 @@ int cardIDCount = 0;
 -(BOOL)addCardToHand: (CardModel*)card side:(char)side
 {
     //has space for more cards
-    if ([self.hands[side] count] < MAX_HAND_SIZE)
+    NSArray *hand = self.hands[side];
+    if ([hand count] < MAX_HAND_SIZE)
     {
         [self.hands[side] addObject:card];
         
         //if is MonsterCardModel, set deployed to YES
-        if ([card isKindOfClass: [MonsterCardModel class]])
-            ((MonsterCardModel*)card).deployed = YES;
+        //if ([card isKindOfClass: [MonsterCardModel class]])
+        //    ((MonsterCardModel*)card).deployed = NO;
         
         return YES;
     }
@@ -340,29 +413,29 @@ int cardIDCount = 0;
     //CastType castOnMove is casted here
     if (monsterCard.cooldown == 0)
     {
-        for (Ability *ability in monsterCard.abilities)
+        for (int i = 0; i < [monsterCard.abilities count]; i++) //castAbility may insert objects in end
+        {
+            Ability*ability = monsterCard.abilities[i];
             if (ability.castType == castOnMove)
                 [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:nil fromSide:side];
+        }
     }
 }
 
 -(void)cardEndTurn: (MonsterCardModel*) monsterCard fromSide: (int)side
 {
     //cast abilities that castOnEndOfTurn
-    for (Ability *ability in monsterCard.abilities)
+    for (int i = 0; i < [monsterCard.abilities count]; i++) //castAbility may insert objects in end
+    {
+        Ability*ability = monsterCard.abilities[i];
         if (ability.castType == castOnEndOfTurn)
             [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:nil fromSide:side];
-    
-    //remove abilities that durationUntilEndOfTurn
-    NSMutableArray *removedAbilities = [NSMutableArray array];
+    }
     
     //cast type must also be always since that means it's already casted
     for (Ability *ability in monsterCard.abilities)
         if (ability.durationType == durationUntilEndOfTurn && ability.castType == castAlways)
-            [removedAbilities addObject:ability];
-    
-    for (Ability *removedAbility in removedAbilities)
-        [monsterCard.abilities removeObject:removedAbility];
+            ability.expired = YES;
     
     //check for dead
     if (monsterCard.dead)
@@ -391,29 +464,44 @@ int cardIDCount = 0;
         [target loseLife: attackerDamage];
         
         int defenderDamage = [self calculateDamage:target fromSide:oppositeSide dealtTo:attackerMonsterCard];
-        [attackerMonsterCard loseLife: defenderDamage];
         
-        //CastType castOnDamaged is casted here by defender
-        for (Ability *ability in target.abilities)
-            if (ability.castType == castOnDamaged)
-                [self castAbility:ability byMonsterCard:target toMonsterCard:attackerMonsterCard fromSide:oppositeSide];
+        BOOL willReceiveAttack = YES;
+        
+        //if attacker has assassinate, it will not be hit in return
+        for (Ability *ability in attacker.abilities)
+            if (!ability.expired && ability.abilityType == abilityAssassin && ability.targetType == targetSelf)
+            {
+                willReceiveAttack = NO;
+                break;
+            }
+        
+        //defender hits back
+        if (willReceiveAttack)
+        {
+            [attackerMonsterCard loseLife: defenderDamage];
+            
+            //CastType castOnDamaged is casted here by defender
+            for (int i = 0; i < [target.abilities count]; i++) //castAbility may insert objects in end
+            {
+                Ability*ability = target.abilities[i];
+                if (ability.castType == castOnDamaged)
+                    [self castAbility:ability byMonsterCard:target toMonsterCard:attackerMonsterCard fromSide:oppositeSide];
+            }
+        }
+        else
+            defenderDamage = 0; //will not receive damage
         
         //CastType castOnHit is casted here by attacker
-        for (Ability *ability in attackerMonsterCard.abilities)
+        for (int i = 0; i < [attackerMonsterCard.abilities count]; i++) //castAbility may insert objects in end
+        {
+            Ability*ability = attackerMonsterCard.abilities[i];
             if (ability.castType == castOnHit)
                 [self castAbility:ability byMonsterCard:attackerMonsterCard toMonsterCard:target fromSide:side];
+        }
         
-        //CastType castOnDamaged is casted here by attacker
-        for (Ability *ability in attackerMonsterCard.abilities)
-            if (ability.castType == castOnDamaged)
-                [self castAbility:ability byMonsterCard:attackerMonsterCard toMonsterCard:target fromSide:side];
+        //NOTE: castOnHit cannot be casted when defending and castOnDamaged cannot be casted when attack, otherwise defensive abilities can be used by attacking etc
         
-        //CastType castOnHit is casted here by defender
-        for (Ability *ability in target.abilities)
-            if (ability.castType == castOnHit)
-                [self castAbility:ability byMonsterCard:target toMonsterCard:attackerMonsterCard fromSide:oppositeSide];
-        
-        attackerMonsterCard.cooldown = attackerMonsterCard.maximumCooldown;
+              attackerMonsterCard.cooldown = attackerMonsterCard.maximumCooldown;
         
         //target dies
         if (target.dead)
@@ -445,11 +533,41 @@ int cardIDCount = 0;
 
 -(BOOL)validAttack: (CardModel*) attacker target: (MonsterCardModel*)target
 {
-    if ([attacker isKindOfClass:[MonsterCardModel class]])
+    //cannot accidentally attack undeployed or dead cards
+    if (!target.deployed || target.dead)
+        return NO;
+    
+    if (attacker == nil || [attacker isKindOfClass:[MonsterCardModel class]])
     {
         MonsterCardModel *attackerMonsterCard = (MonsterCardModel*)attacker;
         
-        //TODO
+        //if target is a taunt unit, then it can be attacked regardless if there are other taunt units
+        BOOL targetHasTaunt = NO;
+        
+        for (Ability *ability in target.abilities)
+        {
+            if (!ability.expired && ability.abilityType == abilityTaunt && ability.targetType == targetSelf)
+            {
+                targetHasTaunt = YES;
+                break;
+            }
+        }
+        
+        //search all minion in target's field. If a minion has the ability taunt and is targetting itself, it cannot be attacked
+        if (!targetHasTaunt)
+        {
+            NSArray *targetField = self.battlefield[target.side];
+            
+            for (MonsterCardModel *monster in targetField)
+            {
+                if (monster != target)
+                {
+                    for (Ability *ability in monster.abilities)
+                        if (!ability.expired && ability.abilityType == abilityTaunt && ability.targetType == targetSelf)
+                            return NO;
+                }
+            }
+        }
     }
     
     return YES;
@@ -466,14 +584,17 @@ int cardIDCount = 0;
             attackerMonster = (MonsterCardModel*)attacker;
         
         //CastType castOnDeath is casted here
-        for (Ability *ability in monsterCard.abilities)
+        for (int i = 0; i < [monsterCard.abilities count]; i++) //castAbility may insert objects in end
+        {
+            Ability*ability = monsterCard.abilities[i];
             if (ability.castType == castOnDeath)
                 [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:attackerMonster fromSide:side];
+        }
         
         //TODO DurationType durationUntilDeath is removed here, but currently no point of removing it at death
         
         //remove it from the battlefield
-        [self.battlefield[side] removeObject:monsterCard];
+        //[self.battlefield[side] removeObject:monsterCard];
     }
     
     [self.graveyard[side] addObject:card]; //add it to the graveyard
@@ -488,6 +609,9 @@ int cardIDCount = 0;
  */
 -(void)castAbility: (Ability*) ability byMonsterCard: (MonsterCardModel*) attacker toMonsterCard: (MonsterCardModel*) target fromSide: (int)side
 {
+    if (ability.expired) //cannot be cast if already expired
+        return;
+    
     //first find array of targets to apply effects on
     NSArray *targets;
     
@@ -498,6 +622,13 @@ int cardIDCount = 0;
         targets = @[attacker];
     else if (ability.targetType == targetVictim)
         targets = @[target];
+    else if (ability.targetType == targetVictimMinion)
+    {
+        if (target.type == cardTypePlayer) //do not cast ability if target is not a minion
+            return;
+        else
+            targets = @[target];
+    }
     else if (ability.targetType == targetAttacker)
     {
         if (target != nil)
@@ -528,11 +659,61 @@ int cardIDCount = 0;
                 PlayerModel *opponent = self.players[OPPONENT_SIDE];
                 opponent.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
                 
-                [self.gameViewController pickAbilityTarget:ability];
+                [self.gameViewController pickAbilityTarget:ability castedBy:attacker];
+                
+                //does not actually cast it immediately since it requires the player to pick a target
+                return;
             }
-            
-            //does not actually cast it immediately since it requires the player to pick a target
-            return;
+            else
+            {
+                //AI must have already picked a target
+                MonsterCardModel* aiTarget = self.aiPlayer.currentTarget;
+                if (aiTarget != nil && [self validAttack:nil target:aiTarget])
+                    targets = @[aiTarget];
+                else
+                {
+                    if (aiTarget != nil)
+                        NSLog(@"WARNING: AI tried to attack an invalid target!");
+                    return;
+                }
+            }
+        }
+    }
+    else if (ability.targetType == targetOneAnyMinion)
+    {
+        if (target != nil)
+            targets = @[target];
+        else
+        {
+            if (side == PLAYER_SIDE)
+            {
+                //NOTE: change here for any future abilities that makes a target immune
+                
+                for (MonsterCardModel *monster in self.battlefield[PLAYER_SIDE])
+                    if (monster != attacker) //cannot target self
+                        monster.cardView.cardHighlightType = cardHighlightTarget;
+                
+                for (MonsterCardModel *monster in self.battlefield[OPPONENT_SIDE])
+                    monster.cardView.cardHighlightType = cardHighlightTarget;
+                
+                [self.gameViewController pickAbilityTarget:ability castedBy:attacker];
+                
+                //does not actually cast it immediately since it requires the player to pick a target
+                return;
+            }
+            else
+            {
+                //AI must have already picked a target
+                MonsterCardModel* aiTarget = self.aiPlayer.currentTarget;
+                if (aiTarget != nil && [self validAttack:nil target:aiTarget])
+                    targets = @[aiTarget];
+                else
+                {
+                    if (aiTarget != nil)
+                        NSLog(@"WARNING: AI tried to attack an invalid target!");
+                    return;
+                }
+            }
         }
     }
     else if (ability.targetType == targetOneFriendly)
@@ -550,11 +731,56 @@ int cardIDCount = 0;
                 PlayerModel *player = self.players[PLAYER_SIDE];
                 player.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
                 
-                [self.gameViewController pickAbilityTarget:ability];
+                [self.gameViewController pickAbilityTarget:ability castedBy:attacker];
+                
+                //does not actually cast it immediately since it requires the player to pick a target
+                return;
             }
-            
-            //does not actually cast it immediately since it requires the player to pick a target
-            return;
+            else
+            {
+                //AI must have already picked a target
+                MonsterCardModel* aiTarget = self.aiPlayer.currentTarget;
+                if (aiTarget != nil && [self validAttack:nil target:aiTarget])
+                    targets = @[aiTarget];
+                else
+                {
+                    if (aiTarget != nil)
+                        NSLog(@"WARNING: AI tried to attack an invalid target!");
+                    return;
+                }
+            }
+        }
+    }
+    else if (ability.targetType == targetOneFriendlyMinion)
+    {
+        if (target != nil)
+            targets = @[target];
+        else
+        {
+            if (side == PLAYER_SIDE)
+            {
+                for (MonsterCardModel *monster in self.battlefield[PLAYER_SIDE])
+                    if (monster != attacker) //cannot target self
+                        monster.cardView.cardHighlightType = cardHighlightTarget;
+                
+                [self.gameViewController pickAbilityTarget:ability castedBy:attacker];
+                
+                //does not actually cast it immediately since it requires the player to pick a target
+                return;
+            }
+            else
+            {
+                //AI must have already picked a target
+                MonsterCardModel* aiTarget = self.aiPlayer.currentTarget;
+                if (aiTarget != nil && [self validAttack:nil target:aiTarget])
+                    targets = @[aiTarget];
+                else
+                {
+                    if (aiTarget != nil)
+                        NSLog(@"WARNING: AI tried to attack an invalid target!");
+                    return;
+                }
+            }
         }
     }
     else if (ability.targetType == targetOneEnemy)
@@ -571,13 +797,56 @@ int cardIDCount = 0;
                 PlayerModel *opponent = self.players[OPPONENT_SIDE];
                 opponent.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
                 
-                [self.gameViewController pickAbilityTarget:ability];
+                [self.gameViewController pickAbilityTarget:ability castedBy:attacker];
+                
+                //does not actually cast it immediately since it requires the player to pick a target
+                return;
             }
-            
-            //does not actually cast it immediately since it requires the player to pick a target
-            return;
+            else
+            {
+                //AI must have already picked a target
+                MonsterCardModel* aiTarget = self.aiPlayer.currentTarget;
+                if (aiTarget != nil && [self validAttack:nil target:aiTarget])
+                    targets = @[aiTarget];
+                else
+                {
+                    if (aiTarget != nil)
+                        NSLog(@"WARNING: AI tried to attack an invalid target!");
+                    return;
+                }
+            }
         }
-        
+    }
+    else if (ability.targetType == targetOneEnemyMinion)
+    {
+        if (target != nil)
+            targets = @[target];
+        else
+        {
+            if (side == PLAYER_SIDE)
+            {
+                for (MonsterCardModel *monster in self.battlefield[OPPONENT_SIDE])
+                    monster.cardView.cardHighlightType = cardHighlightTarget;
+                
+                [self.gameViewController pickAbilityTarget:ability castedBy:attacker];
+                
+                //does not actually cast it immediately since it requires the player to pick a target
+                return;
+            }
+            else
+            {
+                //AI must have already picked a target
+                MonsterCardModel* aiTarget = self.aiPlayer.currentTarget;
+                if (aiTarget != nil && [self validAttack:nil target:aiTarget])
+                    targets = @[aiTarget];
+                else
+                {
+                    if (aiTarget != nil)
+                        NSLog(@"WARNING: AI tried to attack an invalid target!");
+                    return;
+                }
+            }
+        }
     }
     else if (ability.targetType == targetAll)
     {
@@ -683,20 +952,43 @@ int cardIDCount = 0;
                 PlayerModel *opponent = self.players[OPPONENT_SIDE];
                 opponent.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
                 
-                [self.gameViewController pickAbilityTarget:ability];
+                [self.gameViewController pickAbilityTarget:ability castedBy:attacker];
+                //does not actually cast it immediately since it requires the player to pick a target
+                return;
             }
-            
-            //does not actually cast it immediately since it requires the player to pick a target
-            return;
+            else
+            {
+                //AI must have already picked a target
+                MonsterCardModel* aiTarget = self.aiPlayer.currentTarget;
+                if (aiTarget != nil && [self validAttack:nil target:aiTarget])
+                    targets = @[aiTarget];
+                else
+                {
+                    if (aiTarget != nil)
+                        NSLog(@"WARNING: AI tried to attack an invalid target!");
+                    return;
+                }
+            }
+           
         }
     }
     else if (ability.targetType == targetHeroFriendly)
     {
-        targets = @[self.players[side]];
+        PlayerModel *player = self.players[side];
+        targets = @[player.playerMonster];
     }
     else if (ability.targetType == targetHeroEnemy)
     {
-        targets = @[self.players[oppositeSide]];
+        PlayerModel *enemy = self.players[oppositeSide];
+        targets = @[enemy.playerMonster];
+    }
+    
+    //---SPECIAL CASE ABILITIES HERE---//
+    if (ability.abilityType == abilityDrawCard)
+    {
+        //draw card does not target any minion, so simply cast it
+        [self castInstantAbility:ability onMonsterCard:nil fromSide:side];
+        return;
     }
     
     //apply the effect to the targets NOTE: this loop is inefficient but saves a lot of lines
@@ -708,23 +1000,50 @@ int cardIDCount = 0;
         
         //apply the instant effects before they're added
         if (ability.durationType == durationInstant)
-            [self castInstantAbility:appliedAbility onMonsterCard:target];
+            [self castInstantAbility:appliedAbility onMonsterCard:target fromSide:side];
         //not happening right away, store it in there
         else
         {
-            [target.abilities addObject:appliedAbility];
-            
-            //Add special cases here:
-            
-            if (ability.abilityType == abilityAddMaxLife) //also includes a one-time heal
-                target.life += [ability.value intValue];
+            //don't duplicate abilities such as taunt
+            if ([self canAddAbility:target ability:appliedAbility])
+            {
+                [target.abilities addObject:appliedAbility];
+                
+                //Add special cases here:
+                
+                //also includes a one-time heal
+                if (ability.abilityType == abilityAddMaxLife)
+                    target.life += [ability.value intValue];
+                //also removes all existing abilities
+                else if (ability.abilityType == abilityRemoveAbility)
+                {
+                    
+                    //remove all abilities that are not the removeAbility itself
+                    //delete this way to prevent concurrent mod
+                    for (int i = 0; i < [target.abilities count];)
+                    {
+                        Ability*targetAbility = target.abilities[i];
+                        
+                        //skip all abilityRemoveAbility that targets itself
+                        if (targetAbility.abilityType == abilityRemoveAbility && targetAbility.targetType == targetSelf)
+                            i++;
+                        else
+                            [target.abilities removeObjectAtIndex:i];
+                    }
+                    
+                    [target.cardView updateView];
+                }
+            }
         }
     }
 }
 
+
 /** Since castAbility adds instant abilities as an ability, this method actually applies the ability so that it can be removed. Calling an ability that's not applicable results in no effect */
--(void) castInstantAbility: (Ability*) ability onMonsterCard: (MonsterCardModel*) monster
+-(void) castInstantAbility: (Ability*) ability onMonsterCard: (MonsterCardModel*) monster fromSide:(int)side
 {
+    int oppositeSide = side == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE;
+    
     if (ability.abilityType == abilityAddLife)
     {
         int originalHealth = monster.life; //will only pop up the change in health
@@ -735,6 +1054,15 @@ int cardIDCount = 0;
     {
         [monster loseLife:[ability.value intValue]];
         [self.gameViewController animateCardDamage:monster.cardView forDamage:[ability.value integerValue] fromSide:monster.side];
+        
+        //cast on damanged is casted here by monster
+        //CastType castOnDamaged is casted here by defender
+        for (int i = 0; i < [monster.abilities count]; i++) //castAbility may insert objects in end
+        {
+            Ability*ability = monster.abilities[i];
+            if (ability.castType == castOnDamaged)
+                [self castAbility:ability byMonsterCard:monster toMonsterCard:nil fromSide:oppositeSide];
+        }
     }
     else if (ability.abilityType == abilityKill)
     {
@@ -748,6 +1076,85 @@ int cardIDCount = 0;
         monster.cooldown += [ability.value intValue];
     else if (ability.abilityType == abilityLoseCooldown)
         monster.cooldown -= [ability.value intValue];
+    else if (ability.abilityType == abilityDrawCard)
+    {
+        //draws card for one or both sides
+        //TODO not updating caster's view immediately since it's being updated later anyways
+        if (ability.targetType == targetHeroFriendly)
+        {
+            for (int i = 0; i < [ability.value intValue]; i++)
+                [self.gameViewController performBlock:^{
+                    [self drawCard:side];
+                    [self.gameViewController updateHandsView:side];
+                } afterDelay:0.5*(i+1)];
+        }
+        else if (ability.targetType == targetHeroEnemy)
+        {
+            for (int i = 0; i < [ability.value intValue]; i++)
+                [self.gameViewController performBlock:^{
+                    [self drawCard:oppositeSide];
+                    [self.gameViewController updateHandsView:oppositeSide];
+                } afterDelay:0.5*(i+1)];
+        }
+        else if (ability.targetType == targetAll)
+        {
+            for (int i = 0; i < [ability.value intValue]; i++)
+                [self.gameViewController performBlock:^{
+                    [self drawCard:side];
+                    [self drawCard:oppositeSide];
+                    
+                    [self.gameViewController updateHandsView:side];
+                    [self.gameViewController updateHandsView:oppositeSide];
+                } afterDelay:0.5*(i+1)];
+        }
+    }
+    else if (ability.abilityType == abilityAddResource)
+    {
+        PlayerModel* player = self.players[side];
+        PlayerModel* opponent = self.players[oppositeSide];
+        
+        //one or both sides gain resources
+        if (ability.targetType == targetHeroFriendly)
+        {
+            player.resource += [ability.value intValue];
+        }
+        else if (ability.targetType == targetHeroEnemy)
+        {
+            opponent.resource += [ability.value intValue];
+        }
+        else if (ability.targetType == targetAll)
+        {
+            player.resource += [ability.value intValue];
+            opponent.resource += [ability.value intValue];
+        }
+        [self.gameViewController updateResourceView: side];
+        [self.gameViewController updateResourceView: oppositeSide];
+    }
+    else if (ability.abilityType == abilityReturnToHand)
+    {
+        if (monster.type == cardTypePlayer) //very wrong
+        {
+            NSLog(@"WARNING: Tried to return a hero to its hand.");
+            return;
+        }
+        
+        int monsterSide = monster.side;
+        
+        [monster resetAllStats]; //reset all stats
+        NSMutableArray*battlefield = self.battlefield[monsterSide];
+        [battlefield removeObject:monster];
+        
+        NSMutableArray*hand = self.hands[monsterSide];
+        [hand addObject:monster];
+        [self.gameViewController.handsView addSubview:monster.cardView];
+        
+        [self.gameViewController updateBattlefieldView:monsterSide];
+        [self.gameViewController updateHandsView:monsterSide];
+        [monster.cardView updateView];
+        //[monster.cardView updateView];
+        
+        return; //if it's returned to hand, it cannot die or have anything else happen to it
+    }
     else
         NSLog(@"WARNING: Tried to cast an instant ability of AbilityType %d that cannot be casted as durationInstant. Set it to a different DurationType, such as durationForever.", ability.abilityType);
     
@@ -755,7 +1162,43 @@ int cardIDCount = 0;
     [monster.cardView updateView];
     
     if (monster.dead)
+    {
         [self cardDies:monster destroyedBy:nil fromSide:monster.side];
+    }
+}
+
+
+/** Returns YES if monster already contains an ability that cannot be stacked (i.e. cannot have two taughts) */
+-(BOOL)containsDuplicateAbility:(MonsterCardModel*)monster ability:(Ability*)ability
+{
+    for (Ability*monsterAbility in monster.abilities)
+    {
+        if (monsterAbility.abilityType == ability.abilityType)
+        {
+            if (ability.abilityType == abilityTaunt || ability.abilityType == abilityRemoveAbility)
+            {
+                //all settings are identical
+                if (monsterAbility.targetType == ability.targetType && monsterAbility.durationType == ability.durationType && monsterAbility.castType == ability.castType)
+                    return YES;
+            }
+        }
+    }
+    return NO;
+}
+
+/** Checks if it's possible to add this ability to the target. */
+-(BOOL)canAddAbility:(MonsterCardModel*)target ability:(Ability*)ability
+{
+    //cannot add duplicate ability
+    if ([self containsDuplicateAbility:target ability:ability])
+        return NO;
+    
+    //cannot add if contains the abilityRemoveAbility ability.
+    for (Ability *ability in target.abilities)
+        if (ability.abilityType == abilityRemoveAbility && ability.targetType == targetSelf)
+            return NO;
+    
+    return YES;
 }
 
 -(void) checkForGameOver

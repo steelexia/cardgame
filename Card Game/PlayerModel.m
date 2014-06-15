@@ -10,7 +10,7 @@
 
 @implementation PlayerModel
 
-const int MAX_RESOURCE = 9;
+const int MAX_RESOURCE = 10;
 
 @synthesize playerMonster = _playerMonster;
 @synthesize resource = _resource;
@@ -31,7 +31,7 @@ const int MAX_RESOURCE = 9;
 }
 
 /**
- resource must be between MAX_RESOURCE and 0
+ Resource must be between MAX_RESOURCE and 0. TODO maybe allow negative
  */
 -(void)setResource:(int)resource
 {

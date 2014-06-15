@@ -82,7 +82,7 @@ UIImage *backgroundImage, *selectHighlightImage, *targetHighlightImage, *heroSel
         [self addSubview: nameLabel];
         
         self.costLabel = [[UILabel alloc] initWithFrame:self.bounds];
-        self.costLabel.center = CGPointMake(CARD_FULL_WIDTH - 20, 15);
+        self.costLabel.center = CGPointMake(20, 15);
         self.costLabel.textAlignment = NSTextAlignmentCenter;
         self.costLabel.textColor = [UIColor blackColor];
         self.costLabel.backgroundColor = [UIColor clearColor];
@@ -92,15 +92,15 @@ UIImage *backgroundImage, *selectHighlightImage, *targetHighlightImage, *heroSel
         
         CGRect abilityBound = CGRectMake(self.bounds.origin.x + 5, self.bounds.origin.y + self.bounds.size.height/2 - 5, self.bounds.size.width - 10, self.bounds.size.height/2);
         
-        self.baseAbilityLabel = [[UILabel alloc] initWithFrame:abilityBound];
-        //self.baseAbilityLabel.center = CGPointMake(CARD_FULL_WIDTH/2 + 5, 145);
-        self.baseAbilityLabel.textAlignment = NSTextAlignmentLeft;
+        self.baseAbilityLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 150, CARD_FULL_WIDTH - 20, 140)];
+       
         self.baseAbilityLabel.textColor = [UIColor blackColor];
-        self.baseAbilityLabel.numberOfLines = 0;
         self.baseAbilityLabel.backgroundColor = [UIColor clearColor];
         self.baseAbilityLabel.font = [UIFont fontWithName:@"Verdana-Italic" size:10];
-        
-        
+        self.baseAbilityLabel.numberOfLines = 6;
+        self.baseAbilityLabel.textAlignment = NSTextAlignmentLeft;
+        self.baseAbilityLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        [self.baseAbilityLabel sizeToFit];
         [self addSubview: baseAbilityLabel];
         
         //draws specific card elements for monster card
@@ -203,7 +203,7 @@ UIImage *backgroundImage, *selectHighlightImage, *targetHighlightImage, *heroSel
         
         self.attackLabel.text = [NSString stringWithFormat:@"D:%d", monsterCard.damage];
         
-        if (monsterCard.life > monsterCard.maximumLife)
+        if (monsterCard.life > monsterCard.maximumLife || monsterCard.maximumLife > [monsterCard baseMaxLife])
             self.lifeLabel.textColor = [UIColor redColor];
         else
             self.lifeLabel.textColor = [UIColor blackColor];
@@ -211,9 +211,6 @@ UIImage *backgroundImage, *selectHighlightImage, *targetHighlightImage, *heroSel
         
         self.lifeLabel.text = [NSString stringWithFormat:@"L:%d", monsterCard.life];
         self.cooldownLabel.text = [NSString stringWithFormat:@"CD:%d", monsterCard.cooldown];
-        
-        
-        
         //TODO: need a special view to show both current and max values
     }
     else if ([self.cardModel isKindOfClass:[SpellCardModel class]])
@@ -226,8 +223,12 @@ UIImage *backgroundImage, *selectHighlightImage, *targetHighlightImage, *heroSel
     self.baseAbilityLabel.text = @"";
     for (Ability *ability in self.cardModel.abilities)
     {
-        self.baseAbilityLabel.text = [NSString stringWithFormat:@"%@%@\n", self.baseAbilityLabel.text, [Ability getDescription:ability fromCard:self.cardModel]];
+        if (!ability.expired)
+            self.baseAbilityLabel.text = [NSString stringWithFormat:@"%@%@\n", self.baseAbilityLabel.text, [Ability getDescription:ability fromCard:self.cardModel]];
     }
+    
+    self.baseAbilityLabel.frame = CGRectMake(10, 150, CARD_FULL_WIDTH - 20, 140);
+    [self.baseAbilityLabel sizeToFit];
 }
 
 /** Overwritten center getter. Returns the position based on the card's state */
@@ -286,6 +287,10 @@ UIImage *backgroundImage, *selectHighlightImage, *targetHighlightImage, *heroSel
         
         //set super position higher
         super.center = self.originalPosition;
+    }
+    else if (cardViewState == cardViewStateMaximize)
+    {
+        super.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
     }
     else{
         if (self.cardModel.type != cardTypePlayer)

@@ -101,18 +101,35 @@
     [self animateCardDestruction:cardView fromSide:side withDelay:0];
 }
 
-/** Card flies up while fading out. On finish it is removed from superview and the battlefield is updated */
+/** Card flies up while fading out. It is first placed to the top of the view. On finish it is removed from superview and the battlefield is updated */
 -(void) animateCardDestruction: (CardView*) cardView fromSide: (int)side withDelay: (float) delay
 {
     CGPoint newCenter = cardView.center;
     newCenter.y -= CARD_HEIGHT/4;
     
-    [UIView animateWithDuration:0.4 delay:delay options:UIViewAnimationOptionCurveEaseInOut
+    //brings to front so doesn't get covered by other cards that are still alive
+    [[cardView superview] bringSubviewToFront:cardView];
+    
+    [UIView animateWithDuration:0.6 delay:delay options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          cardView.alpha = 0.0;
                          cardView.center = newCenter;
                      }
                      completion:^(BOOL finished){
+                         //remove monsterCards from their field
+                         if ([cardView.cardModel isKindOfClass:[MonsterCardModel class]])
+                         {
+                             MonsterCardModel *monster = (MonsterCardModel*)cardView.cardModel;
+                             
+                             //gotta be extra defensive
+                             if (self.gameModel != nil)
+                             {
+                                 NSArray *field = self.gameModel.battlefield[monster.side];
+                                 if (field != nil && [field count] >0)
+                                 [self.gameModel.battlefield[monster.side] removeObject:monster];
+                             }
+                         }
+                         
                          [cardView removeFromSuperview];
                          [self updateBattlefieldView:side];
                      }];
@@ -161,10 +178,10 @@
                      completion:^(BOOL finished){
                          //target died, update field view and remove it from screen
                          if (((MonsterCardModel*)cardView.cardModel).dead)
-                             [self animateCardDestruction:cardView fromSide:side withDelay: 0.5];
+                             [self animateCardDestruction:cardView fromSide:side withDelay: 0.4];
                          //not dead, move back to position
                          else
-                             [self animateMoveToWithBounce:cardView toPosition:originalPoint inDuration:0.1 withDelay:0.5];
+                             [self animateMoveToWithBounce:cardView toPosition:originalPoint inDuration:0.25 withDelay:0.4];
                          [self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
                      }
      ];
@@ -186,6 +203,29 @@
                      }
      ];
      */
+}
+
+-(void) animateCardAttack: (CardView*) cardView fromSide:(int) side
+{
+    CGPoint startPosition = cardView.center;
+    
+    CGPoint target = startPosition;
+    if (side == PLAYER_SIDE)
+        target.y -= CARD_HEIGHT/5;
+    else
+        target.y += CARD_HEIGHT/5;
+    
+    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         cardView.center = target;
+                     }
+                     completion:^(BOOL finished){
+                         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut
+                                          animations:^{
+                                              cardView.center = startPosition;
+                                          }
+                                          completion:nil];
+                     }];
 }
 
 -(void) animateCardHeal: (CardView*) cardView forLife: (int) life

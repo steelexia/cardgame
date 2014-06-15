@@ -11,10 +11,12 @@
 #import "MonsterCardModel.h"
 #import "SpellCardModel.h"
 #import "Ability.h"
+#import <Parse/Parse.h>
 
 /** Stores the pre-designed cards for single player so that there's no need to read them from a file. */
 @interface SinglePlayerCards : NSObject
 
 +(DeckModel*) getDeckOne;
++(void)uploadPlayerDeck;
 
 @end

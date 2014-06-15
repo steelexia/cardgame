@@ -7,7 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Parse/Parse.h>
+
 @class CardView;
+@class Ability;
 
 /** 
  Abstract class that is the parent of specific card types, such as MonsterCardModel and SpellCardModel.
@@ -30,9 +33,16 @@
 @property enum CardRarity rarity;
 
 /** The technical type of the card (i.e. if it is a temporary card from an ability, or if it's the card representing the player). Card types such as cardTypeTemporary's idNumber would have no purpose.
-    NOT to be confused with card types such as MonsterCard and SpellCard.
+    NOT to be confused with card types such as MonsterCard and SpellCard, which is the cardType on Parse database. This type is not stored there as only player cards are stored.
  */
 @property enum CardType type;
+
+
+/** For cards with the type standard, this links to the PF ID of the creator. */
+@property NSString *creator;
+
+/** For convenience, the creator's username is cached here so that it can be displayed mid-battle of a game. */
+@property NSString *creatorName;
 
 //----------------Card battle stats values----------------//
 
@@ -50,6 +60,18 @@
 /** Initializes an empty card with id and card type */
 -(instancetype)initWithIdNumber:(long)idNumber type:(enum CardType) type;
 
+/** Adds the ability and sets isBaseAbility to YES */
+-(void)addBaseAbility: (Ability*)ability;
+
+/** Loads a card's stats with data grabbed from parse. This should only used for a completely new card that cannot be cached anywhere else, e.g. a human opponent's card. Assumes the card is already allocated! */
+//+(void)loadCardWithParseID:(CardModel*)card withID:(NSString*)parseID;
+
+/** Creates a card out of a PFObject. */
++(CardModel*) createCardFromPFObject: (PFObject*)cardPF;
+
+/** Adds a card to the Parse database. Really only used when user creates a new card. Otherwise mainly for debugging */
++(void) addCardToParse:(CardModel*) card;
+
 @end
 
 enum CardRarity{
@@ -66,3 +88,6 @@ enum CardType{
     cardTypePlayer, //cards used to represent the player hero
     cardTypeSinglePlayer //cards used by AI during single player
 };
+
+extern const int MONSTER_CARD, SPELL_CARD;
+

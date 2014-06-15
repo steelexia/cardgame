@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Content Games. All rights reserved.
 //
 
+//TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Needs String to store the creator
+
 #import "CardModel.h"
 #import "Ability.h"
 @class Ability;
@@ -17,9 +19,6 @@
 
 /** Amount of damage a card deal per attack. Includes all modifiers from abilities, so use baseDamage for unmodified. */
 @property int damage;
-
-/** Additional damage gained through buffs. Can be negative. Assume as a private variable */
-@property int additionalDamage;
 
 /** Amount of damage a card can sustain before dying */
 @property int life;
@@ -38,11 +37,8 @@
 /** Which side is the card deployed on. Must be PLAYER_SIDE or OPPONENT_SIDE */
 @property int side;
 
+
 //----------------Functions----------------//
-
-/** Add damage from incremental sources since it's too difficult to keep track of. This can be negative */
--(void) addDamage: (int) damage;
-
 /**
  Deducts some life from the monster card. This simply subtracts the number and does not look at any other elements such as defence. Mainly a convinience method.
  */
@@ -54,11 +50,20 @@
 /** Adds life ignoring maxLife */
 -(void) addLife: (int) amount;
 
+/** Returns the max life without any modifiers from abilities */
+-(int) baseMaxLife;
+
 /** Returns the unmodified damage from this card */
--(int)baseDamage;
+-(int) baseDamage;
+
+/** Returns the unmodified max cooldown from this card */
+-(int) baseMaxCooldown;
 
 /** Sets up the values for the card to become a hero card */
 -(void) setupAsPlayerHero: (NSString*) name onSide:(int) side;
+
+/** Resets the card as it was first created. Removes all added abilities and resets all stats to default. */
+-(void)resetAllStats;
 
 /** Creates another copy of ability and add it to its abilities. The ability's target type is then set to targetSelf */
 -(void) applyAbility: (Ability*) ability;

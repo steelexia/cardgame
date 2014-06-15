@@ -44,6 +44,9 @@
 /** Used to animate the damage dealt to a card */
 -(void) animateCardDamage: (CardView*) cardView forDamage: (int) damage fromSide:(int) side;
 
+/** Used to animate a card's attack animation. Damage animation should be called separately */
+-(void) animateCardAttack: (CardView*) cardView fromSide:(int) side;
+
 -(void) animateCardHeal: (CardView*) cardView forLife: (int) life;
 
 @end

@@ -23,6 +23,7 @@
 @synthesize handsView, fieldView, uiView, backgroundView;
 @synthesize currentAbilities = _currentAbilities;
 @synthesize endTurnButton = _endTurnButton;
+@synthesize touchStartPoint = _touchStartPoint;
 
 /** Screen dimension for convinience */
 int SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -205,6 +206,13 @@ CardModel* currentCard;
 }
 
 -(void) endTurn{
+    //because touch isn't registered in touch start
+    if (self.viewingCardView != nil)
+    {
+        [self.viewingCardView removeFromSuperview];
+        self.viewingCardView = nil;
+    }
+    
     //tell the gameModel to end turn
     [self.gameModel endTurn: currentSide];
     
@@ -302,7 +310,7 @@ CardModel* currentCard;
             card.cardView.cardHighlightType = cardHighlightNone;
         
         //slerp to the position
-        [self animateMoveToWithBounce:card.cardView toPosition:newCenter inDuration:0.25];
+        [self animateMoveToWithBounce:card.cardView toPosition:newCenter inDuration:0.5];
     }
 }
 
@@ -325,6 +333,9 @@ CardModel* currentCard;
     {
         MonsterCardModel *card = field[i];
         
+        if (card.dead) //dead cards are in the process of being removed, don't update it
+            continue;
+        
         //positions the hand by laying them out from the center
         CGPoint newCenter = CGPointMake((i-battlefieldCenterIndex) * CARD_WIDTH + ((field.count+1)%2 * CARD_WIDTH/2) + SCREEN_WIDTH/2, height);
         
@@ -341,7 +352,7 @@ CardModel* currentCard;
         {
             [card.cardView updateView];
             //slerp to the position
-            [self animateMoveToWithBounce:card.cardView toPosition:newCenter inDuration:0.25];
+            [self animateMoveToWithBounce:card.cardView toPosition:newCenter inDuration:0.5];
         }
         
         //show suggestion glow if it's player's turn and the card can be used, but no suggestion if targetting a spell
@@ -371,41 +382,88 @@ CardModel* currentCard;
 {
     UITouch *touch = [touches anyObject];
     
-    //if picking a target for abilities and touched a card
-    if ([self.currentAbilities count] > 0 && [[touch view] isKindOfClass:[CardView class]])
+    self.touchStartPoint = [touch locationInView:self.view];
+    
+    if (self.viewingCardView != nil)
     {
-        UIView *touchView = [touch view];
-        MonsterCardModel *target = (MonsterCardModel*)((CardView*)[touch view]).cardModel;
-        
-        //if card is highlighted, then it must be valid target
-        if (target.cardView.cardHighlightType == cardHighlightTarget)
+        [self.viewingCardView removeFromSuperview];
+        self.viewingCardView = nil;
+    }
+    
+    //if picking a target for abilities and touched a card
+    if ([self.currentAbilities count] > 0)
+    {
+        if ([[touch view] isKindOfClass:[CardView class]])
         {
-            //cast all abilities at this card
-            for (Ability *ability in self.currentAbilities){
-                [self.gameModel castAbility:ability byMonsterCard:nil toMonsterCard:target fromSide:PLAYER_SIDE];
+            UIView *touchView = [touch view];
+            MonsterCardModel *target = (MonsterCardModel*)((CardView*)[touch view]).cardModel;
+            
+            //if card is highlighted, then it must be valid target
+            if (target.cardView.cardHighlightType == cardHighlightTarget)
+            {
+                //cast all abilities at this card
+                for (Ability *ability in self.currentAbilities){
+                    [self.gameModel castAbility:ability byMonsterCard:nil toMonsterCard:target fromSide:PLAYER_SIDE];
+                }
+                
+                //reset all cards' highlight back to none
+                for (MonsterCardModel *card in self.gameModel.battlefield[PLAYER_SIDE])
+                    card.cardView.cardHighlightType = cardHighlightNone;
+                for (MonsterCardModel *card in self.gameModel.battlefield[OPPONENT_SIDE])
+                    card.cardView.cardHighlightType = cardHighlightNone;
+                PlayerModel *player = self.gameModel.players[PLAYER_SIDE];
+                player.playerMonster.cardView.cardHighlightType = cardHighlightNone;
+                PlayerModel *opponent = self.gameModel.players[OPPONENT_SIDE];
+                opponent.playerMonster.cardView.cardHighlightType = cardHighlightNone;
+                
+                //ability casted successfully
+                [self.currentAbilities removeAllObjects];
+                [self updateBattlefieldView:OPPONENT_SIDE];
+                [self updateBattlefieldView:PLAYER_SIDE];
+                [self updateHandsView:PLAYER_SIDE];
+                
+                //re-enable the disabled views
+                [self.handsView setUserInteractionEnabled:YES];
+                [self.uiView setUserInteractionEnabled:YES];
+                [self.backgroundView setUserInteractionEnabled:YES];
+                
+                return; //prevent the other events happening
+            }
+        }
+        
+        //TODO should not be able to give up spells, either make it impossible to cancel or allow undoing
+        //did not select a valid target, ability given up
+        [self.currentAbilities removeAllObjects];
+        [self updateBattlefieldView:OPPONENT_SIDE];
+        [self updateBattlefieldView:PLAYER_SIDE];
+        [self updateHandsView:PLAYER_SIDE];
+        
+        //re-enable the disabled views
+        [self.handsView setUserInteractionEnabled:YES];
+        [self.uiView setUserInteractionEnabled:YES];
+        [self.backgroundView setUserInteractionEnabled:YES];
+    }
+    else
+    {
+        //if not targetting, store the touch start for use later
+        if ([[touch view] isMemberOfClass:[CardView class]])
+        {
+            CardModel* cardModel = ((CardView*)[touch view]).cardModel;
+            
+            if ([cardModel isKindOfClass:[MonsterCardModel class]])
+            {
+                MonsterCardModel*monster = (MonsterCardModel*)cardModel;
+                
+                //cannot be undeployed (i.e. in hand), dead, or player hero
+                if (monster.deployed && !monster.dead && monster.type != cardTypePlayer)
+                    self.viewingCardStart = cardModel;
             }
             
-            //reset all cards' highlight back to none
-            for (MonsterCardModel *card in self.gameModel.battlefield[PLAYER_SIDE])
-                card.cardView.cardHighlightType = cardHighlightNone;
-            for (MonsterCardModel *card in self.gameModel.battlefield[OPPONENT_SIDE])
-                card.cardView.cardHighlightType = cardHighlightNone;
-            PlayerModel *player = self.gameModel.players[PLAYER_SIDE];
-            player.playerMonster.cardView.cardHighlightType = cardHighlightNone;
-            PlayerModel *opponent = self.gameModel.players[OPPONENT_SIDE];
-            opponent.playerMonster.cardView.cardHighlightType = cardHighlightNone;
-            
-            //ability casted successfully
-            [self.currentAbilities removeAllObjects];
-            [self updateBattlefieldView:OPPONENT_SIDE];
-            [self updateBattlefieldView:PLAYER_SIDE];
-            
-            //re-enable the disabled views
-            [self.handsView setUserInteractionEnabled:YES];
-            [self.uiView setUserInteractionEnabled:YES];
-            [self.backgroundView setUserInteractionEnabled:YES];
-            
-            return; //prevent the other events happening
+            //TEMP: allows viewing enemy's hand for testing the AI
+            NSArray *enemyHand = self.gameModel.hands[OPPONENT_SIDE];
+            for (CardModel*enemyHandCard in enemyHand)
+                if (enemyHandCard == cardModel)
+                    self.viewingCardStart = cardModel;
         }
     }
     
@@ -426,8 +484,12 @@ CardModel* currentCard;
             //saves the index in the view before bringing it to the front
             cardView.previousViewIndex = [self.handsView.subviews indexOfObject:cardView];
             [self.handsView bringSubviewToFront:cardView];
-            cardView.center = [touch locationInView: self.handsView];
             
+            //cardView.center = [touch locationInView: self.handsView];
+            CGPoint newCenter = [touch locationInView: self.view];
+            newCenter.y -= cardView.frame.size.height/2;
+            
+            cardView.center = newCenter;
             
             return; //TODO this is assuming nothing will be done after this
         }
@@ -480,21 +542,17 @@ CardModel* currentCard;
     //hand card follows drag
     if (gameControlState == gameControlStateDraggingHandCard)
     {
-        currentCard.cardView.center = currentPoint;
+        CGPoint newCenter = currentPoint;
+        newCenter.y -= currentCard.cardView.frame.size.height/2;
         
-        //TODO remove this once game no longer allows controlling both players
-        if (currentSide == PLAYER_SIDE)
-            [self scaleDraggingCard:currentCard.cardView atPoint:currentPoint];
+        currentCard.cardView.center = newCenter;
+        
+        [self scaleDraggingCard:currentCard.cardView atPoint:currentPoint];
         
         //highlight field only if can summon the card
         if ([self.gameModel canSummonCard:currentCard side:currentSide])
         {
-            //TODO!!! These are only temporary while two-player is enabled, don't need it afterwards
-            UIImageView *fieldHighlight;
-            if(currentSide == PLAYER_SIDE)
-                fieldHighlight =  playerFieldHighlight;
-            else
-                fieldHighlight = opponentFieldHighlight;
+            UIImageView *fieldHighlight = playerFieldHighlight;
             
             CGPoint relativePoint = [fieldHighlight convertPoint:currentPoint fromView:self.view];
             
@@ -553,6 +611,10 @@ CardModel* currentCard;
     UITouch *touch = [touches anyObject];
     CGPoint currentPoint = [touch locationInView: self.view];
     
+    UIView*view = [touch view];
+    
+    BOOL canViewCard = YES; //if no action made this touch, can zoom into a card
+    
     //when dragging hand card, card is deployed
     if (gameControlState == gameControlStateDraggingHandCard)
     {
@@ -588,6 +650,7 @@ CardModel* currentCard;
         }
         
         currentCard = nil;
+        canViewCard = NO;
     }
     //when dragging field card, attacks target the touch is on top of
     else if (gameControlState == gameControlStateDraggingFieldCard)
@@ -610,7 +673,9 @@ CardModel* currentCard;
         CGPoint relativePoint = [self.playerHeroViews[oppositeSide] convertPoint:currentPoint fromView:self.view];
         if (CGRectContainsPoint(enemyHeroView.bounds, relativePoint))
         {
-            [self attackHero:currentCard target:(MonsterCardModel*) enemyHeroView.cardModel fromSide:currentSide];
+            if ([self.gameModel validAttack:currentCard target:(MonsterCardModel*)enemyHeroView.cardModel])
+                [self attackHero:currentCard target:(MonsterCardModel*) enemyHeroView.cardModel fromSide:currentSide];
+            canViewCard = NO;
         }
         else
         {
@@ -625,7 +690,9 @@ CardModel* currentCard;
                 //found enemy card
                 if (CGRectContainsPoint(cardView.bounds, relativePoint))
                 {
-                    [self attackCard:currentCard target:(MonsterCardModel*)card fromSide:currentSide];
+                    if ([self.gameModel validAttack:currentCard target:(MonsterCardModel*)card])
+                        [self attackCard:currentCard target:(MonsterCardModel*)card fromSide:currentSide];
+                    canViewCard = NO;
                     break;
                 }
             }
@@ -634,6 +701,30 @@ CardModel* currentCard;
         //remove the attack line from view and revert states
         [attackLine removeFromSuperview];
     }
+    
+    if (canViewCard)
+    {
+        //touch ended on same point as start
+        if (self.viewingCardStart != nil && CGPointEqualToPoint(currentPoint, self.touchStartPoint))
+        {
+            //if ([self.viewingCardStart isKindOfClass:[MonsterCardModel class]])
+            //{
+                CardModel*card = self.viewingCardStart;
+                CardView*originalView = card.cardView; //save original view to point back
+                
+                self.viewingCardView = [[CardView alloc] initWithModel:card cardImage: [[UIImageView alloc] initWithImage:originalView.cardImage.image]]; //constructor also modifies monster's cardView pointer
+                
+                card.cardView = originalView; //recover the pointer
+                
+                [self.viewingCardView setCardViewState:cardViewStateMaximize];
+                self.viewingCardView.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+                [self.uiView addSubview:self.viewingCardView];
+            //}
+        }
+    }
+    
+    self.touchStartPoint = CGPointMake(-1,-1);
+    self.viewingCardStart = nil;
 }
 
 -(void) attackCard: (CardModel*) card target:(MonsterCardModel*)targetCard fromSide: (int) side
@@ -644,11 +735,18 @@ CardModel* currentCard;
     NSArray *damages = [self.gameModel attackCard:card fromSide:side target:targetCard];
     
     //animate the damage effects, if card dies, death animation is played
-    [self animateCardDamage:targetCard.cardView forDamage:[damages[0] integerValue] fromSide:oppositeSide];
+    [self animateCardAttack:card.cardView fromSide:side];
+    
+    [self performBlock:^{
+        [self animateCardDamage:targetCard.cardView forDamage:[damages[0] integerValue] fromSide:oppositeSide];
+    } afterDelay:0.1];
     
     //animate damage to attacker if defender dealt damage
     if (damages[1] > 0)
-        [self animateCardDamage:card.cardView forDamage:[damages[1] integerValue] fromSide:side];
+        [self performBlock:^{
+            [self animateCardDamage:card.cardView forDamage:[damages[1] integerValue] fromSide:side];
+        } afterDelay:0.4];
+    
     
     //update views after the attack
     [card.cardView updateView];
@@ -666,18 +764,24 @@ CardModel* currentCard;
 
 -(void) attackHero: (CardModel*) card target:(MonsterCardModel*)targetCard fromSide: (int) side
 {
-    int oppositeSide = currentSide == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE;
+    int oppositeSide = side == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE;
     
     //deal the damage and return it to animate
     NSArray *damages = [self.gameModel attackCard:card fromSide:side target:targetCard];
     
     //animate the damage effects for defender, if card dies, death animation is played
-    [self animateCardDamage:targetCard.cardView forDamage: [damages[0] integerValue] fromSide:oppositeSide];
+    [self animateCardAttack:card.cardView fromSide:side];
+    
+    [self performBlock:^{
+        [self animateCardDamage:targetCard.cardView forDamage:[damages[0] integerValue] fromSide:oppositeSide];
+    } afterDelay:0.1];
     
     //animate damage to attacker if hero somehow dealt damage
     if (damages[1] > 0)
-        [self animateCardDamage:card.cardView forDamage:[damages[1] integerValue] fromSide:side];
-    
+        [self performBlock:^{
+            [self animateCardDamage:card.cardView forDamage:[damages[1] integerValue] fromSide:side];
+        } afterDelay:0.4];
+
     //update views after the attack
     [card.cardView updateView];
     [targetCard.cardView updateView];
@@ -702,8 +806,8 @@ CardModel* currentCard;
     float scale = CARD_DRAGGING_SCALE;
     
     //Scales between two ends at a and b
-    float a = SCREEN_HEIGHT - SCREEN_HEIGHT*FIELD_CENTER_Y_RATIO;
-    float b = SCREEN_HEIGHT - CARD_HEIGHT * 1.5;
+    float a = SCREEN_HEIGHT - SCREEN_HEIGHT*FIELD_CENTER_Y_RATIO + CARD_HEIGHT * 0.5;
+    float b = SCREEN_HEIGHT - CARD_HEIGHT * 1;
     
     if (point.y < a)
         scale = CARD_DEFAULT_SCALE;
@@ -712,7 +816,7 @@ CardModel* currentCard;
     else
     {
         //slerp x from a to b, used as the scale
-        float x = (currentCard.cardView.center.y-a)/(b-a);
+        float x = (point.y-a)/(b-a);
         
         //use only [0,pi/2] of the function for a better effect
         scale =  (1 - cos(x*M_PI_2)) * (CARD_DRAGGING_SCALE-CARD_DEFAULT_SCALE) + CARD_DEFAULT_SCALE;
@@ -721,8 +825,16 @@ CardModel* currentCard;
     currentCard.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, scale, scale);
 }
 
--(void)pickAbilityTarget: (Ability*) ability
+-(void)pickAbilityTarget: (Ability*) ability castedBy:(CardModel*)caster
 {
+    //cannot be used for opponent/AI
+    if (currentSide != PLAYER_SIDE)
+        return;
+    
+    //has no applicable target, don't bother
+    if (![self.gameModel abilityHasValidTargets:ability castedBy:caster side:PLAYER_SIDE])
+        return;
+    
     [self.currentAbilities addObject:ability];
     [self updateBattlefieldView:PLAYER_SIDE];
     
@@ -760,6 +872,19 @@ CardModel* currentCard;
     //update hand's view at the end
     [self updateHandsView:side];
 }
+
+//block delay functions
+- (void)performBlock:(void (^)())block
+{
+    block();
+}
+
+- (void)performBlock:(void (^)())block afterDelay:(NSTimeInterval)delay
+{
+    void (^block_)() = [block copy]; // autorelease this if you're not using ARC
+    [self performSelector:@selector(performBlock:) withObject:block_ afterDelay:delay];
+}
+
 
 //apparently there's no built-in function for operations on points
 //TODO move elsewhere
