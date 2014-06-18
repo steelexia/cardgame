@@ -44,6 +44,9 @@
 /** saves the position of its view index when being dragged */
 @property int previousViewIndex;
 
+/** Set to YES during damage animations to prevent two happening at once. */
+@property BOOL inDamageAnimation;
+
 /** Initializes with attached CardModel, which should be one of its child classes */
 -(instancetype)initWithModel: (CardModel*)cardModel cardImage:(UIImageView*)cardImage;
 

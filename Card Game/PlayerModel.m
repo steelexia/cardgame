@@ -35,9 +35,7 @@ const int MAX_RESOURCE = 10;
  */
 -(void)setResource:(int)resource
 {
-    if (resource > MAX_RESOURCE)
-        _resource = MAX_RESOURCE;
-    else if (resource < 0)
+    if (resource < 0)
         _resource = 0;
     else
         _resource = resource;

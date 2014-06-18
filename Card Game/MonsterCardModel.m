@@ -170,8 +170,8 @@
 {
     self.name = name;
     self.type = cardTypePlayer;
-    self.maximumLife = 20000;
-    self.life = 20000;
+    self.maximumLife = 25000;
+    self.life = 25000;
   
     self.damage = 0;
     self.cooldown = 0;

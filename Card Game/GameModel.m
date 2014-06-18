@@ -94,7 +94,7 @@ int cardIDCount = 0;
     
     NSMutableArray* hand = self.hands[PLAYER_SIDE];
     
-    /*
+    
     MonsterCardModel*monster;
     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
@@ -103,10 +103,10 @@ int cardIDCount = 0;
     monster.cost = 0;
     monster.cooldown = monster.maximumCooldown = 1;
     
-    [monster.abilities addObject: [[Ability alloc] initWithType:abilityReturnToHand castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1000]]];
+    [monster.abilities addObject: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetAll withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
     
     [hand addObject:monster];
-     */
+    
 }
 
 -(void)newTurn:(int)side
@@ -164,12 +164,19 @@ int cardIDCount = 0;
     while ([aiDeck count] > 20) //limit to 20 cards
         [aiDeck removeCardAtIndex:0];
     
-    self.decks = @[[[DeckModel alloc] init], aiDeck];
+    DeckModel *playerDeck = [SinglePlayerCards getDeckOne];
+
+    [playerDeck shuffleDeck];
+    while ([playerDeck count] > 20) //limit to 20 cards
+        [playerDeck removeCardAtIndex:0];
+    
+    self.decks = @[playerDeck, aiDeck];
     
     
-    DeckModel *playerDeck = self.decks[PLAYER_SIDE];
+   
     
     //temporary function that grabs 20 cards from Parse database.
+    /*
     PFQuery *query = [PFQuery queryWithClassName:@"Card"];
     query.limit = 20;
     NSArray* result = [query findObjects];
@@ -177,8 +184,12 @@ int cardIDCount = 0;
     {
         [playerDeck addCard:[CardModel createCardFromPFObject:cardPF]];
     }
+    */
     
-    NSLog(@"loaded %d cards for player.", [playerDeck count]);
+    //TODO no player database yet, so just use single player cards
+    
+    
+    //NSLog(@"loaded %d cards for player.", [playerDeck count]);
     
     /*
     for (int side = 0; side < 2; side++)
@@ -362,14 +373,20 @@ int cardIDCount = 0;
         MonsterCardModel *monsterCard = (MonsterCardModel*) card;
         
         [self addCardToBattlefield:monsterCard side:side];
+        //update it first for better animations
+        [self.gameViewController updateBattlefieldView: side];
         
-        //CastType castOnSummon is casted here
-        for (int i = 0; i < [monsterCard.abilities count]; i++) //castAbility may insert objects in end
-        {
-            Ability*ability = monsterCard.abilities[i];
-            if (ability.castType == castOnSummon)
-                [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:nil fromSide:side];
-        }
+        //cast a little later for better visuals
+        [self.gameViewController performBlock:^{
+            //CastType castOnSummon is casted here
+            for (int i = 0; i < [monsterCard.abilities count]; i++) //castAbility may insert objects in end
+            {
+                Ability*ability = monsterCard.abilities[i];
+                if (ability.castType == castOnSummon)
+                    [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:nil fromSide:side];
+            }
+            [self checkForGameOver];
+        } afterDelay:0.4]; //WARNING: this delay must be shorter than AI's delay between each move
     }
     else if ([card isKindOfClass: [SpellCardModel class]])
     {
@@ -379,6 +396,7 @@ int cardIDCount = 0;
             if (ability.castType == castOnSummon)
                 [self castAbility:ability byMonsterCard:nil toMonsterCard:nil fromSide:side];
         }
+        [self checkForGameOver];
     }
     
     //remove card and use up cost
@@ -447,7 +465,6 @@ int cardIDCount = 0;
     //damage already includes attacker's abilities
     int damage = attacker.damage;
     
-    
     //additional modifiers, especially from defender
     return damage;
 }
@@ -514,12 +531,17 @@ int cardIDCount = 0;
         return @[[NSNumber numberWithInt:attackerDamage],[NSNumber numberWithInt:defenderDamage]];
     }
     
+    [self checkForGameOver];
+    
     return 0;
-    //TODO spellcard
 }
 
 -(BOOL)canAttack: (MonsterCardModel*) attacker fromSide: (int) side
 {
+    //these are mainly for AI due to synchronization with animation
+    if (attacker.dead || !attacker.deployed)
+        return NO;
+    
     //cannot attack if cooldown is above 0
     if (attacker.cooldown > 0)
         return NO;
@@ -594,7 +616,7 @@ int cardIDCount = 0;
         //TODO DurationType durationUntilDeath is removed here, but currently no point of removing it at death
         
         //remove it from the battlefield
-        //[self.battlefield[side] removeObject:monsterCard];
+        [self.battlefield[side] removeObject:monsterCard];
     }
     
     [self.graveyard[side] addObject:card]; //add it to the graveyard
@@ -984,9 +1006,10 @@ int cardIDCount = 0;
     }
     
     //---SPECIAL CASE ABILITIES HERE---//
-    if (ability.abilityType == abilityDrawCard)
+    
+    //these abilities do not target any minion, so simply cast it
+    if (ability.abilityType == abilityDrawCard || ability.abilityType == abilityAddResource)
     {
-        //draw card does not target any minion, so simply cast it
         [self castInstantAbility:ability onMonsterCard:nil fromSide:side];
         return;
     }
@@ -998,11 +1021,11 @@ int cardIDCount = 0;
         //all effects are first added to the abilities: add the ability to the object with castType as castAlways as they're already casted, and pass all other values on. Instant effects are applied right after
         appliedAbility = [[Ability alloc] initWithType:ability.abilityType castType:castAlways targetType:targetSelf withDuration:ability.durationType withValue:ability.value withOtherValues:ability.otherValues];
         
-        //apply the instant effects before they're added
-        if (ability.durationType == durationInstant)
-            [self castInstantAbility:appliedAbility onMonsterCard:target fromSide:side];
-        //not happening right away, store it in there
-        else
+        //if the ability has an instant effect (e.g. deal some damage, draw some cards), cast the effect immediately
+        BOOL castedInstantAbility = [self castInstantAbility:appliedAbility onMonsterCard:target fromSide:side];
+        
+        //is not an instant effect but rather a buff/debuff (e.g. add damage, heal every turn) then store it in the monster
+        if (!castedInstantAbility)
         {
             //don't duplicate abilities such as taunt
             if ([self canAddAbility:target ability:appliedAbility])
@@ -1014,6 +1037,9 @@ int cardIDCount = 0;
                 //also includes a one-time heal
                 if (ability.abilityType == abilityAddMaxLife)
                     target.life += [ability.value intValue];
+                //also includes a one-time add cooldown
+                if (ability.abilityType == abilityAddMaxCooldown)
+                    target.cooldown += [ability.value intValue];
                 //also removes all existing abilities
                 else if (ability.abilityType == abilityRemoveAbility)
                 {
@@ -1039,8 +1065,8 @@ int cardIDCount = 0;
 }
 
 
-/** Since castAbility adds instant abilities as an ability, this method actually applies the ability so that it can be removed. Calling an ability that's not applicable results in no effect */
--(void) castInstantAbility: (Ability*) ability onMonsterCard: (MonsterCardModel*) monster fromSide:(int)side
+/** Since castAbility adds instant abilities as an ability, this method actually applies the ability so that it can be removed. Calling an ability that's not applicable returns NO. */
+-(BOOL) castInstantAbility: (Ability*) ability onMonsterCard: (MonsterCardModel*) monster fromSide:(int)side
 {
     int oppositeSide = side == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE;
     
@@ -1110,6 +1136,7 @@ int cardIDCount = 0;
     }
     else if (ability.abilityType == abilityAddResource)
     {
+        NSLog(@"added resource");
         PlayerModel* player = self.players[side];
         PlayerModel* opponent = self.players[oppositeSide];
         
@@ -1135,7 +1162,7 @@ int cardIDCount = 0;
         if (monster.type == cardTypePlayer) //very wrong
         {
             NSLog(@"WARNING: Tried to return a hero to its hand.");
-            return;
+            return YES;
         }
         
         int monsterSide = monster.side;
@@ -1153,10 +1180,12 @@ int cardIDCount = 0;
         [monster.cardView updateView];
         //[monster.cardView updateView];
         
-        return; //if it's returned to hand, it cannot die or have anything else happen to it
+        return YES; //if it's returned to hand, it cannot die or have anything else happen to it
     }
     else
-        NSLog(@"WARNING: Tried to cast an instant ability of AbilityType %d that cannot be casted as durationInstant. Set it to a different DurationType, such as durationForever.", ability.abilityType);
+    {
+        return NO; //not an instant ability, nothing happened
+    }
     
     //update view and check for death
     [monster.cardView updateView];
@@ -1165,6 +1194,8 @@ int cardIDCount = 0;
     {
         [self cardDies:monster destroyedBy:nil fromSide:monster.side];
     }
+    
+    return YES;
 }
 
 
@@ -1203,6 +1234,10 @@ int cardIDCount = 0;
 
 -(void) checkForGameOver
 {
+    //game already over, can't check
+    if (self.gameOver)
+        return;
+    
     PlayerModel *player = self.players[PLAYER_SIDE];
     PlayerModel *enemy = self.players[OPPONENT_SIDE];
     

@@ -44,6 +44,8 @@ NSArray *resourceLabels;
 
 UIImageView *playerFieldHighlight, *opponentFieldHighlight, *playerFieldEdge, *opponentFieldEdge;
 
+UIImageView *battlefieldBackground;
+
 /** Stores the current UI action being performed */
 enum GameControlState gameControlState;
 
@@ -125,6 +127,10 @@ CardModel* currentCard;
     [self.view addSubview:fieldView];
     [self.view addSubview:handsView];
     [self.view addSubview:uiView];
+    
+    battlefieldBackground  = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"battle_background_0"]];
+    battlefieldBackground.center = self.view.center;
+    [backgroundView addSubview:battlefieldBackground];
     
     //TODO temporary side label
     currentSideLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 20, 150, 20)];
@@ -742,11 +748,11 @@ CardModel* currentCard;
     } afterDelay:0.1];
     
     //animate damage to attacker if defender dealt damage
+    
     if (damages[1] > 0)
         [self performBlock:^{
             [self animateCardDamage:card.cardView forDamage:[damages[1] integerValue] fromSide:side];
         } afterDelay:0.4];
-    
     
     //update views after the attack
     [card.cardView updateView];
@@ -756,10 +762,15 @@ CardModel* currentCard;
     {
         gameControlState = gameControlStateNone;
         currentCard.cardView.cardViewState = cardViewStateNone;
+        card.cardView.cardHighlightType = cardHighlightNone;
         currentCard = nil;
     }
-    [self updateBattlefieldView:currentSide];
-
+    
+    [self performBlock:^{
+        //[self updateBattlefieldView:currentSide];
+    }  afterDelay:2];
+    
+    [self updateHandsView:currentSide]; //a card may have died, freeing up more space to deploy
 }
 
 -(void) attackHero: (CardModel*) card target:(MonsterCardModel*)targetCard fromSide: (int) side
@@ -791,12 +802,13 @@ CardModel* currentCard;
     {
         gameControlState = gameControlStateNone;
         currentCard.cardView.cardViewState = cardViewStateNone;
+        card.cardView.cardHighlightType = cardHighlightNone;
         currentCard = nil;
     }
-    [self updateBattlefieldView:currentSide];
     
-    //check victory
-    [self.gameModel checkForGameOver];
+    [self performBlock:^{
+        //[self updateBattlefieldView:currentSide];
+    }  afterDelay:2];
 }
 
 

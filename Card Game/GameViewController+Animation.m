@@ -116,22 +116,10 @@
                          cardView.center = newCenter;
                      }
                      completion:^(BOOL finished){
-                         //remove monsterCards from their field
-                         if ([cardView.cardModel isKindOfClass:[MonsterCardModel class]])
-                         {
-                             MonsterCardModel *monster = (MonsterCardModel*)cardView.cardModel;
-                             
-                             //gotta be extra defensive
-                             if (self.gameModel != nil)
-                             {
-                                 NSArray *field = self.gameModel.battlefield[monster.side];
-                                 if (field != nil && [field count] >0)
-                                 [self.gameModel.battlefield[monster.side] removeObject:monster];
-                             }
-                         }
-                         
                          [cardView removeFromSuperview];
-                         [self updateBattlefieldView:side];
+                         [self performBlock:^{
+                             [self updateBattlefieldView:side];
+                         }  afterDelay:0.5];
                      }];
 }
 
@@ -140,22 +128,6 @@
     //no animation if no damage
     if (damage == 0)
         return;
-    
-    float power = (damage / 1000.f) + (damage / 1000.f) * arc4random_uniform(100) * 0.01/5 + 1;
-    
-    CGPoint originalPoint = cardView.center;
-    CGPoint targetPoint = cardView.center;
-    
-    int velocity;
-    
-    if (side == PLAYER_SIDE){
-        targetPoint.y += power;
-        velocity = power;
-    }
-    else{
-        targetPoint.y -= power;
-        velocity = -power;
-    }
     
     UILabel *damagePopup = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 50)];
     damagePopup.text = [NSString stringWithFormat:@"-%d", damage];
@@ -168,23 +140,58 @@
     [self.uiView addSubview:damagePopup];
     [self zoomIn:damagePopup inDuration:0.15];
     
-    //card hit by damage and shakes
-    [UIView animateWithDuration:0.125 * power + 0.1
-                          delay:0
-         usingSpringWithDamping:0.001
-          initialSpringVelocity:velocity
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{cardView.center = targetPoint;}
-                     completion:^(BOOL finished){
-                         //target died, update field view and remove it from screen
-                         if (((MonsterCardModel*)cardView.cardModel).dead)
-                             [self animateCardDestruction:cardView fromSide:side withDelay: 0.4];
-                         //not dead, move back to position
-                         else
-                             [self animateMoveToWithBounce:cardView toPosition:originalPoint inDuration:0.25 withDelay:0.4];
-                         [self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
-                     }
-     ];
+    //already animating damage, don't have two shakes at once
+    if (cardView.inDamageAnimation)
+    {
+        //target died, update field view and remove it from screen
+        if (((MonsterCardModel*)cardView.cardModel).dead)
+            [self animateCardDestruction:cardView fromSide:side withDelay: 0.4];
+
+        [self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
+    }
+    else
+    {
+        cardView.inDamageAnimation = YES;
+        
+        float power = (damage / 1000.f) + (damage / 1000.f) * arc4random_uniform(100) * 0.01/5 + 1;
+        
+        CGPoint originalPoint = cardView.center;
+        CGPoint targetPoint = cardView.center;
+        
+        int velocity;
+        
+        if (side == PLAYER_SIDE){
+            targetPoint.y += power;
+            velocity = power;
+        }
+        else{
+            targetPoint.y -= power;
+            velocity = -power;
+        }
+        
+        double duration = 0.125 * power + 0.1;
+        if (duration > 1) //capped
+            duration = 1;
+        
+        //card hit by damage and shakes
+        [UIView animateWithDuration:duration
+                              delay:0
+             usingSpringWithDamping:0.001
+              initialSpringVelocity:velocity
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{cardView.center = targetPoint;}
+                         completion:^(BOOL finished){
+                             cardView.inDamageAnimation = NO;
+                             //target died, update field view and remove it from screen
+                             if (((MonsterCardModel*)cardView.cardModel).dead)
+                                 [self animateCardDestruction:cardView fromSide:side withDelay: 0.4];
+                             //not dead, move back to position
+                             else
+                                 [self animateMoveToWithBounce:cardView toPosition:originalPoint inDuration:0.25 withDelay:0.4];
+                             [self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
+                         }
+         ];
+    }
     
     //older than iOS 7 use this:
     /*
