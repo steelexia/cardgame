@@ -4,7 +4,6 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
-		<string>coolvetica rg.ttf</string>
 		<string>encode-sans.compressed-bold.ttf</string>
 		<string>encode-sans.compressed-black.ttf</string>
 	</array>

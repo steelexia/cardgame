@@ -40,11 +40,11 @@ UIImage *backgroundOverlayImage, *selectHighlightImage, *targetHighlightImage, *
 /** 2D array of images. First array contains elements, second array contains rarity */
 NSArray*backgroundImages;
 
-NSString *mainFont = @"EncodeSansCompressed-Bold";
-NSString *mainFontBlack = @"EncodeSansCompressed-Black";
-
 NSMutableParagraphStyle *abilityTextParagrahStyle;
 NSDictionary *abilityTextAttributtes;
+
+NSString *cardMainFont = @"EncodeSansCompressed-Bold";
+NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
 
 +(void) loadResources
 {
@@ -121,7 +121,7 @@ NSDictionary *abilityTextAttributtes;
         self.nameLabel.textAlignment = NSTextAlignmentCenter;
         self.nameLabel.textColor = [UIColor blackColor];
         self.nameLabel.backgroundColor = [UIColor clearColor];
-        self.nameLabel.font = [UIFont fontWithName:mainFont size:15];
+        self.nameLabel.font = [UIFont fontWithName:cardMainFont size:15];
         
         [self addSubview: nameLabel];
         
@@ -130,7 +130,7 @@ NSDictionary *abilityTextAttributtes;
         self.costLabel.textAlignment = NSTextAlignmentCenter;
         self.costLabel.textColor = [UIColor whiteColor];
         self.costLabel.backgroundColor = [UIColor clearColor];
-        self.costLabel.font = [UIFont fontWithName:mainFontBlack size:24];
+        self.costLabel.font = [UIFont fontWithName:cardMainFontBlack size:24];
         self.costLabel.strokeOn = YES;
         self.costLabel.strokeColour = [UIColor blackColor];
         self.costLabel.strokeThickness = 3;
@@ -145,7 +145,7 @@ NSDictionary *abilityTextAttributtes;
         self.elementLabel.strokeOn = YES;
         self.elementLabel.strokeColour = [UIColor blackColor];
         self.elementLabel.strokeThickness = 2.5;
-        self.elementLabel.font = [UIFont fontWithName:mainFont size:10];
+        self.elementLabel.font = [UIFont fontWithName:cardMainFont size:10];
         self.elementLabel.text = [CardModel elementToString:cardModel.element];
         
         [self addSubview: elementLabel];
@@ -155,7 +155,7 @@ NSDictionary *abilityTextAttributtes;
        
         self.baseAbilityLabel.textColor = [UIColor blackColor];
         self.baseAbilityLabel.backgroundColor = [UIColor clearColor];
-        self.baseAbilityLabel.font = [UIFont fontWithName:mainFont size:10];
+        self.baseAbilityLabel.font = [UIFont fontWithName:cardMainFont size:10];
         self.baseAbilityLabel.numberOfLines = 6;
         self.baseAbilityLabel.textAlignment = NSTextAlignmentLeft;
         self.baseAbilityLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -181,7 +181,7 @@ NSDictionary *abilityTextAttributtes;
                 self.lifeLabel.strokeOn = YES;
                 self.lifeLabel.strokeColour = [UIColor blackColor];
                 self.lifeLabel.strokeThickness = 2.5;
-                self.lifeLabel.font = [UIFont fontWithName:mainFont size:20];
+                self.lifeLabel.font = [UIFont fontWithName:cardMainFont size:20];
                 self.lifeLabel.text = [NSString stringWithFormat:@"%d", monsterCard.life];
                 
                 [self addSubview: lifeLabel];
@@ -216,7 +216,7 @@ NSDictionary *abilityTextAttributtes;
                 self.attackLabel.textAlignment = NSTextAlignmentCenter;
                 self.attackLabel.textColor = [UIColor whiteColor];
                 self.attackLabel.backgroundColor = [UIColor clearColor];
-                self.attackLabel.font = [UIFont fontWithName:mainFont size:18];
+                self.attackLabel.font = [UIFont fontWithName:cardMainFont size:18];
                 self.attackLabel.strokeOn = YES;
                 self.attackLabel.strokeColour = [UIColor blackColor];
                 self.attackLabel.strokeThickness = 2.5;
@@ -232,7 +232,7 @@ NSDictionary *abilityTextAttributtes;
                 self.lifeLabel.strokeOn = YES;
                 self.lifeLabel.strokeColour = [UIColor blackColor];
                 self.lifeLabel.strokeThickness = 2.5;
-                self.lifeLabel.font = [UIFont fontWithName:mainFont size:18];
+                self.lifeLabel.font = [UIFont fontWithName:cardMainFont size:18];
                 self.lifeLabel.text = [NSString stringWithFormat:@"%d", monsterCard.life];
                 
                 [self addSubview: lifeLabel];
@@ -245,7 +245,7 @@ NSDictionary *abilityTextAttributtes;
                 self.cooldownLabel.strokeOn = YES;
                 self.cooldownLabel.strokeColour = [UIColor blackColor];
                 self.cooldownLabel.strokeThickness = 2.5;
-                self.cooldownLabel.font = [UIFont fontWithName:mainFont size:18];
+                self.cooldownLabel.font = [UIFont fontWithName:cardMainFont size:18];
                 self.cooldownLabel.text = [NSString stringWithFormat:@"%d", monsterCard.cooldown];
                 
                 [self addSubview: cooldownLabel];
