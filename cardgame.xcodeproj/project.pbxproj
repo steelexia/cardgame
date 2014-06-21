@@ -10,11 +10,8 @@
 		90605408191AA9D3000B3B93 /* PlayerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 90605407191AA9D3000B3B93 /* PlayerModel.m */; };
 		9060540B191AAE1B000B3B93 /* DeckModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9060540A191AAE1B000B3B93 /* DeckModel.m */; };
 		9060540D191C032B000B3B93 /* end_turn_button_up.png in Resources */ = {isa = PBXBuildFile; fileRef = 9060540C191C032B000B3B93 /* end_turn_button_up.png */; };
-		9069AACD1951E709006D1D98 /* coolvetica rg.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9069AACC1951E6AE006D1D98 /* coolvetica rg.ttf */; };
 		9069AACE1951E734006D1D98 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90F352A8191595C200601130 /* Main_iPhone.storyboard */; };
 		9069AACF1951E737006D1D98 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90F352AB191595C200601130 /* Main_iPad.storyboard */; };
-		9069AAD11951EC61006D1D98 /* encode-sans.compressed-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9069AAD01951EC2B006D1D98 /* encode-sans.compressed-bold.ttf */; };
-		9069AAD31951EDE1006D1D98 /* encode-sans.compressed-black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9069AAD21951EDD6006D1D98 /* encode-sans.compressed-black.ttf */; };
 		9069AAD519520003006D1D98 /* card_background_front_overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AAD419520003006D1D98 /* card_background_front_overlay.png */; };
 		9069AAD819528A7B006D1D98 /* StrokedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9069AAD719528A7B006D1D98 /* StrokedLabel.m */; };
 		9069AAE1195501AB006D1D98 /* card_background_front_dark_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AADA195501AB006D1D98 /* card_background_front_dark_common.png */; };
@@ -24,6 +21,7 @@
 		9069AAE5195501AB006D1D98 /* card_background_front_light_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AADE195501AB006D1D98 /* card_background_front_light_common.png */; };
 		9069AAE6195501AB006D1D98 /* card_background_front_lightning_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AADF195501AB006D1D98 /* card_background_front_lightning_common.png */; };
 		9069AAE7195501AB006D1D98 /* card_background_front_neutral_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AAE0195501AB006D1D98 /* card_background_front_neutral_common.png */; };
+		9069AAEB1956238F006D1D98 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9069AAEA1956238F006D1D98 /* Parse.framework */; };
 		907D9BDC192270DE0037C0CF /* field_edge.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9BDB192270DE0037C0CF /* field_edge.png */; };
 		907D9BDF19229B330037C0CF /* GameViewController+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = 907D9BDE19229B330037C0CF /* GameViewController+Animation.m */; };
 		907D9BE11922AE0D0037C0CF /* field_highlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9BE01922AE0D0037C0CF /* field_highlight.png */; };
@@ -38,7 +36,6 @@
 		907D9C02193045BA0037C0CF /* SinglePlayerCards.m in Sources */ = {isa = PBXBuildFile; fileRef = 907D9C01193045BA0037C0CF /* SinglePlayerCards.m */; };
 		907D9C05193247450037C0CF /* AIPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 907D9C04193247450037C0CF /* AIPlayer.m */; };
 		907D9C071932538E0037C0CF /* end_turn_button_disabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9C061932538E0037C0CF /* end_turn_button_disabled.png */; };
-		907D9C09193E42A00037C0CF /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907D9C08193E42A00037C0CF /* Parse.framework */; };
 		907D9C0B193E43640037C0CF /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907D9C0A193E43640037C0CF /* AudioToolbox.framework */; };
 		907D9C0D193E436B0037C0CF /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907D9C0C193E436B0037C0CF /* CFNetwork.framework */; };
 		907D9C0F193E43740037C0CF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907D9C0E193E43740037C0CF /* CoreLocation.framework */; };
@@ -72,9 +69,6 @@
 		90605409191AAE1B000B3B93 /* DeckModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeckModel.h; sourceTree = "<group>"; };
 		9060540A191AAE1B000B3B93 /* DeckModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeckModel.m; sourceTree = "<group>"; };
 		9060540C191C032B000B3B93 /* end_turn_button_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = end_turn_button_up.png; path = "Card Game/end_turn_button_up.png"; sourceTree = "<group>"; };
-		9069AACC1951E6AE006D1D98 /* coolvetica rg.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "coolvetica rg.ttf"; path = "../coolvetica/tt/coolvetica rg.ttf"; sourceTree = "<group>"; };
-		9069AAD01951EC2B006D1D98 /* encode-sans.compressed-bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "encode-sans.compressed-bold.ttf"; path = "../encode-sans.compressed-bold.ttf"; sourceTree = "<group>"; };
-		9069AAD21951EDD6006D1D98 /* encode-sans.compressed-black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "encode-sans.compressed-black.ttf"; path = "../encode-sans.compressed-black.ttf"; sourceTree = "<group>"; };
 		9069AAD419520003006D1D98 /* card_background_front_overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_overlay.png; path = "Card Game/card_background_front_overlay.png"; sourceTree = "<group>"; };
 		9069AAD619528A7B006D1D98 /* StrokedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrokedLabel.h; sourceTree = "<group>"; };
 		9069AAD719528A7B006D1D98 /* StrokedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StrokedLabel.m; sourceTree = "<group>"; };
@@ -85,6 +79,9 @@
 		9069AADE195501AB006D1D98 /* card_background_front_light_common.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_light_common.png; path = "Card Game/card_background_front_light_common.png"; sourceTree = "<group>"; };
 		9069AADF195501AB006D1D98 /* card_background_front_lightning_common.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_lightning_common.png; path = "Card Game/card_background_front_lightning_common.png"; sourceTree = "<group>"; };
 		9069AAE0195501AB006D1D98 /* card_background_front_neutral_common.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_neutral_common.png; path = "Card Game/card_background_front_neutral_common.png"; sourceTree = "<group>"; };
+		9069AAEA1956238F006D1D98 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "Card Game/Parse.framework"; sourceTree = "<group>"; };
+		9069AAEC195624C7006D1D98 /* encode-sans.compressed-black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "encode-sans.compressed-black.ttf"; sourceTree = "<group>"; };
+		9069AAED195624C7006D1D98 /* encode-sans.compressed-bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "encode-sans.compressed-bold.ttf"; sourceTree = "<group>"; };
 		907D9BDB192270DE0037C0CF /* field_edge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = field_edge.png; path = "Card Game/field_edge.png"; sourceTree = "<group>"; };
 		907D9BDD19229B330037C0CF /* GameViewController+Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GameViewController+Animation.h"; sourceTree = "<group>"; };
 		907D9BDE19229B330037C0CF /* GameViewController+Animation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GameViewController+Animation.m"; sourceTree = "<group>"; };
@@ -104,7 +101,6 @@
 		907D9C03193247450037C0CF /* AIPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIPlayer.h; sourceTree = "<group>"; };
 		907D9C04193247450037C0CF /* AIPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIPlayer.m; sourceTree = "<group>"; };
 		907D9C061932538E0037C0CF /* end_turn_button_disabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = end_turn_button_disabled.png; path = "Card Game/end_turn_button_disabled.png"; sourceTree = "<group>"; };
-		907D9C08193E42A00037C0CF /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "Card Game/Parse.framework"; sourceTree = "<group>"; };
 		907D9C0A193E43640037C0CF /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		907D9C0C193E436B0037C0CF /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		907D9C0E193E43740037C0CF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -154,6 +150,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9069AAEB1956238F006D1D98 /* Parse.framework in Frameworks */,
 				907D9C1B193E43A80037C0CF /* SystemConfiguration.framework in Frameworks */,
 				907D9C19193E439B0037C0CF /* StoreKit.framework in Frameworks */,
 				907D9C17193E43950037C0CF /* Security.framework in Frameworks */,
@@ -165,7 +162,6 @@
 				907D9C0B193E43640037C0CF /* AudioToolbox.framework in Frameworks */,
 				90F35299191595C200601130 /* CoreGraphics.framework in Frameworks */,
 				90F3529B191595C200601130 /* UIKit.framework in Frameworks */,
-				907D9C09193E42A00037C0CF /* Parse.framework in Frameworks */,
 				90F35297191595C200601130 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -176,9 +172,8 @@
 		9069AACB1951E6A2006D1D98 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				9069AAD01951EC2B006D1D98 /* encode-sans.compressed-bold.ttf */,
-				9069AAD21951EDD6006D1D98 /* encode-sans.compressed-black.ttf */,
-				9069AACC1951E6AE006D1D98 /* coolvetica rg.ttf */,
+				9069AAEC195624C7006D1D98 /* encode-sans.compressed-black.ttf */,
+				9069AAED195624C7006D1D98 /* encode-sans.compressed-bold.ttf */,
 			);
 			name = Fonts;
 			sourceTree = "<group>";
@@ -265,6 +260,7 @@
 		90F35295191595C200601130 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9069AAEA1956238F006D1D98 /* Parse.framework */,
 				907D9C1A193E43A80037C0CF /* SystemConfiguration.framework */,
 				907D9C18193E439B0037C0CF /* StoreKit.framework */,
 				907D9C16193E43950037C0CF /* Security.framework */,
@@ -274,7 +270,6 @@
 				907D9C0E193E43740037C0CF /* CoreLocation.framework */,
 				907D9C0C193E436B0037C0CF /* CFNetwork.framework */,
 				907D9C0A193E43640037C0CF /* AudioToolbox.framework */,
-				907D9C08193E42A00037C0CF /* Parse.framework */,
 				90F35296191595C200601130 /* Foundation.framework */,
 				90F35298191595C200601130 /* CoreGraphics.framework */,
 				90F3529A191595C200601130 /* UIKit.framework */,
@@ -420,8 +415,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9069AAD31951EDE1006D1D98 /* encode-sans.compressed-black.ttf in Resources */,
-				9069AACD1951E709006D1D98 /* coolvetica rg.ttf in Resources */,
 				907D9C2019509E850037C0CF /* battle_background_0.png in Resources */,
 				9069AAE3195501AB006D1D98 /* card_background_front_fire_common.png in Resources */,
 				9069AAE7195501AB006D1D98 /* card_background_front_neutral_common.png in Resources */,
@@ -431,7 +424,6 @@
 				9069AACF1951E737006D1D98 /* Main_iPad.storyboard in Resources */,
 				9069AAE5195501AB006D1D98 /* card_background_front_light_common.png in Resources */,
 				9069AACE1951E734006D1D98 /* Main_iPhone.storyboard in Resources */,
-				9069AAD11951EC61006D1D98 /* encode-sans.compressed-bold.ttf in Resources */,
 				907D9BF3192D8D680037C0CF /* hero_default.png in Resources */,
 				907D9BF7192E979C0037C0CF /* hero_glow_select.png in Resources */,
 				9069AAE2195501AB006D1D98 /* card_background_front_earth_common.png in Resources */,
