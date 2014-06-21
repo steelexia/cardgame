@@ -116,8 +116,10 @@ enum AbilityType
     abilityBurn,
     /** Poisoned minions take x damage per turn. Deals much more than burn (~500-3000) TODO */
     abilityPoison,
-    /** Shocked minions take x times (e.g. 2 = 2x) amount of damage per turn. TODO */
+    /** Shocked minions take x times (e.g. 2 = 2x) amount of damage per turn. maybe TODO */
     abilityShock,
+    /** Summons a fake minion of a random element with fake stats (probably copies name and image of a random minion from deck, with random stats). It dies immediately to any attack. Probably the summoned minion is casted along castOnSummon abilities so the spell card is not wasted. (e.g. for 3 cost summon a fake 4000/2000 minion with onSummon deal damage to a minion, so not only the spell card has effect, the minion would look real) TODO  */
+    abilityImage,
     
     //one-time removal of all added abilities
 };

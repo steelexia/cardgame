@@ -10,6 +10,12 @@
 
 @implementation SinglePlayerCards
 
+/*
+ Single player cards notes:
+ - Cards with chosable targets must have that ability as the first, and rest must be identical. There cannot be two different chosable targets in one card (players can't do this either anyways)
+ 
+ */
+
 +(DeckModel*) getDeckOne
 {
     DeckModel *deck = [[DeckModel alloc] init];

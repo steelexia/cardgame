@@ -11,7 +11,20 @@
 
 @implementation GameViewController (Animation)
 
+-(void) addAnimationCounter
+{
+    self.currentNumberOfAnimations++;
+    
+    [self setAllViews:NO];
+}
 
+-(void) decAnimationCounter
+{
+    self.currentNumberOfAnimations--;
+    
+    if (self.currentNumberOfAnimations == 0)
+        [self setAllViews:YES];
+}
 
 -(void) fadeIn: (UIView*) view inDuration: (float) duration
 {
@@ -104,6 +117,7 @@
 /** Card flies up while fading out. It is first placed to the top of the view. On finish it is removed from superview and the battlefield is updated */
 -(void) animateCardDestruction: (CardView*) cardView fromSide: (int)side withDelay: (float) delay
 {
+    [self addAnimationCounter];
     CGPoint newCenter = cardView.center;
     newCenter.y -= CARD_HEIGHT/4;
     
@@ -119,6 +133,7 @@
                          [cardView removeFromSuperview];
                          [self performBlock:^{
                              [self updateBattlefieldView:side];
+                             [self decAnimationCounter];
                          }  afterDelay:0.5];
                      }];
 }
@@ -128,6 +143,8 @@
     //no animation if no damage
     if (damage == 0)
         return;
+    
+    [self addAnimationCounter];
     
     UILabel *damagePopup = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 50)];
     damagePopup.text = [NSString stringWithFormat:@"-%d", damage];
@@ -148,6 +165,7 @@
             [self animateCardDestruction:cardView fromSide:side withDelay: 0.4];
 
         [self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
+        [self decAnimationCounter];
     }
     else
     {
@@ -189,6 +207,7 @@
                              else
                                  [self animateMoveToWithBounce:cardView toPosition:originalPoint inDuration:0.25 withDelay:0.4];
                              [self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
+                             [self decAnimationCounter];
                          }
          ];
     }

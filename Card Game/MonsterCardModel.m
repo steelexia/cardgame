@@ -7,6 +7,7 @@
 //
 
 #import "MonsterCardModel.h"
+#import "CardView.h"
 
 @implementation MonsterCardModel
 
@@ -50,7 +51,18 @@
 
 /** damage will be 0 if set any lower */
 -(void)setDamage:(int)damage{
-    _damage = damage > 0 ? damage : 0;
+    if (damage > 0)
+    {
+        if (_damage != damage)
+            self.cardView.damageViewNeedsUpdate = YES;
+        _damage = damage;
+    }
+    else
+    {
+        if (_damage != 0)
+            self.cardView.damageViewNeedsUpdate = YES;
+        _damage = 0;
+    }
 }
 
 -(int)damage{
@@ -78,12 +90,22 @@
 
 /** life can be above maximumHealth, and negative numbers become 0. For healing use healLife */
 -(void)setLife:(int)life{
+    
+    //inform view to make animation on next update
     if (life <= 0)
     {
         self.dead = YES;
         self.deployed = NO; //undeployed
+        if (_life != 0)
+            self.cardView.lifeViewNeedsUpdate = YES;
+        _life = 0;
     }
-    _life = life > 0 ? life : 0;
+    else
+    {
+        if (_life != life)
+            self.cardView.lifeViewNeedsUpdate = YES;
+        _life = life;
+    }
 }
 
 -(int)life{
@@ -108,7 +130,18 @@
 
 /** cooldown will be 0 if set any lower */
 -(void)setCooldown:(int)cooldown{
-    _cooldown = cooldown > 0 ? cooldown : 0;
+    if (cooldown >= 0)
+    {
+        if (cooldown != _cooldown)
+            self.cardView.cooldownViewNeedsUpdate = YES;
+        _cooldown = cooldown;
+    }
+    else
+    {
+        if (_cooldown != 0)
+            self.cardView.cooldownViewNeedsUpdate = YES;
+        _cooldown = 0;
+    }
 }
 
 -(int)cooldown

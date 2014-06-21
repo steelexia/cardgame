@@ -59,6 +59,13 @@ int enemyTotalStrength, friendlyTotalStrength;
 
 -(void)makeOneMove
 {
+    //if there is running animation, wait until it's over before making another move
+    if (self.gameViewController.currentNumberOfAnimations > 0)
+    {
+        [self performSelector:@selector(makeOneMove) withObject:nil afterDelay:0.5];
+        return;
+    }
+    
     //step 1: process the cards currently in hand
     //keep trying to summon/use cards until no more left
     BOOL outOfHandMoves = [self processHandCards];
@@ -90,7 +97,6 @@ int enemyTotalStrength, friendlyTotalStrength;
             {
                 [self pickAbilityTarget:card]; //searches for castOnSummon ability and picks a target
                 [self.gameViewController summonCard:card fromSide:OPPONENT_SIDE];
-                self.currentTarget = nil; //clear it once it's casted
                 return NO; //finished one move cycle
             }
             
@@ -135,7 +141,6 @@ int enemyTotalStrength, friendlyTotalStrength;
                         return YES;
                     
                     [self.gameViewController summonCard:card fromSide:OPPONENT_SIDE];
-                    self.currentTarget = nil; //clear it once it's casted
                     return NO; //finished one move cycle
                     
                     //NSLog(@"AI: didn't find any target for a spell card.");
@@ -219,6 +224,9 @@ int enemyTotalStrength, friendlyTotalStrength;
  */
 -(void) pickAbilityTarget: (CardModel*) card
 {
+    //clear this before searching
+    self.currentTarget = nil;
+    
     //for simplicity only checks first ability, assumes rest are all identical. NOTE: player cards will likely be a mix, but AI cards must be structured properly
     Ability* onSummonAbility;
     

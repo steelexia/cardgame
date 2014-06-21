@@ -46,6 +46,8 @@
 
 //----------------Card battle stats values----------------//
 
+@property enum CardElement element;
+
 /** Amount of resources it costs to deploy the card. 0 or higher */
 @property int cost;
 
@@ -66,6 +68,9 @@
 /** Loads a card's stats with data grabbed from parse. This should only used for a completely new card that cannot be cached anywhere else, e.g. a human opponent's card. Assumes the card is already allocated! */
 //+(void)loadCardWithParseID:(CardModel*)card withID:(NSString*)parseID;
 
+/** Returns the String version of the elements */
++(NSString*) elementToString:(enum CardElement) element;
+
 /** Creates a card out of a PFObject. */
 +(CardModel*) createCardFromPFObject: (PFObject*)cardPF;
 
@@ -78,7 +83,7 @@ enum CardRarity{
     cardRarityCommon,
     cardRarityUncommon,
     cardRarityRare,
-    cardRarityEpic, //not sure about this yet
+    cardRarityExceptional,
     cardRarityLegendary,
 };
 
@@ -89,5 +94,35 @@ enum CardType{
     cardTypeSinglePlayer //cards used by AI during single player
 };
 
+/**
+ Represents the element the ability is locked to. Each card can only pick abilities with the same element, except elementNeutral.
+ 
+ There are 7 types of elements:
+ Neutral (tan) - Basic skills, e.g. draw card, gain resource, taunt, silence
+ 
+ And 3 pairs of elements, each opposite of another, and they cannot coexist in a deck:
+ Fire (orange-red) - Direct damage, AOE damage, (maybe) burn curse
+ Ice (light blue) - Cooldown increase, (maybe) freeze curse
+ 
+ Lightning (light yellow) - Rapid damage, maybe also AOE?, cooldown decrease (maybe) shock curse
+ Earth (brown) - Regeneration, growth (i.e. life, damage) gain over time (maybe) poison curse
+ 
+ Light (light grey) - Heal, curse removal
+ Dark (dark grey) - Self-damaging, curse,
+ 
+ */
+enum CardElement
+{
+    elementNeutral,
+    elementFire,
+    elementIce,
+    elementLightning,
+    elementEarth,
+    elementLight,
+    elementDark,
+    //TODO single player AI cards may have other elements
+};
+
 extern const int MONSTER_CARD, SPELL_CARD;
+
 

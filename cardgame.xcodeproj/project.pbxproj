@@ -10,6 +10,20 @@
 		90605408191AA9D3000B3B93 /* PlayerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 90605407191AA9D3000B3B93 /* PlayerModel.m */; };
 		9060540B191AAE1B000B3B93 /* DeckModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9060540A191AAE1B000B3B93 /* DeckModel.m */; };
 		9060540D191C032B000B3B93 /* end_turn_button_up.png in Resources */ = {isa = PBXBuildFile; fileRef = 9060540C191C032B000B3B93 /* end_turn_button_up.png */; };
+		9069AACD1951E709006D1D98 /* coolvetica rg.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9069AACC1951E6AE006D1D98 /* coolvetica rg.ttf */; };
+		9069AACE1951E734006D1D98 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90F352A8191595C200601130 /* Main_iPhone.storyboard */; };
+		9069AACF1951E737006D1D98 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90F352AB191595C200601130 /* Main_iPad.storyboard */; };
+		9069AAD11951EC61006D1D98 /* encode-sans.compressed-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9069AAD01951EC2B006D1D98 /* encode-sans.compressed-bold.ttf */; };
+		9069AAD31951EDE1006D1D98 /* encode-sans.compressed-black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9069AAD21951EDD6006D1D98 /* encode-sans.compressed-black.ttf */; };
+		9069AAD519520003006D1D98 /* card_background_front_overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AAD419520003006D1D98 /* card_background_front_overlay.png */; };
+		9069AAD819528A7B006D1D98 /* StrokedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9069AAD719528A7B006D1D98 /* StrokedLabel.m */; };
+		9069AAE1195501AB006D1D98 /* card_background_front_dark_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AADA195501AB006D1D98 /* card_background_front_dark_common.png */; };
+		9069AAE2195501AB006D1D98 /* card_background_front_earth_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AADB195501AB006D1D98 /* card_background_front_earth_common.png */; };
+		9069AAE3195501AB006D1D98 /* card_background_front_fire_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AADC195501AB006D1D98 /* card_background_front_fire_common.png */; };
+		9069AAE4195501AB006D1D98 /* card_background_front_ice_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AADD195501AB006D1D98 /* card_background_front_ice_common.png */; };
+		9069AAE5195501AB006D1D98 /* card_background_front_light_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AADE195501AB006D1D98 /* card_background_front_light_common.png */; };
+		9069AAE6195501AB006D1D98 /* card_background_front_lightning_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AADF195501AB006D1D98 /* card_background_front_lightning_common.png */; };
+		9069AAE7195501AB006D1D98 /* card_background_front_neutral_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AAE0195501AB006D1D98 /* card_background_front_neutral_common.png */; };
 		907D9BDC192270DE0037C0CF /* field_edge.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9BDB192270DE0037C0CF /* field_edge.png */; };
 		907D9BDF19229B330037C0CF /* GameViewController+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = 907D9BDE19229B330037C0CF /* GameViewController+Animation.m */; };
 		907D9BE11922AE0D0037C0CF /* field_highlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9BE01922AE0D0037C0CF /* field_highlight.png */; };
@@ -58,6 +72,19 @@
 		90605409191AAE1B000B3B93 /* DeckModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeckModel.h; sourceTree = "<group>"; };
 		9060540A191AAE1B000B3B93 /* DeckModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeckModel.m; sourceTree = "<group>"; };
 		9060540C191C032B000B3B93 /* end_turn_button_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = end_turn_button_up.png; path = "Card Game/end_turn_button_up.png"; sourceTree = "<group>"; };
+		9069AACC1951E6AE006D1D98 /* coolvetica rg.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "coolvetica rg.ttf"; path = "../coolvetica/tt/coolvetica rg.ttf"; sourceTree = "<group>"; };
+		9069AAD01951EC2B006D1D98 /* encode-sans.compressed-bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "encode-sans.compressed-bold.ttf"; path = "../encode-sans.compressed-bold.ttf"; sourceTree = "<group>"; };
+		9069AAD21951EDD6006D1D98 /* encode-sans.compressed-black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "encode-sans.compressed-black.ttf"; path = "../encode-sans.compressed-black.ttf"; sourceTree = "<group>"; };
+		9069AAD419520003006D1D98 /* card_background_front_overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_overlay.png; path = "Card Game/card_background_front_overlay.png"; sourceTree = "<group>"; };
+		9069AAD619528A7B006D1D98 /* StrokedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrokedLabel.h; sourceTree = "<group>"; };
+		9069AAD719528A7B006D1D98 /* StrokedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StrokedLabel.m; sourceTree = "<group>"; };
+		9069AADA195501AB006D1D98 /* card_background_front_dark_common.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_dark_common.png; path = "Card Game/card_background_front_dark_common.png"; sourceTree = "<group>"; };
+		9069AADB195501AB006D1D98 /* card_background_front_earth_common.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_earth_common.png; path = "Card Game/card_background_front_earth_common.png"; sourceTree = "<group>"; };
+		9069AADC195501AB006D1D98 /* card_background_front_fire_common.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_fire_common.png; path = "Card Game/card_background_front_fire_common.png"; sourceTree = "<group>"; };
+		9069AADD195501AB006D1D98 /* card_background_front_ice_common.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_ice_common.png; path = "Card Game/card_background_front_ice_common.png"; sourceTree = "<group>"; };
+		9069AADE195501AB006D1D98 /* card_background_front_light_common.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_light_common.png; path = "Card Game/card_background_front_light_common.png"; sourceTree = "<group>"; };
+		9069AADF195501AB006D1D98 /* card_background_front_lightning_common.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_lightning_common.png; path = "Card Game/card_background_front_lightning_common.png"; sourceTree = "<group>"; };
+		9069AAE0195501AB006D1D98 /* card_background_front_neutral_common.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_neutral_common.png; path = "Card Game/card_background_front_neutral_common.png"; sourceTree = "<group>"; };
 		907D9BDB192270DE0037C0CF /* field_edge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = field_edge.png; path = "Card Game/field_edge.png"; sourceTree = "<group>"; };
 		907D9BDD19229B330037C0CF /* GameViewController+Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GameViewController+Animation.h"; sourceTree = "<group>"; };
 		907D9BDE19229B330037C0CF /* GameViewController+Animation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GameViewController+Animation.m"; sourceTree = "<group>"; };
@@ -146,9 +173,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9069AACB1951E6A2006D1D98 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				9069AAD01951EC2B006D1D98 /* encode-sans.compressed-bold.ttf */,
+				9069AAD21951EDD6006D1D98 /* encode-sans.compressed-black.ttf */,
+				9069AACC1951E6AE006D1D98 /* coolvetica rg.ttf */,
+			);
+			name = Fonts;
+			sourceTree = "<group>";
+		};
+		9069AAD91955019A006D1D98 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				9069AADA195501AB006D1D98 /* card_background_front_dark_common.png */,
+				9069AADB195501AB006D1D98 /* card_background_front_earth_common.png */,
+				9069AADC195501AB006D1D98 /* card_background_front_fire_common.png */,
+				9069AADD195501AB006D1D98 /* card_background_front_ice_common.png */,
+				9069AADE195501AB006D1D98 /* card_background_front_light_common.png */,
+				9069AADF195501AB006D1D98 /* card_background_front_lightning_common.png */,
+				9069AAE0195501AB006D1D98 /* card_background_front_neutral_common.png */,
+			);
+			name = Common;
+			sourceTree = "<group>";
+		};
 		907D9BD719226B330037C0CF /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				9069AACB1951E6A2006D1D98 /* Fonts */,
 				907D9BD819226B3C0037C0CF /* Graphics */,
 			);
 			name = Assets;
@@ -178,6 +230,7 @@
 		907D9BDA19226B520037C0CF /* Cards */ = {
 			isa = PBXGroup;
 			children = (
+				9069AAD91955019A006D1D98 /* Common */,
 				907D9BF6192E979C0037C0CF /* hero_glow_select.png */,
 				907D9BFE192FD3910037C0CF /* hero_glow_target.png */,
 				907D9BF4192E91290037C0CF /* card_glow_select.png */,
@@ -185,6 +238,7 @@
 				907D9BF0192D3DFB0037C0CF /* card_image_placeholder.png */,
 				907D9BF2192D8D680037C0CF /* hero_default.png */,
 				90F352CE191595F400601130 /* card_background_front.png */,
+				9069AAD419520003006D1D98 /* card_background_front_overlay.png */,
 			);
 			name = Cards;
 			sourceTree = "<group>";
@@ -252,6 +306,8 @@
 				9060540A191AAE1B000B3B93 /* DeckModel.m */,
 				907D9C03193247450037C0CF /* AIPlayer.h */,
 				907D9C04193247450037C0CF /* AIPlayer.m */,
+				9069AAD619528A7B006D1D98 /* StrokedLabel.h */,
+				9069AAD719528A7B006D1D98 /* StrokedLabel.m */,
 				90F352B1191595C200601130 /* Images.xcassets */,
 				90F352DF1916BBCC00601130 /* Cards */,
 				90F3529D191595C200601130 /* Supporting Files */,
@@ -364,15 +420,28 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9069AAD31951EDE1006D1D98 /* encode-sans.compressed-black.ttf in Resources */,
+				9069AACD1951E709006D1D98 /* coolvetica rg.ttf in Resources */,
 				907D9C2019509E850037C0CF /* battle_background_0.png in Resources */,
+				9069AAE3195501AB006D1D98 /* card_background_front_fire_common.png in Resources */,
+				9069AAE7195501AB006D1D98 /* card_background_front_neutral_common.png in Resources */,
 				9060540D191C032B000B3B93 /* end_turn_button_up.png in Resources */,
+				9069AAE1195501AB006D1D98 /* card_background_front_dark_common.png in Resources */,
 				90F352B2191595C200601130 /* Images.xcassets in Resources */,
+				9069AACF1951E737006D1D98 /* Main_iPad.storyboard in Resources */,
+				9069AAE5195501AB006D1D98 /* card_background_front_light_common.png in Resources */,
+				9069AACE1951E734006D1D98 /* Main_iPhone.storyboard in Resources */,
+				9069AAD11951EC61006D1D98 /* encode-sans.compressed-bold.ttf in Resources */,
 				907D9BF3192D8D680037C0CF /* hero_default.png in Resources */,
 				907D9BF7192E979C0037C0CF /* hero_glow_select.png in Resources */,
+				9069AAE2195501AB006D1D98 /* card_background_front_earth_common.png in Resources */,
 				907D9BF1192D3DFB0037C0CF /* card_image_placeholder.png in Resources */,
+				9069AAE6195501AB006D1D98 /* card_background_front_lightning_common.png in Resources */,
 				907D9BDC192270DE0037C0CF /* field_edge.png in Resources */,
 				907D9BF5192E91290037C0CF /* card_glow_select.png in Resources */,
+				9069AAE4195501AB006D1D98 /* card_background_front_ice_common.png in Resources */,
 				907D9BE11922AE0D0037C0CF /* field_highlight.png in Resources */,
+				9069AAD519520003006D1D98 /* card_background_front_overlay.png in Resources */,
 				90F352A1191595C200601130 /* InfoPlist.strings in Resources */,
 				907D9C071932538E0037C0CF /* end_turn_button_disabled.png in Resources */,
 				907D9BFD192FD35F0037C0CF /* card_glow_target.png in Resources */,
@@ -393,6 +462,7 @@
 				90F352B0191595C200601130 /* GameViewController.m in Sources */,
 				90F352D81915C8DB00601130 /* GameModel.m in Sources */,
 				90F352DB1916B48A00601130 /* MonsterCardModel.m in Sources */,
+				9069AAD819528A7B006D1D98 /* StrokedLabel.m in Sources */,
 				90605408191AA9D3000B3B93 /* PlayerModel.m in Sources */,
 				907D9C02193045BA0037C0CF /* SinglePlayerCards.m in Sources */,
 				90F352A7191595C200601130 /* AppDelegate.m in Sources */,

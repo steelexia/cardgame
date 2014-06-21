@@ -47,8 +47,3 @@
 
 @end
 
-/** Represents the element the ability is locked to. Each card can only pick abilities with the same element, except elementNeutral. */
-enum CardElement
-{
-    elementNeutral
-};

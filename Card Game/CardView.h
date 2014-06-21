@@ -11,6 +11,7 @@
 #import "MonsterCardModel.h"
 #import "SpellCardModel.h"
 #import "Ability.h"
+#import "StrokedLabel.h"
 
 /**
  Handles the view aspect of the card. Draws the card based on the model object.
@@ -30,7 +31,9 @@
 @property enum CardHighlightType cardHighlightType;
 
 /** Labels displayed on the cards (somewhat temporary for now) */
-@property (strong) UILabel *nameLabel, *costLabel, *attackLabel, *lifeLabel, *cooldownLabel, *baseAbilityLabel, *addedAbilityLabel;
+@property (strong) StrokedLabel *nameLabel, *costLabel, *attackLabel, *lifeLabel, *cooldownLabel, *elementLabel;
+
+@property (strong) UILabel *baseAbilityLabel, *addedAbilityLabel;
 
 /** Overwritten center */
 @property CGPoint center;
@@ -47,8 +50,15 @@
 /** Set to YES during damage animations to prevent two happening at once. */
 @property BOOL inDamageAnimation;
 
+@property BOOL lifeViewNeedsUpdate;
+@property BOOL damageViewNeedsUpdate;
+@property BOOL cooldownViewNeedsUpdate;
+
+/** Sets the current mode of display for different purposes */
+@property enum CardViewMode cardViewMode;
+
 /** Initializes with attached CardModel, which should be one of its child classes */
--(instancetype)initWithModel: (CardModel*)cardModel cardImage:(UIImageView*)cardImage;
+-(instancetype)initWithModel: (CardModel*)cardModel cardImage:(UIImageView*)cardImage viewMode:(enum CardViewMode)cardViewMode;
 
 /** Updates its view after values are updated (i.e. lost life) */
 -(void)updateView;
@@ -92,4 +102,11 @@ enum CardHighlightType
     cardHighlightNone,
     cardHighlightSelect,
     cardHighlightTarget,
+};
+
+/** For when the cardView is used for different purposes */
+enum CardViewMode
+{
+    cardViewModeIngame,
+    cardViewModeZoomedIngame
 };

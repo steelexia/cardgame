@@ -17,6 +17,8 @@
     
     //TODO should be in main screen
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    [PFUser enableAutomaticUser];
+    [[PFUser currentUser] saveInBackground];
     return YES;
 }
 							

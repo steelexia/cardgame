@@ -24,6 +24,7 @@
 @synthesize currentAbilities = _currentAbilities;
 @synthesize endTurnButton = _endTurnButton;
 @synthesize touchStartPoint = _touchStartPoint;
+@synthesize currentNumberOfAnimations = _currentNumberOfAnimations;
 
 /** Screen dimension for convinience */
 int SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -107,11 +108,25 @@ CardModel* currentCard;
     [self updateHandsView: OPPONENT_SIDE];
     [self updateResourceView: PLAYER_SIDE];
     [self updateResourceView: OPPONENT_SIDE];
+    
+    self.currentNumberOfAnimations = 0; //init
 }
 
 /** Purely for organization, called once when the view is first set up */
 -(void) setupUI
 {
+    /*
+    for (NSString* family in [UIFont familyNames])
+    {
+        NSLog(@"%@", family);
+        
+        for (NSString* name in [UIFont fontNamesForFamilyName: family])
+        {
+            NSLog(@"  %@", name);
+        }
+    }
+*/
+    
     //----Main view layers used to group relevant objects together----//
     handsView = [[ViewLayer alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
     fieldView = [[ViewLayer alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
@@ -130,6 +145,7 @@ CardModel* currentCard;
     
     battlefieldBackground  = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"battle_background_0"]];
     battlefieldBackground.center = self.view.center;
+    battlefieldBackground.frame = self.view.frame;
     [backgroundView addSubview:battlefieldBackground];
     
     //TODO temporary side label
@@ -200,11 +216,11 @@ CardModel* currentCard;
     
     //-----Player's heroes-----//
     
-    CardView *playerHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[PLAYER_SIDE]).playerMonster cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"hero_default"]]];
+    CardView *playerHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[PLAYER_SIDE]).playerMonster cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"hero_default"]] viewMode:cardViewModeIngame];
     playerHeroView.center = CGPointMake((SCREEN_WIDTH - playerFieldEdge.bounds.size.width)/2 + PLAYER_HERO_WIDTH/2, playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*2 + PLAYER_HERO_HEIGHT/2);
     [self.fieldView addSubview:playerHeroView];
     
-    CardView *opponentHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[OPPONENT_SIDE]).playerMonster cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"hero_default"]]];
+    CardView *opponentHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[OPPONENT_SIDE]).playerMonster cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"hero_default"]]viewMode:cardViewModeIngame];
     opponentHeroView.center = CGPointMake((SCREEN_WIDTH - opponentFieldEdge.bounds.size.width)/2 + PLAYER_HERO_WIDTH/2, opponentFieldEdge.center.y - opponentFieldEdge.bounds.size.height/2 - fieldsDistanceHalf*2 - PLAYER_HERO_HEIGHT/2);
     [self.fieldView addSubview:opponentHeroView];
     
@@ -293,7 +309,7 @@ CardModel* currentCard;
         //if card has no view, create one
         if (card.cardView == nil)
         {
-            CardView *cardView = [[CardView alloc] initWithModel:card cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]]];
+            CardView *cardView = [[CardView alloc] initWithModel:card cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]]viewMode:cardViewModeIngame];
             card.cardView = cardView;
             [self.handsView addSubview:card.cardView];
             
@@ -334,7 +350,7 @@ CardModel* currentCard;
     else if (side == OPPONENT_SIDE)
         height = opponentFieldHighlight.center.y;
     
-    //iterate through all player's hand's cards and set their views correctly
+    //iterate through all field cards and set their views correctly
     for (int i = 0; i < field.count; i++)
     {
         MonsterCardModel *card = field[i];
@@ -348,7 +364,7 @@ CardModel* currentCard;
         //if card has no view, create one
         if (card.cardView == nil)
         {
-            CardView *cardView = [[CardView alloc] initWithModel:card cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]]];
+            CardView *cardView = [[CardView alloc] initWithModel:card cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]]viewMode:cardViewModeIngame];
             card.cardView = cardView;
             [self.fieldView addSubview:card.cardView];
             
@@ -368,6 +384,10 @@ CardModel* currentCard;
         else if ([self.currentAbilities count] == 0 || card.cardView.cardHighlightType != cardHighlightTarget)
             card.cardView.cardHighlightType = cardHighlightNone;
     }
+    
+    //update hero
+    CardView*player = self.playerHeroViews[side];
+    player.cardHighlightType = cardHighlightNone;
 }
 
 /** update the corresponding resource label with the number of resource the player has */
@@ -399,8 +419,10 @@ CardModel* currentCard;
     //if picking a target for abilities and touched a card
     if ([self.currentAbilities count] > 0)
     {
+        NSLog(@"has ability");
         if ([[touch view] isKindOfClass:[CardView class]])
         {
+            NSLog(@"touched card view");
             UIView *touchView = [touch view];
             MonsterCardModel *target = (MonsterCardModel*)((CardView*)[touch view]).cardModel;
             
@@ -410,6 +432,7 @@ CardModel* currentCard;
                 //cast all abilities at this card
                 for (Ability *ability in self.currentAbilities){
                     [self.gameModel castAbility:ability byMonsterCard:nil toMonsterCard:target fromSide:PLAYER_SIDE];
+                    [target.cardView updateView];
                 }
                 
                 //reset all cards' highlight back to none
@@ -424,8 +447,8 @@ CardModel* currentCard;
                 
                 //ability casted successfully
                 [self.currentAbilities removeAllObjects];
-                [self updateBattlefieldView:OPPONENT_SIDE];
-                [self updateBattlefieldView:PLAYER_SIDE];
+                //[self updateBattlefieldView:OPPONENT_SIDE];
+                //[self updateBattlefieldView:PLAYER_SIDE];
                 [self updateHandsView:PLAYER_SIDE];
                 
                 //re-enable the disabled views
@@ -433,12 +456,15 @@ CardModel* currentCard;
                 [self.uiView setUserInteractionEnabled:YES];
                 [self.backgroundView setUserInteractionEnabled:YES];
                 
+                NSLog(@"casted");
+                
                 return; //prevent the other events happening
             }
         }
         
         //TODO should not be able to give up spells, either make it impossible to cancel or allow undoing
         //did not select a valid target, ability given up
+        /*
         [self.currentAbilities removeAllObjects];
         [self updateBattlefieldView:OPPONENT_SIDE];
         [self updateBattlefieldView:PLAYER_SIDE];
@@ -448,6 +474,7 @@ CardModel* currentCard;
         [self.handsView setUserInteractionEnabled:YES];
         [self.uiView setUserInteractionEnabled:YES];
         [self.backgroundView setUserInteractionEnabled:YES];
+         */
     }
     else
     {
@@ -713,19 +740,18 @@ CardModel* currentCard;
         //touch ended on same point as start
         if (self.viewingCardStart != nil && CGPointEqualToPoint(currentPoint, self.touchStartPoint))
         {
-            //if ([self.viewingCardStart isKindOfClass:[MonsterCardModel class]])
-            //{
-                CardModel*card = self.viewingCardStart;
-                CardView*originalView = card.cardView; //save original view to point back
-                
-                self.viewingCardView = [[CardView alloc] initWithModel:card cardImage: [[UIImageView alloc] initWithImage:originalView.cardImage.image]]; //constructor also modifies monster's cardView pointer
-                
-                card.cardView = originalView; //recover the pointer
-                
-                [self.viewingCardView setCardViewState:cardViewStateMaximize];
-                self.viewingCardView.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
-                [self.uiView addSubview:self.viewingCardView];
-            //}
+            CardModel*card = self.viewingCardStart;
+            CardView*originalView = card.cardView; //save original view to point back
+            
+            self.viewingCardView = [[CardView alloc] initWithModel:card cardImage: [[UIImageView alloc] initWithImage:originalView.cardImage.image]viewMode:cardViewModeZoomedIngame]; //constructor also modifies monster's cardView pointer
+            
+            card.cardView = originalView; //recover the pointer
+            
+            [self.viewingCardView setCardViewState:cardViewStateMaximize];
+            //self.viewingCardView.cardViewMode = cardViewModeZoomedIngame;
+            self.viewingCardView.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+            [self.uiView addSubview:self.viewingCardView];
+            
         }
     }
     
@@ -806,9 +832,11 @@ CardModel* currentCard;
         currentCard = nil;
     }
     
+    /*
     [self performBlock:^{
-        //[self updateBattlefieldView:currentSide];
+        [self updateBattlefieldView:currentSide];
     }  afterDelay:2];
+     */
 }
 
 
@@ -883,6 +911,14 @@ CardModel* currentCard;
     
     //update hand's view at the end
     [self updateHandsView:side];
+}
+
+-(void)setAllViews:(BOOL)state
+{
+    [self.handsView setUserInteractionEnabled:state];
+    [self.uiView setUserInteractionEnabled:state];
+    [self.backgroundView setUserInteractionEnabled:state];
+    [self.fieldView setUserInteractionEnabled:state];
 }
 
 //block delay functions

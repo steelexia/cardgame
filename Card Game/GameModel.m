@@ -92,21 +92,68 @@ int cardIDCount = 0;
     
     //add a card to player hand for quick testing
     
-    NSMutableArray* hand = self.hands[PLAYER_SIDE];
+    NSMutableArray* playerHand = self.hands[PLAYER_SIDE];
+    NSMutableArray* aiHand = self.hands[OPPONENT_SIDE];
     
+    /*
+    SpellCardModel*spell;
+    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    spell.element = elementLightning;
+    spell.name = @"Overpowered Card";
+    spell.cost = 0;
+    
+    [spell.abilities addObject: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneAny withDuration:durationForever withValue:[NSNumber numberWithInt:2000]]];
+    
+    [hand addObject:spell];
+    */
     
     MonsterCardModel*monster;
     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
-    monster.name = @"Monster";
-    monster.life = monster.maximumLife = 2200;
-    monster.damage = 1800;
+    monster.name = @"Nameless card";
+    monster.life = monster.maximumLife = 100;
+    monster.damage = 100;
+    monster.cost = 0;
+    monster.cooldown = monster.maximumCooldown = 0;
+    
+    [monster.abilities addObject: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]]];
+    
+    [aiHand addObject:monster];
+    
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster.name = @"Nameless card";
+    monster.life = monster.maximumLife = 2000;
+    monster.damage = 1000;
     monster.cost = 0;
     monster.cooldown = monster.maximumCooldown = 1;
     
-    [monster.abilities addObject: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetAll withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
+    //[monster.abilities addObject: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAll withDuration:durationForever withValue:[NSNumber numberWithInt:2000]]];
+    
+    [playerHand addObject:monster];
+    /*
+    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster.element = elementLightning;
+    monster.name = @"Nameless card";
+    monster.life = monster.maximumLife = 40000;
+    monster.damage = 10000;
+    monster.cost = 0;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    //[monster.abilities addObject: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAll withDuration:durationForever withValue:[NSNumber numberWithInt:2000]]];
     
     [hand addObject:monster];
     
+    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster.name = @"Nameless card";
+    monster.life = monster.maximumLife = 4000;
+    monster.damage = 1000;
+    monster.cost = 0;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [monster.abilities addObject: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneAny withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]]];
+    
+    [hand addObject:monster];
+    */
 }
 
 -(void)newTurn:(int)side
@@ -305,8 +352,6 @@ int cardIDCount = 0;
         {
             SpellCardModel *spellCard = (SpellCardModel*) card;
             
-            
-            
             //check if has valid target. If one ability has no valid target then card is invalid (e.g. targets enemy hero & all enemy minions but no enemy minions on field then invalid)
             for (Ability *ability in spellCard.abilities)
             {
@@ -376,6 +421,8 @@ int cardIDCount = 0;
         //update it first for better animations
         [self.gameViewController updateBattlefieldView: side];
         
+        [self.gameViewController addAnimationCounter]; //the delayed cast counts as an animation
+        
         //cast a little later for better visuals
         [self.gameViewController performBlock:^{
             //CastType castOnSummon is casted here
@@ -385,11 +432,13 @@ int cardIDCount = 0;
                 if (ability.castType == castOnSummon)
                     [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:nil fromSide:side];
             }
+            [self.gameViewController decAnimationCounter];
             [self checkForGameOver];
-        } afterDelay:0.4]; //WARNING: this delay must be shorter than AI's delay between each move
+        } afterDelay:0.4];
     }
     else if ([card isKindOfClass: [SpellCardModel class]])
     {
+        //don't need to cast later since don't have deployment time
         for (int i = 0; i < [card.abilities count]; i++) //castAbility may insert objects in end
         {
             Ability*ability = card.abilities[i];
@@ -518,7 +567,11 @@ int cardIDCount = 0;
         
         //NOTE: castOnHit cannot be casted when defending and castOnDamaged cannot be casted when attack, otherwise defensive abilities can be used by attacking etc
         
-              attackerMonsterCard.cooldown = attackerMonsterCard.maximumCooldown;
+        //just a safeguard in case a minion has cooldown of 0. This prevents infinite attacks
+        if (attackerMonsterCard.maximumCooldown > 0)
+            attackerMonsterCard.cooldown = attackerMonsterCard.maximumCooldown;
+        else
+            attackerMonsterCard.cooldown = 1;
         
         //target dies
         if (target.dead)
@@ -610,7 +663,14 @@ int cardIDCount = 0;
         {
             Ability*ability = monsterCard.abilities[i];
             if (ability.castType == castOnDeath)
-                [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:attackerMonster fromSide:side];
+            {
+                [self.gameViewController addAnimationCounter]; //counts as animation
+                //casting after a slight delay makes chain reactions less chaotic
+                [self.gameViewController performBlock:^{
+                    [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:attackerMonster fromSide:side];
+                    [self.gameViewController decAnimationCounter];
+                } afterDelay:0.4]; //TODO will need visual indicator later
+            }
         }
         
         //TODO DurationType durationUntilDeath is removed here, but currently no point of removing it at death
@@ -1017,6 +1077,9 @@ int cardIDCount = 0;
     //apply the effect to the targets NOTE: this loop is inefficient but saves a lot of lines
     for (MonsterCardModel* target in targets)
     {
+        if (target.dead) //skip dead monsters
+            continue;
+        
         Ability * appliedAbility;
         //all effects are first added to the abilities: add the ability to the object with castType as castAlways as they're already casted, and pass all other values on. Instant effects are applied right after
         appliedAbility = [[Ability alloc] initWithType:ability.abilityType castType:castAlways targetType:targetSelf withDuration:ability.durationType withValue:ability.value withOtherValues:ability.otherValues];
@@ -1097,11 +1160,17 @@ int cardIDCount = 0;
         [self.gameViewController animateCardDamage:monster.cardView forDamage:lifeLost fromSide:monster.side];
     }
     else if (ability.abilityType == abilitySetCooldown)
+    {
         monster.cooldown = [ability.value intValue];
+    }
     else if (ability.abilityType == abilityAddCooldown)
+    {
         monster.cooldown += [ability.value intValue];
+    }
     else if (ability.abilityType == abilityLoseCooldown)
+    {
         monster.cooldown -= [ability.value intValue];
+    }
     else if (ability.abilityType == abilityDrawCard)
     {
         //draws card for one or both sides
@@ -1109,29 +1178,41 @@ int cardIDCount = 0;
         if (ability.targetType == targetHeroFriendly)
         {
             for (int i = 0; i < [ability.value intValue]; i++)
+            {
+                [self.gameViewController addAnimationCounter];
                 [self.gameViewController performBlock:^{
                     [self drawCard:side];
                     [self.gameViewController updateHandsView:side];
+                    [self.gameViewController decAnimationCounter];
                 } afterDelay:0.5*(i+1)];
+            }
         }
         else if (ability.targetType == targetHeroEnemy)
         {
             for (int i = 0; i < [ability.value intValue]; i++)
+            {
+                [self.gameViewController addAnimationCounter];
                 [self.gameViewController performBlock:^{
                     [self drawCard:oppositeSide];
                     [self.gameViewController updateHandsView:oppositeSide];
+                    [self.gameViewController decAnimationCounter];
                 } afterDelay:0.5*(i+1)];
+            }
         }
         else if (ability.targetType == targetAll)
         {
             for (int i = 0; i < [ability.value intValue]; i++)
+            {
+                [self.gameViewController addAnimationCounter];
                 [self.gameViewController performBlock:^{
                     [self drawCard:side];
                     [self drawCard:oppositeSide];
                     
                     [self.gameViewController updateHandsView:side];
                     [self.gameViewController updateHandsView:oppositeSide];
+                    [self.gameViewController decAnimationCounter];
                 } afterDelay:0.5*(i+1)];
+            }
         }
     }
     else if (ability.abilityType == abilityAddResource)

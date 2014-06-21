@@ -43,6 +43,10 @@
 @property (strong) CardModel* viewingCardStart;
 @property CGPoint touchStartPoint;
 
+
+/** Counts the number of gameModel effecting animations that are happening. Do not access directly, use addAnimationCounter and decAnimationCounter */
+@property int currentNumberOfAnimations;
+
 /** updates the position of all hands with the gameModel, adding views to cards that don't have one yet */
 //-(void)updateHandsView;
 
@@ -67,6 +71,9 @@
 -(void) attackCard: (CardModel*) card target:(MonsterCardModel*)targetCard fromSide: (int) side;
 
 -(void) attackHero: (CardModel*) card target:(MonsterCardModel*)targetCard fromSide: (int) side;
+
+/** Quickly enable/disable all views */
+-(void)setAllViews:(BOOL)state;
 
 - (void)performBlock:(void (^)())block;
 

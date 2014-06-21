@@ -11,6 +11,11 @@
 /** Custom animations for the card game. Methods are placed here so they can be tweaked easily */
 @interface GameViewController (Animation)
 
+
+-(void) addAnimationCounter;
+
+-(void) decAnimationCounter;
+
 /** Fade in a view */
 -(void) fadeIn: (UIView*) view inDuration: (float) duration;
 

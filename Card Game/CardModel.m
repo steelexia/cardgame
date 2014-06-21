@@ -10,7 +10,7 @@
 #import "MonsterCardModel.h"
 #import "SpellCardModel.h"
 #import "AbilityWrapper.h"
-
+#import "CardView.h"
 @implementation CardModel
 
 @synthesize idNumber = _idNumber;
@@ -21,6 +21,7 @@
 @synthesize type = _type;
 @synthesize creator = _creator;
 @synthesize creatorName = _creatorName;
+@synthesize element = _element;
 
 const int MONSTER_CARD = 0, SPELL_CARD = 1;
 
@@ -40,6 +41,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
         self.abilities = [NSMutableArray array]; //default no ability
         self.type = cardTypeStandard;
         self.creator = @"Unknown";
+        self.element = elementNeutral;
     }
     
     return self;
@@ -70,6 +72,24 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
 {
     ability.isBaseAbility = YES;
     [self.abilities addObject:ability];
+}
+
++(NSString*) elementToString:(enum CardElement) element
+{
+    if (element == elementFire)
+        return @"Fire";
+    else if (element == elementIce)
+        return @"Ice";
+    else if (element == elementLightning)
+        return @"Lightning";
+    else if (element == elementEarth)
+        return @"Earth";
+    else if (element == elementLight)
+        return @"Light";
+    else if (element == elementDark)
+        return @"Dark";
+    else
+        return @"Neutral";
 }
 
 //TODO this function is not working atm
@@ -213,6 +233,8 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
     
     [cardPF saveInBackground];
 }
+
+
 
 @end
 
