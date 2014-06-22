@@ -308,8 +308,6 @@ int enemyTotalStrength, friendlyTotalStrength;
     }
 }
 
-
-
 /** If an ability is considered "harmful", it will never target it at a target of its own minion. Otherwise it will target itself. */
 -(BOOL)isHarmfulAbility: (Ability*) ability toTarget:(MonsterCardModel*)target
 {
@@ -519,6 +517,96 @@ int enemyTotalStrength, friendlyTotalStrength;
         //TODO
         points = card.cost * 1000;
     }
+    
+    return points;
+}
+
+/**
+ Calculates the "points" value of casting an array of abilities at an array of MonsterCardModel targets from the side "side".
+ Call this main function for most purposes, and not the other ones.
+ LIMITATIONS:
+ - Cannot evaluate result of castOnDeath from a castOnDeath ability due to infinite loops (since there's no state for AI's calculations)
+ */
+-(int)evaluateAbilitiesPoints: (NSArray*)abilities targets:(NSArray*)targets targetSide:(int)side
+{
+    int points = USELESS_MOVE;
+    
+    for (MonsterCardModel* target in targets)
+    {
+        int targetPoint = [self evaluateAbilitiesPoints:abilities target:target targetSide:side];
+        
+        //if impossible move, don't bother trying anything else. It's impossible (or game will be lost)
+        if (targetPoint == IMPOSSIBLE_MOVE)
+            return IMPOSSIBLE_MOVE;
+        //this move will win. as long as there are no IMPOSSIBLE_MOVE from other abilities, cast it immediately
+        else if (targetPoint == VICTORY_MOVE)
+            points = VICTORY_MOVE;
+        //useless move, don't contribute to points, but if all are useless, don't cast it
+        else if (targetPoint == USELESS_MOVE)
+        {
+            //do nothing, it won't contribute to the points
+        }
+        //regular move
+        else
+        {
+            //if so far all useless moves, this move is no longer useless
+            if (points == USELESS_MOVE)
+                points = targetPoint;
+            //as long as not a victory move, add the points to previous
+            else if (points != VICTORY_MOVE)
+                points += points;
+        }
+    }
+    
+    return points;
+}
+
+/**
+ Calculates the "points" value of casting an array of abilities at a single MonsterCardModel target from the side "side".
+ In most cases should not call this, but call the parent function instead
+ */
+-(int)evaluateAbilitiesPoints: (NSArray*)abilities target:(MonsterCardModel*)target targetSide:(int)side
+{
+    int points = USELESS_MOVE;
+    
+    for (MonsterCardModel* target in abilities)
+    {
+        int targetPoint = [self evaluateAbilitiesPoints:abilities target:target targetSide:side];
+        
+        //if impossible move, don't bother trying anything else. It's impossible (or game will be lost)
+        if (targetPoint == IMPOSSIBLE_MOVE)
+            return IMPOSSIBLE_MOVE;
+        //this move will win. as long as there are no IMPOSSIBLE_MOVE from other abilities, cast it immediately
+        else if (targetPoint == VICTORY_MOVE)
+            points = VICTORY_MOVE;
+        //useless move, don't contribute to points, but if all are useless, don't cast it
+        else if (targetPoint == USELESS_MOVE)
+        {
+            //do nothing, it won't contribute to the points
+        }
+        //regular move
+        else
+        {
+            //if so far all useless moves, this move is no longer useless
+            if (points == USELESS_MOVE)
+                points = targetPoint;
+            //as long as not a victory move, add the points to previous
+            else if (points != VICTORY_MOVE)
+                points += points;
+        }
+    }
+    
+    return points;
+}
+
+
+/** 
+ Calculates the "points" value of casting a single ability at a single MonsterCardModel target from the side "side".
+ In most cases should not call this, but call the parent function instead
+ */
+-(int)evaluateAbilityPoints: (Ability*)ability target:(MonsterCardModel*)target targetSide:(int)side
+{
+    int points = USELESS_MOVE;
     
     return points;
 }

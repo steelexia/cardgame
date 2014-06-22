@@ -21,6 +21,7 @@
 		9069AAE5195501AB006D1D98 /* card_background_front_light_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AADE195501AB006D1D98 /* card_background_front_light_common.png */; };
 		9069AAE6195501AB006D1D98 /* card_background_front_lightning_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AADF195501AB006D1D98 /* card_background_front_lightning_common.png */; };
 		9069AAE7195501AB006D1D98 /* card_background_front_neutral_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AAE0195501AB006D1D98 /* card_background_front_neutral_common.png */; };
+		9069AAEF19563834006D1D98 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9069AAEE19563834006D1D98 /* Parse.framework */; };
 		907D9BDC192270DE0037C0CF /* field_edge.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9BDB192270DE0037C0CF /* field_edge.png */; };
 		907D9BDF19229B330037C0CF /* GameViewController+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = 907D9BDE19229B330037C0CF /* GameViewController+Animation.m */; };
 		907D9BE11922AE0D0037C0CF /* field_highlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9BE01922AE0D0037C0CF /* field_highlight.png */; };
@@ -60,7 +61,6 @@
 		90F352D81915C8DB00601130 /* GameModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352D71915C8DB00601130 /* GameModel.m */; };
 		90F352DB1916B48A00601130 /* MonsterCardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352DA1916B48A00601130 /* MonsterCardModel.m */; };
 		90F352DE1916BB9300601130 /* SpellCardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352DD1916BB9300601130 /* SpellCardModel.m */; };
-		FA40259419562B1500FCCBAB /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA40259319562B1500FCCBAB /* Parse.framework */; };
 		FA4025971956331300FCCBAB /* DeckEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4025961956331300FCCBAB /* DeckEditorViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -82,6 +82,7 @@
 		9069AAE0195501AB006D1D98 /* card_background_front_neutral_common.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_neutral_common.png; path = "Card Game/card_background_front_neutral_common.png"; sourceTree = "<group>"; };
 		9069AAEC195624C7006D1D98 /* encode-sans.compressed-black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "encode-sans.compressed-black.ttf"; sourceTree = "<group>"; };
 		9069AAED195624C7006D1D98 /* encode-sans.compressed-bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "encode-sans.compressed-bold.ttf"; sourceTree = "<group>"; };
+		9069AAEE19563834006D1D98 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "Card Game/Parse.framework"; sourceTree = "<group>"; };
 		907D9BDB192270DE0037C0CF /* field_edge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = field_edge.png; path = "Card Game/field_edge.png"; sourceTree = "<group>"; };
 		907D9BDD19229B330037C0CF /* GameViewController+Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GameViewController+Animation.h"; sourceTree = "<group>"; };
 		907D9BDE19229B330037C0CF /* GameViewController+Animation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GameViewController+Animation.m"; sourceTree = "<group>"; };
@@ -143,7 +144,6 @@
 		90F352DA1916B48A00601130 /* MonsterCardModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonsterCardModel.m; sourceTree = "<group>"; };
 		90F352DC1916BB9300601130 /* SpellCardModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpellCardModel.h; sourceTree = "<group>"; };
 		90F352DD1916BB9300601130 /* SpellCardModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpellCardModel.m; sourceTree = "<group>"; };
-		FA40259319562B1500FCCBAB /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "Card Game/Parse.framework"; sourceTree = "<group>"; };
 		FA4025951956331300FCCBAB /* DeckEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeckEditorViewController.h; sourceTree = "<group>"; };
 		FA4025961956331300FCCBAB /* DeckEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeckEditorViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -153,7 +153,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA40259419562B1500FCCBAB /* Parse.framework in Frameworks */,
+				9069AAEF19563834006D1D98 /* Parse.framework in Frameworks */,
 				907D9C1B193E43A80037C0CF /* SystemConfiguration.framework in Frameworks */,
 				907D9C19193E439B0037C0CF /* StoreKit.framework in Frameworks */,
 				907D9C17193E43950037C0CF /* Security.framework in Frameworks */,
@@ -263,7 +263,7 @@
 		90F35295191595C200601130 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FA40259319562B1500FCCBAB /* Parse.framework */,
+				9069AAEE19563834006D1D98 /* Parse.framework */,
 				907D9C1A193E43A80037C0CF /* SystemConfiguration.framework */,
 				907D9C18193E439B0037C0CF /* StoreKit.framework */,
 				907D9C16193E43950037C0CF /* Security.framework */,
@@ -298,14 +298,14 @@
 				907D9BDE19229B330037C0CF /* GameViewController+Animation.m */,
 				90F352D61915C8DB00601130 /* GameModel.h */,
 				90F352D71915C8DB00601130 /* GameModel.m */,
-				907D9C00193045BA0037C0CF /* SinglePlayerCards.h */,
-				907D9C01193045BA0037C0CF /* SinglePlayerCards.m */,
 				90605406191AA9D3000B3B93 /* PlayerModel.h */,
 				90605407191AA9D3000B3B93 /* PlayerModel.m */,
 				90605409191AAE1B000B3B93 /* DeckModel.h */,
 				9060540A191AAE1B000B3B93 /* DeckModel.m */,
 				907D9C03193247450037C0CF /* AIPlayer.h */,
 				907D9C04193247450037C0CF /* AIPlayer.m */,
+				907D9C00193045BA0037C0CF /* SinglePlayerCards.h */,
+				907D9C01193045BA0037C0CF /* SinglePlayerCards.m */,
 				9069AAD619528A7B006D1D98 /* StrokedLabel.h */,
 				9069AAD719528A7B006D1D98 /* StrokedLabel.m */,
 				90F352B1191595C200601130 /* Images.xcassets */,
@@ -605,6 +605,7 @@
 					Game,
 					"$(PROJECT_DIR)/Card",
 					Game,
+					"/Users/dmadmin/Desktop/Card\\ Game/Card\\ Game",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Card Game/cardgame-Prefix.pch";
@@ -629,6 +630,7 @@
 					Game,
 					"$(PROJECT_DIR)/Card",
 					Game,
+					"/Users/dmadmin/Desktop/Card\\ Game/Card\\ Game",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Card Game/cardgame-Prefix.pch";

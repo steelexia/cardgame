@@ -320,6 +320,8 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
         UIColor *newCooldownColour;
         if (monsterCard.cooldown > monsterCard.maximumCooldown || monsterCard.cooldown > monsterCard.baseMaxCooldown || monsterCard.maximumCooldown > monsterCard.baseMaxCooldown)
             newCooldownColour = [UIColor redColor];
+        else if (monsterCard.cooldown == 0)
+            newCooldownColour = [UIColor greenColor]; //green when at 0 cooldown
         else
             newCooldownColour = [UIColor whiteColor];
         

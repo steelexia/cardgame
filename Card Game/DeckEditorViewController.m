@@ -26,7 +26,19 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    //get the single player deck
+    DeckModel * testDeck = [SinglePlayerCards getDeckOne];
+    
+    //get the CardView of every card in the deck
+    for (CardModel *card in testDeck.cards)
+    {
+        //create a card view and set it up
+        CardView *cardView = [[CardView alloc] initWithModel:card cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]]viewMode:cardViewModeIngame];
+        card.cardView = cardView;
+        
+        
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -36,24 +48,39 @@
 }
 
 /*
-#pragma mark - Navigation
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+ {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (IBAction)backBtnPressed:(id)sender
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    
 }
-*/
 
-- (IBAction)backBtnPressed:(id)sender {
+- (IBAction)DeckSegmentedControl:(id)sender
+{
+    
 }
-- (IBAction)DeckSegmentedControl:(id)sender {
+
+- (IBAction)CardTypeValueChanged:(id)sender
+{
+    
 }
-- (IBAction)CardTypeValueChanged:(id)sender {
+
+- (IBAction)RemoveAllCardsPressed:(id)sender
+{
+    
 }
-- (IBAction)RemoveAllCardsPressed:(id)sender {
+
+- (IBAction)SaveDeckPressed:(id)sender
+{
+    
 }
-- (IBAction)SaveDeckPressed:(id)sender {
-}
+
 @end
