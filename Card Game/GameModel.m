@@ -1249,6 +1249,7 @@ int cardIDCount = 0;
         int monsterSide = monster.side;
         
         [monster resetAllStats]; //reset all stats
+        monster.deployed = NO;
         NSMutableArray*battlefield = self.battlefield[monsterSide];
         [battlefield removeObject:monster];
         
@@ -1267,6 +1268,7 @@ int cardIDCount = 0;
     {
         return NO; //not an instant ability, nothing happened
     }
+    //TODO when adding new instant effects, include them in the AIPlayer
     
     //update view and check for death
     [monster.cardView updateView];

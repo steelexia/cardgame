@@ -533,7 +533,10 @@ int enemyTotalStrength, friendlyTotalStrength;
     
     for (MonsterCardModel* target in targets)
     {
-        int targetPoint = [self evaluateAbilitiesPoints:abilities target:target targetSide:side];
+        //deep copy the target to perform ability effects
+        MonsterCardModel*copyTarget = [[MonsterCardModel alloc] initWithMonsterCard:target];
+        
+        int targetPoint = [self evaluateAbilitiesPoints:abilities target:copyTarget targetSide:side];
         
         //if impossible move, don't bother trying anything else. It's impossible (or game will be lost)
         if (targetPoint == IMPOSSIBLE_MOVE)
@@ -603,10 +606,105 @@ int enemyTotalStrength, friendlyTotalStrength;
 /** 
  Calculates the "points" value of casting a single ability at a single MonsterCardModel target from the side "side".
  In most cases should not call this, but call the parent function instead
+ This function will actually cast the effect on the target when applicable
  */
 -(int)evaluateAbilityPoints: (Ability*)ability target:(MonsterCardModel*)target targetSide:(int)side
 {
     int points = USELESS_MOVE;
+    //for convenience
+    enum CastType castType = ability.castType;
+    enum DurationType durationType = ability.durationType;
+    
+    if (ability.abilityType == abilityAddLife)
+    {
+        int lifeDifference = target.maximumLife - target.life;
+        
+        //base points from amount of health healed
+        points = [ability.value intValue] > lifeDifference ? [ability.value intValue] : [ability.value intValue];
+    
+        //all repeated casts have similar algorithms
+        if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn)
+        {
+            //healing is exponentially good if monster has enough life
+            if (target.maximumLife > 2000)
+            {
+                points += pow(target.maximumLife - 1000, 1.1);
+            }
+            else
+            {
+                points *= 2; //otherwise just twice as good
+            }
+            
+            if (castType == castOnDamaged)
+            {
+                if (durationType != durationUntilEndOfTurn)
+                    points *= 1.5; //cast on damaged is extra good
+            }
+            else if (castType == castOnMove || castType == castOnHit)
+            {
+                points /= target.maximumCooldown; //terrible if has high cooldown
+                
+                if (durationType == durationUntilEndOfTurn)
+                {
+                    points /= 2; //more maulus
+                    if (target.cooldown > 0) //no effect if monster can't even cast it
+                        points = USELESS_MOVE;
+                }
+            }
+        }
+        else if (castType == castOnDeath)
+        {
+            points = USELESS_MOVE; //casting on death is useless (shouldn't have it)
+        }
+        else
+        {
+            //any other cast types
+            
+        }
+        
+        
+        
+        [target healLife:[ability.value intValue]];
+        
+        
+    }
+    else if (ability.abilityType == abilityLoseLife)
+    {
+        [target loseLife:[ability.value intValue]];
+    }
+    else if (ability.abilityType == abilityKill)
+    {
+        int lifeLost = target.life;
+        [target loseLife:target.life];
+    }
+    else if (ability.abilityType == abilitySetCooldown)
+    {
+        target.cooldown = [ability.value intValue];
+    }
+    else if (ability.abilityType == abilityAddCooldown)
+    {
+        target.cooldown += [ability.value intValue];
+    }
+    else if (ability.abilityType == abilityLoseCooldown)
+    {
+        target.cooldown -= [ability.value intValue];
+    }
+    else if (ability.abilityType == abilityDrawCard)
+    {
+        
+    }
+    else if (ability.abilityType == abilityAddResource)
+    {
+        
+    }
+    else if (ability.abilityType == abilityReturnToHand)
+    {
+        
+    }
+    else
+    {
+        
+    }
     
     return points;
 }
