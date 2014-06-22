@@ -69,6 +69,7 @@
 /** Loads images for drawing cards ahead of time */
 +(void) loadResources;
 
+
 @end
 
 /** Dimension of the card in its default state (i.e. on the field, in hand, etc.)*/
@@ -110,3 +111,7 @@ enum CardViewMode
     cardViewModeIngame,
     cardViewModeZoomedIngame
 };
+
+
+NSString *cardMainFont;
+NSString *cardMainFontBlack;
