@@ -71,7 +71,4 @@
 /** constructor */
 -(instancetype)initWithIdNumber: (long)idNumber;
 
-/** Deep copy constructor */
--(instancetype)initWithMonsterCard:(MonsterCardModel*)monsterCard;
-
 @end

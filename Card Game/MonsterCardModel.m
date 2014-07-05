@@ -49,36 +49,6 @@
     return self;
 }
 
--(instancetype)initWithMonsterCard:(MonsterCardModel*)monsterCard
-{
-    self = [self initWithIdNumber:monsterCard.idNumber];
-    
-    if (self)
-    {
-        //deep copy of all attributes
-        self.damage = monsterCard.baseDamage;
-        self.life = monsterCard.life;
-        self.maximumLife = monsterCard.baseMaxLife;
-        self.cooldown = monsterCard.cooldown;
-        self.maximumCooldown = monsterCard.baseMaxCooldown;
-        self.deployed = monsterCard.deployed;
-        self.side = monsterCard.side;
-        self.type = monsterCard.type;
-        self.element = monsterCard.element;
-        self.dead = monsterCard.dead;
-        for (Ability*ability in monsterCard.abilities)
-            [self.abilities addObject: [[Ability alloc] initWithAbility:ability]];
-        self.cost = monsterCard.cost;
-        self.rarity = monsterCard.rarity;
-        self.name = [[NSString alloc]initWithString:monsterCard.name];
-        self.creator = [[NSString alloc]initWithString:monsterCard.creator];
-        self.creatorName = [[NSString alloc]initWithString:monsterCard.creatorName];
-    }
-    
-    return self;
-
-}
-
 /** damage will be 0 if set any lower */
 -(void)setDamage:(int)damage{
     if (damage > 0)

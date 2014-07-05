@@ -106,7 +106,7 @@ int cardIDCount = 0;
     
     [hand addObject:spell];
     */
-    /*
+    
     MonsterCardModel*monster;
     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     monster.name = @"Nameless card";
@@ -130,7 +130,7 @@ int cardIDCount = 0;
     //[monster.abilities addObject: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAll withDuration:durationForever withValue:[NSNumber numberWithInt:2000]]];
     
     [playerHand addObject:monster];
-    
+    /*
     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     monster.element = elementLightning;
     monster.name = @"Nameless card";
@@ -1249,7 +1249,6 @@ int cardIDCount = 0;
         int monsterSide = monster.side;
         
         [monster resetAllStats]; //reset all stats
-        monster.deployed = NO;
         NSMutableArray*battlefield = self.battlefield[monsterSide];
         [battlefield removeObject:monster];
         
@@ -1268,7 +1267,6 @@ int cardIDCount = 0;
     {
         return NO; //not an instant ability, nothing happened
     }
-    //TODO when adding new instant effects, include them in the AIPlayer
     
     //update view and check for death
     [monster.cardView updateView];

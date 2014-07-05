@@ -146,17 +146,13 @@
     
     [self addAnimationCounter];
     
-    StrokedLabel *damagePopup = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 50)];
+    UILabel *damagePopup = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 50)];
     damagePopup.text = [NSString stringWithFormat:@"-%d", damage];
     damagePopup.center = cardView.center;
     damagePopup.textAlignment = NSTextAlignmentCenter;
     damagePopup.textColor = [UIColor redColor];
     damagePopup.backgroundColor = [UIColor clearColor];
-    damagePopup.font = [UIFont fontWithName:@"Verdana-Bold" size:24];
-    damagePopup.strokeOn = YES;
-    damagePopup.strokeColour = [UIColor blackColor];
-    damagePopup.strokeThickness = 2.5;
-
+    damagePopup.font = [UIFont fontWithName:@"Verdana-Bold" size:18];
     
     [self.uiView addSubview:damagePopup];
     [self zoomIn:damagePopup inDuration:0.15];
