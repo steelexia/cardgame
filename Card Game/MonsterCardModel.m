@@ -21,7 +21,7 @@
 @synthesize dead = _dead;
 
 /** constructor with id number, all other fields will be defaut values */
--(instancetype)initWithIdNumber: (long)idNumber
+-(instancetype)initWithIdNumber: (int)idNumber
 {
     self = [super initWithIdNumber:idNumber];
     
@@ -37,7 +37,7 @@
     return self;
 }
 
--(instancetype)initWithIdNumber:(long)idNumber type:(enum CardType) type
+-(instancetype)initWithIdNumber:(int)idNumber type:(enum CardType) type
 {
     self = [self initWithIdNumber:idNumber];
     
@@ -49,6 +49,8 @@
     return self;
 }
 
+//use cardModel instead
+/*
 -(instancetype)initWithMonsterCard:(MonsterCardModel*)monsterCard
 {
     self = [self initWithIdNumber:monsterCard.idNumber];
@@ -78,7 +80,7 @@
     return self;
 
 }
-
+*/
 /** damage will be 0 if set any lower */
 -(void)setDamage:(int)damage{
     if (damage > 0)

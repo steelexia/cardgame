@@ -11,6 +11,7 @@
 #import "SpellCardModel.h"
 #import "AbilityWrapper.h"
 #import "CardView.h"
+
 @implementation CardModel
 
 @synthesize idNumber = _idNumber;
@@ -26,7 +27,7 @@
 const int MONSTER_CARD = 0, SPELL_CARD = 1;
 
 /** constructor with id number, all other fields will be defaut values */
--(instancetype)initWithIdNumber: (long)idNumber
+-(instancetype)initWithIdNumber: (int)idNumber
 {
     self = [super init];
     
@@ -35,7 +36,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
         _idNumber = idNumber;
         
         //default values
-        self.name = [NSString stringWithFormat:@"Card %ld", idNumber]; //TODO temp
+        self.name = [NSString stringWithFormat:@"Card %d", idNumber]; //TODO temp
         self.cost = 0;
         
         self.abilities = [NSMutableArray array]; //default no ability
@@ -47,7 +48,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
     return self;
 }
 
--(instancetype)initWithIdNumber:(long)idNumber type:(enum CardType) type
+-(instancetype)initWithIdNumber:(int)idNumber type:(enum CardType) type
 {
     self = [self initWithIdNumber:idNumber];
     
@@ -59,12 +60,71 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
     return self;
 }
 
+-(instancetype)initWithCardModel:(CardModel*)card
+{
+    self = [self initWithIdNumber:card.idNumber];
+    
+    if (self)
+    {
+        if ([card isKindOfClass:[MonsterCardModel class]])
+        {
+            MonsterCardModel *selfMonster = [[MonsterCardModel alloc] initWithIdNumber:card.idNumber];
+            MonsterCardModel *otherMonster = (MonsterCardModel*)card;
+            
+            selfMonster.damage = otherMonster.baseDamage;
+            selfMonster.life = otherMonster.life;
+            selfMonster.maximumLife = otherMonster.baseMaxLife;
+            selfMonster.cooldown = otherMonster.cooldown;
+            selfMonster.maximumCooldown = otherMonster.baseMaxCooldown;
+            
+            selfMonster.deployed = otherMonster.deployed;
+            selfMonster.side = otherMonster.side;
+            selfMonster.dead = otherMonster.dead;
+            self = selfMonster;
+        }
+        else if ([card isKindOfClass:[SpellCardModel class]])
+        {
+            SpellCardModel *spell = [[SpellCardModel alloc] initWithIdNumber:card.idNumber];
+            self = spell;
+        }
+        
+        //deep copy of all attributes
+        self.type = card.type;
+        self.element = card.element;
+        
+        for (Ability*ability in card.abilities)
+            [self.abilities addObject: [[Ability alloc] initWithAbility:ability]];
+        self.cost = card.cost;
+        self.rarity = card.rarity;
+        if (card.name != nil)
+            self.name = [[NSString alloc]initWithString:card.name];
+        if (card.creator != nil)
+            self.creator = [[NSString alloc]initWithString:card.creator];
+        if (card.creatorName != nil)
+            self.creatorName = [[NSString alloc]initWithString:card.creatorName];
+    }
+    
+    return self;
+}
+
+-(void)setIdNumber:(int)idNumber
+{
+    if (_idNumber == -1)
+        _idNumber = idNumber;
+}
+
 /* must be 0 or higher */
 -(void)setCost:(int)cost{
     _cost = cost < 0 ? 0 : cost;
 }
 
 -(int)cost{
+    //TODO abilities can affect cost
+    return _cost;
+}
+
+-(int)baseCost
+{
     return _cost;
 }
 
@@ -72,6 +132,33 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
 {
     ability.isBaseAbility = YES;
     [self.abilities addObject:ability];
+}
+
+-(BOOL)isCompatible:(Ability*)ability
+{
+    if ([self isKindOfClass:[SpellCardModel class]])
+    {
+        if (ability.castType != castOnSummon)
+            return NO;
+    }
+    
+    for (Ability*ownAbility in self.abilities)
+    {
+        if (![ownAbility isCompatibleTo:ability])
+            return NO;
+    }
+    
+    return YES;
+}
+
+- (NSComparisonResult)compare:(CardModel *)otherObject
+{
+    NSComparisonResult costResult = [[NSNumber numberWithInt:self.cost] compare:[NSNumber numberWithInt:otherObject.cost]];
+    
+    if (costResult != NSOrderedSame)
+        return costResult;
+    else
+        return [self.name caseInsensitiveCompare:otherObject.name];
 }
 
 +(NSString*) elementToString:(enum CardElement) element
@@ -229,7 +316,6 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
     }
     
     cardPF[@"abilities"] = pfAbilities;
-    
     
     [cardPF saveInBackground];
 }

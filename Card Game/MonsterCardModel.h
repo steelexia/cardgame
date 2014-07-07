@@ -69,9 +69,9 @@
 -(void) applyAbility: (Ability*) ability;
 
 /** constructor */
--(instancetype)initWithIdNumber: (long)idNumber;
+-(instancetype)initWithIdNumber: (int)idNumber;
 
 /** Deep copy constructor */
--(instancetype)initWithMonsterCard:(MonsterCardModel*)monsterCard;
+//-(instancetype)initWithMonsterCard:(MonsterCardModel*)monsterCard;
 
 @end

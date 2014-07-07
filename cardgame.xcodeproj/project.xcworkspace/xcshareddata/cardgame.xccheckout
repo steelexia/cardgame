@@ -5,36 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>B08903E6-DE0F-48A2-B221-59FB8C4504D9</string>
+	<string>D0D4174C-D332-4C95-8F8E-82AEB3064F97</string>
 	<key>IDESourceControlProjectName</key>
 	<string>cardgame</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>40F32587-3F4B-4F45-A9AA-A4B93A07C4DB</key>
-		<string>https://github.com/KetchupMoose/cardgame.git</string>
+		<key>DE4949E4-4B2D-4AFB-BE7C-16CF28269AD3</key>
+		<string>https://github.com/steelexia/cardgame</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>cardgame.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>40F32587-3F4B-4F45-A9AA-A4B93A07C4DB</key>
+		<key>DE4949E4-4B2D-4AFB-BE7C-16CF28269AD3</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/KetchupMoose/cardgame.git</string>
+	<string>https://github.com/steelexia/cardgame</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>40F32587-3F4B-4F45-A9AA-A4B93A07C4DB</string>
+	<string>DE4949E4-4B2D-4AFB-BE7C-16CF28269AD3</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>40F32587-3F4B-4F45-A9AA-A4B93A07C4DB</string>
+			<string>DE4949E4-4B2D-4AFB-BE7C-16CF28269AD3</string>
 			<key>IDESourceControlWCCName</key>
-			<string>cardgame</string>
+			<string>Card Game</string>
 		</dict>
 	</array>
 </dict>

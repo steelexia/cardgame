@@ -24,7 +24,7 @@
 //----------------Card info stats----------------//
 
 /** Each card has an unique id used to identify itself */
-@property (readonly) long idNumber;
+@property (readonly) int idNumber;
 
 /** Name of the card, can have duplicate with other cards? */
 @property (strong) NSString* name;
@@ -56,14 +56,29 @@
 
 //----------------Functions----------------//
 
-/** Initializes an empty card with only an id */
--(instancetype)initWithIdNumber: (long)idNumber;
+
+-(instancetype)initWithIdNumber: (int)idNumber;
 
 /** Initializes an empty card with id and card type */
--(instancetype)initWithIdNumber:(long)idNumber type:(enum CardType) type;
+-(instancetype)initWithIdNumber:(int)idNumber type:(enum CardType) type;
+
+/** Creates a deep copy of target */
+-(instancetype)initWithCardModel:(CardModel*)card;
+
+/** Sets up the id number of the card. Can only be set if the card's id was set to -1 (i.e. no id) */
+-(void)setIdNumber:(int)idNumber;
+
+/** Returns the cost without any applied modifiers */
+-(int)baseCost;
 
 /** Adds the ability and sets isBaseAbility to YES */
 -(void)addBaseAbility: (Ability*)ability;
+
+/** Checks if the ability is compatible with the current card. Calls Ability's compatible function as well. */
+-(BOOL)isCompatible:(Ability*)ability;
+
+/** Compares two cards. First compares by cost, and if identical, compares by name */
+- (NSComparisonResult)compare:(CardModel *)otherObject;
 
 /** Loads a card's stats with data grabbed from parse. This should only used for a completely new card that cannot be cached anywhere else, e.g. a human opponent's card. Assumes the card is already allocated! */
 //+(void)loadCardWithParseID:(CardModel*)card withID:(NSString*)parseID;

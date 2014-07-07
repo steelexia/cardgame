@@ -7,38 +7,26 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "DeckModel.h"
-#import "CardView.h"
-#import "CardModel.h"
-#import "SinglePlayerCards.h"
+#import "CardsCollectionView.h"
+#import "DeckTableView.h"
 
-@interface DeckEditorViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface DeckEditorViewController : UIViewController
 
+@property (strong) CardsCollectionView *cardsView;
 
-@property (weak, nonatomic) IBOutlet UIButton *BackBtn;
+@property (strong) DeckTableView *deckView;
 
-- (IBAction)backBtnPressed:(id)sender;
+@property (strong) UIButton *deleteDeckButton;
 
-@property (weak, nonatomic) IBOutlet UISegmentedControl *DeckSegmentedControl;
+@property (strong) UIButton *deleteDeckConfirmButton, *deleteDeckCancelButton;
 
-- (IBAction)DeckSegmentedControl:(id)sender;
-
-@property (weak, nonatomic) IBOutlet UISegmentedControl *CardTypeSegmentedControl;
-
-- (IBAction)CardTypeValueChanged:(id)sender;
-
-
-
-@property (weak, nonatomic) IBOutlet UIView *DeckListView;
-
-@property (weak, nonatomic) IBOutlet UIButton *RemoveCardsButton;
-
-- (IBAction)RemoveAllCardsPressed:(id)sender;
-
-@property (weak, nonatomic) IBOutlet UIButton *SaveDeckBtn;
-
-- (IBAction)SaveDeckPressed:(id)sender;
-@property (weak, nonatomic) IBOutlet UITableView *cardsTableView;
-
+-(void)cardsViewFinishedScrollingAnimation;
 
 @end
+
+enum CardCollectinViewMode
+{
+    cardCollectionAddCard,
+    cardCollectionRemoveCard,
+};
+

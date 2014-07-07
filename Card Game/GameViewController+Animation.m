@@ -146,20 +146,8 @@
     
     [self addAnimationCounter];
     
-    StrokedLabel *damagePopup = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 50)];
-    damagePopup.text = [NSString stringWithFormat:@"-%d", damage];
-    damagePopup.center = cardView.center;
-    damagePopup.textAlignment = NSTextAlignmentCenter;
-    damagePopup.textColor = [UIColor redColor];
-    damagePopup.backgroundColor = [UIColor clearColor];
-    damagePopup.font = [UIFont fontWithName:@"Verdana-Bold" size:24];
-    damagePopup.strokeOn = YES;
-    damagePopup.strokeColour = [UIColor blackColor];
-    damagePopup.strokeThickness = 2.5;
-
-    
-    [self.uiView addSubview:damagePopup];
-    [self zoomIn:damagePopup inDuration:0.15];
+    [cardView setPopupDamage:damage];
+    //[self zoomIn:damagePopup inDuration:0.15];
     
     //already animating damage, don't have two shakes at once
     if (cardView.inDamageAnimation)
@@ -168,7 +156,7 @@
         if (((MonsterCardModel*)cardView.cardModel).dead)
             [self animateCardDestruction:cardView fromSide:side withDelay: 0.4];
 
-        [self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
+        //[self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
         [self decAnimationCounter];
     }
     else
@@ -210,7 +198,7 @@
                              //not dead, move back to position
                              else
                                  [self animateMoveToWithBounce:cardView toPosition:originalPoint inDuration:0.25 withDelay:0.4];
-                             [self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
+                             //[self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
                              [self decAnimationCounter];
                          }
          ];

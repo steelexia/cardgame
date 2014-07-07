@@ -76,7 +76,7 @@
     //---minions---//
     //cost 1
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10000 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 800;
     monster.damage = 1200;
@@ -87,7 +87,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10001 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 1500;
     monster.damage = 1500;
@@ -96,7 +96,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10002 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 2200;
     monster.damage = 3000;
@@ -106,7 +106,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10003 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 500;
     monster.damage = 1200;
@@ -116,7 +116,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10004 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 500;
     monster.damage = 3000;
@@ -125,7 +125,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10005 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 1500;
     monster.damage = 800;
@@ -135,7 +135,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10006 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 800;
     monster.damage = 1400;
@@ -145,7 +145,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10007 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 4000;
     monster.damage = 0;
@@ -157,7 +157,7 @@
     
     //cost 2
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10008 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 2000;
     monster.damage = 3200;
@@ -166,7 +166,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10009 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 1500;
     monster.damage = 1800;
@@ -177,7 +177,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10010 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 800;
     monster.damage = 3000;
@@ -188,7 +188,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10011 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 2100;
     monster.damage = 1200;
@@ -199,7 +199,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10012 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 2500;
     monster.damage = 3500;
@@ -210,7 +210,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10013 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 1000;
     monster.damage = 2000;
@@ -223,7 +223,7 @@
     
     //cost 3
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10014 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 3500;
     monster.damage = 2500;
@@ -234,7 +234,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10015 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 2200;
     monster.damage = 1800;
@@ -245,7 +245,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10016 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 3500;
     monster.damage = 2500;
@@ -257,7 +257,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10017 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 1000;
     monster.damage = 5000;
@@ -266,7 +266,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10018 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 4000;
     monster.damage = 2500;
@@ -279,7 +279,7 @@
 
     //cost 4
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10019 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 5500;
     monster.damage = 4000;
@@ -288,7 +288,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10020 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 4000;
     monster.damage = 3500;
@@ -299,7 +299,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10021 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 6500;
     monster.damage = 2500;
@@ -310,7 +310,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10022 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 2600;
     monster.damage = 2000;
@@ -324,7 +324,7 @@
     [deck addCard:monster];
     
     //cost 5
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10023 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 4500;
     monster.damage = 4800;
@@ -336,7 +336,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10024 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 5200;
     monster.damage = 4800;
@@ -347,7 +347,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10025 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 7500;
     monster.damage = 1200;
@@ -358,7 +358,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10026 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 4500;
     monster.damage = 5500;
@@ -371,7 +371,7 @@
     
     //cost 6
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10027 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 7800;
     monster.damage = 5500;
@@ -380,7 +380,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10028 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 5200;
     monster.damage = 4400;
@@ -391,7 +391,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10029 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 5500;
     monster.damage = 0;
@@ -403,7 +403,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10030 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 8500;
     monster.damage = 1000;
@@ -415,7 +415,7 @@
     [deck addCard:monster];
     
     //cost 7
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10031 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 4500;
     monster.damage = 4600;
@@ -426,7 +426,7 @@
     
     [deck addCard:monster];
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10032 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 7800;
     monster.damage = 3500;
@@ -439,7 +439,7 @@
     
     //cost 8
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10033 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 6800;
     monster.damage = 6500;
@@ -453,7 +453,7 @@
     
     //cost 9
     
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10034 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
     monster.life = monster.maximumLife = 12000;
     monster.damage = 9000;
@@ -470,7 +470,7 @@
     
     //cost 0
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10035 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 0;
     
@@ -478,7 +478,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10036 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 0;
     
@@ -488,7 +488,7 @@
     
     //cost 1
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10037 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 1;
     
@@ -497,7 +497,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10038 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 1;
     
@@ -506,7 +506,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10039 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 1;
     
@@ -514,7 +514,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10040 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 1;
     
@@ -522,7 +522,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10041 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 1;
     
@@ -530,7 +530,7 @@
     
     [deck addCard: spell];
 
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10042 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 1;
     
@@ -540,7 +540,7 @@
     
     //cost 2
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10043 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 2;
     
@@ -548,7 +548,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10044 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 2;
     
@@ -556,7 +556,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10045 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 2;
     
@@ -566,7 +566,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10046 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 2;
     
@@ -575,7 +575,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10047 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 2;
     
@@ -584,7 +584,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10048 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 2;
     
@@ -593,7 +593,7 @@
     [deck addCard: spell];
     
     //cost 3
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10049 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 3;
     
@@ -601,7 +601,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10050 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 3;
     
@@ -609,7 +609,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10051 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 3;
     
@@ -617,7 +617,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10052 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 3;
     
@@ -625,7 +625,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10053 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 3;
     
@@ -635,7 +635,7 @@
     
     //cost 4
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10054 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 4;
     
@@ -643,7 +643,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10055 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 4;
     
@@ -651,7 +651,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10056 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 4;
     
@@ -661,7 +661,7 @@
     
     //cost 5
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10057 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 5;
     
@@ -669,7 +669,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10058 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 5;
     
@@ -677,7 +677,7 @@
     
     [deck addCard: spell];
     
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10059 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 5;
     
@@ -686,7 +686,7 @@
     [deck addCard: spell];
     
     //cost 6
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10060 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 6;
     
@@ -696,7 +696,7 @@
     [deck addCard: spell];
     
     //cost 7
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10061 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 7;
     
@@ -706,7 +706,7 @@
     [deck addCard: spell];
     
     //cost 8
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeStandard];
+    spell = [[SpellCardModel alloc] initWithIdNumber:10062 type:cardTypeStandard];
     spell.name = @"Spell";
     spell.cost = 8;
     

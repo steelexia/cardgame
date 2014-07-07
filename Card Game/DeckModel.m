@@ -12,6 +12,11 @@
 @implementation DeckModel
 
 @synthesize cards = _cards;
+@synthesize name = _name;
+@synthesize tags = _tags;
+@synthesize cdDeck = _cdDeck;
+
+const int MAX_CARDS_IN_DECK = 20;
 
 -(instancetype)init
 {
@@ -20,17 +25,19 @@
     if (self)
     {
         _cards = [NSMutableArray array];
+        _tags = [NSMutableArray array];
+        _name = @"";
     }
     
     return self;
 }
 
+/** Note that this function does not care about max deck size for gameplay */
 -(BOOL) addCard: (CardModel*) cardModel
 {
-    //TODO check if is full
     //TODO check for dup
     
-    if ([cardModel isMemberOfClass: [CardModel class]])
+    if (![cardModel isKindOfClass: [CardModel class]])
         return NO;
     
     [_cards addObject:cardModel];

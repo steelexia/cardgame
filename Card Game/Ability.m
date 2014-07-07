@@ -7,7 +7,7 @@
 //
 
 #import "Ability.h"
-
+#import "UIConstants.h"
 
 @implementation Ability
 
@@ -71,123 +71,248 @@
     return self;
 }
 
-+(NSString*) getDescription: (Ability*) ability fromCard: (CardModel*) cardModel
+
+-(BOOL)isEqualTypeTo:(Ability*)ability
+{
+    if (ability.abilityType == self.abilityType &&
+        ability.castType == self.castType &&
+        ability.targetType == self.targetType &&
+        ability.durationType == self.durationType)
+        return YES;
+    return NO;
+}
+
+-(BOOL)isCompatibleTo:(Ability*)ability
+{
+    //TODO probably should have used a better structure, but probably not that many rules anyways
+    
+    //abilities with opposite effect can co-exist only if their target or cast types are different
+    if (self.targetType == ability.targetType && self.castType == ability.castType)
+    {
+        //add damage and lose damage
+        if ((self.abilityType == abilityAddDamage && ability.abilityType == abilityLoseDamage)
+            || (self.abilityType == abilityLoseDamage && ability.abilityType == abilityAddDamage))
+            return NO;
+        //add life and lose life
+        if ((self.abilityType == abilityAddLife && ability.abilityType == abilityLoseLife)
+            || (self.abilityType == abilityLoseLife && ability.abilityType == abilityAddLife))
+            return NO;
+        //add cooldown with lose or set
+        if (self.abilityType == abilityAddCooldown)
+        {
+            if (ability.abilityType == abilitySetCooldown || ability.abilityType == abilityLoseCooldown || ability.abilityType == abilityLoseMaxCooldown )
+                return NO;
+        }
+        //lose cooldown with add or set
+        if (self.abilityType == abilityLoseCooldown)
+        {
+            if (ability.abilityType == abilitySetCooldown || ability.abilityType == abilityAddCooldown || ability.abilityType == abilityAddMaxCooldown)
+                    return NO;
+        }
+        //add max cooldown with lose or set
+        if (self.abilityType == abilityAddMaxCooldown)
+        {
+            if (ability.abilityType == abilitySetCooldown || ability.abilityType == abilityLoseMaxCooldown || ability.abilityType == abilityLoseCooldown)
+                return NO;
+        }
+        //lose max cooldown with add or set
+        if (self.abilityType == abilityLoseMaxCooldown)
+        {
+            if (ability.abilityType == abilitySetCooldown || ability.abilityType == abilityAddMaxCooldown || ability.abilityType == abilityAddCooldown)
+                return NO;
+        }
+        //set cooldown with any other
+        if (self.abilityType == abilitySetCooldown)
+        {
+            if (ability.abilityType == abilityAddMaxCooldown || ability.abilityType == abilityAddCooldown || ability.abilityType == abilityLoseMaxCooldown || ability.abilityType == abilityLoseCooldown)
+                return NO;
+        }
+        //kill with add life
+        if (self.abilityType == abilityKill)
+        {
+            if (ability.abilityType == abilityAddLife || ability.abilityType == abilityAddMaxLife)
+                return NO;
+        }
+        //add life with kill
+        if (self.abilityType == abilityAddLife && ability.abilityType == abilityKill)
+                return NO;
+        //add max life with kill
+        if (self.abilityType == abilityAddMaxLife && ability.abilityType == abilityKill)
+            return NO;
+    }
+    
+    //cast types:
+    NSArray*targetOneConflicts = @[[NSNumber numberWithInt:targetOneAny],[NSNumber numberWithInt:targetOneFriendly],[NSNumber numberWithInt:targetOneFriendlyMinion], [NSNumber numberWithInt:targetOneEnemy], [NSNumber numberWithInt:targetOneEnemyMinion], [NSNumber numberWithInt:targetHeroAny], [NSNumber numberWithInt:targetOneAnyMinion]];
+    
+    //cannot have abilities with different castTypes
+    if ([targetOneConflicts containsObject:[NSNumber numberWithInt:self.castType]] && [targetOneConflicts containsObject:[NSNumber numberWithInt:ability.castType]] && (self.castType != ability.castType))
+        return NO;
+    
+    return YES;
+}
+
++(NSMutableAttributedString*) getDescription: (Ability*) ability fromCard: (CardModel*) cardModel
 {
     if (ability.description != nil)
-        return ability.description; //TODO needs some replacements
+        return [[NSMutableAttributedString alloc] initWithString:ability.description]; //TODO needs some replacements
     
     enum AbilityType abilityType = ability.abilityType;
     
     NSString *targetDescription = [Ability getTargetTypeDescription:ability.targetType];
     NSString *castDescription = [Ability getCastTypeDescription:ability.castType fromCard:cardModel];
     NSString *durationDescription = [Ability getDurationTypeDescription:ability.durationType];
+    NSString *valueDescription;
+    
+    NSString *description;
+    
+    BOOL shouldHighlightValue = NO;
+    
+    if (ability.value == nil)
+    {
+        if (ability.otherValues.count >= 2 && [ability.otherValues[0] integerValue] != [ability.otherValues[1] integerValue])
+        {
+            valueDescription = @"X";
+            shouldHighlightValue = YES;
+        }
+        else
+            valueDescription = [NSString stringWithFormat:@"%@", ability.otherValues[0]];
+    }
+    else
+    {
+        if (ability.otherValues.count >= 2 && [ability.otherValues[0] integerValue] != [ability.otherValues[1] integerValue])
+            shouldHighlightValue = YES;
+        
+        valueDescription = [NSString stringWithFormat:@"%@", ability.value];
+    }
     
     if (abilityType == abilityNil)
-        return [NSString stringWithFormat:@"nil ability"];
+        description = [NSString stringWithFormat:@"nil ability"];
     else if (abilityType == abilityAddDamage){
         if (ability.targetType == targetSelf)
-            return [NSString stringWithFormat:@"%@+%@ damage%@.", castDescription, ability.value, durationDescription];
+            description = [NSString stringWithFormat:@"%@+%@ damage%@.", castDescription, valueDescription, durationDescription];
         else
-            return [NSString stringWithFormat:@"%@+%@ damage to %@%@.", castDescription, ability.value, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@+%@ damage to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityLoseDamage){
         if (ability.targetType == targetSelf)
-            return [NSString stringWithFormat:@"%@-%@ damage%@.", castDescription, ability.value, durationDescription];
+            description = [NSString stringWithFormat:@"%@-%@ damage%@.", castDescription, valueDescription, durationDescription];
         else
-            return [NSString stringWithFormat:@"%@-%@ damage to %@%@.", castDescription, ability.value, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@-%@ damage to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityAddLife){
         if (ability.targetType == targetSelf)
-            return [NSString stringWithFormat:@"%@Heal %@ life%@.", castDescription, ability.value, durationDescription];
+            description = [NSString stringWithFormat:@"%@Heal %@ life%@.", castDescription, valueDescription, durationDescription];
         else
-            return [NSString stringWithFormat:@"%@Heal %@ life to %@%@.", castDescription, ability.value, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Heal %@ life to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityAddMaxLife){
         if (ability.targetType == targetSelf)
-            return [NSString stringWithFormat:@"%@+%@ life%@.", castDescription, ability.value, durationDescription];
+            description = [NSString stringWithFormat:@"%@+%@ life%@.", castDescription, valueDescription, durationDescription];
         else
-            return [NSString stringWithFormat:@"%@+%@ life to %@%@.", castDescription, ability.value, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@+%@ life to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityLoseLife){
-        return [NSString stringWithFormat:@"%@Deal %@ damage to %@%@.", castDescription, ability.value, targetDescription, durationDescription];
+        description = [NSString stringWithFormat:@"%@Deal %@ damage to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityKill){
-        return [NSString stringWithFormat:@"%@destroy %@%@.", castDescription, targetDescription, durationDescription];
+        description = [NSString stringWithFormat:@"%@Destroy %@%@.", castDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilitySetCooldown){
         if (ability.targetType == targetSelf)
-            return [NSString stringWithFormat:@"%@set its cooldown to %@%@.", castDescription, ability.value, durationDescription];
+            description = [NSString stringWithFormat:@"%@Set its cooldown to %@%@.", castDescription, valueDescription, durationDescription];
         else
-            return [NSString stringWithFormat:@"%@set cooldown to %@ for %@%@.", castDescription, ability.value, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Set cooldown to %@ for %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityAddCooldown){
         if (ability.targetType == targetSelf)
-            return [NSString stringWithFormat:@"%@+%@ cooldown%@.", castDescription, ability.value, durationDescription];
+            description = [NSString stringWithFormat:@"%@+%@ cooldown%@.", castDescription, valueDescription, durationDescription];
         else
-            return [NSString stringWithFormat:@"%@+%@ cooldown to %@%@.", castDescription, ability.value, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@+%@ cooldown to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityAddMaxCooldown){
         if (ability.targetType == targetSelf)
-            return [NSString stringWithFormat:@"%@+%@ maximum cooldown%@.", castDescription, ability.value, durationDescription];
+            description = [NSString stringWithFormat:@"%@+%@ maximum cooldown%@.", castDescription, valueDescription, durationDescription];
         else
-            return [NSString stringWithFormat:@"%@+%@ maximum cooldown to %@%@.", castDescription, ability.value, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@+%@ maximum cooldown to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityLoseCooldown){
         if (ability.targetType == targetSelf)
-        return [NSString stringWithFormat:@"%@-%@ cooldown%@.", castDescription, ability.value, durationDescription];
+            description = [NSString stringWithFormat:@"%@-%@ cooldown%@.", castDescription, valueDescription, durationDescription];
         else
-            return [NSString stringWithFormat:@"%@-%@ cooldown to %@%@.", castDescription, ability.value, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@-%@ cooldown to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityLoseMaxCooldown){
         if (ability.targetType == targetSelf)
-            return [NSString stringWithFormat:@"%@-%@ maximum cooldown%@.", castDescription, ability.value, durationDescription];
+            description = [NSString stringWithFormat:@"%@-%@ maximum cooldown%@.", castDescription, valueDescription, durationDescription];
         else
-            return [NSString stringWithFormat:@"%@-%@ maximum cooldown to %@%@.", castDescription, ability.value, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@-%@ maximum cooldown to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityTaunt){
         if (ability.targetType == targetSelf)
-            return [NSString stringWithFormat:@"%@Enemy minions must target this card%@.", castDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Taunt%@.", castDescription, durationDescription];
         else
-            return [NSString stringWithFormat:@"%@Give Taunt to %@%@.", castDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Give Taunt to %@%@.", castDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityDrawCard){
         if (ability.targetType == targetHeroEnemy)
-            return [NSString stringWithFormat:@"%@Opponent draws %@ card%@.", castDescription, ability.value, durationDescription];
+            description = [NSString stringWithFormat:@"%@Opponent draws %@ card%@.", castDescription, valueDescription, durationDescription];
         else if (ability.targetType == targetHeroFriendly)
-            return [NSString stringWithFormat:@"%@Draw %@ card%@.", castDescription, ability.value, durationDescription];
+            description = [NSString stringWithFormat:@"%@Draw %@ card%@.", castDescription, valueDescription, durationDescription];
         else if (ability.targetType == targetAll)
-            return [NSString stringWithFormat:@"%@All players draw %@ card%@.", castDescription, ability.value, durationDescription];
+            description = [NSString stringWithFormat:@"%@All players draw %@ card%@.", castDescription, valueDescription, durationDescription];
     }
     else if (abilityType == abilityAddResource){
         if (ability.targetType == targetHeroEnemy)
-            return [NSString stringWithFormat:@"%@Opponent gains %@ resource(s)%@.", castDescription, ability.value, durationDescription];
+            description = [NSString stringWithFormat:@"%@Opponent gains %@ resource(s)%@.", castDescription, valueDescription, durationDescription];
         else if (ability.targetType == targetHeroFriendly)
-            return [NSString stringWithFormat:@"%@Gain %@ resource(s)%@.", castDescription, ability.value, durationDescription];
+            description = [NSString stringWithFormat:@"%@Gain %@ resource(s)%@.", castDescription, valueDescription, durationDescription];
         else if (ability.targetType == targetAll)
-            return [NSString stringWithFormat:@"%@All players gain %@ resource(s)%@.", castDescription, ability.value, durationDescription];
+            description = [NSString stringWithFormat:@"%@All players gain %@ resource(s)%@.", castDescription, valueDescription, durationDescription];
     }
     else if (abilityType == abilityRemoveAbility){
         if (ability.targetType == targetSelf)
-            return [NSString stringWithFormat:@"%@Monster cannot have any abilities%@.", castDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Monster cannot have any abilities%@.", castDescription, durationDescription];
         else
-            return [NSString stringWithFormat:@"%@Remove all abilities from %@%@.", castDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Remove all abilities from %@%@.", castDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityAssassin){
         if (ability.targetType == targetSelf)
-            return [NSString stringWithFormat:@"%@Does not receive damage when attacking%@.", castDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Does not receive damage when attacking%@.", castDescription, durationDescription];
         else
-            return [NSString stringWithFormat:@"%@Monster will not receive damage when attacking %@%@.", castDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Monster will not receive damage when attacking %@%@.", castDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityReturnToHand){
         if (ability.targetType == targetSelf)
-            return [NSString stringWithFormat:@"%@Returns itself to hand%@.", castDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Returns itself to hand%@.", castDescription, durationDescription];
         else
-            return [NSString stringWithFormat:@"%@Return %@ to its owner's hand%@.", castDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Return %@ to its owner's hand%@.", castDescription, targetDescription, durationDescription];
     }
-
-
+    else if (abilityType == abilityPierce){
+        if (ability.targetType == targetSelf)
+            description = [NSString stringWithFormat:@"%@Pierce attack%@.", castDescription, durationDescription];
+        else
+            description = [NSString stringWithFormat:@"%@Gives Pierce to%@%@.", castDescription, targetDescription, durationDescription];
+    }
+    else if (abilityType == abilityFracture){
+        if (ability.targetType == targetSelf)
+            description = [NSString stringWithFormat:@"%@Fractures into %@ pieces%@.", castDescription, valueDescription, durationDescription];
+        else
+            description = [NSString stringWithFormat:@"%@Gives Fracture %@ to%@%@.", castDescription, valueDescription, targetDescription, durationDescription];
+    }
+    else
+        description = [NSString stringWithFormat:@"ability no name %d", ability.abilityType];
     
-    return [NSString stringWithFormat:@"ability %d", ability.abilityType];
+    NSMutableAttributedString *attriDescription = [[NSMutableAttributedString alloc]initWithString:description];
+    
+    if (shouldHighlightValue)
+    {
+        NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+        [attributes addEntriesFromDictionary:@{NSForegroundColorAttributeName:COLOUR_INTERFACE_BLUE}];
+        
+        [attriDescription setAttributes:attributes range:[description rangeOfString:valueDescription]];
+    }
+    
+    return attriDescription;
 }
 
 +(NSString*) getTargetTypeDescription: (enum TargetType) targetType
@@ -211,9 +336,9 @@
     else if (targetType == targetOneFriendlyMinion)
         return [NSString stringWithFormat:@"a friendly minion"];
     else if (targetType == targetOneEnemy)
-        return [NSString stringWithFormat:@"a enemy character"];
+        return [NSString stringWithFormat:@"an enemy character"];
     else if (targetType == targetOneEnemyMinion)
-        return [NSString stringWithFormat:@"a enemy minion"];
+        return [NSString stringWithFormat:@"an enemy minion"];
     else if (targetType == targetAll)
         return [NSString stringWithFormat:@"all characters"];
     else if (targetType == targetAllMinion)

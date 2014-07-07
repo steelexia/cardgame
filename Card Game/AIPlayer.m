@@ -490,7 +490,7 @@ int enemyTotalStrength, friendlyTotalStrength;
                 if (lifeLeft < 1000 && lifeLeft > 0)
                 {
                     points -= (1000 - lifeLeft)/1000 * 5000;
-                    NSLog(@"AI: leaving monster with too low life -%f points", (1000 - lifeLeft)/1000 * 5000);
+                    NSLog(@"AI: leaving monster with too low life -%f points", (1000 - lifeLeft)/1000.f * 5000);
                 }
                 
                 //targets that cannot attack any time soon are not very threatening
@@ -534,7 +534,7 @@ int enemyTotalStrength, friendlyTotalStrength;
     for (MonsterCardModel* target in targets)
     {
         //deep copy the target to perform ability effects
-        MonsterCardModel*copyTarget = [[MonsterCardModel alloc] initWithMonsterCard:target];
+        MonsterCardModel*copyTarget = (MonsterCardModel*)[[CardModel alloc] initWithCardModel:target];
         
         int targetPoint = [self evaluateAbilitiesPoints:abilities target:copyTarget targetSide:side];
         

@@ -22,10 +22,14 @@
 @synthesize damageViewNeedsUpdate = _damageViewNeedsUpdate;
 @synthesize cooldownViewNeedsUpdate = _cooldownViewNeedsUpdate;
 @synthesize cardViewMode = _cardViewMode;
+@synthesize mask = _mask;
 
 const int CARD_WIDTH_RATIO = 5;
 const int CARD_HEIGHT_RATIO = 8;
 const float CARD_IMAGE_RATIO = 450.f/530;
+
+const double CARD_VIEWER_SCALE = 0.8;
+const double CARD_VIEWER_MAXED_SCALE = 1.25;
 
 const float CARD_DEFAULT_SCALE = 0.4f;
 const float CARD_DRAGGING_SCALE = 1.0f;
@@ -46,8 +50,18 @@ NSDictionary *abilityTextAttributtes;
 NSString *cardMainFont = @"EncodeSansCompressed-Bold";
 NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
 
+
+
 +(void) loadResources
 {
+    CARD_WIDTH = 57; //TODO ipad
+    CARD_HEIGHT = (CARD_WIDTH *  CARD_HEIGHT_RATIO / CARD_WIDTH_RATIO);
+    
+    CARD_FULL_WIDTH = CARD_WIDTH/CARD_DEFAULT_SCALE;
+    CARD_FULL_HEIGHT = CARD_HEIGHT/CARD_DEFAULT_SCALE;
+
+    PLAYER_HERO_WIDTH = PLAYER_HERO_HEIGHT = CARD_HEIGHT;
+    
     backgroundImages = @[
                          @[[UIImage imageNamed:@"card_background_front_neutral_common"], //TODO additional rarity here
                            ],
@@ -116,12 +130,14 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
         [self insertSubview:self.highlight atIndex:0];
         
         //draws common card elements such as name and cost
-        self.nameLabel = [[StrokedLabel alloc] initWithFrame:self.bounds];
-        self.nameLabel.center = CGPointMake(CARD_FULL_WIDTH/2 + CARD_FULL_WIDTH/10, 17);
+        self.nameLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,96,30)];
+        self.nameLabel.center = CGPointMake(CARD_FULL_WIDTH/2 + CARD_FULL_WIDTH/10 + 2, 16);
         self.nameLabel.textAlignment = NSTextAlignmentCenter;
         self.nameLabel.textColor = [UIColor blackColor];
         self.nameLabel.backgroundColor = [UIColor clearColor];
         self.nameLabel.font = [UIFont fontWithName:cardMainFont size:15];
+        [self.nameLabel setMinimumScaleFactor:8.f/15];
+        self.nameLabel.adjustsFontSizeToFitWidth = YES;
         
         [self addSubview: nameLabel];
         
@@ -150,7 +166,6 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
         
         [self addSubview: elementLabel];
         
-        
         self.baseAbilityLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(10, 150, CARD_FULL_WIDTH - 20, 135)]; //NOTE changing this is useless, do it down below
        
         self.baseAbilityLabel.textColor = [UIColor blackColor];
@@ -162,7 +177,7 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
 
         [self.baseAbilityLabel sizeToFit];
         [self addSubview: baseAbilityLabel];
-
+        
         //draws specific card elements for monster card
         if ([cardModel isKindOfClass:[MonsterCardModel class]])
         {
@@ -258,9 +273,28 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
             //TODO
         }
         
+        self.damagePopup = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 50)];
+        self.damagePopup.center = self.center;
+        self.damagePopup.textAlignment = NSTextAlignmentCenter;
+        self.damagePopup.textColor = [UIColor redColor];
+        self.damagePopup.backgroundColor = [UIColor clearColor];
+        self.damagePopup.font = [UIFont fontWithName:cardMainFont size:24];
+        self.damagePopup.strokeOn = YES;
+        self.damagePopup.strokeColour = [UIColor blackColor];
+        self.damagePopup.strokeThickness = 2.5;
+        self.damagePopup.text = @"";
+        self.damagePopup.alpha = 0;
+        [self addSubview:self.damagePopup];
+        
         //adds correct text to all of the labels
         [self updateView];
     }
+    
+    self.mask = [[UIView alloc] initWithFrame:self.bounds];
+    [self.mask setUserInteractionEnabled:NO];
+    [self.mask setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.7]];
+    self.mask.alpha = 0;
+    [self addSubview:self.mask];
     
     self.cardHighlightType = cardHighlightNone;
     self.cardViewState = cardViewStateNone;
@@ -351,7 +385,7 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
     for (Ability *ability in self.cardModel.abilities)
     {
         if (!ability.expired)
-            abilityDescription = [NSString stringWithFormat:@"%@%@\n", abilityDescription, [Ability getDescription:ability fromCard:self.cardModel]];
+            abilityDescription = [NSString stringWithFormat:@"%@%@\n", abilityDescription, [[Ability getDescription:ability fromCard:self.cardModel] string]];
     }
     
     self.baseAbilityLabel.attributedText = [[NSAttributedString alloc] initWithString:abilityDescription
@@ -422,6 +456,27 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
     {
         super.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
     }
+    else if (cardViewState == cardViewStateCardViewer)
+    {
+        super.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_VIEWER_SCALE, CARD_VIEWER_SCALE);
+        
+        [UIView animateWithDuration:0.3
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{self.mask.alpha = 0.0;}
+                         completion:nil];
+    }
+    else if (cardViewState == cardViewStateCardViewerGray)
+    {
+        //TODO eventually should change this to an image
+        super.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_VIEWER_SCALE, CARD_VIEWER_SCALE);
+        
+        [UIView animateWithDuration:0.3
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{self.mask.alpha = 0.8;}
+                         completion:nil];
+    }
     else{
         if (self.cardModel.type != cardTypePlayer)
         {
@@ -432,7 +487,54 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
         super.center = self.originalPosition;
     }
     
+    //NSLog(@"I'm called on %@", self);
+    
     _cardViewState = cardViewState;
+}
+
+-(void)setPopupDamage:(int)damage
+{
+     //assuming this will always be animated in this scale
+    
+    //new damage
+    if ([self.damagePopup.text isEqualToString:@""])
+    {
+        self.damagePopup.text = [NSString stringWithFormat:@"%d", damage];
+        NSLog(@"empty");
+    }
+    //recently been damaged, update the
+    else
+    {
+        int totalDamage = [self.damagePopup.text intValue] + damage;
+        self.damagePopup.text = [NSString stringWithFormat:@"%d", totalDamage];
+        NSLog(@"not empty");
+    }
+    
+    self.damagePopup.alpha = 1;
+    self.damagePopup.transform = CGAffineTransformMakeScale(0, 0);
+    
+    NSLog(@"starting animation");
+    
+    [self.damagePopup.layer removeAllAnimations];
+    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         if (self.cardModel.type != cardTypePlayer)
+                             self.damagePopup.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.f/CARD_DEFAULT_SCALE, 1.f/CARD_DEFAULT_SCALE);
+                         else
+                             self.damagePopup.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1,1);
+                     }
+                     completion:^(BOOL finished){
+                         [UIView animateWithDuration:0.5 delay:1.3 options:UIViewAnimationOptionCurveEaseInOut
+                                          animations:^{
+                                              self.damagePopup.alpha = 0;
+                                          }
+                                          completion:^(BOOL finished){
+                                              self.damagePopup.text = @"";
+                                          }];
+                     }];
+    
+    
+    
 }
 
 -(enum CardHighlightType) cardHighlightType
@@ -479,7 +581,6 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
 
 -(void)animateCardHighlightBrighten: (UIImageView*)highlight
 {
-    
     [UIView animateWithDuration:3
                           delay:0
                         options:UIViewAnimationOptionCurveEaseInOut

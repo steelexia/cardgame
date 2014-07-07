@@ -33,8 +33,26 @@
 /** Maximum number of cards with this ability allowed per deck. Most abilities should be around 1-2 since there can be different duration and cast types.*/
 @property int maxCount;
 
+/** Used when being displayed in an AbilityView for convenience */
+@property BOOL enabled;
+
+/** Minimum size of change when designing the ability */
+@property int incrementSize;
+
+/** Returns all ability wrappers */
++(NSArray*)allAbilities;
+
 /** Finds the id of the ability wrapper that is identical to the ability in terms of the types. (value doesn't matter) Returns -1 if it cannot find one that matches. */
 +(int)getIdWithAbility:(Ability*)ability;
+
+/** For storing to core data */
++(NSString*)abilityToString:(Ability*)ability;
+
+/** For reading from core data */
++(Ability*)getAbilityWithString:(NSString*)abilityString;
+
+/** Duplicates an ability wrapper */
+-(instancetype)initWithAbilityWrapper:(AbilityWrapper*)abilityWraper;
 
 /** Loads the database of every pickable ability in the game. Once this is called, getAbilityWithId can be called to obtain all abilities */
 +(void)loadAllAbilities;

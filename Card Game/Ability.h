@@ -28,14 +28,20 @@
 /** If abilityh as custom description, this is used. */
 @property NSString *description;
 
-/** Stores the main value of the ability. This is sufficient for most abilities, such as +1000 damage, +1000 life, or -1 cooldown. */
+/** Stores the main value of the ability. This is sufficient for most abilities, such as +1000 damage, +1000 life, or -1 cooldown. Note that it MUST store integers. Decimal numbers (such as 33%) must be written in whole numbers. (such as 33 not 0.33) */
 @property NSNumber *value;
 
-/** Stores the other values of the ability. Most abilities will have this as nil, but some abilities may need additional values (such as deal 1000-5000 damage) */
+/** Stores other values needed. Note that inside a wrapper it instead stores all the ranges. TODO otherValues is currently not implemented to actually work for extra values. It is only for storing range of value for now. To add the functionality make sure to edit CardEditViewController (add new buttons) and follow the format from comments of AbilityWrapper */
 @property NSArray *otherValues;
 
 /** YES if the duration has already expired, such as durationUntilEndOfTurn. Once this is YES, it will no longer trigger. */
 @property BOOL expired;
+
+/** Checks if all types (castType, abilityType etc) is identical. Does not check the actual values! */
+-(BOOL)isEqualTypeTo:(Ability*)ability;
+
+/** Returns YES if the two ability is compatible, i.e. can exist in the same card */
+-(BOOL)isCompatibleTo:(Ability*)ability;
 
 -(instancetype) initWithType: (enum AbilityType) abilityType castType: (enum CastType) castType targetType: (enum TargetType) targetType withDuration: (enum DurationType) durationType withValue: (NSNumber*) value;
 
@@ -47,7 +53,7 @@
 -(instancetype) initWithAbility: (Ability*) ability;
 
 /** Generate a description in String of the ability */
-+(NSString*) getDescription: (Ability*) ability fromCard:(CardModel*) cardModel;
++(NSMutableAttributedString*) getDescription: (Ability*) ability fromCard:(CardModel*) cardModel;
 
 
 
@@ -96,32 +102,51 @@ enum AbilityType
     abilityAddResource,
     /* Returns a minion to the owner's hand. DO NOT combine this with targetSelf and castOnSummon. (Doesn't make sense anyways) */
     abilityReturnToHand,
+    /** Extra damage dealt to a destroyed enemy is dealt to the enemy hero. NOTE: spell cards cannot pierce because its damage is anonymously dealt (also since it's an ability not a direct damage) */
+    abilityPierce,
+    abilityFracture, //split into ~1-3 monsters with 60%, 25%, and 10% original stats, but no abilities
+    
+    //------------------NOT YET IMPLEMENTED-----------------//
     /* kill a card if its health is below x. Good for low number such as below 1000 to kill off monsters that would have died if damage/life were 1000 times smaller. TODO */
     abilityKillIfBelowHealth,
-    
-    //future
     abilityLeech, //gain life equal to x% of damage
-    abilityFracture, //split into ~1-3 monsters with 60%, 25%, and 10% original stats
+    
     abilityFaceDown, //card is placed faced down until it attacks or is attacked (REALLY cool)
     abilityHideLife, //hide a card's health (or maybe only hero), only a visual effect
     
     abilityReflect, //reflect x% of damage deal by the attacker instead of its attack
     
     abilitySpellImmunity, //might be only for single player, target is immune to all spells and abilities
-    /** Extra damage dealt to a destroyed enemy is dealt to the enemy hero.  */
-    abilityCrushingBlow,
-    /** Frozen minions cannot attack or deal recoil damage. Duration should almost always be untilEndOfTurn, or else the minion will be frozen forever (until silenced). TODO */
+    
+    /** Frozen minions cannot attack or deal recoil damage. Duration should almost always be untilEndOfTurn, or else the minion will be frozen forever (until silenced). ice TODO */
     abilityFreeze,
-    /** Burning minions take x damage to itself and deals the same amount to all other minions on the same field. Perhaps burns do not stack and only the strongest burn will have effect per side. Damage will likely be very small (~300-1000) TODO */
+    /** Burning minions take x damage to itself and deals the same amount to all other minions on the same field. Perhaps burns do not stack and only the strongest burn will have effect per side. Damage will likely be very small (~300-1000), fire TODO */
     abilityBurn,
-    /** Poisoned minions take x damage per turn. Deals much more than burn (~500-3000) TODO */
+    /** Poisoned minions take x damage per turn. Deals much more than burn (~500-3000), earth TODO */
     abilityPoison,
-    /** Shocked minions take x times (e.g. 2 = 2x) amount of damage per turn. maybe TODO */
+    /** Shocked minions take x times (e.g. 2 = 2x) amount of damage per turn. lightning maybe TODO */
     abilityShock,
+    /**  dark TODO */
+    abilityCorrupt,
+    /** Becomes invulnerable (pretty much always until end of turn) light TODO */
+    abilityBless,
     /** Summons a fake minion of a random element with fake stats (probably copies name and image of a random minion from deck, with random stats). It dies immediately to any attack. Probably the summoned minion is casted along castOnSummon abilities so the spell card is not wasted. (e.g. for 3 cost summon a fake 4000/2000 minion with onSummon deal damage to a minion, so not only the spell card has effect, the minion would look real) TODO  */
     abilityImage,
+    /** Card can be added to the deck above the regular limit. Maybe ~2-3 limit for this ability, so can have max of 23 cards in total. This card costs a lot of points, so it'd be a poor card for the benefit of having more cards to draw  TODO*/
+    abilityExtraCard,
+    /** Must be targetSelf and onSummon. It summons a twin card with identical stats. Cost should be more than half the total points available to a card. This allows having more abilities than limit  TODO*/
+    abilityTwin,
+    /** On attack, all friendly minions of type X (probably element type, such as lightnin)'s damage is added onto the attack. TODO */
+    abilityConcentrate,
+    /** Change target's element to neutral */
+    abilityNullify,
+    /** one-time removal of all added abilities */
+    abilityPurify,
+    /** Copies the stats of a card (i.e. only damage, life, and maxCooldown) */
+    abilityCopyStats,
+    /** Randomly gains a stat modifying ability */
+    abilityInstability,
     
-    //one-time removal of all added abilities
 };
 
 /** TargetType determines where the ability is applied to. targetSelf is automatically used by the card with the effect, while most others are casted explicitly.
@@ -161,8 +186,10 @@ enum TargetType
     
     //additional possibilities
     targetOneTaunt,
-    targetEnemyMostLife,
-    targetEnemyMostDamage,
+    targetEnemyMinionMostLife,
+    targetEnemyMinionMostDamage,
+    
+    //TODO unsure how to do element targets
 };
 
 /** CastType determines when it is casted.  */

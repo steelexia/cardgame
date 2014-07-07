@@ -8,6 +8,7 @@
 
 #import "GameModel.h"
 #import "GameViewController+Animation.h"
+#import "UserModel.h"
 
 @implementation GameModel
 
@@ -34,8 +35,6 @@ int cardIDCount = 0;
     if (self){
         self.matchType = matchType;
         self.gameViewController = gameViewController;
-        
-        [AbilityWrapper loadAllAbilities];
         
         //initialize battlefield and hands to be two arrays
         self.battlefield = @[[NSMutableArray array],[NSMutableArray array]];
@@ -106,19 +105,19 @@ int cardIDCount = 0;
     
     [hand addObject:spell];
     */
+    
     /*
     MonsterCardModel*monster;
     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     monster.name = @"Nameless card";
-    monster.life = monster.maximumLife = 100;
-    monster.damage = 100;
+    monster.life = monster.maximumLife = 2000;
+    monster.damage = 7000;
     monster.cost = 0;
     monster.cooldown = monster.maximumCooldown = 0;
     
-    [monster.abilities addObject: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]]];
+    [monster.abilities addObject: [[Ability alloc] initWithType:abilityFracture castType:castOnDeath targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
     
-    [aiHand addObject:monster];
-    
+    [playerHand addObject:monster];
     
     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     monster.name = @"Nameless card";
@@ -207,20 +206,33 @@ int cardIDCount = 0;
     
     DeckModel *aiDeck = [SinglePlayerCards getDeckOne];
     
-    [aiDeck shuffleDeck];
-    while ([aiDeck count] > 20) //limit to 20 cards
-        [aiDeck removeCardAtIndex:0];
-    
-    DeckModel *playerDeck = [SinglePlayerCards getDeckOne];
+    if (aiDeck.count > 0)
+    {
+        [aiDeck shuffleDeck];
 
-    [playerDeck shuffleDeck];
-    while ([playerDeck count] > 20) //limit to 20 cards
-        [playerDeck removeCardAtIndex:0];
+        while ([aiDeck count] > 20) //limit to 20 cards
+            [aiDeck removeCardAtIndex:0];
+     }
+    
+    DeckModel *playerDeck = [[DeckModel alloc] init];
+    
+    DeckModel *deckOne;
+    
+    //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! should not actually be hard coded in GameModel. Instead GameViewController tells what deck to choose
+    if (userCurrentDeck != nil)
+        deckOne = userCurrentDeck;
+    else
+        deckOne = userAllDecks[0];
+    
+    for (CardModel*card in deckOne.cards)
+        [playerDeck addCard:[[CardModel alloc] initWithCardModel:card]];
+    
+    if (playerDeck.count > 0)
+        [playerDeck shuffleDeck];
+    //while ([playerDeck count] > 20) //limit to 20 cards
+    //    [playerDeck removeCardAtIndex:0];
     
     self.decks = @[playerDeck, aiDeck];
-    
-    
-   
     
     //temporary function that grabs 20 cards from Parse database.
     /*
@@ -527,9 +539,15 @@ int cardIDCount = 0;
         int oppositeSide = side == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE;
         
         int attackerDamage = [self calculateDamage:attackerMonsterCard fromSide:side dealtTo:target];
+        int originalLifeTarget = target.life;
         [target loseLife: attackerDamage];
+        int dealtDamageTarget = (originalLifeTarget - target.life);
+        int overDamageTarget = attackerDamage - dealtDamageTarget; //used for pierce attack
         
+        int originalLifeAttacker = attackerMonsterCard.life;
         int defenderDamage = [self calculateDamage:target fromSide:oppositeSide dealtTo:attackerMonsterCard];
+        int overDamageAttacker = 0;
+        int dealtDamageAttacker = 0;
         
         BOOL willReceiveAttack = YES;
         
@@ -545,6 +563,8 @@ int cardIDCount = 0;
         if (willReceiveAttack)
         {
             [attackerMonsterCard loseLife: defenderDamage];
+            dealtDamageAttacker = (originalLifeAttacker - attackerMonsterCard.life);
+            overDamageAttacker = defenderDamage - (originalLifeAttacker - attackerMonsterCard.life);
             
             //CastType castOnDamaged is casted here by defender
             for (int i = 0; i < [target.abilities count]; i++) //castAbility may insert objects in end
@@ -575,13 +595,75 @@ int cardIDCount = 0;
         
         //target dies
         if (target.dead)
+        {
             [self cardDies:target destroyedBy:attackerMonsterCard fromSide:oppositeSide];
+            
+            //search for pierce damage
+            if (target.type != cardTypePlayer)
+            {
+                for (Ability *ability in attackerMonsterCard.abilities)
+                {
+                    if (ability.abilityType == abilityPierce && ability.targetType == targetSelf && !ability.expired)
+                    {
+                        if (overDamageTarget > 0)
+                        {
+                            int dealtDamage = 0;
+                            
+                            PlayerModel*targetPlayer = self.players[target.side];
+                            
+                            int originalLife = targetPlayer.playerMonster.life;
+                            [targetPlayer.playerMonster loseLife:overDamageTarget];
+                            
+                            if (targetPlayer.playerMonster.life > 0)
+                                dealtDamage = overDamageTarget;
+                            else
+                                dealtDamage = overDamageTarget - originalLife;
+                            
+                            [self.gameViewController performBlock:^{
+                                [self.gameViewController animateCardDamage:targetPlayer.playerMonster.cardView forDamage:dealtDamage  fromSide:attackerMonsterCard.side];
+                            } afterDelay:0.1];
+                        }
+                    }
+                }
+            }
+        }
         
         //attacker dies
         if (attackerMonsterCard.dead)
+        {
             [self cardDies:attackerMonsterCard destroyedBy:target fromSide:side];
+            
+            //search for pierce damage
+            if (attackerMonsterCard.type != cardTypePlayer)
+            {
+                for (Ability *ability in target.abilities)
+                {
+                    if (ability.abilityType == abilityPierce && ability.targetType == targetSelf && !ability.expired)
+                    {
+                        if (overDamageAttacker > 0)
+                        {
+                            int dealtDamage = 0;
+                            
+                            PlayerModel*attackerPlayer = self.players[attackerMonsterCard.side];
+                            
+                            int originalLife = attackerPlayer.playerMonster.life;
+                            [attackerPlayer.playerMonster loseLife:overDamageAttacker];
+                            
+                            if (attackerPlayer.playerMonster.life > 0)
+                                dealtDamage = overDamageAttacker;
+                            else
+                                dealtDamage = overDamageAttacker - originalLife;
+                            
+                            [self.gameViewController performBlock:^{
+                                [self.gameViewController animateCardDamage:attackerPlayer.playerMonster.cardView forDamage:dealtDamage  fromSide:target.side];
+                            } afterDelay:0.1];
+                        }
+                    }
+                }
+            }
+        }
         
-        return @[[NSNumber numberWithInt:attackerDamage],[NSNumber numberWithInt:defenderDamage]];
+        return @[[NSNumber numberWithInt:dealtDamageTarget],[NSNumber numberWithInt:dealtDamageAttacker]];
     }
     
     [self checkForGameOver];
@@ -1135,14 +1217,15 @@ int cardIDCount = 0;
     
     if (ability.abilityType == abilityAddLife)
     {
-        int originalHealth = monster.life; //will only pop up the change in health
+        int originalLife = monster.life; //will only pop up the change in health
         [monster healLife:[ability.value intValue]];
-        [self.gameViewController animateCardHeal:monster.cardView forLife:monster.life - originalHealth];
+        [self.gameViewController animateCardHeal:monster.cardView forLife:monster.life - originalLife];
     }
     else if (ability.abilityType == abilityLoseLife)
     {
+        int originalLife = monster.life;
         [monster loseLife:[ability.value intValue]];
-        [self.gameViewController animateCardDamage:monster.cardView forDamage:[ability.value integerValue] fromSide:monster.side];
+        [self.gameViewController animateCardDamage:monster.cardView forDamage:monster.life-originalLife fromSide:monster.side];
         
         //cast on damanged is casted here by monster
         //CastType castOnDamaged is casted here by defender
@@ -1263,6 +1346,57 @@ int cardIDCount = 0;
         //[monster.cardView updateView];
         
         return YES; //if it's returned to hand, it cannot die or have anything else happen to it
+    }
+    else if (ability.abilityType == abilityFracture) //NOT CASTING
+    {
+        int cost = monster.baseCost;
+        int damage = monster.baseDamage;
+        int life = monster.baseMaxLife;
+        
+        if ([ability.value intValue] == 1)
+        {
+            cost = ceil(cost*0.6);
+            damage = ceil(damage*0.6/100)*100;
+            life = ceil(life*0.6/100)*100;
+        }
+        else if ([ability.value intValue] == 2)
+        {
+            cost = ceil(cost*0.25);
+            damage = ceil(damage*0.25/100)*100;
+            life = ceil(life*0.25/100)*100;
+        }
+        else if ([ability.value intValue] == 3)
+        {
+            cost = ceil(cost*0.15);
+            damage = ceil(damage*0.15/100)*100;
+            life = ceil(life*0.15/100)*100;
+        }
+        NSLog(@"casted");
+        for (int i = 0 ; i < [ability.value intValue]; i++)
+        {
+            
+            MonsterCardModel*fracture = [[MonsterCardModel alloc] initWithCardModel:monster];
+            fracture.abilities = [NSMutableArray array]; //clear all abilities
+            fracture.cost = cost;
+            fracture.damage = damage;
+            fracture.life = fracture.maximumLife = life;
+            fracture.cooldown = fracture.maximumCooldown = monster.baseMaxCooldown;
+            
+            NSArray*monsterField = self.battlefield[monster.side];
+            int currentMonsterCount = [monsterField count];
+            if (monster.dead)
+                currentMonsterCount--;
+            
+            if (currentMonsterCount < MAX_BATTLEFIELD_SIZE)
+            {
+                [self addCardToBattlefield:fracture side:monster.side];
+                
+                CardView *fractureView = [[CardView alloc]initWithModel:fracture cardImage:monster.cardView.cardImage viewMode:monster.cardView.cardViewMode];
+                fractureView.center = monster.cardView.center;
+            }
+        }
+        
+        return YES;
     }
     else
     {

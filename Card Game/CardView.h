@@ -57,6 +57,12 @@
 /** Sets the current mode of display for different purposes */
 @property enum CardViewMode cardViewMode;
 
+/** Used as colour mask TODO change into image to fit the card */
+@property UIView* mask;
+
+/** For animating damages */
+@property StrokedLabel *damagePopup;
+
 /** Initializes with attached CardModel, which should be one of its child classes */
 -(instancetype)initWithModel: (CardModel*)cardModel cardImage:(UIImageView*)cardImage viewMode:(enum CardViewMode)cardViewMode;
 
@@ -65,6 +71,8 @@
 
 /** Refreshes its transformations by setting its cardView state to itself */
 -(void)resetTransformations;
+
+-(void)setPopupDamage:(int)damage;
 
 /** Loads images for drawing cards ahead of time */
 +(void) loadResources;
@@ -89,13 +97,17 @@ extern const int  CARD_WIDTH_RATIO, CARD_HEIGHT_RATIO;
 
 extern const float CARD_IMAGE_RATIO;
 
+extern const double CARD_VIEWER_SCALE, CARD_VIEWER_MAXED_SCALE;
+
 /** State of the card's view for positioning */
 enum CardViewState{
     cardViewStateNone,
     cardViewStateHighlighted,
     cardViewStateSelected,
     cardViewStateDragging,
-    cardViewStateMaximize
+    cardViewStateMaximize,
+    cardViewStateCardViewer,
+    cardViewStateCardViewerGray,
 } ;
 
 enum CardHighlightType
@@ -108,8 +120,12 @@ enum CardHighlightType
 /** For when the cardView is used for different purposes */
 enum CardViewMode
 {
+    /** General case during in-game */
     cardViewModeIngame,
-    cardViewModeZoomedIngame
+    /** When being maximized in game */
+    cardViewModeZoomedIngame,
+    /** When viewed in an editor outside of games. Does not animate when values change. */
+    cardViewModeEditor,
 };
 
 

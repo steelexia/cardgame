@@ -11,7 +11,7 @@
 @implementation SpellCardModel
 
 /** constructor with id number, all other fields will be defaut values */
--(instancetype)initWithIdNumber: (long)idNumber
+-(instancetype)initWithIdNumber: (int)idNumber
 {
     self = [super initWithIdNumber:idNumber];
     
@@ -23,7 +23,7 @@
     return self;
 }
 
--(instancetype)initWithIdNumber:(long)idNumber type:(enum CardType) type
+-(instancetype)initWithIdNumber:(int)idNumber type:(enum CardType) type
 {
     self = [self initWithIdNumber:idNumber];
     
@@ -32,6 +32,17 @@
         self.type = type;
     }
     
+    return self;
+}
+
+-(instancetype)initWithCardModel:(CardModel*)card
+{
+    self = [self initWithIdNumber:card.idNumber];
+    
+    if (self)
+    {
+        
+    }
     return self;
 }
 

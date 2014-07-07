@@ -34,9 +34,52 @@ NSArray *allAbilities;
         self.minPoints = minPoints;
         self.maxPoints = maxPoints;
         self.maxCount = maxCount;
+        self.enabled = YES;
+        
+        if (ability.otherValues != nil)
+        {
+            if ([ability.otherValues[1] integerValue] < 99)
+                self.incrementSize = 1;
+            else if ([ability.otherValues[1] integerValue] < 999)
+                self.incrementSize = 10;
+            else
+                self.incrementSize = 100;
+        }
     }
     
     return self;
+}
+
+-(instancetype)initWithAbilityWrapper:(AbilityWrapper*)abilityWraper
+{
+    self = [self initWithAbility: [[Ability alloc] initWithAbility:abilityWraper.ability] element:abilityWraper.element rarity:abilityWraper.rarity minPoints:abilityWraper.minPoints maxPoints:abilityWraper.maxPoints maxCount:abilityWraper.maxCount];
+    
+    return self;
+}
+
++(NSString*)abilityToString:(Ability*)ability
+{
+    return [NSString stringWithFormat:@"%d %@", [AbilityWrapper getIdWithAbility:ability], ability.value];
+}
+
++(Ability*)getAbilityWithString:(NSString*)abilityString
+{
+    int idNumber;
+    NSNumber *value;
+    
+    NSArray * result = [abilityString componentsSeparatedByString:@" "];
+    
+    if (result.count < 2)
+        return nil;
+    
+    idNumber = [result[0] intValue];
+    
+    if ([result[1] isEqualToString:@"nil"])
+        value = nil;
+    else
+        value = [NSNumber numberWithInt:[result[1] intValue]];
+    
+    return [self getAbilityWithId:idNumber value:value otherValues:nil]; //TODO otherValues not really used right now
 }
 
 +(Ability*)getAbilityWithId: (int)idNumber value:(NSNumber*)value otherValues:(NSArray*)otherValues
@@ -63,16 +106,18 @@ NSArray *allAbilities;
     return ability;
 }
 
++(NSArray*)allAbilities
+{
+    return allAbilities;
+}
+
 +(int)getIdWithAbility:(Ability*)ability
 {
     for (int i = 0; i < [allAbilities count]; i++)
     {
         AbilityWrapper* wrapper = allAbilities[i];
         Ability*wrapperAbility = wrapper.ability;
-        if (ability.abilityType == wrapperAbility.abilityType &&
-            ability.castType == wrapperAbility.castType &&
-            ability.targetType == wrapperAbility.targetType &&
-            ability.durationType == wrapperAbility.durationType)
+        if ([wrapperAbility isEqualTypeTo:ability])
             return i;
     }
     
@@ -89,6 +134,7 @@ NSArray *allAbilities;
      Almost all abilities should not use withValue, and instead provide the range of values in withOtherValues as an array, in the form of [value1min, value1max, value2min, value2max...]. Only abilities without values, or a single static value use withValue. 
      Use the constructor with withDescription if a custom description is used. When using this, use %1, %2... to represent value1, value2, etc., as they will be replaced later on. TODO this is not finished yet.
      For now, put all min and max points as 1. Their exact values can be changed later.
+     If value is not nil, otherValues ___MUST___ have at least two elements, being its min and max values. Even if the ability's range is 1, it still must store 1,1 in min and max.
      **/
     allAbilities = @[
                      //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
@@ -659,13 +705,13 @@ NSArray *allAbilities;
     
     //use this to print out all abilities for temp card design
     
-    
+    /*
     for (int i = 0; i < [allAbilities count]; i++)
     {
         AbilityWrapper *wrapper = allAbilities[i];
         NSLog(@"%d %d %d %d", i, wrapper.ability.abilityType, wrapper.ability.castType, wrapper.ability.targetType);
     }
-    
+     */
 }
 
 

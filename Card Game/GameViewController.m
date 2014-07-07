@@ -10,8 +10,8 @@
 #import "GameViewController+Animation.h"
 #import "CardView.h"
 #import "MonsterCardModel.h"
-
-//TODO!!!!!!!!!!!!! put views into subviews (UI view, card view, background view)
+#import "CGPointUtilities.h"
+#import "MainScreenViewController.h"
 
 @interface GameViewController ()
 
@@ -34,6 +34,9 @@ int currentSide;
 
 const float FIELD_CENTER_Y_RATIO = 3/8.f;
 
+/** UILabel used to darken the screen during card selections */
+UILabel *darkFilter;
+
 /** label for showing the current player */
 UILabel *currentSideLabel;
 
@@ -46,6 +49,9 @@ NSArray *resourceLabels;
 UIImageView *playerFieldHighlight, *opponentFieldHighlight, *playerFieldEdge, *opponentFieldEdge;
 
 UIImageView *battlefieldBackground;
+
+UIButton *quitButton, *quitConfirmButton, *quitCancelButton;
+UILabel *quitConfirmLabel;
 
 /** Stores the current UI action being performed */
 enum GameControlState gameControlState;
@@ -77,16 +83,6 @@ CardModel* currentCard;
     
     gameControlState = gameControlStateNone;
     
-    //variable setups TODO probably move elsewhere
-    //card's size is determined based on screen width, assuming height>width TODO: NOT the case for ipad in landscape
-    CARD_WIDTH = ((SCREEN_WIDTH / 5) * 0.9);
-    CARD_HEIGHT = (CARD_WIDTH *  CARD_HEIGHT_RATIO / CARD_WIDTH_RATIO);
-    
-    CARD_FULL_WIDTH = CARD_WIDTH/CARD_DEFAULT_SCALE;
-    CARD_FULL_HEIGHT = CARD_HEIGHT/CARD_DEFAULT_SCALE;
-    
-    PLAYER_HERO_WIDTH = PLAYER_HERO_HEIGHT = CARD_HEIGHT;
-    
     currentSide = PLAYER_SIDE; //TODO not always player begins later
     
     //inits the game model storing the game's data
@@ -115,6 +111,7 @@ CardModel* currentCard;
 /** Purely for organization, called once when the view is first set up */
 -(void) setupUI
 {
+    //for checking fonts
     /*
     for (NSString* family in [UIFont familyNames])
     {
@@ -126,6 +123,11 @@ CardModel* currentCard;
         }
     }
 */
+    
+    //set up UI
+    darkFilter = [[UILabel alloc] initWithFrame:self.view.bounds];
+    darkFilter.backgroundColor = [[UIColor alloc]initWithHue:0 saturation:0 brightness:0 alpha:0.8];
+    [darkFilter setUserInteractionEnabled:YES]; //blocks all interaction behind it
     
     //----Main view layers used to group relevant objects together----//
     handsView = [[ViewLayer alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
@@ -213,6 +215,33 @@ CardModel* currentCard;
     //end button is aligned with field's right border and has same distance away as the distance between the two fields
     self.endTurnButton.center = CGPointMake(SCREEN_WIDTH - (SCREEN_WIDTH - playerFieldEdge.bounds.size.width)/2 - self.endTurnButton.frame.size.width/2, playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*2 + self.endTurnButton.frame.size.height/2);
     [self.backgroundView addSubview: self.endTurnButton];
+    
+    //quit button
+    quitButton = [[UIButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
+    [quitButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
+    [quitButton addTarget:self action:@selector(quitButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.uiView addSubview:quitButton];
+    
+    quitConfirmLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/4, SCREEN_WIDTH*6/8, SCREEN_HEIGHT)];
+    quitConfirmLabel.textColor = [UIColor whiteColor];
+    quitConfirmLabel.backgroundColor = [UIColor clearColor];
+    quitConfirmLabel.font = [UIFont fontWithName:cardMainFont size:25];
+    quitConfirmLabel.textAlignment = NSTextAlignmentCenter;
+    quitConfirmLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    quitConfirmLabel.numberOfLines = 0;
+    quitConfirmLabel.text = @"Are you sure you want to quit? You will lose this game.";
+    [quitConfirmLabel sizeToFit];
+    
+    quitConfirmButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    quitConfirmButton.center = CGPointMake(SCREEN_WIDTH/2 - 80, SCREEN_HEIGHT - 60);
+    [quitConfirmButton setImage:[UIImage imageNamed:@"yes_button"] forState:UIControlStateNormal];
+    [quitConfirmButton addTarget:self action:@selector(quitConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    quitCancelButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    quitCancelButton.center = CGPointMake(SCREEN_WIDTH/2 + 80, SCREEN_HEIGHT - 60);
+    [quitCancelButton setImage:[UIImage imageNamed:@"no_button"] forState:UIControlStateNormal];
+    [quitCancelButton addTarget:self action:@selector(quitCancelButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     //-----Player's heroes-----//
     
@@ -462,7 +491,7 @@ CardModel* currentCard;
             }
         }
         
-        //TODO should not be able to give up spells, either make it impossible to cancel or allow undoing
+        //TODO add a button to give up casting the spell
         //did not select a valid target, ability given up
         /*
         [self.currentAbilities removeAllObjects];
@@ -520,7 +549,7 @@ CardModel* currentCard;
             
             //cardView.center = [touch locationInView: self.handsView];
             CGPoint newCenter = [touch locationInView: self.view];
-            newCenter.y -= cardView.frame.size.height/2;
+            newCenter.y -= cardView.frame.size.height*2/3;
             
             cardView.center = newCenter;
             
@@ -576,7 +605,7 @@ CardModel* currentCard;
     if (gameControlState == gameControlStateDraggingHandCard)
     {
         CGPoint newCenter = currentPoint;
-        newCenter.y -= currentCard.cardView.frame.size.height/2;
+        newCenter.y -= currentCard.cardView.frame.size.height*2/3;
         
         currentCard.cardView.center = newCenter;
         
@@ -921,6 +950,74 @@ CardModel* currentCard;
     [self.fieldView setUserInteractionEnabled:state];
 }
 
+-(void)quitButtonPressed
+{
+    [self darkenScreen];
+    
+    quitConfirmButton.alpha = 0;
+    quitCancelButton.alpha = 0;
+    quitConfirmLabel.alpha = 0;
+    
+    [self.view addSubview:quitConfirmButton];
+    [self.view addSubview:quitCancelButton];
+    [self.view addSubview:quitConfirmLabel];
+    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         quitConfirmButton.alpha = 1;
+                         quitCancelButton.alpha = 1;
+                         quitConfirmLabel.alpha = 1;
+                     }
+                     completion:^(BOOL completed){
+                         
+                     }];
+}
+
+-(void)quitConfirmButtonPressed
+{
+    MainScreenViewController *viewController = [[MainScreenViewController alloc] init];
+    [self presentViewController:viewController animated:YES completion:nil];
+}
+
+-(void)quitCancelButtonPressed
+{
+    [self undarkenScreen];
+    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         quitConfirmButton.alpha = 0;
+                         quitCancelButton.alpha = 0;
+                         quitConfirmLabel.alpha = 0;
+                     }
+                     completion:^(BOOL completed){
+                         [quitConfirmButton removeFromSuperview];
+                         [quitCancelButton removeFromSuperview];
+                         [quitConfirmLabel removeFromSuperview];
+                     }];
+}
+
+-(void)darkenScreen
+{
+    darkFilter.alpha = 0;
+    [self.view addSubview:darkFilter];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         darkFilter.alpha = 0.9;
+                     }
+                     completion:nil];
+}
+
+-(void)undarkenScreen
+{
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         darkFilter.alpha = 0;
+                     }
+                     completion:^(BOOL completed){
+                         [darkFilter removeFromSuperview];
+                     }];
+}
+
 //block delay functions
 - (void)performBlock:(void (^)())block
 {
@@ -931,41 +1028,6 @@ CardModel* currentCard;
 {
     void (^block_)() = [block copy]; // autorelease this if you're not using ARC
     [self performSelector:@selector(performBlock:) withObject:block_ afterDelay:delay];
-}
-
-
-//apparently there's no built-in function for operations on points
-//TODO move elsewhere
-
-CGPoint CGPointAdd(CGPoint p1, CGPoint p2)
-{
-    return CGPointMake(p1.x + p2.x, p1.y + p2.y);
-}
-
-CGPoint CGPointSubtract(CGPoint p1, CGPoint p2)
-{
-    return CGPointMake(p1.x - p2.x, p1.y - p2.y);
-}
-
-CGPoint CGPointMultiplyScalar(CGPoint p1, float s)
-{
-    return CGPointMake(p1.x * s, p1.y * s);
-}
-CGPoint CGPointDivideScalar(CGPoint p1, float s)
-{
-    return CGPointMake(p1.x / s, p1.y / s);
-}
-
-/** returns the absolute distance between p1 and p2 */
-float CGPointDistance(CGPoint p1, CGPoint p2)
-{
-    return abs(sqrt(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2)));
-}
-
-/** returns the angle in radians between p1 and p2 */
-float CGPointAngle(CGPoint p1, CGPoint p2)
-{
-    return atan2(p2.y-p1.y, p2.x - p1.x);
 }
 
 @end
