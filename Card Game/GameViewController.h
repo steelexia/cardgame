@@ -41,9 +41,6 @@
 
 /** The card that has currently been maximized for viewing. While this is open, all other actions are disabled. This not only shows the card in large but also all the applied abilities that don't fit on the card. */
 @property (strong) CardView* viewingCardView;
-@property (strong) CardModel* viewingCardStart;
-@property CGPoint touchStartPoint;
-
 
 /** Counts the number of gameModel effecting animations that are happening. Do not access directly, use addAnimationCounter and decAnimationCounter */
 @property int currentNumberOfAnimations;
@@ -72,6 +69,8 @@
 -(void) attackCard: (CardModel*) card target:(MonsterCardModel*)targetCard fromSide: (int) side;
 
 -(void) attackHero: (CardModel*) card target:(MonsterCardModel*)targetCard fromSide: (int) side;
+
+-(void)newGame;
 
 /** Quickly enable/disable all views */
 -(void)setAllViews:(BOOL)state;

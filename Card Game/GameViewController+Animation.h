@@ -54,4 +54,6 @@
 
 -(void) animateCardHeal: (CardView*) cardView forLife: (int) life;
 
+-(void) animatePlayerTurn;
+
 @end

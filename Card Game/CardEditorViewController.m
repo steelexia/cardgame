@@ -269,6 +269,7 @@ UILabel *darkFilter;
     abilityNewTableView.cevc = self;
     [self.view addSubview:abilityNewTableView];
     
+    
     abilitySearchField =  [[UITextField alloc] initWithFrame:CGRectMake(80,SCREEN_HEIGHT- 22,186,20)];
     
     abilitySearchField.textColor = [UIColor blackColor];

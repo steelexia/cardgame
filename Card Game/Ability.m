@@ -67,6 +67,7 @@
 -(instancetype) initWithAbility: (Ability*) ability
 {
     self = [self initWithType:ability.abilityType castType:ability.castType targetType:ability.targetType withDuration:ability.durationType withValue:ability.value withOtherValues:ability.otherValues withDescription:ability.description];
+    self.isBaseAbility = ability.isBaseAbility;
     
     return self;
 }
@@ -271,27 +272,27 @@
     }
     else if (abilityType == abilityRemoveAbility){
         if (ability.targetType == targetSelf)
-            description = [NSString stringWithFormat:@"%@Monster cannot have any abilities%@.", castDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Mute%@.", castDescription, durationDescription];
         else
-            description = [NSString stringWithFormat:@"%@Remove all abilities from %@%@.", castDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Mute %@%@.", castDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityAssassin){
         if (ability.targetType == targetSelf)
-            description = [NSString stringWithFormat:@"%@Does not receive damage when attacking%@.", castDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Assassin%@.", castDescription, durationDescription];
         else
-            description = [NSString stringWithFormat:@"%@Monster will not receive damage when attacking %@%@.", castDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Give Assassin to%@%@.", castDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityReturnToHand){
         if (ability.targetType == targetSelf)
-            description = [NSString stringWithFormat:@"%@Returns itself to hand%@.", castDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Withdraw%@.", castDescription, durationDescription];
         else
-            description = [NSString stringWithFormat:@"%@Return %@ to its owner's hand%@.", castDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Widthdraw %@%@.", castDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityPierce){
         if (ability.targetType == targetSelf)
-            description = [NSString stringWithFormat:@"%@Pierce attack%@.", castDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Pierce%@.", castDescription, durationDescription];
         else
-            description = [NSString stringWithFormat:@"%@Gives Pierce to%@%@.", castDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Give Pierce to%@%@.", castDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityFracture){
         if (ability.targetType == targetSelf)
@@ -414,6 +415,51 @@
         return [NSString stringWithFormat:@""]; //no description needed
     
     return [NSString stringWithFormat:@"duration type %d", durationType];
+}
+
+/** Maybe return an array later */
++(NSString*)getAbilityKeywordDescription: (Ability*)ability
+{
+    if (ability.abilityType == abilityTaunt)
+        return @"Taunt: Enemy minions must attack this minion.";
+    else if (ability.abilityType == abilityRemoveAbility)
+        return @"Mute: Target cannot have any abilities.";
+    else if (ability.abilityType == abilityAssassin)
+        return @"Assassin: Target does not receive recoil damage when attacking.";
+    else if (ability.abilityType == abilityReturnToHand)
+        return @"Withdraw: Target is returned to the owner's hand.";
+    else if (ability.abilityType == abilityPierce)
+        return @"Pierce: Attack damage dealt above target's health is deal to the enemy hero.";
+    else if (ability.abilityType == abilityFracture)
+        return @"Fracture: Summons weaker copies of itself that has no abilities.";
+    
+    return nil;
+}
+
++(NSMutableArray*)getAbilityKeywordDescriptions: (CardModel*)card
+{
+    NSMutableArray *descriptions = [NSMutableArray array];
+    for (Ability*ability in card.abilities)
+    {
+        NSString*description = [Ability getAbilityKeywordDescription:ability];
+        
+        if (description == nil)
+            continue;
+        
+        BOOL found = NO;
+        for (NSString *d in descriptions)
+        {
+            if ([d isEqualToString:description])
+            {
+                found = YES;
+                break;
+            }
+        }
+        
+        if (!found)
+            [descriptions addObject:description];
+    }
+    return descriptions;
 }
 
 @end

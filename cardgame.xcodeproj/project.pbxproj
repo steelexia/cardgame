@@ -47,6 +47,11 @@
 		907D9C1B193E43A80037C0CF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907D9C1A193E43A80037C0CF /* SystemConfiguration.framework */; };
 		907D9C1E193F87BE0037C0CF /* AbilityWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 907D9C1D193F87BE0037C0CF /* AbilityWrapper.m */; };
 		907D9C2019509E850037C0CF /* battle_background_0.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9C1F19509E850037C0CF /* battle_background_0.png */; };
+		90AB14EE196B5ECC0008FCDD /* GameInfoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 90AB14ED196B5ECC0008FCDD /* GameInfoTableViewCell.m */; };
+		90AB14F1196B5F740008FCDD /* GameInfoTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90AB14F0196B5F740008FCDD /* GameInfoTableView.m */; };
+		90AB14F3196CA7E60008FCDD /* card_background_front_overlay_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB14F2196CA7E60008FCDD /* card_background_front_overlay_common.png */; };
+		90AB14F5196CA7F90008FCDD /* card_background_front_monster_overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB14F4196CA7F90008FCDD /* card_background_front_monster_overlay.png */; };
+		90AB14F7196CB7720008FCDD /* no_target_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB14F6196CB7720008FCDD /* no_target_button.png */; };
 		90DA43321959CDF900E44AED /* CardsCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DA43311959CDF900E44AED /* CardsCollectionView.m */; };
 		90DA43351959D75700E44AED /* CustomCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DA43341959D75700E44AED /* CustomCollectionView.m */; };
 		90DA433C195A451000E44AED /* arrow_left_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 90DA433A195A451000E44AED /* arrow_left_button.png */; };
@@ -235,6 +240,13 @@
 		907D9C1C193F87BE0037C0CF /* AbilityWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbilityWrapper.h; sourceTree = "<group>"; };
 		907D9C1D193F87BE0037C0CF /* AbilityWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbilityWrapper.m; sourceTree = "<group>"; };
 		907D9C1F19509E850037C0CF /* battle_background_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = battle_background_0.png; path = "Card Game/battle_background_0.png"; sourceTree = "<group>"; };
+		90AB14EC196B5ECC0008FCDD /* GameInfoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameInfoTableViewCell.h; sourceTree = "<group>"; };
+		90AB14ED196B5ECC0008FCDD /* GameInfoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameInfoTableViewCell.m; sourceTree = "<group>"; };
+		90AB14EF196B5F740008FCDD /* GameInfoTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameInfoTableView.h; sourceTree = "<group>"; };
+		90AB14F0196B5F740008FCDD /* GameInfoTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameInfoTableView.m; sourceTree = "<group>"; };
+		90AB14F2196CA7E60008FCDD /* card_background_front_overlay_common.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_overlay_common.png; path = "Card Game/card_background_front_overlay_common.png"; sourceTree = "<group>"; };
+		90AB14F4196CA7F90008FCDD /* card_background_front_monster_overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_monster_overlay.png; path = "Card Game/card_background_front_monster_overlay.png"; sourceTree = "<group>"; };
+		90AB14F6196CB7720008FCDD /* no_target_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = no_target_button.png; path = "Card Game/no_target_button.png"; sourceTree = "<group>"; };
 		90DA43301959CDF900E44AED /* CardsCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardsCollectionView.h; sourceTree = "<group>"; };
 		90DA43311959CDF900E44AED /* CardsCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardsCollectionView.m; sourceTree = "<group>"; };
 		90DA43331959D75700E44AED /* CustomCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCollectionView.h; sourceTree = "<group>"; };
@@ -369,6 +381,7 @@
 		9069AAD91955019A006D1D98 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				90AB14F2196CA7E60008FCDD /* card_background_front_overlay_common.png */,
 				90DA434B195B7C0300E44AED /* card_background_front_neutral_common_icon.png */,
 				9069AADA195501AB006D1D98 /* card_background_front_dark_common.png */,
 				9069AADB195501AB006D1D98 /* card_background_front_earth_common.png */,
@@ -484,6 +497,7 @@
 		907D9BD919226B4C0037C0CF /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				90AB14F6196CB7720008FCDD /* no_target_button.png */,
 				90DA43AC1969D21500E44AED /* battle_button_gray.png */,
 				90DA43AD1969D21500E44AED /* battle_button.png */,
 				90DA43AE1969D21500E44AED /* back_button.png */,
@@ -525,6 +539,7 @@
 			isa = PBXGroup;
 			children = (
 				9069AAD91955019A006D1D98 /* Common */,
+				90AB14F4196CA7F90008FCDD /* card_background_front_monster_overlay.png */,
 				907D9BF6192E979C0037C0CF /* hero_glow_select.png */,
 				907D9BFE192FD3910037C0CF /* hero_glow_target.png */,
 				907D9BF4192E91290037C0CF /* card_glow_select.png */,
@@ -578,6 +593,10 @@
 				90605407191AA9D3000B3B93 /* PlayerModel.m */,
 				90DA43C81969DBDB00E44AED /* DeckChooserViewController.h */,
 				90DA43C91969DBDB00E44AED /* DeckChooserViewController.m */,
+				90AB14EC196B5ECC0008FCDD /* GameInfoTableViewCell.h */,
+				90AB14ED196B5ECC0008FCDD /* GameInfoTableViewCell.m */,
+				90AB14EF196B5F740008FCDD /* GameInfoTableView.h */,
+				90AB14F0196B5F740008FCDD /* GameInfoTableView.m */,
 			);
 			name = "Game Battle Screen";
 			sourceTree = "<group>";
@@ -794,6 +813,8 @@
 				90DA43C71969D21500E44AED /* remove_deck_button.png in Resources */,
 				907D9C2019509E850037C0CF /* battle_background_0.png in Resources */,
 				90DA435B195E0BD900E44AED /* add_deck_button.png in Resources */,
+				90AB14F3196CA7E60008FCDD /* card_background_front_overlay_common.png in Resources */,
+				90AB14F5196CA7F90008FCDD /* card_background_front_monster_overlay.png in Resources */,
 				90DA4372195F96DB00E44AED /* increment_button.png in Resources */,
 				9069AAE3195501AB006D1D98 /* card_background_front_fire_common.png in Resources */,
 				9069AAE7195501AB006D1D98 /* card_background_front_neutral_common.png in Resources */,
@@ -826,6 +847,7 @@
 				90DA43C41969D21500E44AED /* save_card_button.png in Resources */,
 				907D9BE11922AE0D0037C0CF /* field_highlight.png in Resources */,
 				90DA4341195A4A6E00E44AED /* remove_button.png in Resources */,
+				90AB14F7196CB7720008FCDD /* no_target_button.png in Resources */,
 				90DA43BD1969D21500E44AED /* randomize_card_button.png in Resources */,
 				90DA43C61969D21500E44AED /* remove_deck_button_gray.png in Resources */,
 				9069AAD519520003006D1D98 /* card_background_front_overlay.png in Resources */,
@@ -847,6 +869,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9060540B191AAE1B000B3B93 /* DeckModel.m in Sources */,
+				90AB14EE196B5ECC0008FCDD /* GameInfoTableViewCell.m in Sources */,
 				90DA4361195E6EA800E44AED /* UserModel.m in Sources */,
 				907D9BEA192515E70037C0CF /* Ability.m in Sources */,
 				90DA4368195F6D0800E44AED /* StrokedTextField.m in Sources */,
@@ -862,6 +885,7 @@
 				90DA43CA1969DBDB00E44AED /* DeckChooserViewController.m in Sources */,
 				90DA435E195E45B500E44AED /* MainScreenViewController.m in Sources */,
 				90DA4364195F5DE700E44AED /* CardEditorViewController.m in Sources */,
+				90AB14F1196B5F740008FCDD /* GameInfoTableView.m in Sources */,
 				907D9C02193045BA0037C0CF /* SinglePlayerCards.m in Sources */,
 				90F352A7191595C200601130 /* AppDelegate.m in Sources */,
 				907D9BE7192446250037C0CF /* ViewLayer.m in Sources */,

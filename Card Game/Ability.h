@@ -55,7 +55,7 @@
 /** Generate a description in String of the ability */
 +(NSMutableAttributedString*) getDescription: (Ability*) ability fromCard:(CardModel*) cardModel;
 
-
++(NSMutableArray*)getAbilityKeywordDescriptions: (CardModel*)card;
 
 @end
 
@@ -211,9 +211,12 @@ enum CastType
     castOnDeath, //CANNOT be used with selectable target
     
     //future
+    /** TODO */
     castOnAnyMinionDeath,
+    /** TODO */
     castOnFriendlyMinionDeath,
-    castOnEnemyMininoDeath,
+    /** TODO */
+    castOnEnemyMinionDeath,
 };
 
 /** 

@@ -683,6 +683,9 @@ NSArray *allAbilities;
                      //return attacker on death
                      [[AbilityWrapper alloc] initWithAbility:
                       [[Ability alloc] initWithType:abilityReturnToHand castType:castOnDeath targetType:targetAttacker withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] element:elementNeutral rarity:cardRarityCommon minPoints:1 maxPoints:1 maxCount:1],
+                     //return self on death (very expensive)
+                     [[AbilityWrapper alloc] initWithAbility:
+                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnDeath targetType:targetSelf withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] element:elementNeutral rarity:cardRarityCommon minPoints:1 maxPoints:1 maxCount:1],
                      //return victim on hit
                      [[AbilityWrapper alloc] initWithAbility:
                       [[Ability alloc] initWithType:abilityReturnToHand castType:castOnHit targetType:targetVictim withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] element:elementNeutral rarity:cardRarityCommon minPoints:1 maxPoints:1 maxCount:1],
@@ -699,8 +702,35 @@ NSArray *allAbilities;
                      [[AbilityWrapper alloc] initWithAbility:
                       [[Ability alloc] initWithType:abilityReturnToHand castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] element:elementNeutral rarity:cardRarityCommon minPoints:1 maxPoints:1 maxCount:1],
                      
-                     //ADD ADDITIONAL ABILITIES HERE, DO NOT INSERT IN MIDDLE!!!
+                     //---fracture---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
+                     //fracture on death
+                     [[AbilityWrapper alloc] initWithAbility:
+                      [[Ability alloc] initWithType:abilityFracture castType:castOnDeath targetType:targetSelf withDuration:durationInstant withValue:0 withOtherValues:@[@1,@3] withDescription:nil] element:elementNeutral rarity:cardRarityCommon minPoints:1 maxPoints:1 maxCount:2], //note that costs don't change
+                     //fracture on damaged (EXTREMELY expensive)
+                     [[AbilityWrapper alloc] initWithAbility:
+                      [[Ability alloc] initWithType:abilityFracture castType:castOnDamaged targetType:targetSelf withDuration:durationInstant withValue:0 withOtherValues:@[@1,@3] withDescription:nil] element:elementNeutral rarity:cardRarityCommon minPoints:1 maxPoints:1 maxCount:1], //note that costs don't change
+                     //fracture on move (EXTREMELY expensive)
+                     [[AbilityWrapper alloc] initWithAbility:
+                      [[Ability alloc] initWithType:abilityFracture castType:castOnMove targetType:targetSelf withDuration:durationInstant withValue:0 withOtherValues:@[@1,@3] withDescription:nil] element:elementNeutral rarity:cardRarityCommon minPoints:1 maxPoints:1 maxCount:1], //note that costs don't change
+                     //fracture on move (EXTREMELY expensive)
+                     [[AbilityWrapper alloc] initWithAbility:
+                      [[Ability alloc] initWithType:abilityFracture castType:castOnEndOfTurn targetType:targetSelf withDuration:durationInstant withValue:0 withOtherValues:@[@1,@3] withDescription:nil] element:elementNeutral rarity:cardRarityCommon minPoints:1 maxPoints:1 maxCount:1], //note that costs don't change
                      
+                     //---pierce---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
+                     //minion with pierce
+                     [[AbilityWrapper alloc] initWithAbility:
+                      [[Ability alloc] initWithType:abilityPierce castType:castAlways targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] element:elementNeutral rarity:cardRarityCommon minPoints:1 maxPoints:1 maxCount:2],
+                     //give pierce to a minion (pretty OP)
+                     [[AbilityWrapper alloc] initWithAbility:
+                      [[Ability alloc] initWithType:abilityPierce castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] element:elementNeutral rarity:cardRarityCommon minPoints:1 maxPoints:1 maxCount:1],
+                     //give pierce to a random minion
+                     [[AbilityWrapper alloc] initWithAbility:
+                      [[Ability alloc] initWithType:abilityPierce castType:castOnSummon targetType:targetOneRandomMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] element:elementNeutral rarity:cardRarityCommon minPoints:1 maxPoints:1 maxCount:1],
+                     //give pierce to a random friendly minion on death
+                     [[AbilityWrapper alloc] initWithAbility:
+                      [[Ability alloc] initWithType:abilityPierce castType:castOnDeath targetType:targetOneRandomFriendlyMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] element:elementNeutral rarity:cardRarityCommon minPoints:1 maxPoints:1 maxCount:1],
+                     
+                     //ADD ADDITIONAL ABILITIES HERE, DO NOT INSERT IN MIDDLE!!!
     ];
     
     //use this to print out all abilities for temp card design

@@ -73,7 +73,6 @@
 
 -(void) animateMoveTo: (UIView*) view toPosition: (CGPoint) target inDuration: (float) duration withDelay: (float) delay
 {
-    
     [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          view.center = target;
@@ -158,9 +157,12 @@
 
         //[self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
         [self decAnimationCounter];
+        
+        NSLog(@"in animation");
     }
     else
     {
+        NSLog(@"not in animation");
         cardView.inDamageAnimation = YES;
         
         float power = (damage / 1000.f) + (damage / 1000.f) * arc4random_uniform(100) * 0.01/5 + 1;
@@ -254,11 +256,29 @@
     lifePopup.textAlignment = NSTextAlignmentCenter;
     lifePopup.textColor = [UIColor greenColor];
     lifePopup.backgroundColor = [UIColor clearColor];
-    lifePopup.font = [UIFont fontWithName:@"Verdana-Bold" size:18];
+    lifePopup.font = [UIFont fontWithName:cardMainFontBlack size:18];
     
     [self.uiView addSubview:lifePopup];
     [self zoomIn:lifePopup inDuration:0.15];
     [self fadeOutAndRemove:lifePopup inDuration:0.5 withDelay:0.5];
+}
+
+-(void) animatePlayerTurn
+{
+    StrokedLabel *newTurn = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 300, 60)];
+    newTurn.center = CGPointMake(self.view.bounds.size.width + 300, self.view.center.y);
+    newTurn.text = [NSString stringWithFormat:@"YOUR TURN"];
+    newTurn.textAlignment = NSTextAlignmentCenter;
+    newTurn.textColor = [UIColor whiteColor];
+    newTurn.font = [UIFont fontWithName:cardMainFontBlack size:35];
+    newTurn.strokeColour = [UIColor blackColor];
+    newTurn.strokeThickness = 3;
+    newTurn.strokeOn = YES;
+    
+    [self.uiView addSubview:newTurn];
+    
+    [self animateMoveToWithBounce:newTurn toPosition:self.view.center inDuration:0.5];
+    [self fadeOutAndRemove:newTurn inDuration:0.5 withDelay:1.5];
 }
 
 @end

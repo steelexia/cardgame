@@ -37,6 +37,8 @@
 /** Which side is the card deployed on. Must be PLAYER_SIDE or OPPONENT_SIDE */
 @property int side;
 
+/** For correctly iterating through turn start and ends for each card */
+@property BOOL turnEnded;
 
 //----------------Functions----------------//
 /**

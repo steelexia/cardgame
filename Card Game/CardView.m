@@ -39,10 +39,10 @@ int CARD_WIDTH = 50, CARD_HEIGHT = 80;
 int CARD_FULL_WIDTH = 50, CARD_FULL_HEIGHT = 80;
 int PLAYER_HERO_WIDTH = 50, PLAYER_HERO_HEIGHT = 50;
 
-UIImage *backgroundOverlayImage, *selectHighlightImage, *targetHighlightImage, *heroSelectHighlightImage, *heroTargetHighlightImage;
+UIImage *backgroundMonsterOverlayImage, *selectHighlightImage, *targetHighlightImage, *heroSelectHighlightImage, *heroTargetHighlightImage;
 
 /** 2D array of images. First array contains elements, second array contains rarity */
-NSArray*backgroundImages;
+NSArray*backgroundImages, *backgroundOverlayImages;
 
 NSMutableParagraphStyle *abilityTextParagrahStyle;
 NSDictionary *abilityTextAttributtes;
@@ -63,17 +63,62 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
     PLAYER_HERO_WIDTH = PLAYER_HERO_HEIGHT = CARD_HEIGHT;
     
     backgroundImages = @[
-                         @[[UIImage imageNamed:@"card_background_front_neutral_common"], //TODO additional rarity here
+                         @[[UIImage imageNamed:@"card_background_front_neutral_common"],
+                           //TODO replace with additional rarity here
+                           [UIImage imageNamed:@"card_background_front_neutral_common"],
+                           [UIImage imageNamed:@"card_background_front_neutral_common"],
+                           [UIImage imageNamed:@"card_background_front_neutral_common"],
+                           [UIImage imageNamed:@"card_background_front_neutral_common"],
                            ],
-                         @[[UIImage imageNamed:@"card_background_front_fire_common"]],
-                         @[[UIImage imageNamed:@"card_background_front_ice_common"]],
-                         @[[UIImage imageNamed:@"card_background_front_lightning_common"]],
-                         @[[UIImage imageNamed:@"card_background_front_earth_common"]],
-                         @[[UIImage imageNamed:@"card_background_front_light_common"]],
-                         @[[UIImage imageNamed:@"card_background_front_dark_common"]],
+                         @[[UIImage imageNamed:@"card_background_front_fire_common"],
+                           [UIImage imageNamed:@"card_background_front_fire_common"],
+                           [UIImage imageNamed:@"card_background_front_fire_common"],
+                           [UIImage imageNamed:@"card_background_front_fire_common"],
+                           [UIImage imageNamed:@"card_background_front_fire_common"],
+                           ],
+                         @[[UIImage imageNamed:@"card_background_front_ice_common"],
+                           [UIImage imageNamed:@"card_background_front_ice_common"],
+                           [UIImage imageNamed:@"card_background_front_ice_common"],
+                           [UIImage imageNamed:@"card_background_front_ice_common"],
+                           [UIImage imageNamed:@"card_background_front_ice_common"],
+                           ],
+                         @[[UIImage imageNamed:@"card_background_front_lightning_common"],
+                           [UIImage imageNamed:@"card_background_front_lightning_common"],
+                           [UIImage imageNamed:@"card_background_front_lightning_common"],
+                           [UIImage imageNamed:@"card_background_front_lightning_common"],
+                           [UIImage imageNamed:@"card_background_front_lightning_common"],
+                           ],
+                         @[[UIImage imageNamed:@"card_background_front_earth_common"],
+                           [UIImage imageNamed:@"card_background_front_earth_common"],
+                           [UIImage imageNamed:@"card_background_front_earth_common"],
+                           [UIImage imageNamed:@"card_background_front_earth_common"],
+                           [UIImage imageNamed:@"card_background_front_earth_common"],
+                           ],
+                         @[[UIImage imageNamed:@"card_background_front_light_common"],
+                           [UIImage imageNamed:@"card_background_front_light_common"],
+                           [UIImage imageNamed:@"card_background_front_light_common"],
+                           [UIImage imageNamed:@"card_background_front_light_common"],
+                           [UIImage imageNamed:@"card_background_front_light_common"],
+                           ],
+                         @[[UIImage imageNamed:@"card_background_front_dark_common"],
+                           [UIImage imageNamed:@"card_background_front_dark_common"],
+                           [UIImage imageNamed:@"card_background_front_dark_common"],
+                           [UIImage imageNamed:@"card_background_front_dark_common"],
+                           [UIImage imageNamed:@"card_background_front_dark_common"],
+                           ],
                          ];
     
-    backgroundOverlayImage = [UIImage imageNamed:@"card_background_front_overlay"];
+    backgroundOverlayImages = @[
+     [UIImage imageNamed:@"card_background_front_overlay_common"],
+     //TODO other rarities
+     [UIImage imageNamed:@"card_background_front_overlay_common"],
+     [UIImage imageNamed:@"card_background_front_overlay_common"],
+     [UIImage imageNamed:@"card_background_front_overlay_common"],
+     [UIImage imageNamed:@"card_background_front_overlay_common"],
+    ];
+    
+    backgroundMonsterOverlayImage = [UIImage imageNamed:@"card_background_front_monster_overlay"];
+    
     selectHighlightImage = [UIImage imageNamed:@"card_glow_select"];
     heroSelectHighlightImage = [UIImage imageNamed:@"hero_glow_select"];
     targetHighlightImage = [UIImage imageNamed:@"card_glow_target"];
@@ -109,7 +154,7 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
         
         [self addSubview:self.cardImage];
         
-        UIImageView *cardOverlay = [[UIImageView alloc] initWithImage:backgroundOverlayImage];
+        UIImageView *cardOverlay = [[UIImageView alloc] initWithImage:backgroundOverlayImages[cardModel.rarity]];
         cardOverlay.bounds = CGRectMake(0, 0, CARD_FULL_WIDTH, CARD_FULL_HEIGHT);
         cardOverlay.center = CGPointMake(CARD_FULL_WIDTH/2, CARD_FULL_HEIGHT/2);
         [self addSubview:cardOverlay];
@@ -226,6 +271,12 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
             //other cards
             else
             {
+                //monster overlay
+                UIImageView *monsterOverlay = [[UIImageView alloc] initWithImage:backgroundMonsterOverlayImage];
+                monsterOverlay.bounds = CGRectMake(0, 0, CARD_FULL_WIDTH, CARD_FULL_HEIGHT);
+                monsterOverlay.center = CGPointMake(CARD_FULL_WIDTH/2, CARD_FULL_HEIGHT/2);
+                [self addSubview:monsterOverlay];
+                
                 self.attackLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,CARD_FULL_WIDTH/2,20)];
                 self.attackLabel.center = CGPointMake(35, 138);
                 self.attackLabel.textAlignment = NSTextAlignmentCenter;
@@ -271,17 +322,20 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
         {
             
             //TODO
+            
+            //element is a little higher
+            self.elementLabel.center = CGPointMake(CARD_FULL_WIDTH/2, 144);
         }
         
-        self.damagePopup = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 50)];
+        self.damagePopup = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
         self.damagePopup.center = self.center;
         self.damagePopup.textAlignment = NSTextAlignmentCenter;
         self.damagePopup.textColor = [UIColor redColor];
         self.damagePopup.backgroundColor = [UIColor clearColor];
-        self.damagePopup.font = [UIFont fontWithName:cardMainFont size:24];
-        self.damagePopup.strokeOn = YES;
-        self.damagePopup.strokeColour = [UIColor blackColor];
-        self.damagePopup.strokeThickness = 2.5;
+        self.damagePopup.font = [UIFont fontWithName:cardMainFontBlack size:28];
+        //self.damagePopup.strokeOn = YES;
+        //self.damagePopup.strokeColour = [UIColor blackColor];
+        //self.damagePopup.strokeThickness = 2.5;
         self.damagePopup.text = @"";
         self.damagePopup.alpha = 0;
         [self addSubview:self.damagePopup];
@@ -384,7 +438,7 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
     NSString *abilityDescription = @"";
     for (Ability *ability in self.cardModel.abilities)
     {
-        if (!ability.expired)
+        if (!ability.expired && ability.isBaseAbility)
             abilityDescription = [NSString stringWithFormat:@"%@%@\n", abilityDescription, [[Ability getDescription:ability fromCard:self.cardModel] string]];
     }
     

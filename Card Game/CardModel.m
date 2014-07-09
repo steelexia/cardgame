@@ -80,6 +80,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
             selfMonster.deployed = otherMonster.deployed;
             selfMonster.side = otherMonster.side;
             selfMonster.dead = otherMonster.dead;
+            selfMonster.turnEnded = otherMonster.turnEnded;
             self = selfMonster;
         }
         else if ([card isKindOfClass:[SpellCardModel class]])

@@ -19,6 +19,7 @@
 @synthesize deployed = _deployed;
 @synthesize side = _side;
 @synthesize dead = _dead;
+@synthesize turnEnded = _turnEnded;
 
 /** constructor with id number, all other fields will be defaut values */
 -(instancetype)initWithIdNumber: (int)idNumber

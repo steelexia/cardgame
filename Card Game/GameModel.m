@@ -79,7 +79,7 @@ int cardIDCount = 0;
         //shuffle deck
         [deck shuffleDeck]; //TURN THIS ON/OFF FOR DEBUGGING
         
-        //draw 3 cards
+        //draw 4 cards
         for (int i = 0; i < 4; i++)
         {
             [self.gameViewController performBlock:^{
@@ -88,6 +88,10 @@ int cardIDCount = 0;
             } afterDelay:0.5*(i+1)];
         }
     }
+    
+    [self.gameViewController performBlock:^{
+        [self.gameViewController newGame];
+    } afterDelay:0.5*(5)];
     
     //add a card to player hand for quick testing
     
@@ -163,10 +167,39 @@ int cardIDCount = 0;
     player.resource = player.maxResource;
     
     //new turn effects to all cards (e.g. deduct cooldown)
+    /*
     for (MonsterCardModel* monsterCard in self.battlefield[side])
     {
         [self cardNewTurn:monsterCard fromSide: side];
         [monsterCard.cardView updateView];
+    }
+     */
+    
+    NSArray* battlefield = self.battlefield[side];
+    BOOL allCardsStarted = NO;
+    
+    //this ensures every single card has its turn started even if the array has been modified
+    while (!allCardsStarted)
+    {
+        for (int i = 0; i < [battlefield count]; i++)
+        {
+            MonsterCardModel* monsterCard = battlefield[i];
+            
+            //turn has not started, start its turn
+            if (monsterCard.turnEnded)
+            {
+                [self cardNewTurn:monsterCard fromSide: side];
+                [monsterCard.cardView updateView];
+                break; //restart the loop
+            }
+            //at the last card and already has turn ended, all done
+            else if (i == [battlefield count]-1)
+                allCardsStarted = YES;
+        }
+        
+        //no monster left, end it
+        if ([battlefield count] == 0)
+            break;
     }
     
     //draws another card
@@ -175,12 +208,43 @@ int cardIDCount = 0;
 
 -(void) endTurn: (int) side
 {
-    //end turn effects to all cards (e.g. deduct cooldown)
-    for (MonsterCardModel* monsterCard in self.battlefield[side])
+    NSArray* battlefield = self.battlefield[side];
+    BOOL allCardsEnded = NO;
+    
+    //this ensures every single card has its turn ended even if the array has been modified
+    while (!allCardsEnded)
     {
+        for (int i = 0; i < [battlefield count]; i++)
+        {
+            MonsterCardModel* monsterCard = battlefield[i];
+            
+            //turn has not ended, end its turn
+            if (!monsterCard.turnEnded)
+            {
+                [self cardEndTurn:monsterCard fromSide: side];
+                [monsterCard.cardView updateView];
+                break; //restart the loop
+            }
+            //at the last card and already has turn ended, all done
+            else if (i == [battlefield count]-1)
+                allCardsEnded = YES;
+        }
+        
+        //no monster left, end it
+        if ([battlefield count] == 0)
+            break;
+    }
+    
+    //end turn effects to all cards (e.g. deduct cooldown)
+    /*
+    for (int i = 0; i < [battlefield count]; i++)
+    {
+        MonsterCardModel* monsterCard = battlefield[i];
         [self cardEndTurn:monsterCard fromSide: side];
         [monsterCard.cardView updateView];
     }
+    */
+    
 }
 
 -(BOOL)drawCard:(int)side
@@ -499,6 +563,8 @@ int cardIDCount = 0;
                 [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:nil fromSide:side];
         }
     }
+    
+    monsterCard.turnEnded = NO;
 }
 
 -(void)cardEndTurn: (MonsterCardModel*) monsterCard fromSide: (int)side
@@ -519,6 +585,8 @@ int cardIDCount = 0;
     //check for dead
     if (monsterCard.dead)
         [self cardDies:monsterCard destroyedBy:nil fromSide:side];
+    
+    monsterCard.turnEnded = YES;
 }
 
 -(int)calculateDamage: (MonsterCardModel*)attacker fromSide:(int) side dealtTo:(MonsterCardModel*)target
@@ -1159,7 +1227,11 @@ int cardIDCount = 0;
     //apply the effect to the targets NOTE: this loop is inefficient but saves a lot of lines
     for (MonsterCardModel* target in targets)
     {
-        if (target.dead) //skip dead monsters
+        if (target.dead //skip dead monsters
+            //except for the following abilities
+            && ability.abilityType != abilityFracture //fracturing always targets a dead monster
+            && ability.abilityType != abilityReturnToHand //can return a dead monster to hand
+            )
             continue;
         
         Ability * appliedAbility;
@@ -1300,7 +1372,6 @@ int cardIDCount = 0;
     }
     else if (ability.abilityType == abilityAddResource)
     {
-        NSLog(@"added resource");
         PlayerModel* player = self.players[side];
         PlayerModel* opponent = self.players[oppositeSide];
         
@@ -1347,7 +1418,7 @@ int cardIDCount = 0;
         
         return YES; //if it's returned to hand, it cannot die or have anything else happen to it
     }
-    else if (ability.abilityType == abilityFracture) //NOT CASTING
+    else if (ability.abilityType == abilityFracture)
     {
         int cost = monster.baseCost;
         int damage = monster.baseDamage;
@@ -1371,11 +1442,11 @@ int cardIDCount = 0;
             damage = ceil(damage*0.15/100)*100;
             life = ceil(life*0.15/100)*100;
         }
-        NSLog(@"casted");
         for (int i = 0 ; i < [ability.value intValue]; i++)
         {
-            
             MonsterCardModel*fracture = [[MonsterCardModel alloc] initWithCardModel:monster];
+            fracture.dead = NO;
+            fracture.turnEnded = NO;
             fracture.abilities = [NSMutableArray array]; //clear all abilities
             fracture.cost = cost;
             fracture.damage = damage;
@@ -1391,8 +1462,8 @@ int cardIDCount = 0;
             {
                 [self addCardToBattlefield:fracture side:monster.side];
                 
-                CardView *fractureView = [[CardView alloc]initWithModel:fracture cardImage:monster.cardView.cardImage viewMode:monster.cardView.cardViewMode];
-                fractureView.center = monster.cardView.center;
+                //CardView *fractureView = [[CardView alloc]initWithModel:fracture cardImage:monster.cardView.cardImage viewMode:monster.cardView.cardViewMode];
+                //fractureView.center = monster.cardView.center;
             }
         }
         

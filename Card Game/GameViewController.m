@@ -12,6 +12,7 @@
 #import "MonsterCardModel.h"
 #import "CGPointUtilities.h"
 #import "MainScreenViewController.h"
+#import "GameInfoTableView.h"
 
 @interface GameViewController ()
 
@@ -23,7 +24,6 @@
 @synthesize handsView, fieldView, uiView, backgroundView;
 @synthesize currentAbilities = _currentAbilities;
 @synthesize endTurnButton = _endTurnButton;
-@synthesize touchStartPoint = _touchStartPoint;
 @synthesize currentNumberOfAnimations = _currentNumberOfAnimations;
 
 /** Screen dimension for convinience */
@@ -35,10 +35,7 @@ int currentSide;
 const float FIELD_CENTER_Y_RATIO = 3/8.f;
 
 /** UILabel used to darken the screen during card selections */
-UILabel *darkFilter;
-
-/** label for showing the current player */
-UILabel *currentSideLabel;
+UIView *darkFilter;
 
 /** TODO: temporary label for representing the attack line when targetting monsters */
 UILabel *attackLine;
@@ -52,6 +49,11 @@ UIImageView *battlefieldBackground;
 
 UIButton *quitButton, *quitConfirmButton, *quitCancelButton;
 UILabel *quitConfirmLabel;
+
+StrokedLabel *pickATargetLabel;
+UIButton *giveupAbilityButton;
+
+GameInfoTableView*extraAbilityView, *abilityDescriptionView;
 
 /** Stores the current UI action being performed */
 enum GameControlState gameControlState;
@@ -125,7 +127,7 @@ CardModel* currentCard;
 */
     
     //set up UI
-    darkFilter = [[UILabel alloc] initWithFrame:self.view.bounds];
+    darkFilter = [[UIView alloc] initWithFrame:self.view.bounds];
     darkFilter.backgroundColor = [[UIColor alloc]initWithHue:0 saturation:0 brightness:0 alpha:0.8];
     [darkFilter setUserInteractionEnabled:YES]; //blocks all interaction behind it
     
@@ -149,12 +151,6 @@ CardModel* currentCard;
     battlefieldBackground.center = self.view.center;
     battlefieldBackground.frame = self.view.frame;
     [backgroundView addSubview:battlefieldBackground];
-    
-    //TODO temporary side label
-    currentSideLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 20, 150, 20)];
-    currentSideLabel.text = @"Player's turn"; //TODO
-    
-    [self.uiView addSubview: currentSideLabel];
     
     //----set up the attack line----//
     attackLine = [[UILabel alloc] initWithFrame:CGRectMake(0,0,0, 0)];
@@ -254,16 +250,215 @@ CardModel* currentCard;
     [self.fieldView addSubview:opponentHeroView];
     
     self.playerHeroViews = @[playerHeroView, opponentHeroView];
+    
+    //-----ability extra description-----//
+    extraAbilityView = [[GameInfoTableView alloc] initWithFrame:CGRectMake(0, 0, 80, SCREEN_HEIGHT*2/5) withTitle:@"Added Abilities"];
+    extraAbilityView.center = CGPointMake(45, SCREEN_HEIGHT/2);
+    
+    abilityDescriptionView  = [[GameInfoTableView alloc] initWithFrame:CGRectMake(0, 0, 80, SCREEN_HEIGHT*2/5) withTitle:@"Keywords"];
+    abilityDescriptionView.center = CGPointMake(SCREEN_WIDTH-45, SCREEN_HEIGHT/2);
+
+    //-----ability targetting hint & give up-----//
+    pickATargetLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 200, 50)];
+    pickATargetLabel.center = CGPointMake(self.view.bounds.size.width/2 + 20, self.view.bounds.size.height-120);
+    pickATargetLabel.text = [NSString stringWithFormat:@"Select a target"];
+    pickATargetLabel.textAlignment = NSTextAlignmentCenter;
+    pickATargetLabel.textColor = [UIColor whiteColor];
+    pickATargetLabel.font = [UIFont fontWithName:cardMainFontBlack size:26];
+    pickATargetLabel.strokeColour = [UIColor blackColor];
+    pickATargetLabel.strokeThickness = 2;
+    pickATargetLabel.strokeOn = YES;
+    
+    giveupAbilityButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 45)];
+    giveupAbilityButton.center = CGPointMake(self.view.bounds.size.width/2 + 20, self.view.bounds.size.height-60);
+    [giveupAbilityButton setImage:[UIImage imageNamed:@"no_target_button"] forState:UIControlStateNormal];
+    [giveupAbilityButton addTarget:self action:@selector(noTargetButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    //for target selection
+    UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
+                                           initWithTarget:self
+                                           action:@selector(tapRegistered:)];
+    [tapGesture setCancelsTouchesInView:NO];
+    [self.view addGestureRecognizer:tapGesture];
 }
 
--(void) endTurn{
-    //because touch isn't registered in touch start
-    if (self.viewingCardView != nil)
+-(void)newGame
+{
+    [self animatePlayerTurn];
+}
+
+-(void)tapRegistered: (UITapGestureRecognizer *)recognizer
+{
+    CGPoint location = [recognizer locationInView:self.view];
+    UIView *hitView = [self.view hitTest:location withEvent:nil];
+    
+    //selecting ability target, don't view cards
+    //if picking a target for abilities and touched a card
+    if ([self.currentAbilities count] > 0)
     {
-        [self.viewingCardView removeFromSuperview];
-        self.viewingCardView = nil;
+        if ([hitView isKindOfClass:[CardView class]])
+        {
+            MonsterCardModel *target = (MonsterCardModel*)((CardView*)hitView).cardModel;
+            
+            //if card is highlighted, then it must be valid target
+            if (target.cardView.cardHighlightType == cardHighlightTarget)
+            {
+                //cast all abilities at this card
+                for (Ability *ability in self.currentAbilities){
+                    [self.gameModel castAbility:ability byMonsterCard:nil toMonsterCard:target fromSide:PLAYER_SIDE];
+                    [target.cardView updateView];
+                }
+                
+                //reset all cards' highlight back to none
+                for (MonsterCardModel *card in self.gameModel.battlefield[PLAYER_SIDE])
+                    card.cardView.cardHighlightType = cardHighlightNone;
+                for (MonsterCardModel *card in self.gameModel.battlefield[OPPONENT_SIDE])
+                    card.cardView.cardHighlightType = cardHighlightNone;
+                PlayerModel *player = self.gameModel.players[PLAYER_SIDE];
+                player.playerMonster.cardView.cardHighlightType = cardHighlightNone;
+                PlayerModel *opponent = self.gameModel.players[OPPONENT_SIDE];
+                opponent.playerMonster.cardView.cardHighlightType = cardHighlightNone;
+                
+                //ability casted successfully
+                [self.currentAbilities removeAllObjects];
+                //[self updateBattlefieldView:OPPONENT_SIDE];
+                //[self updateBattlefieldView:PLAYER_SIDE];
+                [self updateHandsView:PLAYER_SIDE];
+                
+                //re-enable the disabled views
+                [self.handsView setUserInteractionEnabled:YES];
+                [self.uiView setUserInteractionEnabled:YES];
+                [self.backgroundView setUserInteractionEnabled:YES];
+                [self.endTurnButton setUserInteractionEnabled:YES];
+                
+                [self fadeOutAndRemove:pickATargetLabel inDuration:0.2 withDelay:0];
+                [self fadeOutAndRemove:giveupAbilityButton inDuration:0.2 withDelay:0];
+                
+                return; //prevent the other events happening
+            }
+        }
+        
+        //TODO add a button to give up casting the spell
+        //did not select a valid target, ability given up
+        /*
+         [self.currentAbilities removeAllObjects];
+         [self updateBattlefieldView:OPPONENT_SIDE];
+         [self updateBattlefieldView:PLAYER_SIDE];
+         [self updateHandsView:PLAYER_SIDE];
+         
+         //re-enable the disabled views
+         [self.handsView setUserInteractionEnabled:YES];
+         [self.uiView setUserInteractionEnabled:YES];
+         [self.backgroundView setUserInteractionEnabled:YES];
+         */
     }
     
+    if (self.viewingCardView == nil)
+    {
+        BOOL tappedOnACard = NO;
+        
+        for (CardModel*card in self.gameModel.battlefield[PLAYER_SIDE])
+        {
+            if (hitView == card.cardView)
+            {
+                [self zoomFieldCard:card];
+                tappedOnACard = YES;
+                break;
+            }
+        }
+        
+        if (!tappedOnACard)
+            for (CardModel*card in self.gameModel.battlefield[OPPONENT_SIDE])
+            {
+                if (hitView == card.cardView)
+                {
+                    [self zoomFieldCard:card];
+                    tappedOnACard = YES;
+                    break;
+                }
+            }
+        
+        //temporary for debugging
+        if (!tappedOnACard)
+            for (CardModel*card in self.gameModel.hands[OPPONENT_SIDE])
+            {
+                if (hitView == card.cardView)
+                {
+                    [self zoomFieldCard:card];
+                    tappedOnACard = YES;
+                    break;
+                }
+            }
+    }
+    if (hitView == self.viewingCardView)
+    {
+        gameControlState = gameControlStateNone;
+        
+        [self.viewingCardView setUserInteractionEnabled:NO];
+        
+        [self unmodalScreen];
+        
+        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             self.viewingCardView.alpha = 0;
+                             abilityDescriptionView.alpha = 0;
+                             extraAbilityView.alpha = 0;
+                         }
+                         completion:^(BOOL completed){
+                             [self.viewingCardView removeFromSuperview];
+                             [abilityDescriptionView removeFromSuperview];
+                             [extraAbilityView removeFromSuperview];
+                             self.viewingCardView = nil;
+                         }];
+    }
+}
+
+-(void)zoomFieldCard: (CardModel*)card
+{
+    CardView*originalView = card.cardView; //save original view to point back
+    
+    self.viewingCardView = [[CardView alloc] initWithModel:card cardImage: [[UIImageView alloc] initWithImage:originalView.cardImage.image]viewMode:cardViewModeZoomedIngame]; //constructor also modifies monster's cardView pointer
+    
+    card.cardView = originalView; //recover the pointer
+    
+    [self.viewingCardView setCardViewState:cardViewStateMaximize];
+    self.viewingCardView.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+    [self modalScreen];
+    
+    [extraAbilityView.currentStrings removeAllObjects];
+    for (Ability *ability in card.abilities)
+        if (!ability.isBaseAbility && !ability.expired)
+            [extraAbilityView.currentStrings addObject:[[Ability getDescription:ability fromCard:card] string]];
+    [extraAbilityView.tableView reloadData];
+    
+    abilityDescriptionView.currentStrings = [Ability getAbilityKeywordDescriptions:card];
+    [abilityDescriptionView.tableView reloadData];
+    
+    self.viewingCardView.alpha = 0;
+    abilityDescriptionView.alpha = 0;
+    extraAbilityView.alpha = 0;
+    
+    [self.viewingCardView setUserInteractionEnabled:NO];
+    
+    [self.view addSubview:self.viewingCardView];
+   
+    //only add these if there are actually anything to display
+    if ([abilityDescriptionView.currentStrings count]>0)
+        [self.view addSubview:abilityDescriptionView];
+    if ([extraAbilityView.currentStrings count]>0)
+        [self.view addSubview:extraAbilityView];
+    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         self.viewingCardView.alpha = 1;
+                         abilityDescriptionView.alpha = 1;
+                         extraAbilityView.alpha = 1;
+                     }
+                     completion:^(BOOL finished){[self.viewingCardView setUserInteractionEnabled:YES];}];
+}
+
+
+-(void) endTurn{
     //tell the gameModel to end turn
     [self.gameModel endTurn: currentSide];
     
@@ -273,12 +468,10 @@ CardModel* currentCard;
     if (currentSide == PLAYER_SIDE)
     {
         currentSide = OPPONENT_SIDE;
-        currentSideLabel.text = @"Opponent's turn";
     }
     else
     {
         currentSide = PLAYER_SIDE;
-        currentSideLabel.text = @"Player's turn";
     }
     
     //update turn ender's views
@@ -296,7 +489,10 @@ CardModel* currentCard;
     
     //disable and enable endTurnButton accordingly depending on who's turn it is
     if (currentSide == PLAYER_SIDE)
+    {
+        [self animatePlayerTurn];
         [self.endTurnButton setEnabled:YES];
+    }
     else
         [self.endTurnButton setEnabled:NO];
     
@@ -395,7 +591,10 @@ CardModel* currentCard;
         {
             CardView *cardView = [[CardView alloc] initWithModel:card cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]]viewMode:cardViewModeIngame];
             card.cardView = cardView;
+            
+            cardView.alpha = 0;
             [self.fieldView addSubview:card.cardView];
+            [self fadeIn:cardView inDuration:0.2];
             
             card.cardView.center = newCenter; //TODO
         }
@@ -437,98 +636,10 @@ CardModel* currentCard;
 {
     UITouch *touch = [touches anyObject];
     
-    self.touchStartPoint = [touch locationInView:self.view];
-    
-    if (self.viewingCardView != nil)
-    {
-        [self.viewingCardView removeFromSuperview];
-        self.viewingCardView = nil;
-    }
-    
-    //if picking a target for abilities and touched a card
+    //this is handeled in tap
     if ([self.currentAbilities count] > 0)
-    {
-        NSLog(@"has ability");
-        if ([[touch view] isKindOfClass:[CardView class]])
-        {
-            NSLog(@"touched card view");
-            UIView *touchView = [touch view];
-            MonsterCardModel *target = (MonsterCardModel*)((CardView*)[touch view]).cardModel;
-            
-            //if card is highlighted, then it must be valid target
-            if (target.cardView.cardHighlightType == cardHighlightTarget)
-            {
-                //cast all abilities at this card
-                for (Ability *ability in self.currentAbilities){
-                    [self.gameModel castAbility:ability byMonsterCard:nil toMonsterCard:target fromSide:PLAYER_SIDE];
-                    [target.cardView updateView];
-                }
-                
-                //reset all cards' highlight back to none
-                for (MonsterCardModel *card in self.gameModel.battlefield[PLAYER_SIDE])
-                    card.cardView.cardHighlightType = cardHighlightNone;
-                for (MonsterCardModel *card in self.gameModel.battlefield[OPPONENT_SIDE])
-                    card.cardView.cardHighlightType = cardHighlightNone;
-                PlayerModel *player = self.gameModel.players[PLAYER_SIDE];
-                player.playerMonster.cardView.cardHighlightType = cardHighlightNone;
-                PlayerModel *opponent = self.gameModel.players[OPPONENT_SIDE];
-                opponent.playerMonster.cardView.cardHighlightType = cardHighlightNone;
-                
-                //ability casted successfully
-                [self.currentAbilities removeAllObjects];
-                //[self updateBattlefieldView:OPPONENT_SIDE];
-                //[self updateBattlefieldView:PLAYER_SIDE];
-                [self updateHandsView:PLAYER_SIDE];
-                
-                //re-enable the disabled views
-                [self.handsView setUserInteractionEnabled:YES];
-                [self.uiView setUserInteractionEnabled:YES];
-                [self.backgroundView setUserInteractionEnabled:YES];
-                
-                NSLog(@"casted");
-                
-                return; //prevent the other events happening
-            }
-        }
-        
-        //TODO add a button to give up casting the spell
-        //did not select a valid target, ability given up
-        /*
-        [self.currentAbilities removeAllObjects];
-        [self updateBattlefieldView:OPPONENT_SIDE];
-        [self updateBattlefieldView:PLAYER_SIDE];
-        [self updateHandsView:PLAYER_SIDE];
-        
-        //re-enable the disabled views
-        [self.handsView setUserInteractionEnabled:YES];
-        [self.uiView setUserInteractionEnabled:YES];
-        [self.backgroundView setUserInteractionEnabled:YES];
-         */
-    }
-    else
-    {
-        //if not targetting, store the touch start for use later
-        if ([[touch view] isMemberOfClass:[CardView class]])
-        {
-            CardModel* cardModel = ((CardView*)[touch view]).cardModel;
-            
-            if ([cardModel isKindOfClass:[MonsterCardModel class]])
-            {
-                MonsterCardModel*monster = (MonsterCardModel*)cardModel;
-                
-                //cannot be undeployed (i.e. in hand), dead, or player hero
-                if (monster.deployed && !monster.dead && monster.type != cardTypePlayer)
-                    self.viewingCardStart = cardModel;
-            }
-            
-            //TEMP: allows viewing enemy's hand for testing the AI
-            NSArray *enemyHand = self.gameModel.hands[OPPONENT_SIDE];
-            for (CardModel*enemyHandCard in enemyHand)
-                if (enemyHandCard == cardModel)
-                    self.viewingCardStart = cardModel;
-        }
-    }
-    
+        return;
+
     //touched a hands card
     //TODO for now allow dragging opponent's hand cards for debugging, but disable later
     for (CardModel *card in self.gameModel.hands[currentSide])
@@ -675,8 +786,6 @@ CardModel* currentCard;
     
     UIView*view = [touch view];
     
-    BOOL canViewCard = YES; //if no action made this touch, can zoom into a card
-    
     //when dragging hand card, card is deployed
     if (gameControlState == gameControlStateDraggingHandCard)
     {
@@ -712,7 +821,6 @@ CardModel* currentCard;
         }
         
         currentCard = nil;
-        canViewCard = NO;
     }
     //when dragging field card, attacks target the touch is on top of
     else if (gameControlState == gameControlStateDraggingFieldCard)
@@ -737,7 +845,6 @@ CardModel* currentCard;
         {
             if ([self.gameModel validAttack:currentCard target:(MonsterCardModel*)enemyHeroView.cardModel])
                 [self attackHero:currentCard target:(MonsterCardModel*) enemyHeroView.cardModel fromSide:currentSide];
-            canViewCard = NO;
         }
         else
         {
@@ -754,7 +861,6 @@ CardModel* currentCard;
                 {
                     if ([self.gameModel validAttack:currentCard target:(MonsterCardModel*)card])
                         [self attackCard:currentCard target:(MonsterCardModel*)card fromSide:currentSide];
-                    canViewCard = NO;
                     break;
                 }
             }
@@ -763,29 +869,6 @@ CardModel* currentCard;
         //remove the attack line from view and revert states
         [attackLine removeFromSuperview];
     }
-    
-    if (canViewCard)
-    {
-        //touch ended on same point as start
-        if (self.viewingCardStart != nil && CGPointEqualToPoint(currentPoint, self.touchStartPoint))
-        {
-            CardModel*card = self.viewingCardStart;
-            CardView*originalView = card.cardView; //save original view to point back
-            
-            self.viewingCardView = [[CardView alloc] initWithModel:card cardImage: [[UIImageView alloc] initWithImage:originalView.cardImage.image]viewMode:cardViewModeZoomedIngame]; //constructor also modifies monster's cardView pointer
-            
-            card.cardView = originalView; //recover the pointer
-            
-            [self.viewingCardView setCardViewState:cardViewStateMaximize];
-            //self.viewingCardView.cardViewMode = cardViewModeZoomedIngame;
-            self.viewingCardView.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
-            [self.uiView addSubview:self.viewingCardView];
-            
-        }
-    }
-    
-    self.touchStartPoint = CGPointMake(-1,-1);
-    self.viewingCardStart = nil;
 }
 
 -(void) attackCard: (CardModel*) card target:(MonsterCardModel*)targetCard fromSide: (int) side
@@ -911,6 +994,17 @@ CardModel* currentCard;
     [self.handsView setUserInteractionEnabled:NO];
     [self.uiView setUserInteractionEnabled:NO];
     [self.backgroundView setUserInteractionEnabled:NO];
+    [self.endTurnButton setUserInteractionEnabled:NO];
+    
+    if (pickATargetLabel.superview == nil)
+    {
+        [self.uiView addSubview:pickATargetLabel];
+        [self.view addSubview:giveupAbilityButton];
+        pickATargetLabel.alpha = 0;
+        giveupAbilityButton.alpha = 0;
+        [self fadeIn:pickATargetLabel inDuration:0.2];
+        [self fadeIn:giveupAbilityButton inDuration:0.2];
+    }
 }
 
 -(void)summonCard: (CardModel*)card fromSide: (int)side
@@ -996,6 +1090,30 @@ CardModel* currentCard;
                      }];
 }
 
+-(void)noTargetButtonPressed
+{
+    //reset all cards' highlight back to none
+    for (MonsterCardModel *card in self.gameModel.battlefield[PLAYER_SIDE])
+        card.cardView.cardHighlightType = cardHighlightNone;
+    for (MonsterCardModel *card in self.gameModel.battlefield[OPPONENT_SIDE])
+        card.cardView.cardHighlightType = cardHighlightNone;
+    PlayerModel *player = self.gameModel.players[PLAYER_SIDE];
+    player.playerMonster.cardView.cardHighlightType = cardHighlightNone;
+    PlayerModel *opponent = self.gameModel.players[OPPONENT_SIDE];
+    opponent.playerMonster.cardView.cardHighlightType = cardHighlightNone;
+    
+    [self.currentAbilities removeAllObjects];
+    
+    //re-enable the disabled views
+    [self.handsView setUserInteractionEnabled:YES];
+    [self.uiView setUserInteractionEnabled:YES];
+    [self.backgroundView setUserInteractionEnabled:YES];
+    [self.endTurnButton setUserInteractionEnabled:YES];
+    
+    [self fadeOutAndRemove:pickATargetLabel inDuration:0.2 withDelay:0];
+    [self fadeOutAndRemove:giveupAbilityButton inDuration:0.2 withDelay:0];
+}
+
 -(void)darkenScreen
 {
     darkFilter.alpha = 0;
@@ -1016,6 +1134,17 @@ CardModel* currentCard;
                      completion:^(BOOL completed){
                          [darkFilter removeFromSuperview];
                      }];
+}
+
+-(void)modalScreen
+{
+    darkFilter.alpha = 0.1; //because apparently 0 alpha = cannot be interacted...
+    [self.view addSubview:darkFilter];
+}
+
+-(void)unmodalScreen
+{
+    [darkFilter removeFromSuperview];
 }
 
 //block delay functions
