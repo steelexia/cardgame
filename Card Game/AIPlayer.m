@@ -523,7 +523,14 @@ int enemyTotalStrength, friendlyTotalStrength;
 
 /**
  Calculates the "points" value of casting an array of abilities at an array of MonsterCardModel targets from the side "side".
- Call this main function for most purposes, and not the other ones.
+  Call this main function for most purposes, and not the other ones.
+ All abilities that are being casted needs to be converted to castAlways, and all abilities that are not valid for casting needs to be converted to castNil. The exception is when a minion is being casted, when all abilities are valid (note that castOnSummon still needs to be converted to castAlways).
+ For example:
+ When minion is casted, convert castOnSummon to castAlways, leave rest be.
+ When minion is attacking, convert castOnHit to castAlways, turn rest to castNil.
+ When minion is dying, convert castOnDeath to castAlways, turn rest to castNil.
+ When enemy minion is taking damage, convert castOnDamaged to castAlways, turn rest to castNil.
+
  LIMITATIONS:
  - Cannot evaluate result of castOnDeath from a castOnDeath ability due to infinite loops (since there's no state for AI's calculations)
  */
@@ -606,7 +613,9 @@ int enemyTotalStrength, friendlyTotalStrength;
 /** 
  Calculates the "points" value of casting a single ability at a single MonsterCardModel target from the side "side".
  In most cases should not call this, but call the parent function instead
- This function will actually cast the effect on the target when applicable
+ This function will actually cast the effect on the target when applicable.
+ Note that abilities being casted will have the castType of castAlways, so all other casts are (probably?) summoning a minion with the ability. E.g. abilityAddLife with castOnDamaged must be summoning or giving a minion this ability, as when it's casted while onDamaged isn't evaluated.
+ NOTE: if an ability has castNil, it means it is not a valid cast at the moment. This is for example used on castOnSummon when it has already been summoned, or castOnEndOfTurn when a minion is attacking.
  */
 -(int)evaluateAbilityPoints: (Ability*)ability target:(MonsterCardModel*)target targetSide:(int)side
 {
@@ -614,6 +623,10 @@ int enemyTotalStrength, friendlyTotalStrength;
     //for convenience
     enum CastType castType = ability.castType;
     enum DurationType durationType = ability.durationType;
+    
+    //minion is already summoned, this ability becomes useless
+    if (ability.castType == castNil || ability.expired)
+        return USELESS_MOVE;
     
     if (ability.abilityType == abilityAddLife)
     {
@@ -660,17 +673,62 @@ int enemyTotalStrength, friendlyTotalStrength;
         {
             //any other cast types
             
+            if (castType == castAlways)
+            {
+                //heal the copy so other abilities can evaluate the updated "state"
+                [target healLife:[ability.value intValue]];
+            }
         }
-        
-        
-        
-        [target healLife:[ability.value intValue]];
-        
-        
     }
     else if (ability.abilityType == abilityLoseLife)
     {
-        [target loseLife:[ability.value intValue]];
+        //base points from amount of damage dealt
+        points = [ability.value intValue] > target.life ? target.life : [ability.value intValue];
+        
+        //all repeated casts have similar algorithms
+        if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn)
+        {
+            //repeated damage is exponentially good if monster has enough life
+            if (target.maximumLife > 2000)
+            {
+                points += pow(target.maximumLife - 1000, 1.1);
+            }
+            else
+            {
+                points *= 2; //otherwise just twice as good
+            }
+            
+            if (castType == castOnDamaged)
+            {
+                if (durationType != durationUntilEndOfTurn)
+                    points *= 1.5; //cast on damaged is extra good
+            }
+            else if (castType == castOnMove || castType == castOnHit)
+            {
+                points /= target.maximumCooldown; //terrible if has high cooldown
+                
+                if (durationType == durationUntilEndOfTurn)
+                {
+                    points /= 2; //more maulus
+                    if (target.cooldown > 0) //no effect if monster can't even cast it
+                        points = USELESS_MOVE;
+                }
+            }
+        }
+        else
+        {
+            if (castType == castAlways)
+            {
+                [target loseLife:[ability.value intValue]];
+            }
+        }
+        
+        //dealt no damage, useless
+        if (points == 0)
+            points = USELESS_MOVE;
+        
+        
+        //NOTE monster death is checked at the end of all ability casts
     }
     else if (ability.abilityType == abilityKill)
     {

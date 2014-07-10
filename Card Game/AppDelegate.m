@@ -78,7 +78,7 @@
     if (_managedObjectModel != nil) {
         return _managedObjectModel;
     }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"CardGame" withExtension:@"momd"]; //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"CardGameCoreData" withExtension:@"momd"]; //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return _managedObjectModel;
 }
