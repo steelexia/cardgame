@@ -202,7 +202,8 @@ enum CastType
     /** This effect is always on. Or this ability that has already been applied. CANNOT be used with selectable target */
     castAlways,
     castOnHit, //effect applied on the monster it hits. CANNOT be used with selectable target
-    castOnDamaged, //effect applied on the monster that attacks it. CANNOT be used with selectable target
+    /** Effect applied on the monster that attacks it. CANNOT be used with selectable target, and MUST NOT be used with abilityLoseLife, since it will result in loops (except in specific combinations such as targetAttacker) */
+    castOnDamaged,
     /** Whenever the minion's cooldown reaches 0. DO NOT use with any ability that loses cooldown. It could easily result in infinite loops of cooldown loss. CANNOT be used with selectable target. 
      NOTE: This can only be triggered at the start of a turn. Even if a monster has its CD reduced to 0 during a turn, castOnMove will not trigger. This again prevents infinite loops.
      */

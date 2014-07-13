@@ -40,6 +40,9 @@
 /** For correctly iterating through turn start and ends for each card */
 @property BOOL turnEnded;
 
+/** Used for AI to keep track of the original card when copying them for states. */
+@property (weak) MonsterCardModel*originalCard;
+
 //----------------Functions----------------//
 /**
  Deducts some life from the monster card. This simply subtracts the number and does not look at any other elements such as defence. Mainly a convinience method.
@@ -77,3 +80,5 @@
 //-(instancetype)initWithMonsterCard:(MonsterCardModel*)monsterCard;
 
 @end
+
+extern const int HERO_MAX_LIFE;

@@ -327,7 +327,7 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
             self.elementLabel.center = CGPointMake(CARD_FULL_WIDTH/2, 144);
         }
         
-        self.damagePopup = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
+        self.damagePopup = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 300, 50)];
         self.damagePopup.center = self.center;
         self.damagePopup.textAlignment = NSTextAlignmentCenter;
         self.damagePopup.textColor = [UIColor redColor];
@@ -556,20 +556,20 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
         self.damagePopup.text = [NSString stringWithFormat:@"%d", damage];
         NSLog(@"empty");
     }
-    //recently been damaged, update the
+    //recently been damaged, update the label
     else
     {
         int totalDamage = [self.damagePopup.text intValue] + damage;
         self.damagePopup.text = [NSString stringWithFormat:@"%d", totalDamage];
         NSLog(@"not empty");
+        return;
     }
     
     self.damagePopup.alpha = 1;
     self.damagePopup.transform = CGAffineTransformMakeScale(0, 0);
     
     NSLog(@"starting animation");
-    
-    [self.damagePopup.layer removeAllAnimations];
+
     [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          if (self.cardModel.type != cardTypePlayer)

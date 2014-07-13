@@ -173,7 +173,7 @@ NSArray *allAbilities;
                      //direct damage to one random enemy
                      [[AbilityWrapper alloc] initWithAbility:
                       [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:0 withOtherValues:@[@1000,@8000] withDescription:nil] element:elementNeutral rarity:cardRarityCommon minPoints:1 maxPoints:1 maxCount:1],
-                     //reflect damage back to attacker
+                     //reflect damage back to attacker (note that this will not cause loop since the reflected damage is an ability, thus have no attacker and cannot be further reflected)
                      [[AbilityWrapper alloc] initWithAbility:
                       [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:0 withOtherValues:@[@1000,@5000] withDescription:nil] element:elementNeutral rarity:cardRarityCommon minPoints:1 maxPoints:1 maxCount:1],
                      //damage attacker on death

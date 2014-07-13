@@ -21,6 +21,8 @@
 @synthesize dead = _dead;
 @synthesize turnEnded = _turnEnded;
 
+const int HERO_MAX_LIFE = 25000;
+
 /** constructor with id number, all other fields will be defaut values */
 -(instancetype)initWithIdNumber: (int)idNumber
 {
@@ -236,8 +238,8 @@
 {
     self.name = name;
     self.type = cardTypePlayer;
-    self.maximumLife = 25000;
-    self.life = 25000;
+    self.maximumLife = HERO_MAX_LIFE;
+    self.life = HERO_MAX_LIFE;
   
     self.damage = 0;
     self.cooldown = 0;

@@ -254,8 +254,19 @@ int cardIDCount = 0;
     
     if ([deck count] > 0 && hand.count < MAX_HAND_SIZE)
     {
-        [hand addObject: [deck removeCardAtIndex:0]];
+        CardModel *card = [deck removeCardAtIndex:0];
+        
+        if ([card isKindOfClass:[MonsterCardModel class]])
+        {
+            MonsterCardModel*monster = (MonsterCardModel*)card;
+            monster.side = side;
+        }
+        
+
+        
+        [hand addObject: card];
     }
+    
     
     //TODO deal damage to player maybe
     
@@ -296,7 +307,64 @@ int cardIDCount = 0;
     //while ([playerDeck count] > 20) //limit to 20 cards
     //    [playerDeck removeCardAtIndex:0];
     
+    
+    //TODO testing
+    /*
+    aiDeck = [[DeckModel alloc] init];
+    
+    SpellCardModel*spell;
+    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    spell.element = elementLightning;
+    spell.name = @"Spell";
+    spell.cost = 1;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:5000]]];
+    
+    [aiDeck addCard:spell];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    spell.element = elementLightning;
+    spell.name = @"Spell";
+    spell.cost = 1;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:5000]]];
+    
+    [aiDeck addCard:spell];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    spell.element = elementLightning;
+    spell.name = @"Spell";
+    spell.cost = 1;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:5000]]];
+    
+    [aiDeck addCard:spell];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    spell.element = elementLightning;
+    spell.name = @"Spell";
+    spell.cost = 1;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
+    
+    [aiDeck addCard:spell];
+    
+    MonsterCardModel*monster;
+    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster.name = @"Nameless card";
+    monster.life = monster.maximumLife = 5000;
+    monster.damage = 2000;
+    monster.cost = 1;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    //[monster.abilities addObject: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneAny withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]]];
+    
+    [aiDeck addCard:monster];
+    */
+    
     self.decks = @[playerDeck, aiDeck];
+    
+    
     
     //temporary function that grabs 20 cards from Parse database.
     /*
@@ -404,7 +472,6 @@ int cardIDCount = 0;
 -(void)addCardToBattlefield: (MonsterCardModel*)monsterCard side:(char)side
 {
     [self.battlefield[side] addObject:monsterCard];
-    monsterCard.side = side;
     monsterCard.deployed = YES;
 }
 
@@ -762,7 +829,7 @@ int cardIDCount = 0;
     if (!target.deployed || target.dead)
         return NO;
     
-    if (attacker == nil || [attacker isKindOfClass:[MonsterCardModel class]])
+    if (attacker != nil && [attacker isKindOfClass:[MonsterCardModel class]])
     {
         MonsterCardModel *attackerMonsterCard = (MonsterCardModel*)attacker;
         
@@ -1132,7 +1199,7 @@ int cardIDCount = 0;
         [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
         [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
         
-        targets = @[allTargets[arc4random_uniform(allTargets.count-1)]];
+        targets = @[allTargets[arc4random_uniform(allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomMinion)
     {
@@ -1140,7 +1207,7 @@ int cardIDCount = 0;
         [allTargets removeObject:attacker]; //remove itself
         [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
         
-        targets = @[allTargets[arc4random_uniform(allTargets.count-1)]];
+        targets = @[allTargets[arc4random_uniform(allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomFriendly)
     {
@@ -1148,27 +1215,27 @@ int cardIDCount = 0;
         [allTargets removeObject:attacker]; //remove itself
         [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
         
-        targets = @[allTargets[arc4random_uniform(allTargets.count-1)]];
+        targets = @[allTargets[arc4random_uniform(allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomFriendlyMinion)
     {
         NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
         [allTargets removeObject:attacker]; //remove itself
         
-        targets = @[allTargets[arc4random_uniform(allTargets.count-1)]];
+        targets = @[allTargets[arc4random_uniform(allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomEnemy)
     {
         NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
         [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
         
-        targets = @[allTargets[arc4random_uniform(allTargets.count-1)]];
+        targets = @[allTargets[arc4random_uniform(allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomEnemyMinion)
     {
         NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
         
-        targets = @[allTargets[arc4random_uniform(allTargets.count-1)]];
+        targets = @[allTargets[arc4random_uniform(allTargets.count)]];
     }
     else if (ability.targetType == targetHeroAny)
     {
@@ -1274,8 +1341,10 @@ int cardIDCount = 0;
                             [target.abilities removeObjectAtIndex:i];
                     }
                     
-                    [target.cardView updateView];
+                    //[target.cardView updateView];
                 }
+                
+                [target.cardView updateView];
             }
         }
     }

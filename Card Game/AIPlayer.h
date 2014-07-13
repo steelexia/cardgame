@@ -1,6 +1,6 @@
 //
 //  AIPlayer.h
-//  cardgame
+//
 //
 //  Created by Steele Xia
 //  Copyright (c) 2014 Content Games. All rights reserved.
@@ -29,5 +29,7 @@
 
 /** Tells the AI that a new turns has begun, and it will start to make moves */
 -(void)newTurn;
+
+-(int)evaluateMonsterValue: (MonsterCardModel*)monster;
 
 @end
