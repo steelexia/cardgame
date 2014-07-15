@@ -101,11 +101,14 @@ int enemyTotalStrength, friendlyTotalStrength;
             if ([card isKindOfClass:[MonsterCardModel class]])
             {
                 MonsterCardModel*monster = (MonsterCardModel*)card;
-                int points = [self evaluateMonsterValue:(MonsterCardModel*)card];
+                int points = [self evaluateMonsterValue:(MonsterCardModel*)card]/2; //50% effective
                 
                 int allAbilityPoints = USELESS_MOVE;
                 
+                allAbilityPoints = [self getCastOnSummonValue:card];
+                
                 //add up all points from cast on summon
+                /*
                 for(Ability*ability in card.abilities)
                 {
                     if (ability.castType == castOnSummon)
@@ -117,7 +120,7 @@ int enemyTotalStrength, friendlyTotalStrength;
                         
                         NSArray*copyTargets = [self copyMonsterArray:targets];
                         
-                        int abilityPoints = [self evaluateAbilitiesPoints:copyAbility caster:monster targets:copyTargets fromSide:OPPONENT_SIDE];
+                        int abilityPoints = [self evaluateAbilitiesPoints:copyAbility caster:monster targets:copyTargets fromSide:OPPONENT_SIDE withCost:card.cost];
                         
                         if (abilityPoints == IMPOSSIBLE_MOVE)
                             allAbilityPoints = IMPOSSIBLE_MOVE;
@@ -140,7 +143,7 @@ int enemyTotalStrength, friendlyTotalStrength;
                         }
                     }
                 }
-                
+                */
                 //add the ability points if it's a regular move
                 if (allAbilityPoints == VICTORY_MOVE || allAbilityPoints == IMPOSSIBLE_MOVE)
                     points = allAbilityPoints;
@@ -154,6 +157,7 @@ int enemyTotalStrength, friendlyTotalStrength;
                 {
                     bestCard = card;
                     bestPoints = points;
+                    bestTarget = self.currentTarget; //assume it's placed here
                 }
                 
                 NSLog(@"points for summoning %d %d minion: %d", monster.damage, monster.life, points);
@@ -184,51 +188,7 @@ int enemyTotalStrength, friendlyTotalStrength;
                 
                 int points = USELESS_MOVE;
                 
-                NSMutableArray*cardAbilitiesCopy = [NSMutableArray array];
-                
-                for (Ability *ability in card.abilities)
-                {
-                    Ability*copyAbility = [[Ability alloc] initWithAbility:ability];
-                    copyAbility.castType = castAlways; //set this to always meaning it is casted right now
-                    [cardAbilitiesCopy addObject: copyAbility];
-                }
-                
-                //go through all abilities and add up the points
-                for (Ability *ability in cardAbilitiesCopy)
-                {
-                    //here all onSummon becomes castAlways
-                    if (ability.castType == castOnSummon)
-                        ability.castType = castAlways;
-                    
-                    NSArray *targets = [self getAbilityTargets:ability attacker:nil target:nil fromSide:OPPONENT_SIDE];
-                    NSArray *targetsCopy = [self copyMonsterArray:targets];
-                    //TODO each array of ability should be sharing the target list
-                    
-                    NSLog(@"AI: number of targets: %d", targets.count);
-                    NSLog(@"AI: number of targetsCopy: %d", targetsCopy.count);
-                    int abilityPoints = [self evaluateAbilitiesPoints:ability caster:nil targets:targetsCopy fromSide:OPPONENT_SIDE];
-                    
-                    if (abilityPoints == IMPOSSIBLE_MOVE)
-                        points = IMPOSSIBLE_MOVE;
-                    else if (abilityPoints == VICTORY_MOVE)
-                        points = VICTORY_MOVE;
-                    else if (abilityPoints == USELESS_MOVE)
-                    {
-                        //do nothing, it won't contribute to the points
-                    }
-                    //regular move
-                    else
-                    {
-                        NSLog(@"AI: total points from ability %@, %d points", [[Ability getDescription:ability fromCard:card] string], abilityPoints);
-                        
-                        //if so far all useless moves, this move is no longer useless
-                        if (points == USELESS_MOVE)
-                            points = abilityPoints;
-                        //as long as not a victory move, add the points to previous
-                        else if (points != VICTORY_MOVE && points != IMPOSSIBLE_MOVE)
-                            points += abilityPoints;
-                    }
-                }
+                points = [self getCastOnSummonValue:card];
                 
                 //should expect good card to deal good damage, so doesn't waste them on bad moves
                 points -= [self getCardBaseCost:card];
@@ -277,20 +237,12 @@ int enemyTotalStrength, friendlyTotalStrength;
         
         if (bestPoints > moveThreshold)
         {
-            if ([bestCard isKindOfClass:[MonsterCardModel class]])
-            {
-                MonsterCardModel*monster = (MonsterCardModel*)bestCard;
-                [self pickAbilityTarget:monster]; //searches for castOnSummon ability and picks a target
-            }
-            else if ([bestCard isKindOfClass:[SpellCardModel class]])
-            {
-                
-            }
-            
             //sets the current target to the correct object since algorithm will pick a copy of the original card
             self.currentTarget = bestTarget;
+            
             if(self.currentTarget!=nil)
             {
+                NSLog(@"AI: current target is not nil, pointing back to original card.");
                 while(self.currentTarget.originalCard!=nil)
                     self.currentTarget = self.currentTarget.originalCard;
             }
@@ -733,11 +685,23 @@ int enemyTotalStrength, friendlyTotalStrength;
             
             Ability*copyAbility = [[Ability alloc] initWithAbility:ability];
             
-            int abilityPoint = [self evaluateAbilityPoints:copyAbility caster:nil target:monster fromSide:monster.side];
+            int abilityPoint = [self evaluateAbilityPoints:copyAbility caster:nil target:monster fromSide:monster.side withCost:0];
             
-            if (ability.castType == castOnHit || ability.castType == castOnMove)
-                abilityPoint = abilityPoint / (monster.cooldown>0?monster.cooldown:1);
-            
+            if (abilityPoint == VICTORY_MOVE)
+                abilityPoint = VICTORY_MOVE;
+            else if (abilityPoint == IMPOSSIBLE_MOVE)
+                return IMPOSSIBLE_MOVE;
+            else if (abilityPoint == USELESS_MOVE)
+            {
+                
+            }
+            else
+            {
+                if (points != VICTORY_MOVE)
+                    if (ability.castType == castOnHit || ability.castType == castOnMove)
+                        abilityPoint = abilityPoint / (monster.cooldown>0?monster.cooldown:1);
+            }
+                
             points += abilityPoint / 2; //half as effective
         }
     }
@@ -798,7 +762,7 @@ int enemyTotalStrength, friendlyTotalStrength;
  LIMITATIONS:
  - Cannot evaluate result of castOnDeath from a castOnDeath ability due to infinite loops (since there's no state for AI's calculations)
  */
--(int)evaluateAbilitiesPoints: (Ability*)ability caster:(MonsterCardModel*)caster targets:(NSArray*)targets  fromSide:(int)side
+-(int)evaluateAbilitiesPoints: (Ability*)ability caster:(MonsterCardModel*)caster targets:(NSArray*)targets  fromSide:(int)side  withCost:(int)cost
 {
     int points = USELESS_MOVE;
     
@@ -811,9 +775,8 @@ int enemyTotalStrength, friendlyTotalStrength;
         //MonsterCardModel*copyTarget = (MonsterCardModel*)[[CardModel alloc] initWithCardModel:target];
         
         enum TargetType targetType = ability.targetType;
-        int targetPoint = [self evaluateAbilityPoints:ability caster:caster target:target fromSide:side];
+        int targetPoint = [self evaluateAbilityPoints:ability caster:caster target:target fromSide:side  withCost:cost];
         
-        //TODO random ones
         if (targetType == targetHeroAny || targetType == targetOneAny ||targetType == targetOneAnyMinion ||targetType == targetOneEnemy ||targetType == targetOneEnemyMinion||targetType == targetOneFriendly ||targetType == targetOneFriendlyMinion)
         {
             //only one is casted, choose best one (and currentTarget)
@@ -849,6 +812,14 @@ int enemyTotalStrength, friendlyTotalStrength;
                     points += targetPoint;
             }
         }
+    }
+
+    //if is a random target ability
+    if (ability.targetType == targetOneRandomAny || ability.targetType == targetOneRandomEnemy || ability.targetType == targetOneRandomEnemyMinion || ability.targetType == targetOneRandomFriendly || ability.targetType == targetOneRandomFriendlyMinion || ability.targetType == targetOneRandomMinion)
+    {
+        //and is not one of the special moves, the actual values is all minions divided by the total number, since only one can be targetted
+        if (points != IMPOSSIBLE_MOVE && points != VICTORY_MOVE && points != USELESS_MOVE)
+            points /= [targets count];
     }
     
     return points;
@@ -901,9 +872,9 @@ int enemyTotalStrength, friendlyTotalStrength;
  Note that abilities being casted will have the castType of castAlways, so all other casts are (probably?) summoning a minion with the ability. E.g. abilityAddLife with castOnDamaged must be summoning or giving a minion this ability, as when it's casted while onDamaged isn't evaluated.
  NOTE: if an ability has castNil, it means it is not a valid cast at the moment. This is for example used on castOnSummon when it has already been summoned, or castOnEndOfTurn when a minion is attacking.
  */
--(int)evaluateAbilityPoints: (Ability*)ability caster:(MonsterCardModel*)caster target:(MonsterCardModel*)target fromSide:(int)side
+-(int)evaluateAbilityPoints: (Ability*)ability caster:(MonsterCardModel*)caster target:(MonsterCardModel*)target fromSide:(int)side withCost:(int)cost
 {
-    int points = USELESS_MOVE;
+    int points = 0;
     int oppositeside = side == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE;
     
     //for convenience
@@ -967,14 +938,12 @@ int enemyTotalStrength, friendlyTotalStrength;
             if (points == 0)
                 return USELESS_MOVE;
             
-            int targetPoints = [self evaluateMonsterValue:target];
-            if (target.side == side) //friendly minions are "negative" points
-                targetPoints = -targetPoints;
+            int targetPoints = -[self evaluateMonsterValue:target];
             
             //any other cast types
             points += targetPoints * 0.2; //stronger target = better move
             
-            if (target.side == oppositeside) //healing the enemy makes everything negative
+            if (target.side == side)
                 points = -points;
             
             if (castType == castAlways)
@@ -1195,7 +1164,7 @@ int enemyTotalStrength, friendlyTotalStrength;
             //if directly casting, simply return same as damage
             copyAbility.abilityType = abilityLoseLife;
             copyAbility.value = [[NSNumber alloc] initWithInt: target.life];
-            return [self evaluateAbilityPoints:copyAbility caster:caster target:target fromSide:side];
+            return [self evaluateAbilityPoints:copyAbility caster:caster target:target fromSide:side  withCost:cost];
         }
         
         NSLog(@"AI: ability kill, %d final points", points);
@@ -1254,6 +1223,14 @@ int enemyTotalStrength, friendlyTotalStrength;
                 return USELESS_MOVE;
             
             points = [self getMonsterPerTurnValue:target];
+            
+            if (points == USELESS_MOVE)
+                points = 0;
+            else if (points == VICTORY_MOVE)
+                return VICTORY_MOVE;
+            else if (points == IMPOSSIBLE_MOVE)
+                return IMPOSSIBLE_MOVE;
+            
             points *= 1 + (target.life / 8000.f);
             
             NSLog(@"AI: points for per turn value: %d", points);
@@ -1291,7 +1268,7 @@ int enemyTotalStrength, friendlyTotalStrength;
                 copyAbility.value = [[NSNumber alloc] initWithInt: [ability.value intValue] - target.cooldown];
             }
             
-            return [self evaluateAbilityPoints:copyAbility caster:caster target:target fromSide:side];
+            return [self evaluateAbilityPoints:copyAbility caster:caster target:target fromSide:side withCost:cost];
         }
     }
     else if (ability.abilityType == abilityAddMaxCooldown || ability.abilityType == abilityLoseMaxCooldown)
@@ -1349,6 +1326,14 @@ int enemyTotalStrength, friendlyTotalStrength;
                 return USELESS_MOVE;
             
             points = [self getMonsterPerTurnValue:target];
+            
+            if (points == USELESS_MOVE)
+                points = 0;
+            else if (points == VICTORY_MOVE)
+                return VICTORY_MOVE;
+            else if (points == IMPOSSIBLE_MOVE)
+                return IMPOSSIBLE_MOVE;
+            
             points *= 1 + (target.life / 8000.f);
             points *= cooldownChange; //negative since adding cd is bad
             
@@ -1404,6 +1389,9 @@ int enemyTotalStrength, friendlyTotalStrength;
             
             //multiplied by what and how many it targets
             points = [self getTargetTypeMultipliedPoints:ability.targetType points:points];
+            
+            if (target.side == side)
+                points = -points;
         }
         else
         {
@@ -1425,33 +1413,245 @@ int enemyTotalStrength, friendlyTotalStrength;
             if (target.side == side)
                 points = -points;
         }
+        
+        NSLog(@"AI: ability add/lose damage, %d final points", points);
     }
     else if (ability.abilityType == abilityTaunt)
     {
         //TODO
-        points = 1000;
+        if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn || castType == castOnDeath)
+        {
+            //cheap
+            points = [self getTargetTypeMultipliedPoints:ability.targetType points:500];
+        }
+        else
+        {
+            points += target.life * 0.15;
+            points += target.damage * 0.15;
+            
+            PlayerModel*targetPlayer = self.gameModel.players[target.side];
+            
+            //player having low health makes taunt much much better
+            if (targetPlayer.playerMonster.life < 10000)
+                points += (10000 - targetPlayer.playerMonster.life) * 0.25;
+            
+            //having other minions on field is even better
+            if ([self.gameModel.battlefield[target.side] count] > 0)
+            {
+                points += target.life * 0.15;
+                points += target.damage * 0.15;
+            }
+        }
+        
+        if (target.side == side)
+            points = -points;
     }
     else if (ability.abilityType == abilityDrawCard)
     {
-        //TODO
-        points = [ability.value integerValue] * 2500;
+        if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn || castType == castOnDeath)
+        {
+            //cheap
+            points = [self getTargetTypeMultipliedPoints:ability.targetType points:[ability.value integerValue] * 2500];
+        }
+        else
+        {
+            int cardChange = [ability.value intValue];
+            NSArray*targetHand;
+            
+            if (targetType == targetHeroFriendly || targetType == targetAll)
+            {
+                targetHand = self.gameModel.hands[target.side];
+                int remainingSpace = MAX_HAND_SIZE - [targetHand count];
+                if (cardChange > remainingSpace)
+                    cardChange = remainingSpace;
+                
+                if (cardChange == 0)
+                    points = USELESS_MOVE;
+                else if (target.side == side)
+                    points += cardChange * 2500;
+                else
+                    points += cardChange * -2500;
+            }
+            
+            if (targetType == targetHeroEnemy || targetType == targetAll)
+            {
+                targetHand = self.gameModel.hands[target.side == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE];
+                int remainingSpace = MAX_HAND_SIZE - [targetHand count];
+                if (cardChange > remainingSpace)
+                    cardChange = remainingSpace;
+                
+                if (cardChange == 0)
+                {
+                    if (cardChange == 0)
+                        points = USELESS_MOVE;
+                }
+                else
+                {
+                    if (points == USELESS_MOVE)
+                        points = 0;
+                    
+                    if (target.side != side)
+                        points += cardChange * 2500;
+                    else
+                        points += cardChange * -2500;
+                }
+            }
+        }
     }
     else if (ability.abilityType == abilityAddResource)
     {
-        //TODO
-        points = [ability.value integerValue] * 1000; //ONLY if actually have cards to cast
+        if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn || castType == castOnDeath)
+        {
+            //cheap
+            points = [self getTargetTypeMultipliedPoints:ability.targetType points:[ability.value integerValue] * 1000];
+        }
+        else
+        {
+            int resourceChange = [ability.value intValue];
+            
+            if (targetType == targetHeroFriendly || targetType == targetAll)
+            {
+                NSArray*targetHand = self.gameModel.hands[target.side];
+                
+                int summonableCards = 0;
+                
+                int remainingSpace = MAX_RESOURCE - resourceChange;
+                if (resourceChange > remainingSpace)
+                    resourceChange = remainingSpace;
+                
+                for (CardModel*card in targetHand)
+                {
+                    if ([self.gameModel canSummonCard:card side:target.side withAdditionalResource:resourceChange-cost])
+                        summonableCards++;
+                }
+                
+                if (summonableCards < 2) //asumming the card casted here is summonable
+                    points = USELESS_MOVE;
+                else if (target.side == side)
+                    points += resourceChange * 1000;
+                else
+                    points += resourceChange * -1000;
+            }
+            
+            if (targetType == targetHeroEnemy || targetType == targetAll)
+            {
+                NSArray*targetHand = self.gameModel.hands[target.side == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE];
+                int remainingSpace = MAX_RESOURCE - resourceChange;
+                if (resourceChange > remainingSpace)
+                    resourceChange = remainingSpace;
+                
+                int summonableCards = 0;
+                
+                for (CardModel*card in targetHand)
+                {
+                    if ([self.gameModel canSummonCard:card side:target.side withAdditionalResource:resourceChange-cost])
+                        summonableCards++;
+                }
+                
+                if (summonableCards < 2)
+                {
+                    if (points == 0)
+                        points = USELESS_MOVE;
+                }
+                else
+                {
+                    if (points == USELESS_MOVE)
+                        points = 0;
+                    
+                    if (target.side != side)
+                        points += resourceChange * 1000;
+                    else
+                        points += resourceChange * -1000;
+                }
+            }
+        }
     }
     else if (ability.abilityType == abilityAssassin)
     {
-        //TODO
-        points = 2000;
+        if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn || castType == castOnDeath)
+        {
+            //cheap
+            points = [self getTargetTypeMultipliedPoints:ability.targetType points:3000];
+        }
+        else
+        {
+            points = [self getMonsterPerTurnValue:target]; //TODO not exactly correct since on move is not that relevant
+        }
     }
-    /*
-     else if (ability.abilityType == abilityReturnToHand)
+    else if (ability.abilityType == abilityPierce)
     {
-        
+        if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn || castType == castOnDeath)
+        {
+            //cheap
+            points = [self getTargetTypeMultipliedPoints:ability.targetType points:2000];
+        }
+        else
+            points = target.damage / target.maximumCooldown / 2;
     }
-    */
+    else if (ability.abilityType == abilityFracture)
+    {
+        if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn || castType == castOnDeath)
+        {
+            //cheap
+            points = [self getTargetTypeMultipliedPoints:ability.targetType points:3000];
+        }
+        else
+        {
+            points += target.damage / target.maximumCooldown / 2;
+            points += target.life / 2;
+
+            int fractureCount = [ability.value intValue];
+            int fieldSpace = [self.gameModel.battlefield[target.side] count] - 1; //TODO assumes this is cast on death, but that's not exactly always the case (rare enough)
+            
+            if (fieldSpace < [ability.value intValue])
+            {
+                fractureCount = fieldSpace;
+                
+                if ([ability.value intValue]!=0)
+                    points *= (float)fractureCount / [ability.value intValue];
+            }
+        }
+    }
+    else if (ability.abilityType == abilityRemoveAbility)
+    {
+        if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn || castType == castOnDeath)
+        {
+            //cheap
+            points = [self getTargetTypeMultipliedPoints:ability.targetType points:3000];
+        }
+        else
+        {
+            int originalDamageValue = [self evaluateMonsterDamageValue:target];
+            
+            target.abilities = [NSMutableArray array];
+            
+            int newDamageValue = [self evaluateMonsterDamageValue:target];
+            
+            points = originalDamageValue - newDamageValue;
+            
+            if (target.side == side)
+                points *= -1;
+        }
+    }
+    else if (ability.abilityType == abilityReturnToHand)
+    {
+        if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn || castType == castOnDeath)
+        {
+            //WAY too complicated
+            points = [self getTargetTypeMultipliedPoints:ability.targetType points:1000];
+        }
+        else
+        {
+            //value equals to cast on summon value minus cost and half of minion's value
+            points = [self getCastOnSummonValue:target];
+            
+            points -= [self getCardBaseCost:target];
+            points -= [self evaluateMonsterValue:target]/2;
+            
+            if (target.side == side)
+                points *= -1;
+        }
+    }
     else
     {
         NSLog(@"AI: unimplemented ability, useless move");
@@ -1492,21 +1692,84 @@ int enemyTotalStrength, friendlyTotalStrength;
             if (ability.abilityType == abilityAddCooldown || ability.abilityType == abilityLoseCooldown || ability.abilityType == abilitySetCooldown || ability.abilityType == abilityAddMaxCooldown || ability.abilityType == abilityLoseMaxCooldown)
                 continue;
             
-            int abilityPoint = [self evaluateAbilityPoints:ability caster:nil target:monster fromSide:monster.side];
-            targetPoint += abilityPoint / (monster.cooldown>0?monster.cooldown:1) / 2; //half as effective
+            int abilityPoint = [self evaluateAbilityPoints:ability caster:nil target:monster fromSide:monster.side withCost:0];
+            
+            if (abilityPoint == VICTORY_MOVE)
+                targetPoint = VICTORY_MOVE;
+            else if (abilityPoint == IMPOSSIBLE_MOVE)
+                return IMPOSSIBLE_MOVE;
+            else if (abilityPoint == USELESS_MOVE)
+            {
+                
+            }
+            else if (targetPoint != VICTORY_MOVE)
+                targetPoint += abilityPoint / (monster.cooldown>0?monster.cooldown:1) / 2; //half as effective
         }
     }
     
     return targetPoint;
 }
+-(int)getCastOnSummonValue:(CardModel*)card
+{
+    int points = USELESS_MOVE;
+    
+    NSMutableArray*cardAbilitiesCopy = [NSMutableArray array];
+    
+    for (Ability *ability in card.abilities)
+    {
+        Ability*copyAbility = [[Ability alloc] initWithAbility:ability];
+        copyAbility.castType = castAlways; //set this to always meaning it is casted right now
+        [cardAbilitiesCopy addObject: copyAbility];
+    }
+    
+    //go through all abilities and add up the points
+    for (Ability *ability in cardAbilitiesCopy)
+    {
+        //here all onSummon becomes castAlways
+        if (ability.castType == castOnSummon)
+            ability.castType = castAlways;
+        
+        NSArray *targets = [self getAbilityTargets:ability attacker:nil target:nil fromSide:OPPONENT_SIDE];
+        NSArray *targetsCopy = [self copyMonsterArray:targets];
+        //TODO each array of ability should be sharing the target list
+        
+        NSLog(@"AI: number of targets: %d", targets.count);
+        NSLog(@"AI: number of targetsCopy: %d", targetsCopy.count);
+        int abilityPoints = [self evaluateAbilitiesPoints:ability caster:nil targets:targetsCopy fromSide:OPPONENT_SIDE withCost:card.cost];
+        
+        if (abilityPoints == IMPOSSIBLE_MOVE)
+            points = IMPOSSIBLE_MOVE;
+        else if (abilityPoints == VICTORY_MOVE)
+            points = VICTORY_MOVE;
+        else if (abilityPoints == USELESS_MOVE)
+        {
+            //do nothing, it won't contribute to the points
+        }
+        //regular move
+        else
+        {
+            NSLog(@"AI: total points from ability %@, %d points", [[Ability getDescription:ability fromCard:card] string], abilityPoints);
+            
+            //if so far all useless moves, this move is no longer useless
+            if (points == USELESS_MOVE)
+                points = abilityPoints;
+            //as long as not a victory move, add the points to previous
+            else if (points != VICTORY_MOVE && points != IMPOSSIBLE_MOVE)
+                points += abilityPoints;
+        }
+    }
+    
+    return points;
+}
+
 /*
 -(int)getMostMonsterPerTurnValueFromSide:(int)side
 {
     int points = 0;
-    
+ 
     for (MonsterCardModel*monster in self.gameModel.battlefield[side])
         points += [self getMonsterPerTurnValue:monster];
-    
+ 
     return points;
 }
  */

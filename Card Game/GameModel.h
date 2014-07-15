@@ -97,6 +97,9 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
  Returns NO if it can not summon it, such as if addCardToBattleField returns false, or if the player summoning does not have sufficient resources */
 -(BOOL)canSummonCard: (CardModel*)card side:(char)side;
 
+/** Lazy function for AI */
+-(BOOL) canSummonCard: (CardModel*)card side:(char)side withAdditionalResource:(int)resource;
+
 /** Checks if an ability has valid targets. caster can be nil, if casted by SpellCard. */
 -(BOOL)abilityHasValidTargets: (Ability*)ability castedBy:(CardModel*)caster side:(int)side;
 

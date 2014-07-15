@@ -309,9 +309,10 @@ int cardIDCount = 0;
     
     
     //TODO testing
-    /*
+    
     aiDeck = [[DeckModel alloc] init];
     
+    /*
     SpellCardModel*spell;
     spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     spell.element = elementLightning;
@@ -348,19 +349,54 @@ int cardIDCount = 0;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
     
     [aiDeck addCard:spell];
+    */
+    
     
     MonsterCardModel*monster;
+    /*
     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     monster.name = @"Nameless card";
-    monster.life = monster.maximumLife = 5000;
+    monster.life = monster.maximumLife = 1000;
     monster.damage = 2000;
     monster.cost = 1;
     monster.cooldown = monster.maximumCooldown = 1;
     
-    //[monster.abilities addObject: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneAny withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneAny withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]]];
     
     [aiDeck addCard:monster];
-    */
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster.name = @"Nameless card";
+    monster.life = monster.maximumLife = 1000;
+    monster.damage = 2000;
+    monster.cost = 1;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneAny withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]]];
+    
+    [aiDeck addCard:monster];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster.name = @"Nameless card";
+    monster.life = monster.maximumLife = 1000;
+    monster.damage = 2000;
+    monster.cost = 1;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneAny withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]]];
+    
+    [aiDeck addCard:monster];*/
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10025 type:cardTypeSinglePlayer];
+    monster.name = @"Monster";
+    monster.life = monster.maximumLife = 7500;
+    monster.damage = 1200;
+    monster.cost = 5;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:2500]]];
+    
+    [aiDeck addCard:monster];
     
     self.decks = @[playerDeck, aiDeck];
     
@@ -477,10 +513,15 @@ int cardIDCount = 0;
 
 -(BOOL) canSummonCard: (CardModel*)card side:(char)side
 {
+    return [self canSummonCard:card side:side withAdditionalResource:0];
+}
+
+-(BOOL) canSummonCard: (CardModel*)card side:(char)side withAdditionalResource:(int)resource
+{
     PlayerModel *player = (PlayerModel*) self.players[side];
     
     //checks if player can afford this first before caring about card type
-    if (player.resource >= card.cost)
+    if (player.resource + resource >= card.cost)
     {
         if ([card isKindOfClass: [MonsterCardModel class]])
         {

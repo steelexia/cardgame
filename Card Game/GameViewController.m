@@ -389,6 +389,9 @@ CardModel* currentCard;
                     break;
                 }
             }
+        
+        if (tappedOnACard)
+            gameControlState = gameControlStateNone;
     }
     if (hitView == self.viewingCardView)
     {

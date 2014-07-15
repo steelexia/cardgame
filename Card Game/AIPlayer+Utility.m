@@ -17,14 +17,20 @@
     
     //all of the target types. Put the target into the array targets for applying abilities later
     if (ability.targetType == targetSelf)
-        targets = @[attacker];
+    {
+        if (attacker!=nil)
+            targets = @[attacker];
+    }
     else if (ability.targetType == targetVictim)
-        targets = @[target];
+    {
+        if (target!=nil)
+            targets = @[target];
+    }
     else if (ability.targetType == targetVictimMinion)
     {
         if (target.type == cardTypePlayer) //do not cast ability if target is not a minion
             return @[];
-        else
+        else if (target!=nil)
             targets = @[target];
     }
     else if (ability.targetType == targetAttacker)
@@ -82,7 +88,7 @@
     {
         PlayerModel *player = self.gameModel.players[PLAYER_SIDE];
         PlayerModel *opponent = self.gameModel.players[OPPONENT_SIDE];
-        targets = @[player, opponent];
+        targets = @[player.playerMonster, opponent.playerMonster];
          
     }
     else if (ability.targetType == targetHeroFriendly)
@@ -166,7 +172,7 @@
 
 -(int)getCardBaseCost:(CardModel*)card
 {
-    int cost = card.cost * 1500;
+    int cost = card.cost * 1000;
     if (cost == 0)
         cost = 250;
     return cost;
