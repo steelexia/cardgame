@@ -111,8 +111,8 @@ const int INITIAL_DECK_LIMIT = 3;
     cdCard.creator = card.creator;
     cdCard.creatorName = card.creatorName;
     
+    cdCard.abilities = @"";
     
-    NSMutableSet *cdAbilities = [NSMutableSet set];
     for (Ability *ability in card.abilities)
     {
         
@@ -123,11 +123,9 @@ const int INITIAL_DECK_LIMIT = 3;
         //cdAbility.value = cdAbility.value;
         //[cdAbilities addObject:cdAbility];
         //NSString*abilityString = AbilityWrapper get;
-        [cdAbilities addObject: [AbilityWrapper abilityToString:ability]];
+        cdCard.abilities = [NSString stringWithFormat:@"%@%@,", cdCard.abilities, [AbilityWrapper abilityToString:ability]];
     }
     
-    //cdCard.abilities = cdAbilities;
-    cdCard.abilities = [NSKeyedArchiver archivedDataWithRootObject:cdAbilities];
     
     if ([card isKindOfClass:[MonsterCardModel class]])
     {
@@ -171,11 +169,19 @@ const int INITIAL_DECK_LIMIT = 3;
     
     if (cdCard.abilities!=nil)
     {
-        NSMutableArray *abilityArray = [NSKeyedUnarchiver unarchiveObjectWithData:cdCard.abilities];
+        NSArray* abilityStrings = [cdCard.abilities componentsSeparatedByString:@","];
         
-        for (NSString*cdAbility in abilityArray)
+        for (NSString*cdAbility in abilityStrings)
         {
+            if ([cdAbility isEqualToString:@""])
+                continue;
+            
             Ability*ability = [AbilityWrapper getAbilityWithString:cdAbility];
+            if (ability==nil)
+            {
+                NSLog(@"ERROR: Failed to add an ability from CD: %@", cdAbility);
+                continue;
+            }
             [card addBaseAbility:ability];
         }
     }

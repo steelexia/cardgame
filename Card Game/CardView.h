@@ -49,6 +49,7 @@
 
 /** Set to YES during damage animations to prevent two happening at once. */
 @property BOOL inDamageAnimation;
+@property BOOL inDestructionAnimation;
 
 @property BOOL lifeViewNeedsUpdate;
 @property BOOL damageViewNeedsUpdate;

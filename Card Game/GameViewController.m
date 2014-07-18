@@ -391,7 +391,10 @@ CardModel* currentCard;
             }
         
         if (tappedOnACard)
+        {
             gameControlState = gameControlStateNone;
+            [attackLine removeFromSuperview];
+        }
     }
     if (hitView == self.viewingCardView)
     {

@@ -97,20 +97,19 @@ int cardIDCount = 0;
     
     NSMutableArray* playerHand = self.hands[PLAYER_SIDE];
     NSMutableArray* aiHand = self.hands[OPPONENT_SIDE];
-    
     /*
     SpellCardModel*spell;
     spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     spell.element = elementLightning;
     spell.name = @"Overpowered Card";
     spell.cost = 0;
-    
+    [spell.abilities addObject: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneAny withDuration:durationForever withValue:[NSNumber numberWithInt:200]]];
+    [playerHand addObject:spell];
     [spell.abilities addObject: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneAny withDuration:durationForever withValue:[NSNumber numberWithInt:2000]]];
     
-    [hand addObject:spell];
-    */
+    [playerHand addObject:spell];
     
-    /*
+    
     MonsterCardModel*monster;
     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     monster.name = @"Nameless card";
@@ -157,6 +156,8 @@ int cardIDCount = 0;
     
     [hand addObject:monster];
     */
+    
+    
 }
 
 -(void)newTurn:(int)side
@@ -309,10 +310,10 @@ int cardIDCount = 0;
     
     
     //TODO testing
-    
+    /*
     aiDeck = [[DeckModel alloc] init];
     
-    /*
+    
     SpellCardModel*spell;
     spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     spell.element = elementLightning;
@@ -351,19 +352,8 @@ int cardIDCount = 0;
     [aiDeck addCard:spell];
     */
     
-    
-    MonsterCardModel*monster;
     /*
-    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
-    monster.name = @"Nameless card";
-    monster.life = monster.maximumLife = 1000;
-    monster.damage = 2000;
-    monster.cost = 1;
-    monster.cooldown = monster.maximumCooldown = 1;
-    
-    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneAny withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]]];
-    
-    [aiDeck addCard:monster];
+    MonsterCardModel*monster;
     
     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     monster.name = @"Nameless card";
@@ -385,7 +375,18 @@ int cardIDCount = 0;
     
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneAny withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]]];
     
-    [aiDeck addCard:monster];*/
+    [aiDeck addCard:monster];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster.name = @"Nameless card";
+    monster.life = monster.maximumLife = 1000;
+    monster.damage = 2000;
+    monster.cost = 1;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneAny withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]]];
+    
+    [aiDeck addCard:monster];
     
     monster = [[MonsterCardModel alloc] initWithIdNumber:10025 type:cardTypeSinglePlayer];
     monster.name = @"Monster";
@@ -397,7 +398,7 @@ int cardIDCount = 0;
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:2500]]];
     
     [aiDeck addCard:monster];
-    
+    */
     self.decks = @[playerDeck, aiDeck];
     
     
@@ -1368,7 +1369,6 @@ int cardIDCount = 0;
                 //also removes all existing abilities
                 else if (ability.abilityType == abilityRemoveAbility)
                 {
-                    
                     //remove all abilities that are not the removeAbility itself
                     //delete this way to prevent concurrent mod
                     for (int i = 0; i < [target.abilities count];)
@@ -1382,7 +1382,11 @@ int cardIDCount = 0;
                             [target.abilities removeObjectAtIndex:i];
                     }
                     
-                    //[target.cardView updateView];
+                    //reset life and cooldown to max if they're above
+                    if (target.life > target.maximumLife)
+                        target.life = target.maximumLife;
+                    if (target.cooldown > target.maximumCooldown)
+                        target.cooldown = target.maximumCooldown;
                 }
                 
                 [target.cardView updateView];
@@ -1423,6 +1427,15 @@ int cardIDCount = 0;
         int lifeLost = monster.life;
         [monster loseLife:monster.life];
         [self.gameViewController animateCardDamage:monster.cardView forDamage:lifeLost fromSide:monster.side];
+        
+        //cast on damanged is casted here by monster
+        //CastType castOnDamaged is casted here by defender
+        for (int i = 0; i < [monster.abilities count]; i++) //castAbility may insert objects in end
+        {
+            Ability*ability = monster.abilities[i];
+            if (ability.castType == castOnDamaged)
+                [self castAbility:ability byMonsterCard:monster toMonsterCard:nil fromSide:oppositeSide];
+        }
     }
     else if (ability.abilityType == abilitySetCooldown)
     {

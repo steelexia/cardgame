@@ -80,8 +80,6 @@
                      completion:nil];
 }
 
-
-
 -(void) animateMoveToWithBounce:(UIView *)view toPosition:(CGPoint)target inDuration:(float)duration
 {
     [self animateMoveToWithBounce:view toPosition:target inDuration:duration withDelay:0];
@@ -116,8 +114,15 @@
 /** Card flies up while fading out. It is first placed to the top of the view. On finish it is removed from superview and the battlefield is updated */
 -(void) animateCardDestruction: (CardView*) cardView fromSide: (int)side withDelay: (float) delay
 {
+    if (cardView.inDestructionAnimation)
+        return;
+    
+    cardView.inDestructionAnimation=YES;
+    
+    CGPoint newCenter = CGPointMake(cardView.center.x, cardView.center.y);
+    //NSLog(@"%f %f %f %f", cardView.center.x,cardView.center.y, cardView.originalPosition.x, cardView.originalPosition.y);
+    
     [self addAnimationCounter];
-    CGPoint newCenter = cardView.center;
     newCenter.y -= CARD_HEIGHT/4;
     
     //brings to front so doesn't get covered by other cards that are still alive
@@ -133,6 +138,7 @@
                          [self performBlock:^{
                              [self updateBattlefieldView:side];
                              [self decAnimationCounter];
+                             cardView.inDestructionAnimation = NO;
                          }  afterDelay:0.5];
                      }];
 }
