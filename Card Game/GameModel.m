@@ -97,7 +97,7 @@ int cardIDCount = 0;
     
     NSMutableArray* playerHand = self.hands[PLAYER_SIDE];
     NSMutableArray* aiHand = self.hands[OPPONENT_SIDE];
-    
+    /*
     SpellCardModel*spell;
     spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     spell.element = elementLightning;
@@ -147,7 +147,7 @@ int cardIDCount = 0;
     [playerHand addObject:spell];
     
     
-    /*
+    
     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     monster.name = @"Nameless card";
     monster.life = monster.maximumLife = 2000;
