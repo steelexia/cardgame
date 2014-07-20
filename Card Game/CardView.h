@@ -35,6 +35,8 @@
 
 @property (strong) UILabel *baseAbilityLabel, *addedAbilityLabel;
 
+@property (strong) NSMutableArray *abilityIcons;
+
 /** Overwritten center */
 @property CGPoint center;
 
@@ -127,6 +129,18 @@ enum CardViewMode
     cardViewModeZoomedIngame,
     /** When viewed in an editor outside of games. Does not animate when values change. */
     cardViewModeEditor,
+};
+
+enum CardAbilityIcon
+{
+    abilityIconCastOnMove,
+    abilityIconCastOnDeath,
+    abilityIconCastOnHit,
+    abilityIconCastOnDamaged,
+    abilityIconTaunt,
+    abilityIconAssassin,
+    abilityIconPierce,
+    abilityIconRemoveAbility,
 };
 
 

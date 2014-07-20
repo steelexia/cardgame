@@ -55,6 +55,16 @@
 		90AB14FA196EF4360008FCDD /* AIPlayer+Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 90AB14F9196EF4360008FCDD /* AIPlayer+Utility.m */; };
 		90AB14FF196F2FF20008FCDD /* encode-sans.compressed-black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 90AB14FD196F2FF20008FCDD /* encode-sans.compressed-black.ttf */; };
 		90AB1500196F2FF20008FCDD /* encode-sans.compressed-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 90AB14FE196F2FF20008FCDD /* encode-sans.compressed-bold.ttf */; };
+		90AB15021979FB5E0008FCDD /* resource_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB15011979FB5E0008FCDD /* resource_icon.png */; };
+		90AB15041979FFA40008FCDD /* battle_background_0_overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB15031979FFA40008FCDD /* battle_background_0_overlay.png */; };
+		90AB1506197AC71E0008FCDD /* card_ability_icon_taunt.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB1505197AC71E0008FCDD /* card_ability_icon_taunt.png */; };
+		90AB1509197AD6DA0008FCDD /* card_ability_icon_cast_on_hit.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB1507197AD6DA0008FCDD /* card_ability_icon_cast_on_hit.png */; };
+		90AB150A197AD6DA0008FCDD /* card_ability_icon_cast_on_move.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB1508197AD6DA0008FCDD /* card_ability_icon_cast_on_move.png */; };
+		90AB150D197AE3CF0008FCDD /* card_ability_icon_cast_on_damaged.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB150B197AE3CF0008FCDD /* card_ability_icon_cast_on_damaged.png */; };
+		90AB150E197AE3CF0008FCDD /* card_ability_icon_pierce.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB150C197AE3CF0008FCDD /* card_ability_icon_pierce.png */; };
+		90AB1511197AEC310008FCDD /* card_ability_icon_assassin.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB150F197AEC310008FCDD /* card_ability_icon_assassin.png */; };
+		90AB1512197AEC310008FCDD /* card_ability_icon_remove_ability.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB1510197AEC310008FCDD /* card_ability_icon_remove_ability.png */; };
+		90AB1514197AF4590008FCDD /* card_ability_icon_cast_on_death.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB1513197AF4590008FCDD /* card_ability_icon_cast_on_death.png */; };
 		90DA43321959CDF900E44AED /* CardsCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DA43311959CDF900E44AED /* CardsCollectionView.m */; };
 		90DA43351959D75700E44AED /* CustomCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DA43341959D75700E44AED /* CustomCollectionView.m */; };
 		90DA433C195A451000E44AED /* arrow_left_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 90DA433A195A451000E44AED /* arrow_left_button.png */; };
@@ -254,6 +264,16 @@
 		90AB14F9196EF4360008FCDD /* AIPlayer+Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AIPlayer+Utility.m"; sourceTree = "<group>"; };
 		90AB14FD196F2FF20008FCDD /* encode-sans.compressed-black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "encode-sans.compressed-black.ttf"; sourceTree = "<group>"; };
 		90AB14FE196F2FF20008FCDD /* encode-sans.compressed-bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "encode-sans.compressed-bold.ttf"; sourceTree = "<group>"; };
+		90AB15011979FB5E0008FCDD /* resource_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = resource_icon.png; path = "Card Game/resource_icon.png"; sourceTree = "<group>"; };
+		90AB15031979FFA40008FCDD /* battle_background_0_overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = battle_background_0_overlay.png; path = "Card Game/battle_background_0_overlay.png"; sourceTree = "<group>"; };
+		90AB1505197AC71E0008FCDD /* card_ability_icon_taunt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_ability_icon_taunt.png; path = "Card Game/card_ability_icon_taunt.png"; sourceTree = "<group>"; };
+		90AB1507197AD6DA0008FCDD /* card_ability_icon_cast_on_hit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_ability_icon_cast_on_hit.png; path = "Card Game/card_ability_icon_cast_on_hit.png"; sourceTree = "<group>"; };
+		90AB1508197AD6DA0008FCDD /* card_ability_icon_cast_on_move.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_ability_icon_cast_on_move.png; path = "Card Game/card_ability_icon_cast_on_move.png"; sourceTree = "<group>"; };
+		90AB150B197AE3CF0008FCDD /* card_ability_icon_cast_on_damaged.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_ability_icon_cast_on_damaged.png; path = "Card Game/card_ability_icon_cast_on_damaged.png"; sourceTree = "<group>"; };
+		90AB150C197AE3CF0008FCDD /* card_ability_icon_pierce.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_ability_icon_pierce.png; path = "Card Game/card_ability_icon_pierce.png"; sourceTree = "<group>"; };
+		90AB150F197AEC310008FCDD /* card_ability_icon_assassin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_ability_icon_assassin.png; path = "Card Game/card_ability_icon_assassin.png"; sourceTree = "<group>"; };
+		90AB1510197AEC310008FCDD /* card_ability_icon_remove_ability.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_ability_icon_remove_ability.png; path = "Card Game/card_ability_icon_remove_ability.png"; sourceTree = "<group>"; };
+		90AB1513197AF4590008FCDD /* card_ability_icon_cast_on_death.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_ability_icon_cast_on_death.png; path = "Card Game/card_ability_icon_cast_on_death.png"; sourceTree = "<group>"; };
 		90DA43301959CDF900E44AED /* CardsCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardsCollectionView.h; sourceTree = "<group>"; };
 		90DA43311959CDF900E44AED /* CardsCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardsCollectionView.m; sourceTree = "<group>"; };
 		90DA43331959D75700E44AED /* CustomCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCollectionView.h; sourceTree = "<group>"; };
@@ -505,6 +525,7 @@
 		907D9BD919226B4C0037C0CF /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				90AB15011979FB5E0008FCDD /* resource_icon.png */,
 				90AB14F6196CB7720008FCDD /* no_target_button.png */,
 				90DA43AC1969D21500E44AED /* battle_button_gray.png */,
 				90DA43AD1969D21500E44AED /* battle_button.png */,
@@ -534,6 +555,7 @@
 				90DA433F195A4A6E00E44AED /* remove_button.png */,
 				90DA433A195A451000E44AED /* arrow_left_button.png */,
 				90DA433B195A451000E44AED /* arrow_right_button.png */,
+				90AB15031979FFA40008FCDD /* battle_background_0_overlay.png */,
 				907D9C1F19509E850037C0CF /* battle_background_0.png */,
 				907D9C061932538E0037C0CF /* end_turn_button_disabled.png */,
 				907D9BE01922AE0D0037C0CF /* field_highlight.png */,
@@ -546,7 +568,7 @@
 		907D9BDA19226B520037C0CF /* Cards */ = {
 			isa = PBXGroup;
 			children = (
-				90AB14FB196F2FB20008FCDD /* New Group */,
+				90AB14FB196F2FB20008FCDD /* Abilities */,
 				9069AAD91955019A006D1D98 /* Common */,
 				90AB14F4196CA7F90008FCDD /* card_background_front_monster_overlay.png */,
 				907D9BF6192E979C0037C0CF /* hero_glow_select.png */,
@@ -561,11 +583,19 @@
 			name = Cards;
 			sourceTree = "<group>";
 		};
-		90AB14FB196F2FB20008FCDD /* New Group */ = {
+		90AB14FB196F2FB20008FCDD /* Abilities */ = {
 			isa = PBXGroup;
 			children = (
+				90AB150F197AEC310008FCDD /* card_ability_icon_assassin.png */,
+				90AB1510197AEC310008FCDD /* card_ability_icon_remove_ability.png */,
+				90AB1505197AC71E0008FCDD /* card_ability_icon_taunt.png */,
+				90AB1507197AD6DA0008FCDD /* card_ability_icon_cast_on_hit.png */,
+				90AB1508197AD6DA0008FCDD /* card_ability_icon_cast_on_move.png */,
+				90AB150B197AE3CF0008FCDD /* card_ability_icon_cast_on_damaged.png */,
+				90AB150C197AE3CF0008FCDD /* card_ability_icon_pierce.png */,
+				90AB1513197AF4590008FCDD /* card_ability_icon_cast_on_death.png */,
 			);
-			name = "New Group";
+			name = Abilities;
 			sourceTree = "<group>";
 		};
 		90AB14FC196F2FBE0008FCDD /* Fonts */ = {
@@ -833,19 +863,24 @@
 				90DA4371195F96DB00E44AED /* decrement_button.png in Resources */,
 				90DA43C51969D21500E44AED /* add_deck_button_gray.png in Resources */,
 				90DA43BC1969D21500E44AED /* back_button.png in Resources */,
+				90AB1511197AEC310008FCDD /* card_ability_icon_assassin.png in Resources */,
+				90AB1512197AEC310008FCDD /* card_ability_icon_remove_ability.png in Resources */,
 				90DA43C31969D21500E44AED /* save_card_button_gray.png in Resources */,
 				90DA43BF1969D21500E44AED /* monster_button.png in Resources */,
 				90DA4358195E023600E44AED /* no_button.png in Resources */,
 				90DA4350195DF3C500E44AED /* save_deck_button.png in Resources */,
 				90AB1500196F2FF20008FCDD /* encode-sans.compressed-bold.ttf in Resources */,
+				90AB15041979FFA40008FCDD /* battle_background_0_overlay.png in Resources */,
 				90DA43C71969D21500E44AED /* remove_deck_button.png in Resources */,
 				907D9C2019509E850037C0CF /* battle_background_0.png in Resources */,
 				90DA435B195E0BD900E44AED /* add_deck_button.png in Resources */,
 				90AB14FF196F2FF20008FCDD /* encode-sans.compressed-black.ttf in Resources */,
 				90AB14F3196CA7E60008FCDD /* card_background_front_overlay_common.png in Resources */,
+				90AB150D197AE3CF0008FCDD /* card_ability_icon_cast_on_damaged.png in Resources */,
 				90AB14F5196CA7F90008FCDD /* card_background_front_monster_overlay.png in Resources */,
 				90DA4372195F96DB00E44AED /* increment_button.png in Resources */,
 				9069AAE3195501AB006D1D98 /* card_background_front_fire_common.png in Resources */,
+				90AB15021979FB5E0008FCDD /* resource_icon.png in Resources */,
 				9069AAE7195501AB006D1D98 /* card_background_front_neutral_common.png in Resources */,
 				9060540D191C032B000B3B93 /* end_turn_button_up.png in Resources */,
 				9069AAE1195501AB006D1D98 /* card_background_front_dark_common.png in Resources */,
@@ -853,18 +888,22 @@
 				9069AACF1951E737006D1D98 /* Main_iPad.storyboard in Resources */,
 				9069AAE5195501AB006D1D98 /* card_background_front_light_common.png in Resources */,
 				9069AACE1951E734006D1D98 /* Main_iPhone.storyboard in Resources */,
+				90AB150E197AE3CF0008FCDD /* card_ability_icon_pierce.png in Resources */,
 				90DA43C11969D21500E44AED /* spell_button.png in Resources */,
 				90DA434E195C941400E44AED /* add_button_gray.png in Resources */,
 				90DA43C21969D21500E44AED /* cancel_card_button.png in Resources */,
 				90DA4340195A4A6E00E44AED /* add_button.png in Resources */,
 				90DA4355195E022B00E44AED /* yes_button.png in Resources */,
+				90AB1509197AD6DA0008FCDD /* card_ability_icon_cast_on_hit.png in Resources */,
 				90DA43BE1969D21500E44AED /* monster_button_gray.png in Resources */,
+				90AB150A197AD6DA0008FCDD /* card_ability_icon_cast_on_move.png in Resources */,
 				90DA43C01969D21500E44AED /* spell_button_gray.png in Resources */,
 				90DA43BA1969D21500E44AED /* battle_button_gray.png in Resources */,
 				907D9BF3192D8D680037C0CF /* hero_default.png in Resources */,
 				90DA437519608F4D00E44AED /* increment_button_gray.png in Resources */,
 				907D9BF7192E979C0037C0CF /* hero_glow_select.png in Resources */,
 				9069AAE2195501AB006D1D98 /* card_background_front_earth_common.png in Resources */,
+				90AB1514197AF4590008FCDD /* card_ability_icon_cast_on_death.png in Resources */,
 				907D9BF1192D3DFB0037C0CF /* card_image_placeholder.png in Resources */,
 				9069AAE6195501AB006D1D98 /* card_background_front_lightning_common.png in Resources */,
 				907D9BDC192270DE0037C0CF /* field_edge.png in Resources */,
@@ -885,6 +924,7 @@
 				907D9C071932538E0037C0CF /* end_turn_button_disabled.png in Resources */,
 				907D9BFD192FD35F0037C0CF /* card_glow_target.png in Resources */,
 				90F352CF191595F400601130 /* card_background_front.png in Resources */,
+				90AB1506197AC71E0008FCDD /* card_ability_icon_taunt.png in Resources */,
 				907D9BFF192FD3910037C0CF /* hero_glow_target.png in Resources */,
 				90DA4359195E023600E44AED /* ok_button.png in Resources */,
 			);

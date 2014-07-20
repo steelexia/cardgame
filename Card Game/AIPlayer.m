@@ -162,7 +162,6 @@ int enemyTotalStrength, friendlyTotalStrength;
                         points = cardBaseCost;
                 }
 
-                
                 NSLog(@"AI: total points from spell card with cost %d: %d points", card.cost, points);
                 
                 if (points > bestPoints)
@@ -1325,7 +1324,7 @@ int enemyTotalStrength, friendlyTotalStrength;
             }
         }
         
-        if (target.side == side)
+        if (points != USELESS_MOVE)
             points = -points;
     }
     else if (ability.abilityType == abilityDrawCard)
@@ -1333,7 +1332,7 @@ int enemyTotalStrength, friendlyTotalStrength;
         if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn || castType == castOnDeath)
         {
             //cheap
-            points = [self getTargetTypeMultipliedPoints:ability.targetType points:[ability.value integerValue] * 2500];
+            points = [self getTargetTypeMultipliedPoints:ability.targetType points:[ability.value integerValue] * -2500];
         }
         else
         {
@@ -1349,10 +1348,11 @@ int enemyTotalStrength, friendlyTotalStrength;
                 
                 if (cardChange == 0)
                     points = USELESS_MOVE;
-                else if (target.side == side)
-                    points += cardChange * 2500;
                 else
-                    points += cardChange * -2500;
+                {
+                    points += cardChange * 2500;
+                    NSLog(@"here");
+                }
             }
             
             if (targetType == targetHeroEnemy || targetType == targetAll)
@@ -1372,10 +1372,8 @@ int enemyTotalStrength, friendlyTotalStrength;
                     if (points == USELESS_MOVE)
                         points = 0;
                     
-                    if (target.side != side)
-                        points += cardChange * 2500;
-                    else
-                        points += cardChange * -2500;
+                    points += cardChange * -2500;
+                    NSLog(@"here2");
                 }
             }
         }
@@ -1385,7 +1383,7 @@ int enemyTotalStrength, friendlyTotalStrength;
         if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn || castType == castOnDeath)
         {
             //cheap
-            points = [self getTargetTypeMultipliedPoints:ability.targetType points:[ability.value integerValue] * 1000];
+            points = [self getTargetTypeMultipliedPoints:ability.targetType points:[ability.value integerValue] * -1000];
         }
         else
         {
@@ -1453,11 +1451,14 @@ int enemyTotalStrength, friendlyTotalStrength;
         if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn || castType == castOnDeath)
         {
             //cheap
-            points = [self getTargetTypeMultipliedPoints:ability.targetType points:3000];
+            points = [self getTargetTypeMultipliedPoints:ability.targetType points:-3000];
         }
         else
         {
             points = [self getMonsterPerTurnValue:target]; //TODO not exactly correct since on move is not that relevant
+            
+            if (points != side)
+                points = -points;
         }
     }
     else if (ability.abilityType == abilityPierce)
@@ -1465,17 +1466,21 @@ int enemyTotalStrength, friendlyTotalStrength;
         if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn || castType == castOnDeath)
         {
             //cheap
-            points = [self getTargetTypeMultipliedPoints:ability.targetType points:2000];
+            points = [self getTargetTypeMultipliedPoints:ability.targetType points:-2000];
         }
         else
+        {
             points = target.damage / target.maximumCooldown / 2;
+            if (points != side)
+                points = -points;
+        }
     }
     else if (ability.abilityType == abilityFracture)
     {
         if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn || castType == castOnDeath)
         {
             //cheap
-            points = [self getTargetTypeMultipliedPoints:ability.targetType points:3000];
+            points = [self getTargetTypeMultipliedPoints:ability.targetType points:-4000];
         }
         else
         {
@@ -1493,6 +1498,9 @@ int enemyTotalStrength, friendlyTotalStrength;
                 if ([ability.value intValue]!=0)
                     points *= (float)fractureCount / [ability.value intValue];
             }
+            
+            if (points != side)
+                points = -points;
         }
     }
     else if (ability.abilityType == abilityRemoveAbility)

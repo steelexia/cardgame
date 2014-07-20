@@ -157,8 +157,36 @@ CardModel* currentCard;
     attackLine.backgroundColor = [UIColor redColor];
     
     //----set up the resource labels----//
-    //TODO positions are temporary
-    resourceLabels = @[[[UILabel alloc] initWithFrame: CGRectMake(SCREEN_WIDTH - 30, SCREEN_HEIGHT - 30, 50, 20)], [[UILabel alloc] initWithFrame: CGRectMake(SCREEN_WIDTH - 30,  40, 50, 20)]];
+    StrokedLabel*playerResourceLabel = [[StrokedLabel alloc] initWithFrame: CGRectMake(0, 0, 60, 30)];
+    playerResourceLabel.center = CGPointMake(SCREEN_WIDTH - 30, SCREEN_HEIGHT - 30);
+    playerResourceLabel.textAlignment = NSTextAlignmentCenter;
+    playerResourceLabel.textColor = [UIColor whiteColor];
+    playerResourceLabel.backgroundColor = [UIColor clearColor];
+    playerResourceLabel.font = [UIFont fontWithName:cardMainFont size:20];
+    playerResourceLabel.adjustsFontSizeToFitWidth = YES;
+    playerResourceLabel.strokeColour = [UIColor blackColor];
+    playerResourceLabel.strokeOn = YES;
+    playerResourceLabel.strokeThickness = 3;
+    UIImageView *playerResourceIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"resource_icon"]];
+    playerResourceIcon.frame = CGRectMake(0, 0, 45, 45);
+    playerResourceIcon.center = playerResourceLabel.center;
+    
+    StrokedLabel*opponentResourceLabel = [[StrokedLabel alloc] initWithFrame: CGRectMake(0,0, 60, 30)];
+    opponentResourceLabel.center = CGPointMake(SCREEN_WIDTH - 30, 30);
+    opponentResourceLabel.textAlignment = NSTextAlignmentCenter;
+    opponentResourceLabel.textColor = [UIColor whiteColor];
+    opponentResourceLabel.backgroundColor = [UIColor clearColor];
+    opponentResourceLabel.font = [UIFont fontWithName:cardMainFont size:20];
+    opponentResourceLabel.adjustsFontSizeToFitWidth = YES;
+    opponentResourceLabel.strokeColour = [UIColor blackColor];
+    opponentResourceLabel.strokeOn = YES;
+    opponentResourceLabel.strokeThickness = 3;
+    UIImageView *opponentResourceIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"resource_icon"]];
+    opponentResourceIcon.frame = CGRectMake(0, 0, 45, 45);
+    opponentResourceIcon.center = opponentResourceLabel.center;
+    resourceLabels = @[playerResourceLabel,opponentResourceLabel];
+    [self.uiView addSubview:playerResourceIcon];
+    [self.uiView addSubview:opponentResourceIcon];
     [self.uiView addSubview:resourceLabels[PLAYER_SIDE]];
     [self.uiView addSubview:resourceLabels[OPPONENT_SIDE]];
     
@@ -197,8 +225,12 @@ CardModel* currentCard;
     [self.backgroundView addSubview:opponentFieldHighlight];
     [self.backgroundView addSubview:opponentFieldEdge];
     
+    UIView*backgroundOverlay = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"battle_background_0_overlay"]];
+    backgroundOverlay.frame = self.view.bounds;
+    [self.backgroundView addSubview:backgroundOverlay];
+    
     //----end turn button----//
-    UIImage* endTurnImage = [UIImage imageNamed:@"end_turn_button_up.png"];
+    UIImage* endTurnImage = [UIImage imageNamed:@"end_turn_button_up.png"]; //TODO all these images to load function
     UIImage* endTurnDisabledImage = [UIImage imageNamed:@"end_turn_button_disabled.png"];
     self.endTurnButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.endTurnButton.frame = CGRectMake(0, 0, 60, 45);

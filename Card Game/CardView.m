@@ -42,7 +42,7 @@ int PLAYER_HERO_WIDTH = 50, PLAYER_HERO_HEIGHT = 50;
 UIImage *backgroundMonsterOverlayImage, *selectHighlightImage, *targetHighlightImage, *heroSelectHighlightImage, *heroTargetHighlightImage;
 
 /** 2D array of images. First array contains elements, second array contains rarity */
-NSArray*backgroundImages, *backgroundOverlayImages;
+NSArray*backgroundImages, *backgroundOverlayImages, *abilityIconImages;
 
 NSMutableParagraphStyle *abilityTextParagrahStyle;
 NSDictionary *abilityTextAttributtes;
@@ -108,6 +108,18 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
                            ],
                          ];
     
+    //ensure order is same as enum order
+    abilityIconImages = @[
+                          [UIImage imageNamed:@"card_ability_icon_cast_on_move"],
+                          [UIImage imageNamed:@"card_ability_icon_cast_on_death"],
+                          [UIImage imageNamed:@"card_ability_icon_cast_on_hit"],
+                          [UIImage imageNamed:@"card_ability_icon_cast_on_damaged"],
+                          [UIImage imageNamed:@"card_ability_icon_taunt"],
+                          [UIImage imageNamed:@"card_ability_icon_assassin"],
+                          [UIImage imageNamed:@"card_ability_icon_pierce"],
+                          [UIImage imageNamed:@"card_ability_icon_remove_ability"],
+                          ];
+    
     backgroundOverlayImages = @[
      [UIImage imageNamed:@"card_background_front_overlay_common"],
      //TODO other rarities
@@ -118,6 +130,7 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
     ];
     
     backgroundMonsterOverlayImage = [UIImage imageNamed:@"card_background_front_monster_overlay"];
+    
     
     selectHighlightImage = [UIImage imageNamed:@"card_glow_select"];
     heroSelectHighlightImage = [UIImage imageNamed:@"hero_glow_select"];
@@ -142,6 +155,8 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
         
         NSArray*elementArray = backgroundImages[cardModel.element];
         //TODO
+        
+        self.abilityIcons = [NSMutableArray array];
         
         UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:elementArray[0]];
         backgroundImageView.bounds = CGRectMake(0, 0, CARD_FULL_WIDTH, CARD_FULL_HEIGHT);
@@ -426,7 +441,119 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
             self.cooldownLabel.textColor = newCooldownColour;
         }
         
+        if (self.cardViewMode == cardViewModeIngame || self.cardViewMode == cardViewModeZoomedIngame)
+        {
+            NSMutableArray *currentAbilityIconImages = [NSMutableArray array];
+            
+            for (Ability *ability in monsterCard.abilities)
+            {
+                UIImage *iconImage;
+                if (ability.castType == castOnMove || ability.castType == castOnEndOfTurn)
+                    iconImage = abilityIconImages[abilityIconCastOnMove];
+                else if (ability.castType == castOnDeath)
+                    iconImage = abilityIconImages[abilityIconCastOnDeath];
+                else if (ability.castType == castOnHit)
+                    iconImage = abilityIconImages[abilityIconCastOnHit];
+                else if (ability.castType == castOnDamaged)
+                    iconImage = abilityIconImages[abilityIconCastOnDamaged];
+                else if (ability.targetType == targetSelf)
+                {
+                    if (ability.abilityType == abilityTaunt)
+                        iconImage = abilityIconImages[abilityIconTaunt];
+                    else if (ability.abilityType == abilityAssassin)
+                        iconImage = abilityIconImages[abilityIconAssassin];
+                    else if (ability.abilityType == abilityPierce)
+                        iconImage = abilityIconImages[abilityIconPierce];
+                    else if (ability.abilityType == abilityRemoveAbility)
+                        iconImage = abilityIconImages[abilityIconRemoveAbility];
+                }
+                
+                if (iconImage != nil && ![currentAbilityIconImages containsObject:iconImage])
+                    [currentAbilityIconImages addObject:iconImage];
+            }
+            
+            NSMutableArray*abilityIcons = [NSMutableArray array];
+            
+            //first step, remove all icons that no longer exists
+            //loop backwards to prevent con cur mod
+            for (int i = self.abilityIcons.count-1; i >= 0 ; i--)
+            {
+                UIImageView*iconImageView = self.abilityIcons[i];
+                
+                //remove if doesn't exist
+                if (![currentAbilityIconImages containsObject:iconImageView.image])
+                {
+                    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut
+                                     animations:^{
+                                         iconImageView.alpha = 0;
+                                     }
+                                     completion:^(BOOL finished){
+                                         [iconImageView removeFromSuperview];
+                                     }];
+                    [self.abilityIcons removeObjectAtIndex:i];
+                }
+            }
+            
+            
+            float iconCenterIndex = currentAbilityIconImages.count/2; //for positioning the cards
+            if (currentAbilityIconImages.count % 2 == 0)
+                iconCenterIndex -= 0.5;
+            
+            int index = 0;
+            
+            //go through every new iconImage
+            for (UIImage *iconImage in currentAbilityIconImages)
+            {
+                UIImageView*icon;
+                //go through existing images and update them
+                for (UIImageView*iconImageView in self.abilityIcons)
+                {
+                    //already exist, move it here
+                    if (iconImageView.image == iconImage)
+                    {
+                        icon = iconImageView;
+                        break;
+                    }
+                }
+                
+                int x = (index-iconCenterIndex) * 15 + ((currentAbilityIconImages.count+1)%2 * 3) + self.bounds.size.width/2;
+                
+                //this is a new icon, create it
+                if (icon==nil)
+                {
+                    icon = [[UIImageView alloc] initWithImage:iconImage];
+                    icon.frame = CGRectMake(0, 0, 20, 20);
+                    icon.center = CGPointMake(x, self.bounds.size.height - 4);
+                    icon.alpha = 0;
+                    
+                    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut
+                                     animations:^{
+                                         icon.alpha = 1;
+                                     }
+                                     completion:nil];
+                    
+                    [self addSubview:icon];
+                }
+                else
+                {
+                    //already exist, simply animate to new position
+                    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut
+                                     animations:^{
+                                         icon.center = CGPointMake(x, self.bounds.size.height - 4);
+                                     }
+                                     completion:nil];
+                }
+                
+                [abilityIcons addObject:icon]; //add to new array
+                index++;
+            }
+            
+            //point to new array
+            self.abilityIcons = abilityIcons;
+        }
+        
         //TODO: need a special view to show both current and max values
+        
     }
     else if ([self.cardModel isKindOfClass:[SpellCardModel class]])
     {
