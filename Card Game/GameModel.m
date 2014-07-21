@@ -13,7 +13,7 @@
 @implementation GameModel
 
 const int MAX_BATTLEFIELD_SIZE = 5;
-const int MAX_HAND_SIZE = 8;
+const int MAX_HAND_SIZE = 7;
 const char PLAYER_SIDE = 0, OPPONENT_SIDE = 1;
 
 @synthesize gameViewController = _gameViewController;
@@ -97,56 +97,37 @@ int cardIDCount = 0;
     
     NSMutableArray* playerHand = self.hands[PLAYER_SIDE];
     NSMutableArray* aiHand = self.hands[OPPONENT_SIDE];
+    
     /*
     SpellCardModel*spell;
     spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     spell.element = elementLightning;
     spell.name = @"Overpowered Card";
-    spell.cost = 2;
-    [spell.abilities addObject: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
+    spell.cost = 1;
+    [spell.abilities addObject: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:5000]]];
     
     [aiHand addObject:spell];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     spell.element = elementLightning;
     spell.name = @"Overpowered Card";
-    spell.cost = 0;
-    [spell.abilities addObject: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
-    
+    spell.cost = 1;
+    [spell.abilities addObject: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:5000]]];
     [aiHand addObject:spell];
     
     
     MonsterCardModel*monster;
+
     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     monster.name = @"Nameless card";
     monster.life = monster.maximumLife = 2000;
-    monster.damage = 7000;
+    monster.damage = 1000;
     monster.cost = 0;
-    monster.cooldown = monster.maximumCooldown = 0;
+    monster.cooldown = monster.maximumCooldown = 1;
+    monster.side = PLAYER_SIDE;
     
-    [monster.abilities addObject: [[Ability alloc] initWithType:abilityFracture castType:castOnHit targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
-    [monster.abilities addObject: [[Ability alloc] initWithType:abilityFracture castType:castOnDamaged targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
-    [monster.abilities addObject: [[Ability alloc] initWithType:abilityFracture castType:castOnMove targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
-
+    
     [playerHand addObject:monster];
-    
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
-    spell.element = elementLightning;
-    spell.name = @"Overpowered Card";
-    spell.cost = 0;
-    [spell.abilities addObject: [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
-    
-    [playerHand addObject:spell];
-    
-    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
-    spell.element = elementLightning;
-    spell.name = @"Overpowered Card";
-    spell.cost = 0;
-    [spell.abilities addObject: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
-    
-    [playerHand addObject:spell];
-    
-    
     
     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     monster.name = @"Nameless card";
@@ -154,8 +135,19 @@ int cardIDCount = 0;
     monster.damage = 1000;
     monster.cost = 0;
     monster.cooldown = monster.maximumCooldown = 1;
+    monster.side = PLAYER_SIDE;
     
-    //[monster.abilities addObject: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAll withDuration:durationForever withValue:[NSNumber numberWithInt:2000]]];
+    
+    [playerHand addObject:monster];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster.name = @"Nameless card";
+    monster.life = monster.maximumLife = 2000;
+    monster.damage = 1000;
+    monster.cost = 0;
+    monster.cooldown = monster.maximumCooldown = 1;
+    monster.side = PLAYER_SIDE;
+
     
     [playerHand addObject:monster];
     

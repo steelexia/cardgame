@@ -69,6 +69,10 @@ enum GameControlState{
 /** Currently selected card. The actual card depends on gameControlState. E.g. during gameControlStateSelectedHandCard this card is a card in the hand */
 CardModel* currentCard;
 
+
+/** Used to reduce amount of calculation needed for viewing hand cards via dragging. This flag is set when a touch enters/leaves the zone so it only needs to be updated once */
+BOOL leftHandViewZone = NO;
+
 +(void) loadResources
 {
     [CardView loadResources];
@@ -154,7 +158,7 @@ CardModel* currentCard;
     
     //----set up the attack line----//
     attackLine = [[UILabel alloc] initWithFrame:CGRectMake(0,0,0, 0)];
-    attackLine.backgroundColor = [UIColor redColor];
+    attackLine.backgroundColor = [UIColor colorWithRed:0.67 green:0.08 blue:0 alpha:0.6];
     
     //----set up the resource labels----//
     StrokedLabel*playerResourceLabel = [[StrokedLabel alloc] initWithFrame: CGRectMake(0, 0, 60, 30)];
@@ -567,7 +571,7 @@ CardModel* currentCard;
         CardModel *card = hand[i];
         
         //positions the hand by laying them out from the center TODO use up available space!
-        CGPoint newCenter = CGPointMake((i-handCenterIndex+0.5) * CARD_WIDTH/2.5 + ((hand.count+1)%2 * CARD_WIDTH/4) + SCREEN_WIDTH/1.7, height + abs(distanceFromCenter) * 3);
+        CGPoint newCenter = CGPointMake((i-handCenterIndex+0.5) * CARD_WIDTH/2.3 + ((hand.count+1)%2 * CARD_WIDTH/4) + SCREEN_WIDTH/1.8, height + abs(distanceFromCenter) * 3);
         
         //if card has no view, create one
         if (card.cardView == nil)
@@ -673,37 +677,61 @@ CardModel* currentCard;
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UITouch *touch = [touches anyObject];
+    CGPoint currentPoint = [touch locationInView:self.view];
     
     //this is handeled in tap
     if ([self.currentAbilities count] > 0)
         return;
-
-    //touched a hands card
-    //TODO for now allow dragging opponent's hand cards for debugging, but disable later
-    for (CardModel *card in self.gameModel.hands[currentSide])
+    
+    //below card height, dragging cycles through cards
+    if (currentPoint.y > SCREEN_HEIGHT - CARD_HEIGHT && currentSide == PLAYER_SIDE)
     {
-        CardView *cardView = card.cardView;
+        /*
+        int closestDistanceFromTouch = 999999;
+        CardView*closestCard = nil;
         
-        if ([touch view] == cardView)
+        NSArray*playerHand = self.gameModel.hands[PLAYER_SIDE];
+        for (int i = 0; i < playerHand.count; i++)
         {
-            cardView.cardViewState = cardViewStateDragging;
+            CardModel* cardModel = playerHand[i];
+            CardView*cardView = cardModel.cardView;
+            
+            int distanceFromTouch = abs(cardView.center.x - currentPoint.x);
+            
+            if (distanceFromTouch < closestDistanceFromTouch)
+            {
+                closestDistanceFromTouch = distanceFromTouch;
+                closestCard = cardView;
+            }
+        }
+        
+        if (closestCard!=nil && closestDistanceFromTouch < CARD_WIDTH*2/3)
+        {
+            closestCard.cardViewState = cardViewStateDragging;
             //cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, DEFAULT_SCALE, DEFAULT_SCALE);
             
             gameControlState = gameControlStateDraggingHandCard;
-            currentCard = cardView.cardModel;
+            currentCard = closestCard.cardModel;
+            
+            closestCard.center = CGPointMake(closestCard.center.x, (SCREEN_HEIGHT-CARD_FULL_HEIGHT*2/3));
             
             //saves the index in the view before bringing it to the front
-            cardView.previousViewIndex = [self.handsView.subviews indexOfObject:cardView];
-            [self.handsView bringSubviewToFront:cardView];
+            closestCard.previousViewIndex = [self.handsView.subviews indexOfObject:closestCard];
+            [self.handsView bringSubviewToFront:closestCard];
             
             //cardView.center = [touch locationInView: self.handsView];
-            CGPoint newCenter = [touch locationInView: self.view];
-            newCenter.y -= cardView.frame.size.height*2/3;
+            //CGPoint newCenter = [touch locationInView: self.view];
+            //newCenter.y -= cardView.frame.size.height*2/3;
             
-            cardView.center = newCenter;
+            //cardView.center = newCenter;
             
             return; //TODO this is assuming nothing will be done after this
-        }
+        }*/
+        
+        gameControlState = gameControlStateDraggingHandCard;
+        [self touchesMoved:touches withEvent:event];
+        
+        return;
     }
     
     //touched a card on battlefield, drag a line for picking a target to attack
@@ -753,29 +781,134 @@ CardModel* currentCard;
     //hand card follows drag
     if (gameControlState == gameControlStateDraggingHandCard)
     {
-        CGPoint newCenter = currentPoint;
-        newCenter.y -= currentCard.cardView.frame.size.height*2/3;
-        
-        currentCard.cardView.center = newCenter;
-        
-        [self scaleDraggingCard:currentCard.cardView atPoint:currentPoint];
-        
-        //highlight field only if can summon the card
-        if ([self.gameModel canSummonCard:currentCard side:currentSide])
+        //below card height, dragging cycles through cards
+        if (currentPoint.y > SCREEN_HEIGHT - CARD_HEIGHT)
         {
-            UIImageView *fieldHighlight = playerFieldHighlight;
-            
-            CGPoint relativePoint = [fieldHighlight convertPoint:currentPoint fromView:self.view];
-            
-            //when dragging on top of the field, highlight it
-            if (CGRectContainsPoint(fieldHighlight.bounds, relativePoint))
+            if (leftHandViewZone)
             {
-                if (fieldHighlight.alpha == 0)
-                    [self fadeIn:fieldHighlight inDuration:0.2];
-                
+                [self updateHandsView:PLAYER_SIDE];
+                leftHandViewZone = NO;
             }
-            else if (fieldHighlight.alpha != 0) //fade out if not
+            
+            int closestDistanceFromTouch = 999999;
+            CardView*closestCard = nil;
+            
+            NSArray*playerHand = self.gameModel.hands[PLAYER_SIDE];
+            for (int i = 0; i < playerHand.count; i++)
+            {
+                CardModel* cardModel = playerHand[i];
+                CardView*cardView = cardModel.cardView;
+                
+                //int offsetedX = currentPoint.x + CARD_WIDTH*0.33;
+                int offsetedX = currentPoint.x;
+                
+                int distanceFromTouch = abs(cardView.center.x - offsetedX);
+                
+                if (distanceFromTouch < closestDistanceFromTouch)
+                {
+                    closestDistanceFromTouch = distanceFromTouch;
+                    closestCard = cardView;
+                }
+                
+                //from 0 to 50 pixels left to right, 55 means within 10 pixels y is the same
+                double cardScaleIdentity = (55 - distanceFromTouch)/50.f;
+                
+                //clamp to 0, now it's [0,1]
+                if (cardScaleIdentity < 0)
+                    cardScaleIdentity = 0;
+                if (cardScaleIdentity > 1)
+                    cardScaleIdentity = 1;
+                
+                //give it quadratic rather than linear feel
+                cardScaleIdentity = pow(cardScaleIdentity,2);
+                
+                //now [CARD_DEFAULT_SCALE, CARD_DRAGGING_SCALE]
+                double cardScale = (cardScaleIdentity*(CARD_DRAGGING_SCALE-CARD_DEFAULT_SCALE)) + CARD_DEFAULT_SCALE;
+                
+                //NSLog(@"%f", cardScale);
+                
+                float handCenterIndex = playerHand.count/2; //for positioning the cards
+                
+                //predetermine the y position of the card depending on which side it's on
+                float distanceFromCenter;
+                
+                if (playerHand.count % 2 == 0)
+                    distanceFromCenter = i - handCenterIndex + 0.5;
+                else
+                    distanceFromCenter = i - handCenterIndex;
+                
+                float maxZoomPosition = (SCREEN_HEIGHT-CARD_FULL_HEIGHT*2/3);
+                
+                //note that these can't go into the animation since it'll cause wiggling (due to resetting the transform)
+                cardView.transform = CGAffineTransformIdentity;
+                cardView.transform = CGAffineTransformScale(cardView.transform, cardScale, cardScale);
+                cardView.transform = CGAffineTransformConcat(cardView.transform, CGAffineTransformMakeRotation(M_PI_4/12 * distanceFromCenter));
+                
+                [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseInOut
+                                 animations:^{
+                                     cardView.center = CGPointMake(cardView.center.x, maxZoomPosition + (1-cardScaleIdentity)*(CARD_FULL_HEIGHT*2/3-CARD_HEIGHT/2));
+                                 }
+                                 completion:nil];
+            }
+            
+            //must be close enough to a new card before changing
+            if (closestCard!=nil)
+            {
+                //reinsert previous currentCard
+                if (currentCard != closestCard.cardModel)
+                {
+                    if (currentCard!=nil)
+                    {
+                        //reinsert previous card back to the old position
+                        [self.handsView insertSubview:currentCard.cardView atIndex:currentCard.cardView.previousViewIndex];
+                    }
+                    
+                    currentCard = closestCard.cardModel;
+                    //saves the index in the view before bringing it to the front
+                    closestCard.previousViewIndex = [self.handsView.subviews indexOfObject:closestCard];
+                    [self.handsView bringSubviewToFront:closestCard];
+                }
+            }
+        }
+        //above card height, will only be moving the card that has been selected
+        else
+        {
+            if (!leftHandViewZone)
+            {
+                for (CardModel*card in self.gameModel.hands[PLAYER_SIDE])
+                {
+                    if (card != currentCard)
+                        card.cardView.cardViewState = cardViewStateNone;
+                }
+                
+                [self updateHandsView:PLAYER_SIDE];
+                leftHandViewZone = YES;
+            }
+            
+            CGPoint newCenter = currentPoint;
+            newCenter.y -= currentCard.cardView.frame.size.height/2;
+            
+            currentCard.cardView.center = newCenter;
+            
+            [self scaleDraggingCard:currentCard.cardView atPoint:currentPoint];
+            
+            //highlight field only if can summon the card
+            if ([self.gameModel canSummonCard:currentCard side:currentSide])
+            {
+                UIImageView *fieldHighlight = playerFieldHighlight;
+                
+                CGPoint relativePoint = [fieldHighlight convertPoint:currentPoint fromView:self.view];
+                
+                //when dragging on top of the field, highlight it
+                if (CGRectContainsPoint(fieldHighlight.bounds, relativePoint))
+                {
+                    if (fieldHighlight.alpha == 0)
+                        [self fadeIn:fieldHighlight inDuration:0.2];
+                    
+                }
+                else if (fieldHighlight.alpha != 0) //fade out if not
                     [self fadeOut:fieldHighlight inDuration:0.2];
+            }
         }
     }
     //field card drags a line for targetting
@@ -787,7 +920,7 @@ CardModel* currentCard;
         //TODO: temporary attack line, just a label with red background (red rect)
         attackLine.center = CGPointAdd(p1, CGPointDivideScalar((CGPointSubtract(p2, p1)), 2));
         int length = (int)CGPointDistance(p1, p2);
-        attackLine.bounds = CGRectMake(0,-10,(int)(length*1),10);
+        attackLine.bounds = CGRectMake(0,-10,(int)(length*1),4);
         [attackLine setTransform: CGAffineTransformMakeRotation(CGPointAngle(p1,p2))];
     }
 }
@@ -837,6 +970,9 @@ CardModel* currentCard;
             fieldRect = opponentFieldHighlight;
         
         CGPoint relativePoint = [fieldRect convertPoint:currentPoint fromView:self.view];
+        
+        for (CardModel*card in self.gameModel.hands[PLAYER_SIDE])
+            card.cardView.cardViewState = cardViewStateNone;
         
         //is possible to summon card as touchesStart checks the possibility
         //must be able to summon this card (e.g. enough space, enough resource)
