@@ -77,6 +77,9 @@
 
 -(void)setPopupDamage:(int)damage;
 
+/** Make any necessary animation when casting an ability (e.g. castOnHit flashing when hitting) */
+-(void)castedAbility:(Ability*)ability;
+
 /** Loads images for drawing cards ahead of time */
 +(void) loadResources;
 

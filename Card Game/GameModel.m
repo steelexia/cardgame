@@ -98,8 +98,23 @@ int cardIDCount = 0;
     NSMutableArray* playerHand = self.hands[PLAYER_SIDE];
     NSMutableArray* aiHand = self.hands[OPPONENT_SIDE];
     
-    /*
     SpellCardModel*spell;
+    /*
+    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    spell.element = elementLightning;
+    spell.name = @"Overpowered Card";
+    spell.cost = 0;
+    [spell.abilities addObject: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:5000]]];
+    [playerHand addObject:spell];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    spell.element = elementLightning;
+    spell.name = @"Overpowered Card";
+    spell.cost = 0;
+    [spell.abilities addObject: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:5000]]];
+    [playerHand addObject:spell];
+    
+    
     spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     spell.element = elementLightning;
     spell.name = @"Overpowered Card";
@@ -582,7 +597,7 @@ int cardIDCount = 0;
         targetType == targetOneFriendlyMinion)
     {
         for (MonsterCardModel*monster in friendlyField)
-            if (monster != caster)
+            if ([self canAddAbility:monster ability:ability])
                 return YES;
         
         return NO;
@@ -591,18 +606,22 @@ int cardIDCount = 0;
             targetType == targetAllEnemyMinions ||
             targetType == targetOneEnemyMinion)
     {
-        if ([enemyField count] == 0)
-            return NO;
+        for (MonsterCardModel*monster in enemyField)
+            if ([self canAddAbility:monster ability:ability])
+                return YES;
+        
+        return NO;
     }
     else if (targetType == targetAllMinion ||
              targetType == targetOneRandomMinion ||
              targetType == targetOneAnyMinion)
     {
-        if ([enemyField count] > 0)
-            return YES;
-        
         for (MonsterCardModel*monster in friendlyField)
-            if (monster != caster)
+            if ([self canAddAbility:monster ability:ability])
+                return YES;
+        
+        for (MonsterCardModel*monster in enemyField)
+            if ([self canAddAbility:monster ability:ability])
                 return YES;
         
         return NO;
@@ -622,7 +641,7 @@ int cardIDCount = 0;
         
         [self addCardToBattlefield:monsterCard side:side];
         //update it first for better animations
-        [self.gameViewController updateBattlefieldView: side];
+        //[self.gameViewController updateBattlefieldView: side];
         
         [self.gameViewController addAnimationCounter]; //the delayed cast counts as an animation
         
@@ -633,7 +652,10 @@ int cardIDCount = 0;
             {
                 Ability*ability = monsterCard.abilities[i];
                 if (ability.castType == castOnSummon)
+                {
+                    [card.cardView castedAbility:ability];
                     [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:nil fromSide:side];
+                }
             }
             [self.gameViewController decAnimationCounter];
             [self checkForGameOver];
@@ -646,7 +668,10 @@ int cardIDCount = 0;
         {
             Ability*ability = card.abilities[i];
             if (ability.castType == castOnSummon)
+            {
+                [card.cardView castedAbility:ability];
                 [self castAbility:ability byMonsterCard:nil toMonsterCard:nil fromSide:side];
+            }
         }
         [self checkForGameOver];
     }
@@ -687,7 +712,10 @@ int cardIDCount = 0;
         {
             Ability*ability = monsterCard.abilities[i];
             if (ability.castType == castOnMove)
+            {
+                [monsterCard.cardView castedAbility:ability];
                 [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:nil fromSide:side];
+            }
         }
     }
     
@@ -701,7 +729,10 @@ int cardIDCount = 0;
     {
         Ability*ability = monsterCard.abilities[i];
         if (ability.castType == castOnEndOfTurn)
+        {
+            [monsterCard.cardView castedAbility:ability];
             [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:nil fromSide:side];
+        }
     }
     
     //cast type must also be always since that means it's already casted
@@ -766,7 +797,10 @@ int cardIDCount = 0;
             {
                 Ability*ability = target.abilities[i];
                 if (ability.castType == castOnDamaged)
+                {
+                    [target.cardView castedAbility:ability];
                     [self castAbility:ability byMonsterCard:target toMonsterCard:attackerMonsterCard fromSide:oppositeSide];
+                }
             }
         }
         else
@@ -777,7 +811,10 @@ int cardIDCount = 0;
         {
             Ability*ability = attackerMonsterCard.abilities[i];
             if (ability.castType == castOnHit)
+            {
+                [attackerMonsterCard.cardView castedAbility:ability];
                 [self castAbility:ability byMonsterCard:attackerMonsterCard toMonsterCard:target fromSide:side];
+            }
         }
         
         //NOTE: castOnHit cannot be casted when defending and castOnDamaged cannot be casted when attack, otherwise defensive abilities can be used by attacking etc
@@ -931,6 +968,10 @@ int cardIDCount = 0;
     {
         MonsterCardModel *monsterCard = (MonsterCardModel*)card;
         
+        if (!monsterCard.deployed)
+            return;
+        monsterCard.deployed = NO;
+        
         MonsterCardModel* attackerMonster = nil;
         if ([attacker isKindOfClass:[MonsterCardModel class]])
             attackerMonster = (MonsterCardModel*)attacker;
@@ -941,6 +982,7 @@ int cardIDCount = 0;
             Ability*ability = monsterCard.abilities[i];
             if (ability.castType == castOnDeath)
             {
+                [monsterCard.cardView castedAbility:ability];
                 [self.gameViewController addAnimationCounter]; //counts as animation
                 //casting after a slight delay makes chain reactions less chaotic
                 [self.gameViewController performBlock:^{
@@ -1003,20 +1045,23 @@ int cardIDCount = 0;
         {
             if (side == PLAYER_SIDE)
             {
-                //NOTE: change here for any future abilities that makes a target immune
+                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
+                [allTargets removeObject:attacker]; //remove itself
+                [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
+                [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
+                [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
                 
-                for (MonsterCardModel *monster in self.battlefield[PLAYER_SIDE])
-                    if (monster != attacker) //cannot target self
-                        monster.cardView.cardHighlightType = cardHighlightTarget;
                 
-                PlayerModel *player = self.players[PLAYER_SIDE];
-                player.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
-                
-                for (MonsterCardModel *monster in self.battlefield[OPPONENT_SIDE])
+                for (MonsterCardModel *monster in allTargets)
+                {
+                    //cannot have dup ability or add ability to muted minions
+                    if (![self canAddAbility:monster ability:ability])
+                        continue;
+                    else if (monster == attacker) //cannot target self
+                        continue;
+                    
                     monster.cardView.cardHighlightType = cardHighlightTarget;
-                
-                PlayerModel *opponent = self.players[OPPONENT_SIDE];
-                opponent.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
+                }
                 
                 [self.gameViewController pickAbilityTarget:ability castedBy:attacker];
                 
@@ -1046,14 +1091,20 @@ int cardIDCount = 0;
         {
             if (side == PLAYER_SIDE)
             {
-                //NOTE: change here for any future abilities that makes a target immune
+                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
+                [allTargets removeObject:attacker]; //remove itself
+                [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
                 
-                for (MonsterCardModel *monster in self.battlefield[PLAYER_SIDE])
-                    if (monster != attacker) //cannot target self
-                        monster.cardView.cardHighlightType = cardHighlightTarget;
-                
-                for (MonsterCardModel *monster in self.battlefield[OPPONENT_SIDE])
+                for (MonsterCardModel *monster in allTargets)
+                {
+                    //cannot have dup ability or add ability to muted minions
+                    if (![self canAddAbility:monster ability:ability])
+                        continue;
+                    else if (monster == attacker) //cannot target self
+                        continue;
+                    
                     monster.cardView.cardHighlightType = cardHighlightTarget;
+                }
                 
                 [self.gameViewController pickAbilityTarget:ability castedBy:attacker];
                 
@@ -1083,13 +1134,20 @@ int cardIDCount = 0;
         {
             if (side == PLAYER_SIDE)
             {
-                for (MonsterCardModel *monster in self.battlefield[PLAYER_SIDE])
-                    if (monster != attacker) //cannot target self
-                        monster.cardView.cardHighlightType = cardHighlightTarget;
+                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
+                [allTargets removeObject:attacker]; //remove itself
+                [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
                 
-                PlayerModel *player = self.players[PLAYER_SIDE];
-                player.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
-                
+                for (MonsterCardModel *monster in allTargets)
+                {
+                    //cannot have dup ability or add ability to muted minions
+                    if (![self canAddAbility:monster ability:ability])
+                        continue;
+                    else if (monster == attacker) //cannot target self
+                        continue;
+                    
+                    monster.cardView.cardHighlightType = cardHighlightTarget;
+                }
                 [self.gameViewController pickAbilityTarget:ability castedBy:attacker];
                 
                 //does not actually cast it immediately since it requires the player to pick a target
@@ -1118,9 +1176,19 @@ int cardIDCount = 0;
         {
             if (side == PLAYER_SIDE)
             {
-                for (MonsterCardModel *monster in self.battlefield[PLAYER_SIDE])
-                    if (monster != attacker) //cannot target self
-                        monster.cardView.cardHighlightType = cardHighlightTarget;
+                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
+                [allTargets removeObject:attacker]; //remove itself
+                
+                for (MonsterCardModel *monster in allTargets)
+                {
+                    //cannot have dup ability or add ability to muted minions
+                    if (![self canAddAbility:monster ability:ability])
+                        continue;
+                    else if (monster == attacker) //cannot target self
+                        continue;
+                    
+                    monster.cardView.cardHighlightType = cardHighlightTarget;
+                }
                 
                 [self.gameViewController pickAbilityTarget:ability castedBy:attacker];
                 
@@ -1150,11 +1218,19 @@ int cardIDCount = 0;
         {
             if (side == PLAYER_SIDE)
             {
-                for (MonsterCardModel *monster in self.battlefield[OPPONENT_SIDE])
-                    monster.cardView.cardHighlightType = cardHighlightTarget;
+                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
+                [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
                 
-                PlayerModel *opponent = self.players[OPPONENT_SIDE];
-                opponent.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
+                for (MonsterCardModel *monster in allTargets)
+                {
+                    //cannot have dup ability or add ability to muted minions
+                    if (![self canAddAbility:monster ability:ability])
+                        continue;
+                    else if (monster == attacker) //cannot target self
+                        continue;
+                    
+                    monster.cardView.cardHighlightType = cardHighlightTarget;
+                }
                 
                 [self.gameViewController pickAbilityTarget:ability castedBy:attacker];
                 
@@ -1184,9 +1260,18 @@ int cardIDCount = 0;
         {
             if (side == PLAYER_SIDE)
             {
-                for (MonsterCardModel *monster in self.battlefield[OPPONENT_SIDE])
-                    monster.cardView.cardHighlightType = cardHighlightTarget;
+                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
                 
+                for (MonsterCardModel *monster in allTargets)
+                {
+                    //cannot have dup ability or add ability to muted minions
+                    if (![self canAddAbility:monster ability:ability])
+                        continue;
+                    else if (monster == attacker) //cannot target self
+                        continue;
+                    
+                    monster.cardView.cardHighlightType = cardHighlightTarget;
+                }
                 [self.gameViewController pickAbilityTarget:ability castedBy:attacker];
                 
                 //does not actually cast it immediately since it requires the player to pick a target
@@ -1305,11 +1390,20 @@ int cardIDCount = 0;
         {
             if (side == PLAYER_SIDE)
             {
-                PlayerModel *player = self.players[PLAYER_SIDE];
-                player.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
+                NSMutableArray *allTargets = [NSMutableArray array];
+                [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
+                [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
                 
-                PlayerModel *opponent = self.players[OPPONENT_SIDE];
-                opponent.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
+                for (MonsterCardModel *monster in allTargets)
+                {
+                    //cannot have dup ability or add ability to muted minions
+                    if (![self canAddAbility:monster ability:ability])
+                        continue;
+                    else if (monster == attacker) //cannot target self
+                        continue;
+                    
+                    monster.cardView.cardHighlightType = cardHighlightTarget;
+                }
                 
                 [self.gameViewController pickAbilityTarget:ability castedBy:attacker];
                 //does not actually cast it immediately since it requires the player to pick a target
@@ -1635,7 +1729,8 @@ int cardIDCount = 0;
     {
         if (monsterAbility.abilityType == ability.abilityType)
         {
-            if (ability.abilityType == abilityTaunt || ability.abilityType == abilityRemoveAbility)
+            //TODO add abilities that cannot have duplicates here
+            if (ability.abilityType == abilityTaunt || ability.abilityType == abilityPierce || ability.abilityType == abilityAssassin || ability.abilityType == abilityRemoveAbility)
             {
                 //all settings are identical
                 if (monsterAbility.targetType == ability.targetType && monsterAbility.durationType == ability.durationType && monsterAbility.castType == ability.castType)
@@ -1649,14 +1744,18 @@ int cardIDCount = 0;
 /** Checks if it's possible to add this ability to the target. */
 -(BOOL)canAddAbility:(MonsterCardModel*)target ability:(Ability*)ability
 {
-    //cannot add duplicate ability
-    if ([self containsDuplicateAbility:target ability:ability])
-        return NO;
-    
-    //cannot add if contains the abilityRemoveAbility ability.
-    for (Ability *ability in target.abilities)
-        if (ability.abilityType == abilityRemoveAbility && ability.targetType == targetSelf)
+    //instant ability don't worry about can add or not TODO maybe new ability that prevents it from being targetted
+    if (ability.durationType != durationInstant)
+    {
+        //cannot add if contains the abilityRemoveAbility ability.
+        for (Ability *ability in target.abilities)
+            if (ability.abilityType == abilityRemoveAbility && ability.targetType == targetSelf)
+                return NO;
+        
+        //cannot add duplicate ability
+        if ([self containsDuplicateAbility:target ability:ability])
             return NO;
+    }
     
     return YES;
 }

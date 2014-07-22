@@ -819,6 +819,9 @@ BOOL leftHandViewZone = NO;
                 if (cardScaleIdentity > 1)
                     cardScaleIdentity = 1;
                 
+                if (cardScaleIdentity == 0)
+                    continue;
+                
                 //give it quadratic rather than linear feel
                 cardScaleIdentity = pow(cardScaleIdentity,2);
                 
@@ -852,7 +855,7 @@ BOOL leftHandViewZone = NO;
             }
             
             //must be close enough to a new card before changing
-            if (closestCard!=nil)
+            if (closestCard!=nil && closestDistanceFromTouch < CARD_WIDTH/2)
             {
                 //reinsert previous currentCard
                 if (currentCard != closestCard.cardModel)
@@ -1183,6 +1186,30 @@ BOOL leftHandViewZone = NO;
 
 -(void)summonCard: (CardModel*)card fromSide: (int)side
 {
+    //opponent summoning has extra animation: maximizes to the left to show the card
+    if (side == OPPONENT_SIDE)
+    {
+        CardView*originalView = card.cardView;
+        CardView *cardView = [[CardView alloc] initWithModel:card cardImage:[[UIImageView alloc] initWithImage: card.cardView.cardImage.image] viewMode:cardViewModeZoomedIngame];
+        card.cardView = originalView;
+        
+        cardView.center = card.cardView.center; //TODO
+        
+        [self.uiView addSubview:cardView];
+        
+        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             cardView.center = CGPointMake(CARD_FULL_WIDTH/2 + 5,self.view.center.y);
+                             cardView.transform = CGAffineTransformMakeScale(CARD_DRAGGING_SCALE, CARD_DRAGGING_SCALE);
+                         }
+                         completion:^(BOOL finished){
+                             [self fadeOutAndRemove:cardView inDuration:0.2 withDelay:1.5];
+                         }];
+        
+        
+        //cardView.center = self.view.center;
+    }
+    
     [self.gameModel summonCard: card side: side];
     
     if ([card isKindOfClass: [MonsterCardModel class]])

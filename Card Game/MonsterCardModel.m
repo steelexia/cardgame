@@ -130,7 +130,7 @@ const int HERO_MAX_LIFE = 25000;
     if (life <= 0)
     {
         self.dead = YES;
-        self.deployed = NO; //undeployed
+        //self.deployed = NO; //NOTE it is "undeployed" in game model
         if (_life != 0)
             self.cardView.lifeViewNeedsUpdate = YES;
         _life = 0;

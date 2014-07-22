@@ -1604,6 +1604,7 @@ int enemyTotalStrength, friendlyTotalStrength;
 -(int)getCastOnSummonValue:(CardModel*)card fromSide:(int)side
 {
     int points = USELESS_MOVE;
+    self.currentTarget = nil; //reset current target
     
     NSMutableArray*cardAbilitiesCopy = [NSMutableArray array];
     

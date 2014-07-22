@@ -760,6 +760,55 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
     self.cardViewState = self.cardViewState; //this causes the setCardViewState to be called again
 }
 
+-(void)castedAbility:(Ability*)ability
+{
+    //TODO could add a cast on summon, would be nice
+    if (ability.castType == castOnDeath)
+    {
+        for (UIImageView*abilityIcon in self.abilityIcons)
+        {
+            if (abilityIcon.image == abilityIconImages[abilityIconCastOnDeath])
+            {
+                [CardView animateIconCast:abilityIcon];
+                break;
+            }
+        }
+    }
+    else if (ability.castType == castOnHit)
+    {
+        for (UIImageView*abilityIcon in self.abilityIcons)
+        {
+            if (abilityIcon.image == abilityIconImages[abilityIconCastOnHit])
+            {
+                [CardView animateIconCast:abilityIcon];
+                break;
+            }
+        }
+    }
+    else if (ability.castType == castOnDamaged)
+    {
+        for (UIImageView*abilityIcon in self.abilityIcons)
+        {
+            if (abilityIcon.image == abilityIconImages[abilityIconCastOnDamaged])
+            {
+                [CardView animateIconCast:abilityIcon];
+                break;
+            }
+        }
+    }
+    else if (ability.castType == castOnMove || ability.castType == castOnEndOfTurn)
+    {
+        for (UIImageView*abilityIcon in self.abilityIcons)
+        {
+            if (abilityIcon.image == abilityIconImages[abilityIconCastOnMove])
+            {
+                [CardView animateIconCast:abilityIcon];
+                break;
+            }
+        }
+    }
+}
+
 -(void)animateCardHighlightBrighten: (UIImageView*)highlight
 {
     [UIView animateWithDuration:3
@@ -796,6 +845,21 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
                          [UIView animateWithDuration:0.25 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut
                                           animations:^{
                                               label.transform = CGAffineTransformMakeScale(1, 1);
+                                          }
+                                          completion:nil];
+                     }];
+}
+
++(void)animateIconCast: (UIView*)view
+{
+    [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         view.transform = CGAffineTransformMakeScale(4, 4);
+                     }
+                     completion:^(BOOL finished){
+                         [UIView animateWithDuration:0.25 delay:0.5 options:UIViewAnimationOptionCurveEaseInOut
+                                          animations:^{
+                                              view.transform = CGAffineTransformMakeScale(1, 1);
                                           }
                                           completion:nil];
                      }];
