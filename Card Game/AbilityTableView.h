@@ -38,3 +38,5 @@ enum AbilityTableViewMode
     abilityTableViewExisting,
     abilityTableViewNew,
 };
+
+extern const int ABILITY_TABLE_VIEW_ROW_HEIGHT;

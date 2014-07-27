@@ -172,9 +172,9 @@
 
 -(int)getCardBaseCost:(CardModel*)card
 {
-    int cost = card.cost * 1000;
+    int cost = card.cost * -1000;
     if (cost == 0)
-        cost = 250;
+        cost = -250;
     return cost;
 }
 

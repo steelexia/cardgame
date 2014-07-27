@@ -646,6 +646,7 @@ DeckModel * allCards;
 {
     if ([self isCurrentDeckValid])
     {
+        NSLog(@"is valid");
         if (currentDeck == nil)
         {
             //add this new deck to userModel
@@ -673,6 +674,7 @@ DeckModel * allCards;
     }
     else
     {
+        NSLog(@"not valid");
         [self darkenScreen];
         
         [autoAddCardsLabel setEnabled:NO];
@@ -745,19 +747,62 @@ DeckModel * allCards;
 
 -(void)autoAddCardsButtonPressed
 {
-    [self notAutoAddCardsButtonPressed]; //TODO not implemented yet
+    //TODO temporary method, just as random cards
+    //TODO later needs to add cards that is actually valid
+    NSMutableArray*ownedCards = [NSMutableArray array];
+    for (CardView*cardView in self.cardsView.currentCardViews)
+        [ownedCards addObject:cardView];
     
-    /* 
-     //TODO future:
-     [autoAddCardsLabel removeFromSuperview];
-     [autoAddCardsButton removeFromSuperview];
-     [notAutoAddCardsButton removeFromSuperview];
-     
-     [self.view addSubview: autoAddCardsFailedLabel];
-     [self.view addSubview: autoAddCardsFailedButton];
-     */
+    while (self.deckView.currentCells.count < MAX_CARDS_IN_DECK)
+    {
+        int randomIndex = [[NSNumber numberWithUnsignedInteger:arc4random_uniform(ownedCards.count - 1)] intValue];
+        
+        CardView*cardView = ownedCards[randomIndex];
+        
+        int insertionIndex = -1;
+        
+        //insert at the first position where card < card at index
+        for (int i = 0; i < [self.deckView.currentCells count]; i++)
+        {
+            CardView *cellCard = self.deckView.currentCells[i];
+            if ([cardView.cardModel compare:cellCard.cardModel] == NSOrderedAscending)
+            {
+                insertionIndex = i;
+                break;
+            }
+        }
+        
+        //not found index, insert at end
+        if (insertionIndex == -1)
+            insertionIndex = self.deckView.currentCells.count;
+        
+        
+        [self.deckView.currentCells insertObject:cardView atIndex:insertionIndex];
+        [ownedCards removeObjectAtIndex:randomIndex];
+    }
     
+    autoAddCardsLabel.alpha = 1;
+    autoAddCardsButton.alpha = 1;
+    notAutoAddCardsButton.alpha = 1;
     
+    [autoAddCardsLabel setEnabled:NO];
+    [autoAddCardsButton setEnabled:NO];
+    [notAutoAddCardsButton setEnabled:NO];
+    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         autoAddCardsLabel.alpha = 0;
+                         autoAddCardsButton.alpha = 0;
+                         notAutoAddCardsButton.alpha = 0;
+                     }
+                     completion:^(BOOL completed){
+                         [autoAddCardsLabel removeFromSuperview];
+                         [autoAddCardsButton removeFromSuperview];
+                         [notAutoAddCardsButton removeFromSuperview];
+                     }];
+    [self undarkenScreen];
+    
+    [self saveDeckButtonPressed];
 }
 
 -(void)notAutoAddCardsButtonPressed
@@ -1063,5 +1108,6 @@ DeckModel * allCards;
     [self performSelector:@selector(performBlock:) withObject:block_ afterDelay:delay];
 }
 
+- (BOOL)prefersStatusBarHidden {return YES;}
 
 @end

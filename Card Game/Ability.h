@@ -55,7 +55,12 @@
 /** Generate a description in String of the ability */
 +(NSMutableAttributedString*) getDescription: (Ability*) ability fromCard:(CardModel*) cardModel;
 
+/** Get all of the description needed */
++(NSString*) getDescriptionForBaseAbilities: (CardModel*) card;
+
 +(NSMutableArray*)getAbilityKeywordDescriptions: (CardModel*)card;
+
++(BOOL)abilityIsSelectableTargetType:(Ability*)ability;
 
 @end
 
@@ -65,6 +70,7 @@ enum AbilityType
     //WARNING: PUT ALL ADDITIONS AT THE BOTTOM OF THE LIST, DO NOT INSERT IN MIDDLE
     /** Acts as nil pointer. Should never use this */
     abilityNil,
+    
     /** Gives a minion more damage */
     abilityAddDamage,
     /** Makes a minion lose damage */
@@ -98,13 +104,14 @@ enum AbilityType
     abilityRemoveAbility,
     /** Does not take damage from defender when attacking. It also won't be targetted by defender's onDamaged abilities */
     abilityAssassin,
-    /* Adds x point of resources to the target player. targetType should be same as abilityDrawCard: targetHeroFriendly, targetHeroEnemy, targetAll. */
+    /** Adds x point of resources to the target player. targetType should be same as abilityDrawCard: targetHeroFriendly, targetHeroEnemy, targetAll. */
     abilityAddResource,
-    /* Returns a minion to the owner's hand. DO NOT combine this with targetSelf and castOnSummon. (Doesn't make sense anyways) */
+    /** Returns a minion to the owner's hand. DO NOT combine this with targetSelf and castOnSummon. (Doesn't make sense anyways) */
     abilityReturnToHand,
     /** Extra damage dealt to a destroyed enemy is dealt to the enemy hero. NOTE: spell cards cannot pierce because its damage is anonymously dealt (also since it's an ability not a direct damage) */
     abilityPierce,
-    abilityFracture, //split into ~1-3 monsters with 60%, 25%, and 10% original stats, but no abilities
+    /** split into ~1-3 monsters with 60%, 25%, and 10% original stats, but no abilities */
+    abilityFracture,
     
     //------------------NOT YET IMPLEMENTED-----------------//
     /* kill a card if its health is below x. Good for low number such as below 1000 to kill off monsters that would have died if damage/life were 1000 times smaller. TODO */
@@ -146,7 +153,8 @@ enum AbilityType
     abilityCopyStats,
     /** Randomly gains a stat modifying ability */
     abilityInstability,
-    
+    /** Cannot be targetted by monster attacks */
+    abilityAcrobatics,
 };
 
 /** TargetType determines where the ability is applied to. targetSelf is automatically used by the card with the effect, while most others are casted explicitly.

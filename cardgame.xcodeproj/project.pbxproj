@@ -65,6 +65,7 @@
 		90AB1511197AEC310008FCDD /* card_ability_icon_assassin.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB150F197AEC310008FCDD /* card_ability_icon_assassin.png */; };
 		90AB1512197AEC310008FCDD /* card_ability_icon_remove_ability.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB1510197AEC310008FCDD /* card_ability_icon_remove_ability.png */; };
 		90AB1514197AF4590008FCDD /* card_ability_icon_cast_on_death.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB1513197AF4590008FCDD /* card_ability_icon_cast_on_death.png */; };
+		90AB1516198355F00008FCDD /* points_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB1515198355F00008FCDD /* points_icon.png */; };
 		90DA43321959CDF900E44AED /* CardsCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DA43311959CDF900E44AED /* CardsCollectionView.m */; };
 		90DA43351959D75700E44AED /* CustomCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DA43341959D75700E44AED /* CustomCollectionView.m */; };
 		90DA433C195A451000E44AED /* arrow_left_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 90DA433A195A451000E44AED /* arrow_left_button.png */; };
@@ -274,6 +275,7 @@
 		90AB150F197AEC310008FCDD /* card_ability_icon_assassin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_ability_icon_assassin.png; path = "Card Game/card_ability_icon_assassin.png"; sourceTree = "<group>"; };
 		90AB1510197AEC310008FCDD /* card_ability_icon_remove_ability.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_ability_icon_remove_ability.png; path = "Card Game/card_ability_icon_remove_ability.png"; sourceTree = "<group>"; };
 		90AB1513197AF4590008FCDD /* card_ability_icon_cast_on_death.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_ability_icon_cast_on_death.png; path = "Card Game/card_ability_icon_cast_on_death.png"; sourceTree = "<group>"; };
+		90AB1515198355F00008FCDD /* points_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = points_icon.png; path = "Card Game/points_icon.png"; sourceTree = "<group>"; };
 		90DA43301959CDF900E44AED /* CardsCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardsCollectionView.h; sourceTree = "<group>"; };
 		90DA43311959CDF900E44AED /* CardsCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardsCollectionView.m; sourceTree = "<group>"; };
 		90DA43331959D75700E44AED /* CustomCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCollectionView.h; sourceTree = "<group>"; };
@@ -525,6 +527,7 @@
 		907D9BD919226B4C0037C0CF /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				90AB1515198355F00008FCDD /* points_icon.png */,
 				90AB15011979FB5E0008FCDD /* resource_icon.png */,
 				90AB14F6196CB7720008FCDD /* no_target_button.png */,
 				90DA43AC1969D21500E44AED /* battle_button_gray.png */,
@@ -897,6 +900,7 @@
 				90AB1509197AD6DA0008FCDD /* card_ability_icon_cast_on_hit.png in Resources */,
 				90DA43BE1969D21500E44AED /* monster_button_gray.png in Resources */,
 				90AB150A197AD6DA0008FCDD /* card_ability_icon_cast_on_move.png in Resources */,
+				90AB1516198355F00008FCDD /* points_icon.png in Resources */,
 				90DA43C01969D21500E44AED /* spell_button_gray.png in Resources */,
 				90DA43BA1969D21500E44AED /* battle_button_gray.png in Resources */,
 				907D9BF3192D8D680037C0CF /* hero_default.png in Resources */,

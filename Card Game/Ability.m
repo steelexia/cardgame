@@ -20,7 +20,6 @@
 @synthesize isBaseAbility = _isBaseAbility;
 @synthesize description = _description;
 
-
 -(instancetype) initWithType: (enum AbilityType) abilityType castType: (enum CastType) castType targetType: (enum TargetType) targetType withDuration: (enum DurationType) durationType withValue: (NSNumber*) value
 {
     self = [super init];
@@ -146,10 +145,116 @@
     NSArray*targetOneConflicts = @[[NSNumber numberWithInt:targetOneAny],[NSNumber numberWithInt:targetOneFriendly],[NSNumber numberWithInt:targetOneFriendlyMinion], [NSNumber numberWithInt:targetOneEnemy], [NSNumber numberWithInt:targetOneEnemyMinion], [NSNumber numberWithInt:targetHeroAny], [NSNumber numberWithInt:targetOneAnyMinion]];
     
     //cannot have abilities with different castTypes
-    if ([targetOneConflicts containsObject:[NSNumber numberWithInt:self.castType]] && [targetOneConflicts containsObject:[NSNumber numberWithInt:ability.castType]] && (self.castType != ability.castType))
+    if ([targetOneConflicts containsObject:[NSNumber numberWithInt:self.targetType]] && [targetOneConflicts containsObject:[NSNumber numberWithInt:ability.targetType]] && (self.targetType != ability.targetType))
         return NO;
     
     return YES;
+}
+
++(NSString*) getDescriptionForBaseAbilities: (CardModel*) card
+{
+    NSArray *dupAbilities = [NSMutableArray arrayWithArray:card.abilities];
+    NSMutableArray *sortedAbilities = [NSMutableArray arrayWithArray: [dupAbilities sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+        Ability*abilityA = (Ability*)a;
+        Ability*abilityB = (Ability*)b;
+        return [[Ability getCastTypeOrder:abilityA.castType] compare:[Ability getCastTypeOrder:abilityB.castType]];
+    }]];
+   
+    NSString*description = @"";
+    
+    while ([sortedAbilities count] > 0)
+    {
+        Ability*ability = sortedAbilities[0];
+        [sortedAbilities removeObjectAtIndex:0];
+        
+        //non-base abilities are not shown since they are on separate menu
+        if (!ability.isBaseAbility)
+            continue;
+        
+        enum AbilityType abilityType = ability.abilityType;
+        enum CastType castType = ability.castType;
+        enum TargetType targetType = ability.targetType;
+        enum DurationType durationType = ability.durationType;
+        
+        NSString*castTypeString = [Ability getCastTypeDescription:castType fromCard:card];
+        
+        if ([description rangeOfString:castTypeString].location == NSNotFound)
+        {
+            //add a period if this is not the first cast type
+            if (description.length > 0)
+                description = [NSString stringWithFormat:@"%@.\n%@", description, castTypeString];
+            else
+                description = [NSString stringWithFormat:@"%@%@", description, castTypeString];
+        }
+        else
+        {
+            description = [NSString stringWithFormat:@"%@. ", description];
+        }
+        
+        description = [NSString stringWithFormat:@"%@%@", description, [Ability getAbilityTypeDescriptionFromAbility:ability withValueDescription: [NSString stringWithFormat:@"%@", ability.value]]];
+        
+        for (int i = [sortedAbilities count] - 1; i >= 0; i--)
+        {
+            Ability*otherAbility = sortedAbilities[i];
+
+            //all cast types are the same
+            if (otherAbility.castType == castType && otherAbility.durationType == durationType && otherAbility.targetType == targetType)
+            {
+                description = [NSString stringWithFormat:@"%@, %@", description, [Ability getAbilityTypeDescriptionFromAbility:otherAbility withValueDescription: [NSString stringWithFormat:@"%@", otherAbility.value]]];
+                [sortedAbilities removeObjectAtIndex:i];
+            }
+        }
+        
+        if (targetType != targetSelf)
+        {
+            //TODO: ADD SPECIAL CASES
+            if (abilityType == abilityAddResource || abilityType == abilityDrawCard)
+            {
+                //do nothing, these don't use the generic target strings
+            }
+            else
+            {
+                description = [NSString stringWithFormat:@"%@ %@ %@", description, [Ability getAbilityPreposition:ability], [Ability getTargetTypeDescription:targetType]];
+            }
+        }
+        
+        description = [NSString stringWithFormat:@"%@%@", description, [Ability  getDurationTypeDescription:durationType]];
+    }
+
+    //add a period at the end
+    if (description.length > 0)
+        description = [NSString stringWithFormat:@"%@.", description];
+    
+    return description;
+}
+
++(NSString*)getAbilityPreposition:(Ability*)ability
+{
+    enum AbilityType abilityType = ability.abilityType;
+    enum TargetType targetType = ability.targetType;
+    
+    if (abilityType == abilityLoseLife)
+    {
+        return @"to";
+    }
+    else if (abilityType == abilityKill || abilityType == abilityAddResource || abilityType == abilityDrawCard || abilityType == abilityReturnToHand || abilityType == abilityRemoveAbility)
+    {
+        return @"";
+    }
+    else if (abilityType == abilitySetCooldown)
+    {
+        if (targetType == targetSelf)
+            return @"";
+        else
+            return @"for";
+    }
+    else
+    {
+        if (targetType == targetSelf)
+            return @"";
+        else
+            return @"to";
+    }
 }
 
 +(NSMutableAttributedString*) getDescription: (Ability*) ability fromCard: (CardModel*) cardModel
@@ -162,9 +267,9 @@
     NSString *targetDescription = [Ability getTargetTypeDescription:ability.targetType];
     NSString *castDescription = [Ability getCastTypeDescription:ability.castType fromCard:cardModel];
     NSString *durationDescription = [Ability getDurationTypeDescription:ability.durationType];
-    NSString *valueDescription;
+    NSString *valueDescription = @"NO VALUE";
     
-    NSString *description;
+    NSString *description = @"NO DESCRIPTION";
     
     BOOL shouldHighlightValue = NO;
     
@@ -316,6 +421,99 @@
     return attriDescription;
 }
 
++(NSString*) getAbilityTypeDescriptionFromAbility:(Ability*)ability withValueDescription:(NSString*)valueDescription
+{
+    NSString* description = @"NO DESCRIPTION";
+    
+    enum AbilityType abilityType = ability.abilityType;
+    
+    if (abilityType == abilityNil)
+        description = [NSString stringWithFormat:@"nil ability"];
+    else if (abilityType == abilityAddDamage){
+            description = [NSString stringWithFormat:@"+%@ damage", valueDescription];
+    }
+    else if (abilityType == abilityLoseDamage){
+            description = [NSString stringWithFormat:@"-%@ damage", valueDescription];
+    }
+    else if (abilityType == abilityAddLife){
+            description = [NSString stringWithFormat:@"Heal %@ life", valueDescription];
+    }
+    else if (abilityType == abilityAddMaxLife){
+            description = [NSString stringWithFormat:@"+%@ life", valueDescription];
+    }
+    else if (abilityType == abilityLoseLife){
+        description = [NSString stringWithFormat:@"Deal %@ damage", valueDescription];
+    }
+    else if (abilityType == abilityKill){
+        description = [NSString stringWithFormat:@"Destroy"];
+    }
+    else if (abilityType == abilitySetCooldown){
+        if (ability.targetType == targetSelf)
+            description = [NSString stringWithFormat:@"Set its cooldown to %@", valueDescription];
+        else
+            description = [NSString stringWithFormat:@"Set cooldown to %@ for ", valueDescription];
+    }
+    else if (abilityType == abilityAddCooldown){
+            description = [NSString stringWithFormat:@"+%@ cooldown", valueDescription];
+    }
+    else if (abilityType == abilityAddMaxCooldown){
+            description = [NSString stringWithFormat:@"+%@ maximum cooldown", valueDescription];
+    }
+    else if (abilityType == abilityLoseCooldown){
+            description = [NSString stringWithFormat:@"-%@ cooldown", valueDescription];
+    }
+    else if (abilityType == abilityLoseMaxCooldown){
+            description = [NSString stringWithFormat:@"-%@ maximum cooldown", valueDescription];
+    }
+    else if (abilityType == abilityTaunt){
+            description = [NSString stringWithFormat:@"Taunt"];
+    }
+    else if (abilityType == abilityDrawCard){
+        if (ability.targetType == targetHeroEnemy)
+            description = [NSString stringWithFormat:@"Opponent draws %@ card(s)", valueDescription];
+        else if (ability.targetType == targetHeroFriendly)
+            description = [NSString stringWithFormat:@"Draw %@ card(s)", valueDescription];
+        else if (ability.targetType == targetAll)
+            description = [NSString stringWithFormat:@"All players draw %@ card(s)", valueDescription];
+    }
+    else if (abilityType == abilityAddResource){
+        if (ability.targetType == targetHeroEnemy)
+            description = [NSString stringWithFormat:@"Opponent gains %@ resource(s)", valueDescription];
+        else if (ability.targetType == targetHeroFriendly)
+            description = [NSString stringWithFormat:@"Gain %@ resource(s)", valueDescription];
+        else if (ability.targetType == targetAll)
+            description = [NSString stringWithFormat:@"All players gain %@ resource(s)", valueDescription];
+    }
+    else if (abilityType == abilityRemoveAbility){
+            description = [NSString stringWithFormat:@"Mute"];
+    }
+    else if (abilityType == abilityAssassin){
+        if (ability.targetType == targetSelf)
+            description = [NSString stringWithFormat:@"Assassin"];
+        else
+            description = [NSString stringWithFormat:@"Give Assassin"];
+    }
+    else if (abilityType == abilityReturnToHand){
+            description = [NSString stringWithFormat:@"Withdraw"];
+    }
+    else if (abilityType == abilityPierce){
+        if (ability.targetType == targetSelf)
+            description = [NSString stringWithFormat:@"Pierce"];
+        else
+            description = [NSString stringWithFormat:@"Give Pierce"];
+    }
+    else if (abilityType == abilityFracture){
+        if (ability.targetType == targetSelf)
+            description = [NSString stringWithFormat:@"Fractures into %@ pieces",  valueDescription];
+        else
+            description = [NSString stringWithFormat:@"Gives Fracture %@", valueDescription];
+    }
+    else
+        description = [NSString stringWithFormat:@"ability no name %d", ability.abilityType];
+    
+    return description;
+}
+
 +(NSString*) getTargetTypeDescription: (enum TargetType) targetType
 {
     if (targetType == targetNil)
@@ -392,7 +590,7 @@
     else if (castType == castOnDamaged)
         return [NSString stringWithFormat:@"On damaged: "];
     else if (castType == castOnMove)
-        return [NSString stringWithFormat:@"On zero cooldown: "];
+        return [NSString stringWithFormat:@"On move: "];
     else if (castType == castOnEndOfTurn)
         return [NSString stringWithFormat:@"On end of turn: "];
     else if (castType == castOnDeath)
@@ -460,6 +658,37 @@
             [descriptions addObject:description];
     }
     return descriptions;
+}
+
++(BOOL)abilityIsSelectableTargetType:(Ability*)ability
+{
+    enum TargetType targetType = ability.targetType;
+    
+    if (targetType == targetHeroAny || targetType == targetOneAny ||targetType == targetOneAnyMinion ||targetType == targetOneEnemy ||targetType == targetOneEnemyMinion||targetType == targetOneFriendly ||targetType == targetOneFriendlyMinion)
+        return YES;
+    
+    return NO;
+}
+
++(NSNumber*)getCastTypeOrder:(enum CastType)castType
+{
+    //NOTE: give enoguh space between numbers so can add more in future
+    if (castType == castAlways)
+        return @100;
+    else if (castType == castOnSummon)
+        return @200;
+    else if (castType == castOnEndOfTurn)
+        return @300;
+    else if (castType == castOnMove)
+        return @400;
+    else if (castType == castOnHit)
+        return @500;
+    else if (castType == castOnDamaged)
+        return @600;
+    else if (castType == castOnDeath)
+        return @700;
+    
+    return @10000;
 }
 
 @end

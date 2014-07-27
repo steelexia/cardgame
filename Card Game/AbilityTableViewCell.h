@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "CustomScrollView.h"
+#import "StrokedLabel.h"
 
 @interface AbilityTableViewCell : UITableViewCell
 
 @property CustomScrollView*scrollView;
 @property UILabel*abilityText;
+@property StrokedLabel*abilityMinCost, *abilityPoints;
 
 @end

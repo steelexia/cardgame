@@ -207,4 +207,6 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     // Dispose of any resources that can be recreated.
 }
 
+- (BOOL)prefersStatusBarHidden {return YES;}
+
 @end

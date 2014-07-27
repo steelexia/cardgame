@@ -114,7 +114,7 @@ int enemyTotalStrength, friendlyTotalStrength;
                 else if (allAbilityPoints != USELESS_MOVE)
                 {
                     points += allAbilityPoints;
-                    points -= [self getCardBaseCost:card];
+                    points += [self getCardBaseCost:card];
                 }
                 
                 if (points > bestPoints)
@@ -157,7 +157,7 @@ int enemyTotalStrength, friendlyTotalStrength;
                 if (points != VICTORY_MOVE && points != IMPOSSIBLE_MOVE)
                 {
                     if (points != USELESS_MOVE)
-                        points -= cardBaseCost;
+                        points += cardBaseCost;
                     else
                         points = cardBaseCost;
                 }
@@ -200,7 +200,9 @@ int enemyTotalStrength, friendlyTotalStrength;
         
         //get rid of cards if full
         if (hand.count >= MAX_HAND_SIZE)
+        {
             moveThreshold -= 2000;
+        }
         
         NSLog(@"AI: move threshold: %d", moveThreshold);
         
@@ -297,8 +299,11 @@ int enemyTotalStrength, friendlyTotalStrength;
     else
         NSLog(@"AI: picked move with %d points.", bestPoints);
     
+    //for now this is static value
+    int threshold = -3000;
+    
     //didn't find a monster that could attack, out of moves
-    if (bestPoints == IMPOSSIBLE_MOVE || bestMonster == nil)
+    if (bestPoints < threshold || bestMonster == nil)
         return YES;
     else{
         if (bestTarget.type == cardTypePlayer)
@@ -352,14 +357,16 @@ int enemyTotalStrength, friendlyTotalStrength;
         {
             //will be reluctant to attack a full life hero
             int lifeLost = enemyPlayer.playerMonster.maximumLife - enemyPlayer.playerMonster.life;
+            
+            /*
             if (lifeLost < 10000)
             {
                 points -= (10000 - lifeLost)/2;
                 NSLog(@"AI: enemy hero high life -%d points", (10000 - lifeLost)/2);
             }
-            
+            */
             //enemy hero having high life makes dealing damage unattractive, but enemy having low life makes any damage attractive
-            double damageModifier = (((float)(enemyPlayer.playerMonster.maximumLife - enemyPlayer.playerMonster.life) / enemyPlayer.playerMonster.maximumLife))*2 + 0.25;
+            double damageModifier = (((float)(enemyPlayer.playerMonster.maximumLife - enemyPlayer.playerMonster.life) / enemyPlayer.playerMonster.maximumLife))*2;
             
             NSLog(@"AI: enemy hero damage modifier %f", damageModifier);
             
@@ -657,7 +664,7 @@ int enemyTotalStrength, friendlyTotalStrength;
         enum TargetType targetType = ability.targetType;
         int targetPoint = [self evaluateAbilityPoints:ability caster:caster target:target fromSide:side  withCost:cost];
         
-        if (targetType == targetHeroAny || targetType == targetOneAny ||targetType == targetOneAnyMinion ||targetType == targetOneEnemy ||targetType == targetOneEnemyMinion||targetType == targetOneFriendly ||targetType == targetOneFriendlyMinion)
+        if ([Ability abilityIsSelectableTargetType:ability])
         {
             //only one is casted, choose best one (and currentTarget)
             if (targetPoint > points)
@@ -701,7 +708,7 @@ int enemyTotalStrength, friendlyTotalStrength;
         if (points != IMPOSSIBLE_MOVE && points != VICTORY_MOVE && points != USELESS_MOVE)
             points /= [targets count];
     }
-    
+
     return points;
 }
 
@@ -771,11 +778,8 @@ int enemyTotalStrength, friendlyTotalStrength;
         int lifeDifference = target.maximumLife - target.life;
         
         //base points from amount of health healed
-        points = [ability.value intValue] > lifeDifference ? [ability.value intValue] : [ability.value intValue];
+        points = [ability.value intValue] < lifeDifference ? [ability.value intValue] : lifeDifference;
         points *= -1; //"good" abilities are negative
-        
-        if (points == 0 || target.dead)
-            return USELESS_MOVE;
     
         //all repeated casts have similar algorithms
         if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn || castType == castOnDeath)
@@ -816,7 +820,7 @@ int enemyTotalStrength, friendlyTotalStrength;
         else
         {
             if (points == 0)
-                return USELESS_MOVE;
+                return 0;
             
             int targetPoints = -[self evaluateMonsterValue:target];
             
@@ -954,13 +958,9 @@ int enemyTotalStrength, friendlyTotalStrength;
             //dealing damage actually isn't that good at all, instead killing is what makes it a good move
             points = points/2;
             
-            points += targetPoints * 0.05; //stronger target = better move
-            
-            NSLog(@"AI: bonus from strong target: %f", targetPoints * 0.05);
-            
             if (target.side == side) //dealing damage to own minion makes it negative
                 points = -points;
-            else if (target.side == PLAYER_SIDE)
+            else if (target.side == oppositeside)
             {
                 //overdealing damage to enemy is bad
                 int overDamage = [ability.value intValue] - target.life;
@@ -971,6 +971,10 @@ int enemyTotalStrength, friendlyTotalStrength;
                     NSLog(@"AI: over damage: %d", -overDamage/4);
                 }
             }
+            
+            points += targetPoints * 0.05; //stronger target = better move
+            
+            NSLog(@"AI: bonus from strong target: %f", targetPoints * 0.05);
             
             if (castType == castAlways)
             {
@@ -1302,10 +1306,11 @@ int enemyTotalStrength, friendlyTotalStrength;
         if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn || castType == castOnDeath)
         {
             //cheap
-            points = [self getTargetTypeMultipliedPoints:ability.targetType points:500];
+            points = [self getTargetTypeMultipliedPoints:ability.targetType points:-500];
         }
         else
         {
+            points = 0;
             points += target.life * 0.15;
             points += target.damage * 0.15;
             
@@ -1322,10 +1327,10 @@ int enemyTotalStrength, friendlyTotalStrength;
                 points += target.life * 0.15;
                 points += target.damage * 0.15;
             }
+            
+            if (target.side != side)
+                points = -points;
         }
-        
-        if (points != USELESS_MOVE)
-            points = -points;
     }
     else if (ability.abilityType == abilityDrawCard)
     {
@@ -1536,7 +1541,7 @@ int enemyTotalStrength, friendlyTotalStrength;
             //value equals to cast on summon value minus cost and half of minion's value
             points = [self getCastOnSummonValue:target fromSide:target.side];
             
-            points -= [self getCardBaseCost:target];
+            points += [self getCardBaseCost:target];
             points -= [self evaluateMonsterValue:target]/2;
             
             if (target.side == side)
@@ -1603,8 +1608,10 @@ int enemyTotalStrength, friendlyTotalStrength;
 
 -(int)getCastOnSummonValue:(CardModel*)card fromSide:(int)side
 {
-    int points = USELESS_MOVE;
     self.currentTarget = nil; //reset current target
+    
+    int points = USELESS_MOVE;
+    int selectableTargetPoints = 0;
     
     NSMutableArray*cardAbilitiesCopy = [NSMutableArray array];
     
@@ -1623,11 +1630,17 @@ int enemyTotalStrength, friendlyTotalStrength;
     {
         NSArray *targets;
         
-        if ([card isKindOfClass:[MonsterCardModel class]])
-            targets = [self getAbilityTargets:ability attacker:(MonsterCardModel*)card target:nil fromSide:side];
+        //if this is a selectable target type and target has already been chosen, cannot choose a different target. (e.g. +1000 life and +1000 damage to any minion can't be casted on two different minions)
+        if ([Ability abilityIsSelectableTargetType:ability] && self.currentTarget!=nil)
+            targets = @[self.currentTarget];
         else
-            targets = [self getAbilityTargets:ability attacker:nil target:nil fromSide:side];
-            
+        {
+            if ([card isKindOfClass:[MonsterCardModel class]])
+                targets = [self getAbilityTargets:ability attacker:(MonsterCardModel*)card target:nil fromSide:side];
+            else
+                targets = [self getAbilityTargets:ability attacker:nil target:nil fromSide:side];
+        }
+        
         NSArray *targetsCopy = [self copyMonsterArray:targets];
         //TODO each array of ability should be sharing the target list
         
@@ -1636,9 +1649,15 @@ int enemyTotalStrength, friendlyTotalStrength;
         int abilityPoints = [self evaluateAbilitiesPoints:ability caster:nil targets:targetsCopy fromSide:side withCost:card.cost];
         
         if (abilityPoints == IMPOSSIBLE_MOVE)
+        {
             points = IMPOSSIBLE_MOVE;
+            selectableTargetPoints = points;
+        }
         else if (abilityPoints == VICTORY_MOVE)
+        {
             points = VICTORY_MOVE;
+            selectableTargetPoints = points;
+        }
         else if (abilityPoints == USELESS_MOVE)
         {
             //do nothing, it won't contribute to the points
@@ -1654,6 +1673,22 @@ int enemyTotalStrength, friendlyTotalStrength;
             //as long as not a victory move, add the points to previous
             else if (points != VICTORY_MOVE && points != IMPOSSIBLE_MOVE)
                 points += abilityPoints;
+            
+            //since selectable ability can be discarded, keep its points separately
+            if (selectableTargetPoints != VICTORY_MOVE && selectableTargetPoints != IMPOSSIBLE_MOVE)
+                selectableTargetPoints += abilityPoints;
+        }
+    }
+    
+    //if points is negative and is a pickable target, just ignore this ability since it doesn't have to be casted
+    if (selectableTargetPoints < 0)
+    {
+        if (selectableTargetPoints != VICTORY_MOVE)
+        {
+            if (selectableTargetPoints != IMPOSSIBLE_MOVE)
+                points -= selectableTargetPoints; //discard the selectable target's points
+            
+            self.currentTarget = nil; //discard the target
         }
     }
     

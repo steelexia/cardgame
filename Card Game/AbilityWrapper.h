@@ -22,8 +22,8 @@
 
 /** Specific combination of ability settings. Its description may be  */
 @property Ability *ability;
-/** Locks the ability to a specific type of element. */
-@property enum CardElement element;
+/** Locks the ability to the specified elements. */
+@property NSArray* elements;
 /** The minimum rarity required before a card can pick this ability */
 @property enum CardRarity rarity;
 /** The number of points the ability costs for a card when designing the card. minPoints represents the cost for the smallest number for otherValues. (if smaller number is better ability, minPoints would actually be bigger number than maxPoints) */
@@ -38,6 +38,14 @@
 
 /** Minimum size of change when designing the ability */
 @property int incrementSize;
+
+/** Minimum cost required for the card to be able to use this ability. This prevents scenarios such as a cost 1 card (played on turn 1) having an ability with deal 10000 damage to random friendly minion, which would allow it to have extremely high combat stats for an ability that has almost no penalties */
+@property int minCost;
+
+/** If the ability wrapped can be used by card of the specified element */
+-(BOOL)isCompatibleWithElement:(enum CardElement)element;
+
+-(BOOL)isCompatibleWithCardModel:(CardModel*)card;
 
 /** Returns all ability wrappers */
 +(NSArray*)allAbilities;
@@ -63,5 +71,8 @@
 /** Gets a specific ability combination with the PFObject. */
 +(Ability*)getAbilityWithPFObject:(PFObject*)abilityPF;
 
+
+
 @end
 
+#define ALL_ELEMENTS @(elementNeutral), @(elementFire), @(elementIce), @(elementLightning), @(elementEarth), @(elementLight), @(elementDark)

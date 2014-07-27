@@ -97,9 +97,39 @@ int cardIDCount = 0;
     
     NSMutableArray* playerHand = self.hands[PLAYER_SIDE];
     NSMutableArray* aiHand = self.hands[OPPONENT_SIDE];
+    /*
+    MonsterCardModel*monster;
+    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster.name = @"Nameless card";
+    monster.life = monster.maximumLife = 100;
+    monster.damage = 100;
+    monster.cost = 0;
+    monster.cooldown = monster.maximumCooldown = 0;
+    monster.side = PLAYER_SIDE;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnDeath targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:2000]]];
+    
+    [playerHand addObject:monster];
     
     SpellCardModel*spell;
-    /*
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    spell.element = elementLightning;
+    spell.name = @"Overpowered Card";
+    spell.cost = 1;
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationForever withValue:[NSNumber numberWithInt:400000]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:4000]]];
+    [aiHand addObject:spell];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    spell.element = elementLightning;
+    spell.name = @"Overpowered Card";
+    spell.cost = 1;
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationForever withValue:[NSNumber numberWithInt:400000]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:4000]]];
+    [aiHand addObject:spell];
+    
+
+    
     spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     spell.element = elementLightning;
     spell.name = @"Overpowered Card";

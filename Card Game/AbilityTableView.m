@@ -16,6 +16,8 @@
 
 @synthesize currentAbilities = _currentAbilities;
 
+const int ABILITY_TABLE_VIEW_ROW_HEIGHT = 20;
+
 - (id)initWithFrame:(CGRect)frame mode:(enum AbilityTableViewMode)viewMode
 {
     self = [super initWithFrame:frame];
@@ -31,7 +33,7 @@
         [_tableView registerClass:[AbilityTableViewCell class] forCellReuseIdentifier:@"abilityTableCell"];
 
         //[_tableView setBackgroundColor:COLOUR_INTERFACE_BLUE];
-        _tableView.rowHeight = 20;
+        _tableView.rowHeight = ABILITY_TABLE_VIEW_ROW_HEIGHT;
         
         [_tableView setDataSource:self];
         [_tableView setDelegate:self];
@@ -75,9 +77,11 @@
     
     CGSize textSize = [[abilityText string] sizeWithFont:[cell.abilityText font]];
     cell.abilityText.attributedText = abilityText;
-    cell.abilityText.frame = CGRectMake(0,0,textSize.width, cell.bounds.size.height);
+    cell.abilityText.frame = CGRectMake(50,0,textSize.width, cell.bounds.size.height);
+    cell.abilityMinCost.text = [NSString stringWithFormat:@"%d", wrapper.minCost];
+    cell.abilityPoints.text = [NSString stringWithFormat:@"%d", wrapper.minPoints];
     cell.scrollView.frame = cell.bounds;
-    [cell.scrollView setContentSize:CGSizeMake(textSize.width, cell.bounds.size.height)];
+    [cell.scrollView setContentSize:CGSizeMake(textSize.width + 50, cell.bounds.size.height)];
     [cell.scrollView setContentOffset:CGPointMake(0,0)];
     
     if (!wrapper.enabled)

@@ -171,7 +171,7 @@ BOOL leftHandViewZone = NO;
     playerResourceLabel.strokeColour = [UIColor blackColor];
     playerResourceLabel.strokeOn = YES;
     playerResourceLabel.strokeThickness = 3;
-    UIImageView *playerResourceIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"resource_icon"]];
+    UIImageView *playerResourceIcon = [[UIImageView alloc] initWithImage:RESOURCE_ICON_IMAGE];
     playerResourceIcon.frame = CGRectMake(0, 0, 45, 45);
     playerResourceIcon.center = playerResourceLabel.center;
     
@@ -185,7 +185,7 @@ BOOL leftHandViewZone = NO;
     opponentResourceLabel.strokeColour = [UIColor blackColor];
     opponentResourceLabel.strokeOn = YES;
     opponentResourceLabel.strokeThickness = 3;
-    UIImageView *opponentResourceIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"resource_icon"]];
+    UIImageView *opponentResourceIcon = [[UIImageView alloc] initWithImage:RESOURCE_ICON_IMAGE];
     opponentResourceIcon.frame = CGRectMake(0, 0, 45, 45);
     opponentResourceIcon.center = opponentResourceLabel.center;
     resourceLabels = @[playerResourceLabel,opponentResourceLabel];
@@ -822,8 +822,8 @@ BOOL leftHandViewZone = NO;
                 if (cardScaleIdentity == 0)
                     continue;
                 
-                //give it quadratic rather than linear feel
-                cardScaleIdentity = pow(cardScaleIdentity,2);
+                //give a non-linear feel
+                cardScaleIdentity = pow(cardScaleIdentity, 3);
                 
                 //now [CARD_DEFAULT_SCALE, CARD_DRAGGING_SCALE]
                 double cardScale = (cardScaleIdentity*(CARD_DRAGGING_SCALE-CARD_DEFAULT_SCALE)) + CARD_DEFAULT_SCALE;
@@ -907,7 +907,6 @@ BOOL leftHandViewZone = NO;
                 {
                     if (fieldHighlight.alpha == 0)
                         [self fadeIn:fieldHighlight inDuration:0.2];
-                    
                 }
                 else if (fieldHighlight.alpha != 0) //fade out if not
                     [self fadeOut:fieldHighlight inDuration:0.2];

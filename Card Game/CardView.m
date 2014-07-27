@@ -196,7 +196,7 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
         self.nameLabel.textColor = [UIColor blackColor];
         self.nameLabel.backgroundColor = [UIColor clearColor];
         self.nameLabel.font = [UIFont fontWithName:cardMainFont size:15];
-        [self.nameLabel setMinimumScaleFactor:8.f/15];
+        [self.nameLabel setMinimumScaleFactor:6.f/15];
         self.nameLabel.adjustsFontSizeToFitWidth = YES;
         
         [self addSubview: nameLabel];
@@ -223,8 +223,7 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
         self.elementLabel.strokeThickness = 2.5;
         self.elementLabel.font = [UIFont fontWithName:cardMainFont size:10];
         self.elementLabel.text = [CardModel elementToString:cardModel.element];
-        
-        [self addSubview: elementLabel];
+        //NOTE added above other stuff
         
         self.baseAbilityLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(10, 150, CARD_FULL_WIDTH - 20, 135)]; //NOTE changing this is useless, do it down below
        
@@ -330,6 +329,8 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
                 self.cooldownLabel.text = [NSString stringWithFormat:@"%d", monsterCard.cooldown];
                 
                 [self addSubview: cooldownLabel];
+                
+                [self addSubview: elementLabel];
             }
         }
         //draws specific card elements for spell card
@@ -340,7 +341,10 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
             
             //element is a little higher
             self.elementLabel.center = CGPointMake(CARD_FULL_WIDTH/2, 144);
+            [self addSubview: elementLabel];
         }
+        
+        
         
         self.damagePopup = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 300, 50)];
         self.damagePopup.center = self.center;
@@ -421,10 +425,10 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
         
         //update cooldown label
         UIColor *newCooldownColour;
-        if (monsterCard.cooldown > monsterCard.maximumCooldown || monsterCard.cooldown > monsterCard.baseMaxCooldown || monsterCard.maximumCooldown > monsterCard.baseMaxCooldown)
-            newCooldownColour = [UIColor redColor];
-        else if (monsterCard.cooldown == 0)
+        if (monsterCard.cooldown == 0)
             newCooldownColour = [UIColor greenColor]; //green when at 0 cooldown
+        else if (monsterCard.cooldown > monsterCard.maximumCooldown || monsterCard.cooldown > monsterCard.baseMaxCooldown || monsterCard.maximumCooldown > monsterCard.baseMaxCooldown)
+            newCooldownColour = [UIColor redColor];
         else
             newCooldownColour = [UIColor whiteColor];
         
@@ -563,11 +567,15 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
     }
     
     NSString *abilityDescription = @"";
+    
+    /*
     for (Ability *ability in self.cardModel.abilities)
     {
         if (!ability.expired && ability.isBaseAbility)
             abilityDescription = [NSString stringWithFormat:@"%@%@\n", abilityDescription, [[Ability getDescription:ability fromCard:self.cardModel] string]];
     }
+    */
+    abilityDescription = [Ability getDescriptionForBaseAbilities:self.cardModel];
     
     self.baseAbilityLabel.attributedText = [[NSAttributedString alloc] initWithString:abilityDescription
                                                                            attributes:abilityTextAttributtes];

@@ -17,6 +17,8 @@
 
 @property CardModel*currentCardModel;
 @property CardView*currentCardView;
+@property int currentCost;
+@property int maxCost;
 
 -(void)rowSelected:(AbilityTableView*)tableView indexPath:(NSIndexPath *)indexPath;
 

@@ -34,7 +34,7 @@ const int MAX_NAME_FONT_SIZE = 15;
 
 /** A monster's base stat cannot be higher than these. (not that it's even easy to get to these stats */
 const int MAX_DAMAGE = 20000, MIN_DAMAGE = 0, DAMAGE_INCREMENT = 100;
-const int MAX_LIFE = 20000, MIN_LIFE = 100, LIFE_INCREMENT = 100;
+const int MAX_LIFE = 20000, MIN_LIFE = 1000, LIFE_INCREMENT = 100;
 const int MAX_COOLDOWN = 5, MIN_COOLDOWN = 1, COOLDOWN_INCREMENT = 1;
 const int MIN_COST = 0, COST_INCREMENT = 1; //maxCost is an array
 
@@ -49,6 +49,8 @@ UIView*damageEditArea, *lifeEditArea, *costEditArea, *cdEditArea, *imageEditArea
 NSArray* rarityMaxCosts, *rarityMaxAbilityCount;
 /** Spell cards can have this many extra abilities compared to Monster cards */
 const int SPELL_CARD_BONUS_ABILITY_COUNT = 1;
+
+StrokedLabel*currentCostLabel, *maxCostLabel;
 
 /** New is for adding new abilities, existing is for editing existing abilities */
 AbilityTableView *abilityNewTableView, *abilityExistingTableView;
@@ -71,6 +73,15 @@ UILabel *saveCardConfirmLabel, *cancelCardConfirmLabel;
 
 /** UILabel used to darken the screen during card selections */
 UILabel *darkFilter;
+
+/** Stuff for element selection */
+StrokedLabel *neutralLabel, *fireLabel, *iceLabel, *lightningLabel, *earthLabel, *lightLabel, *darkLabel;
+
+UIButton*elementConfirmButton;
+
+UILabel *elementDescriptionLabel;
+
+UIImageView*pointsImageBackground;
 
 - (id)initWithCard:(CardModel*)card
 {
@@ -104,7 +115,7 @@ UILabel *darkFilter;
     
     //card cannot exceed this number of abilities
     rarityMaxAbilityCount = @[
-                              @4, //common TODO!!!!!!!!!!!!!!!!!!!!!!!!!!! 10 right now just for testing, should be 2
+                              @4, //common TODO!!!!!!!!!!!!!!!!!!!!!!!!!!! 4 right now just for testing, should be 2
                               @2, //uncommon
                               @3, //rare
                               @3, //exceptional
@@ -320,6 +331,40 @@ UILabel *darkFilter;
     
     [self.view addSubview:abilityAddButton];
     
+    pointsImageBackground = [[UIImageView alloc]initWithImage:POINTS_ICON_IMAGE];
+    pointsImageBackground.frame = CGRectMake(0,0,74, 74);
+    pointsImageBackground.center = CGPointMake(35, 180);
+    
+    [self.view addSubview:pointsImageBackground];
+    
+    currentCostLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,46,32)];
+    currentCostLabel.center = CGPointMake(30, 165);
+    currentCostLabel.textAlignment = NSTextAlignmentCenter;
+    currentCostLabel.textColor = [UIColor whiteColor];
+    currentCostLabel.backgroundColor = [UIColor clearColor];
+    currentCostLabel.font = [UIFont fontWithName:cardMainFont size:20];
+    [currentCostLabel setMinimumScaleFactor:12.f/20];
+    currentCostLabel.adjustsFontSizeToFitWidth = YES;
+    currentCostLabel.strokeOn = YES;
+    currentCostLabel.strokeColour = [UIColor blackColor];
+    currentCostLabel.strokeThickness = 3;
+    
+    [self.view addSubview:currentCostLabel];
+    
+    maxCostLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,46,32)];
+    maxCostLabel.center = CGPointMake(40, 196);
+    maxCostLabel.textAlignment = NSTextAlignmentCenter;
+    maxCostLabel.textColor = [UIColor whiteColor];
+    maxCostLabel.backgroundColor = [UIColor clearColor];
+    maxCostLabel.font = [UIFont fontWithName:cardMainFont size:20];
+    [maxCostLabel setMinimumScaleFactor:12.f/20];
+    maxCostLabel.adjustsFontSizeToFitWidth = YES;
+    maxCostLabel.strokeOn = YES;
+    maxCostLabel.strokeColour = [UIColor blackColor];
+    maxCostLabel.strokeThickness = 3;
+    
+    [self.view addSubview:maxCostLabel];
+    
     //, *lifeEditArea, *costEditArea, *cdEditArea, *imageEditArea;
     
     self.currentCardModel = self.currentCardModel; //send the model to views
@@ -399,6 +444,93 @@ UILabel *darkFilter;
     darkFilter.backgroundColor = [[UIColor alloc]initWithHue:0 saturation:0 brightness:0 alpha:0.8];
     [darkFilter setUserInteractionEnabled:YES]; //blocks all interaction behind it
     
+    //----------------------element edit screen--------------------//
+    neutralLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    neutralLabel.font = [UIFont fontWithName:cardMainFont size:25];
+    neutralLabel.textAlignment = NSTextAlignmentCenter;
+    neutralLabel.strokeOn = YES;
+    neutralLabel.strokeColour = COLOUR_NEUTRAL_OUTLINE;
+    neutralLabel.strokeThickness = 4;
+    [neutralLabel setUserInteractionEnabled:YES];
+    [neutralLabel setTextColor:COLOUR_NEUTRAL];
+    [neutralLabel setText:[CardModel elementToString:elementNeutral]];
+    
+    fireLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    fireLabel.font = [UIFont fontWithName:cardMainFont size:25];
+    fireLabel.textAlignment = NSTextAlignmentCenter;
+    fireLabel.strokeOn = YES;
+    fireLabel.strokeColour = COLOUR_FIRE_OUTLINE;
+    fireLabel.strokeThickness = 4;
+    [fireLabel setUserInteractionEnabled:YES];
+    [fireLabel setTextColor:COLOUR_FIRE];
+    [fireLabel setText:[CardModel elementToString:elementFire]];
+    
+    iceLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    iceLabel.font = [UIFont fontWithName:cardMainFont size:25];
+    iceLabel.textAlignment = NSTextAlignmentCenter;
+    iceLabel.strokeOn = YES;
+    iceLabel.strokeColour = COLOUR_ICE_OUTLINE;
+    iceLabel.strokeThickness = 4;
+    [iceLabel setUserInteractionEnabled:YES];
+    [iceLabel setTextColor:COLOUR_ICE];
+    [iceLabel setText:[CardModel elementToString:elementIce]];
+    
+    lightningLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    lightningLabel.font = [UIFont fontWithName:cardMainFont size:25];
+    lightningLabel.textAlignment = NSTextAlignmentCenter;
+    lightningLabel.strokeOn = YES;
+    lightningLabel.strokeColour = COLOUR_LIGHTNING_OUTLINE;
+    lightningLabel.strokeThickness = 4;
+    [lightningLabel setUserInteractionEnabled:YES];
+    [lightningLabel setTextColor:COLOUR_LIGHTNING];
+    [lightningLabel setText:[CardModel elementToString:elementLightning]];
+    
+    earthLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    earthLabel.font = [UIFont fontWithName:cardMainFont size:25];
+    earthLabel.textAlignment = NSTextAlignmentCenter;
+    earthLabel.strokeOn = YES;
+    earthLabel.strokeColour = COLOUR_EARTH_OUTLINE;
+    earthLabel.strokeThickness = 4;
+    [earthLabel setUserInteractionEnabled:YES];
+    [earthLabel setTextColor:COLOUR_EARTH];
+    [earthLabel setText:[CardModel elementToString:elementEarth]];
+    
+    lightLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    lightLabel.font = [UIFont fontWithName:cardMainFont size:25];
+    lightLabel.textAlignment = NSTextAlignmentCenter;
+    lightLabel.strokeOn = YES;
+    lightLabel.strokeColour = COLOUR_LIGHT_OUTLINE;
+    lightLabel.strokeThickness = 4;
+    [lightLabel setUserInteractionEnabled:YES];
+    [lightLabel setTextColor:COLOUR_LIGHT];
+    [lightLabel setText:[CardModel elementToString:elementLight]];
+    
+    darkLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    darkLabel.font = [UIFont fontWithName:cardMainFont size:25];
+    darkLabel.textColor = COLOUR_DARK;
+    darkLabel.textAlignment = NSTextAlignmentCenter;
+    darkLabel.strokeOn = YES;
+    darkLabel.strokeColour = COLOUR_DARK_OUTLINE;
+    darkLabel.strokeThickness = 4;
+    [darkLabel setUserInteractionEnabled:YES];
+    [darkLabel setTextColor:COLOUR_DARK];
+    [darkLabel setText:[CardModel elementToString:elementDark]];
+    
+    elementConfirmButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    elementConfirmButton.center = CGPointMake(SCREEN_WIDTH/2 + 80, SCREEN_HEIGHT - 60);
+    [elementConfirmButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
+    [elementConfirmButton addTarget:self action:@selector(elementConfirmButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    elementDescriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(140, SCREEN_HEIGHT/6, SCREEN_WIDTH-140-20, SCREEN_HEIGHT)];
+    elementDescriptionLabel.textColor = [UIColor whiteColor];
+    elementDescriptionLabel.backgroundColor = [UIColor clearColor];
+    elementDescriptionLabel.font = [UIFont fontWithName:cardMainFont size:18];
+    elementDescriptionLabel.textAlignment = NSTextAlignmentLeft;
+    elementDescriptionLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    elementDescriptionLabel.numberOfLines = 0;
+    elementDescriptionLabel.text = @"";
+    [elementDescriptionLabel sizeToFit];
+    
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center addObserver:self selector:@selector(keyboardOnScreen:) name:UIKeyboardDidShowNotification object:nil];
     
@@ -411,6 +543,8 @@ UILabel *darkFilter;
                                            action:@selector(tapRegistered)];
     [tapGesture setCancelsTouchesInView:NO];
     [self.view addGestureRecognizer:tapGesture];
+    
+    [self setupNewMonster];
 }
 
 -(void)tapRegistered
@@ -527,7 +661,8 @@ UILabel *darkFilter;
             if ((change > 0 && [damageIncButton isHighlighted])
                 || (change < 0 && [damageDecButton isHighlighted]))
             {
-                [self modifyDamage:change];
+                for (int i = 0; i < 5; i++)
+                    [self modifyDamage:change];
                 running = NO;
                 [self damageButtonHeld:change];
             }
@@ -547,7 +682,7 @@ UILabel *darkFilter;
     {
         monster.damage = monster.baseDamage + change;
         [self.currentCardView updateView];
-        //TODO update points
+        [self updateCost];
     }
     
     [self updateIncrementButton:damageDecButton];
@@ -577,7 +712,8 @@ UILabel *darkFilter;
             if ((change > 0 && [lifeIncButton isHighlighted])
                 || (change < 0 && [lifeDecButton isHighlighted]))
             {
-                [self modifyLife:change];
+                for (int i = 0; i < 5; i++)
+                    [self modifyLife:change];
                 running = NO;
                 [self lifeButtonHeld:change];
             }
@@ -597,7 +733,7 @@ UILabel *darkFilter;
     {
         monster.maximumLife = monster.life = monster.baseMaxLife + change;
         [self.currentCardView updateView];
-        //TODO update points
+        [self updateCost];
     }
     
     [self updateIncrementButton:lifeDecButton];
@@ -623,7 +759,7 @@ UILabel *darkFilter;
     {
         monster.maximumCooldown = monster.cooldown = monster.baseMaxCooldown + change;
         [self.currentCardView updateView];
-        //TOOD update points
+        [self updateCost];
     }
     
     [self updateIncrementButton:cdDecButton];
@@ -634,11 +770,15 @@ UILabel *darkFilter;
 -(void)costIncButtonPressed
 {
     [self modifyCost:COST_INCREMENT];
+    [abilityAddButton setEnabled:NO];
+    [self updateExistingAbilityList];
 }
 
 -(void)costDecButtonPressed
 {
     [self modifyCost:-COST_INCREMENT];
+    [abilityAddButton setEnabled:NO];
+    [self updateExistingAbilityList];
 }
 
 -(void)modifyCost:(int)change
@@ -650,7 +790,8 @@ UILabel *darkFilter;
     {
         self.currentCardModel.cost = self.currentCardModel.baseCost + change;
         [self.currentCardView updateView];
-        //TOOD update points
+        [self updateCost];
+        [self updateNewAbilityList]; //changing cost may unlock new abilities
     }
     
     [self updateIncrementButton:costDecButton];
@@ -751,6 +892,8 @@ UILabel *darkFilter;
     
     [abilityExistingTableView.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     
+    [self updateCost];
+    
     [self updateAbilityButtons:wrapper];
 }
 
@@ -765,6 +908,8 @@ UILabel *darkFilter;
     [abilityExistingTableView.tableView reloadData];
     
     [abilityExistingTableView.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    
+    [self updateCost];
     
     [self updateAbilityButtons:wrapper];
 }
@@ -801,6 +946,8 @@ UILabel *darkFilter;
         [self.currentCardModel addBaseAbility:dupWrapper.ability];
         
         [self updateNewAbilityList];
+        
+        [self updateCost];
     }
 }
 
@@ -815,19 +962,46 @@ UILabel *darkFilter;
         {
             if ([existingWrapper.ability isEqualTypeTo:wrapper.ability])
             {
+                NSLog(@"NOT ENABLED DUE TO EQUAL TYPE: %@", [[Ability getDescription:wrapper.ability fromCard:_currentCardModel]string]);
                 wrapper.enabled = NO;
                 break;
             }
         }
         
-        if (wrapper.enabled == YES && ![self.currentCardModel isCompatible:wrapper.ability])
+        if (wrapper.enabled == YES && (![self.currentCardModel isCompatible:wrapper.ability] || wrapper.minCost > _currentCardModel.cost))
+        {
+            NSLog(@"NOT ENABLED DUE COMPATIBILITY OR COST %@", [[Ability getDescription:wrapper.ability fromCard:_currentCardModel]string]);
             wrapper.enabled = NO;
+            wrapper.enabled = NO;
+        }
     }
     
     [abilityNewTableView.tableView reloadData];
     [abilityNewTableView reloadInputViews];
+    
+    [abilityAddButton setEnabled:[abilityNewTableView.currentAbilities[[abilityNewTableView.tableView indexPathForSelectedRow].row] enabled]];
 }
 
+/** Only for when changing the element etc., to remove abilities that are no longer compatible */
+-(void)updateExistingAbilityList
+{
+    for (int i = abilityExistingTableView.currentAbilities.count - 1; i >= 0; i--)
+    {
+        AbilityWrapper*wrapper = abilityExistingTableView.currentAbilities[i];
+        
+        if (![wrapper isCompatibleWithCardModel:_currentCardModel] || wrapper.minCost > _currentCardModel.cost)
+        {
+            [abilityExistingTableView.currentAbilities removeObjectAtIndex:i];
+            
+            //remove from monster
+            [self.currentCardModel.abilities removeObject:wrapper.ability];
+        }
+    }
+    
+    [abilityExistingTableView.tableView reloadData];
+    [abilityExistingTableView reloadInputViews];
+    [self.currentCardView updateView];
+}
 
 -(void)abilityRemoveButtonPressed
 {
@@ -838,15 +1012,7 @@ UILabel *darkFilter;
         AbilityWrapper *wrapper = abilityExistingTableView.currentAbilities[selectedIndexPath.row];
         
         //remove from monster
-        for (int i =0 ; i < self.currentCardModel.abilities.count; i++)
-        {
-            Ability *ability = self.currentCardModel.abilities[i];
-            if (ability == wrapper.ability)
-            {
-                [self.currentCardModel.abilities removeObjectAtIndex:i];
-                break;
-            }
-        }
+        [self.currentCardModel.abilities removeObject:wrapper.ability];
         
         //enable the wrapper back in newAbilities
         for (AbilityWrapper*newWrapper in abilityNewTableView.currentAbilities)
@@ -869,7 +1035,125 @@ UILabel *darkFilter;
         [abilityRemoveButton setEnabled:NO];
         [abilityIncButton setEnabled:NO];
         [abilityDecButton setEnabled:NO];
+        
+        [self updateCost];
     }
+}
+
+-(void)reloadCardView
+{
+    int index = 0;
+    if (_currentCardView!=nil)
+    {
+        index = [[self.view subviews] indexOfObject:_currentCardView];
+        [_currentCardView removeFromSuperview];
+    }
+    
+    _currentCardView = [[CardView alloc] initWithModel:_currentCardModel cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]]viewMode:cardViewModeEditor];
+    _currentCardView.cardViewState = cardViewStateCardViewer;
+    _currentCardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_EDITOR_SCALE, CARD_EDITOR_SCALE);
+    
+    _currentCardView.center = CGPointMake(175, 185);
+    
+    [_currentCardView updateView];
+    [self.view insertSubview:_currentCardView atIndex:index];
+}
+
+-(void)removeAllStatButtons
+{
+    [damageDecButton removeFromSuperview];
+    [damageIncButton removeFromSuperview];
+    [lifeDecButton removeFromSuperview];
+    [lifeIncButton removeFromSuperview];
+    [cdDecButton removeFromSuperview];
+    [cdIncButton removeFromSuperview];
+    [costDecButton removeFromSuperview];
+    [costIncButton removeFromSuperview];
+}
+
+-(void)updateCost
+{
+    self.maxCost = 1000; //base
+    self.maxCost += self.currentCardModel.cost * 1000;
+    self.currentCost = 0;
+    
+    //rarity gives bonus to max cost
+    if (self.currentCardModel.rarity == cardRarityUncommon)
+        self.maxCost *= 1.05;
+    else if (self.currentCardModel.rarity == cardRarityRare)
+        self.maxCost *= 1.1;
+    else if (self.currentCardModel.rarity == cardRarityExceptional)
+        self.maxCost *= 1.15;
+    else if (self.currentCardModel.rarity == cardRarityLegendary)
+        self.maxCost *= 1.25;
+    
+    for (int i = 0; i < abilityExistingTableView.currentAbilities.count; i++)
+    {
+        AbilityWrapper *wrapper = abilityExistingTableView.currentAbilities[i];
+        
+        if (wrapper.ability.otherValues != nil && wrapper.ability.otherValues.count >= 2)
+        {
+            //1000,4000
+            //2000,8000
+            
+            int minValue = [wrapper.ability.otherValues[0] intValue];
+            int maxValue = [wrapper.ability.otherValues[1] intValue];
+            int valueDifference = maxValue - minValue;
+            
+            if (valueDifference == 0)
+                valueDifference = 1;
+            
+            int currentValue = [wrapper.ability.value intValue] - minValue;
+            double valuePercent = (double)currentValue / valueDifference;
+            
+            int abilityCost = ceil(((wrapper.maxPoints - wrapper.minPoints)*valuePercent) + wrapper.minPoints);
+            
+            //cast on move's points are divided by the max cooldown
+            if (wrapper.ability.castType == castOnMove && [self.currentCardModel isKindOfClass:[MonsterCardModel class]])
+            {
+                MonsterCardModel*monster = (MonsterCardModel*)self.currentCardModel;
+                abilityCost /= monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown;
+                
+                //TODO if minion has charge, + cost of equivalent ability with castOnSummon AND castOnHit, castOnMove?
+                
+                //TODO if minion has taunt, all castOnDamaged becomes % more expensive
+                
+                //TODO if minion has no damage and no taunt, cast on death are discounted ?half off
+            }
+            
+            
+            
+            //TODO add a modifier function for comparing with other abilities here
+            
+            self.currentCost += abilityCost;
+            
+            //update the icon in the tableView
+            AbilityTableViewCell* cell = (AbilityTableViewCell*)[abilityExistingTableView.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+            cell.abilityPoints.text = [NSString stringWithFormat:@"%d", abilityCost];
+        }
+        else
+        {
+            //no adjustable value/cost, just use min points
+            self.currentCost += wrapper.minPoints;
+        }
+    }
+    
+    //monster cards add stats into cost
+    if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
+    {
+        MonsterCardModel*monster = (MonsterCardModel*)self.currentCardModel;
+        
+        //TODO it's much more complicated (add damage/life modifiers from abilities)
+        if (monster.damage == 0)
+            self.currentCost -= 250; //experimental: no damange = can't attack = gain some extra points
+        else
+            self.currentCost += ceil(monster.damage / 2 / (monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown));
+        self.currentCost += ceil(monster.maximumLife / 2);
+    }
+   
+    currentCostLabel.text = [NSString stringWithFormat:@"%d", self.currentCost];
+    maxCostLabel.text = [NSString stringWithFormat:@"%d", self.maxCost];
+    
 }
 
 -(void)monsterButtonPressed
@@ -891,31 +1175,24 @@ UILabel *darkFilter;
     monster.cooldown = monster.maximumCooldown = 1;
     
     if (self.currentCardModel!=nil)
+    {
         monster.name = self.currentCardModel.name;
+        monster.cost = self.currentCardModel.cost;
+        monster.element = self.currentCardModel.element;
+        //TODO image
+    }
     else
         monster.name = @"";
     
     _currentCardModel = monster;
     
-    int index = 0;
-    if (_currentCardView!=nil)
-    {
-        index = [[self.view subviews] indexOfObject:_currentCardView];
-        [_currentCardView removeFromSuperview];
-    }
-    
-    _currentCardView = [[CardView alloc] initWithModel:monster cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]]viewMode:cardViewModeEditor];
-    _currentCardView.cardViewState = cardViewStateCardViewer;
-    _currentCardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_EDITOR_SCALE, CARD_EDITOR_SCALE);
-    
-    _currentCardView.center = CGPointMake(175, 185);
-    
-    [_currentCardView updateView];
-    [self.view insertSubview:_currentCardView atIndex:index];
+    [self reloadCardView];
     
     self.currentCardModel = monster;
     
     [self resetAbilityViews];
+    [self updateCost];
+    [self selectElement: _currentCardModel.element];
 }
 
 -(void)spellButtonPressed
@@ -926,25 +1203,18 @@ UILabel *darkFilter;
     [self removeAllStatButtons];
 }
 
--(void)removeAllStatButtons
-{
-    [damageDecButton removeFromSuperview];
-    [damageIncButton removeFromSuperview];
-    [lifeDecButton removeFromSuperview];
-    [lifeIncButton removeFromSuperview];
-    [cdDecButton removeFromSuperview];
-    [cdIncButton removeFromSuperview];
-    [costDecButton removeFromSuperview];
-    [costIncButton removeFromSuperview];
-}
-
 -(void)setupNewSpell
 {
     SpellCardModel*spell = [[SpellCardModel alloc] initWithIdNumber:-1];
     spell.cost = 1;
     
     if (self.currentCardModel!=nil)
+    {
         spell.name = self.currentCardModel.name;
+        spell.cost = self.currentCardModel.cost;
+        spell.element = self.currentCardModel.element;
+        //TODO image
+    }
     else
         spell.name = @"";
     
@@ -969,6 +1239,8 @@ UILabel *darkFilter;
     self.currentCardModel = spell;
     
     [self resetAbilityViews];
+    [self updateCost];
+    [self selectElement: _currentCardModel.element];
 }
 
 
@@ -982,8 +1254,6 @@ UILabel *darkFilter;
     [self loadAllValidAbilities];
     [abilityNewTableView.tableView reloadData];
     [abilityNewTableView.tableView reloadInputViews];
-    
-    
 }
 
 -(void)updateCardTypeButtons
@@ -1130,6 +1400,10 @@ UILabel *darkFilter;
                              
                          }];
     }
+    else if (touchedView == elementEditArea)
+    {
+        [self openElementEditScreen];
+    }
     else if (touchedView != self.currentCardView)
     {
         [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
@@ -1143,7 +1417,122 @@ UILabel *darkFilter;
                          }];
     }
     
+    //element select
+    if (touchedView == neutralLabel)
+    {
+        [self selectElement: elementNeutral];
+    }
+    else if (touchedView == fireLabel)
+    {
+        [self selectElement:  elementFire];
+    }
+    else if (touchedView == iceLabel)
+    {
+        [self selectElement:  elementIce];
+    }
+    else if (touchedView == lightningLabel)
+    {
+        [self selectElement:  elementLightning];
+    }
+    else if (touchedView == earthLabel)
+    {
+        [self selectElement: elementEarth];
+    }
+    else if (touchedView == lightLabel)
+    {
+        [self selectElement: elementLight];
+    }
+    else if (touchedView == darkLabel)
+    {
+        [self selectElement: elementDark];
+    }
+    
     [self abilityEditAreaSetEnabled:touchedView == abilityEditArea];
+}
+
+-(void)selectElement:(enum CardElement)element
+{
+    if (element == elementNeutral)
+    {
+        [self zoomElementLabel:neutralLabel];
+        self.currentCardModel.element = elementNeutral;
+        elementDescriptionLabel.text = @"Neutral cards don't have particularily power abilities of their own, but they are compatible with all other elements, making them a good addition in any deck.";
+    }
+    else if (element == elementFire)
+    {
+        [self zoomElementLabel:fireLabel];
+        self.currentCardModel.element = elementFire;
+        elementDescriptionLabel.text = @"Fire cards excel in dealing massive, direct damage. They also have many area-of-effect abilities that can quickly wipe their opponent's board. They cannot coexist with Ice cards in a deck.";
+    }
+    else if (element == elementIce)
+    {
+        [self zoomElementLabel:iceLabel];
+        self.currentCardModel.element = elementIce;
+        elementDescriptionLabel.text = @"Ice cards specialize in defensive abilities such as cooldown extension to stall their opponent's attack. They cannot coexist with Fire cards in a deck.";
+    }
+    else if (element == elementLightning)
+    {
+        [self zoomElementLabel:lightningLabel];
+        self.currentCardModel.element = elementLightning;
+        elementDescriptionLabel.text = @"Thunder cards deals rapid, and often random attacks that can quickly overwhelm their opponents if they are unprepared. They cannot coexist with Earth cards in a deck.";
+    }
+    else if (element == elementEarth)
+    {
+        [self zoomElementLabel:earthLabel];
+        self.currentCardModel.element = elementEarth;
+        elementDescriptionLabel.text = @"Earth cards often start out as weak minions, but if left unchecked, can grow to become incredibly powerful. They cannot coexist with Thunder cards in a deck.";
+    }
+    else if (element == elementLight)
+    {
+        [self zoomElementLabel:lightLabel];
+        self.currentCardModel.element = elementLight;
+        elementDescriptionLabel.text = @"Light cards focuses on healing and strengthening friendly creatures. They are able to increase the effectiveness of even the weakest creatures. They cannot coexist with Dark cards in a deck.";
+    }
+    else if (element == elementDark)
+    {
+        [self zoomElementLabel:darkLabel];
+        self.currentCardModel.element = elementDark;
+         elementDescriptionLabel.text = @"Dark cards usually have extremely powerful minions and abilities that require sacrifices from the caster. They cannot coexist with Light cards in a deck.";
+    }
+    
+    [elementDescriptionLabel setFrame: CGRectMake(140, SCREEN_HEIGHT/6, SCREEN_WIDTH-140-20, SCREEN_HEIGHT)];
+    [elementDescriptionLabel sizeToFit];
+}
+
+-(void)zoomElementLabel:(UIView*)view
+{
+    [self resetAllElementLabelsExcept:view];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         view.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.5, 1.5);
+                     }
+                     completion:^(BOOL completed){
+                         
+                     }];
+}
+
+-(void)resetAllElementLabelsExcept:(UIView*)view
+{
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         if (neutralLabel != view)
+                             neutralLabel.transform = CGAffineTransformIdentity;
+                         if (fireLabel != view)
+                             fireLabel.transform = CGAffineTransformIdentity;
+                         if (iceLabel != view)
+                             iceLabel.transform = CGAffineTransformIdentity;
+                         if (lightningLabel != view)
+                             lightningLabel.transform = CGAffineTransformIdentity;
+                         if (earthLabel != view)
+                             earthLabel.transform = CGAffineTransformIdentity;
+                         if (lightLabel != view)
+                             lightLabel.transform = CGAffineTransformIdentity;
+                         if (darkLabel != view)
+                             darkLabel.transform = CGAffineTransformIdentity;
+                     }
+                     completion:^(BOOL completed){
+                         
+                     }];
 }
 
 -(void)abilityEditAreaSetEnabled:(BOOL)state
@@ -1198,6 +1587,99 @@ UILabel *darkFilter;
     }
 }
 
+-(void)openElementEditScreen
+{
+    [self darkenScreen];
+    
+    int yDistance = SCREEN_HEIGHT/8;
+    int xDistance = 70;
+    
+    neutralLabel.center = CGPointMake(xDistance, yDistance * 1);
+    fireLabel.center = CGPointMake(xDistance, yDistance * 2);
+    iceLabel.center = CGPointMake(xDistance, yDistance * 3);
+    lightningLabel.center = CGPointMake(xDistance, yDistance * 4);
+    earthLabel.center = CGPointMake(xDistance, yDistance * 5);
+    lightLabel.center = CGPointMake(xDistance, yDistance * 6);
+    darkLabel.center = CGPointMake(xDistance, yDistance * 7);
+    
+    neutralLabel.alpha = 0;
+    fireLabel.alpha = 0;
+    iceLabel.alpha = 0;
+    lightningLabel.alpha = 0;
+    earthLabel.alpha = 0;
+    lightLabel.alpha = 0;
+    darkLabel.alpha = 0;
+    elementConfirmButton.alpha = 0;
+    elementDescriptionLabel.alpha = 0;
+    
+    [self.view addSubview:neutralLabel];
+    [self.view addSubview:fireLabel];
+    [self.view addSubview:iceLabel];
+    [self.view addSubview:lightningLabel];
+    [self.view addSubview:earthLabel];
+    [self.view addSubview:lightLabel];
+    [self.view addSubview:darkLabel];
+    [self.view addSubview:elementConfirmButton];
+    [self.view addSubview:elementDescriptionLabel];
+    
+    [elementDescriptionLabel setFrame: CGRectMake(140, SCREEN_HEIGHT/6, SCREEN_WIDTH-140-20, SCREEN_HEIGHT)];
+    elementDescriptionLabel.numberOfLines = 0;
+    elementDescriptionLabel.textAlignment = NSTextAlignmentLeft;
+    elementDescriptionLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    [elementDescriptionLabel sizeToFit];
+    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         neutralLabel.alpha = 1;
+                         fireLabel.alpha = 1;
+                         iceLabel.alpha = 1;
+                         lightningLabel.alpha = 1;
+                         earthLabel.alpha = 1;
+                         lightLabel.alpha = 1;
+                         darkLabel.alpha = 1;
+                         elementConfirmButton.alpha = 1;
+                         elementDescriptionLabel.alpha = 1;
+                     }
+                     completion:^(BOOL completed){
+                     }];
+}
+
+-(void)elementConfirmButtonPressed
+{
+    [self undarkenScreen];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         neutralLabel.alpha = 0;
+                         fireLabel.alpha = 0;
+                         iceLabel.alpha = 0;
+                         lightningLabel.alpha = 0;
+                         earthLabel.alpha = 0;
+                         lightLabel.alpha = 0;
+                         darkLabel.alpha = 0;
+                         elementConfirmButton.alpha = 0;
+                         elementDescriptionLabel.alpha = 0;
+                     }
+                     completion:^(BOOL completed){
+                         [neutralLabel removeFromSuperview];
+                         [fireLabel removeFromSuperview];
+                         [iceLabel removeFromSuperview];
+                         [lightningLabel removeFromSuperview];
+                         [earthLabel removeFromSuperview];
+                         [lightLabel removeFromSuperview];
+                         [darkLabel removeFromSuperview];
+                         [elementConfirmButton removeFromSuperview];
+                         [elementDescriptionLabel removeFromSuperview];
+                     }];
+    
+    
+    
+    [self resetAbilityViews];
+    [self updateNewAbilityList];
+    [self updateExistingAbilityList];
+    [self reloadCardView];
+}
+
+
 -(void)rowSelected:(AbilityTableView*)tableView indexPath:(NSIndexPath *)indexPath
 {
     if (tableView == abilityNewTableView)
@@ -1249,16 +1731,12 @@ UILabel *darkFilter;
 -(void)loadAllValidAbilities
 {
     NSArray*allAbilities = [AbilityWrapper allAbilities];
-    BOOL isSpellCard = [self.currentCardModel isKindOfClass:[SpellCardModel class]];
     
     for (AbilityWrapper*wrapper in allAbilities)
     {
         //must be valid element and rarity
-        if (wrapper.element == self.currentCardModel.element && wrapper.rarity <= self.currentCardModel.rarity)
-        {
-            if (!isSpellCard || wrapper.ability.castType == castOnSummon)
-                [abilityNewTableView.currentAbilities addObject:wrapper];
-        }
+        if ([wrapper isCompatibleWithCardModel:_currentCardModel])
+            [abilityNewTableView.currentAbilities addObject:wrapper];
     }
     
     //sort the valid abilities
@@ -1421,5 +1899,6 @@ UILabel *darkFilter;
     [self performSelector:@selector(performBlock:) withObject:block_ afterDelay:delay];
 }
 
+- (BOOL)prefersStatusBarHidden {return YES;}
 
 @end

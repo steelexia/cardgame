@@ -35,8 +35,7 @@ const int MAX_CARDS_IN_DECK = 20;
 /** Note that this function does not care about max deck size for gameplay */
 -(BOOL) addCard: (CardModel*) cardModel
 {
-    //TODO check for dup
-    
+    //TODO check for dup?
     if (![cardModel isKindOfClass: [CardModel class]])
         return NO;
     

@@ -9,6 +9,7 @@
 #import "AbilityTableViewCell.h"
 #import "UIConstants.h"
 #import "CardView.h"
+#import "AbilityTableView.h"
 
 @implementation AbilityTableViewCell
 
@@ -21,11 +22,45 @@
         self.scrollView = [[CustomScrollView alloc]initWithFrame:self.bounds];
         [self.scrollView setBackgroundColor:[UIColor clearColor]];
         
-        self.abilityText = [[UILabel alloc] initWithFrame:self.bounds];
+        int cellHeight = self.bounds.size.height;
+        
+        self.abilityMinCost = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,ABILITY_TABLE_VIEW_ROW_HEIGHT,ABILITY_TABLE_VIEW_ROW_HEIGHT)];
+        self.abilityMinCost.font = [UIFont fontWithName:cardMainFont size:14];
+        self.abilityMinCost.textColor = [UIColor whiteColor];
+        self.abilityMinCost.strokeOn = YES;
+        self.abilityMinCost.strokeThickness = 2;
+        self.abilityMinCost.strokeColour = [UIColor blackColor];
+        self.abilityMinCost.textAlignment = NSTextAlignmentCenter;
+        self.abilityMinCost.center = CGPointMake(ABILITY_TABLE_VIEW_ROW_HEIGHT/2,ABILITY_TABLE_VIEW_ROW_HEIGHT/2);
+        
+        UIImageView *resourceIcon = [[UIImageView alloc] initWithImage:RESOURCE_ICON_IMAGE];
+        resourceIcon.frame = CGRectMake(0,0,ABILITY_TABLE_VIEW_ROW_HEIGHT, ABILITY_TABLE_VIEW_ROW_HEIGHT);
+        
+        self.abilityPoints = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,ABILITY_TABLE_VIEW_ROW_HEIGHT*1.5,ABILITY_TABLE_VIEW_ROW_HEIGHT)];
+        self.abilityPoints.font = [UIFont fontWithName:cardMainFont size:10];
+        [self.abilityPoints setAdjustsFontSizeToFitWidth:YES];
+        [self.abilityPoints setMinimumScaleFactor:8.f/10];
+        self.abilityPoints.textColor = [UIColor whiteColor];
+        self.abilityPoints.strokeOn = YES;
+        self.abilityPoints.strokeThickness = 1;
+        self.abilityPoints.strokeColour = [UIColor blackColor];
+        self.abilityPoints.textAlignment = NSTextAlignmentCenter;
+        self.abilityPoints.center = CGPointMake(ABILITY_TABLE_VIEW_ROW_HEIGHT * 1.7, ABILITY_TABLE_VIEW_ROW_HEIGHT/2);
+        
+        UIImageView *pointsIcon = [[UIImageView alloc] initWithImage:POINTS_ICON_IMAGE];
+        pointsIcon.frame = CGRectMake(0,0,ABILITY_TABLE_VIEW_ROW_HEIGHT, ABILITY_TABLE_VIEW_ROW_HEIGHT);
+        pointsIcon.center = CGPointMake(ABILITY_TABLE_VIEW_ROW_HEIGHT * 1.7, ABILITY_TABLE_VIEW_ROW_HEIGHT/2);
+        
+        //NOTE this frame is changed in tableview
+        self.abilityText = [[UILabel alloc] initWithFrame:CGRectMake(0,0,self.scrollView.frame.size.width, cellHeight)];
         self.abilityText.font = [UIFont fontWithName:cardMainFont size:14];
         self.abilityText.textColor = [UIColor blackColor];
         
-        [self.scrollView addSubview: self.abilityText];
+        [self.scrollView addSubview:resourceIcon];
+        [self.scrollView addSubview:self.abilityMinCost];
+        [self.scrollView addSubview:pointsIcon];
+        [self.scrollView addSubview:self.abilityPoints];
+        [self.scrollView addSubview:self.abilityText];
         [self addSubview:self.scrollView];
         [self.scrollView setUserInteractionEnabled:YES];
         [self.scrollView setShowsHorizontalScrollIndicator:NO];

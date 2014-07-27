@@ -169,7 +169,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
     else if (element == elementIce)
         return @"Ice";
     else if (element == elementLightning)
-        return @"Lightning";
+        return @"Thunder";
     else if (element == elementEarth)
         return @"Earth";
     else if (element == elementLight)
