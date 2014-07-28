@@ -1505,9 +1505,11 @@ int cardIDCount = 0;
                 //also includes a one-time heal
                 if (ability.abilityType == abilityAddMaxLife)
                     target.life += [ability.value intValue];
-                //also includes a one-time add cooldown
+                //also includes a one-time add/lose cooldown
                 if (ability.abilityType == abilityAddMaxCooldown)
                     target.cooldown += [ability.value intValue];
+                if (ability.abilityType == abilityLoseMaxCooldown)
+                    target.cooldown -= [ability.value intValue];
                 //also removes all existing abilities
                 else if (ability.abilityType == abilityRemoveAbility)
                 {
@@ -1664,6 +1666,8 @@ int cardIDCount = 0;
             NSLog(@"WARNING: Tried to return a hero to its hand.");
             return YES;
         }
+        
+        //TODO needs to reset any silenced abilty (instead of removing abilities with silence, set them to expired
         
         int monsterSide = monster.side;
         

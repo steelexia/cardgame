@@ -962,7 +962,7 @@ UIImageView*pointsImageBackground;
         {
             if ([existingWrapper.ability isEqualTypeTo:wrapper.ability])
             {
-                NSLog(@"NOT ENABLED DUE TO EQUAL TYPE: %@", [[Ability getDescription:wrapper.ability fromCard:_currentCardModel]string]);
+                //NSLog(@"NOT ENABLED DUE TO EQUAL TYPE: %@", [[Ability getDescription:wrapper.ability fromCard:_currentCardModel]string]);
                 wrapper.enabled = NO;
                 break;
             }
@@ -970,7 +970,7 @@ UIImageView*pointsImageBackground;
         
         if (wrapper.enabled == YES && (![self.currentCardModel isCompatible:wrapper.ability] || wrapper.minCost > _currentCardModel.cost))
         {
-            NSLog(@"NOT ENABLED DUE COMPATIBILITY OR COST %@", [[Ability getDescription:wrapper.ability fromCard:_currentCardModel]string]);
+            //NSLog(@"NOT ENABLED DUE COMPATIBILITY OR COST %@", [[Ability getDescription:wrapper.ability fromCard:_currentCardModel]string]);
             wrapper.enabled = NO;
             wrapper.enabled = NO;
         }
@@ -1093,8 +1093,9 @@ UIImageView*pointsImageBackground;
         
         if (wrapper.ability.otherValues != nil && wrapper.ability.otherValues.count >= 2)
         {
-            //1000,4000
-            //2000,8000
+            enum CastType castType = wrapper.ability.castType;
+            enum AbilityType abilityType = wrapper.ability.abilityType;
+            enum TargetType targetType = wrapper.ability.targetType;
             
             int minValue = [wrapper.ability.otherValues[0] intValue];
             int maxValue = [wrapper.ability.otherValues[1] intValue];
@@ -1108,17 +1109,35 @@ UIImageView*pointsImageBackground;
             
             int abilityCost = ceil(((wrapper.maxPoints - wrapper.minPoints)*valuePercent) + wrapper.minPoints);
             
-            //cast on move's points are divided by the max cooldown
-            if (wrapper.ability.castType == castOnMove && [self.currentCardModel isKindOfClass:[MonsterCardModel class]])
+            if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
             {
                 MonsterCardModel*monster = (MonsterCardModel*)self.currentCardModel;
-                abilityCost /= monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown;
                 
-                //TODO if minion has charge, + cost of equivalent ability with castOnSummon AND castOnHit, castOnMove?
+                if (castType == castOnSummon)
+                {
+                    //if is charge (assuming value = 0)
+                    if (abilityType == abilitySetCooldown && targetType == targetSelf)
+                    {
+                        
+                    }
+                }
+                //cast on move and hit's points are divided by the max cooldown
+                else if (castType == castOnMove || castType == castOnHit)
+                {
+                    abilityCost /= monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown;
+                }
+                
+                //TODO if minion has charge, + cost of equivalent ability with castOnSummon AND castOnHit, castOnMove?, castOnDeath
                 
                 //TODO if minion has taunt, all castOnDamaged becomes % more expensive
                 
                 //TODO if minion has no damage and no taunt, cast on death are discounted ?half off
+                
+                //TODO any targetVictim is incompatible with kill on hit targetVictim or targetAllEnemy
+                
+                //TODO destroy all other minion incompatible with destroy all friendly minions
+                
+                //TODO negative cast on hit become 0 if no attack, positive becomes ~50% if no attack
             }
             
             

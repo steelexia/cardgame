@@ -203,6 +203,9 @@ const int HERO_MAX_LIFE = 25000;
         }
     }
     
+    //NOTE: max cooldown cannot be lower than 1 (almost meaningless anyways), causes some graphics issues
+    if (totalCooldown < 1)
+        totalCooldown = 1;
     return totalCooldown;
 }
 
