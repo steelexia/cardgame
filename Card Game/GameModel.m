@@ -1701,15 +1701,15 @@ int cardIDCount = 0;
         }
         else if ([ability.value intValue] == 2)
         {
-            cost = ceil(cost*0.25);
-            damage = ceil(damage*0.25/100)*100;
-            life = ceil(life*0.25/100)*100;
+            cost = ceil(cost*0.35);
+            damage = ceil(damage*0.35/100)*100;
+            life = ceil(life*0.35/100)*100;
         }
         else if ([ability.value intValue] == 3)
         {
-            cost = ceil(cost*0.15);
-            damage = ceil(damage*0.15/100)*100;
-            life = ceil(life*0.15/100)*100;
+            cost = ceil(cost*0.3);
+            damage = ceil(damage*0.3/100)*100;
+            life = ceil(life*0.3/100)*100;
         }
         for (int i = 0 ; i < [ability.value intValue]; i++)
         {
@@ -1761,7 +1761,7 @@ int cardIDCount = 0;
 {
     for (Ability*monsterAbility in monster.abilities)
     {
-        if (monsterAbility.abilityType == ability.abilityType)
+        if (monsterAbility.abilityType == ability.abilityType && !monsterAbility.expired)
         {
             //TODO add abilities that cannot have duplicates here
             if (ability.abilityType == abilityTaunt || ability.abilityType == abilityPierce || ability.abilityType == abilityAssassin || ability.abilityType == abilityRemoveAbility)
@@ -1783,12 +1783,20 @@ int cardIDCount = 0;
     {
         //cannot add if contains the abilityRemoveAbility ability.
         for (Ability *ability in target.abilities)
-            if (ability.abilityType == abilityRemoveAbility && ability.targetType == targetSelf)
+            if (ability.abilityType == abilityRemoveAbility && ability.targetType == targetSelf && ability.castType == castAlways && !ability.expired)
                 return NO;
         
         //cannot add duplicate ability
         if ([self containsDuplicateAbility:target ability:ability])
             return NO;
+    }
+    
+    //if targetting an attacker, ability is avoided if target has abilityAssassin
+    if (ability.targetType == targetAttacker)
+    {
+        for (Ability *ability in target.abilities)
+            if (ability.abilityType == abilityAssassin && ability.targetType == targetSelf && ability.castType == castAlways && !ability.expired)
+                return NO;
     }
     
     return YES;

@@ -42,6 +42,9 @@
 /** Minimum cost required for the card to be able to use this ability. This prevents scenarios such as a cost 1 card (played on turn 1) having an ability with deal 10000 damage to random friendly minion, which would allow it to have extremely high combat stats for an ability that has almost no penalties */
 @property int minCost;
 
+/** Used for Card Editor to keep track of current cost based on the card's stats and other abilities */
+@property int currentCost;
+
 /** If the ability wrapped can be used by card of the specified element */
 -(BOOL)isCompatibleWithElement:(enum CardElement)element;
 
@@ -76,3 +79,22 @@
 @end
 
 #define ALL_ELEMENTS @(elementNeutral), @(elementFire), @(elementIce), @(elementLightning), @(elementEarth), @(elementLight), @(elementDark)
+
+#define FIRE_AND_ICE @(elementFire), @(elementIce)
+
+#define LIGHTNING_AND_EARTH @(elementLightning), @(elementEarth)
+
+#define LIGHT_AND_DARK @(elementLight), @(elementDark)
+
+#define OFFENSIVE_ELEMENTS @(elementFire), @(elementLightning), @(elementDark)
+
+#define DEFENSIVE_ELEMENTS @(elementIce), @(elementEarth), @(elementLight)
+
+#define ELEMENT_NEUTRAL @(elementNeutral)
+#define ELEMENT_FIRE @(elementFire)
+#define ELEMENT_ICE @(elementIce)
+#define ELEMENT_LIGHTNING @(elementLightning)
+#define ELEMENT_EARTH @(elementEarth)
+#define ELEMENT_LIGHT @(elementLight)
+#define ELEMENT_DARK @(elementDark)
+

@@ -683,6 +683,7 @@ UIImageView*pointsImageBackground;
         monster.damage = monster.baseDamage + change;
         [self.currentCardView updateView];
         [self updateCost];
+        [self updateNewAbilityList];
     }
     
     [self updateIncrementButton:damageDecButton];
@@ -734,6 +735,7 @@ UIImageView*pointsImageBackground;
         monster.maximumLife = monster.life = monster.baseMaxLife + change;
         [self.currentCardView updateView];
         [self updateCost];
+        [self updateNewAbilityList];
     }
     
     [self updateIncrementButton:lifeDecButton];
@@ -760,6 +762,7 @@ UIImageView*pointsImageBackground;
         monster.maximumCooldown = monster.cooldown = monster.baseMaxCooldown + change;
         [self.currentCardView updateView];
         [self updateCost];
+        [self updateNewAbilityList];
     }
     
     [self updateIncrementButton:cdDecButton];
@@ -955,9 +958,19 @@ UIImageView*pointsImageBackground;
 {
     //[self loadAllValidAbilities];
     
+    int i = 0;
     for (AbilityWrapper*wrapper in abilityNewTableView.currentAbilities)
     {
         wrapper.enabled = YES;
+        
+        [self updateAbilityPoints:wrapper withWrappers:abilityNewTableView.currentAbilities];
+        
+        //update the icon in the tableView
+        AbilityTableViewCell* cell = (AbilityTableViewCell*)[abilityNewTableView.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i++ inSection:0]];
+        cell.abilityPoints.text = [NSString stringWithFormat:@"%d", wrapper.currentCost];
+        if (wrapper.ability.abilityType == abilityAssassin && wrapper.ability.targetType == targetSelf && wrapper.ability.castType == castAlways)
+            NSLog(@"%d %d",i-1, wrapper.currentCost);
+        
         for (AbilityWrapper*existingWrapper in abilityExistingTableView.currentAbilities)
         {
             if ([existingWrapper.ability isEqualTypeTo:wrapper.ability])
@@ -971,7 +984,6 @@ UIImageView*pointsImageBackground;
         if (wrapper.enabled == YES && (![self.currentCardModel isCompatible:wrapper.ability] || wrapper.minCost > _currentCardModel.cost))
         {
             //NSLog(@"NOT ENABLED DUE COMPATIBILITY OR COST %@", [[Ability getDescription:wrapper.ability fromCard:_currentCardModel]string]);
-            wrapper.enabled = NO;
             wrapper.enabled = NO;
         }
     }
@@ -1091,70 +1103,13 @@ UIImageView*pointsImageBackground;
     {
         AbilityWrapper *wrapper = abilityExistingTableView.currentAbilities[i];
         
-        if (wrapper.ability.otherValues != nil && wrapper.ability.otherValues.count >= 2)
-        {
-            enum CastType castType = wrapper.ability.castType;
-            enum AbilityType abilityType = wrapper.ability.abilityType;
-            enum TargetType targetType = wrapper.ability.targetType;
-            
-            int minValue = [wrapper.ability.otherValues[0] intValue];
-            int maxValue = [wrapper.ability.otherValues[1] intValue];
-            int valueDifference = maxValue - minValue;
-            
-            if (valueDifference == 0)
-                valueDifference = 1;
-            
-            int currentValue = [wrapper.ability.value intValue] - minValue;
-            double valuePercent = (double)currentValue / valueDifference;
-            
-            int abilityCost = ceil(((wrapper.maxPoints - wrapper.minPoints)*valuePercent) + wrapper.minPoints);
-            
-            if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
-            {
-                MonsterCardModel*monster = (MonsterCardModel*)self.currentCardModel;
-                
-                if (castType == castOnSummon)
-                {
-                    //if is charge (assuming value = 0)
-                    if (abilityType == abilitySetCooldown && targetType == targetSelf)
-                    {
-                        
-                    }
-                }
-                //cast on move and hit's points are divided by the max cooldown
-                else if (castType == castOnMove || castType == castOnHit)
-                {
-                    abilityCost /= monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown;
-                }
-                
-                //TODO if minion has charge, + cost of equivalent ability with castOnSummon AND castOnHit, castOnMove?, castOnDeath
-                
-                //TODO if minion has taunt, all castOnDamaged becomes % more expensive
-                
-                //TODO if minion has no damage and no taunt, cast on death are discounted ?half off
-                
-                //TODO any targetVictim is incompatible with kill on hit targetVictim or targetAllEnemy
-                
-                //TODO destroy all other minion incompatible with destroy all friendly minions
-                
-                //TODO negative cast on hit become 0 if no attack, positive becomes ~50% if no attack
-            }
-            
-            
-            
-            //TODO add a modifier function for comparing with other abilities here
-            
-            self.currentCost += abilityCost;
-            
-            //update the icon in the tableView
-            AbilityTableViewCell* cell = (AbilityTableViewCell*)[abilityExistingTableView.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-            cell.abilityPoints.text = [NSString stringWithFormat:@"%d", abilityCost];
-        }
-        else
-        {
-            //no adjustable value/cost, just use min points
-            self.currentCost += wrapper.minPoints;
-        }
+        [self updateAbilityPoints:wrapper withWrappers:abilityExistingTableView.currentAbilities];
+        
+        //update the icon in the tableView
+        AbilityTableViewCell* cell = (AbilityTableViewCell*)[abilityExistingTableView.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        cell.abilityPoints.text = [NSString stringWithFormat:@"%d", wrapper.currentCost];
+        
+        self.currentCost += wrapper.currentCost;
     }
     
     //monster cards add stats into cost
@@ -1166,13 +1121,274 @@ UIImageView*pointsImageBackground;
         if (monster.damage == 0)
             self.currentCost -= 250; //experimental: no damange = can't attack = gain some extra points
         else
-            self.currentCost += ceil(monster.damage / 2 / (monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown));
+        {
+            BOOL hasTaunt = [self currentCardHasTaunt];
+            
+            //no taunt, every 1k attack is worth 500 points, and divided by cooldown
+            if (hasTaunt)
+            {
+                self.currentCost += ceil(monster.damage / 2 / (monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown));
+            }
+            //has taunt, cooldown provides much fewer reduction
+            else
+            {
+                double cooldown = (monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown);
+                if (cooldown > 1)
+                    cooldown = cooldown/15.f + 1; //only about 20% more damage at cooldown of 5
+                
+                self.currentCost += ceil(monster.damage / 2 / cooldown);
+            }
+        }
+        
         self.currentCost += ceil(monster.maximumLife / 2);
     }
    
     currentCostLabel.text = [NSString stringWithFormat:@"%d", self.currentCost];
     maxCostLabel.text = [NSString stringWithFormat:@"%d", self.maxCost];
     
+}
+
+-(void)updateAbilityPoints:(AbilityWrapper*)wrapper withWrappers:(NSArray*)wrappers
+{
+    int abilityCost = 0;
+    
+    enum CastType castType = wrapper.ability.castType;
+    enum AbilityType abilityType = wrapper.ability.abilityType;
+    enum TargetType targetType = wrapper.ability.targetType;
+    
+    //has min and max values, lerp the abilityCost
+    if (wrapper.ability.otherValues != nil && wrapper.ability.otherValues.count >= 2)
+    {
+        int minValue = [wrapper.ability.otherValues[0] intValue];
+        int maxValue = [wrapper.ability.otherValues[1] intValue];
+        int valueDifference = maxValue - minValue;
+        
+        if (valueDifference == 0)
+            valueDifference = 1;
+        
+        int currentValue = [wrapper.ability.value intValue] - minValue;
+        double valuePercent = (double)currentValue / valueDifference;
+        
+        abilityCost = ceil(((wrapper.maxPoints - wrapper.minPoints)*valuePercent) + wrapper.minPoints);
+    }
+    //no adjustable value/cost, just use min points
+    else
+    {
+        abilityCost = wrapper.minPoints;
+    }
+    
+    
+    //monster card specific stuff
+    if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
+    {
+        MonsterCardModel*monster = (MonsterCardModel*)self.currentCardModel;
+        
+        //fracture ability is a special case
+        if (abilityType == abilityFracture)
+        {
+            //base cost
+            int cooldown = (monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown);
+            abilityCost += monster.damage * 0.5 / cooldown;
+            abilityCost += monster.life * 0.5;
+            
+            if (castType == castOnDamaged)
+                abilityCost *= 2;
+            else if (castType == castOnEndOfTurn)
+                abilityCost *= 3;
+            else if (castType == castOnMove)
+                abilityCost *= 3;
+        }
+        else if (abilityType == abilityPierce)
+        {
+            abilityCost += monster.damage * 0.1;
+        }
+        else if (abilityType == abilityLoseDamage)
+        {
+            //lose damage abilities' negative points are capped by the minion's actual damage. e.g. if minion has 2000 damage, -2500 damage on hit is same as -2000
+            if (targetType == targetSelf)
+            {
+                if (castType == castOnHit)
+                {
+                    if (![self currentCardHasTaunt]) //taunt removes the bonus
+                    {
+                        if (abilityCost < -monster.damage*0.1)
+                            abilityCost = -monster.damage*0.1;
+                    }
+                }
+                else if (castType == castOnDamaged)
+                {
+                    if (abilityCost < -monster.damage*0.2)
+                        abilityCost = -monster.damage*0.2;
+                }
+                else if (castType == castOnMove)
+                {
+                    if (abilityCost < -monster.damage*0.4)
+                        abilityCost = -monster.damage*0.4;
+                }
+            }
+        }
+        else if (abilityType == abilityAddCooldown || abilityType == abilityAddMaxCooldown)
+        {
+            if (targetType == targetSelf)
+            {
+                //adding cooldown to self depends on the damage
+                if (castType == castOnHit)
+                {
+                    if (![self currentCardHasTaunt]) //taunt removes the bonus
+                    {
+                        if (abilityType == abilityAddCooldown)
+                            abilityCost = -monster.damage*0.1;
+                        else if (abilityType == abilityAddMaxCooldown)
+                            abilityCost = -monster.damage*0.2;
+                    }
+                }
+            }
+        }
+        
+        
+        
+        if (castType == castOnSummon)
+        {
+            //if is charge (assuming value = 0)
+            if (abilityType == abilitySetCooldown && targetType == targetSelf)
+            {
+                abilityCost += monster.damage; //having charge is equivalent in cost as having a deal damage ability
+                //NOTE: affects cast on hit abilities' cost
+            }
+        }
+        //cast on move and hit's points are divided by the max cooldown
+        else if (castType == castOnMove || castType == castOnHit)
+        {
+            if (castType == castOnHit)
+            {
+                //having assassin makes cast on hit MUCH better
+                if ([self currentCardHasAssassin])
+                    abilityCost *= 1.4;
+                
+                //charge makes this even more expensive
+                if ([self currentCardHasCharge])
+                    abilityCost *= 1.75;
+                
+                //cast on hit with no damage from the minion
+                if (monster.damage == 0)
+                {
+                    //all negative becomes useless
+                    if (abilityCost < 0)
+                        abilityCost = 0;
+                    //positive gets discount
+                    else
+                        abilityCost *= 0.6;
+                }
+            }
+            
+            abilityCost /= monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown;
+        }
+        else if (castType == castOnDamaged || castType == castOnDeath)
+        {
+            BOOL hasTaunt = [self currentCardHasTaunt];
+            
+            if (hasTaunt)
+            {
+                //has taunt, becomes more expensive, although multiplier doesn't work on negative abilities
+                if (abilityCost > 0)
+                {
+                    if (castType == castOnDeath)
+                        abilityCost *= 1.15;
+                    else if (castType == castOnDamaged)
+                        abilityCost *= 1.45;
+                }
+            }
+            else
+            {
+                //no taunt, no damage
+                if (monster.damage == 0)
+                {
+                    //negative abilities become useless since nobody will attack it anyways
+                    if (abilityCost < 0)
+                        abilityCost = 0;
+                    else
+                    {
+                        //positive abilities receive discount
+                        if (castType == castOnDeath)
+                            abilityCost *= 0.6;
+                        else if (castType == castOnDamaged)
+                            abilityCost *= 0.5;
+                    }
+                }
+            }
+        }
+        else if (castType == castAlways)
+        {
+            if (targetType == targetSelf)
+            {
+                //taunt has its special case for values
+                if (abilityType == abilityTaunt)
+                {
+                    //costs 10% of stats
+                    abilityCost += monster.damage * 0.1;
+                    abilityCost += monster.life * 0.1;
+                }
+                else if (abilityType == abilityAssassin)
+                {
+                    //costs 40% of stats
+                    abilityCost += monster.damage * 0.25;
+                    abilityCost += monster.life * 0.25;
+                    abilityCost /= monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown;
+                    
+                    //damageless assassin has it cheaper
+                    if (monster.damage == 0)
+                        abilityCost *= 0.6;
+                }
+            }
+        }
+
+    }
+    else if ([self.currentCardModel isKindOfClass:[SpellCardModel class]])
+    {
+        if (abilityType == abilityAddResource)
+        {
+            if (targetType == targetHeroFriendly && castType == castOnSummon)
+            {
+                //half off if ability is spell card and has no other abilities
+                if (wrappers.count == 1)
+                    abilityCost *= 0.5;
+            }
+        }
+    }
+    
+    wrapper.currentCost = abilityCost;
+}
+
+-(BOOL)currentCardHasTaunt
+{
+    if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
+        for (AbilityWrapper *wrapper in abilityExistingTableView.currentAbilities)
+            if (wrapper.ability.abilityType == abilityTaunt && wrapper.ability.targetType == targetSelf && wrapper.ability.castType == castAlways)
+                return YES;
+    
+    return NO;
+}
+
+-(BOOL)currentCardHasAssassin
+{
+    if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
+        for (AbilityWrapper *wrapper in abilityExistingTableView.currentAbilities)
+            if (wrapper.ability.abilityType == abilityAssassin && wrapper.ability.targetType == targetSelf && wrapper.ability.castType == castAlways)
+                return YES;
+    
+    return NO;
+}
+
+/** Charge means on summon set self cooldown to 0 */
+-(BOOL)currentCardHasCharge
+{
+    //NOTE: assumes value = 0
+    if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
+        for (AbilityWrapper *wrapper in abilityExistingTableView.currentAbilities)
+            if (wrapper.ability.abilityType == abilitySetCooldown && wrapper.ability.targetType == targetSelf && wrapper.ability.castType == castOnSummon)
+                return YES;
+    
+    return NO;
 }
 
 -(void)monsterButtonPressed
@@ -1690,11 +1906,11 @@ UIImageView*pointsImageBackground;
                          [elementDescriptionLabel removeFromSuperview];
                      }];
     
-    
-    
-    [self resetAbilityViews];
-    [self updateNewAbilityList];
+    //[self resetAbilityViews];
     [self updateExistingAbilityList];
+    [abilityNewTableView.currentAbilities removeAllObjects];
+    [self loadAllValidAbilities];
+    [self updateNewAbilityList];
     [self reloadCardView];
 }
 
@@ -1708,6 +1924,8 @@ UIImageView*pointsImageBackground;
         
         [abilityAddButton setEnabled:[abilityNewTableView.currentAbilities[indexPath.row] enabled]];
         [self abilityEditAreaSetEnabled:NO]; //turn off the other table's buttons
+        
+        [self removeAllStatButtons];
     }
     else if (tableView == abilityExistingTableView)
     {
@@ -1720,6 +1938,7 @@ UIImageView*pointsImageBackground;
         
         [self updateAbilityButtons:wrapper];
     }
+    
 }
 
 -(void)updateAbilityButtons:(AbilityWrapper*)wrapper
@@ -1755,7 +1974,17 @@ UIImageView*pointsImageBackground;
     {
         //must be valid element and rarity
         if ([wrapper isCompatibleWithCardModel:_currentCardModel])
+        {
             [abilityNewTableView.currentAbilities addObject:wrapper];
+            if (wrapper.ability.otherValues != nil && wrapper.ability.otherValues.count == 2)
+            {
+                NSNumber *valueA = wrapper.ability.otherValues[0];
+                NSNumber *valueB = wrapper.ability.otherValues[1];
+                wrapper.ability.value = abs(wrapper.minPoints) < abs(wrapper.maxPoints) ? valueA : valueB;
+            }
+            else
+                wrapper.ability.value = 0;
+        }
     }
     
     //sort the valid abilities

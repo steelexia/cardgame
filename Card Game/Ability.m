@@ -89,6 +89,7 @@
     //abilities with opposite effect can co-exist only if their target or cast types are different
     if (self.targetType == ability.targetType && self.castType == ability.castType)
     {
+        //TODO these are old if statements, should move down into more compact version
         //add damage and lose damage
         if ((self.abilityType == abilityAddDamage && ability.abilityType == abilityLoseDamage)
             || (self.abilityType == abilityLoseDamage && ability.abilityType == abilityAddDamage))
@@ -141,7 +142,58 @@
             return NO;
     }
     
-    //cast types:
+    //don't know a better way to cut this down in half
+    for (int i = 0; i < 2; i++)
+    {
+        Ability *a,*b;
+        if (i == 0)
+        {
+            a = self;
+            b = ability;
+        }
+        else if (i == 1)
+        {
+            a = ability;
+            b = self;
+        }
+        
+        //if one ability is kill, and they have both same cast types
+        if (a.abilityType == abilityKill && a.castType == b.castType)
+        {
+            //if the kill ability targets enemies
+            if (a.targetType == targetAllEnemyMinions || a.targetType == targetAllMinion || a.targetType == targetVictimMinion)
+            {
+                //then the other ability cannot target the victim (subset of a), or any target type same as ability a
+                if (b.targetType == targetVictim || b.targetType == targetVictimMinion || (b.targetType == a.targetType))
+                {
+                    //this prevents for example killing all enemy minions and adding attack to victim minion, which is meaningless
+                    return NO;
+                }
+            }
+        }
+        
+        //if same cast type
+        if (a.castType == b.castType)
+        {
+            //one ability is kill all minions
+            if (a.abilityType == abilityKill && a.targetType == targetAllMinion)
+            {
+                //the other cannot be kill all enemy minions or kill all friendly minions
+                if (b.abilityType == abilityKill && (b.targetType == targetAllEnemyMinions || b.targetType == targetAllFriendlyMinions))
+                    return NO;
+            }
+            
+            //draw card abilities cannot be draw for enemy and friendly, for that must use the targetAll instead (because drawing for all is better than the difference of draw for own and draw for enemy
+            if (a.abilityType == abilityDrawCard && b.abilityType == abilityDrawCard)
+            {
+                if (a.targetType == targetHeroFriendly && b.targetType == targetHeroEnemy)
+                    return NO;
+            }
+        }
+        
+    }
+    
+    //cast types: cannot have more than one selectable cast type
     NSArray*targetOneConflicts = @[[NSNumber numberWithInt:targetOneAny],[NSNumber numberWithInt:targetOneFriendly],[NSNumber numberWithInt:targetOneFriendlyMinion], [NSNumber numberWithInt:targetOneEnemy], [NSNumber numberWithInt:targetOneEnemyMinion], [NSNumber numberWithInt:targetHeroAny], [NSNumber numberWithInt:targetOneAnyMinion]];
     
     //cannot have abilities with different castTypes

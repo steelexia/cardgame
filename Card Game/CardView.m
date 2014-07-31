@@ -344,8 +344,6 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
             [self addSubview: elementLabel];
         }
         
-        
-        
         self.damagePopup = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 300, 50)];
         self.damagePopup.center = self.center;
         self.damagePopup.textAlignment = NSTextAlignmentCenter;

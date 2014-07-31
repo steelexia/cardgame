@@ -37,6 +37,7 @@ const int ABILITY_TABLE_VIEW_ROW_HEIGHT = 20;
         
         [_tableView setDataSource:self];
         [_tableView setDelegate:self];
+        _tableView.allowsMultipleSelection = NO;
         
         [self setUserInteractionEnabled:YES];
         [self addSubview:_tableView];
@@ -79,7 +80,7 @@ const int ABILITY_TABLE_VIEW_ROW_HEIGHT = 20;
     cell.abilityText.attributedText = abilityText;
     cell.abilityText.frame = CGRectMake(50,0,textSize.width, cell.bounds.size.height);
     cell.abilityMinCost.text = [NSString stringWithFormat:@"%d", wrapper.minCost];
-    cell.abilityPoints.text = [NSString stringWithFormat:@"%d", wrapper.minPoints];
+    cell.abilityPoints.text = [NSString stringWithFormat:@"%d", wrapper.currentCost];
     cell.scrollView.frame = cell.bounds;
     [cell.scrollView setContentSize:CGSizeMake(textSize.width + 50, cell.bounds.size.height)];
     [cell.scrollView setContentOffset:CGPointMake(0,0)];
