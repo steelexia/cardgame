@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSNumber * damage;
 @property (nonatomic, retain) NSNumber * life;
 @property (nonatomic, retain) NSNumber * cooldown;
+@property (nonatomic, retain) NSNumber * element;
 
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * creator;

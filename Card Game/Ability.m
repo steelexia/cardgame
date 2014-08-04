@@ -175,11 +175,11 @@
         //if same cast type
         if (a.castType == b.castType)
         {
-            //one ability is kill all minions
-            if (a.abilityType == abilityKill && a.targetType == targetAllMinion)
+            //one ability is kill
+            if (a.abilityType == abilityKill)
             {
-                //the other cannot be kill all enemy minions or kill all friendly minions
-                if (b.abilityType == abilityKill && (b.targetType == targetAllEnemyMinions || b.targetType == targetAllFriendlyMinions))
+                //the other cannot be any ability subset of the kill ability (e.g. kill all minions, add damage for enemy is invalid)
+                if ([b isTargetTypeSubsetOf:a.targetType])
                     return NO;
             }
             
@@ -190,7 +190,6 @@
                     return NO;
             }
         }
-        
     }
     
     //cast types: cannot have more than one selectable cast type
@@ -201,6 +200,82 @@
         return NO;
     
     return YES;
+}
+
+-(BOOL)isTargetTypeSubsetOf:(enum TargetType)targetType
+{
+    //base case: equal types are subsets
+    if (self.targetType == targetType)
+        return YES;
+    
+    //any is subset of targetall
+    if (targetType == targetAll)
+        return YES;
+    
+    //non minion-specifics:
+    if (targetType == targetAllFriendly)
+    {
+        if ([self isTargetTypeSubsetOf:targetOneFriendly])
+            return YES;
+        if ([self isTargetTypeSubsetOf:targetOneRandomFriendly])
+            return YES;
+        if ([self isTargetTypeSubsetOf:targetAllFriendlyMinions])
+            return YES;
+    }
+    if (targetType == targetAllEnemy)
+    {
+        if ([self isTargetTypeSubsetOf:targetOneEnemy])
+            return YES;
+        if ([self isTargetTypeSubsetOf:targetOneRandomEnemy])
+            return YES;
+        if ([self isTargetTypeSubsetOf:targetAllEnemyMinions])
+            return YES;
+    }
+    
+    //minion specifics
+    if (targetType == targetAllMinion)
+    {
+        if ([self isTargetTypeSubsetOf:targetAllFriendlyMinions] || [self isTargetTypeSubsetOf:targetAllEnemyMinions])
+            return YES;
+        if ([self isTargetTypeSubsetOf:targetOneAnyMinion] || [self isTargetTypeSubsetOf:targetOneRandomMinion])
+            return YES;
+    }
+    if (targetType == targetAllFriendlyMinions)
+    {
+        if ([self isTargetTypeSubsetOf:targetOneFriendlyMinion])
+            return YES;
+        if ([self isTargetTypeSubsetOf:targetOneRandomFriendlyMinion])
+            return YES;
+    }
+    if (targetType == targetAllEnemyMinions)
+    {
+        if ([self isTargetTypeSubsetOf:targetOneEnemyMinion])
+            return YES;
+        if ([self isTargetTypeSubsetOf:targetOneRandomEnemyMinion])
+            return YES;
+    }
+    
+    
+    //hero specifics
+    if (targetType == targetHeroAny)
+    {
+        if ([self isTargetTypeSubsetOf:targetHeroFriendly])
+            return YES;
+        if ([self isTargetTypeSubsetOf:targetHeroEnemy])
+            return YES;
+    }
+    if (targetType == targetOneFriendly)
+    {
+        if ([self isTargetTypeSubsetOf:targetHeroFriendly])
+            return YES;
+    }
+    if (targetType == targetOneEnemy)
+    {
+        if ([self isTargetTypeSubsetOf:targetHeroEnemy])
+            return YES;
+    }
+    
+    return NO;
 }
 
 +(NSString*) getDescriptionForBaseAbilities: (CardModel*) card
@@ -332,7 +407,7 @@
             valueDescription = @"X";
             shouldHighlightValue = YES;
         }
-        else
+        else if (ability.otherValues.count > 0)
             valueDescription = [NSString stringWithFormat:@"%@", ability.otherValues[0]];
     }
     else

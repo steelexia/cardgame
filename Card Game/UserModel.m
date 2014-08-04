@@ -23,6 +23,52 @@ const int INITIAL_DECK_LIMIT = 3;
     userAllCDCards = [NSMutableArray array];
     [userAllCards addObjectsFromArray:[SinglePlayerCards getDeckOne].cards];
     userDeckLimit = INITIAL_DECK_LIMIT;
+    
+    [UserModel updateUser:^(void)
+     {
+         userGold = [userPF[@"gold"] intValue];
+         if (userPF[@"cards"] == nil)
+         {
+             userPF[@"cards"] = @[];
+             [userPF saveInBackground];
+         }
+     }
+     ];
+}
+
++(void)updateUser:(void (^)())onFinishBlock
+{
+    PFQuery *query = [PFUser query];
+    [query whereKey:@"objectId" equalTo:[PFUser currentUser].objectId];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error)
+        {
+            if (objects.count > 0)
+            {
+                userPF = objects[0];
+                onFinishBlock();
+            }
+            else
+            {
+                NSLog(@"ERROR: COULD NOT FIND USER!");
+            }
+        }
+        else
+        {
+            NSLog(@"ERROR: ERROR FINDING USER!");
+        }
+    }];
+}
+
++(BOOL)ownsCardWithID:(int)idNumber
+{
+    for (CardModel*card in userAllCards)
+    {
+        //NOTE: just for temporary when some cards are single player cards
+        if (card.type == cardTypeStandard && card.idNumber == idNumber)
+            return YES;
+    }
+    return NO;
 }
 
 +(void)loadAllCards
@@ -107,6 +153,7 @@ const int INITIAL_DECK_LIMIT = 3;
     cdCard.idNumber = [NSNumber numberWithInt:card.idNumber];
     cdCard.cost = [NSNumber numberWithInt:card.cost];
     cdCard.rarity = [NSNumber numberWithInt:card.rarity];
+    cdCard.element = [NSNumber numberWithInt:card.element];
     cdCard.name = card.name;
     cdCard.creator = card.creator;
     cdCard.creatorName = card.creatorName;
@@ -163,6 +210,7 @@ const int INITIAL_DECK_LIMIT = 3;
     
     card.cost = [cdCard.cost intValue];
     card.rarity = [cdCard.rarity intValue];
+    card.element = [cdCard.element intValue];
     card.name = cdCard.name;
     card.creator = cdCard.creator;
     card.creatorName = cdCard.creatorName;
@@ -286,6 +334,19 @@ const int INITIAL_DECK_LIMIT = 3;
                                 block:^(NSNumber *idNumber, NSError *error) {
                                     if (!error) {
                                         card.idNumber = [idNumber integerValue];
+                                        
+                                        //upload card to parse
+                                        [CardModel addCardToParse:card];
+                                        
+                                        //create a sale
+                                        PFObject *sale = [PFObject objectWithClassName:@"Sale"];
+                                        sale[@"cardID"] = idNumber;
+                                        sale[@"likes"] = @0;
+                                        sale[@"seller"] = [PFUser currentUser].objectId;
+                                        sale[@"stock"] = @10;
+                                        
+                                        [sale saveInBackground];
+                                        
                                         [self saveCard:card];
                                     }
                                     else

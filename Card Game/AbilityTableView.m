@@ -80,10 +80,27 @@ const int ABILITY_TABLE_VIEW_ROW_HEIGHT = 20;
     cell.abilityText.attributedText = abilityText;
     cell.abilityText.frame = CGRectMake(50,0,textSize.width, cell.bounds.size.height);
     cell.abilityMinCost.text = [NSString stringWithFormat:@"%d", wrapper.minCost];
-    cell.abilityPoints.text = [NSString stringWithFormat:@"%d", wrapper.currentCost];
+    cell.abilityPoints.text = [NSString stringWithFormat:@"%d", wrapper.currentPoints];
     cell.scrollView.frame = cell.bounds;
     [cell.scrollView setContentSize:CGSizeMake(textSize.width + 50, cell.bounds.size.height)];
     [cell.scrollView setContentOffset:CGPointMake(0,0)];
+    
+    if (wrapper.currentPoints > wrapper.basePoints)
+    {
+        cell.abilityPoints.textColor = [UIColor redColor];
+        //NSLog(@"RED: %d %d", wrapper.currentPoints, wrapper.basePoints);
+        //NSLog(@"%@", [[Ability getDescription:wrapper.ability fromCard:_currentCardModel]string]);
+    }
+    else if (wrapper.currentPoints < wrapper.basePoints)
+    {
+        cell.abilityPoints.textColor = [UIColor greenColor];
+        //NSLog(@"GREEN: %d %d", wrapper.currentPoints, wrapper.basePoints);
+        //NSLog(@"%@", [[Ability getDescription:wrapper.ability fromCard:_currentCardModel]string]);
+    }
+    else
+    {
+        cell.abilityPoints.textColor = [UIColor whiteColor];
+    }
     
     if (!wrapper.enabled)
     [cell.abilityText setTextColor:[UIColor lightGrayColor]];
@@ -114,6 +131,5 @@ const int ABILITY_TABLE_VIEW_ROW_HEIGHT = 20;
     [self.currentAbilities removeAllObjects];
     [self.tableView reloadData];
 }
-
 
 @end

@@ -23,6 +23,7 @@
 @synthesize creator = _creator;
 @synthesize creatorName = _creatorName;
 @synthesize element = _element;
+@synthesize cardViewState = _cardViewState;
 
 const int MONSTER_CARD = 0, SPELL_CARD = 1;
 
@@ -43,6 +44,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
         self.type = cardTypeStandard;
         self.creator = @"Unknown";
         self.element = elementNeutral;
+        self.cardViewState = cardViewStateCardViewer;
     }
     
     return self;
@@ -135,6 +137,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
     [self.abilities addObject:ability];
 }
 
+/*
 -(BOOL)isCompatible:(Ability*)ability
 {
     if ([self isKindOfClass:[SpellCardModel class]])
@@ -150,7 +153,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
     }
     
     return YES;
-}
+}*/
 
 - (NSComparisonResult)compare:(CardModel *)otherObject
 {
@@ -226,9 +229,10 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
     NSNumber *rarity = cardPF[@"rarity"];
     NSArray *abilities = cardPF[@"abilities"];
     NSString *creator = cardPF[@"creator"];
+    NSNumber *element = cardPF[@"element"];
     
     //TODO in future this should [probably] never be nil
-    if (creator != nil)
+    if (creator != nil && ![creator isEqualToString:@"Unknown"])
     {
         card.creator = creator;
         card.creatorName = @"Loading..."; //TODO
@@ -254,6 +258,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
     card.name = name;
     card.cost = [cost intValue];
     card.rarity = [rarity intValue];
+    card.element = [element intValue];
     
     return card;
 }
@@ -268,6 +273,8 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
     cardPF[@"cost"] = [NSNumber numberWithInt:card.cost];
     cardPF[@"rarity"] = [NSNumber numberWithInt:card.rarity];
     cardPF[@"creator"] = card.creator;
+    
+    cardPF[@"element"] = [NSNumber numberWithInt:card.element];
    
     if ([card isKindOfClass:[MonsterCardModel class]])
     {

@@ -43,7 +43,10 @@
 @property int minCost;
 
 /** Used for Card Editor to keep track of current cost based on the card's stats and other abilities */
-@property int currentCost;
+@property int currentPoints;
+
+/** For Card Editor. Stores the cost without any modifiers from other abilities or stats */
+@property int basePoints;
 
 /** If the ability wrapped can be used by card of the specified element */
 -(BOOL)isCompatibleWithElement:(enum CardElement)element;

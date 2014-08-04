@@ -69,6 +69,8 @@
 /** Initializes with attached CardModel, which should be one of its child classes */
 -(instancetype)initWithModel: (CardModel*)cardModel cardImage:(UIImageView*)cardImage viewMode:(enum CardViewMode)cardViewMode;
 
+-(instancetype)initWithModel:(CardModel *)cardModel cardImage:(UIImageView*)cardImage viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState;
+
 /** Updates its view after values are updated (i.e. lost life) */
 -(void)updateView;
 
@@ -114,6 +116,7 @@ enum CardViewState{
     cardViewStateMaximize,
     cardViewStateCardViewer,
     cardViewStateCardViewerGray,
+    cardViewStateCardViewerTransparent,
 } ;
 
 enum CardHighlightType

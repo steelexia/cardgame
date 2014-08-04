@@ -7,6 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		90456EC9198AFD6B00B807DC /* CardsCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 90456EC8198AFD6B00B807DC /* CardsCollectionCell.m */; };
+		90456ECC198D4DB500B807DC /* DeckCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 90456ECB198D4DB500B807DC /* DeckCell.m */; };
+		90456ECF198D588D00B807DC /* DeckCardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 90456ECE198D588D00B807DC /* DeckCardCell.m */; };
+		90456ED3198D717200B807DC /* StoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 90456ED2198D717200B807DC /* StoreViewController.m */; };
+		90456ED6198D72AA00B807DC /* StoreCardsCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90456ED5198D72AA00B807DC /* StoreCardsCollectionView.m */; };
+		90456ED9198DAAE700B807DC /* StoreCardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 90456ED8198DAAE700B807DC /* StoreCardCell.m */; };
+		90456EDC198DBECC00B807DC /* GameStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 90456EDB198DBECC00B807DC /* GameStore.m */; };
+		90456EE3198F1B9100B807DC /* buy_button_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 90456EDD198F1B9100B807DC /* buy_button_gray.png */; };
+		90456EE4198F1B9100B807DC /* buy_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 90456EDE198F1B9100B807DC /* buy_button.png */; };
+		90456EE5198F1B9100B807DC /* edit_button_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 90456EDF198F1B9100B807DC /* edit_button_gray.png */; };
+		90456EE6198F1B9100B807DC /* edit_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 90456EE0198F1B9100B807DC /* edit_button.png */; };
+		90456EE7198F1B9100B807DC /* like_button_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 90456EE1198F1B9100B807DC /* like_button_gray.png */; };
+		90456EE8198F1B9100B807DC /* like_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 90456EE2198F1B9100B807DC /* like_button.png */; };
 		90605408191AA9D3000B3B93 /* PlayerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 90605407191AA9D3000B3B93 /* PlayerModel.m */; };
 		9060540B191AAE1B000B3B93 /* DeckModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9060540A191AAE1B000B3B93 /* DeckModel.m */; };
 		9060540D191C032B000B3B93 /* end_turn_button_up.png in Resources */ = {isa = PBXBuildFile; fileRef = 9060540C191C032B000B3B93 /* end_turn_button_up.png */; };
@@ -131,6 +144,26 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		90456EC7198AFD6B00B807DC /* CardsCollectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardsCollectionCell.h; sourceTree = "<group>"; };
+		90456EC8198AFD6B00B807DC /* CardsCollectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardsCollectionCell.m; sourceTree = "<group>"; };
+		90456ECA198D4DB500B807DC /* DeckCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeckCell.h; sourceTree = "<group>"; };
+		90456ECB198D4DB500B807DC /* DeckCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeckCell.m; sourceTree = "<group>"; };
+		90456ECD198D588D00B807DC /* DeckCardCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeckCardCell.h; sourceTree = "<group>"; };
+		90456ECE198D588D00B807DC /* DeckCardCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeckCardCell.m; sourceTree = "<group>"; };
+		90456ED1198D717200B807DC /* StoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoreViewController.h; sourceTree = "<group>"; };
+		90456ED2198D717200B807DC /* StoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StoreViewController.m; sourceTree = "<group>"; };
+		90456ED4198D72AA00B807DC /* StoreCardsCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoreCardsCollectionView.h; sourceTree = "<group>"; };
+		90456ED5198D72AA00B807DC /* StoreCardsCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StoreCardsCollectionView.m; sourceTree = "<group>"; };
+		90456ED7198DAAE700B807DC /* StoreCardCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoreCardCell.h; sourceTree = "<group>"; };
+		90456ED8198DAAE700B807DC /* StoreCardCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StoreCardCell.m; sourceTree = "<group>"; };
+		90456EDA198DBECC00B807DC /* GameStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameStore.h; sourceTree = "<group>"; };
+		90456EDB198DBECC00B807DC /* GameStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameStore.m; sourceTree = "<group>"; };
+		90456EDD198F1B9100B807DC /* buy_button_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = buy_button_gray.png; path = "Card Game/buy_button_gray.png"; sourceTree = "<group>"; };
+		90456EDE198F1B9100B807DC /* buy_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = buy_button.png; path = "Card Game/buy_button.png"; sourceTree = "<group>"; };
+		90456EDF198F1B9100B807DC /* edit_button_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = edit_button_gray.png; path = "Card Game/edit_button_gray.png"; sourceTree = "<group>"; };
+		90456EE0198F1B9100B807DC /* edit_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = edit_button.png; path = "Card Game/edit_button.png"; sourceTree = "<group>"; };
+		90456EE1198F1B9100B807DC /* like_button_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = like_button_gray.png; path = "Card Game/like_button_gray.png"; sourceTree = "<group>"; };
+		90456EE2198F1B9100B807DC /* like_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = like_button.png; path = "Card Game/like_button.png"; sourceTree = "<group>"; };
 		90605406191AA9D3000B3B93 /* PlayerModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerModel.h; sourceTree = "<group>"; };
 		90605407191AA9D3000B3B93 /* PlayerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerModel.m; sourceTree = "<group>"; };
 		90605409191AAE1B000B3B93 /* DeckModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeckModel.h; sourceTree = "<group>"; };
@@ -398,6 +431,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		90456ED0198D715700B807DC /* Store Screen */ = {
+			isa = PBXGroup;
+			children = (
+				90456ED1198D717200B807DC /* StoreViewController.h */,
+				90456ED2198D717200B807DC /* StoreViewController.m */,
+				90456ED4198D72AA00B807DC /* StoreCardsCollectionView.h */,
+				90456ED5198D72AA00B807DC /* StoreCardsCollectionView.m */,
+				90456ED7198DAAE700B807DC /* StoreCardCell.h */,
+				90456ED8198DAAE700B807DC /* StoreCardCell.m */,
+				90456EDA198DBECC00B807DC /* GameStore.h */,
+				90456EDB198DBECC00B807DC /* GameStore.m */,
+			);
+			name = "Store Screen";
+			sourceTree = "<group>";
+		};
 		9069AACB1951E6A2006D1D98 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -527,6 +575,12 @@
 		907D9BD919226B4C0037C0CF /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				90456EDD198F1B9100B807DC /* buy_button_gray.png */,
+				90456EDE198F1B9100B807DC /* buy_button.png */,
+				90456EDF198F1B9100B807DC /* edit_button_gray.png */,
+				90456EE0198F1B9100B807DC /* edit_button.png */,
+				90456EE1198F1B9100B807DC /* like_button_gray.png */,
+				90456EE2198F1B9100B807DC /* like_button.png */,
 				90AB1515198355F00008FCDD /* points_icon.png */,
 				90AB15011979FB5E0008FCDD /* resource_icon.png */,
 				90AB14F6196CB7720008FCDD /* no_target_button.png */,
@@ -617,12 +671,18 @@
 				FA4025961956331300FCCBAB /* DeckEditorViewController.m */,
 				90DA43301959CDF900E44AED /* CardsCollectionView.h */,
 				90DA43311959CDF900E44AED /* CardsCollectionView.m */,
+				90456EC7198AFD6B00B807DC /* CardsCollectionCell.h */,
+				90456EC8198AFD6B00B807DC /* CardsCollectionCell.m */,
 				90DA43331959D75700E44AED /* CustomCollectionView.h */,
 				90DA43341959D75700E44AED /* CustomCollectionView.m */,
 				90DA4342195B256100E44AED /* DeckTableView.h */,
 				90DA4343195B256100E44AED /* DeckTableView.m */,
 				90DA4348195B271900E44AED /* CustomTableView.h */,
 				90DA4349195B271900E44AED /* CustomTableView.m */,
+				90456ECA198D4DB500B807DC /* DeckCell.h */,
+				90456ECB198D4DB500B807DC /* DeckCell.m */,
+				90456ECD198D588D00B807DC /* DeckCardCell.h */,
+				90456ECE198D588D00B807DC /* DeckCardCell.m */,
 			);
 			name = "Deck Editor Screen";
 			sourceTree = "<group>";
@@ -719,6 +779,7 @@
 		90F3529C191595C200601130 /* Card Game */ = {
 			isa = PBXGroup;
 			children = (
+				90456ED0198D715700B807DC /* Store Screen */,
 				90DA4347195B25EE00E44AED /* Game Battle Screen */,
 				90DA4345195B258400E44AED /* Deck Editor Screen */,
 				90DA4365195F5DF300E44AED /* Card Editor Screen */,
@@ -866,12 +927,15 @@
 				90DA4371195F96DB00E44AED /* decrement_button.png in Resources */,
 				90DA43C51969D21500E44AED /* add_deck_button_gray.png in Resources */,
 				90DA43BC1969D21500E44AED /* back_button.png in Resources */,
+				90456EE4198F1B9100B807DC /* buy_button.png in Resources */,
 				90AB1511197AEC310008FCDD /* card_ability_icon_assassin.png in Resources */,
 				90AB1512197AEC310008FCDD /* card_ability_icon_remove_ability.png in Resources */,
 				90DA43C31969D21500E44AED /* save_card_button_gray.png in Resources */,
 				90DA43BF1969D21500E44AED /* monster_button.png in Resources */,
+				90456EE7198F1B9100B807DC /* like_button_gray.png in Resources */,
 				90DA4358195E023600E44AED /* no_button.png in Resources */,
 				90DA4350195DF3C500E44AED /* save_deck_button.png in Resources */,
+				90456EE8198F1B9100B807DC /* like_button.png in Resources */,
 				90AB1500196F2FF20008FCDD /* encode-sans.compressed-bold.ttf in Resources */,
 				90AB15041979FFA40008FCDD /* battle_background_0_overlay.png in Resources */,
 				90DA43C71969D21500E44AED /* remove_deck_button.png in Resources */,
@@ -879,6 +943,7 @@
 				90DA435B195E0BD900E44AED /* add_deck_button.png in Resources */,
 				90AB14FF196F2FF20008FCDD /* encode-sans.compressed-black.ttf in Resources */,
 				90AB14F3196CA7E60008FCDD /* card_background_front_overlay_common.png in Resources */,
+				90456EE5198F1B9100B807DC /* edit_button_gray.png in Resources */,
 				90AB150D197AE3CF0008FCDD /* card_ability_icon_cast_on_damaged.png in Resources */,
 				90AB14F5196CA7F90008FCDD /* card_background_front_monster_overlay.png in Resources */,
 				90DA4372195F96DB00E44AED /* increment_button.png in Resources */,
@@ -908,6 +973,7 @@
 				907D9BF7192E979C0037C0CF /* hero_glow_select.png in Resources */,
 				9069AAE2195501AB006D1D98 /* card_background_front_earth_common.png in Resources */,
 				90AB1514197AF4590008FCDD /* card_ability_icon_cast_on_death.png in Resources */,
+				90456EE6198F1B9100B807DC /* edit_button.png in Resources */,
 				907D9BF1192D3DFB0037C0CF /* card_image_placeholder.png in Resources */,
 				9069AAE6195501AB006D1D98 /* card_background_front_lightning_common.png in Resources */,
 				907D9BDC192270DE0037C0CF /* field_edge.png in Resources */,
@@ -927,6 +993,7 @@
 				90F352A1191595C200601130 /* InfoPlist.strings in Resources */,
 				907D9C071932538E0037C0CF /* end_turn_button_disabled.png in Resources */,
 				907D9BFD192FD35F0037C0CF /* card_glow_target.png in Resources */,
+				90456EE3198F1B9100B807DC /* buy_button_gray.png in Resources */,
 				90F352CF191595F400601130 /* card_background_front.png in Resources */,
 				90AB1506197AC71E0008FCDD /* card_ability_icon_taunt.png in Resources */,
 				907D9BFF192FD3910037C0CF /* hero_glow_target.png in Resources */,
@@ -950,15 +1017,19 @@
 				90DA43D01969DD9D00E44AED /* CDDeckModel.m in Sources */,
 				90F352D81915C8DB00601130 /* GameModel.m in Sources */,
 				90F352DB1916B48A00601130 /* MonsterCardModel.m in Sources */,
+				90456EC9198AFD6B00B807DC /* CardsCollectionCell.m in Sources */,
 				9069AAD819528A7B006D1D98 /* StrokedLabel.m in Sources */,
 				90605408191AA9D3000B3B93 /* PlayerModel.m in Sources */,
 				90DA43351959D75700E44AED /* CustomCollectionView.m in Sources */,
 				90DA434A195B271900E44AED /* CustomTableView.m in Sources */,
+				90456ECC198D4DB500B807DC /* DeckCell.m in Sources */,
+				90456EDC198DBECC00B807DC /* GameStore.m in Sources */,
 				90DA43D61969F6F200E44AED /* AbilityTableViewCell.m in Sources */,
 				90DA43CA1969DBDB00E44AED /* DeckChooserViewController.m in Sources */,
 				90DA435E195E45B500E44AED /* MainScreenViewController.m in Sources */,
 				90DA4364195F5DE700E44AED /* CardEditorViewController.m in Sources */,
 				90AB14F1196B5F740008FCDD /* GameInfoTableView.m in Sources */,
+				90456ED9198DAAE700B807DC /* StoreCardCell.m in Sources */,
 				907D9C02193045BA0037C0CF /* SinglePlayerCards.m in Sources */,
 				90F352A7191595C200601130 /* AppDelegate.m in Sources */,
 				907D9BE7192446250037C0CF /* ViewLayer.m in Sources */,
@@ -969,6 +1040,7 @@
 				90AB14FA196EF4360008FCDD /* AIPlayer+Utility.m in Sources */,
 				90F352A3191595C200601130 /* main.m in Sources */,
 				907D9BDF19229B330037C0CF /* GameViewController+Animation.m in Sources */,
+				90456ED6198D72AA00B807DC /* StoreCardsCollectionView.m in Sources */,
 				90DA43321959CDF900E44AED /* CardsCollectionView.m in Sources */,
 				90DA43D9196A222800E44AED /* CustomScrollView.m in Sources */,
 				90DA4353195DF83D00E44AED /* UIConstants.m in Sources */,
@@ -979,7 +1051,9 @@
 				FA4025971956331300FCCBAB /* DeckEditorViewController.m in Sources */,
 				90DA436E195F833400E44AED /* CustomTextField.m in Sources */,
 				90DA43D31969E4F100E44AED /* CardGameCoreData.xcdatamodeld in Sources */,
+				90456ECF198D588D00B807DC /* DeckCardCell.m in Sources */,
 				90F352D519159A0300601130 /* CardModel.m in Sources */,
+				90456ED3198D717200B807DC /* StoreViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

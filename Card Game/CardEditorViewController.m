@@ -683,6 +683,7 @@ UIImageView*pointsImageBackground;
         monster.damage = monster.baseDamage + change;
         [self.currentCardView updateView];
         [self updateCost];
+        [self updateExistingAbilityList];
         [self updateNewAbilityList];
     }
     
@@ -735,6 +736,7 @@ UIImageView*pointsImageBackground;
         monster.maximumLife = monster.life = monster.baseMaxLife + change;
         [self.currentCardView updateView];
         [self updateCost];
+        [self updateExistingAbilityList];
         [self updateNewAbilityList];
     }
     
@@ -762,6 +764,7 @@ UIImageView*pointsImageBackground;
         monster.maximumCooldown = monster.cooldown = monster.baseMaxCooldown + change;
         [self.currentCardView updateView];
         [self updateCost];
+        [self updateExistingAbilityList];
         [self updateNewAbilityList];
     }
     
@@ -774,14 +777,12 @@ UIImageView*pointsImageBackground;
 {
     [self modifyCost:COST_INCREMENT];
     [abilityAddButton setEnabled:NO];
-    [self updateExistingAbilityList];
 }
 
 -(void)costDecButtonPressed
 {
     [self modifyCost:-COST_INCREMENT];
     [abilityAddButton setEnabled:NO];
-    [self updateExistingAbilityList];
 }
 
 -(void)modifyCost:(int)change
@@ -794,6 +795,7 @@ UIImageView*pointsImageBackground;
         self.currentCardModel.cost = self.currentCardModel.baseCost + change;
         [self.currentCardView updateView];
         [self updateCost];
+        [self updateExistingAbilityList];
         [self updateNewAbilityList]; //changing cost may unlock new abilities
     }
     
@@ -958,19 +960,14 @@ UIImageView*pointsImageBackground;
 {
     //[self loadAllValidAbilities];
     
-    int i = 0;
+    //int i = 0;
     for (AbilityWrapper*wrapper in abilityNewTableView.currentAbilities)
     {
         wrapper.enabled = YES;
         
-        [self updateAbilityPoints:wrapper withWrappers:abilityNewTableView.currentAbilities];
-        
         //update the icon in the tableView
-        AbilityTableViewCell* cell = (AbilityTableViewCell*)[abilityNewTableView.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i++ inSection:0]];
-        cell.abilityPoints.text = [NSString stringWithFormat:@"%d", wrapper.currentCost];
-        if (wrapper.ability.abilityType == abilityAssassin && wrapper.ability.targetType == targetSelf && wrapper.ability.castType == castAlways)
-            NSLog(@"%d %d",i-1, wrapper.currentCost);
-        
+        [self updateAbilityPoints:wrapper withWrappers:abilityExistingTableView.currentAbilities];
+
         for (AbilityWrapper*existingWrapper in abilityExistingTableView.currentAbilities)
         {
             if ([existingWrapper.ability isEqualTypeTo:wrapper.ability])
@@ -981,11 +978,14 @@ UIImageView*pointsImageBackground;
             }
         }
         
-        if (wrapper.enabled == YES && (![self.currentCardModel isCompatible:wrapper.ability] || wrapper.minCost > _currentCardModel.cost))
+        if (![wrapper isCompatibleWithCardModel:self.currentCardModel])
         {
             //NSLog(@"NOT ENABLED DUE COMPATIBILITY OR COST %@", [[Ability getDescription:wrapper.ability fromCard:_currentCardModel]string]);
             wrapper.enabled = NO;
         }
+        
+        if (wrapper.minCost > self.currentCardModel.cost)
+            wrapper.enabled = NO;
     }
     
     [abilityNewTableView.tableView reloadData];
@@ -1000,6 +1000,9 @@ UIImageView*pointsImageBackground;
     for (int i = abilityExistingTableView.currentAbilities.count - 1; i >= 0; i--)
     {
         AbilityWrapper*wrapper = abilityExistingTableView.currentAbilities[i];
+        
+        //update the icon in the tableView
+        [self updateAbilityPoints:wrapper withWrappers:abilityExistingTableView.currentAbilities];
         
         if (![wrapper isCompatibleWithCardModel:_currentCardModel] || wrapper.minCost > _currentCardModel.cost)
         {
@@ -1039,10 +1042,8 @@ UIImageView*pointsImageBackground;
         //remove from table
         [abilityExistingTableView.currentAbilities removeObjectAtIndex:selectedIndexPath.row];
         
-        [abilityNewTableView.tableView reloadData];
-        [abilityNewTableView reloadInputViews];
-        [abilityExistingTableView.tableView reloadData];
-        [abilityExistingTableView reloadInputViews];
+        [self updateNewAbilityList];
+        [self updateExistingAbilityList];
         
         [abilityRemoveButton setEnabled:NO];
         [abilityIncButton setEnabled:NO];
@@ -1107,9 +1108,9 @@ UIImageView*pointsImageBackground;
         
         //update the icon in the tableView
         AbilityTableViewCell* cell = (AbilityTableViewCell*)[abilityExistingTableView.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-        cell.abilityPoints.text = [NSString stringWithFormat:@"%d", wrapper.currentCost];
+        cell.abilityPoints.text = [NSString stringWithFormat:@"%d", wrapper.currentPoints];
         
-        self.currentCost += wrapper.currentCost;
+        self.currentCost += wrapper.currentPoints;
     }
     
     //monster cards add stats into cost
@@ -1177,6 +1178,7 @@ UIImageView*pointsImageBackground;
         abilityCost = wrapper.minPoints;
     }
     
+    wrapper.basePoints = abilityCost;
     
     //monster card specific stuff
     if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
@@ -1197,10 +1199,6 @@ UIImageView*pointsImageBackground;
                 abilityCost *= 3;
             else if (castType == castOnMove)
                 abilityCost *= 3;
-        }
-        else if (abilityType == abilityPierce)
-        {
-            abilityCost += monster.damage * 0.1;
         }
         else if (abilityType == abilityLoseDamage)
         {
@@ -1244,10 +1242,35 @@ UIImageView*pointsImageBackground;
                 }
             }
         }
-        
-        
-        
-        if (castType == castOnSummon)
+        if (castType == castAlways)
+        {
+            if (targetType == targetSelf)
+            {
+                //taunt has its special case for values
+                if (abilityType == abilityTaunt)
+                {
+                    //costs 10% of stats
+                    abilityCost += monster.damage * 0.1;
+                    abilityCost += monster.life * 0.1;
+                }
+                else if (abilityType == abilityAssassin)
+                {
+                    //costs 40% of stats
+                    abilityCost += monster.damage * 0.25;
+                    abilityCost += monster.life * 0.25;
+                    abilityCost /= monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown;
+                    
+                    //damageless assassin has it cheaper
+                    if (monster.damage == 0)
+                        abilityCost *= 0.6;
+                }
+                else if (abilityType == abilityPierce)
+                {
+                    abilityCost += monster.damage * 0.1;
+                }
+            }
+        }
+        else if (castType == castOnSummon)
         {
             //if is charge (assuming value = 0)
             if (abilityType == abilitySetCooldown && targetType == targetSelf)
@@ -1256,8 +1279,13 @@ UIImageView*pointsImageBackground;
                 //NOTE: affects cast on hit abilities' cost
             }
         }
+        
+        //save again since above are abilities with no cost
+        wrapper.basePoints = abilityCost;
+        
+        
         //cast on move and hit's points are divided by the max cooldown
-        else if (castType == castOnMove || castType == castOnHit)
+        if (castType == castOnMove || castType == castOnHit)
         {
             if (castType == castOnHit)
             {
@@ -1317,30 +1345,6 @@ UIImageView*pointsImageBackground;
                 }
             }
         }
-        else if (castType == castAlways)
-        {
-            if (targetType == targetSelf)
-            {
-                //taunt has its special case for values
-                if (abilityType == abilityTaunt)
-                {
-                    //costs 10% of stats
-                    abilityCost += monster.damage * 0.1;
-                    abilityCost += monster.life * 0.1;
-                }
-                else if (abilityType == abilityAssassin)
-                {
-                    //costs 40% of stats
-                    abilityCost += monster.damage * 0.25;
-                    abilityCost += monster.life * 0.25;
-                    abilityCost /= monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown;
-                    
-                    //damageless assassin has it cheaper
-                    if (monster.damage == 0)
-                        abilityCost *= 0.6;
-                }
-            }
-        }
 
     }
     else if ([self.currentCardModel isKindOfClass:[SpellCardModel class]])
@@ -1350,13 +1354,13 @@ UIImageView*pointsImageBackground;
             if (targetType == targetHeroFriendly && castType == castOnSummon)
             {
                 //half off if ability is spell card and has no other abilities
-                if (wrappers.count == 1)
+                if (wrappers.count == 0 || (wrappers.count == 1 && [wrapper.ability isEqualTypeTo:[wrappers[0] ability]]))
                     abilityCost *= 0.5;
             }
         }
     }
     
-    wrapper.currentCost = abilityCost;
+    wrapper.currentPoints = abilityCost;
 }
 
 -(BOOL)currentCardHasTaunt

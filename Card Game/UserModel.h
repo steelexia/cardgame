@@ -17,6 +17,11 @@
 +(void)saveDeck:(DeckModel*)deck;
 +(void)deleteDeck:(DeckModel*)deck;
 +(void)publishCard:(CardModel*)card;
++(void)saveCard:(CardModel*)card;
+/** Refreshes the parse user by querying from database */
++(void)updateUser;
+/** Returns true if userAllCards contains a card with same ID */
++(BOOL)ownsCardWithID:(int)idNumber;
 @end
 
 /** Array of CardModel's that the player has. */
@@ -26,7 +31,8 @@ NSMutableArray*userAllDecks;
 NSManagedObjectContext*userCDContext;
 DeckModel *userCurrentDeck;
 int userDeckLimit;
-
+int userGold;
+PFObject *userPF;
 
 
 /** The number of decks allowed per player at the very beginning of the game. Can gain more via quests etc. */

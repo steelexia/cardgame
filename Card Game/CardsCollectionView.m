@@ -12,7 +12,7 @@
 
 @implementation CardsCollectionView
 
-@synthesize currentCardViews = _currentCardViews;
+@synthesize currentCardModels = _currentCardModels;
 @synthesize collectionView = _collectionView;
 @synthesize parentViewController = _parentViewController;
 @synthesize isScrolling = _isScrolling;
@@ -25,9 +25,9 @@
     if (self) {
         self.collectionView = [[CustomCollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
         
-        self.currentCardViews = [NSMutableArray array];
+        self.currentCardModels = [NSMutableArray array];
         
-        [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cardsCollectionCell"];
+        [self.collectionView registerClass:[CardsCollectionCell class] forCellWithReuseIdentifier:@"cardsCollectionCell"];
         [self.collectionView setBackgroundColor:[UIColor clearColor]];
         
         [self.collectionView setDataSource:self];
@@ -42,27 +42,28 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return [self.currentCardViews count];
+    return [self.currentCardModels count];
 }
 
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *cell=[collectionView dequeueReusableCellWithReuseIdentifier:@"cardsCollectionCell" forIndexPath:indexPath];
-    
-    //clear all subviews in the cell
-    //[[cell subviews] makeObjectsPerformSelector: @selector(removeFromSuperview)];
+    CardsCollectionCell *cell=[collectionView dequeueReusableCellWithReuseIdentifier:@"cardsCollectionCell" forIndexPath:indexPath];
     
     //cell.backgroundColor=[UIColor greenColor];
-    CardView*cardView = self.currentCardViews[indexPath.row];
-    cardView.center = cell.center;
-    cardView.frame = CGRectMake(0,0,CARD_FULL_WIDTH,CARD_FULL_HEIGHT);
+    //if (cell.cardView != nil)
     
-    [cell addSubview:cardView];
+    [cell.cardView removeFromSuperview];
     
-    //greatly improves performance but freezes scale?
-    cell.layer.shouldRasterize = YES;
-    cell.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    CardModel*card = self.currentCardModels[indexPath.row];
+    
+    cell.cardView = [[CardView alloc] initWithModel:card cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]] viewMode:card.cardViewState viewState:card.cardViewState];
+    cell.cardView.cardHighlightType = cardHighlightNone;
+    cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_VIEWER_SCALE, CARD_VIEWER_SCALE);
+    cell.cardView.center = cell.center;
+    cell.cardView.frame = CGRectMake(0,0,CARD_FULL_WIDTH,CARD_FULL_HEIGHT);
+    
+    [cell addSubview:cell.cardView];
     
     return cell;
 }
@@ -87,10 +88,10 @@
 
 -(void)removeCellAt:(int)index onFinish:(void (^)())block
 {
-    if (index < self.currentCardViews.count)
+    if (index < self.currentCardModels.count)
     {
         [self.collectionView performBatchUpdates:^{
-            [self.currentCardViews removeObjectAtIndex:index];
+            [self.currentCardModels removeObjectAtIndex:index];
             NSIndexPath *indexPath =[NSIndexPath indexPathForRow:index inSection:0];
             [self.collectionView deleteItemsAtIndexPaths:[NSArray arrayWithObject:indexPath]];
         } completion:^(BOOL finished) {
@@ -101,7 +102,7 @@
 
 -(void)removeAllCells
 {
-    [self.currentCardViews removeAllObjects];
+    [self.currentCardModels removeAllObjects];
     [self.collectionView reloadData];
 }
 

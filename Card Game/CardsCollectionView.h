@@ -9,11 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "CustomCollectionView.h"
 #import "UIConstants.h"
+#import "CardsCollectionCell.h"
 
 @interface CardsCollectionView:UIView <UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, UICollectionViewDelegate>
 
-/** Array of CardView's that is currently being displayed */
-@property (strong) NSMutableArray*currentCardViews;
+
+@property (strong) NSMutableArray*currentCardModels;
+
+
 
 @property (strong) CustomCollectionView *collectionView;
 

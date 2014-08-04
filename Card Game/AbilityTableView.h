@@ -29,7 +29,6 @@
 
 -(void)removeAllCells;
 
-
 @end
 
 

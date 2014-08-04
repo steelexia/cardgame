@@ -28,11 +28,9 @@
     [UIConstants loadResources];
     
     //load resources
-    [UserModel setupUser];
+    [UserModel setupUser]; //also loads user data such as gold
     [AbilityWrapper loadAllAbilities];
     [CardView loadResources];
-    
-    [UserModel setupUser];
     
     userCDContext = [self managedObjectContext];
     

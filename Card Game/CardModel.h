@@ -54,6 +54,9 @@
 /** Stores all of the Ability's the card is currently holding. For MonsterCards, it is equivalent to all "enchantments" applied to it, which (IMPORTANT!) also includes debuffs. For SpellCards, it is simply the effects it will give when summoned.  */
 @property (strong) NSMutableArray* abilities;
 
+/** For card editor */
+@property enum CardViewState cardViewState;
+
 //----------------Functions----------------//
 
 
@@ -75,7 +78,7 @@
 -(void)addBaseAbility: (Ability*)ability;
 
 /** Checks if the ability is compatible with the current card. Calls Ability's compatible function as well. */
--(BOOL)isCompatible:(Ability*)ability;
+//-(BOOL)isCompatible:(Ability*)ability;
 
 /** Compares two cards. First compares by cost, and if identical, compares by name */
 - (NSComparisonResult)compare:(CardModel *)otherObject;

@@ -145,6 +145,31 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
     
 }
 
+-(instancetype)initWithModel:(CardModel *)cardModel cardImage:(UIImageView*)cardImage viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState
+{
+    self = [self initWithModel:cardModel cardImage:cardImage viewMode:cardViewMode];
+    
+    if (self)
+    {
+        _cardViewState = cardViewState;
+        
+        //do the changes without animation
+        super.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_VIEWER_SCALE, CARD_VIEWER_SCALE);
+
+        if (cardViewState == cardViewStateCardViewer)
+            self.mask.alpha = 0.0;
+        else if (cardViewState == cardViewStateCardViewerGray)
+            self.mask.alpha = 0.8;
+        else if (cardViewState == cardViewStateCardViewerTransparent)
+        {
+            self.mask.alpha = 0.4;
+            self.alpha = 0.3;
+        }
+    }
+    
+    return self;
+}
+
 -(instancetype)initWithModel:(CardModel *)cardModel cardImage:(UIImageView*)cardImage viewMode:(enum CardViewMode)cardViewMode
 {
     self = [super init]; //does not actually make an image because highlight has to be behind it..
@@ -650,7 +675,10 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
         [UIView animateWithDuration:0.3
                               delay:0
                             options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^{self.mask.alpha = 0.0;}
+                         animations:^{
+                             self.mask.alpha = 0.0;
+                             self.alpha = 1;
+                         }
                          completion:nil];
     }
     else if (cardViewState == cardViewStateCardViewerGray)
@@ -661,7 +689,23 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
         [UIView animateWithDuration:0.3
                               delay:0
                             options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^{self.mask.alpha = 0.8;}
+                         animations:^{
+                             self.mask.alpha = 0.8;
+                             self.alpha = 1;
+                         }
+                         completion:nil];
+    }
+    else if (cardViewState == cardViewStateCardViewerTransparent)
+    {
+        super.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_VIEWER_SCALE, CARD_VIEWER_SCALE);
+        
+        [UIView animateWithDuration:0.3
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             self.mask.alpha = 0.4;
+                             self.alpha = 0.3;
+                         }
                          completion:nil];
     }
     else{
@@ -673,8 +717,6 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
         //revert super's position
         super.center = self.originalPosition;
     }
-    
-    //NSLog(@"I'm called on %@", self);
     
     _cardViewState = cardViewState;
 }

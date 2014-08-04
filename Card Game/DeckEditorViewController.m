@@ -248,13 +248,30 @@ DeckModel * allCards;
 /** Update all cards to ensure cards that cannot be added are grayed out */
 - (void) updateCardsViewCards
 {
-    for (CardView* card in self.cardsView.currentCardViews)
+    for (CardModel* card in self.cardsView.currentCardModels)
     {
-        if ([self canAddCardToDeck: card])
-            card.cardViewState = cardViewStateCardViewer;
-        else
-            card.cardViewState = cardViewStateCardViewerGray;
+        [self updateCard:card];
     }
+}
+
+-(void) updateCard:(CardModel*)card
+{
+    if ([self.deckView.currentCells containsObject:card])
+    {
+        card.cardViewState = cardViewStateCardViewerTransparent;
+    }
+    else if ([self canAddCardToDeck: card])
+    {
+        //NSLog(@"can add");
+        card.cardViewState = cardViewStateCardViewer;
+    }
+    else
+    {
+        //NSLog(@"can't add");
+        card.cardViewState = cardViewStateCardViewerGray;
+    }
+    
+    card.cardView.cardViewState = card.cardViewState;
 }
 
 
@@ -289,7 +306,7 @@ DeckModel * allCards;
         //cardsView
         if ([cardView.superview isKindOfClass:[UICollectionViewCell class]])
         {
-            if (cardView != currentCard && currentCard == nil)
+            if (cardView != currentCard && currentCard == nil && cardView.cardViewState != cardViewStateCardViewerTransparent)
             {
                 CardView*newMaximizedView = [[CardView alloc] initWithModel:cardView.cardModel cardImage: [[UIImageView alloc] initWithImage:cardView.cardImage.image]viewMode:cardViewModeEditor]; //constructor also modifies monster's cardView pointer
                 [newMaximizedView setCardViewState:cardView.cardViewState];
@@ -297,8 +314,8 @@ DeckModel * allCards;
                 newMaximizedView.cardModel.cardView = cardView; //recover the pointer
                 
                 //find index of cardView
-                for (int i = 0; i < self.cardsView.currentCardViews.count; i++)
-                    if (self.cardsView.currentCardViews[i] == cardView)
+                for (int i = 0; i < self.cardsView.currentCardModels.count; i++)
+                    if (self.cardsView.currentCardModels[i] == [cardView cardModel])
                     {
                         currentIndex = i;
                         break;
@@ -330,9 +347,6 @@ DeckModel * allCards;
         }
         else if ([cardView.superview isKindOfClass:[UIScrollView class]])
         {
-            //TODO
-            //NSLog(@"clicked one in table view");
-
             //nearly identical code with cardview
             if (cardView != currentCard && currentCard == nil)
             {
@@ -343,7 +357,7 @@ DeckModel * allCards;
                 
                 //find index of cardView in table
                 for (int i = 0; i < self.deckView.currentCells.count; i++)
-                    if (self.deckView.currentCells[i] == cardView)
+                    if (self.deckView.currentCells[i] == cardView.cardModel)
                     {
                         currentIndex = i;
                         break;
@@ -481,7 +495,7 @@ DeckModel * allCards;
         
         [self.view addSubview:addCardToDeckButton];
         
-        NSMutableArray*reasons = [self canAddCardToDeckWithReason:currentCard];
+        NSMutableArray*reasons = [self canAddCardToDeckWithReason:currentCard.cardModel];
         if (reasons.count > 0)
         {
             NSString *reasonsText = @"Cannot add this card to deck.\n";
@@ -551,29 +565,29 @@ DeckModel * allCards;
 
 - (void) addCardToDeckPressed
 {
-    //TODO
     [currentCard removeFromSuperview];
     
-    [self addCardToDeckView:currentCard];
+    [self addCardToDeckView:currentCard.cardModel];
     
     currentCard = nil;
     
     [self unmaximizeCard:cardCollectionAddCard];
-    [self.cardsView removeCellAt:currentIndex onFinish:^(void){[self updateCardsViewCards];}];
+    //[self.cardsView removeCellAt:currentIndex onFinish:^(void){[self updateCardsViewCards];}];
+    //TODO fade it instead
     
     currentIndex = -1;
 }
 
 /** Inserts the card into the correct position in the deck view */
--(void)addCardToDeckView: (CardView*)card
+-(void)addCardToDeckView: (CardModel*)card
 {
     int insertionIndex = -1;
     
     //insert at the first position where card < card at index
     for (int i = 0; i < [self.deckView.currentCells count]; i++)
     {
-        CardView *cellCard = self.deckView.currentCells[i];
-        if ([card.cardModel compare:cellCard.cardModel] == NSOrderedAscending)
+        CardModel *cellCard = self.deckView.currentCells[i];
+        if ([card compare:cellCard] == NSOrderedAscending)
         {
             insertionIndex = i;
             break;
@@ -593,6 +607,7 @@ DeckModel * allCards;
     //scroll to the newly inserted position
     [self.deckView.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:insertionIndex inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     
+    [self updateCardsViewCards];
     [self updateCardsCounterLabel];
 }
 
@@ -600,27 +615,28 @@ DeckModel * allCards;
 {
     [currentCard removeFromSuperview];
     
-    [self addCardToCardsView:currentCard];
-    
     currentCard = nil;
     
     [self unmaximizeCard:cardCollectionRemoveCard];
     [self.deckView removeCellAt:currentIndex];
     [self updateCardsCounterLabel];
     [self updateCardsViewCards];
+    [self.cardsView reloadInputViews];
+    [self.cardsView.collectionView reloadData];
     currentIndex = -1;
 }
 
 /** Inserts the card into the correct position in the cards view */
+/*
 -(void)addCardToCardsView: (CardView*)card
 {
     int insertionIndex = -1;
     
     //insert at the first position where card < card at index
-    for (int i = 0; i < [self.cardsView.currentCardViews count]; i++)
+    for (int i = 0; i < [self.cardsView.currentCardModels count]; i++)
     {
-        CardView *cellCard = self.cardsView.currentCardViews[i];
-        if ([card.cardModel compare:cellCard.cardModel] == NSOrderedAscending)
+        CardModel *cellCard = self.cardsView.currentCardModels[i];
+        if ([card.cardModel compare:cellCard] == NSOrderedAscending)
         {
             insertionIndex = i;
             break;
@@ -629,18 +645,18 @@ DeckModel * allCards;
     
     //not found index, insert at end
     if (insertionIndex == -1)
-        insertionIndex = self.cardsView.currentCardViews.count;
+        insertionIndex = self.cardsView.currentCardModels.count;
     
     card.cardHighlightType = cardHighlightNone;
     card.cardViewState = cardViewStateCardViewer;
     card.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_VIEWER_SCALE, CARD_VIEWER_SCALE);
     
-    [self.cardsView.currentCardViews insertObject:card atIndex:insertionIndex];
+    [self.cardsView.currentCardModels insertObject:card atIndex:insertionIndex];
     
     NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:insertionIndex inSection:0];
     [self.cardsView.collectionView insertItemsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]];
     [self.cardsView.collectionView reloadInputViews];
-}
+}*/
 
 -(void) saveDeckButtonPressed
 {
@@ -653,8 +669,8 @@ DeckModel * allCards;
             DeckModel* newDeck = [[DeckModel alloc] init];
             newDeck.name = @"New Deck";
             
-            for (CardView* cardView in self.deckView.currentCells)
-                [newDeck addCard:cardView.cardModel];
+            for (CardModel* card in self.deckView.currentCells)
+                [newDeck addCard:card];
             
             //TODO also store this on Parse
             [UserModel saveDeck:newDeck];
@@ -664,8 +680,8 @@ DeckModel * allCards;
             //clear the deck and add the new cards in
             [currentDeck.cards removeAllObjects];
             
-            for (CardView* cardView in self.deckView.currentCells)
-                [currentDeck addCard:cardView.cardModel];
+            for (CardModel* card in self.deckView.currentCells)
+                [currentDeck addCard:card];
             
             [UserModel saveDeck:currentDeck];
         }
@@ -716,7 +732,7 @@ DeckModel * allCards;
 
 
 /** Returns empty array if can add to card, otherwise array of NSString as reasons to why card cannot be added. */
--(NSMutableArray*) canAddCardToDeckWithReason: (CardView*) card
+-(NSMutableArray*) canAddCardToDeckWithReason: (CardModel*) card
 {
     NSMutableArray* reasons = [NSMutableArray array];
     if (self.deckView.currentCells.count >= MAX_CARDS_IN_DECK) //TODO extra card ability
@@ -729,7 +745,7 @@ DeckModel * allCards;
 }
 
 /** Simply returns YES or NO. */
--(BOOL) canAddCardToDeck: (CardView*) card
+-(BOOL) canAddCardToDeck: (CardModel*) card
 {
     if (self.deckView.currentCells.count >= MAX_CARDS_IN_DECK) //TODO extra card ability
         return NO;
@@ -750,22 +766,22 @@ DeckModel * allCards;
     //TODO temporary method, just as random cards
     //TODO later needs to add cards that is actually valid
     NSMutableArray*ownedCards = [NSMutableArray array];
-    for (CardView*cardView in self.cardsView.currentCardViews)
-        [ownedCards addObject:cardView];
+    for (CardModel*card in self.cardsView.currentCardModels)
+        [ownedCards addObject:card];
     
     while (self.deckView.currentCells.count < MAX_CARDS_IN_DECK)
     {
         int randomIndex = [[NSNumber numberWithUnsignedInteger:arc4random_uniform(ownedCards.count - 1)] intValue];
         
-        CardView*cardView = ownedCards[randomIndex];
+        CardModel*cardModel = ownedCards[randomIndex];
         
         int insertionIndex = -1;
         
         //insert at the first position where card < card at index
         for (int i = 0; i < [self.deckView.currentCells count]; i++)
         {
-            CardView *cellCard = self.deckView.currentCells[i];
-            if ([cardView.cardModel compare:cellCard.cardModel] == NSOrderedAscending)
+            CardModel *cellCard = self.deckView.currentCells[i];
+            if ([cardModel compare:cellCard] == NSOrderedAscending)
             {
                 insertionIndex = i;
                 break;
@@ -777,7 +793,7 @@ DeckModel * allCards;
             insertionIndex = self.deckView.currentCells.count;
         
         
-        [self.deckView.currentCells insertObject:cardView atIndex:insertionIndex];
+        [self.deckView.currentCells insertObject:cardModel atIndex:insertionIndex];
         [ownedCards removeObjectAtIndex:randomIndex];
     }
     
@@ -879,12 +895,7 @@ DeckModel * allCards;
     {
         for (CardModel*card in currentDeck.cards)
         {
-            //create a card view and set it up
-            CardView *cardView = [[CardView alloc] initWithModel:card cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]]viewMode:cardViewModeEditor];
-            card.cardView = cardView;
-            cardView.cardHighlightType = cardHighlightNone;
-            cardView.cardViewState = cardViewStateCardViewer;
-            [self.deckView.currentCells addObject:cardView];
+            [self.deckView.currentCells addObject:card];
         }
         [self.view addSubview:self.deleteDeckButton];
     }
@@ -894,25 +905,9 @@ DeckModel * allCards;
     //get the CardView of every card in the deck
     for (CardModel *card in allCards.cards)
     {
-        //skip if the card already exists
-        if ([currentDeck.cards containsObject:card])
-            continue;
-        
-        //create a card view and set it up
-        CardView *cardView = [[CardView alloc] initWithModel:card cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]]viewMode:cardViewModeEditor];
-        card.cardView = cardView;
-        cardView.cardHighlightType = cardHighlightNone;
-        cardView.cardViewState = cardViewStateCardViewer;
-        cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_VIEWER_SCALE, CARD_VIEWER_SCALE);
-        
-        //[self.cardsView.currentCardViews addObject:card.cardView];
-        [self.cardsView.currentCardViews addObject:card.cardView];
+        [self updateCard:card];
+        [self.cardsView.currentCardModels addObject:card];
     }
-    
-    [self updateCardsViewCards];
-    
-    
-    //} completion:nil];
     
     [self updateCardsCounterLabel];
     
@@ -923,7 +918,9 @@ DeckModel * allCards;
     
     [self.cardsView.collectionView performBatchUpdates:^{
         [self.cardsView.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
-    } completion:nil];
+    } completion:^(BOOL finished){
+        [self updateCardsViewCards];
+    }];
     //[self.cardsView.collectionView reloadData];
     //[self.cardsView.collectionView reloadInputViews];
 }

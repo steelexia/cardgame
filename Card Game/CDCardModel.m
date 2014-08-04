@@ -21,5 +21,6 @@
 @dynamic creator;
 @dynamic creatorName;
 @dynamic abilities;
+@dynamic element;
 
 @end

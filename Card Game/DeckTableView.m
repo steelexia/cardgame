@@ -9,6 +9,8 @@
 #import "DeckTableView.h"
 #import "CardView.h"
 #import "DeckModel.h"
+#import "DeckCell.h"
+#import "DeckCardCell.h"
 
 @implementation DeckTableView
 
@@ -31,8 +33,8 @@ const double DECK_EDITOR_CARD_SCALE = 0.6;
         _tableView.separatorColor = [UIColor clearColor];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         
-        [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"deckTableCardCell"];
-        [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"deckTableDeckCell"];
+        [_tableView registerClass:[DeckCardCell class] forCellReuseIdentifier:@"deckTableCardCell"];
+        [_tableView registerClass:[DeckCell class] forCellReuseIdentifier:@"deckTableDeckCell"];
         [_tableView setBackgroundColor:COLOUR_INTERFACE_BLUE];
         _tableView.rowHeight = 40;
         
@@ -60,55 +62,49 @@ const double DECK_EDITOR_CARD_SCALE = 0.6;
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell;
-    
     if (self.viewMode == deckTableViewCards)
     {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"deckTableCardCell" forIndexPath:indexPath];
-        CardView*cardView = self.currentCells[indexPath.row];
+        DeckCardCell *cell = [tableView dequeueReusableCellWithIdentifier:@"deckTableCardCell" forIndexPath:indexPath];
+        
+        [cell.cardView removeFromSuperview];
+        
+        CardModel*card = self.currentCells[indexPath.row];
+        CardView*originalView = card.cardView;
+        CardView*cardView = [[CardView alloc] initWithModel:card cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]]viewMode:cardViewModeEditor];
+        card.cardView = originalView; //recover pointer
+        cardView.cardHighlightType = cardHighlightNone;
+        cardView.cardViewState = cardViewStateCardViewer;
         //cardView.frame = CGRectMake(0,0,CARD_FULL_WIDTH,CARD_FULL_HEIGHT);
         cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, DECK_EDITOR_CARD_SCALE, DECK_EDITOR_CARD_SCALE);
         
         cardView.center = CGPointMake(cell.center.x, 68);
+        cell.cardView = cardView;
         [cell addSubview:cardView];
+        
+        return cell;
     }
     else if (self.viewMode == deckTableViewDecks)
     {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"deckTableDeckCell" forIndexPath:indexPath];
+        DeckCell *cell = [tableView dequeueReusableCellWithIdentifier:@"deckTableDeckCell" forIndexPath:indexPath];
         
         DeckModel*deck = self.currentCells[indexPath.row];
         
-        //not a real button, just for the rounded rect look
-        UIButton *background = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        background.frame = cell.bounds;
-        [background setUserInteractionEnabled:NO];
-        [background setBackgroundColor:[UIColor colorWithHue:0.11 saturation:0.36 brightness:0.82 alpha:1]];
-        [background.layer setBorderColor:[UIColor blackColor].CGColor];
-        [background.layer setBorderWidth:2];
+        cell.nameLabel.text = deck.name;
+        //because cell size is wrong in its constructor..
+        cell.nameLabel.center = CGPointMake(cell.bounds.size.width/2, cell.nameLabel.center.y);
         
-        //CGRect nameLabelFrame = ;
+        //TODO set to the deck's colour, etc
         
-        StrokedLabel * nameLabel = [[StrokedLabel alloc]initWithFrame:CGRectMake(cell.bounds.origin.x, cell.bounds.origin.y, cell.bounds.size.width, cell.bounds.size.height/2)];
-        nameLabel.textAlignment = NSTextAlignmentCenter;
-        nameLabel.textColor = [UIColor whiteColor];
-        nameLabel.backgroundColor = [UIColor clearColor];
-        nameLabel.font = [UIFont fontWithName:cardMainFont size:12];
-        nameLabel.strokeOn = YES;
-        nameLabel.strokeColour = [UIColor blackColor];
-        nameLabel.strokeThickness = 2;
-        nameLabel.text = deck.name;
-        
-        [cell addSubview:background];
-        [cell addSubview:nameLabel];
+        return cell;
     }
     
-    cell.backgroundColor = [UIColor clearColor];
+    
     
     //greatly improves performance but freezes scale?
-    cell.layer.shouldRasterize = YES;
-    cell.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    //cell.layer.shouldRasterize = YES;
+    //cell.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
-    return cell;
+    return nil;
 }
 
 -(void)removeCellAt:(int)index {

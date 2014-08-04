@@ -16,7 +16,7 @@
 
 @property (strong) CustomTableView *tableView;
 
-/** The stored data depends on the current mode. When editing all decks, the array stores DeckModel's. When editing a single deck, the array stores CardView's. */
+/** The stored data depends on the current mode. When editing all decks, the array stores DeckModel's. When editing a single deck, the array stores CardModel. */
 @property (strong) NSMutableArray *currentCells;
 
 @property enum DeckTableViewMode viewMode;

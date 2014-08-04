@@ -9,6 +9,7 @@
 #import "MainScreenViewController.h"
 #import "DeckChooserViewController.h"
 #import "CardEditorViewController.h"
+#import "StoreViewController.h"
 
 @interface MainScreenViewController ()
 
@@ -53,6 +54,14 @@
     [cardButton addTarget:self action:@selector(cardButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:cardButton];
+    
+    UIButton *storeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    storeButton.frame = CGRectMake(0, 0, 200, 40);
+    storeButton.center = CGPointMake(self.view.bounds.size.width/2, self.view.bounds.size.height/2 + 160);
+    [storeButton setTitle:@"Cards Store" forState:UIControlStateNormal];
+    [storeButton addTarget:self action:@selector(storeButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:storeButton];
 }
 
 -(void)gameButtonPressed
@@ -76,11 +85,19 @@
     [self presentViewController:viewController animated:YES completion:nil];
 }
 
+-(void)storeButtonPressed
+{
+    StoreViewController *viewController = [[StoreViewController alloc] init];
+    viewController.previousScreen = [[MainScreenViewController alloc]init];
+    [self presentViewController:viewController animated:YES completion:nil];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 
 

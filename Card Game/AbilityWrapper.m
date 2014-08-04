@@ -18,7 +18,7 @@
 @synthesize maxPoints = _maxPoints;
 @synthesize maxCount = _maxCount;
 @synthesize minCost = _minCost;
-@synthesize currentCost = _currentCost;
+@synthesize currentPoints = _currentPoints;
 
 /** Every AbilityWrapper (i.e. pickable ability) is in this list. */
 NSArray *allAbilities;
@@ -39,7 +39,7 @@ NSArray *allAbilities;
         self.minCost = minCost;
         self.enabled = YES;
         
-        if (ability.otherValues != nil)
+        if (ability.otherValues != nil && ability.otherValues.count == 2)
         {
             if ([ability.otherValues[1] integerValue] < 99)
                 self.incrementSize = 1;
@@ -74,11 +74,25 @@ NSArray *allAbilities;
 {
     BOOL isSpellCard = [card isKindOfClass:[SpellCardModel class]];
     
-    if([self isCompatibleWithElement:card.element] && //element is correct
-       self.rarity <= card.rarity && //rarity is enough
-       (!isSpellCard || self.ability.castType == castOnSummon)) //spell card must have castOnSummon
-        return YES;
-    return NO;
+    if(![self isCompatibleWithElement:card.element]) //element is not correct
+        return NO;
+        
+    if (self.rarity > card.rarity) //rarity is not enough
+        return NO;
+    
+    if (isSpellCard && self.ability.castType != castOnSummon) //spell card must have castOnSummon
+        return NO;
+    
+    if (isSpellCard && self.ability.targetType == targetSelf) //spell card must have castOnSummon
+        return NO;
+    
+    for (Ability*cardAbility in card.abilities)
+    {
+        if (cardAbility != self.ability && ![cardAbility isCompatibleTo:self.ability])
+            return NO;
+    }
+    
+    return YES;
 }
 
 +(NSString*)abilityToString:(Ability*)ability
@@ -254,7 +268,7 @@ NSArray *allAbilities;
                       [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroEnemy withDuration:durationInstant withValue:0 withOtherValues:@[@1000,@5000] withDescription:nil] elements:@[OFFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:750 maxPoints:3750 maxCount:2 minCost:0],
                      //direct damage to friendly hero
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:0 withOtherValues:@[@1000,@5000] withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:-750 maxPoints:-3750 maxCount:2 minCost:2], //?uncommon
+                      [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:0 withOtherValues:@[@1000,@5000] withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:-600 maxPoints:-3000 maxCount:2 minCost:2], //?uncommon
                      //direct damage to one random enemy
                      [[AbilityWrapper alloc] initWithAbility:
                       [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:0 withOtherValues:@[@1000,@8000] withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:800 maxPoints:6400 maxCount:2 minCost:0],
@@ -372,63 +386,63 @@ NSArray *allAbilities;
                      //---kill---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
                      //kill 1 minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[OFFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:5500 maxPoints:5500 maxCount:2 minCost:1],
+                      [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[OFFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:5500 maxPoints:5500 maxCount:2 minCost:1],
                      //kill all minions
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetAllMinion withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:10000 maxPoints:10000 maxCount:1 minCost:6],
+                      [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetAllMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:10000 maxPoints:10000 maxCount:1 minCost:6],
                      //kill all friendly minions on summon
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[OFFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:-2000 maxPoints:-2000 maxCount:1 minCost:6], //exact minCost need adjustment
+                      [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[OFFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:-2000 maxPoints:-2000 maxCount:1 minCost:6], //exact minCost need adjustment
                      //kill 1 random enemy minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_DARK] rarity:cardRarityCommon minPoints:4500 maxPoints:4500 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_DARK] rarity:cardRarityCommon minPoints:4500 maxPoints:4500 maxCount:1 minCost:1],
                      //kill 1 random minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneRandomMinion withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:3500 maxPoints:3500 maxCount:1 minCost:4],
+                      [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneRandomMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:3500 maxPoints:3500 maxCount:1 minCost:4],
                      //kill attacker on death (this would work when attacking although it would be sort of "weird" to use this with charge, since it's same as kill one any minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityKill castType:castOnDeath targetType:targetAttacker withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:5750 maxPoints:5750 maxCount:1 minCost:4],
+                      [[Ability alloc] initWithType:abilityKill castType:castOnDeath targetType:targetAttacker withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:5750 maxPoints:5750 maxCount:1 minCost:4],
                      //kill all minions on death
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityKill castType:castOnDeath targetType:targetAllMinion withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[OFFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:9600 maxPoints:9600 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityKill castType:castOnDeath targetType:targetAllMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[OFFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:9600 maxPoints:9600 maxCount:1 minCost:1],
                      //kill all friendly minions on death
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityKill castType:castOnDeath targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:-3500 maxPoints:-3500 maxCount:1 minCost:5],
+                      [[Ability alloc] initWithType:abilityKill castType:castOnDeath targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:-3500 maxPoints:-3500 maxCount:1 minCost:5],
                      //kill attacker on damaged
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityKill castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ALL_ELEMENTS] rarity:cardRarityCommon minPoints:1600 maxPoints:1600 maxCount:1 minCost:3],
+                      [[Ability alloc] initWithType:abilityKill castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ALL_ELEMENTS] rarity:cardRarityCommon minPoints:1600 maxPoints:1600 maxCount:1 minCost:3],
                      //kill victim on hit (won't work on hero)
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityKill castType:castOnHit targetType:targetVictimMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[OFFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:2000 maxPoints:2000 maxCount:1 minCost:4],
+                      [[Ability alloc] initWithType:abilityKill castType:castOnHit targetType:targetVictimMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[OFFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:2000 maxPoints:2000 maxCount:1 minCost:4],
                      //kill 1 random enemy minion on death
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityKill castType:castOnDeath targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:4000 maxPoints:4000 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityKill castType:castOnDeath targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:4000 maxPoints:4000 maxCount:1 minCost:1],
                      
                      //---taunt---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
                      //minion with taunt
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ALL_ELEMENTS] rarity:cardRarityCommon minPoints:0 maxPoints:0 maxCount:4 minCost:1], //NOTE: points is based on minion's stats
+                      [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ALL_ELEMENTS] rarity:cardRarityCommon minPoints:0 maxPoints:0 maxCount:4 minCost:1], //NOTE: points is based on minion's stats
                      //give taunt to a minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[DEFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:500 maxPoints:500 maxCount:2 minCost:1],
+                      [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[DEFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:500 maxPoints:500 maxCount:2 minCost:1],
                      //give taunt to a friendly minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_NEUTRAL] rarity:cardRarityCommon minPoints:500 maxPoints:500 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_NEUTRAL] rarity:cardRarityCommon minPoints:500 maxPoints:500 maxCount:1 minCost:1],
                      //give taunt to a random minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetOneRandomMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:250 maxPoints:250 maxCount:2 minCost:2],
+                      [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetOneRandomMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:250 maxPoints:250 maxCount:2 minCost:2],
                      //give taunt to all friendly minions
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[DEFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:1050 maxPoints:1050 maxCount:1 minCost:0],
+                      [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[DEFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:1050 maxPoints:1050 maxCount:1 minCost:0],
                      //give taunt to a random minion on end of turn
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityTaunt castType:castOnEndOfTurn targetType:targetOneRandomMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:750 maxPoints:750 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityTaunt castType:castOnEndOfTurn targetType:targetOneRandomMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:750 maxPoints:750 maxCount:1 minCost:1],
                      //give taunt to self on damage taken (very cheap ability)
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityTaunt castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_ICE] rarity:cardRarityCommon minPoints:250 maxPoints:250 maxCount:2 minCost:1],
+                      [[Ability alloc] initWithType:abilityTaunt castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_ICE] rarity:cardRarityCommon minPoints:250 maxPoints:250 maxCount:2 minCost:1],
                      //give taunt to a random friendly minion on death
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityTaunt castType:castOnDeath targetType:targetOneRandomFriendlyMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[DEFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:250 maxPoints:250 maxCount:2 minCost:1],
+                      [[Ability alloc] initWithType:abilityTaunt castType:castOnDeath targetType:targetOneRandomFriendlyMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[DEFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:250 maxPoints:250 maxCount:2 minCost:1],
                      
                      //---draw card---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
                      //draw x cards immediately
@@ -710,54 +724,54 @@ NSArray *allAbilities;
                      //---assassin---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
                      //minion with assassin
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityAssassin castType:castAlways targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:0 maxPoints:0 maxCount:2 minCost:1], //depends entirely on base stats (inc. cast on hit!)
+                      [[Ability alloc] initWithType:abilityAssassin castType:castAlways targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:0 maxPoints:0 maxCount:2 minCost:1], //depends entirely on base stats (inc. cast on hit!)
                      //give assassin to a minion (pretty OP)
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityAssassin castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:1750 maxPoints:1750 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityAssassin castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:1750 maxPoints:1750 maxCount:1 minCost:1],
                      //give assassin to a random enemy minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityAssassin castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:-500 maxPoints:-500 maxCount:1 minCost:3],
+                      [[Ability alloc] initWithType:abilityAssassin castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:-500 maxPoints:-500 maxCount:1 minCost:3],
                      //give assassin to a random friendly minion on death
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityAssassin castType:castOnDeath targetType:targetOneRandomFriendlyMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:1000 maxPoints:1000 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityAssassin castType:castOnDeath targetType:targetOneRandomFriendlyMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:1000 maxPoints:1000 maxCount:1 minCost:1],
                      
                      //---remove abilities---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
                      //minion with no abilities, but cannot receive debuffs
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castAlways targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_NEUTRAL] rarity:cardRarityCommon minPoints:500 maxPoints:500 maxCount:2 minCost:2],
+                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castAlways targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_NEUTRAL] rarity:cardRarityCommon minPoints:500 maxPoints:500 maxCount:2 minCost:2],
                      //silence a minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_LIGHT] rarity:cardRarityCommon minPoints:1050 maxPoints:1050 maxCount:2 minCost:0],
+                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_LIGHT] rarity:cardRarityCommon minPoints:1050 maxPoints:1050 maxCount:2 minCost:0],
                      //silence an enemy minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_ICE, ELEMENT_EARTH] rarity:cardRarityCommon minPoints:1050 maxPoints:1050 maxCount:2 minCost:0],
+                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_ICE, ELEMENT_EARTH] rarity:cardRarityCommon minPoints:1050 maxPoints:1050 maxCount:2 minCost:0],
                      //silence all minions
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetAllMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:3100 maxPoints:3100 maxCount:1 minCost:3],
+                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetAllMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:3100 maxPoints:3100 maxCount:1 minCost:3],
                      //silence all enemy minions
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_LIGHT] rarity:cardRarityCommon minPoints:4100 maxPoints:4100 maxCount:1 minCost:4],
+                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_LIGHT] rarity:cardRarityCommon minPoints:4100 maxPoints:4100 maxCount:1 minCost:4],
                      //silence random minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneRandomMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:500 maxPoints:500 maxCount:2 minCost:0],
+                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneRandomMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:500 maxPoints:500 maxCount:2 minCost:0],
                      //silence attacker on damaged
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_ICE] rarity:cardRarityCommon minPoints:1500 maxPoints:1500 maxCount:1 minCost:2],
+                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_ICE] rarity:cardRarityCommon minPoints:1500 maxPoints:1500 maxCount:1 minCost:2],
                      //silence victim on hit
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnHit targetType:targetVictim withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_FIRE] rarity:cardRarityCommon minPoints:1000 maxPoints:1000 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnHit targetType:targetVictim withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_FIRE] rarity:cardRarityCommon minPoints:1000 maxPoints:1000 maxCount:1 minCost:1],
                      //silence one random minion every end of turn
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnEndOfTurn targetType:targetOneRandomMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:1000 maxPoints:1000 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnEndOfTurn targetType:targetOneRandomMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:1000 maxPoints:1000 maxCount:1 minCost:1],
                      //silence one random enemy minion every end of turn
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnEndOfTurn targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:1500 maxPoints:1500 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnEndOfTurn targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:1500 maxPoints:1500 maxCount:1 minCost:1],
                      //silence random enemy minion on death
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnDeath targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:400 maxPoints:400 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnDeath targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:400 maxPoints:400 maxCount:1 minCost:1],
                      //silence all enemy minions on death
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_LIGHT] rarity:cardRarityCommon minPoints:3000 maxPoints:3000 maxCount:1 minCost:2],
+                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_LIGHT] rarity:cardRarityCommon minPoints:3000 maxPoints:3000 maxCount:1 minCost:2],
                      
                      //---gain resource---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
                      //gain x resources immediately (mostly for spell cards, such as gain 2 resource for 0 cost)
@@ -773,40 +787,40 @@ NSArray *allAbilities;
                      //---return to hand---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
                      //return 1 friendly minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_LIGHT] rarity:cardRarityCommon minPoints:500 maxPoints:500 maxCount:2 minCost:0],
+                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_LIGHT] rarity:cardRarityCommon minPoints:500 maxPoints:500 maxCount:2 minCost:0],
                      //return 1 minion (much more expensive)
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:3150 maxPoints:3150 maxCount:2 minCost:1],
+                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:3150 maxPoints:3150 maxCount:2 minCost:1],
                      //return all minions
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnSummon targetType:targetAllMinion withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_NEUTRAL] rarity:cardRarityCommon minPoints:7250 maxPoints:7250 maxCount:1 minCost:2],
+                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnSummon targetType:targetAllMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_NEUTRAL] rarity:cardRarityCommon minPoints:7250 maxPoints:7250 maxCount:1 minCost:2],
                      //return all friendly minions on summon
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:1000 maxPoints:1000 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:1000 maxPoints:1000 maxCount:1 minCost:1],
                      //return 1 random enemy minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:2200 maxPoints:2200 maxCount:2 minCost:2],
+                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:2200 maxPoints:2200 maxCount:2 minCost:2],
                      //return 1 random minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnSummon targetType:targetOneRandomMinion withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:1250 maxPoints:1250 maxCount:1 minCost:0],
+                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnSummon targetType:targetOneRandomMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:1250 maxPoints:1250 maxCount:1 minCost:0],
                      //return attacker on death
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnDeath targetType:targetAttacker withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_EARTH, ELEMENT_LIGHT] rarity:cardRarityCommon minPoints:750 maxPoints:750 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnDeath targetType:targetAttacker withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_EARTH, ELEMENT_LIGHT] rarity:cardRarityCommon minPoints:750 maxPoints:750 maxCount:1 minCost:1],
                      //return victim on hit
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnHit targetType:targetVictim withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_FIRE] rarity:cardRarityCommon minPoints:3000 maxPoints:3000 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnHit targetType:targetVictim withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_FIRE] rarity:cardRarityCommon minPoints:3000 maxPoints:3000 maxCount:1 minCost:1],
                      //return attacker on damaged
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[FIRE_AND_ICE] rarity:cardRarityCommon minPoints:1500 maxPoints:1500 maxCount:1 minCost:1], //cheaper than on hit since don't have choice in which minion to return to hand
+                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[FIRE_AND_ICE] rarity:cardRarityCommon minPoints:1500 maxPoints:1500 maxCount:1 minCost:1], //cheaper than on hit since don't have choice in which minion to return to hand
                      //return all minions on death
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnDeath targetType:targetAllMinion withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:5500 maxPoints:5500 maxCount:1 minCost:2],
+                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnDeath targetType:targetAllMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:5500 maxPoints:5500 maxCount:1 minCost:2],
                      //return all friendly minions on death
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnDeath targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_LIGHT] rarity:cardRarityCommon minPoints:2500 maxPoints:2500 maxCount:1 minCost:2],
+                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnDeath targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_LIGHT] rarity:cardRarityCommon minPoints:2500 maxPoints:2500 maxCount:1 minCost:2],
                      //return all enemy minions on death
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationInstant withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:7000 maxPoints:7000 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityReturnToHand castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:7000 maxPoints:7000 maxCount:1 minCost:1],
                      
                      //---fracture---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
                      //fracture on death
@@ -826,16 +840,16 @@ NSArray *allAbilities;
                      //---pierce---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
                      //minion with pierce
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityPierce castType:castAlways targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[OFFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:0 maxPoints:0 maxCount:3 minCost:1], //depends on damage
+                      [[Ability alloc] initWithType:abilityPierce castType:castAlways targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[OFFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:0 maxPoints:0 maxCount:3 minCost:1], //depends on damage
                      //give pierce to a minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityPierce castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_FIRE] rarity:cardRarityCommon minPoints:1150 maxPoints:1150 maxCount:1 minCost:0],
+                      [[Ability alloc] initWithType:abilityPierce castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_FIRE] rarity:cardRarityCommon minPoints:1150 maxPoints:1150 maxCount:1 minCost:0],
                      //give pierce to a random minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityPierce castType:castOnSummon targetType:targetOneRandomMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:750 maxPoints:750 maxCount:1 minCost:0],
+                      [[Ability alloc] initWithType:abilityPierce castType:castOnSummon targetType:targetOneRandomMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:750 maxPoints:750 maxCount:1 minCost:0],
                      //give pierce to a random friendly minion on death
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityPierce castType:castOnDeath targetType:targetOneRandomFriendlyMinion withDuration:durationForever withValue:0 withOtherValues:nil withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:500 maxPoints:500 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityPierce castType:castOnDeath targetType:targetOneRandomFriendlyMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:500 maxPoints:500 maxCount:1 minCost:1],
                      
                      //ADD ADDITIONAL ABILITIES HERE, DO NOT INSERT IN MIDDLE!!!
     ];
