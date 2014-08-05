@@ -26,6 +26,9 @@
 /** Used only if needed for synching with core data. If this deck was loaded from core data, it should have this variable */
 @property (strong) CDDeckModel *cdDeck;
 
+/** For parse */
+@property (strong) NSString*objectID;
+
 /** Adds a CardModel into cards. Returns NO if contains duplicate, not a CardModel, or deck is full */
 -(BOOL) addCard: (CardModel*) cardModel;
 

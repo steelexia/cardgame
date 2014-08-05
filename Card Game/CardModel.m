@@ -24,6 +24,7 @@
 @synthesize creatorName = _creatorName;
 @synthesize element = _element;
 @synthesize cardViewState = _cardViewState;
+@synthesize likes = _likes;
 
 const int MONSTER_CARD = 0, SPELL_CARD = 1;
 
@@ -45,6 +46,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
         self.creator = @"Unknown";
         self.element = elementNeutral;
         self.cardViewState = cardViewStateCardViewer;
+        self.likes = 0;
     }
     
     return self;
@@ -94,6 +96,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
         //deep copy of all attributes
         self.type = card.type;
         self.element = card.element;
+        self.likes = card.likes;
         
         for (Ability*ability in card.abilities)
             [self.abilities addObject: [[Ability alloc] initWithAbility:ability]];
@@ -230,6 +233,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
     NSArray *abilities = cardPF[@"abilities"];
     NSString *creator = cardPF[@"creator"];
     NSNumber *element = cardPF[@"element"];
+    NSNumber *likes = cardPF[@"likes"];
     
     //TODO in future this should [probably] never be nil
     if (creator != nil && ![creator isEqualToString:@"Unknown"])
@@ -259,6 +263,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
     card.cost = [cost intValue];
     card.rarity = [rarity intValue];
     card.element = [element intValue];
+    card.likes = [likes intValue];
     
     return card;
 }
@@ -273,6 +278,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
     cardPF[@"cost"] = [NSNumber numberWithInt:card.cost];
     cardPF[@"rarity"] = [NSNumber numberWithInt:card.rarity];
     cardPF[@"creator"] = card.creator;
+    cardPF[@"likes"] = @(card.likes);
     
     cardPF[@"element"] = [NSNumber numberWithInt:card.element];
    

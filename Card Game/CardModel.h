@@ -44,6 +44,9 @@
 /** For convenience, the creator's username is cached here so that it can be displayed mid-battle of a game. */
 @property NSString *creatorName;
 
+/** Number of likes a card has received. Only relevant for standard cards */
+@property int likes;
+
 //----------------Card battle stats values----------------//
 
 @property enum CardElement element;

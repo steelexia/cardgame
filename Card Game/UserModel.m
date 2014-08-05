@@ -28,10 +28,11 @@ const int INITIAL_DECK_LIMIT = 3;
      {
          userGold = [userPF[@"gold"] intValue];
          if (userPF[@"cards"] == nil)
-         {
              userPF[@"cards"] = @[];
-             [userPF saveInBackground];
-         }
+         if (userPF[@"decks"] == nil)
+             userPF[@"decks"] = @[];
+         [self loadAllCards]; //also loads decks
+         [userPF saveInBackground];
      }
      ];
 }
@@ -73,6 +74,42 @@ const int INITIAL_DECK_LIMIT = 3;
 
 +(void)loadAllCards
 {
+    NSArray *cardsIDArray = userPF[@"cards"];
+    __block int loadedCards = 0;
+    for (NSNumber*cardID in cardsIDArray)
+    {
+        PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
+        [cardQuery whereKey:@"idNumber" equalTo:cardID];
+        cardQuery.limit = 1;
+        [cardQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error)
+            {
+                if (objects.count > 0)
+                {
+                    //add card
+                    [userAllCards addObject:[CardModel createCardFromPFObject:objects[0]]];
+                    
+                    loadedCards++;
+                    
+                    //load all decks once all cards have been loaded
+                    if (loadedCards >= cardsIDArray.count)
+                        [self loadAllDecks];
+                }
+                else
+                {
+                    NSLog(@"ERROR: COULD NOT FIND USER!");
+                }
+            }
+            else
+            {
+                NSLog(@"ERROR: ERROR FINDING USER!");
+            }
+        }];
+    }
+    
+    
+    //TODO: load from CD if Parse's hasn't been updated
+    /*
     NSError *error;
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Card"
@@ -84,10 +121,20 @@ const int INITIAL_DECK_LIMIT = 3;
     for (CDCardModel *card in fetchedObjects) {
         [userAllCards addObject:[self cardFromCDCard:card]];
     }
+     */
 }
 
 +(void)loadAllDecks
 {
+    NSArray*decksArray = userPF[@"decks"];
+    
+    for (PFObject*deckPF in decksArray)
+    {
+        DeckModel*deck = [self getDeckFromDeckPF:deckPF];
+        if (deck!= nil)
+            [userAllDecks addObject:deck];
+    }
+    /*
     NSError *error;
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Deck"
@@ -99,6 +146,19 @@ const int INITIAL_DECK_LIMIT = 3;
     for (CDDeckModel *deck in fetchedObjects) {
         [userAllDecks addObject:[self deckFromCD:deck]];
     }
+     */
+}
+
++(CardModel*)getCardFromID:(int)idNumber
+{
+    for (CardModel*card in userAllCards)
+    {
+        if (idNumber == card.idNumber)
+        {
+            return card;
+        }
+    }
+    return nil;
 }
 
 //don't think is needed
@@ -157,6 +217,7 @@ const int INITIAL_DECK_LIMIT = 3;
     cdCard.name = card.name;
     cdCard.creator = card.creator;
     cdCard.creatorName = card.creatorName;
+    cdCard.likes = @(card.likes);
     
     cdCard.abilities = @"";
     
@@ -214,6 +275,7 @@ const int INITIAL_DECK_LIMIT = 3;
     card.name = cdCard.name;
     card.creator = cdCard.creator;
     card.creatorName = cdCard.creatorName;
+    card.likes = [cdCard.likes intValue];
     
     if (cdCard.abilities!=nil)
     {
@@ -264,8 +326,86 @@ const int INITIAL_DECK_LIMIT = 3;
     return deck;
 }
 
++(PFObject*)getDeckPFFromDeck:(DeckModel*)deck
+{
+    PFObject *deckPF = [PFObject objectWithClassName:@"Deck"];
+    deckPF[@"name"] = deck.name;
+    deckPF[@"tags"] = deck.tags;
+        
+    NSMutableArray*cardsID = [NSMutableArray arrayWithCapacity:deck.cards.count];
+    for (CardModel*card in deck.cards)
+        [cardsID addObject:@(card.idNumber)];
+    deckPF[@"cards"] = cardsID;
+    
+    return deckPF;
+}
+
++(DeckModel*)getDeckFromDeckPF:(PFObject*)deckPF
+{
+    [deckPF fetchIfNeeded];
+    DeckModel*deck = [[DeckModel alloc]init];
+    @try
+    {
+        deck.name = deckPF[@"name"];
+        deck.tags = deckPF[@"tags"];
+        
+        for (NSNumber*idNumber in deckPF[@"cards"])
+            [deck addCard:[self getCardFromID:[idNumber intValue]]];
+    }
+    @catch (NSException *e) {
+        NSLog(@"%@", e);
+        return nil;
+    }
+    return deck;
+}
+
 +(void)saveDeck:(DeckModel*)deck
 {
+    NSMutableArray*currentDecks = [NSMutableArray arrayWithArray:userPF[@"decks"]];
+    
+    BOOL foundDeck = NO;
+    for (PFObject*deckPF in currentDecks)
+    {
+        if ([deckPF.objectId isEqualToString:deck.objectID])
+        {
+            NSLog(@"found deck");
+            
+            deckPF[@"name"] = deck.name;
+            deckPF[@"tags"] = deck.tags;
+            
+            NSMutableArray*cardsID = [NSMutableArray arrayWithCapacity:deck.cards.count];
+            for (CardModel*card in deck.cards)
+                [cardsID addObject:@(card.idNumber)];
+            deckPF[@"cards"] = cardsID;
+            [deckPF saveInBackground];
+            
+            foundDeck = YES;
+        }
+    }
+    
+    if (!foundDeck)
+    {
+        PFObject *deckPF = [self getDeckPFFromDeck:deck];
+        [deckPF saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded)
+            {
+                NSLog(@"success");
+                userPF[@"decks"] = currentDecks;
+                [currentDecks addObject:deckPF];
+                [userPF saveInBackground];
+            }
+            else
+            {
+                NSLog(@"ERROR: FAILED TO SAVE");
+            }
+        }];
+    }
+    
+    if (![userAllDecks containsObject:deck])
+        [userAllDecks addObject:deck];
+    
+    //TODO readd these later
+    /*
     CDDeckModel *cdDeck;
     
     if (deck.cdDeck == nil)
@@ -305,10 +445,28 @@ const int INITIAL_DECK_LIMIT = 3;
     
     if (![userAllDecks containsObject:deck])
         [userAllDecks addObject:deck];
+     */
 }
 
 +(void)deleteDeck:(DeckModel*)deck
 {
+    NSMutableArray*currentDecks = [NSMutableArray arrayWithArray:userPF[@"decks"]];
+    
+    for (PFObject*deckPF in currentDecks)
+    {
+        if ([deckPF.objectId isEqualToString:deck.objectID])
+        {
+            [currentDecks removeObject:deckPF];
+            [userAllDecks removeObject:deck];
+            break;
+        }
+    }
+    
+    [userPF saveInBackground];
+    
+    
+    //TODO readd these later
+    /*
     if (deck.cdDeck!=nil)
     {
         [userCDContext deleteObject:deck.cdDeck];
@@ -325,6 +483,7 @@ const int INITIAL_DECK_LIMIT = 3;
     }
     
     [userAllDecks removeObject:deck];
+     */
 }
 
 //maybe not put it here?

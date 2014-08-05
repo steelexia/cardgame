@@ -49,8 +49,7 @@
      */
     
     
-    [UserModel loadAllCards];
-    [UserModel loadAllDecks];
+    
     
     return YES;
 }

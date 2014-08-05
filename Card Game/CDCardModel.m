@@ -22,5 +22,6 @@
 @dynamic creatorName;
 @dynamic abilities;
 @dynamic element;
+@dynamic likes;
 
 @end

@@ -174,7 +174,6 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void)closeCardInfoView
 {
-    
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          _backButton.alpha = 1;
