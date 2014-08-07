@@ -7,6 +7,9 @@
 //
 
 #import "CardView.h"
+#import "UIConstants.h"
+#import "StoreCardCell.h"
+#import "CustomCollectionView.h"
 
 @implementation CardView
 
@@ -34,12 +37,17 @@ const double CARD_VIEWER_MAXED_SCALE = 1.25;
 const float CARD_DEFAULT_SCALE = 0.4f;
 const float CARD_DRAGGING_SCALE = 1.0f;
 
+int CARD_IMAGE_WIDTH;
+int CARD_IMAGE_HEIGHT;
+
 /** Dummy initial values, will be changed in setup */
 int CARD_WIDTH = 50, CARD_HEIGHT = 80;
 int CARD_FULL_WIDTH = 50, CARD_FULL_HEIGHT = 80;
 int PLAYER_HERO_WIDTH = 50, PLAYER_HERO_HEIGHT = 50;
 
 UIImage *backgroundMonsterOverlayImage, *selectHighlightImage, *targetHighlightImage, *heroSelectHighlightImage, *heroTargetHighlightImage;
+
+UIImage*placeHolderImage, *heroPlaceHolderImage;
 
 /** 2D array of images. First array contains elements, second array contains rarity */
 NSArray*backgroundImages, *backgroundOverlayImages, *abilityIconImages;
@@ -50,7 +58,7 @@ NSDictionary *abilityTextAttributtes;
 NSString *cardMainFont = @"EncodeSansCompressed-Bold";
 NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
 
-
+NSMutableDictionary *standardCardImages;
 
 +(void) loadResources
 {
@@ -59,12 +67,16 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
     
     CARD_FULL_WIDTH = CARD_WIDTH/CARD_DEFAULT_SCALE;
     CARD_FULL_HEIGHT = CARD_HEIGHT/CARD_DEFAULT_SCALE;
+    
+    CARD_IMAGE_WIDTH = 265;
+    CARD_IMAGE_HEIGHT = 225;
 
     PLAYER_HERO_WIDTH = PLAYER_HERO_HEIGHT = CARD_HEIGHT;
     
     backgroundImages = @[
                          @[[UIImage imageNamed:@"card_background_front_neutral_common"],
                            //TODO replace with additional rarity here
+                           //NOTE: actually different elements probably won't get different images for each rarity. however that's not to say it can't be added in the future
                            [UIImage imageNamed:@"card_background_front_neutral_common"],
                            [UIImage imageNamed:@"card_background_front_neutral_common"],
                            [UIImage imageNamed:@"card_background_front_neutral_common"],
@@ -123,10 +135,10 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
     backgroundOverlayImages = @[
      [UIImage imageNamed:@"card_background_front_overlay_common"],
      //TODO other rarities
-     [UIImage imageNamed:@"card_background_front_overlay_common"],
-     [UIImage imageNamed:@"card_background_front_overlay_common"],
-     [UIImage imageNamed:@"card_background_front_overlay_common"],
-     [UIImage imageNamed:@"card_background_front_overlay_common"],
+     [UIImage imageNamed:@"card_background_front_overlay_uncommon"],
+     [UIImage imageNamed:@"card_background_front_overlay_rare"],
+     [UIImage imageNamed:@"card_background_front_overlay_exceptional"],
+     [UIImage imageNamed:@"card_background_front_overlay_legendary"],
     ];
     
     backgroundMonsterOverlayImage = [UIImage imageNamed:@"card_background_front_monster_overlay"];
@@ -137,17 +149,25 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
     targetHighlightImage = [UIImage imageNamed:@"card_glow_target"];
     heroTargetHighlightImage = [UIImage imageNamed:@"hero_glow_target"];
     
+    placeHolderImage = [UIImage imageNamed:@"card_image_placeholder"];
+    heroPlaceHolderImage = [UIImage imageNamed:@"hero_default"];
+    
     abilityTextParagrahStyle = [[NSMutableParagraphStyle alloc] init];
     //[abilityTextParagrahStyle setLineSpacing:];
     [abilityTextParagrahStyle setMaximumLineHeight:10];
     abilityTextAttributtes = @{NSParagraphStyleAttributeName : abilityTextParagrahStyle,};
     
-    
+    standardCardImages = [[NSMutableDictionary alloc] init];
 }
 
--(instancetype)initWithModel:(CardModel *)cardModel cardImage:(UIImageView*)cardImage viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState
+-(instancetype)initWithModel:(CardModel *)cardModel viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState
 {
-    self = [self initWithModel:cardModel cardImage:cardImage viewMode:cardViewMode];
+    return [self initWithModel:cardModel withImage:nil viewMode:cardViewMode viewState:cardViewState];
+}
+
+-(instancetype)initWithModel:(CardModel *)cardModel withImage:(UIImage*)cardImage viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState
+{
+    self = [self initWithModel:cardModel withImage:cardImage viewMode:cardViewMode];
     
     if (self)
     {
@@ -170,12 +190,20 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
     return self;
 }
 
--(instancetype)initWithModel:(CardModel *)cardModel cardImage:(UIImageView*)cardImage viewMode:(enum CardViewMode)cardViewMode
+-(instancetype)initWithModel:(CardModel *)cardModel viewMode:(enum CardViewMode)cardViewMode
+{
+    return [self initWithModel:cardModel withImage:nil viewMode:cardViewMode];
+}
+
+-(instancetype)initWithModel:(CardModel *)cardModel withImage:(UIImage*)cardImage viewMode:(enum CardViewMode)cardViewMode
 {
     self = [super init]; //does not actually make an image because highlight has to be behind it..
     
     if (self != nil)
     {
+        _cardModel = cardModel;
+        cardModel.cardView = self; //point model's view back to itself
+        
         self.cardViewMode = cardViewMode;
         
         NSArray*elementArray = backgroundImages[cardModel.element];
@@ -188,19 +216,38 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
         backgroundImageView.center = CGPointMake(CARD_FULL_WIDTH/2, CARD_FULL_HEIGHT/2);
         [self addSubview: backgroundImageView];
 
-        self.cardImage = cardImage;
-        self.cardImage.bounds = CGRectMake(10, 30, CARD_FULL_WIDTH - 16, (CARD_FULL_WIDTH-16) * CARD_IMAGE_RATIO);
-        self.cardImage.center = CGPointMake(CARD_FULL_WIDTH/2, self.cardImage.bounds.size.height/2 + self.cardImage.bounds.origin.y - 4);
+        if (cardImage == nil)
+        {
+            if (cardModel.type == cardTypePlayer)
+            {
+                self.cardImage = [[UIImageView alloc] initWithImage:heroPlaceHolderImage];
+            }
+            else
+            {
+                self.cardImage = [[UIImageView alloc]initWithImage:placeHolderImage];
+            }
+            
+            _reloadAttempts = 0;
+            
+            NSLog(@"%d pre thread load image", self.cardModel.idNumber);
+            [self performBlockInBackground:^(void){
+                [self loadImage];
+            }];
+        }
+        else
+            self.cardImage = [[UIImageView alloc]initWithImage:cardImage];
         
+        self.cardImage.frame = CGRectMake(0, 0, CARD_FULL_WIDTH - 16, (CARD_FULL_WIDTH-16) * CARD_IMAGE_RATIO);
+        self.cardImage.center = CGPointMake(CARD_FULL_WIDTH/2, 80);
+        self.cardImage.backgroundColor = [UIColor whiteColor];
         [self addSubview:self.cardImage];
+        
+        
         
         UIImageView *cardOverlay = [[UIImageView alloc] initWithImage:backgroundOverlayImages[cardModel.rarity]];
         cardOverlay.bounds = CGRectMake(0, 0, CARD_FULL_WIDTH, CARD_FULL_HEIGHT);
         cardOverlay.center = CGPointMake(CARD_FULL_WIDTH/2, CARD_FULL_HEIGHT/2);
         [self addSubview:cardOverlay];
-        
-        _cardModel = cardModel;
-        cardModel.cardView = self; //point model's view back to itself
         
         self.userInteractionEnabled = true; //allows interaction
         
@@ -286,8 +333,6 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
                 [self addSubview: lifeLabel];
                 
                 //change the background and size
-                self.cardImage.image = [UIImage imageNamed:@"hero_default"];
-                
                 //change the main image size
                 self.cardImage.bounds = CGRectMake(5, 20, PLAYER_HERO_WIDTH - 10, (PLAYER_HERO_WIDTH-20) * CARD_IMAGE_RATIO);
                 self.cardImage.center = CGPointMake(PLAYER_HERO_WIDTH/2, self.cardImage.bounds.size.height/2 + self.cardImage.bounds.origin.y);
@@ -589,16 +634,7 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
         //TODO
     }
     
-    NSString *abilityDescription = @"";
-    
-    /*
-    for (Ability *ability in self.cardModel.abilities)
-    {
-        if (!ability.expired && ability.isBaseAbility)
-            abilityDescription = [NSString stringWithFormat:@"%@%@\n", abilityDescription, [[Ability getDescription:ability fromCard:self.cardModel] string]];
-    }
-    */
-    abilityDescription = [Ability getDescriptionForBaseAbilities:self.cardModel];
+    NSString *abilityDescription = [Ability getDescriptionForBaseAbilities:self.cardModel];
     
     self.baseAbilityLabel.attributedText = [[NSAttributedString alloc] initWithString:abilityDescription
                                                                            attributes:abilityTextAttributtes];
@@ -857,6 +893,145 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
     }
 }
 
+-(void)loadImage
+{
+    //fetch an image and load it
+    
+    BOOL errorLoading = NO;
+    NSLog(@"%d load image", self.cardModel.idNumber);
+    UIImage*image = [CardView getImageForCard:self.cardModel errorLoading:&errorLoading];
+    [self.cardImage setImage:image];
+    
+    if (self.cardImage.image == placeHolderImage)
+        NSLog(@"%d placeholder", self.cardModel.idNumber);
+    else
+    {
+        NSLog(@"%d not placeholder", self.cardModel.idNumber);
+        
+        /*
+         //for fixing store stuff
+         UIView*superView = self.superview;
+         if (superView != nil && [superView isKindOfClass:[StoreCardCell class]])
+         {
+         StoreCardCell *cell = (StoreCardCell*)superView;
+         UIView*cellSuperView = cell.superview;
+         
+         if (cellSuperView != nil && [cellSuperView isKindOfClass:[CustomCollectionView class]])
+         {
+         CustomCollectionView*clv = (CustomCollectionView*)cellSuperView;
+         [clv reloadItemsAtIndexPaths:[NSIndexPath]];
+         }
+         
+         [cell reloadInputViews];
+         NSLog(@"refreshed");
+         }
+         */
+    }
+    
+    if (errorLoading) //TODO!!!!!! assuming that when the cardView is destroyed, this block will also be
+    {
+        NSLog(@"retrying");
+        if (_reloadAttempts++ < 15) //stop retrying after some time
+        {
+            //try again
+            [self performBlock:^{
+                [self loadImage];
+            } afterDelay:10];
+        }
+        else
+            NSLog(@"MAX RETRY REACHED");
+    }
+    else
+        NSLog(@"success");
+}
+
++(UIImage*)getImageForCard:(CardModel*)card errorLoading:(BOOL*)errorLoading
+{
+    NSLog(@"%d start", card.idNumber);
+    if (card.type == cardTypeStandard)
+    {
+        NSLog(@"%d standard", card.idNumber);
+        if (card.idNumber == NO_ID)
+            return placeHolderImage;
+        
+        UIImage* image = standardCardImages[@(card.idNumber)];
+        
+        //already loaded
+        if (image!=nil)
+        {
+            NSLog(@"%d image in database", card.idNumber);
+            return image;
+        }
+        //load from parse
+        else
+        {
+            NSLog(@"%d loading from parse", card.idNumber);
+            PFObject *cardPF;
+            if (card.cardPF == nil)
+            {
+                PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
+                cardQuery.limit = 1;
+                [cardQuery whereKey:@"idNumber" equalTo:@(card.idNumber)];
+                NSArray*cardArray = [cardQuery findObjects];
+                if (cardArray.count == 0)
+                {
+                    *errorLoading = YES;
+                    return placeHolderImage;
+                }
+                else
+                    cardPF = cardArray[0];
+            }
+            else
+                cardPF = card.cardPF;
+            
+            [cardPF[@"image"] fetchIfNeeded];
+            PFObject *imagePF = cardPF[@"image"];
+            
+            if (imagePF != nil)
+            {
+                NSLog(@"%d image is not nil", card.idNumber);
+                PFFile *file = imagePF[@"image"];
+                if (file != nil)
+                {
+                    NSData*data = [file getData];
+                    if (data != nil)
+                    {
+                        UIImage *image = [UIImage imageWithData:data];
+                        if (image != nil)
+                        {
+                            NSLog(@"got image");
+                            [standardCardImages setObject:image  forKey:@(card.idNumber)];
+                            NSLog(@"dic count %d", standardCardImages.count);
+                                NSLog(@"%@",[standardCardImages description]);
+                            return image;
+                        }
+                        else
+                            NSLog(@"%d image nil", card.idNumber);
+                    }
+                    else
+                        NSLog(@"%d data nil", card.idNumber);
+                }
+                else
+                    *errorLoading = YES;
+            }
+            else
+                NSLog(@"%d imagePF nil", card.idNumber);
+            
+        }
+    }
+    else if (card.type == cardTypePlayer)
+    {
+        return heroPlaceHolderImage;
+    }
+    else
+    {
+        //TODO
+    }
+    
+    return placeHolderImage;
+}
+
+
 -(void)animateCardHighlightBrighten: (UIImageView*)highlight
 {
     [UIView animateWithDuration:3
@@ -911,6 +1086,41 @@ NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
                                           }
                                           completion:nil];
                      }];
+}
+
+- (void)performBlockInBackground:(void (^)())block {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        block();
+    });
+}
+
+//block delay functions
+- (void)performBlock:(void (^)())block
+{
+    block();
+}
+
+- (void)performBlock:(void (^)())block afterDelay:(NSTimeInterval)delay
+{
+    void (^block_)() = [block copy]; // autorelease this if you're not using ARC
+    [self performSelector:@selector(performBlock:) withObject:block_ afterDelay:delay];
+}
+
+
+-(UIColor*)getRarityColor
+{
+    if (_cardModel.rarity == cardRarityCommon)
+        return COLOUR_COMMON;
+    else if (_cardModel.rarity == cardRarityUncommon)
+        return COLOUR_UNCOMMON;
+    else if (_cardModel.rarity == cardRarityRare)
+        return COLOUR_RARE;
+    else if (_cardModel.rarity == cardRarityExceptional)
+        return COLOUR_EXCEPTIONAL;
+    else if (_cardModel.rarity == cardRarityLegendary)
+        return COLOUR_LEGENDARY;
+    
+    return COLOUR_COMMON;
 }
 
 @end

@@ -378,10 +378,10 @@ NSArray *allAbilities;
                       [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnMove targetType:targetOneRandomFriendlyMinion withDuration:durationForever withValue:0 withOtherValues:@[@1000,@4000] withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:500 maxPoints:2000 maxCount:1 minCost:1],
                      //add to self on move
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnMove targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:@[@1000,@8000] withDescription:nil] elements:@[ELEMENT_FIRE] rarity:cardRarityCommon minPoints:800 maxPoints:6400 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnMove targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:@[@1000,@8000] withDescription:nil] elements:@[ELEMENT_FIRE] rarity:cardRarityCommon minPoints:1000 maxPoints:12000 maxCount:1 minCost:1],
                      //add to self on end of turn
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnEndOfTurn targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:@[@1000,@4000] withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:800 maxPoints:3200 maxCount:1 minCost:0],
+                      [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnEndOfTurn targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:@[@1000,@4000] withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:1000 maxPoints:6000 maxCount:1 minCost:0],
     
                      //---kill---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
                      //kill 1 minion
@@ -524,7 +524,7 @@ NSArray *allAbilities;
                       [[Ability alloc] initWithType:abilityAddDamage castType:castOnEndOfTurn targetType:targetOneRandomFriendlyMinion withDuration:durationForever withValue:0 withOtherValues:@[@1000,@3000] withDescription:nil] elements:@[LIGHTNING_AND_EARTH] rarity:cardRarityCommon minPoints:750 maxPoints:2250 maxCount:1 minCost:2],
                      //add to self on end of turn
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityAddDamage castType:castOnEndOfTurn targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:@[@1000,@3000] withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:750 maxPoints:2250 maxCount:1 minCost:2],
+                      [[Ability alloc] initWithType:abilityAddDamage castType:castOnEndOfTurn targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:@[@1000,@3000] withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:1000 maxPoints:6000 maxCount:1 minCost:2],
                      
                      //---lose damage---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
                      //lose to 1 minion

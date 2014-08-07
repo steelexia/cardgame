@@ -20,19 +20,24 @@
     [Parse setApplicationId:@"yekARh373R6T7z42RzFD8R1ywZVYELpOS1gCVD5C"
                   clientKey:@"Y46eRRr2QOFIu9kJGmmJldxV0xbPdtdbC6DJ7Q53"];
     
-    //TODO should be in main screen
-    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-    [PFUser enableAutomaticUser];
-    [[PFUser currentUser] saveInBackground];
-    
     [UIConstants loadResources];
-    
-    //load resources
-    [UserModel setupUser]; //also loads user data such as gold
     [AbilityWrapper loadAllAbilities];
     [CardView loadResources];
     
     userCDContext = [self managedObjectContext];
+    
+    //TODO should be in main screen
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    
+    [PFUser enableAutomaticUser];
+    
+    [[PFUser currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        
+        //NSLog(@"%d", succeeded);
+        
+        //load resources
+        [UserModel setupUser]; //also loads user data such as gold
+    }];
     
     /*
      CDCardModel *card = [NSEntityDescription

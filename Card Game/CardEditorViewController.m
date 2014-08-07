@@ -58,7 +58,8 @@ AbilityTableView *abilityNewTableView, *abilityExistingTableView;
 UILabel*abilityValueLabel;
 UIButton *abilityIncButton, *abilityDecButton, *abilityAddButton, *abilityRemoveButton;
 
-UITextField*abilitySearchField;
+UILabel*tagsLabel;
+UITextField*tagsField;
 
 CGSize keyboardSize;
 
@@ -82,6 +83,11 @@ UIButton*elementConfirmButton;
 UILabel *elementDescriptionLabel;
 
 UIImageView*pointsImageBackground;
+
+/** Image upload stuff */
+UIView*imageUploadView;
+UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
+
 
 - (id)initWithCard:(CardModel*)card
 {
@@ -141,7 +147,7 @@ UIImageView*pointsImageBackground;
     //nameTextField.text = self.currentCardModel.name;
     nameTextField.transform = self.currentCardView.transform;
     nameTextField.returnKeyType = UIReturnKeyDone;
-    [nameTextField setPlaceholder:@"Type name here"];
+    [nameTextField setPlaceholder:@"Enter name here"];
     [nameTextField setAutocorrectionType:UITextAutocorrectionTypeNo];
     [nameTextField addTarget:self action:@selector(nameTextFieldEdited) forControlEvents:UIControlEventEditingChanged];
     [nameTextField setMinimumFontSize:8.f];
@@ -220,6 +226,15 @@ UIImageView*pointsImageBackground;
     
     [self updateAllIncrementButtons];
     
+    CGPoint cardImagePoint = [self.view convertPoint:self.currentCardView.cardImage.center fromView:self.currentCardView];
+    imageEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.currentCardView.cardImage.frame.size.width*CARD_EDITOR_SCALE, self.currentCardView.cardImage.frame.size.height*CARD_EDITOR_SCALE)];
+    imageEditArea.center = CGPointMake(cardImagePoint.x, cardImagePoint.y);
+    
+    //imageEditArea.backgroundColor = [UIColor redColor];
+    //imageEditArea.alpha = 0.5;
+    
+    [self.view addSubview:imageEditArea];
+    
     damageEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 60, 36)];
     damageEditArea.center = CGPointMake(attackLabelPoint.x, attackLabelPoint.y);
     
@@ -268,6 +283,8 @@ UIImageView*pointsImageBackground;
     
     [self.view addSubview:abilityEditArea];
     
+    
+    
     //-------------------------ability views------------------------//
     
     //existing
@@ -276,28 +293,35 @@ UIImageView*pointsImageBackground;
     //[self.view addSubview:abilityExistingTableView];
     
     //new
-    abilityNewTableView = [[AbilityTableView alloc] initWithFrame:CGRectMake(80, 345, 186, SCREEN_HEIGHT - 345 - 24) mode:abilityTableViewNew];
+    abilityNewTableView = [[AbilityTableView alloc] initWithFrame:CGRectMake(80, 345, 186, SCREEN_HEIGHT - 345 - 28) mode:abilityTableViewNew];
     abilityNewTableView.cevc = self;
     [self.view addSubview:abilityNewTableView];
     
     
-    abilitySearchField =  [[UITextField alloc] initWithFrame:CGRectMake(80,SCREEN_HEIGHT- 22,186,20)];
+    tagsField =  [[UITextField alloc] initWithFrame:CGRectMake(120,SCREEN_HEIGHT- 24,196,20)];
     
-    abilitySearchField.textColor = [UIColor blackColor];
-    abilitySearchField.font = [UIFont fontWithName:cardMainFont size:12];
-    abilitySearchField.returnKeyType = UIReturnKeySearch;
-    [abilitySearchField setPlaceholder:@"Search for an ability"];
-    [abilitySearchField setAutocorrectionType:UITextAutocorrectionTypeNo];
-    [abilitySearchField addTarget:self action:@selector(abilitySearchFieldBegan) forControlEvents:UIControlEventEditingDidBegin];
-    [abilitySearchField addTarget:self action:@selector(abilitySearchFieldFinished) forControlEvents:UIControlEventEditingDidEnd];
-    [abilitySearchField setDelegate:self];
-    [abilitySearchField.layer setBorderColor:COLOUR_INTERFACE_BLUE.CGColor];
-    [abilitySearchField.layer setBorderWidth:1];
-    //[abilitySearchField setBackgroundColor:];
-    abilitySearchField.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0);
-    abilitySearchField.layer.cornerRadius = 4.0;
+    tagsField.textColor = [UIColor blackColor];
+    tagsField.font = [UIFont fontWithName:cardMainFont size:12];
+    tagsField.returnKeyType = UIReturnKeyDone;
+    [tagsField setPlaceholder:@"Enter tags separated by space"];
+    [tagsField setAutocorrectionType:UITextAutocorrectionTypeNo];
+    [tagsField addTarget:self action:@selector(tagsFieldBegan) forControlEvents:UIControlEventEditingDidBegin];
+    [tagsField addTarget:self action:@selector(tagsFieldFinished) forControlEvents:UIControlEventEditingDidEnd];
+    [tagsField setDelegate:self];
+    [tagsField.layer setBorderColor:COLOUR_INTERFACE_BLUE.CGColor];
+    [tagsField.layer setBorderWidth:1];
+    //[tagsField setBackgroundColor:];
+    tagsField.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0);
+    tagsField.layer.cornerRadius = 4.0;
+    [tagsField addTarget:self action:@selector(tagsTextFieldEdited) forControlEvents:UIControlEventEditingChanged];
     
-    [self.view addSubview:abilitySearchField];
+    [self.view addSubview:tagsField];
+    
+    tagsLabel = [[UILabel alloc] initWithFrame:CGRectMake(80, SCREEN_HEIGHT-24, 80, 20)];
+    tagsLabel.font = [UIFont fontWithName:cardMainFont size:16];
+    tagsLabel.textColor = [UIColor blackColor];
+    tagsLabel.text = @"Tags:";
+    [self.view addSubview:tagsLabel];
     
     abilityIncButton = [[UIButton alloc] initWithFrame:CGRectMake(270, 222, 46, 32)];
     [abilityIncButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateNormal];
@@ -323,7 +347,7 @@ UIImageView*pointsImageBackground;
     
     //[self.view addSubview:abilityRemoveButton];
     
-    abilityAddButton = [[UIButton alloc] initWithFrame:CGRectMake(270, SCREEN_HEIGHT - 64, 46, 32)];
+    abilityAddButton = [[UIButton alloc] initWithFrame:CGRectMake(270, SCREEN_HEIGHT - 60, 46, 32)];
     [abilityAddButton setImage:[UIImage imageNamed:@"add_deck_button"] forState:UIControlStateNormal];
     [abilityAddButton setImage:[UIImage imageNamed:@"add_deck_button_gray"] forState:UIControlStateDisabled];
     [abilityAddButton addTarget:self action:@selector(abilityAddButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
@@ -331,14 +355,14 @@ UIImageView*pointsImageBackground;
     
     [self.view addSubview:abilityAddButton];
     
-    pointsImageBackground = [[UIImageView alloc]initWithImage:POINTS_ICON_IMAGE];
+    pointsImageBackground = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"points_icon_card_creator"]];
     pointsImageBackground.frame = CGRectMake(0,0,74, 74);
     pointsImageBackground.center = CGPointMake(35, 180);
     
     [self.view addSubview:pointsImageBackground];
     
     currentCostLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,46,32)];
-    currentCostLabel.center = CGPointMake(30, 165);
+    currentCostLabel.center = CGPointMake(30, 164);
     currentCostLabel.textAlignment = NSTextAlignmentCenter;
     currentCostLabel.textColor = [UIColor whiteColor];
     currentCostLabel.backgroundColor = [UIColor clearColor];
@@ -352,7 +376,7 @@ UIImageView*pointsImageBackground;
     [self.view addSubview:currentCostLabel];
     
     maxCostLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,46,32)];
-    maxCostLabel.center = CGPointMake(40, 196);
+    maxCostLabel.center = CGPointMake(40, 197);
     maxCostLabel.textAlignment = NSTextAlignmentCenter;
     maxCostLabel.textColor = [UIColor whiteColor];
     maxCostLabel.backgroundColor = [UIColor clearColor];
@@ -531,6 +555,60 @@ UIImageView*pointsImageBackground;
     elementDescriptionLabel.text = @"";
     [elementDescriptionLabel sizeToFit];
     
+    //image upload screen
+    imageUploadView = [[UIView alloc] initWithFrame:self.view.bounds];
+    imageUploadView.backgroundColor = [[UIColor alloc]initWithHue:0 saturation:0 brightness:0 alpha:0.8];
+    [imageUploadView setUserInteractionEnabled:YES];
+    
+    StrokedLabel*uploadLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,SCREEN_WIDTH,40)];
+    uploadLabel.textColor = [UIColor whiteColor];
+    uploadLabel.font = [UIFont fontWithName:cardMainFont size:30];
+    uploadLabel.textAlignment = NSTextAlignmentCenter;
+    uploadLabel.center = CGPointMake(SCREEN_WIDTH/2, 60);
+    uploadLabel.strokeOn = YES;
+    uploadLabel.strokeColour = [UIColor blackColor];
+    uploadLabel.strokeThickness = 4;
+    uploadLabel.text = @"Create an image";
+    [imageUploadView addSubview:uploadLabel];
+    
+    UILabel*upload2Label = [[UILabel alloc] initWithFrame:CGRectMake(0,0,SCREEN_WIDTH,40)];
+    upload2Label.textColor = [UIColor whiteColor];
+    upload2Label.font = [UIFont fontWithName:cardMainFont size:20];
+    upload2Label.textAlignment = NSTextAlignmentCenter;
+    upload2Label.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 50);
+    upload2Label.text = @"Upload from:";
+    [imageUploadView addSubview:upload2Label];
+    
+    uploadFromFileButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
+    [uploadFromFileButton setImage:[UIImage imageNamed:@"upload_from_file_button"] forState:UIControlStateNormal];
+    uploadFromFileButton.center = CGPointMake(SCREEN_WIDTH/3, SCREEN_HEIGHT/2+50);
+    [imageUploadView addSubview:uploadFromFileButton];
+    [uploadFromFileButton addTarget:self action:@selector(uploadFromFileButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    uploadFromCameraButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
+    [uploadFromCameraButton setImage:[UIImage imageNamed:@"upload_from_camera_button"] forState:UIControlStateNormal];
+    uploadFromCameraButton.center = CGPointMake(SCREEN_WIDTH*2/3, SCREEN_HEIGHT/2+50);
+    [imageUploadView addSubview:uploadFromCameraButton];
+    [uploadFromCameraButton addTarget:self action:@selector(uploadFromCameraButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    //upload indicator
+    _cardUploadIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [_cardUploadIndicator setFrame:self.view.bounds];
+    [_cardUploadIndicator setBackgroundColor:[UIColor colorWithHue:0 saturation:0 brightness:0 alpha:0.5]];
+    [_cardUploadIndicator setUserInteractionEnabled:YES];
+    _cardUploadLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 40)];
+    _cardUploadLabel.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 60);
+    _cardUploadLabel.textAlignment = NSTextAlignmentCenter;
+    _cardUploadLabel.textColor = [UIColor whiteColor];
+    _cardUploadLabel.font = [UIFont fontWithName:cardMainFont size:20];
+    _cardUploadLabel.text = [NSString stringWithFormat:@"Uploading Card..."];
+    [_cardUploadIndicator addSubview:_cardUploadLabel];
+    
+    _cardUploadFailedButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    _cardUploadFailedButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 60);
+    [_cardUploadFailedButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
+    [_cardUploadFailedButton addTarget:self action:@selector(cardUploadFailedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center addObserver:self selector:@selector(keyboardOnScreen:) name:UIKeyboardDidShowNotification object:nil];
     
@@ -550,7 +628,7 @@ UIImageView*pointsImageBackground;
 -(void)tapRegistered
 {
     [nameTextField resignFirstResponder];
-    [abilitySearchField resignFirstResponder];
+    [tagsField resignFirstResponder];
 }
 
 -(void)nameTextFieldEdited
@@ -607,13 +685,19 @@ UIImageView*pointsImageBackground;
     //[_currentCardView.nameLabel setFont:nameTextField.font];
 }
 
+-(void)tagsTextFieldEdited
+{
+    while (tagsField.text.length > 100)
+        tagsField.text = [tagsField.text substringToIndex:[tagsField.text length]-1];
+}
+
 -(void)keyboardOnScreen:(NSNotification *)notification
 {
     keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     
 }
 
--(void)abilitySearchFieldBegan
+-(void)tagsFieldBegan
 {
     int height = keyboardSize.height;
     
@@ -626,7 +710,7 @@ UIImageView*pointsImageBackground;
                      completion:nil];
 }
 
--(void)abilitySearchFieldFinished
+-(void)tagsFieldFinished
 {
     [UIView animateWithDuration:0.15
                           delay:0
@@ -1062,7 +1146,7 @@ UIImageView*pointsImageBackground;
         [_currentCardView removeFromSuperview];
     }
     
-    _currentCardView = [[CardView alloc] initWithModel:_currentCardModel cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]]viewMode:cardViewModeEditor];
+    _currentCardView = [[CardView alloc] initWithModel:_currentCardModel viewMode:cardViewModeEditor];
     _currentCardView.cardViewState = cardViewStateCardViewer;
     _currentCardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_EDITOR_SCALE, CARD_EDITOR_SCALE);
     
@@ -1146,6 +1230,17 @@ UIImageView*pointsImageBackground;
    
     currentCostLabel.text = [NSString stringWithFormat:@"%d", self.currentCost];
     maxCostLabel.text = [NSString stringWithFormat:@"%d", self.maxCost];
+    
+    if (self.currentCost > self.maxCost)
+    {
+        currentCostLabel.textColor = [UIColor redColor];
+        [saveCardButton setEnabled:NO];
+    }
+    else
+    {
+        currentCostLabel.textColor = [UIColor whiteColor];
+        [saveCardButton setEnabled:YES];
+    }
     
 }
 
@@ -1406,7 +1501,7 @@ UIImageView*pointsImageBackground;
 
 -(void)setupNewMonster
 {
-    MonsterCardModel*monster = [[MonsterCardModel alloc] initWithIdNumber:-1];
+    MonsterCardModel*monster = [[MonsterCardModel alloc] initWithIdNumber:NO_ID];
     
     monster.life = monster.maximumLife = 1000;
     monster.damage = 1000;
@@ -1466,7 +1561,7 @@ UIImageView*pointsImageBackground;
         [_currentCardView removeFromSuperview];
     }
     
-    _currentCardView = [[CardView alloc] initWithModel:spell cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]]viewMode:cardViewModeEditor];
+    _currentCardView = [[CardView alloc] initWithModel:spell viewMode:cardViewModeEditor];
     _currentCardView.cardViewState = cardViewStateCardViewer;
     _currentCardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_EDITOR_SCALE, CARD_EDITOR_SCALE);
     
@@ -1518,7 +1613,66 @@ UIImageView*pointsImageBackground;
 /** When OK is pressed and the card is sent to Parse database */
 - (void) publishCurrentCard
 {
-    [UserModel publishCard:self.currentCardModel];
+    //get rid of the confirm screen
+    [self confirmCancelButtonPressed];
+    
+    _cardUploadIndicator.alpha = 0;
+    _cardUploadLabel.text = [NSString stringWithFormat:@"Uploading Card..."];
+    [_cardUploadIndicator setColor:[UIColor whiteColor]];
+    [self.view addSubview:_cardUploadIndicator];
+    [_cardUploadIndicator startAnimating];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _cardUploadIndicator.alpha = 1;
+                     }
+                     completion:^(BOOL completed){
+                         [self performBlock:^{
+                             BOOL succ = [UserModel publishCard:self.currentCardModel withImage:self.currentCardView.cardImage.image];
+                             
+                             if (succ)
+                             {
+                                 [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                                                  animations:^{
+                                                      _cardUploadIndicator.alpha = 0;
+                                                  }
+                                                  completion:^(BOOL completed){
+                                                      [_cardUploadIndicator stopAnimating];
+                                                      [_cardUploadIndicator removeFromSuperview];
+                                                      
+                                                      //TODO
+                                                      MainScreenViewController *viewController = [[MainScreenViewController alloc] init];
+                                                      [self presentViewController:viewController animated:YES completion:nil];
+                                                  }];
+                             }
+                             else
+                             {
+                                 [_cardUploadIndicator setColor:[UIColor clearColor]];
+                                 _cardUploadLabel.text = [NSString stringWithFormat:@"Error uploading card."];
+                                 _cardUploadFailedButton.alpha = 0;
+                                 [_cardUploadIndicator addSubview:_cardUploadFailedButton];
+                                 [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                                                  animations:^{
+                                                      _cardUploadFailedButton.alpha = 1;
+                                                  }
+                                                  completion:^(BOOL completed){
+                                                      [_cardUploadFailedButton setUserInteractionEnabled:YES];
+                                                  }];
+                             }
+                         }];
+                     }];
+}
+
+-(void)cardUploadFailedButtonPressed
+{
+    [_cardUploadFailedButton setUserInteractionEnabled:NO];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _cardUploadIndicator.alpha = 0;
+                     }
+                     completion:^(BOOL completed){
+                         [_cardUploadFailedButton removeFromSuperview];
+                     }];
+    
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -1643,6 +1797,10 @@ UIImageView*pointsImageBackground;
     {
         [self openElementEditScreen];
     }
+    else if (touchedView == imageEditArea)
+    {
+        [self openImageUploadScreen];
+    }
     else if (touchedView != self.currentCardView)
     {
         [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
@@ -1655,6 +1813,7 @@ UIImageView*pointsImageBackground;
                              [costIncButton removeFromSuperview];
                          }];
     }
+    
     
     //element select
     if (touchedView == neutralLabel)
@@ -1918,6 +2077,62 @@ UIImageView*pointsImageBackground;
     [self reloadCardView];
 }
 
+-(void)openImageUploadScreen
+{
+    [self.view addSubview:imageUploadView];
+    imageUploadView.alpha = 0;
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         imageUploadView.alpha = 1;
+                     }
+                     completion:^(BOOL completed){
+                         
+                     }];
+}
+
+-(void)uploadFromFileButtonPressed
+{
+    self.imagePicker = [[GKImagePicker alloc] init];
+    self.imagePicker.cropSize = CGSizeMake(CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT);
+    
+    [self.imagePicker.imagePickerController setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+    self.imagePicker.delegate = self;
+    //self.imagePicker.resizeableCropArea = YES;
+    
+    [self presentViewController:self.imagePicker.imagePickerController animated:YES completion:nil];
+    //[self presentModalViewController:self.imagePicker.imagePickerController animated:YES];
+}
+
+-(void)uploadFromCameraButtonPressed
+{
+    
+    /*
+    if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+    {
+        [imagePicker setSourceType:UIImagePickerControllerSourceTypeCamera];
+    }
+    */
+    //[self presentViewController:imagePicker animated:YES completion:nil];
+}
+
+- (void)imagePicker:(GKImagePicker *)imagePicker pickedImage:(UIImage *)image
+{
+    self.currentCardView.cardImage.image = image;
+    
+    NSLog(@"view %f %f, image %f %f", self.currentCardView.cardImage.frame.size.width, self.currentCardView.cardImage.frame.size.height, image.size.width, image.size.height);
+    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         imageUploadView.alpha = 0;
+                     }
+                     completion:^(BOOL completed){
+                         [imageUploadView removeFromSuperview];
+                     }];
+    
+    //[self.imageView setImage:image];
+    //[self dismissViewControllerAnimated:YES completion:nil];
+    [imagePicker.imagePickerController dismissViewControllerAnimated:YES completion:nil];
+}
 
 -(void)rowSelected:(AbilityTableView*)tableView indexPath:(NSIndexPath *)indexPath
 {
@@ -1942,7 +2157,6 @@ UIImageView*pointsImageBackground;
         
         [self updateAbilityButtons:wrapper];
     }
-    
 }
 
 -(void)updateAbilityButtons:(AbilityWrapper*)wrapper
@@ -2057,12 +2271,12 @@ UIImageView*pointsImageBackground;
 -(void)saveCardConfirmButtonPressed
 {
     self.currentCardModel.name = nameTextField.text; //TODO not exactly the best place
+    self.currentCardModel.tags = [NSMutableArray arrayWithArray:[tagsField.text componentsSeparatedByString:@" "]];
     
     [userAllCards addObject:self.currentCardModel]; //TODO might not be needed once using parse
     [self publishCurrentCard];
     
-    MainScreenViewController *viewController = [[MainScreenViewController alloc] init];
-    [self presentViewController:viewController animated:YES completion:nil];
+    
 }
 
 -(void)cancelCardConfirmButtonPressed

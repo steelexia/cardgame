@@ -35,6 +35,29 @@
 		9069AAE6195501AB006D1D98 /* card_background_front_lightning_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AADF195501AB006D1D98 /* card_background_front_lightning_common.png */; };
 		9069AAE7195501AB006D1D98 /* card_background_front_neutral_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AAE0195501AB006D1D98 /* card_background_front_neutral_common.png */; };
 		9069AB451957A903006D1D98 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9069AB381957A8F8006D1D98 /* Parse.framework */; };
+		907020441991437D00FDE444 /* gold_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 907020431991437D00FDE444 /* gold_icon.png */; };
+		9070204619914B1C00FDE444 /* like_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9070204519914B1C00FDE444 /* like_icon.png */; };
+		9070204B19915FD500FDE444 /* card_background_front_overlay_legendary.png in Resources */ = {isa = PBXBuildFile; fileRef = 9070204719915FD500FDE444 /* card_background_front_overlay_legendary.png */; };
+		9070204C19915FD500FDE444 /* card_background_front_overlay_exceptional.png in Resources */ = {isa = PBXBuildFile; fileRef = 9070204819915FD500FDE444 /* card_background_front_overlay_exceptional.png */; };
+		9070204D19915FD500FDE444 /* card_background_front_overlay_rare.png in Resources */ = {isa = PBXBuildFile; fileRef = 9070204919915FD500FDE444 /* card_background_front_overlay_rare.png */; };
+		9070204E19915FD500FDE444 /* card_background_front_overlay_uncommon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9070204A19915FD500FDE444 /* card_background_front_overlay_uncommon.png */; };
+		907020501992937E00FDE444 /* points_icon_card_creator.png in Resources */ = {isa = PBXBuildFile; fileRef = 9070204F1992937E00FDE444 /* points_icon_card_creator.png */; };
+		907020531992A1CB00FDE444 /* upload_from_camera_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 907020511992A1CB00FDE444 /* upload_from_camera_button.png */; };
+		907020541992A1CB00FDE444 /* upload_from_file_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 907020521992A1CB00FDE444 /* upload_from_file_button.png */; };
+		9070206B1992AC8100FDE444 /* GKCropBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 907020571992AC8100FDE444 /* GKCropBorderView.m */; };
+		9070206C1992AC8100FDE444 /* GKImageCropOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 907020591992AC8100FDE444 /* GKImageCropOverlayView.m */; };
+		9070206D1992AC8100FDE444 /* GKImageCropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9070205B1992AC8100FDE444 /* GKImageCropView.m */; };
+		9070206E1992AC8100FDE444 /* GKImageCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9070205D1992AC8100FDE444 /* GKImageCropViewController.m */; };
+		9070206F1992AC8100FDE444 /* GKImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 9070205F1992AC8100FDE444 /* GKImagePicker.m */; };
+		907020701992AC8100FDE444 /* GKResizeableCropOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 907020611992AC8100FDE444 /* GKResizeableCropOverlayView.m */; };
+		907020711992AC8100FDE444 /* PLCameraSheetButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 907020631992AC8100FDE444 /* PLCameraSheetButton.png */; };
+		907020721992AC8100FDE444 /* PLCameraSheetButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 907020641992AC8100FDE444 /* PLCameraSheetButton@2x.png */; };
+		907020731992AC8100FDE444 /* PLCameraSheetButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 907020651992AC8100FDE444 /* PLCameraSheetButtonPressed.png */; };
+		907020741992AC8100FDE444 /* PLCameraSheetButtonPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 907020661992AC8100FDE444 /* PLCameraSheetButtonPressed@2x.png */; };
+		907020751992AC8100FDE444 /* PLCameraSheetDoneButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 907020671992AC8100FDE444 /* PLCameraSheetDoneButton.png */; };
+		907020761992AC8100FDE444 /* PLCameraSheetDoneButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 907020681992AC8100FDE444 /* PLCameraSheetDoneButton@2x.png */; };
+		907020771992AC8100FDE444 /* PLCameraSheetDoneButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 907020691992AC8100FDE444 /* PLCameraSheetDoneButtonPressed.png */; };
+		907020781992AC8100FDE444 /* PLCameraSheetDoneButtonPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9070206A1992AC8100FDE444 /* PLCameraSheetDoneButtonPressed@2x.png */; };
 		907D9BDC192270DE0037C0CF /* field_edge.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9BDB192270DE0037C0CF /* field_edge.png */; };
 		907D9BDF19229B330037C0CF /* GameViewController+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = 907D9BDE19229B330037C0CF /* GameViewController+Animation.m */; };
 		907D9BE11922AE0D0037C0CF /* field_highlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9BE01922AE0D0037C0CF /* field_highlight.png */; };
@@ -256,6 +279,35 @@
 		9069AB421957A8F8006D1D98 /* StrokedLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StrokedLabel.m; sourceTree = "<group>"; };
 		9069AB431957A8F8006D1D98 /* ViewLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewLayer.h; sourceTree = "<group>"; };
 		9069AB441957A8F8006D1D98 /* ViewLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewLayer.m; sourceTree = "<group>"; };
+		907020431991437D00FDE444 /* gold_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gold_icon.png; path = "Card Game/gold_icon.png"; sourceTree = "<group>"; };
+		9070204519914B1C00FDE444 /* like_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = like_icon.png; path = "Card Game/like_icon.png"; sourceTree = "<group>"; };
+		9070204719915FD500FDE444 /* card_background_front_overlay_legendary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_overlay_legendary.png; path = "Card Game/card_background_front_overlay_legendary.png"; sourceTree = "<group>"; };
+		9070204819915FD500FDE444 /* card_background_front_overlay_exceptional.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_overlay_exceptional.png; path = "Card Game/card_background_front_overlay_exceptional.png"; sourceTree = "<group>"; };
+		9070204919915FD500FDE444 /* card_background_front_overlay_rare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_overlay_rare.png; path = "Card Game/card_background_front_overlay_rare.png"; sourceTree = "<group>"; };
+		9070204A19915FD500FDE444 /* card_background_front_overlay_uncommon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_overlay_uncommon.png; path = "Card Game/card_background_front_overlay_uncommon.png"; sourceTree = "<group>"; };
+		9070204F1992937E00FDE444 /* points_icon_card_creator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = points_icon_card_creator.png; path = "Card Game/points_icon_card_creator.png"; sourceTree = "<group>"; };
+		907020511992A1CB00FDE444 /* upload_from_camera_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = upload_from_camera_button.png; path = "Card Game/upload_from_camera_button.png"; sourceTree = "<group>"; };
+		907020521992A1CB00FDE444 /* upload_from_file_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = upload_from_file_button.png; path = "Card Game/upload_from_file_button.png"; sourceTree = "<group>"; };
+		907020561992AC8100FDE444 /* GKCropBorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKCropBorderView.h; sourceTree = "<group>"; };
+		907020571992AC8100FDE444 /* GKCropBorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKCropBorderView.m; sourceTree = "<group>"; };
+		907020581992AC8100FDE444 /* GKImageCropOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKImageCropOverlayView.h; sourceTree = "<group>"; };
+		907020591992AC8100FDE444 /* GKImageCropOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKImageCropOverlayView.m; sourceTree = "<group>"; };
+		9070205A1992AC8100FDE444 /* GKImageCropView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKImageCropView.h; sourceTree = "<group>"; };
+		9070205B1992AC8100FDE444 /* GKImageCropView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKImageCropView.m; sourceTree = "<group>"; };
+		9070205C1992AC8100FDE444 /* GKImageCropViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKImageCropViewController.h; sourceTree = "<group>"; };
+		9070205D1992AC8100FDE444 /* GKImageCropViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKImageCropViewController.m; sourceTree = "<group>"; };
+		9070205E1992AC8100FDE444 /* GKImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKImagePicker.h; sourceTree = "<group>"; };
+		9070205F1992AC8100FDE444 /* GKImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKImagePicker.m; sourceTree = "<group>"; };
+		907020601992AC8100FDE444 /* GKResizeableCropOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GKResizeableCropOverlayView.h; sourceTree = "<group>"; };
+		907020611992AC8100FDE444 /* GKResizeableCropOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GKResizeableCropOverlayView.m; sourceTree = "<group>"; };
+		907020631992AC8100FDE444 /* PLCameraSheetButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PLCameraSheetButton.png; sourceTree = "<group>"; };
+		907020641992AC8100FDE444 /* PLCameraSheetButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PLCameraSheetButton@2x.png"; sourceTree = "<group>"; };
+		907020651992AC8100FDE444 /* PLCameraSheetButtonPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PLCameraSheetButtonPressed.png; sourceTree = "<group>"; };
+		907020661992AC8100FDE444 /* PLCameraSheetButtonPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PLCameraSheetButtonPressed@2x.png"; sourceTree = "<group>"; };
+		907020671992AC8100FDE444 /* PLCameraSheetDoneButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PLCameraSheetDoneButton.png; sourceTree = "<group>"; };
+		907020681992AC8100FDE444 /* PLCameraSheetDoneButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PLCameraSheetDoneButton@2x.png"; sourceTree = "<group>"; };
+		907020691992AC8100FDE444 /* PLCameraSheetDoneButtonPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PLCameraSheetDoneButtonPressed.png; sourceTree = "<group>"; };
+		9070206A1992AC8100FDE444 /* PLCameraSheetDoneButtonPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PLCameraSheetDoneButtonPressed@2x.png"; sourceTree = "<group>"; };
 		907D9BDB192270DE0037C0CF /* field_edge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = field_edge.png; path = "Card Game/field_edge.png"; sourceTree = "<group>"; };
 		907D9BDD19229B330037C0CF /* GameViewController+Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GameViewController+Animation.h"; sourceTree = "<group>"; };
 		907D9BDE19229B330037C0CF /* GameViewController+Animation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GameViewController+Animation.m"; sourceTree = "<group>"; };
@@ -455,9 +507,13 @@
 			name = Fonts;
 			sourceTree = "<group>";
 		};
-		9069AAD91955019A006D1D98 /* Common */ = {
+		9069AAD91955019A006D1D98 /* Rarity */ = {
 			isa = PBXGroup;
 			children = (
+				9070204719915FD500FDE444 /* card_background_front_overlay_legendary.png */,
+				9070204819915FD500FDE444 /* card_background_front_overlay_exceptional.png */,
+				9070204919915FD500FDE444 /* card_background_front_overlay_rare.png */,
+				9070204A19915FD500FDE444 /* card_background_front_overlay_uncommon.png */,
 				90AB14F2196CA7E60008FCDD /* card_background_front_overlay_common.png */,
 				90DA434B195B7C0300E44AED /* card_background_front_neutral_common_icon.png */,
 				9069AADA195501AB006D1D98 /* card_background_front_dark_common.png */,
@@ -468,7 +524,7 @@
 				9069AADF195501AB006D1D98 /* card_background_front_lightning_common.png */,
 				9069AAE0195501AB006D1D98 /* card_background_front_neutral_common.png */,
 			);
-			name = Common;
+			name = Rarity;
 			sourceTree = "<group>";
 		};
 		9069AAF61957A8F8006D1D98 /* Card Game */ = {
@@ -553,6 +609,40 @@
 			path = "Card Game";
 			sourceTree = "<group>";
 		};
+		907020551992AC8100FDE444 /* GKClasses */ = {
+			isa = PBXGroup;
+			children = (
+				907020561992AC8100FDE444 /* GKCropBorderView.h */,
+				907020571992AC8100FDE444 /* GKCropBorderView.m */,
+				907020581992AC8100FDE444 /* GKImageCropOverlayView.h */,
+				907020591992AC8100FDE444 /* GKImageCropOverlayView.m */,
+				9070205A1992AC8100FDE444 /* GKImageCropView.h */,
+				9070205B1992AC8100FDE444 /* GKImageCropView.m */,
+				9070205C1992AC8100FDE444 /* GKImageCropViewController.h */,
+				9070205D1992AC8100FDE444 /* GKImageCropViewController.m */,
+				9070205E1992AC8100FDE444 /* GKImagePicker.h */,
+				9070205F1992AC8100FDE444 /* GKImagePicker.m */,
+				907020601992AC8100FDE444 /* GKResizeableCropOverlayView.h */,
+				907020611992AC8100FDE444 /* GKResizeableCropOverlayView.m */,
+			);
+			path = GKClasses;
+			sourceTree = "<group>";
+		};
+		907020621992AC8100FDE444 /* GKImages */ = {
+			isa = PBXGroup;
+			children = (
+				907020631992AC8100FDE444 /* PLCameraSheetButton.png */,
+				907020641992AC8100FDE444 /* PLCameraSheetButton@2x.png */,
+				907020651992AC8100FDE444 /* PLCameraSheetButtonPressed.png */,
+				907020661992AC8100FDE444 /* PLCameraSheetButtonPressed@2x.png */,
+				907020671992AC8100FDE444 /* PLCameraSheetDoneButton.png */,
+				907020681992AC8100FDE444 /* PLCameraSheetDoneButton@2x.png */,
+				907020691992AC8100FDE444 /* PLCameraSheetDoneButtonPressed.png */,
+				9070206A1992AC8100FDE444 /* PLCameraSheetDoneButtonPressed@2x.png */,
+			);
+			path = GKImages;
+			sourceTree = "<group>";
+		};
 		907D9BD719226B330037C0CF /* Assets */ = {
 			isa = PBXGroup;
 			children = (
@@ -575,6 +665,11 @@
 		907D9BD919226B4C0037C0CF /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				907020511992A1CB00FDE444 /* upload_from_camera_button.png */,
+				907020521992A1CB00FDE444 /* upload_from_file_button.png */,
+				9070204F1992937E00FDE444 /* points_icon_card_creator.png */,
+				9070204519914B1C00FDE444 /* like_icon.png */,
+				907020431991437D00FDE444 /* gold_icon.png */,
 				90456EDD198F1B9100B807DC /* buy_button_gray.png */,
 				90456EDE198F1B9100B807DC /* buy_button.png */,
 				90456EDF198F1B9100B807DC /* edit_button_gray.png */,
@@ -626,7 +721,7 @@
 			isa = PBXGroup;
 			children = (
 				90AB14FB196F2FB20008FCDD /* Abilities */,
-				9069AAD91955019A006D1D98 /* Common */,
+				9069AAD91955019A006D1D98 /* Rarity */,
 				90AB14F4196CA7F90008FCDD /* card_background_front_monster_overlay.png */,
 				907D9BF6192E979C0037C0CF /* hero_glow_select.png */,
 				907D9BFE192FD3910037C0CF /* hero_glow_target.png */,
@@ -740,6 +835,8 @@
 			isa = PBXGroup;
 			children = (
 				907D9BD719226B330037C0CF /* Assets */,
+				907020551992AC8100FDE444 /* GKClasses */,
+				907020621992AC8100FDE444 /* GKImages */,
 				90F3529C191595C200601130 /* Card Game */,
 				90F352BE191595C300601130 /* Card GameTests */,
 				90F35295191595C200601130 /* Frameworks */,
@@ -923,11 +1020,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				907020541992A1CB00FDE444 /* upload_from_file_button.png in Resources */,
 				90DA434C195B7C0300E44AED /* card_background_front_neutral_common_icon.png in Resources */,
 				90DA4371195F96DB00E44AED /* decrement_button.png in Resources */,
 				90DA43C51969D21500E44AED /* add_deck_button_gray.png in Resources */,
 				90DA43BC1969D21500E44AED /* back_button.png in Resources */,
 				90456EE4198F1B9100B807DC /* buy_button.png in Resources */,
+				9070204E19915FD500FDE444 /* card_background_front_overlay_uncommon.png in Resources */,
 				90AB1511197AEC310008FCDD /* card_ability_icon_assassin.png in Resources */,
 				90AB1512197AEC310008FCDD /* card_ability_icon_remove_ability.png in Resources */,
 				90DA43C31969D21500E44AED /* save_card_button_gray.png in Resources */,
@@ -944,8 +1043,10 @@
 				90AB14FF196F2FF20008FCDD /* encode-sans.compressed-black.ttf in Resources */,
 				90AB14F3196CA7E60008FCDD /* card_background_front_overlay_common.png in Resources */,
 				90456EE5198F1B9100B807DC /* edit_button_gray.png in Resources */,
+				907020731992AC8100FDE444 /* PLCameraSheetButtonPressed.png in Resources */,
 				90AB150D197AE3CF0008FCDD /* card_ability_icon_cast_on_damaged.png in Resources */,
 				90AB14F5196CA7F90008FCDD /* card_background_front_monster_overlay.png in Resources */,
+				907020741992AC8100FDE444 /* PLCameraSheetButtonPressed@2x.png in Resources */,
 				90DA4372195F96DB00E44AED /* increment_button.png in Resources */,
 				9069AAE3195501AB006D1D98 /* card_background_front_fire_common.png in Resources */,
 				90AB15021979FB5E0008FCDD /* resource_icon.png in Resources */,
@@ -953,22 +1054,31 @@
 				9060540D191C032B000B3B93 /* end_turn_button_up.png in Resources */,
 				9069AAE1195501AB006D1D98 /* card_background_front_dark_common.png in Resources */,
 				90F352B2191595C200601130 /* Images.xcassets in Resources */,
+				9070204619914B1C00FDE444 /* like_icon.png in Resources */,
 				9069AACF1951E737006D1D98 /* Main_iPad.storyboard in Resources */,
 				9069AAE5195501AB006D1D98 /* card_background_front_light_common.png in Resources */,
 				9069AACE1951E734006D1D98 /* Main_iPhone.storyboard in Resources */,
 				90AB150E197AE3CF0008FCDD /* card_ability_icon_pierce.png in Resources */,
 				90DA43C11969D21500E44AED /* spell_button.png in Resources */,
+				9070204D19915FD500FDE444 /* card_background_front_overlay_rare.png in Resources */,
 				90DA434E195C941400E44AED /* add_button_gray.png in Resources */,
 				90DA43C21969D21500E44AED /* cancel_card_button.png in Resources */,
+				907020531992A1CB00FDE444 /* upload_from_camera_button.png in Resources */,
 				90DA4340195A4A6E00E44AED /* add_button.png in Resources */,
+				907020771992AC8100FDE444 /* PLCameraSheetDoneButtonPressed.png in Resources */,
+				907020721992AC8100FDE444 /* PLCameraSheetButton@2x.png in Resources */,
 				90DA4355195E022B00E44AED /* yes_button.png in Resources */,
+				9070204C19915FD500FDE444 /* card_background_front_overlay_exceptional.png in Resources */,
 				90AB1509197AD6DA0008FCDD /* card_ability_icon_cast_on_hit.png in Resources */,
+				907020761992AC8100FDE444 /* PLCameraSheetDoneButton@2x.png in Resources */,
 				90DA43BE1969D21500E44AED /* monster_button_gray.png in Resources */,
 				90AB150A197AD6DA0008FCDD /* card_ability_icon_cast_on_move.png in Resources */,
 				90AB1516198355F00008FCDD /* points_icon.png in Resources */,
 				90DA43C01969D21500E44AED /* spell_button_gray.png in Resources */,
 				90DA43BA1969D21500E44AED /* battle_button_gray.png in Resources */,
+				907020781992AC8100FDE444 /* PLCameraSheetDoneButtonPressed@2x.png in Resources */,
 				907D9BF3192D8D680037C0CF /* hero_default.png in Resources */,
+				907020501992937E00FDE444 /* points_icon_card_creator.png in Resources */,
 				90DA437519608F4D00E44AED /* increment_button_gray.png in Resources */,
 				907D9BF7192E979C0037C0CF /* hero_glow_select.png in Resources */,
 				9069AAE2195501AB006D1D98 /* card_background_front_earth_common.png in Resources */,
@@ -979,6 +1089,7 @@
 				907D9BDC192270DE0037C0CF /* field_edge.png in Resources */,
 				90DA433D195A451000E44AED /* arrow_right_button.png in Resources */,
 				90DA433C195A451000E44AED /* arrow_left_button.png in Resources */,
+				907020751992AC8100FDE444 /* PLCameraSheetDoneButton.png in Resources */,
 				90DA43BB1969D21500E44AED /* battle_button.png in Resources */,
 				907D9BF5192E91290037C0CF /* card_glow_select.png in Resources */,
 				9069AAE4195501AB006D1D98 /* card_background_front_ice_common.png in Resources */,
@@ -992,11 +1103,14 @@
 				90DA437619608F4D00E44AED /* decrement_button_gray.png in Resources */,
 				90F352A1191595C200601130 /* InfoPlist.strings in Resources */,
 				907D9C071932538E0037C0CF /* end_turn_button_disabled.png in Resources */,
+				907020441991437D00FDE444 /* gold_icon.png in Resources */,
 				907D9BFD192FD35F0037C0CF /* card_glow_target.png in Resources */,
 				90456EE3198F1B9100B807DC /* buy_button_gray.png in Resources */,
+				907020711992AC8100FDE444 /* PLCameraSheetButton.png in Resources */,
 				90F352CF191595F400601130 /* card_background_front.png in Resources */,
 				90AB1506197AC71E0008FCDD /* card_ability_icon_taunt.png in Resources */,
 				907D9BFF192FD3910037C0CF /* hero_glow_target.png in Resources */,
+				9070204B19915FD500FDE444 /* card_background_front_overlay_legendary.png in Resources */,
 				90DA4359195E023600E44AED /* ok_button.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1017,7 +1131,9 @@
 				90DA43D01969DD9D00E44AED /* CDDeckModel.m in Sources */,
 				90F352D81915C8DB00601130 /* GameModel.m in Sources */,
 				90F352DB1916B48A00601130 /* MonsterCardModel.m in Sources */,
+				9070206B1992AC8100FDE444 /* GKCropBorderView.m in Sources */,
 				90456EC9198AFD6B00B807DC /* CardsCollectionCell.m in Sources */,
+				9070206D1992AC8100FDE444 /* GKImageCropView.m in Sources */,
 				9069AAD819528A7B006D1D98 /* StrokedLabel.m in Sources */,
 				90605408191AA9D3000B3B93 /* PlayerModel.m in Sources */,
 				90DA43351959D75700E44AED /* CustomCollectionView.m in Sources */,
@@ -1027,10 +1143,12 @@
 				90DA43D61969F6F200E44AED /* AbilityTableViewCell.m in Sources */,
 				90DA43CA1969DBDB00E44AED /* DeckChooserViewController.m in Sources */,
 				90DA435E195E45B500E44AED /* MainScreenViewController.m in Sources */,
+				907020701992AC8100FDE444 /* GKResizeableCropOverlayView.m in Sources */,
 				90DA4364195F5DE700E44AED /* CardEditorViewController.m in Sources */,
 				90AB14F1196B5F740008FCDD /* GameInfoTableView.m in Sources */,
 				90456ED9198DAAE700B807DC /* StoreCardCell.m in Sources */,
 				907D9C02193045BA0037C0CF /* SinglePlayerCards.m in Sources */,
+				9070206F1992AC8100FDE444 /* GKImagePicker.m in Sources */,
 				90F352A7191595C200601130 /* AppDelegate.m in Sources */,
 				907D9BE7192446250037C0CF /* ViewLayer.m in Sources */,
 				90F352D21915961C00601130 /* CardView.m in Sources */,
@@ -1046,8 +1164,10 @@
 				90DA4353195DF83D00E44AED /* UIConstants.m in Sources */,
 				907D9C05193247450037C0CF /* AIPlayer.m in Sources */,
 				90DA43CD1969DD9000E44AED /* CDCardModel.m in Sources */,
+				9070206E1992AC8100FDE444 /* GKImageCropViewController.m in Sources */,
 				90DA43791960B7EA00E44AED /* AbilityTableView.m in Sources */,
 				90F352DE1916BB9300601130 /* SpellCardModel.m in Sources */,
+				9070206C1992AC8100FDE444 /* GKImageCropOverlayView.m in Sources */,
 				FA4025971956331300FCCBAB /* DeckEditorViewController.m in Sources */,
 				90DA436E195F833400E44AED /* CustomTextField.m in Sources */,
 				90DA43D31969E4F100E44AED /* CardGameCoreData.xcdatamodeld in Sources */,

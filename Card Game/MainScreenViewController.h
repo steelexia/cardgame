@@ -13,4 +13,6 @@
 
 @interface MainScreenViewController : UIViewController
 
+@property (strong) UIActivityIndicatorView*gameLoadingView;
+
 @end

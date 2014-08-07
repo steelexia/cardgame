@@ -66,10 +66,17 @@
 /** For animating damages */
 @property StrokedLabel *damagePopup;
 
-/** Initializes with attached CardModel, which should be one of its child classes */
--(instancetype)initWithModel: (CardModel*)cardModel cardImage:(UIImageView*)cardImage viewMode:(enum CardViewMode)cardViewMode;
+/** For loading image */
+@property int reloadAttempts;
 
--(instancetype)initWithModel:(CardModel *)cardModel cardImage:(UIImageView*)cardImage viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState;
+/** Initializes with attached CardModel, which should be one of its child classes */
+-(instancetype)initWithModel: (CardModel*)cardModel viewMode:(enum CardViewMode)cardViewMode;
+
+-(instancetype)initWithModel: (CardModel*)cardModel withImage:(UIImage*)cardImage viewMode:(enum CardViewMode)cardViewMode;
+
+-(instancetype)initWithModel:(CardModel *)cardModel viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState;
+
+-(instancetype)initWithModel:(CardModel *)cardModel withImage:(UIImage*)cardImage viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState;
 
 /** Updates its view after values are updated (i.e. lost life) */
 -(void)updateView;
@@ -81,6 +88,8 @@
 
 /** Make any necessary animation when casting an ability (e.g. castOnHit flashing when hitting) */
 -(void)castedAbility:(Ability*)ability;
+
+-(UIColor*)getRarityColor;
 
 /** Loads images for drawing cards ahead of time */
 +(void) loadResources;
@@ -106,6 +115,8 @@ extern const int  CARD_WIDTH_RATIO, CARD_HEIGHT_RATIO;
 extern const float CARD_IMAGE_RATIO;
 
 extern const double CARD_VIEWER_SCALE, CARD_VIEWER_MAXED_SCALE;
+
+extern int CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT;
 
 /** State of the card's view for positioning */
 enum CardViewState{

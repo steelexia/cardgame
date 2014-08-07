@@ -8,6 +8,7 @@
 
 #import "StoreCardCell.h"
 #import "CardView.h"
+#import "UIConstants.h"
 
 @implementation StoreCardCell
 
@@ -28,20 +29,42 @@
         [self addSubview:_activityView];
         [_activityView startAnimating];
         
-        _costLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, 30)];
-        _costLabel.textColor = [UIColor yellowColor];
-        _costLabel.textAlignment = NSTextAlignmentLeft;
-        _costLabel.font = [UIFont fontWithName:cardMainFont size:26];
-        _costLabel.center = CGPointMake(frame.size.width/2 + 40, frame.size.height - 60);
-        //[self addSubview:_costLabel];
+        _statsView = [[UIView alloc] initWithFrame:self.bounds];
+        [_statsView setUserInteractionEnabled:NO];
         
-        _likesLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, 30)];
-        _likesLabel.textColor = [UIColor blackColor];
-        _likesLabel.textAlignment = NSTextAlignmentLeft;
-        _likesLabel.font = [UIFont fontWithName:cardMainFont size:26];
-        _likesLabel.text = @"0";
-        _likesLabel.center = CGPointMake(frame.size.width/2 + 40, frame.size.height - 30);
-        //[self addSubview:_likesLabel];
+        _likesIcon = [[UIImageView alloc] initWithImage:LIKE_ICON_IMAGE];
+        _likesIcon.frame = CGRectMake(0, 0, 28, 28);
+        _likesIcon.center = CGPointMake(frame.size.width/3, frame.size.height-31);
+        [_statsView addSubview:_likesIcon];
+        
+        _likesLabel = [[StrokedLabel alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, 30)];
+        _likesLabel.textColor = [UIColor whiteColor];
+        _likesLabel.textAlignment = NSTextAlignmentCenter;
+        _likesLabel.font = [UIFont fontWithName:cardMainFont size:20];
+        _likesLabel.center = CGPointMake(frame.size.width/3, frame.size.height-19);
+        _likesLabel.strokeOn = YES;
+        _likesLabel.strokeThickness = 3;
+        _likesLabel.strokeColour = [UIColor blackColor];
+        [_statsView addSubview:_likesLabel];
+        
+        _costIcon = [[UIImageView alloc] initWithImage:GOLD_ICON_IMAGE];
+        _costIcon.frame = CGRectMake(0, 0, 28, 28);
+        _costIcon.center = CGPointMake(frame.size.width*2/3, frame.size.height-31);
+        [_statsView addSubview:_costIcon];
+        
+        _costLabel = [[StrokedLabel alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, 30)];
+        _costLabel.textColor = [UIColor whiteColor];
+        _costLabel.textAlignment = NSTextAlignmentCenter;
+        _costLabel.font = [UIFont fontWithName:cardMainFont size:20];
+        _costLabel.center = CGPointMake(frame.size.width*2/3, frame.size.height-19);
+        _costLabel.strokeOn = YES;
+        _costLabel.strokeThickness = 3;
+        _costLabel.strokeColour = [UIColor blackColor];
+        [_statsView addSubview:_costLabel];
+        
+       
+        
+        
     }
     return self;
 }

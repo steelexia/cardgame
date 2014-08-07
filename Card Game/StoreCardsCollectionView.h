@@ -16,7 +16,7 @@
 
 /** Stores the sale info. Its card may not have been loaded. */
 @property (strong) NSMutableArray*currentSales;
-
+@property (strong) NSMutableArray*currentCardsPF;
 
 @property (strong) CustomCollectionView *collectionView;
 

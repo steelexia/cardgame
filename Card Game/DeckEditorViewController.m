@@ -308,7 +308,7 @@ DeckModel * allCards;
         {
             if (cardView != currentCard && currentCard == nil && cardView.cardViewState != cardViewStateCardViewerTransparent)
             {
-                CardView*newMaximizedView = [[CardView alloc] initWithModel:cardView.cardModel cardImage: [[UIImageView alloc] initWithImage:cardView.cardImage.image]viewMode:cardViewModeEditor]; //constructor also modifies monster's cardView pointer
+                CardView*newMaximizedView = [[CardView alloc] initWithModel:cardView.cardModel viewMode:cardViewModeEditor]; //constructor also modifies monster's cardView pointer
                 [newMaximizedView setCardViewState:cardView.cardViewState];
                 
                 newMaximizedView.cardModel.cardView = cardView; //recover the pointer
@@ -350,7 +350,7 @@ DeckModel * allCards;
             //nearly identical code with cardview
             if (cardView != currentCard && currentCard == nil)
             {
-                CardView*newMaximizedView = [[CardView alloc] initWithModel:cardView.cardModel cardImage: [[UIImageView alloc] initWithImage:cardView.cardImage.image]viewMode:cardViewModeEditor]; //constructor also modifies monster's cardView pointer
+                CardView*newMaximizedView = [[CardView alloc] initWithModel:cardView.cardModel viewMode:cardViewModeEditor]; //constructor also modifies monster's cardView pointer
                 [newMaximizedView setCardViewState:cardView.cardViewState];
                 
                 newMaximizedView.cardModel.cardView = cardView; //recover the pointer

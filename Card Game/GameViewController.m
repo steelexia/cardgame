@@ -277,11 +277,11 @@ BOOL leftHandViewZone = NO;
     
     //-----Player's heroes-----//
     
-    CardView *playerHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[PLAYER_SIDE]).playerMonster cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"hero_default"]] viewMode:cardViewModeIngame];
+    CardView *playerHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[PLAYER_SIDE]).playerMonster viewMode:cardViewModeIngame];
     playerHeroView.center = CGPointMake((SCREEN_WIDTH - playerFieldEdge.bounds.size.width)/2 + PLAYER_HERO_WIDTH/2, playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*2 + PLAYER_HERO_HEIGHT/2);
     [self.fieldView addSubview:playerHeroView];
     
-    CardView *opponentHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[OPPONENT_SIDE]).playerMonster cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"hero_default"]]viewMode:cardViewModeIngame];
+    CardView *opponentHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[OPPONENT_SIDE]).playerMonster viewMode:cardViewModeIngame];
     opponentHeroView.center = CGPointMake((SCREEN_WIDTH - opponentFieldEdge.bounds.size.width)/2 + PLAYER_HERO_WIDTH/2, opponentFieldEdge.center.y - opponentFieldEdge.bounds.size.height/2 - fieldsDistanceHalf*2 - PLAYER_HERO_HEIGHT/2);
     [self.fieldView addSubview:opponentHeroView];
     
@@ -459,7 +459,7 @@ BOOL leftHandViewZone = NO;
 {
     CardView*originalView = card.cardView; //save original view to point back
     
-    self.viewingCardView = [[CardView alloc] initWithModel:card cardImage: [[UIImageView alloc] initWithImage:originalView.cardImage.image]viewMode:cardViewModeZoomedIngame]; //constructor also modifies monster's cardView pointer
+    self.viewingCardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeZoomedIngame]; //constructor also modifies monster's cardView pointer
     
     card.cardView = originalView; //recover the pointer
     
@@ -576,7 +576,7 @@ BOOL leftHandViewZone = NO;
         //if card has no view, create one
         if (card.cardView == nil)
         {
-            CardView *cardView = [[CardView alloc] initWithModel:card cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]]viewMode:cardViewModeIngame];
+            CardView *cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeIngame];
             card.cardView = cardView;
             [self.handsView addSubview:card.cardView];
             
@@ -631,7 +631,7 @@ BOOL leftHandViewZone = NO;
         //if card has no view, create one
         if (card.cardView == nil)
         {
-            CardView *cardView = [[CardView alloc] initWithModel:card cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]]viewMode:cardViewModeIngame];
+            CardView *cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeIngame];
             card.cardView = cardView;
             
             cardView.alpha = 0;
@@ -1189,7 +1189,7 @@ BOOL leftHandViewZone = NO;
     if (side == OPPONENT_SIDE)
     {
         CardView*originalView = card.cardView;
-        CardView *cardView = [[CardView alloc] initWithModel:card cardImage:[[UIImageView alloc] initWithImage: card.cardView.cardImage.image] viewMode:cardViewModeZoomedIngame];
+        CardView *cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeZoomedIngame];
         card.cardView = originalView;
         
         cardView.center = card.cardView.center; //TODO
@@ -1358,5 +1358,7 @@ BOOL leftHandViewZone = NO;
     void (^block_)() = [block copy]; // autorelease this if you're not using ARC
     [self performSelector:@selector(performBlock:) withObject:block_ afterDelay:delay];
 }
+
+- (BOOL)prefersStatusBarHidden {return YES;}
 
 @end

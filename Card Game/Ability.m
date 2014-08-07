@@ -384,6 +384,7 @@
     }
 }
 
+//TODO!!!! This is an older function which needs some clean up to use the function beneath it instead
 +(NSMutableAttributedString*) getDescription: (Ability*) ability fromCard: (CardModel*) cardModel
 {
     if (ability.description != nil)
@@ -512,7 +513,7 @@
         if (ability.targetType == targetSelf)
             description = [NSString stringWithFormat:@"%@Assassin%@.", castDescription, durationDescription];
         else
-            description = [NSString stringWithFormat:@"%@Give Assassin to%@%@.", castDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Give Assassin to %@%@.", castDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityReturnToHand){
         if (ability.targetType == targetSelf)
@@ -524,13 +525,13 @@
         if (ability.targetType == targetSelf)
             description = [NSString stringWithFormat:@"%@Pierce%@.", castDescription, durationDescription];
         else
-            description = [NSString stringWithFormat:@"%@Give Pierce to%@%@.", castDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Give Pierce to %@%@.", castDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityFracture){
         if (ability.targetType == targetSelf)
             description = [NSString stringWithFormat:@"%@Fractures into %@ pieces%@.", castDescription, valueDescription, durationDescription];
         else
-            description = [NSString stringWithFormat:@"%@Gives Fracture %@ to%@%@.", castDescription, valueDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Gives Fracture %@ to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
     }
     else
         description = [NSString stringWithFormat:@"ability no name %d", ability.abilityType];

@@ -10,6 +10,7 @@
 #import "DeckChooserViewController.h"
 #import "CardEditorViewController.h"
 #import "StoreViewController.h"
+#import "UIConstants.h"
 
 @interface MainScreenViewController ()
 
@@ -62,6 +63,50 @@
     [storeButton addTarget:self action:@selector(storeButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:storeButton];
+    
+    //initial loading TODO
+    if (!userInfoLoaded)
+    {
+        _gameLoadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        [_gameLoadingView setColor:COLOUR_INTERFACE_BLUE];
+        [_gameLoadingView setFrame:self.view.bounds];
+        [_gameLoadingView setBackgroundColor:[UIColor colorWithHue:0 saturation:0 brightness:1 alpha:0.8]];
+        [_gameLoadingView setUserInteractionEnabled:YES];
+        UILabel *loadingLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
+        loadingLabel.center = CGPointMake(self.view.bounds.size.width/2, self.view.bounds.size.height/2 + 60);
+        loadingLabel.textAlignment = NSTextAlignmentCenter;
+        loadingLabel.textColor = COLOUR_INTERFACE_BLUE;
+        loadingLabel.font = [UIFont fontWithName:cardMainFont size:20];
+        loadingLabel.text = [NSString stringWithFormat:@"Loading Game..."];
+        [_gameLoadingView addSubview:loadingLabel];
+        
+        [self.view addSubview:_gameLoadingView];
+        [_gameLoadingView startAnimating];
+        [self checkForLoadFinish];
+    }
+}
+
+//checks for userInfoLoaded flag to be set to YES. Once it does, remove the loading screen.
+-(void)checkForLoadFinish
+{
+    if (userInfoLoaded)
+    {
+        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             _gameLoadingView.alpha = 0;
+                         }
+                         completion:^(BOOL completed){
+                             [_gameLoadingView stopAnimating];
+                             [_gameLoadingView removeFromSuperview];
+                         }];
+    }
+    else
+    {
+        //keep checking
+        [self performBlock:^{
+            [self checkForLoadFinish];
+        } afterDelay:0.2];
+    }
 }
 
 -(void)gameButtonPressed
@@ -90,6 +135,18 @@
     StoreViewController *viewController = [[StoreViewController alloc] init];
     viewController.previousScreen = [[MainScreenViewController alloc]init];
     [self presentViewController:viewController animated:YES completion:nil];
+}
+
+//block delay functions
+- (void)performBlock:(void (^)())block
+{
+    block();
+}
+
+- (void)performBlock:(void (^)())block afterDelay:(NSTimeInterval)delay
+{
+    void (^block_)() = [block copy]; // autorelease this if you're not using ARC
+    [self performSelector:@selector(performBlock:) withObject:block_ afterDelay:delay];
 }
 
 - (void)didReceiveMemoryWarning

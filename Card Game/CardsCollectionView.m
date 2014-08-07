@@ -48,7 +48,7 @@
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CardsCollectionCell *cell=[collectionView dequeueReusableCellWithReuseIdentifier:@"cardsCollectionCell" forIndexPath:indexPath];
+    CardsCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cardsCollectionCell" forIndexPath:indexPath];
     
     //cell.backgroundColor=[UIColor greenColor];
     //if (cell.cardView != nil)
@@ -57,13 +57,15 @@
     
     CardModel*card = self.currentCardModels[indexPath.row];
     
-    cell.cardView = [[CardView alloc] initWithModel:card cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]] viewMode:card.cardViewState viewState:card.cardViewState];
+    cell.cardView = [[CardView alloc] initWithModel:card viewMode:card.cardViewState viewState:card.cardViewState];
     cell.cardView.cardHighlightType = cardHighlightNone;
     cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_VIEWER_SCALE, CARD_VIEWER_SCALE);
     cell.cardView.center = cell.center;
     cell.cardView.frame = CGRectMake(0,0,CARD_FULL_WIDTH,CARD_FULL_HEIGHT);
     
     [cell addSubview:cell.cardView];
+    
+    NSLog(@"%d", cell.cardView.cardViewState);
     
     return cell;
 }

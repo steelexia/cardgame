@@ -16,12 +16,27 @@
 +(void)loadAllDecks;
 +(void)saveDeck:(DeckModel*)deck;
 +(void)deleteDeck:(DeckModel*)deck;
-+(void)publishCard:(CardModel*)card;
+/** Returns success */
++(BOOL)publishCard:(CardModel*)card withImage:(UIImage*)image;
 +(void)saveCard:(CardModel*)card;
 /** Refreshes the parse user by querying from database */
 +(void)updateUser;
 /** Returns true if userAllCards contains a card with same ID */
 +(BOOL)ownsCardWithID:(int)idNumber;
+
+/** The following functions are used to get the interaction values of a card. It includes cards that are liked, edited, and owned. All flags are stored in a single number using its bits. Returns NO if failed to save properly, so do not call the set functions on main thread. Liked card uses first bit. */
++(BOOL)setLikedCard:(CardModel*)card;
+/** Uses second bit */
++(BOOL)setEditedCard:(CardModel*)card;
+/** Uses third bit */
++(BOOL)setOwnedCard:(CardModel*)card;
+
++(BOOL)getLikedCard:(CardModel*)card;
+/** Uses second bit */
++(BOOL)getEditedCard:(CardModel*)card;
+/** Uses third bit */
++(BOOL)getOwnedCard:(CardModel*)card;
+
 @end
 
 /** Array of CardModel's that the player has. */
@@ -33,6 +48,7 @@ DeckModel *userCurrentDeck;
 int userDeckLimit;
 int userGold;
 PFObject *userPF;
+BOOL userInfoLoaded;
 
 
 /** The number of decks allowed per player at the very beginning of the game. Can gain more via quests etc. */

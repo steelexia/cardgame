@@ -155,6 +155,8 @@ enum AbilityType
     abilityInstability,
     /** Cannot be targetted by monster attacks */
     abilityAcrobatics,
+    /** Randomly targetted abilities always hit this minion (or one of it if there are multiple on field) */
+    abilityAttract,
 };
 
 /** TargetType determines where the ability is applied to. targetSelf is automatically used by the card with the effect, while most others are casted explicitly.
@@ -226,6 +228,8 @@ enum CastType
     castOnFriendlyMinionDeath,
     /** TODO */
     castOnEnemyMinionDeath,
+    /** Many abilities should be using this one instead */
+    castOnStartOfTurn,
 };
 
 /** 

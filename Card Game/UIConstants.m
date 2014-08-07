@@ -32,8 +32,16 @@
     COLOUR_LIGHT_OUTLINE = [[UIColor alloc] initWithRed:100/255.f green:100/255.f blue:100/255.f alpha:1];
     COLOUR_DARK_OUTLINE = [[UIColor alloc] initWithRed:160/255.f green:160/255.f blue:160/255.f alpha:1];
     
+    COLOUR_COMMON = [[UIColor alloc] initWithRed:208/255.f green:199/255.f blue:179/255.f alpha:1];
+    COLOUR_UNCOMMON = [[UIColor alloc] initWithRed:237/255.f green:237/255.f blue:237/255.f alpha:1];
+    COLOUR_RARE = [[UIColor alloc] initWithRed:35/255.f green:101/255.f blue:210/255.f alpha:1];
+    COLOUR_EXCEPTIONAL = [[UIColor alloc] initWithRed:232/255.f green:204/255.f blue:19/255.f alpha:1];
+    COLOUR_LEGENDARY = [[UIColor alloc] initWithRed:207/255.f green:111/255.f blue:34/255.f alpha:1];
+    
     RESOURCE_ICON_IMAGE = [UIImage imageNamed:@"resource_icon"];
     POINTS_ICON_IMAGE = [UIImage imageNamed:@"points_icon"];
+    GOLD_ICON_IMAGE = [UIImage imageNamed:@"gold_icon"];
+    LIKE_ICON_IMAGE = [UIImage imageNamed:@"like_icon"];
 }
 
 @end

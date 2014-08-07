@@ -62,18 +62,19 @@ const float STORE_CARD_SCALE = 1.1f;
         //card may be null at this point (hasn't been loaded)
         if (card != (id)[NSNull null])
         {
-            CardModel*card = self.currentCards[indexPath.row];
-            cell.cardView = [[CardView alloc] initWithModel:card cardImage:[[UIImageView alloc]initWithImage: [UIImage imageNamed:@"card_image_placeholder"]] viewMode:cardViewStateMaximize viewState:card.cardViewState];
+            //CardModel*card = self.currentCards[indexPath.row];
+            PFObject*cardPF = self.currentCardsPF[indexPath.row];
+            
+            cell.cardView = [[CardView alloc] initWithModel:card withImage:cell.cardView.cardImage.image viewMode:cardViewStateMaximize viewState:card.cardViewState];
             cell.cardView.cardHighlightType = cardHighlightNone;
             cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, STORE_CARD_SCALE, STORE_CARD_SCALE);
             cell.cardView.center = cell.center;
-            cell.cardView.frame = CGRectMake(0,0,CARD_FULL_WIDTH*STORE_CARD_SCALE,CARD_FULL_HEIGHT*STORE_CARD_SCALE + 80);
+            cell.cardView.frame = CGRectMake(0,0,CARD_FULL_WIDTH*STORE_CARD_SCALE,CARD_FULL_HEIGHT*STORE_CARD_SCALE + 50);
             cell.costLabel.text = [NSString stringWithFormat:@"%d", [GameStore getCardCost:card]];
+            cell.likesLabel.text = [NSString stringWithFormat:@"%d", [cardPF[@"likes"] intValue]];
             
             [cell addSubview:cell.cardView];
-            
-            [cell addSubview:cell.likesLabel];
-            [cell addSubview:cell.costLabel];
+            [cell addSubview:cell.statsView];
             
             [cell.activityView stopAnimating];
             [cell.activityView removeFromSuperview];
@@ -84,7 +85,7 @@ const float STORE_CARD_SCALE = 1.1f;
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(CARD_FULL_WIDTH*STORE_CARD_SCALE,CARD_FULL_HEIGHT*STORE_CARD_SCALE + 80);
+    return CGSizeMake(CARD_FULL_WIDTH*STORE_CARD_SCALE,CARD_FULL_HEIGHT*STORE_CARD_SCALE + 50);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {

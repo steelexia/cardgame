@@ -8,12 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "CardView.h"
+#import "StrokedLabel.h"
 
 @interface StoreCardCell : UICollectionViewCell
 
 @property (strong) CardView*cardView;
 
-@property (strong) UILabel*costLabel, *likesLabel;
+@property (strong) StrokedLabel*costLabel, *likesLabel;
+
+@property (strong) UIImageView*costIcon, *likesIcon;
+
+@property (strong) UIView *statsView;
 
 @property UIActivityIndicatorView *activityView;
 

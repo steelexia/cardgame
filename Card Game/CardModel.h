@@ -44,6 +44,9 @@
 /** For convenience, the creator's username is cached here so that it can be displayed mid-battle of a game. */
 @property NSString *creatorName;
 
+/** Tags used to filter cards by players */
+@property NSMutableArray *tags;
+
 /** Number of likes a card has received. Only relevant for standard cards */
 @property int likes;
 
@@ -59,6 +62,8 @@
 
 /** For card editor */
 @property enum CardViewState cardViewState;
+
+@property (strong) PFObject *cardPF;
 
 //----------------Functions----------------//
 
@@ -95,8 +100,10 @@
 /** Creates a card out of a PFObject. */
 +(CardModel*) createCardFromPFObject: (PFObject*)cardPF;
 
-/** Adds a card to the Parse database. Really only used when user creates a new card. Otherwise mainly for debugging */
-+(void) addCardToParse:(CardModel*) card;
+/** Adds a card to the Parse database. Really only used when user creates a new card. WARNING: do not call this on main thread because it blocks while saving */
++(NSError*) addCardToParse:(CardModel*) card withImage:(UIImage*)image;
+
++(NSString*)getRarityText:(enum CardRarity)rarity;
 
 @end
 
@@ -144,6 +151,6 @@ enum CardElement
     //TODO single player AI cards may have other elements
 };
 
-extern const int MONSTER_CARD, SPELL_CARD;
+extern const int MONSTER_CARD, SPELL_CARD, NO_ID;
 
 

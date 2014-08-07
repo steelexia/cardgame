@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "StoreCardsCollectionView.h"
 #import "CardView.h"
+#import "StrokedLabel.h"
 
 @interface StoreViewController : UIViewController
 
@@ -16,15 +17,20 @@
 
 @property (strong)UIButton*backButton;
 @property (strong)UIViewController*previousScreen;
-@property (strong)UILabel *goldLabel;
+@property (strong)StrokedLabel *userGoldLabel, *userLikesLabel;
 
 //card info views
 @property (strong)UIView*cardInfoView;
 @property (strong)UIView*darkFilter;
 @property (strong)CardView*cardView;
+@property (strong)PFObject*cardPF;
 @property (strong)UIButton*buyButton,*editButton,*likeButton;
-@property (strong)UILabel*authorLabel, *idLabel, *rarityLabel, *likesLabel;
+@property (strong)StrokedLabel*creatorLabel, *idLabel, *rarityLabel, *rarityTextLabel, *likesLabel, *goldLabel;
+@property (strong)StrokedLabel*likeHintLabel, *editHintLabel, *buyHintLabel;
+@property (strong)UILabel*cardTagsLabel;
+
 @property (strong)UIActivityIndicatorView*cardPurchaseIndicator;
+
 /** PFObjects of class Sale currenting being viewed */
 
 @end

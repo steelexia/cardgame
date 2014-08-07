@@ -26,7 +26,7 @@
 @synthesize cardViewState = _cardViewState;
 @synthesize likes = _likes;
 
-const int MONSTER_CARD = 0, SPELL_CARD = 1;
+const int MONSTER_CARD = 0, SPELL_CARD = 1, NO_ID = -1;
 
 /** constructor with id number, all other fields will be defaut values */
 -(instancetype)initWithIdNumber: (int)idNumber
@@ -43,10 +43,12 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
         
         self.abilities = [NSMutableArray array]; //default no ability
         self.type = cardTypeStandard;
-        self.creator = @"Unknown";
+        self.creatorName = @"Unknown";
+        self.creator = @"";
         self.element = elementNeutral;
         self.cardViewState = cardViewStateCardViewer;
         self.likes = 0;
+        self.tags = [NSMutableArray array];
     }
     
     return self;
@@ -97,6 +99,8 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
         self.type = card.type;
         self.element = card.element;
         self.likes = card.likes;
+        self.tags = card.tags;
+        self.cardPF = card.cardPF;
         
         for (Ability*ability in card.abilities)
             [self.abilities addObject: [[Ability alloc] initWithAbility:ability]];
@@ -115,8 +119,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
 
 -(void)setIdNumber:(int)idNumber
 {
-    if (_idNumber == -1)
-        _idNumber = idNumber;
+    _idNumber = idNumber;
 }
 
 /* must be 0 or higher */
@@ -234,6 +237,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
     NSString *creator = cardPF[@"creator"];
     NSNumber *element = cardPF[@"element"];
     NSNumber *likes = cardPF[@"likes"];
+    NSArray *tags = cardPF[@"tags"];
     
     //TODO in future this should [probably] never be nil
     if (creator != nil && ![creator isEqualToString:@"Unknown"])
@@ -264,12 +268,25 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
     card.rarity = [rarity intValue];
     card.element = [element intValue];
     card.likes = [likes intValue];
+    card.tags = [NSMutableArray arrayWithArray:tags];
+    card.cardPF = cardPF;
     
     return card;
 }
 
-+(void) addCardToParse:(CardModel*) card
++(NSError*) addCardToParse:(CardModel*) card withImage:(UIImage*)image
 {
+    PFObject *cardImage = [PFObject objectWithClassName:@"CardImage"];
+    NSData *imageData = UIImagePNGRepresentation(image);
+    PFFile *imageFile = [PFFile fileWithName:[NSString stringWithFormat:@"%d.png", card.idNumber] data:imageData];
+    cardImage[@"image"] = imageFile;
+    
+    NSError*imageSaveEror = nil;
+    [cardImage save:&imageSaveEror];
+    
+    if (imageSaveEror)
+        return imageSaveEror;
+    
     //common to all cards
     PFObject *cardPF = [PFObject objectWithClassName:@"Card"];
     
@@ -279,6 +296,8 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
     cardPF[@"rarity"] = [NSNumber numberWithInt:card.rarity];
     cardPF[@"creator"] = card.creator;
     cardPF[@"likes"] = @(card.likes);
+    cardPF[@"tags"] = card.tags;
+    cardPF[@"image"] = cardImage;
     
     cardPF[@"element"] = [NSNumber numberWithInt:card.element];
    
@@ -331,9 +350,30 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1;
     
     cardPF[@"abilities"] = pfAbilities;
     
-    [cardPF saveInBackground];
+    NSError*cardSaveEror = nil;
+    [cardPF save:&cardSaveEror];
+    
+    if (cardSaveEror)
+        return cardSaveEror;
+    
+    return nil;
 }
 
++(NSString*)getRarityText:(enum CardRarity)rarity
+{
+    if (rarity == cardRarityCommon)
+        return @"Common";
+    else if (rarity == cardRarityUncommon)
+        return @"Uncommon";
+    else if (rarity == cardRarityRare)
+        return @"Rare";
+    else if (rarity == cardRarityExceptional)
+        return @"Exceptional";
+    else if (rarity == cardRarityLegendary)
+        return @"Legendary";
+    
+    return @"INVALID RARITY";
+}
 
 
 @end

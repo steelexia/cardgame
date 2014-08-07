@@ -27,10 +27,14 @@ const int INITIAL_DECK_LIMIT = 3;
     [UserModel updateUser:^(void)
      {
          userGold = [userPF[@"gold"] intValue];
-         if (userPF[@"cards"] == nil)
-             userPF[@"cards"] = @[];
          if (userPF[@"decks"] == nil)
              userPF[@"decks"] = @[];
+         if (userPF[@"gold"] == nil)
+             userPF[@"gold"] = @(99999);
+         if (userPF[@"likes"] == nil)
+             userPF[@"likes"] = @(99);
+         if (userPF[@"interactedCards"] == nil)
+             userPF[@"interactedCards"] = @{};
          [self loadAllCards]; //also loads decks
          [userPF saveInBackground];
      }
@@ -72,41 +76,68 @@ const int INITIAL_DECK_LIMIT = 3;
     return NO;
 }
 
++(NSArray*)loadAllCardIDs
+{
+    NSMutableArray*cardIDs = [NSMutableArray array];
+    NSDictionary*dic = userPF[@"interactedCards"];
+    
+    if (dic != nil)
+    {
+        for (NSString*idString in dic)
+        {
+            int idNumber = [idString intValue];
+            
+            if ([UserModel getOwnedCardID:idNumber])
+                [cardIDs addObject:@(idNumber)];
+        }
+    }
+    
+    return cardIDs;
+}
+
 +(void)loadAllCards
 {
-    NSArray *cardsIDArray = userPF[@"cards"];
+    NSArray *cardsIDArray = [UserModel loadAllCardIDs];
+
     __block int loadedCards = 0;
-    for (NSNumber*cardID in cardsIDArray)
+    
+    if (cardsIDArray.count == 0)
     {
-        PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
-        [cardQuery whereKey:@"idNumber" equalTo:cardID];
-        cardQuery.limit = 1;
-        [cardQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error)
-            {
-                if (objects.count > 0)
+        [self loadAllDecks];
+    }
+    else
+    {
+        for (NSNumber *cardID in cardsIDArray)
+        {
+            PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
+            [cardQuery whereKey:@"idNumber" equalTo:cardID];
+            cardQuery.limit = 1;
+            [cardQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (!error)
                 {
-                    //add card
-                    [userAllCards addObject:[CardModel createCardFromPFObject:objects[0]]];
-                    
-                    loadedCards++;
-                    
-                    //load all decks once all cards have been loaded
-                    if (loadedCards >= cardsIDArray.count)
-                        [self loadAllDecks];
+                    if (objects.count > 0)
+                    {
+                        //add card
+                        [userAllCards addObject:[CardModel createCardFromPFObject:objects[0]]];
+                        
+                        loadedCards++;
+                        
+                        //load all decks once all cards have been loaded
+                        if (loadedCards >= cardsIDArray.count)
+                            [self loadAllDecks];
+                    }
+                    else
+                    {
+                        NSLog(@"ERROR: COULD NOT FIND USER!");
+                    }
                 }
                 else
                 {
-                    NSLog(@"ERROR: COULD NOT FIND USER!");
+                    NSLog(@"ERROR: ERROR FINDING USER!");
                 }
-            }
-            else
-            {
-                NSLog(@"ERROR: ERROR FINDING USER!");
-            }
-        }];
+            }];
+        }
     }
-    
     
     //TODO: load from CD if Parse's hasn't been updated
     /*
@@ -126,14 +157,18 @@ const int INITIAL_DECK_LIMIT = 3;
 
 +(void)loadAllDecks
 {
-    NSArray*decksArray = userPF[@"decks"];
-    
-    for (PFObject*deckPF in decksArray)
-    {
-        DeckModel*deck = [self getDeckFromDeckPF:deckPF];
-        if (deck!= nil)
-            [userAllDecks addObject:deck];
-    }
+    [UserModel performBlockInBackground:^(void){
+        NSArray*decksArray = userPF[@"decks"];
+        
+        for (PFObject*deckPF in decksArray)
+        {
+            DeckModel*deck = [self getDeckFromDeckPF:deckPF];
+            if (deck!= nil)
+                [userAllDecks addObject:deck];
+        }
+        
+        userInfoLoaded = YES; //TODO move this if other things are loaded
+    }];
     /*
     NSError *error;
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
@@ -348,6 +383,7 @@ const int INITIAL_DECK_LIMIT = 3;
     {
         deck.name = deckPF[@"name"];
         deck.tags = deckPF[@"tags"];
+        deck.objectID = deckPF.objectId;
         
         for (NSNumber*idNumber in deckPF[@"cards"])
             [deck addCard:[self getCardFromID:[idNumber intValue]]];
@@ -458,9 +494,12 @@ const int INITIAL_DECK_LIMIT = 3;
         {
             [currentDecks removeObject:deckPF];
             [userAllDecks removeObject:deck];
+            [deckPF deleteInBackground];
             break;
         }
     }
+    
+    userPF[@"decks"] = currentDecks;
     
     [userPF saveInBackground];
     
@@ -487,33 +526,127 @@ const int INITIAL_DECK_LIMIT = 3;
 }
 
 //maybe not put it here?
-+(void)publishCard:(CardModel*)card
++(BOOL)publishCard:(CardModel*)card withImage:(UIImage*)image
 {
-    [PFCloud callFunctionInBackground:@"getNewCardID" withParameters:@{}
-                                block:^(NSNumber *idNumber, NSError *error) {
-                                    if (!error) {
-                                        card.idNumber = [idNumber integerValue];
-                                        
-                                        //upload card to parse
-                                        [CardModel addCardToParse:card];
-                                        
-                                        //create a sale
-                                        PFObject *sale = [PFObject objectWithClassName:@"Sale"];
-                                        sale[@"cardID"] = idNumber;
-                                        sale[@"likes"] = @0;
-                                        sale[@"seller"] = [PFUser currentUser].objectId;
-                                        sale[@"stock"] = @10;
-                                        
-                                        [sale saveInBackground];
-                                        
-                                        [self saveCard:card];
-                                    }
-                                    else
-                                    {
-                                        NSLog(@"ERROR: Failed to get an ID from cloud. Card is not uploaded");
-                                        //TODO!!!
-                                    }
-                                }];
+    NSNumber *idNumber = [PFCloud callFunction:@"getNewCardID" withParameters:@{}];
+    if (idNumber == nil)
+        return NO;
+    card.idNumber = [idNumber intValue];
+    
+    //upload card to parse
+    NSError *error = [CardModel addCardToParse:card withImage:image];
+    if (error)
+        return NO;
+    
+    //create a sale
+    PFObject *sale = [PFObject objectWithClassName:@"Sale"];
+    sale[@"cardID"] = idNumber;
+    sale[@"likes"] = @0;
+    sale[@"seller"] = [PFUser currentUser].objectId;
+    sale[@"stock"] = @10;
+    
+    NSError *saleError = nil;
+    [sale save:&saleError]; //TODO this is only temporary for now, later
+    
+    if (saleError)
+        return NO;
+    
+    //[self saveCard:card];
+    
+    NSLog(@"card successfully uploaded!");
+    
+    return YES;
 }
+
++(BOOL)setLikedCard:(CardModel*)card
+{
+    return [self setCardInteraction:card.idNumber atBit:0];
+}
+
++(BOOL)setEditedCard:(CardModel*)card
+{
+    return [self setCardInteraction:card.idNumber atBit:1];
+}
+
++(BOOL)setOwnedCard:(CardModel*)card
+{
+    return [self setCardInteraction:card.idNumber atBit:2];
+}
+
++(BOOL)setCardInteraction:(int)idNumber atBit:(int)bit
+{
+    NSDictionary*dic = userPF[@"interactedCards"];
+    if (dic == nil)
+        dic = @{};
+    
+    NSMutableDictionary *interactedCards = [[NSMutableDictionary alloc] initWithDictionary:dic];
+    
+    NSNumber *interactions = interactedCards[[NSString stringWithFormat:@"%d", idNumber]];
+    if (interactions == nil)
+        interactions = @(0x1 << bit);
+    else
+        interactions = @([interactions intValue] | 0x1 << bit);
+    NSLog(@"interaction %d", [interactions intValue]);
+    
+    [interactedCards setObject:interactions forKey:[NSString stringWithFormat:@"%d", idNumber]];
+    userPF[@"interactedCards"] = interactedCards;
+    
+    NSError *error;
+    [userPF save:&error];
+    
+    if (error)
+        return NO;
+    else
+        return YES;
+}
+
++(BOOL)getLikedCard:(CardModel*)card
+{
+    return [self getCardInteraction:card.idNumber atBit:0];
+}
+
++(BOOL)getEditedCard:(CardModel*)card
+{
+    return [self getCardInteraction:card.idNumber atBit:1];
+}
+
++(BOOL)getOwnedCard:(CardModel*)card
+{
+    return [self getCardInteraction:card.idNumber atBit:2];
+}
+
++(BOOL)getOwnedCardID:(int)idNumber
+{
+    return [self getCardInteraction:idNumber atBit:2];
+}
+
+
++(BOOL)getCardInteraction:(int)idNumber atBit:(int)bit
+{
+    NSDictionary*dic = userPF[@"interactedCards"];
+    if (dic == nil)
+        return NO;
+    
+    NSMutableDictionary *interactedCards = [[NSMutableDictionary alloc] initWithDictionary:dic];
+    
+    NSNumber *interactions = interactedCards[[NSString stringWithFormat:@"%d", idNumber]];
+    if (interactions == nil)
+        return NO;
+    else
+    {
+        int integer = [interactions intValue];
+        if ((integer >> bit) % 2 == 1) //checks the last bit after pushing it off
+            return YES;
+    }
+    return NO;
+}
+
++ (void)performBlockInBackground:(void (^)())block {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        block();
+    });
+}
+
+
 
 @end

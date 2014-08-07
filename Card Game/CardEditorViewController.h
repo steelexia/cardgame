@@ -12,13 +12,18 @@
 #import "StrokedTextField.h"
 #import "CustomTextField.h"
 #import "AbilityTableView.h"
+#import "GKImagePicker.h"
 
-@interface CardEditorViewController : UIViewController <UITextFieldDelegate>
+@interface CardEditorViewController : UIViewController <UITextFieldDelegate, GKImagePickerDelegate>
 
 @property CardModel*currentCardModel;
 @property CardView*currentCardView;
 @property int currentCost;
 @property int maxCost;
+@property (strong)GKImagePicker *imagePicker;
+@property (strong)UIActivityIndicatorView*cardUploadIndicator;
+@property (strong)UILabel*cardUploadLabel;
+@property (strong)UIButton*cardUploadFailedButton;
 
 -(void)rowSelected:(AbilityTableView*)tableView indexPath:(NSIndexPath *)indexPath;
 
