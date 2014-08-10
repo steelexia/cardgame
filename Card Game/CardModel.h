@@ -98,7 +98,7 @@
 +(NSString*) elementToString:(enum CardElement) element;
 
 /** Creates a card out of a PFObject. */
-+(CardModel*) createCardFromPFObject: (PFObject*)cardPF;
++(CardModel*) createCardFromPFObject: (PFObject*)cardPF onFinish:(void (^)(CardModel*))block;
 
 /** Adds a card to the Parse database. Really only used when user creates a new card. WARNING: do not call this on main thread because it blocks while saving */
 +(NSError*) addCardToParse:(CardModel*) card withImage:(UIImage*)image;

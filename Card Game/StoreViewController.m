@@ -35,8 +35,6 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
         self.view.backgroundColor = [UIColor whiteColor];
         
         [self.view addSubview:_cardsView];
-        
-        [self loadCards];
     }
     return self;
 }
@@ -233,6 +231,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     cardPurchaseLabel.font = [UIFont fontWithName:cardMainFont size:20];
     cardPurchaseLabel.text = [NSString stringWithFormat:@"Processing Purchase..."];
     [_cardPurchaseIndicator addSubview:cardPurchaseLabel];
+    
+    [self loadCards];
 }
 
 -(void)backButtonPressed
@@ -282,25 +282,34 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void)updateCardInfoView:(CardModel*)cardModel
 {
+    //store the PFObject for use later
+    NSNumber*cardID = @(cardModel.idNumber);
+    
+    BOOL foundCardPF = NO;
+    
+    for (PFObject *cardPF in self.cardsView.currentCardsPF)
+    {
+        if (cardPF != [NSNull null] && [cardID isEqualToNumber:cardPF[@"idNumber"]])
+        {
+            _cardPF = cardPF;
+            foundCardPF = YES;
+            break;
+        }
+    }
+    
+    //this shouldn't happen, since the cardView will exist only if the cardPF has been loaded
+    if (!foundCardPF)
+    {
+        NSLog(@"ERROR: Could not find cardPF for a card that's already loaded");
+        return;
+    }
+     
     [_cardView removeFromSuperview];
     
     CardView*originalView = cardModel.cardView;
     _cardView = [[CardView alloc] initWithModel:cardModel viewMode:cardViewModeEditor];
     cardModel.cardView = originalView;
     _cardView.cardViewState = cardViewStateCardViewer;
-    
-    //store the PFObject for use later
-    NSNumber*cardID = @(cardModel.idNumber);
-    int i = 0;
-    for (PFObject *cardPF in self.cardsView.currentCardsPF)
-    {
-        if ([cardID isEqualToNumber:cardPF[@"idNumber"]])
-        {
-            _cardPF = cardPF;
-            break;
-        }
-        i++;
-    }
     
     if (SCREEN_HEIGHT < 568)
     {
@@ -555,12 +564,22 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void)editButtonPressed
 {
-    //TODO
-    [self updateCardInfoView:_cardView.cardModel];
+    CardModel*cardCopy = [[CardModel alloc] initWithCardModel:_cardView.cardModel];
+    CardEditorViewController *cevc = [[CardEditorViewController alloc] initWithMode:cardEditorModeVoting WithCard:cardCopy];
+    
+    [self presentViewController:cevc animated:YES completion:^{
+        if (cevc.voteConfirmed)
+        {
+            
+        }
+        
+        [self updateCardInfoView:_cardView.cardModel];
+    }];
 }
 
 -(void)loadCards
 {
+    NSLog(@"load card start");
     PFQuery *salesQuery = [PFQuery queryWithClassName:@"Sale"];
     salesQuery.limit = 100; //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     [salesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -578,28 +597,37 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
             [self.cardsView.collectionView reloadData];
             
             //TODO insert loading cells, then update them as they arrive
+            /*
             for (int i = 0; i < objects.count; i++)
             {
-                PFObject *sale = objects[i];
-                
-                PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
-                cardQuery.limit = 1;
-                [cardQuery whereKey:@"idNumber" equalTo:sale[@"cardID"]];
-                [cardQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                    if(!error && objects.count >= 1){
-                        PFObject *card = objects[0];
+                //each cell is loaded in background
+                [self performBlockInBackground:^(void){
+                    PFObject *sale = objects[i];
+                    
+                    PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
+                    cardQuery.limit = 1;
+                    [cardQuery whereKey:@"idNumber" equalTo:sale[@"cardID"]];
+                    [cardQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                         
-                        _cardsView.currentCardsPF[i] = card;
-                        _cardsView.currentCards[i] = [CardModel createCardFromPFObject:card];
-                        
-                        [_cardsView.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]]];
-                    }
-                    else
-                    {
-                        NSLog(@"ERROR SEARCHING SALES");
-                    }
+                        if(!error && objects.count >= 1){
+                            PFObject *card = objects[0];
+                            
+                            _cardsView.currentCardsPF[i] = card;
+                            
+                            [self performBlockInBackground:^(void){
+                                _cardsView.currentCards[i] = [CardModel createCardFromPFObject:card];
+                                
+                                [_cardsView.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]]];
+                            }];
+                        }
+                        else
+                        {
+                            NSLog(@"ERROR SEARCHING SALES");
+                        }
+                    }];
                 }];
             }
+             */
         }
         else
         {
@@ -613,6 +641,12 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)performBlockInBackground:(void (^)())block {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        block();
+    });
 }
 
 - (BOOL)prefersStatusBarHidden {return YES;}

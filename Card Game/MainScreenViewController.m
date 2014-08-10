@@ -114,7 +114,6 @@
     GameViewController *gvc = [[GameViewController alloc] init];
     DeckChooserViewController*dcvc = [[DeckChooserViewController alloc]init];
     dcvc.nextScreen = gvc;
-    dcvc.previousScreen = [[MainScreenViewController alloc]init];
     [self presentViewController:dcvc animated:YES completion:nil];
 }
 
@@ -126,7 +125,7 @@
 
 -(void)cardButtonPressed
 {
-    CardEditorViewController *viewController = [[CardEditorViewController alloc] init];
+    CardEditorViewController *viewController = [[CardEditorViewController alloc] initWithMode:cardEditorModeCreation WithCard:nil];
     [self presentViewController:viewController animated:YES completion:nil];
 }
 

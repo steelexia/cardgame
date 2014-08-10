@@ -118,7 +118,7 @@ const int INITIAL_DECK_LIMIT = 3;
                     if (objects.count > 0)
                     {
                         //add card
-                        [userAllCards addObject:[CardModel createCardFromPFObject:objects[0]]];
+                        [userAllCards addObject:[CardModel createCardFromPFObject:objects[0] onFinish:nil]];
                         
                         loadedCards++;
                         

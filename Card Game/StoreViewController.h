@@ -10,6 +10,7 @@
 #import "StoreCardsCollectionView.h"
 #import "CardView.h"
 #import "StrokedLabel.h"
+#import "CardEditorViewController.h"
 
 @interface StoreViewController : UIViewController
 

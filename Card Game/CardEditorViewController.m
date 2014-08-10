@@ -15,6 +15,7 @@
 
 #import "MainScreenViewController.h"
 #import "AbilityTableView.h"
+#import "CardPointsUtility.h"
 
 @interface CardEditorViewController ()
 
@@ -45,8 +46,6 @@ UIButton *damageIncButton, *damageDecButton, *lifeIncButton, *lifeDecButton, *cd
 /** Transparent views used to register touch events for enabling the buttons for editing the stats. */
 UIView*damageEditArea, *lifeEditArea, *costEditArea, *cdEditArea, *imageEditArea, *elementEditArea, *abilityEditArea;
 
-/** Maximum cost and count allowed for each rarity */
-NSArray* rarityMaxCosts, *rarityMaxAbilityCount;
 /** Spell cards can have this many extra abilities compared to Monster cards */
 const int SPELL_CARD_BONUS_ABILITY_COUNT = 1;
 
@@ -89,11 +88,17 @@ UIView*imageUploadView;
 UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
 
 
-- (id)initWithCard:(CardModel*)card
+- (id)initWithMode: (enum CardEditorMode)editorMode WithCard:(CardModel*)card
 {
     self = [super init];
     if (self) {
+        _editorMode = editorMode;
         
+        if (card != nil)
+        {
+            _currentCardModel = card;
+            _originalCard = [[CardModel alloc] initWithCardModel:card];
+        }
     }
     return self;
 }
@@ -105,33 +110,17 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     SCREEN_WIDTH = self.view.bounds.size.width;
     SCREEN_HEIGHT = self.view.bounds.size.height;
     
-    if (_currentCardModel == nil)
+    //card cannot exceed this number of abilities
+    
+    self.view.backgroundColor = [UIColor whiteColor];
+    
+    if (_editorMode == cardEditorModeCreation)
     {
         //no card, start with a new one
         [self setupNewMonster];
     }
     
-    rarityMaxCosts = @[
-                       @10, //common TODO!!!!!!!!!!!!!!!!!!!!!!!!!!! 10 right now just for testing
-                       @7, //uncommon
-                       @8, //rare
-                       @9, //exceptional
-                       @10, //legendary
-                       ];
-    
-    //card cannot exceed this number of abilities
-    rarityMaxAbilityCount = @[
-                              @4, //common TODO!!!!!!!!!!!!!!!!!!!!!!!!!!! 4 right now just for testing, should be 2
-                              @2, //uncommon
-                              @3, //rare
-                              @3, //exceptional
-                              @4, //legendary
-                              ];
-    
-    self.view.backgroundColor = [UIColor whiteColor];
-    
-    
-    [self.view addSubview:_currentCardView];
+    [self reloadCardView];
     
     //----------------card basic stats views---------------------//
     
@@ -153,8 +142,12 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     [nameTextField setMinimumFontSize:8.f];
     nameTextField.adjustsFontSizeToFitWidth = YES; //TODO doesn't work under 14
     
+    if (_editorMode == cardEditorModeVoting)
+        [nameTextField setText:_currentCardModel.name];
+    
     [nameTextField setDelegate:self];
     [self.view addSubview:nameTextField];
+    
     
     CGPoint attackLabelPoint = [self.view convertPoint:self.currentCardView.attackLabel.center fromView:self.currentCardView];
     damageIncButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
@@ -233,7 +226,8 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     //imageEditArea.backgroundColor = [UIColor redColor];
     //imageEditArea.alpha = 0.5;
     
-    [self.view addSubview:imageEditArea];
+    if (_editorMode == cardEditorModeCreation)
+        [self.view addSubview:imageEditArea];
     
     damageEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 60, 36)];
     damageEditArea.center = CGPointMake(attackLabelPoint.x, attackLabelPoint.y);
@@ -274,7 +268,8 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     //elementEditArea.backgroundColor = [UIColor redColor];
     //elementEditArea.alpha = 0.5;
     
-    [self.view addSubview:elementEditArea];
+    if (_editorMode == cardEditorModeCreation)
+        [self.view addSubview:elementEditArea];
     
     abilityEditArea = [[UIView alloc] initWithFrame: CGRectMake(80, 242, 186, 90)];
     
@@ -317,11 +312,21 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     
     [self.view addSubview:tagsField];
     
+    if (_editorMode != cardEditorModeCreation)
+    {
+        [tagsField setEnabled:NO];
+        [tagsField setBackgroundColor:COLOUR_INTERFACE_GRAY];
+        [tagsField setPlaceholder:@""];
+    }
+    
     tagsLabel = [[UILabel alloc] initWithFrame:CGRectMake(80, SCREEN_HEIGHT-24, 80, 20)];
     tagsLabel.font = [UIFont fontWithName:cardMainFont size:16];
     tagsLabel.textColor = [UIColor blackColor];
     tagsLabel.text = @"Tags:";
     [self.view addSubview:tagsLabel];
+    
+    if (_editorMode != cardEditorModeCreation)
+        [tagsLabel setTextColor:COLOUR_INTERFACE_GRAY];
     
     abilityIncButton = [[UIButton alloc] initWithFrame:CGRectMake(270, 222, 46, 32)];
     [abilityIncButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateNormal];
@@ -391,9 +396,6 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     
     //, *lifeEditArea, *costEditArea, *cdEditArea, *imageEditArea;
     
-    self.currentCardModel = self.currentCardModel; //send the model to views
-    [self loadAllValidAbilities];
-    
     monsterCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 50)];
     [monsterCardButton setImage:[UIImage imageNamed:@"monster_button"] forState:UIControlStateNormal];
     [monsterCardButton setImage:[UIImage imageNamed:@"monster_button_gray"] forState:UIControlStateDisabled];
@@ -401,12 +403,18 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     [monsterCardButton addTarget:self action:@selector(monsterButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:monsterCardButton];
     
+    if (_editorMode != cardEditorModeCreation)
+        [monsterCardButton setEnabled:NO];
+    
     spellCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 50)];
     [spellCardButton setImage:[UIImage imageNamed:@"spell_button"] forState:UIControlStateNormal];
     [spellCardButton setImage:[UIImage imageNamed:@"spell_button_gray"] forState:UIControlStateDisabled];
     spellCardButton.center = CGPointMake(35, 105);
     [spellCardButton addTarget:self action:@selector(spellButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:spellCardButton];
+    
+    if (_editorMode != cardEditorModeCreation)
+        [spellCardButton setEnabled:NO];
     
     saveCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 40)];
     [saveCardButton setImage:[UIImage imageNamed:@"save_card_button"] forState:UIControlStateNormal];
@@ -421,13 +429,16 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     [cancelCardButton addTarget:self action:@selector(cancelCardButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:cancelCardButton];
     
+    /*
     randomizeCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 40)];
     [randomizeCardButton setImage:[UIImage imageNamed:@"randomize_card_button"] forState:UIControlStateNormal];
     randomizeCardButton.center = CGPointMake(35, SCREEN_HEIGHT - 115);
     [randomizeCardButton addTarget:self action:@selector(randomizeCardButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:randomizeCardButton];
-    
-    
+    if (_editorMode != cardEditorModeCreation)
+        [randomizeCardButton setEnabled:NO];
+    */
+        
     //confirmation dialogs
     saveCardConfirmLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/4, SCREEN_WIDTH*6/8, SCREEN_HEIGHT)];
     saveCardConfirmLabel.textColor = [UIColor whiteColor];
@@ -436,13 +447,20 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     saveCardConfirmLabel.textAlignment = NSTextAlignmentCenter;
     saveCardConfirmLabel.lineBreakMode = NSLineBreakByWordWrapping;
     saveCardConfirmLabel.numberOfLines = 0;
-    saveCardConfirmLabel.text = @"Are you sure you want to create this card? You will not be able to edit it again.";
+    if (_editorMode == cardEditorModeCreation)
+        saveCardConfirmLabel.text = @"Are you sure you want to create this card? You will not be able to edit it again.";
+    if (_editorMode == cardEditorModeVoting)
+        saveCardConfirmLabel.text = @"Are you sure you want to cast your vote? You will not be able to edit it again.";
     [saveCardConfirmLabel sizeToFit];
     
     saveCardConfirmButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     saveCardConfirmButton.center = CGPointMake(SCREEN_WIDTH/2 - 80, SCREEN_HEIGHT - 60);
     [saveCardConfirmButton setImage:[UIImage imageNamed:@"yes_button"] forState:UIControlStateNormal];
-    [saveCardConfirmButton addTarget:self action:@selector(saveCardConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    if (_editorMode == cardEditorModeCreation)
+        [saveCardConfirmButton addTarget:self action:@selector(saveCardConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    else if (_editorMode == cardEditorModeVoting)
+        [saveCardConfirmButton addTarget:self action:@selector(voteCardConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     confirmCancelButon = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     confirmCancelButon.center = CGPointMake(SCREEN_WIDTH/2 + 80, SCREEN_HEIGHT - 60);
@@ -587,9 +605,13 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     
     uploadFromCameraButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
     [uploadFromCameraButton setImage:[UIImage imageNamed:@"upload_from_camera_button"] forState:UIControlStateNormal];
+    [uploadFromCameraButton setImage:[UIImage imageNamed:@"upload_from_camera_button_gray"] forState:UIControlStateDisabled];
     uploadFromCameraButton.center = CGPointMake(SCREEN_WIDTH*2/3, SCREEN_HEIGHT/2+50);
     [imageUploadView addSubview:uploadFromCameraButton];
     [uploadFromCameraButton addTarget:self action:@selector(uploadFromCameraButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    if (![UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera])
+        [uploadFromCameraButton setEnabled:NO];
     
     //upload indicator
     _cardUploadIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
@@ -609,6 +631,11 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     [_cardUploadFailedButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
     [_cardUploadFailedButton addTarget:self action:@selector(cardUploadFailedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
+    _cardVoteFailedButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    _cardVoteFailedButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 60);
+    [_cardVoteFailedButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
+    [_cardVoteFailedButton addTarget:self action:@selector(cardVoteFailedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center addObserver:self selector:@selector(keyboardOnScreen:) name:UIKeyboardDidShowNotification object:nil];
     
@@ -622,7 +649,19 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     [tapGesture setCancelsTouchesInView:NO];
     [self.view addGestureRecognizer:tapGesture];
     
-    [self setupNewMonster];
+    if (_editorMode == cardEditorModeVoting)
+    {
+        abilityNewTableView.currentCard = _currentCardModel;
+        abilityExistingTableView.currentCard = _currentCardModel;
+    }
+    
+    [self resetAbilityViews];
+    [self selectElement: _currentCardModel.element];
+    
+    if (_editorMode == cardEditorModeVoting)
+        [self setupExistingCard];
+    
+    [self updateCost:self.currentCardModel];
 }
 
 -(void)tapRegistered
@@ -766,7 +805,7 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     {
         monster.damage = monster.baseDamage + change;
         [self.currentCardView updateView];
-        [self updateCost];
+        [self updateCost:self.currentCardModel];
         [self updateExistingAbilityList];
         [self updateNewAbilityList];
     }
@@ -819,7 +858,7 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     {
         monster.maximumLife = monster.life = monster.baseMaxLife + change;
         [self.currentCardView updateView];
-        [self updateCost];
+        [self updateCost:self.currentCardModel];
         [self updateExistingAbilityList];
         [self updateNewAbilityList];
     }
@@ -847,7 +886,7 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     {
         monster.maximumCooldown = monster.cooldown = monster.baseMaxCooldown + change;
         [self.currentCardView updateView];
-        [self updateCost];
+        [self updateCost:self.currentCardModel];
         [self updateExistingAbilityList];
         [self updateNewAbilityList];
     }
@@ -873,12 +912,12 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
 {
     //TODO there is rarity requirement for higher costs
     
-    if ((change > 0 && self.currentCardModel.baseCost < [rarityMaxCosts[self.currentCardModel.rarity] integerValue])
+    if ((change > 0 && self.currentCardModel.baseCost < [CardPointsUtility getMaxCostForCard:self.currentCardModel])
         || (change < 0 && self.currentCardModel.baseCost > MIN_COST))
     {
         self.currentCardModel.cost = self.currentCardModel.baseCost + change;
         [self.currentCardView updateView];
-        [self updateCost];
+        [self updateCost:self.currentCardModel];
         [self updateExistingAbilityList];
         [self updateNewAbilityList]; //changing cost may unlock new abilities
     }
@@ -945,7 +984,7 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     }
     else if (button == costIncButton)
     {
-        if (self.currentCardModel.baseCost == [rarityMaxCosts[self.currentCardModel.rarity] integerValue])
+        if (self.currentCardModel.baseCost == [CardPointsUtility getMaxCostForCard:self.currentCardModel])
             [costIncButton setEnabled:NO];
         else
             [costIncButton setEnabled:YES];
@@ -981,7 +1020,7 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     
     [abilityExistingTableView.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     
-    [self updateCost];
+    [self updateCost:self.currentCardModel];
     
     [self updateAbilityButtons:wrapper];
 }
@@ -998,7 +1037,7 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     
     [abilityExistingTableView.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     
-    [self updateCost];
+    [self updateCost:self.currentCardModel];
     
     [self updateAbilityButtons:wrapper];
 }
@@ -1036,7 +1075,7 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
         
         [self updateNewAbilityList];
         
-        [self updateCost];
+        [self updateCost:self.currentCardModel];
     }
 }
 
@@ -1050,7 +1089,7 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
         wrapper.enabled = YES;
         
         //update the icon in the tableView
-        [self updateAbilityPoints:wrapper withWrappers:abilityExistingTableView.currentAbilities];
+        [CardPointsUtility updateAbilityPoints:self.currentCardModel forWrapper:wrapper withWrappers:abilityExistingTableView.currentAbilities];
 
         for (AbilityWrapper*existingWrapper in abilityExistingTableView.currentAbilities)
         {
@@ -1070,12 +1109,24 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
         
         if (wrapper.minCost > self.currentCardModel.cost)
             wrapper.enabled = NO;
+        
+        //max count reached
+        if ([CardPointsUtility getMaxAbilityCountForCard:self.currentCardModel] <= self.currentCardModel.abilities.count)
+            wrapper.enabled = NO;
     }
     
     [abilityNewTableView.tableView reloadData];
     [abilityNewTableView reloadInputViews];
     
-    [abilityAddButton setEnabled:[abilityNewTableView.currentAbilities[[abilityNewTableView.tableView indexPathForSelectedRow].row] enabled]];
+    NSIndexPath *selectedPath = [abilityNewTableView.tableView indexPathForSelectedRow];
+    if (selectedPath != nil)
+    {
+        //if reached max ability limit, disable it
+        if ([CardPointsUtility getMaxAbilityCountForCard:self.currentCardModel] > self.currentCardModel.abilities.count)
+            [abilityAddButton setEnabled:[abilityNewTableView.currentAbilities[selectedPath.row] enabled]];
+        else
+            [abilityAddButton setEnabled:NO];
+    }
 }
 
 /** Only for when changing the element etc., to remove abilities that are no longer compatible */
@@ -1086,7 +1137,7 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
         AbilityWrapper*wrapper = abilityExistingTableView.currentAbilities[i];
         
         //update the icon in the tableView
-        [self updateAbilityPoints:wrapper withWrappers:abilityExistingTableView.currentAbilities];
+        [CardPointsUtility updateAbilityPoints:self.currentCardModel forWrapper:wrapper withWrappers:abilityExistingTableView.currentAbilities];
         
         if (![wrapper isCompatibleWithCardModel:_currentCardModel] || wrapper.minCost > _currentCardModel.cost)
         {
@@ -1133,27 +1184,24 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
         [abilityIncButton setEnabled:NO];
         [abilityDecButton setEnabled:NO];
         
-        [self updateCost];
+        [self updateCost:self.currentCardModel];
     }
 }
 
 -(void)reloadCardView
 {
-    int index = 0;
-    if (_currentCardView!=nil)
-    {
-        index = [[self.view subviews] indexOfObject:_currentCardView];
-        [_currentCardView removeFromSuperview];
-    }
+    UIImage*originalImage = _currentCardView.cardImage.image;
+    [_currentCardView removeFromSuperview];
     
-    _currentCardView = [[CardView alloc] initWithModel:_currentCardModel viewMode:cardViewModeEditor];
+    _currentCardView = [[CardView alloc] initWithModel:_currentCardModel withImage:originalImage viewMode:cardViewModeEditor];
     _currentCardView.cardViewState = cardViewStateCardViewer;
     _currentCardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_EDITOR_SCALE, CARD_EDITOR_SCALE);
+    _currentCardView.nameLabel.alpha = 0; //don't ever show the name label, since it's taken over by nameTextField
     
     _currentCardView.center = CGPointMake(175, 185);
     
     [_currentCardView updateView];
-    [self.view insertSubview:_currentCardView atIndex:index];
+    [self.view insertSubview:_currentCardView atIndex:0];
 }
 
 -(void)removeAllStatButtons
@@ -1168,27 +1216,17 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     [costIncButton removeFromSuperview];
 }
 
--(void)updateCost
+-(void)updateCost:(CardModel*)card
 {
-    self.maxCost = 1000; //base
-    self.maxCost += self.currentCardModel.cost * 1000;
     self.currentCost = 0;
     
-    //rarity gives bonus to max cost
-    if (self.currentCardModel.rarity == cardRarityUncommon)
-        self.maxCost *= 1.05;
-    else if (self.currentCardModel.rarity == cardRarityRare)
-        self.maxCost *= 1.1;
-    else if (self.currentCardModel.rarity == cardRarityExceptional)
-        self.maxCost *= 1.15;
-    else if (self.currentCardModel.rarity == cardRarityLegendary)
-        self.maxCost *= 1.25;
+    self.maxCost = [CardPointsUtility getMaxPointsForCard:self.currentCardModel];
     
     for (int i = 0; i < abilityExistingTableView.currentAbilities.count; i++)
     {
         AbilityWrapper *wrapper = abilityExistingTableView.currentAbilities[i];
         
-        [self updateAbilityPoints:wrapper withWrappers:abilityExistingTableView.currentAbilities];
+        [CardPointsUtility updateAbilityPoints:card forWrapper:wrapper withWrappers:abilityExistingTableView.currentAbilities];
         
         //update the icon in the tableView
         AbilityTableViewCell* cell = (AbilityTableViewCell*)[abilityExistingTableView.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
@@ -1198,34 +1236,10 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     }
     
     //monster cards add stats into cost
-    if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
+    if ([card isKindOfClass:[MonsterCardModel class]])
     {
-        MonsterCardModel*monster = (MonsterCardModel*)self.currentCardModel;
-        
-        //TODO it's much more complicated (add damage/life modifiers from abilities)
-        if (monster.damage == 0)
-            self.currentCost -= 250; //experimental: no damange = can't attack = gain some extra points
-        else
-        {
-            BOOL hasTaunt = [self currentCardHasTaunt];
-            
-            //no taunt, every 1k attack is worth 500 points, and divided by cooldown
-            if (hasTaunt)
-            {
-                self.currentCost += ceil(monster.damage / 2 / (monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown));
-            }
-            //has taunt, cooldown provides much fewer reduction
-            else
-            {
-                double cooldown = (monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown);
-                if (cooldown > 1)
-                    cooldown = cooldown/15.f + 1; //only about 20% more damage at cooldown of 5
-                
-                self.currentCost += ceil(monster.damage / 2 / cooldown);
-            }
-        }
-        
-        self.currentCost += ceil(monster.maximumLife / 2);
+        MonsterCardModel*monster = (MonsterCardModel*)card;
+        self.currentCost += [CardPointsUtility getStatsPointsForMonsterCard:monster];
     }
    
     currentCostLabel.text = [NSString stringWithFormat:@"%d", self.currentCost];
@@ -1241,262 +1255,61 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
         currentCostLabel.textColor = [UIColor whiteColor];
         [saveCardButton setEnabled:YES];
     }
-    
 }
 
--(void)updateAbilityPoints:(AbilityWrapper*)wrapper withWrappers:(NSArray*)wrappers
+-(void)setupExistingCard
 {
-    int abilityCost = 0;
+    //[self reloadCardView];
     
-    enum CastType castType = wrapper.ability.castType;
-    enum AbilityType abilityType = wrapper.ability.abilityType;
-    enum TargetType targetType = wrapper.ability.targetType;
+    /*
+    [self resetAbilityViews];
+    [self selectElement: _currentCardModel.element];
+    [self updateCost:self.currentCardModel];
+     */
     
-    //has min and max values, lerp the abilityCost
-    if (wrapper.ability.otherValues != nil && wrapper.ability.otherValues.count >= 2)
+    //create a new array since the original does not include otherValues
+    NSArray*originalAbilities = _currentCardModel.abilities;
+    _currentCardModel.abilities = [NSMutableArray arrayWithCapacity:originalAbilities.count];
+    
+    //add abilities:
+    for (Ability*ability in originalAbilities)
     {
-        int minValue = [wrapper.ability.otherValues[0] intValue];
-        int maxValue = [wrapper.ability.otherValues[1] intValue];
-        int valueDifference = maxValue - minValue;
-        
-        if (valueDifference == 0)
-            valueDifference = 1;
-        
-        int currentValue = [wrapper.ability.value intValue] - minValue;
-        double valuePercent = (double)currentValue / valueDifference;
-        
-        abilityCost = ceil(((wrapper.maxPoints - wrapper.minPoints)*valuePercent) + wrapper.minPoints);
-    }
-    //no adjustable value/cost, just use min points
-    else
-    {
-        abilityCost = wrapper.minPoints;
-    }
-    
-    wrapper.basePoints = abilityCost;
-    
-    //monster card specific stuff
-    if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
-    {
-        MonsterCardModel*monster = (MonsterCardModel*)self.currentCardModel;
-        
-        //fracture ability is a special case
-        if (abilityType == abilityFracture)
+        NSLog(@"looping current card ability %d", abilityNewTableView.currentAbilities.count);
+        for (AbilityWrapper *wrapper in abilityNewTableView.currentAbilities)
         {
-            //base cost
-            int cooldown = (monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown);
-            abilityCost += monster.damage * 0.5 / cooldown;
-            abilityCost += monster.life * 0.5;
-            
-            if (castType == castOnDamaged)
-                abilityCost *= 2;
-            else if (castType == castOnEndOfTurn)
-                abilityCost *= 3;
-            else if (castType == castOnMove)
-                abilityCost *= 3;
-        }
-        else if (abilityType == abilityLoseDamage)
-        {
-            //lose damage abilities' negative points are capped by the minion's actual damage. e.g. if minion has 2000 damage, -2500 damage on hit is same as -2000
-            if (targetType == targetSelf)
+            NSLog(@"looping new wrappers");
+            if ([wrapper.ability isEqualTypeTo: ability])
             {
-                if (castType == castOnHit)
-                {
-                    if (![self currentCardHasTaunt]) //taunt removes the bonus
-                    {
-                        if (abilityCost < -monster.damage*0.1)
-                            abilityCost = -monster.damage*0.1;
-                    }
-                }
-                else if (castType == castOnDamaged)
-                {
-                    if (abilityCost < -monster.damage*0.2)
-                        abilityCost = -monster.damage*0.2;
-                }
-                else if (castType == castOnMove)
-                {
-                    if (abilityCost < -monster.damage*0.4)
-                        abilityCost = -monster.damage*0.4;
-                }
-            }
-        }
-        else if (abilityType == abilityAddCooldown || abilityType == abilityAddMaxCooldown)
-        {
-            if (targetType == targetSelf)
-            {
-                //adding cooldown to self depends on the damage
-                if (castType == castOnHit)
-                {
-                    if (![self currentCardHasTaunt]) //taunt removes the bonus
-                    {
-                        if (abilityType == abilityAddCooldown)
-                            abilityCost = -monster.damage*0.1;
-                        else if (abilityType == abilityAddMaxCooldown)
-                            abilityCost = -monster.damage*0.2;
-                    }
-                }
-            }
-        }
-        if (castType == castAlways)
-        {
-            if (targetType == targetSelf)
-            {
-                //taunt has its special case for values
-                if (abilityType == abilityTaunt)
-                {
-                    //costs 10% of stats
-                    abilityCost += monster.damage * 0.1;
-                    abilityCost += monster.life * 0.1;
-                }
-                else if (abilityType == abilityAssassin)
-                {
-                    //costs 40% of stats
-                    abilityCost += monster.damage * 0.25;
-                    abilityCost += monster.life * 0.25;
-                    abilityCost /= monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown;
-                    
-                    //damageless assassin has it cheaper
-                    if (monster.damage == 0)
-                        abilityCost *= 0.6;
-                }
-                else if (abilityType == abilityPierce)
-                {
-                    abilityCost += monster.damage * 0.1;
-                }
-            }
-        }
-        else if (castType == castOnSummon)
-        {
-            //if is charge (assuming value = 0)
-            if (abilityType == abilitySetCooldown && targetType == targetSelf)
-            {
-                abilityCost += monster.damage; //having charge is equivalent in cost as having a deal damage ability
-                //NOTE: affects cast on hit abilities' cost
-            }
-        }
-        
-        //save again since above are abilities with no cost
-        wrapper.basePoints = abilityCost;
-        
-        
-        //cast on move and hit's points are divided by the max cooldown
-        if (castType == castOnMove || castType == castOnHit)
-        {
-            if (castType == castOnHit)
-            {
-                //having assassin makes cast on hit MUCH better
-                if ([self currentCardHasAssassin])
-                    abilityCost *= 1.4;
+                NSLog(@"found equal");
+                AbilityWrapper *dupWrapper = [[AbilityWrapper alloc] initWithAbilityWrapper:wrapper];
+                wrapper.enabled = NO;
+                dupWrapper.ability.value = ability.value;
+                [_currentCardModel addBaseAbility:dupWrapper.ability];
                 
-                //charge makes this even more expensive
-                if ([self currentCardHasCharge])
-                    abilityCost *= 1.75;
-                
-                //cast on hit with no damage from the minion
-                if (monster.damage == 0)
-                {
-                    //all negative becomes useless
-                    if (abilityCost < 0)
-                        abilityCost = 0;
-                    //positive gets discount
-                    else
-                        abilityCost *= 0.6;
-                }
-            }
-            
-            abilityCost /= monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown;
-        }
-        else if (castType == castOnDamaged || castType == castOnDeath)
-        {
-            BOOL hasTaunt = [self currentCardHasTaunt];
-            
-            if (hasTaunt)
-            {
-                //has taunt, becomes more expensive, although multiplier doesn't work on negative abilities
-                if (abilityCost > 0)
-                {
-                    if (castType == castOnDeath)
-                        abilityCost *= 1.15;
-                    else if (castType == castOnDamaged)
-                        abilityCost *= 1.45;
-                }
-            }
-            else
-            {
-                //no taunt, no damage
-                if (monster.damage == 0)
-                {
-                    //negative abilities become useless since nobody will attack it anyways
-                    if (abilityCost < 0)
-                        abilityCost = 0;
-                    else
-                    {
-                        //positive abilities receive discount
-                        if (castType == castOnDeath)
-                            abilityCost *= 0.6;
-                        else if (castType == castOnDamaged)
-                            abilityCost *= 0.5;
-                    }
-                }
-            }
-        }
-
-    }
-    else if ([self.currentCardModel isKindOfClass:[SpellCardModel class]])
-    {
-        if (abilityType == abilityAddResource)
-        {
-            if (targetType == targetHeroFriendly && castType == castOnSummon)
-            {
-                //half off if ability is spell card and has no other abilities
-                if (wrappers.count == 0 || (wrappers.count == 1 && [wrapper.ability isEqualTypeTo:[wrappers[0] ability]]))
-                    abilityCost *= 0.5;
+                [abilityExistingTableView.currentAbilities addObject:dupWrapper];
+                break;
             }
         }
     }
     
-    wrapper.currentPoints = abilityCost;
+    [_currentCardView updateView];
+    
+    [abilityExistingTableView.tableView reloadData];
+    [abilityExistingTableView reloadInputViews];
 }
 
--(BOOL)currentCardHasTaunt
-{
-    if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
-        for (AbilityWrapper *wrapper in abilityExistingTableView.currentAbilities)
-            if (wrapper.ability.abilityType == abilityTaunt && wrapper.ability.targetType == targetSelf && wrapper.ability.castType == castAlways)
-                return YES;
-    
-    return NO;
-}
-
--(BOOL)currentCardHasAssassin
-{
-    if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
-        for (AbilityWrapper *wrapper in abilityExistingTableView.currentAbilities)
-            if (wrapper.ability.abilityType == abilityAssassin && wrapper.ability.targetType == targetSelf && wrapper.ability.castType == castAlways)
-                return YES;
-    
-    return NO;
-}
-
-/** Charge means on summon set self cooldown to 0 */
--(BOOL)currentCardHasCharge
-{
-    //NOTE: assumes value = 0
-    if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
-        for (AbilityWrapper *wrapper in abilityExistingTableView.currentAbilities)
-            if (wrapper.ability.abilityType == abilitySetCooldown && wrapper.ability.targetType == targetSelf && wrapper.ability.castType == castOnSummon)
-                return YES;
-    
-    return NO;
-}
 
 -(void)monsterButtonPressed
 {
     [self setupNewMonster];
-    [self updateCardTypeButtons];
     
-    [costDecButton removeFromSuperview];
-    [costIncButton removeFromSuperview];
+    [self resetAbilityViews];
+    [self updateCost:self.currentCardModel];
+    [self selectElement: _currentCardModel.element];
+    
+    [self updateCardTypeButtons];
+    [self removeAllStatButtons];
+    [self reloadCardView];
 }
 
 -(void)setupNewMonster
@@ -1513,28 +1326,26 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
         monster.name = self.currentCardModel.name;
         monster.cost = self.currentCardModel.cost;
         monster.element = self.currentCardModel.element;
-        //TODO image
     }
     else
         monster.name = @"";
     
     _currentCardModel = monster;
-    
-    [self reloadCardView];
-    
-    self.currentCardModel = monster;
-    
-    [self resetAbilityViews];
-    [self updateCost];
-    [self selectElement: _currentCardModel.element];
+    abilityNewTableView.currentCard = _currentCardModel;
+    abilityExistingTableView.currentCard = _currentCardModel;
 }
 
 -(void)spellButtonPressed
 {
     [self setupNewSpell];
-    [self updateCardTypeButtons];
     
+    [self resetAbilityViews];
+    [self updateCost:self.currentCardModel];
+    [self selectElement: _currentCardModel.element];
+    
+    [self updateCardTypeButtons];
     [self removeAllStatButtons];
+    [self reloadCardView];
 }
 
 -(void)setupNewSpell
@@ -1547,39 +1358,19 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
         spell.name = self.currentCardModel.name;
         spell.cost = self.currentCardModel.cost;
         spell.element = self.currentCardModel.element;
-        //TODO image
     }
     else
         spell.name = @"";
     
     _currentCardModel = spell;
-    
-    int index = 0;
-    if (_currentCardView!=nil)
-    {
-        index = (int)[[self.view subviews] indexOfObject:_currentCardView];
-        [_currentCardView removeFromSuperview];
-    }
-    
-    _currentCardView = [[CardView alloc] initWithModel:spell viewMode:cardViewModeEditor];
-    _currentCardView.cardViewState = cardViewStateCardViewer;
-    _currentCardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_EDITOR_SCALE, CARD_EDITOR_SCALE);
-    
-    _currentCardView.center = CGPointMake(175, 185);
-    
-    [_currentCardView updateView];
-    [self.view insertSubview:_currentCardView atIndex:index];
-    
-    self.currentCardModel = spell;
-    
-    [self resetAbilityViews];
-    [self updateCost];
-    [self selectElement: _currentCardModel.element];
+    abilityNewTableView.currentCard = _currentCardModel;
+    abilityExistingTableView.currentCard = _currentCardModel;
 }
 
 
 -(void)resetAbilityViews
 {
+    NSLog(@"resetting ability views");
     [abilityExistingTableView.currentAbilities removeAllObjects];
     [abilityExistingTableView.tableView reloadData];
     [abilityExistingTableView.tableView reloadInputViews];
@@ -1592,15 +1383,18 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
 
 -(void)updateCardTypeButtons
 {
-    if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
+    if (_editorMode == cardEditorModeCreation)
     {
-        spellCardButton.enabled = YES;
-        monsterCardButton.enabled = NO;
-    }
-    else
-    {
-        spellCardButton.enabled = NO;
-        monsterCardButton.enabled = YES;
+        if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
+        {
+            spellCardButton.enabled = YES;
+            monsterCardButton.enabled = NO;
+        }
+        else
+        {
+            spellCardButton.enabled = NO;
+            monsterCardButton.enabled = YES;
+        }
     }
 }
 
@@ -1640,8 +1434,7 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
                                                       [_cardUploadIndicator removeFromSuperview];
                                                       
                                                       //TODO
-                                                      MainScreenViewController *viewController = [[MainScreenViewController alloc] init];
-                                                      [self presentViewController:viewController animated:YES completion:nil];
+                                                      [self dismissViewControllerAnimated:YES completion:nil];
                                                   }];
                              }
                              else
@@ -1673,6 +1466,18 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
                          [_cardUploadFailedButton removeFromSuperview];
                      }];
     
+}
+
+-(void)cardVoteFailedButtonPressed
+{
+    [_cardVoteFailedButton setUserInteractionEnabled:NO];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _cardVoteIndicator.alpha = 0;
+                     }
+                     completion:^(BOOL completed){
+                         [_cardVoteFailedButton removeFromSuperview];
+                     }];
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -2097,29 +1902,27 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     
     [self.imagePicker.imagePickerController setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
     self.imagePicker.delegate = self;
-    //self.imagePicker.resizeableCropArea = YES;
     
     [self presentViewController:self.imagePicker.imagePickerController animated:YES completion:nil];
-    //[self presentModalViewController:self.imagePicker.imagePickerController animated:YES];
 }
 
 -(void)uploadFromCameraButtonPressed
 {
+    self.imagePicker = [[GKImagePicker alloc] init];
+    self.imagePicker.cropSize = CGSizeMake(CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT);
     
-    /*
-    if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
-    {
-        [imagePicker setSourceType:UIImagePickerControllerSourceTypeCamera];
-    }
-    */
-    //[self presentViewController:imagePicker animated:YES completion:nil];
+    [self.imagePicker.imagePickerController setSourceType:UIImagePickerControllerSourceTypeCamera];
+    self.imagePicker.delegate = self;
+    
+    [self presentViewController:self.imagePicker.imagePickerController animated:YES completion:nil];
 }
 
 - (void)imagePicker:(GKImagePicker *)imagePicker pickedImage:(UIImage *)image
 {
-    self.currentCardView.cardImage.image = image;
+    UIImage *scaledImage = [CardEditorViewController imageWithImage:image scaledToSize:CGSizeMake(CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT)];
+    self.currentCardView.cardImage.image = scaledImage;
     
-    NSLog(@"view %f %f, image %f %f", self.currentCardView.cardImage.frame.size.width, self.currentCardView.cardImage.frame.size.height, image.size.width, image.size.height);
+    //NSLog(@"view %f %f, image %f %f", self.currentCardView.cardImage.frame.size.width, self.currentCardView.cardImage.frame.size.height, image.size.width, image.size.height);
     
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
@@ -2141,7 +1944,11 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
         if (indexPath.row < 0 || indexPath.row >= abilityNewTableView.currentAbilities.count) //being defensive
             return;
         
-        [abilityAddButton setEnabled:[abilityNewTableView.currentAbilities[indexPath.row] enabled]];
+        if ([CardPointsUtility getMaxAbilityCountForCard:self.currentCardModel] > self.currentCardModel.abilities.count)
+            [abilityAddButton setEnabled:[abilityNewTableView.currentAbilities[indexPath.row] enabled]];
+        else
+            [abilityAddButton setEnabled:NO];
+        
         [self abilityEditAreaSetEnabled:NO]; //turn off the other table's buttons
         
         [self removeAllStatButtons];
@@ -2164,7 +1971,7 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     Ability *ability = wrapper.ability;
     
     //enable the abilityInc and Dec buttons
-    if (ability.value != nil)
+    if (ability.value != nil && ability.otherValues.count >= 2)
     {
         if ([ability.value integerValue] > [ability.otherValues[0] integerValue])
             [abilityDecButton setEnabled:YES];
@@ -2188,13 +1995,21 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
 {
     NSArray*allAbilities = [AbilityWrapper allAbilities];
     
+    NSMutableArray*cardAbilitiesBackup;
+    if (_editorMode == cardEditorModeVoting)
+    {
+        //clear the abilities temporarily to prevent some abilities not added to the list
+        cardAbilitiesBackup = _currentCardModel.abilities;
+        _currentCardModel.abilities = [NSMutableArray array];
+    }
+    
     for (AbilityWrapper*wrapper in allAbilities)
     {
         //must be valid element and rarity
         if ([wrapper isCompatibleWithCardModel:_currentCardModel])
         {
             [abilityNewTableView.currentAbilities addObject:wrapper];
-            if (wrapper.ability.otherValues != nil && wrapper.ability.otherValues.count == 2)
+            if (wrapper.ability.otherValues != nil && wrapper.ability.otherValues.count >= 2)
             {
                 NSNumber *valueA = wrapper.ability.otherValues[0];
                 NSNumber *valueB = wrapper.ability.otherValues[1];
@@ -2204,6 +2019,9 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
                 wrapper.ability.value = 0;
         }
     }
+    
+    if (_editorMode == cardEditorModeVoting)
+        _currentCardModel.abilities = cardAbilitiesBackup;
     
     //sort the valid abilities
     [abilityNewTableView.currentAbilities sortUsingComparator:^(AbilityWrapper* a, AbilityWrapper* b){
@@ -2275,14 +2093,88 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     
     [userAllCards addObject:self.currentCardModel]; //TODO might not be needed once using parse
     [self publishCurrentCard];
-    
-    
+}
+
+-(void)voteCardConfirmButtonPressed
+{
+    _cardUploadIndicator.alpha = 0;
+    _cardUploadLabel.text = [NSString stringWithFormat:@"Casting vote..."];
+    [_cardUploadIndicator setColor:[UIColor whiteColor]];
+    [self.view addSubview:_cardUploadIndicator];
+    [_cardUploadIndicator startAnimating];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _cardUploadIndicator.alpha = 1;
+                     }
+                     completion:^(BOOL completed){
+                         PFObject*cardPF = _currentCardModel.cardPF;
+                         
+                         CardVote *cardVote;
+                         PFObject*cardVotePF;
+                         
+                         //this is not actually supposed to happen, as it shouldn't be a nil, but this is just for debug cards that didn't have cardVotes when created
+                         if (cardPF[@"cardVote"] == nil)
+                         {
+                             NSLog(@"creating card vote from nil");
+                             cardVote = [[CardVote alloc] initWithCardModel:_currentCardModel];
+                             cardVotePF = [PFObject objectWithClassName:@"CardVote"];
+                         }
+                         //normal case: just update the votes
+                         else
+                         {
+                             NSLog(@"creating card vote from existing object");
+                             cardVotePF = cardPF[@"cardVote"];
+                             [cardVotePF fetch];
+                             cardVote = [[CardVote alloc] initWithPFObject:cardVotePF];
+                             [cardVote addVote:_currentCardModel];
+                         }
+                         
+                         NSLog(@"created card vote");
+                         
+                         [cardVote generatedVotedCard:_currentCardModel];
+                         [cardVote updateToPFObject:cardVotePF];
+                         
+                         NSLog(@"saving card vote");
+                         
+                         cardPF[@"cardVote"] = cardVotePF;
+                         
+                         [cardPF saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                             if (succeeded)
+                             {
+                                 [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                                                  animations:^{
+                                                      _cardUploadIndicator.alpha = 0;
+                                                  }
+                                                  completion:^(BOOL completed){
+                                                      [_cardUploadIndicator stopAnimating];
+                                                      [_cardUploadIndicator removeFromSuperview];
+                                                      
+                                                      _voteConfirmed = YES;
+                                                      [self dismissViewControllerAnimated:YES completion:nil];
+                                                  }];
+                             }
+                             else
+                             {
+                                 [_cardUploadIndicator setColor:[UIColor clearColor]];
+                                 _cardUploadLabel.text = [NSString stringWithFormat:@"Error casting vote."];
+                                 _cardVoteFailedButton.alpha = 0;
+                                 [_cardUploadIndicator addSubview:_cardVoteFailedButton];
+                                 [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                                                  animations:^{
+                                                      _cardVoteFailedButton.alpha = 1;
+                                                  }
+                                                  completion:^(BOOL completed){
+                                                      [_cardVoteFailedButton setUserInteractionEnabled:YES];
+                                                  }];
+                             }
+                         }];
+                         
+                     }];
 }
 
 -(void)cancelCardConfirmButtonPressed
 {
-    MainScreenViewController *viewController = [[MainScreenViewController alloc] init];
-    [self presentViewController:viewController animated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)confirmCancelButtonPressed
@@ -2351,6 +2243,17 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
 -(CardModel*)currentCardModel
 {
     return _currentCardModel;
+}
+
++ (UIImage*)imageWithImage:(UIImage*)image
+              scaledToSize:(CGSize)newSize
+{
+    UIGraphicsBeginImageContext( newSize );
+    [image drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
 }
 
 //block delay functions

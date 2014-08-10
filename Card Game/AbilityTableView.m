@@ -75,6 +75,7 @@ const int ABILITY_TABLE_VIEW_ROW_HEIGHT = 20;
      */
     
     NSAttributedString*abilityText = [Ability getDescription:wrapper.ability fromCard:self.currentCard];
+    NSLog(@"getting text");
     
     CGSize textSize = [[abilityText string] sizeWithFont:[cell.abilityText font]];
     cell.abilityText.attributedText = abilityText;

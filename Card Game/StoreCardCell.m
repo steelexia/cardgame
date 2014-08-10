@@ -26,8 +26,6 @@
         _activityView.frame = CGRectMake(0,0,50,50);
         _activityView.center = CGPointMake(frame.size.width/2, frame.size.height/2);
         //_activityView.backgroundColor = [UIColor blackColor];
-        [self addSubview:_activityView];
-        [_activityView startAnimating];
         
         _statsView = [[UIView alloc] initWithFrame:self.bounds];
         [_statsView setUserInteractionEnabled:NO];
@@ -62,9 +60,8 @@
         _costLabel.strokeColour = [UIColor blackColor];
         [_statsView addSubview:_costLabel];
         
-       
-        
-        
+        self.layer.shouldRasterize = YES;
+        self.layer.rasterizationScale = [UIScreen mainScreen].scale;
     }
     return self;
 }

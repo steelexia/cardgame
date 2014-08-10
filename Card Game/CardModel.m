@@ -11,6 +11,7 @@
 #import "SpellCardModel.h"
 #import "AbilityWrapper.h"
 #import "CardView.h"
+#import "CardVote.h"
 
 @implementation CardModel
 
@@ -205,10 +206,9 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1, NO_ID = -1;
     }];
 }
 
-+(CardModel*) createCardFromPFObject: (PFObject*)cardPF
++(CardModel*) createCardFromPFObject: (PFObject*)cardPF onFinish:(void (^)(CardModel*))block
 {
     CardModel*card;
-    
     NSNumber *cardType = cardPF[@"cardType"];
     NSNumber *idNumber = cardPF[@"idNumber"];
     
@@ -271,6 +271,9 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1, NO_ID = -1;
     card.tags = [NSMutableArray arrayWithArray:tags];
     card.cardPF = cardPF;
     
+    if (block!=nil)
+        block(card);
+    
     return card;
 }
 
@@ -287,6 +290,26 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1, NO_ID = -1;
     if (imageSaveEror)
         return imageSaveEror;
     
+    PFObject*cardPF = [CardModel cardToCardPF:card withImage:cardImage];
+    
+    CardVote*cardVote = [[CardVote alloc] initWithCardModel:card];
+    [cardVote generatedVotedCard:card];
+    PFObject*cardVotePF = [PFObject objectWithClassName:@"CardVote"];
+    [cardVote updateToPFObject:cardVotePF];
+    
+    cardPF[@"cardVote"] = cardVotePF;
+    
+    NSError*cardSaveEror = nil;
+    [cardPF save:&cardSaveEror];
+    
+    if (cardSaveEror)
+        return cardSaveEror;
+    
+    return nil;
+}
+
++(PFObject*)cardToCardPF:(CardModel*)card withImage:(PFObject*)imagePF
+{
     //common to all cards
     PFObject *cardPF = [PFObject objectWithClassName:@"Card"];
     
@@ -297,10 +320,10 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1, NO_ID = -1;
     cardPF[@"creator"] = card.creator;
     cardPF[@"likes"] = @(card.likes);
     cardPF[@"tags"] = card.tags;
-    cardPF[@"image"] = cardImage;
+    cardPF[@"image"] = imagePF;
     
     cardPF[@"element"] = [NSNumber numberWithInt:card.element];
-   
+    
     if ([card isKindOfClass:[MonsterCardModel class]])
     {
         MonsterCardModel *monsterCard = (MonsterCardModel*)card;
@@ -318,7 +341,6 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1, NO_ID = -1;
     
     //loaded after stats
     NSMutableArray *pfAbilities = [[NSMutableArray alloc] init];
-    //TODO image
     for (int i = 0 ; i < [card.abilities count]; i++){
         if ([card.abilities[i] isKindOfClass:[PFObject class]]){
             [pfAbilities addObject:card.abilities[i]];
@@ -334,7 +356,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1, NO_ID = -1;
                 PFObject*pfAbility = [PFObject objectWithClassName:@"Ability"];
                 pfAbility[@"idNumber"] = [[NSNumber alloc] initWithInt:abilityID];
                 if (ability.value == nil)
-                   pfAbility[@"value"] = @0;
+                    pfAbility[@"value"] = @0;
                 else
                     pfAbility[@"value"] = ability.value;
                 pfAbility[@"otherValues"] = ability.otherValues;
@@ -350,13 +372,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1, NO_ID = -1;
     
     cardPF[@"abilities"] = pfAbilities;
     
-    NSError*cardSaveEror = nil;
-    [cardPF save:&cardSaveEror];
-    
-    if (cardSaveEror)
-        return cardSaveEror;
-    
-    return nil;
+    return cardPF;
 }
 
 +(NSString*)getRarityText:(enum CardRarity)rarity

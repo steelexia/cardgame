@@ -113,14 +113,11 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     
     [self.view addSubview:self.chooseDeckButton];
     
-    if (self.previousScreen!=nil)
-    {
-        self.backButton = [[UIButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
-        [self.backButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
-        [self.backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-        
-        [self.view addSubview:self.backButton];
-    }
+    self.backButton = [[UIButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
+    [self.backButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
+    [self.backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:self.backButton];
     
     [self resetAllViews];
 }
@@ -192,7 +189,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void)backButtonPressed
 {
-    [self presentViewController:self.previousScreen animated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)battleButtonPressed

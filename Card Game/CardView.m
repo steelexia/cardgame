@@ -216,16 +216,22 @@ NSMutableDictionary *standardCardImages;
         backgroundImageView.center = CGPointMake(CARD_FULL_WIDTH/2, CARD_FULL_HEIGHT/2);
         [self addSubview: backgroundImageView];
 
+        UIView*imageBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CARD_FULL_WIDTH - 16, (CARD_FULL_WIDTH-16) * CARD_IMAGE_RATIO)];
+        [imageBackgroundView setBackgroundColor:[UIColor whiteColor]];
+        imageBackgroundView.center = CGPointMake(CARD_FULL_WIDTH/2, 80);
+        //[backgroundImageView addSubview:imageBackgroundView]; //for providing a view if card image has transparent areas, not using cardImage's background since it has problems when loading in store
+        
         if (cardImage == nil)
         {
             if (cardModel.type == cardTypePlayer)
-            {
                 self.cardImage = [[UIImageView alloc] initWithImage:heroPlaceHolderImage];
-            }
             else
-            {
                 self.cardImage = [[UIImageView alloc]initWithImage:placeHolderImage];
-            }
+            
+            self.cardImage.frame = CGRectMake(0, 0, CARD_FULL_WIDTH - 16, (CARD_FULL_WIDTH-16) * CARD_IMAGE_RATIO);
+            self.cardImage.center = CGPointMake(CARD_FULL_WIDTH/2, 80);
+            self.cardImage.backgroundColor = [UIColor whiteColor];
+            [self addSubview:self.cardImage];
             
             _reloadAttempts = 0;
             
@@ -235,14 +241,14 @@ NSMutableDictionary *standardCardImages;
             }];
         }
         else
+        {
             self.cardImage = [[UIImageView alloc]initWithImage:cardImage];
-        
-        self.cardImage.frame = CGRectMake(0, 0, CARD_FULL_WIDTH - 16, (CARD_FULL_WIDTH-16) * CARD_IMAGE_RATIO);
-        self.cardImage.center = CGPointMake(CARD_FULL_WIDTH/2, 80);
-        self.cardImage.backgroundColor = [UIColor whiteColor];
-        [self addSubview:self.cardImage];
-        
-        
+            
+            self.cardImage.frame = CGRectMake(0, 0, CARD_FULL_WIDTH - 16, (CARD_FULL_WIDTH-16) * CARD_IMAGE_RATIO);
+            self.cardImage.center = CGPointMake(CARD_FULL_WIDTH/2, 80);
+            self.cardImage.backgroundColor = [UIColor whiteColor];
+            [self addSubview:self.cardImage];
+        }
         
         UIImageView *cardOverlay = [[UIImageView alloc] initWithImage:backgroundOverlayImages[cardModel.rarity]];
         cardOverlay.bounds = CGRectMake(0, 0, CARD_FULL_WIDTH, CARD_FULL_HEIGHT);
@@ -765,22 +771,18 @@ NSMutableDictionary *standardCardImages;
     if ([self.damagePopup.text isEqualToString:@""])
     {
         self.damagePopup.text = [NSString stringWithFormat:@"%d", damage];
-        NSLog(@"empty");
     }
     //recently been damaged, update the label
     else
     {
         int totalDamage = [self.damagePopup.text intValue] + damage;
         self.damagePopup.text = [NSString stringWithFormat:@"%d", totalDamage];
-        NSLog(@"not empty");
         return;
     }
     
     self.damagePopup.alpha = 1;
     self.damagePopup.transform = CGAffineTransformMakeScale(0, 0);
     
-    NSLog(@"starting animation");
-
     [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          if (self.cardModel.type != cardTypePlayer)
@@ -896,41 +898,15 @@ NSMutableDictionary *standardCardImages;
 -(void)loadImage
 {
     //fetch an image and load it
-    
     BOOL errorLoading = NO;
-    NSLog(@"%d load image", self.cardModel.idNumber);
     UIImage*image = [CardView getImageForCard:self.cardModel errorLoading:&errorLoading];
-    [self.cardImage setImage:image];
     
-    if (self.cardImage.image == placeHolderImage)
-        NSLog(@"%d placeholder", self.cardModel.idNumber);
-    else
-    {
-        NSLog(@"%d not placeholder", self.cardModel.idNumber);
-        
-        /*
-         //for fixing store stuff
-         UIView*superView = self.superview;
-         if (superView != nil && [superView isKindOfClass:[StoreCardCell class]])
-         {
-         StoreCardCell *cell = (StoreCardCell*)superView;
-         UIView*cellSuperView = cell.superview;
-         
-         if (cellSuperView != nil && [cellSuperView isKindOfClass:[CustomCollectionView class]])
-         {
-         CustomCollectionView*clv = (CustomCollectionView*)cellSuperView;
-         [clv reloadItemsAtIndexPaths:[NSIndexPath]];
-         }
-         
-         [cell reloadInputViews];
-         NSLog(@"refreshed");
-         }
-         */
-    }
+    dispatch_sync(dispatch_get_main_queue(), ^(void) {
+        [self.cardImage setImage:image];
+    });
     
     if (errorLoading) //TODO!!!!!! assuming that when the cardView is destroyed, this block will also be
     {
-        NSLog(@"retrying");
         if (_reloadAttempts++ < 15) //stop retrying after some time
         {
             //try again
@@ -947,10 +923,8 @@ NSMutableDictionary *standardCardImages;
 
 +(UIImage*)getImageForCard:(CardModel*)card errorLoading:(BOOL*)errorLoading
 {
-    NSLog(@"%d start", card.idNumber);
     if (card.type == cardTypeStandard)
     {
-        NSLog(@"%d standard", card.idNumber);
         if (card.idNumber == NO_ID)
             return placeHolderImage;
         
@@ -959,13 +933,13 @@ NSMutableDictionary *standardCardImages;
         //already loaded
         if (image!=nil)
         {
-            NSLog(@"%d image in database", card.idNumber);
+            //NSLog(@"%d image in database", card.idNumber);
             return image;
         }
         //load from parse
         else
         {
-            NSLog(@"%d loading from parse", card.idNumber);
+            //NSLog(@"%d loading from parse", card.idNumber);
             PFObject *cardPF;
             if (card.cardPF == nil)
             {
@@ -989,7 +963,6 @@ NSMutableDictionary *standardCardImages;
             
             if (imagePF != nil)
             {
-                NSLog(@"%d image is not nil", card.idNumber);
                 PFFile *file = imagePF[@"image"];
                 if (file != nil)
                 {
@@ -999,10 +972,7 @@ NSMutableDictionary *standardCardImages;
                         UIImage *image = [UIImage imageWithData:data];
                         if (image != nil)
                         {
-                            NSLog(@"got image");
                             [standardCardImages setObject:image  forKey:@(card.idNumber)];
-                            NSLog(@"dic count %d", standardCardImages.count);
-                                NSLog(@"%@",[standardCardImages description]);
                             return image;
                         }
                         else

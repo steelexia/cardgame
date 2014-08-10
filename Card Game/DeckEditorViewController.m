@@ -935,9 +935,7 @@ DeckModel * allCards;
 
 -(void)backButtonPressed
 {
-    //TODO all these back buttons should use a variable and not use a hard switch
-    MainScreenViewController *viewController = [[MainScreenViewController alloc] init];
-    [self presentViewController:viewController animated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)deleteButtonPressed

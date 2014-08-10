@@ -21,6 +21,6 @@
 @property (strong)UILabel*chosenDeckTagsLabel;
 @property (strong)UIButton*chooseDeckButton,*backButton;
 @property (strong)DeckModel*currentDeck;
-@property(strong)UIViewController*previousScreen, *nextScreen;
+@property(strong)UIViewController *nextScreen;
 
 @end

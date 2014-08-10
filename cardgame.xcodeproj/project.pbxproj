@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9032E127199446BB002A6725 /* upload_from_camera_button_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 9032E126199446BB002A6725 /* upload_from_camera_button_gray.png */; };
+		9032E12D19953EAE002A6725 /* CardVote.m in Sources */ = {isa = PBXBuildFile; fileRef = 9032E12C19953EAE002A6725 /* CardVote.m */; };
+		9032E13019959483002A6725 /* CardPointsUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 9032E12F19959483002A6725 /* CardPointsUtility.m */; };
 		90456EC9198AFD6B00B807DC /* CardsCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 90456EC8198AFD6B00B807DC /* CardsCollectionCell.m */; };
 		90456ECC198D4DB500B807DC /* DeckCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 90456ECB198D4DB500B807DC /* DeckCell.m */; };
 		90456ECF198D588D00B807DC /* DeckCardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 90456ECE198D588D00B807DC /* DeckCardCell.m */; };
@@ -167,6 +170,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9032E126199446BB002A6725 /* upload_from_camera_button_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = upload_from_camera_button_gray.png; path = "Card Game/upload_from_camera_button_gray.png"; sourceTree = "<group>"; };
+		9032E12B19953EAE002A6725 /* CardVote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardVote.h; sourceTree = "<group>"; };
+		9032E12C19953EAE002A6725 /* CardVote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardVote.m; sourceTree = "<group>"; };
+		9032E12E19959483002A6725 /* CardPointsUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardPointsUtility.h; sourceTree = "<group>"; };
+		9032E12F19959483002A6725 /* CardPointsUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardPointsUtility.m; sourceTree = "<group>"; };
 		90456EC7198AFD6B00B807DC /* CardsCollectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardsCollectionCell.h; sourceTree = "<group>"; };
 		90456EC8198AFD6B00B807DC /* CardsCollectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardsCollectionCell.m; sourceTree = "<group>"; };
 		90456ECA198D4DB500B807DC /* DeckCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeckCell.h; sourceTree = "<group>"; };
@@ -665,6 +673,7 @@
 		907D9BD919226B4C0037C0CF /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				9032E126199446BB002A6725 /* upload_from_camera_button_gray.png */,
 				907020511992A1CB00FDE444 /* upload_from_camera_button.png */,
 				907020521992A1CB00FDE444 /* upload_from_file_button.png */,
 				9070204F1992937E00FDE444 /* points_icon_card_creator.png */,
@@ -827,6 +836,8 @@
 				90DA43D51969F6F200E44AED /* AbilityTableViewCell.m */,
 				90DA43D7196A222800E44AED /* CustomScrollView.h */,
 				90DA43D8196A222800E44AED /* CustomScrollView.m */,
+				9032E12E19959483002A6725 /* CardPointsUtility.h */,
+				9032E12F19959483002A6725 /* CardPointsUtility.m */,
 			);
 			name = "Card Editor Screen";
 			sourceTree = "<group>";
@@ -959,6 +970,8 @@
 				907D9BE9192515E70037C0CF /* Ability.m */,
 				907D9C1C193F87BE0037C0CF /* AbilityWrapper.h */,
 				907D9C1D193F87BE0037C0CF /* AbilityWrapper.m */,
+				9032E12B19953EAE002A6725 /* CardVote.h */,
+				9032E12C19953EAE002A6725 /* CardVote.m */,
 			);
 			name = Cards;
 			sourceTree = "<group>";
@@ -1038,6 +1051,7 @@
 				90AB1500196F2FF20008FCDD /* encode-sans.compressed-bold.ttf in Resources */,
 				90AB15041979FFA40008FCDD /* battle_background_0_overlay.png in Resources */,
 				90DA43C71969D21500E44AED /* remove_deck_button.png in Resources */,
+				9032E127199446BB002A6725 /* upload_from_camera_button_gray.png in Resources */,
 				907D9C2019509E850037C0CF /* battle_background_0.png in Resources */,
 				90DA435B195E0BD900E44AED /* add_deck_button.png in Resources */,
 				90AB14FF196F2FF20008FCDD /* encode-sans.compressed-black.ttf in Resources */,
@@ -1137,6 +1151,7 @@
 				9069AAD819528A7B006D1D98 /* StrokedLabel.m in Sources */,
 				90605408191AA9D3000B3B93 /* PlayerModel.m in Sources */,
 				90DA43351959D75700E44AED /* CustomCollectionView.m in Sources */,
+				9032E12D19953EAE002A6725 /* CardVote.m in Sources */,
 				90DA434A195B271900E44AED /* CustomTableView.m in Sources */,
 				90456ECC198D4DB500B807DC /* DeckCell.m in Sources */,
 				90456EDC198DBECC00B807DC /* GameStore.m in Sources */,
@@ -1154,6 +1169,7 @@
 				90F352D21915961C00601130 /* CardView.m in Sources */,
 				90DA436B195F6E6000E44AED /* CGPointUtilities.m in Sources */,
 				907D9C1E193F87BE0037C0CF /* AbilityWrapper.m in Sources */,
+				9032E13019959483002A6725 /* CardPointsUtility.m in Sources */,
 				90DA4344195B256100E44AED /* DeckTableView.m in Sources */,
 				90AB14FA196EF4360008FCDD /* AIPlayer+Utility.m in Sources */,
 				90F352A3191595C200601130 /* main.m in Sources */,
