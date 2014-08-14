@@ -73,10 +73,6 @@ CardModel* currentCard;
 /** Used to reduce amount of calculation needed for viewing hand cards via dragging. This flag is set when a touch enters/leaves the zone so it only needs to be updated once */
 BOOL leftHandViewZone = NO;
 
-+(void) loadResources
-{
-    [CardView loadResources];
-}
 
 - (void)viewDidLoad
 {
@@ -84,8 +80,6 @@ BOOL leftHandViewZone = NO;
     
     SCREEN_WIDTH = self.view.bounds.size.width;
     SCREEN_HEIGHT = self.view.bounds.size.height;
-    
-    [GameViewController loadResources];
     
     gameControlState = gameControlStateNone;
     

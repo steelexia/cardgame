@@ -300,6 +300,7 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     tagsField.returnKeyType = UIReturnKeyDone;
     [tagsField setPlaceholder:@"Enter tags separated by space"];
     [tagsField setAutocorrectionType:UITextAutocorrectionTypeNo];
+    [tagsField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
     [tagsField addTarget:self action:@selector(tagsFieldBegan) forControlEvents:UIControlEventEditingDidBegin];
     [tagsField addTarget:self action:@selector(tagsFieldFinished) forControlEvents:UIControlEventEditingDidEnd];
     [tagsField setDelegate:self];
@@ -609,6 +610,11 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     uploadFromCameraButton.center = CGPointMake(SCREEN_WIDTH*2/3, SCREEN_HEIGHT/2+50);
     [imageUploadView addSubview:uploadFromCameraButton];
     [uploadFromCameraButton addTarget:self action:@selector(uploadFromCameraButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    uploadBackButton = [[UIButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
+    [uploadBackButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
+    [uploadBackButton addTarget:self action:@selector(uploadBackButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    [imageUploadView addSubview:uploadBackButton];
     
     if (![UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera])
         [uploadFromCameraButton setEnabled:NO];
@@ -1934,6 +1940,17 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     [imagePicker.imagePickerController dismissViewControllerAnimated:YES completion:nil];
 }
 
+-(void)uploadBackButtonPressed
+{
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         imageUploadView.alpha = 0;
+                     }
+                     completion:^(BOOL completed){
+                         [imageUploadView removeFromSuperview];
+                     }];
+}
+
 -(void)rowSelected:(AbilityTableView*)tableView indexPath:(NSIndexPath *)indexPath
 {
     if (tableView == abilityNewTableView)
@@ -2086,8 +2103,18 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
 -(void)saveCardConfirmButtonPressed
 {
     self.currentCardModel.name = nameTextField.text; //TODO not exactly the best place
-    self.currentCardModel.tags = [NSMutableArray arrayWithArray:[tagsField.text componentsSeparatedByString:@" "]];
     
+    NSString *lowerTags = [tagsField.text lowercaseString];
+    NSMutableArray*lowerTagsArray = [NSMutableArray arrayWithArray:[lowerTags componentsSeparatedByString:@" "]];
+    NSMutableArray*noDupTags = [NSMutableArray array];
+    
+    for (NSString*string in lowerTagsArray)
+    {
+        if (![noDupTags containsObject:string])
+            [noDupTags addObject:string];
+    }
+    
+    self.currentCardModel.tags = noDupTags;
     [userAllCards addObject:self.currentCardModel]; //TODO might not be needed once using parse
     [self publishCurrentCard];
 }

@@ -35,8 +35,6 @@
 
 -(void)rowSelected:(AbilityTableView*)tableView indexPath:(NSIndexPath *)indexPath;
 
-
-
 @end
 
 extern const double CARD_EDITOR_SCALE;

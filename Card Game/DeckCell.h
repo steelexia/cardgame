@@ -12,5 +12,6 @@
 @interface DeckCell : UITableViewCell
 
 @property (strong) StrokedLabel * nameLabel;
+@property (strong) StrokedLabel* invalidLabel;
 
 @end

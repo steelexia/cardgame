@@ -29,6 +29,12 @@
 /** For parse */
 @property (strong) NSString*objectID;
 
+/** For player decks, if this is set to NO, it cannot be used in battle. */
+@property BOOL isInvalid;
+
+/** If is not valid, this will contain array of reasons why it's invalid */
+@property (strong) NSMutableArray *invalidReasons;
+
 /** Adds a CardModel into cards. Returns NO if contains duplicate, not a CardModel, or deck is full */
 -(BOOL) addCard: (CardModel*) cardModel;
 
@@ -43,6 +49,13 @@
 
 /** Reorders all cards in the deck. Used during games */
 -(void) shuffleDeck;
+
++(void) validateDeck:(DeckModel*)deck;
+
+/** Assumes deck is already invalid! */
++(BOOL) isDeckInvalidOnlyTooFewCards:(DeckModel*)deck;
+
++(void) validateDeckIgnoreTooFewCards:(DeckModel*)deck;
 
 @end
 

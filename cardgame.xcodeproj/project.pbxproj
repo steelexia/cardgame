@@ -17,6 +17,9 @@
 		9032E13A19991146002A6725 /* filter_toggle_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 9032E13919991146002A6725 /* filter_toggle_button.png */; };
 		9032E13D199918F8002A6725 /* category_tab_enabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 9032E13B199918F8002A6725 /* category_tab_enabled.png */; };
 		9032E13E199918F8002A6725 /* category_tab_disabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 9032E13C199918F8002A6725 /* category_tab_disabled.png */; };
+		9032E140199936B2002A6725 /* card_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9032E13F199936B2002A6725 /* card_icon.png */; };
+		9032E142199946F9002A6725 /* add_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9032E141199946F9002A6725 /* add_icon.png */; };
+		9032E14419994DD9002A6725 /* sell_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 9032E14319994DD9002A6725 /* sell_button.png */; };
 		90456EC9198AFD6B00B807DC /* CardsCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 90456EC8198AFD6B00B807DC /* CardsCollectionCell.m */; };
 		90456ECC198D4DB500B807DC /* DeckCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 90456ECB198D4DB500B807DC /* DeckCell.m */; };
 		90456ECF198D588D00B807DC /* DeckCardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 90456ECE198D588D00B807DC /* DeckCardCell.m */; };
@@ -112,6 +115,14 @@
 		90AB1512197AEC310008FCDD /* card_ability_icon_remove_ability.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB1510197AEC310008FCDD /* card_ability_icon_remove_ability.png */; };
 		90AB1514197AF4590008FCDD /* card_ability_icon_cast_on_death.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB1513197AF4590008FCDD /* card_ability_icon_cast_on_death.png */; };
 		90AB1516198355F00008FCDD /* points_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB1515198355F00008FCDD /* points_icon.png */; };
+		90C52890199BE53E00750C54 /* search_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 90C5288F199BE53E00750C54 /* search_button.png */; };
+		90C52892199BE87500750C54 /* search_toggle_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 90C52891199BE87500750C54 /* search_toggle_button.png */; };
+		90C52894199C00D000750C54 /* card_icon_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 90C52893199C00D000750C54 /* card_icon_gray.png */; };
+		90C52897199C2A1300750C54 /* search_button_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 90C52895199C2A1300750C54 /* search_button_small.png */; };
+		90C52898199C2A1300750C54 /* filter_button_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 90C52896199C2A1300750C54 /* filter_button_small.png */; };
+		90C5289A199C304D00750C54 /* popular_tags_button_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 90C52899199C304D00750C54 /* popular_tags_button_small.png */; };
+		90C5289D199C369100750C54 /* filter_button_small_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 90C5289B199C369100750C54 /* filter_button_small_selected.png */; };
+		90C5289E199C369100750C54 /* search_button_small_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 90C5289C199C369100750C54 /* search_button_small_selected.png */; };
 		90DA43321959CDF900E44AED /* CardsCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DA43311959CDF900E44AED /* CardsCollectionView.m */; };
 		90DA43351959D75700E44AED /* CustomCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DA43341959D75700E44AED /* CustomCollectionView.m */; };
 		90DA433C195A451000E44AED /* arrow_left_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 90DA433A195A451000E44AED /* arrow_left_button.png */; };
@@ -173,6 +184,11 @@
 		90F352D81915C8DB00601130 /* GameModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352D71915C8DB00601130 /* GameModel.m */; };
 		90F352DB1916B48A00601130 /* MonsterCardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352DA1916B48A00601130 /* MonsterCardModel.m */; };
 		90F352DE1916BB9300601130 /* SpellCardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352DD1916BB9300601130 /* SpellCardModel.m */; };
+		90F7DAF91999AE5100D4FD97 /* invalid_deck_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F7DAF81999AE5100D4FD97 /* invalid_deck_button.png */; };
+		90F7DAFB199AC1ED00D4FD97 /* card_image_empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F7DAFA199AC1ED00D4FD97 /* card_image_empty.png */; };
+		90F7DAFE199ACAC500D4FD97 /* SinglePlayerMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F7DAFD199ACAC500D4FD97 /* SinglePlayerMenuViewController.m */; };
+		90F7DB01199ACF0C00D4FD97 /* CampaignMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F7DB00199ACF0C00D4FD97 /* CampaignMenuViewController.m */; };
+		90F7DB04199AD69C00D4FD97 /* Campaign.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F7DB03199AD69C00D4FD97 /* Campaign.m */; };
 		FA4025971956331300FCCBAB /* DeckEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4025961956331300FCCBAB /* DeckEditorViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -189,6 +205,9 @@
 		9032E13919991146002A6725 /* filter_toggle_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = filter_toggle_button.png; path = "Card Game/filter_toggle_button.png"; sourceTree = "<group>"; };
 		9032E13B199918F8002A6725 /* category_tab_enabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = category_tab_enabled.png; path = "Card Game/category_tab_enabled.png"; sourceTree = "<group>"; };
 		9032E13C199918F8002A6725 /* category_tab_disabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = category_tab_disabled.png; path = "Card Game/category_tab_disabled.png"; sourceTree = "<group>"; };
+		9032E13F199936B2002A6725 /* card_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_icon.png; path = "Card Game/card_icon.png"; sourceTree = "<group>"; };
+		9032E141199946F9002A6725 /* add_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = add_icon.png; path = "Card Game/add_icon.png"; sourceTree = "<group>"; };
+		9032E14319994DD9002A6725 /* sell_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sell_button.png; path = "Card Game/sell_button.png"; sourceTree = "<group>"; };
 		90456EC7198AFD6B00B807DC /* CardsCollectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardsCollectionCell.h; sourceTree = "<group>"; };
 		90456EC8198AFD6B00B807DC /* CardsCollectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardsCollectionCell.m; sourceTree = "<group>"; };
 		90456ECA198D4DB500B807DC /* DeckCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeckCell.h; sourceTree = "<group>"; };
@@ -383,6 +402,14 @@
 		90AB1510197AEC310008FCDD /* card_ability_icon_remove_ability.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_ability_icon_remove_ability.png; path = "Card Game/card_ability_icon_remove_ability.png"; sourceTree = "<group>"; };
 		90AB1513197AF4590008FCDD /* card_ability_icon_cast_on_death.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_ability_icon_cast_on_death.png; path = "Card Game/card_ability_icon_cast_on_death.png"; sourceTree = "<group>"; };
 		90AB1515198355F00008FCDD /* points_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = points_icon.png; path = "Card Game/points_icon.png"; sourceTree = "<group>"; };
+		90C5288F199BE53E00750C54 /* search_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = search_button.png; path = "Card Game/search_button.png"; sourceTree = "<group>"; };
+		90C52891199BE87500750C54 /* search_toggle_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = search_toggle_button.png; path = "Card Game/search_toggle_button.png"; sourceTree = "<group>"; };
+		90C52893199C00D000750C54 /* card_icon_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_icon_gray.png; path = "Card Game/card_icon_gray.png"; sourceTree = "<group>"; };
+		90C52895199C2A1300750C54 /* search_button_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = search_button_small.png; path = "Card Game/search_button_small.png"; sourceTree = "<group>"; };
+		90C52896199C2A1300750C54 /* filter_button_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = filter_button_small.png; path = "Card Game/filter_button_small.png"; sourceTree = "<group>"; };
+		90C52899199C304D00750C54 /* popular_tags_button_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = popular_tags_button_small.png; path = "Card Game/popular_tags_button_small.png"; sourceTree = "<group>"; };
+		90C5289B199C369100750C54 /* filter_button_small_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = filter_button_small_selected.png; path = "Card Game/filter_button_small_selected.png"; sourceTree = "<group>"; };
+		90C5289C199C369100750C54 /* search_button_small_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = search_button_small_selected.png; path = "Card Game/search_button_small_selected.png"; sourceTree = "<group>"; };
 		90DA43301959CDF900E44AED /* CardsCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardsCollectionView.h; sourceTree = "<group>"; };
 		90DA43311959CDF900E44AED /* CardsCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardsCollectionView.m; sourceTree = "<group>"; };
 		90DA43331959D75700E44AED /* CustomCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCollectionView.h; sourceTree = "<group>"; };
@@ -477,6 +504,14 @@
 		90F352DA1916B48A00601130 /* MonsterCardModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonsterCardModel.m; sourceTree = "<group>"; };
 		90F352DC1916BB9300601130 /* SpellCardModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpellCardModel.h; sourceTree = "<group>"; };
 		90F352DD1916BB9300601130 /* SpellCardModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpellCardModel.m; sourceTree = "<group>"; };
+		90F7DAF81999AE5100D4FD97 /* invalid_deck_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = invalid_deck_button.png; path = "Card Game/invalid_deck_button.png"; sourceTree = "<group>"; };
+		90F7DAFA199AC1ED00D4FD97 /* card_image_empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_image_empty.png; path = "Card Game/card_image_empty.png"; sourceTree = "<group>"; };
+		90F7DAFC199ACAC500D4FD97 /* SinglePlayerMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SinglePlayerMenuViewController.h; sourceTree = "<group>"; };
+		90F7DAFD199ACAC500D4FD97 /* SinglePlayerMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SinglePlayerMenuViewController.m; sourceTree = "<group>"; };
+		90F7DAFF199ACF0C00D4FD97 /* CampaignMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CampaignMenuViewController.h; sourceTree = "<group>"; };
+		90F7DB00199ACF0C00D4FD97 /* CampaignMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CampaignMenuViewController.m; sourceTree = "<group>"; };
+		90F7DB02199AD69C00D4FD97 /* Campaign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Campaign.h; sourceTree = "<group>"; };
+		90F7DB03199AD69C00D4FD97 /* Campaign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Campaign.m; sourceTree = "<group>"; };
 		FA4025951956331300FCCBAB /* DeckEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeckEditorViewController.h; sourceTree = "<group>"; };
 		FA4025961956331300FCCBAB /* DeckEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeckEditorViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -687,6 +722,18 @@
 		907D9BD919226B4C0037C0CF /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				90C5289B199C369100750C54 /* filter_button_small_selected.png */,
+				90C5289C199C369100750C54 /* search_button_small_selected.png */,
+				90C52899199C304D00750C54 /* popular_tags_button_small.png */,
+				90C52895199C2A1300750C54 /* search_button_small.png */,
+				90C52896199C2A1300750C54 /* filter_button_small.png */,
+				90C52893199C00D000750C54 /* card_icon_gray.png */,
+				90C52891199BE87500750C54 /* search_toggle_button.png */,
+				90C5288F199BE53E00750C54 /* search_button.png */,
+				90F7DAF81999AE5100D4FD97 /* invalid_deck_button.png */,
+				9032E14319994DD9002A6725 /* sell_button.png */,
+				9032E141199946F9002A6725 /* add_icon.png */,
+				9032E13F199936B2002A6725 /* card_icon.png */,
 				9032E13B199918F8002A6725 /* category_tab_enabled.png */,
 				9032E13C199918F8002A6725 /* category_tab_disabled.png */,
 				9032E13919991146002A6725 /* filter_toggle_button.png */,
@@ -752,6 +799,7 @@
 			children = (
 				90AB14FB196F2FB20008FCDD /* Abilities */,
 				9069AAD91955019A006D1D98 /* Rarity */,
+				90F7DAFA199AC1ED00D4FD97 /* card_image_empty.png */,
 				90AB14F4196CA7F90008FCDD /* card_background_front_monster_overlay.png */,
 				907D9BF6192E979C0037C0CF /* hero_glow_select.png */,
 				907D9BFE192FD3910037C0CF /* hero_glow_target.png */,
@@ -821,6 +869,12 @@
 				90AB14F9196EF4360008FCDD /* AIPlayer+Utility.m */,
 				907D9C00193045BA0037C0CF /* SinglePlayerCards.h */,
 				907D9C01193045BA0037C0CF /* SinglePlayerCards.m */,
+				90F7DAFC199ACAC500D4FD97 /* SinglePlayerMenuViewController.h */,
+				90F7DAFD199ACAC500D4FD97 /* SinglePlayerMenuViewController.m */,
+				90F7DAFF199ACF0C00D4FD97 /* CampaignMenuViewController.h */,
+				90F7DB00199ACF0C00D4FD97 /* CampaignMenuViewController.m */,
+				90F7DB02199AD69C00D4FD97 /* Campaign.h */,
+				90F7DB03199AD69C00D4FD97 /* Campaign.m */,
 			);
 			name = "Single Player";
 			sourceTree = "<group>";
@@ -1078,14 +1132,18 @@
 				907D9C2019509E850037C0CF /* battle_background_0.png in Resources */,
 				90DA435B195E0BD900E44AED /* add_deck_button.png in Resources */,
 				90AB14FF196F2FF20008FCDD /* encode-sans.compressed-black.ttf in Resources */,
+				90C5289D199C369100750C54 /* filter_button_small_selected.png in Resources */,
 				90AB14F3196CA7E60008FCDD /* card_background_front_overlay_common.png in Resources */,
 				90456EE5198F1B9100B807DC /* edit_button_gray.png in Resources */,
 				907020731992AC8100FDE444 /* PLCameraSheetButtonPressed.png in Resources */,
+				90C52897199C2A1300750C54 /* search_button_small.png in Resources */,
 				90AB150D197AE3CF0008FCDD /* card_ability_icon_cast_on_damaged.png in Resources */,
 				90AB14F5196CA7F90008FCDD /* card_background_front_monster_overlay.png in Resources */,
 				907020741992AC8100FDE444 /* PLCameraSheetButtonPressed@2x.png in Resources */,
 				90DA4372195F96DB00E44AED /* increment_button.png in Resources */,
+				90C5289E199C369100750C54 /* search_button_small_selected.png in Resources */,
 				9069AAE3195501AB006D1D98 /* card_background_front_fire_common.png in Resources */,
+				9032E142199946F9002A6725 /* add_icon.png in Resources */,
 				90AB15021979FB5E0008FCDD /* resource_icon.png in Resources */,
 				9069AAE7195501AB006D1D98 /* card_background_front_neutral_common.png in Resources */,
 				9060540D191C032B000B3B93 /* end_turn_button_up.png in Resources */,
@@ -1094,11 +1152,14 @@
 				9070204619914B1C00FDE444 /* like_icon.png in Resources */,
 				9069AACF1951E737006D1D98 /* Main_iPad.storyboard in Resources */,
 				9069AAE5195501AB006D1D98 /* card_background_front_light_common.png in Resources */,
+				90C52894199C00D000750C54 /* card_icon_gray.png in Resources */,
 				9069AACE1951E734006D1D98 /* Main_iPhone.storyboard in Resources */,
 				90AB150E197AE3CF0008FCDD /* card_ability_icon_pierce.png in Resources */,
 				90DA43C11969D21500E44AED /* spell_button.png in Resources */,
 				9032E13619986006002A6725 /* dummy_button.png in Resources */,
 				9032E13A19991146002A6725 /* filter_toggle_button.png in Resources */,
+				9032E140199936B2002A6725 /* card_icon.png in Resources */,
+				90C52890199BE53E00750C54 /* search_button.png in Resources */,
 				9070204D19915FD500FDE444 /* card_background_front_overlay_rare.png in Resources */,
 				90DA434E195C941400E44AED /* add_button_gray.png in Resources */,
 				90DA43C21969D21500E44AED /* cancel_card_button.png in Resources */,
@@ -1108,6 +1169,7 @@
 				907020721992AC8100FDE444 /* PLCameraSheetButton@2x.png in Resources */,
 				90DA4355195E022B00E44AED /* yes_button.png in Resources */,
 				9070204C19915FD500FDE444 /* card_background_front_overlay_exceptional.png in Resources */,
+				90C52898199C2A1300750C54 /* filter_button_small.png in Resources */,
 				90AB1509197AD6DA0008FCDD /* card_ability_icon_cast_on_hit.png in Resources */,
 				907020761992AC8100FDE444 /* PLCameraSheetDoneButton@2x.png in Resources */,
 				90DA43BE1969D21500E44AED /* monster_button_gray.png in Resources */,
@@ -1127,6 +1189,7 @@
 				9069AAE6195501AB006D1D98 /* card_background_front_lightning_common.png in Resources */,
 				907D9BDC192270DE0037C0CF /* field_edge.png in Resources */,
 				90DA433D195A451000E44AED /* arrow_right_button.png in Resources */,
+				90C5289A199C304D00750C54 /* popular_tags_button_small.png in Resources */,
 				90DA433C195A451000E44AED /* arrow_left_button.png in Resources */,
 				907020751992AC8100FDE444 /* PLCameraSheetDoneButton.png in Resources */,
 				90DA43BB1969D21500E44AED /* battle_button.png in Resources */,
@@ -1134,15 +1197,19 @@
 				907D9BF5192E91290037C0CF /* card_glow_select.png in Resources */,
 				9069AAE4195501AB006D1D98 /* card_background_front_ice_common.png in Resources */,
 				90DA43C41969D21500E44AED /* save_card_button.png in Resources */,
+				90F7DAF91999AE5100D4FD97 /* invalid_deck_button.png in Resources */,
 				907D9BE11922AE0D0037C0CF /* field_highlight.png in Resources */,
 				90DA4341195A4A6E00E44AED /* remove_button.png in Resources */,
 				90AB14F7196CB7720008FCDD /* no_target_button.png in Resources */,
 				90DA43BD1969D21500E44AED /* randomize_card_button.png in Resources */,
+				9032E14419994DD9002A6725 /* sell_button.png in Resources */,
 				90DA43C61969D21500E44AED /* remove_deck_button_gray.png in Resources */,
 				9069AAD519520003006D1D98 /* card_background_front_overlay.png in Resources */,
 				90DA437619608F4D00E44AED /* decrement_button_gray.png in Resources */,
 				9032E13E199918F8002A6725 /* category_tab_disabled.png in Resources */,
+				90C52892199BE87500750C54 /* search_toggle_button.png in Resources */,
 				90F352A1191595C200601130 /* InfoPlist.strings in Resources */,
+				90F7DAFB199AC1ED00D4FD97 /* card_image_empty.png in Resources */,
 				907D9C071932538E0037C0CF /* end_turn_button_disabled.png in Resources */,
 				907020441991437D00FDE444 /* gold_icon.png in Resources */,
 				9032E13819986121002A6725 /* filter_button.png in Resources */,
@@ -1178,10 +1245,13 @@
 				9070206D1992AC8100FDE444 /* GKImageCropView.m in Sources */,
 				9069AAD819528A7B006D1D98 /* StrokedLabel.m in Sources */,
 				90605408191AA9D3000B3B93 /* PlayerModel.m in Sources */,
+				90F7DAFE199ACAC500D4FD97 /* SinglePlayerMenuViewController.m in Sources */,
 				90DA43351959D75700E44AED /* CustomCollectionView.m in Sources */,
+				90F7DB04199AD69C00D4FD97 /* Campaign.m in Sources */,
 				9032E12D19953EAE002A6725 /* CardVote.m in Sources */,
 				90DA434A195B271900E44AED /* CustomTableView.m in Sources */,
 				90456ECC198D4DB500B807DC /* DeckCell.m in Sources */,
+				90F7DB01199ACF0C00D4FD97 /* CampaignMenuViewController.m in Sources */,
 				90456EDC198DBECC00B807DC /* GameStore.m in Sources */,
 				90DA43D61969F6F200E44AED /* AbilityTableViewCell.m in Sources */,
 				90DA43CA1969DBDB00E44AED /* DeckChooserViewController.m in Sources */,

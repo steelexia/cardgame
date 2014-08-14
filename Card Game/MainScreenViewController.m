@@ -11,12 +11,14 @@
 #import "CardEditorViewController.h"
 #import "StoreViewController.h"
 #import "UIConstants.h"
-
+#import "SinglePlayerMenuViewController.h"
 @interface MainScreenViewController ()
 
 @end
 
 @implementation MainScreenViewController
+
+UILabel *loadingLabel;
 
 - (void)viewDidLoad
 {
@@ -32,13 +34,13 @@
     
     [self.view addSubview:tempTitle];
     
-    UIButton *gameButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    gameButton.frame = CGRectMake(0, 0, 200, 40);
-    gameButton.center = CGPointMake(self.view.bounds.size.width/2, self.view.bounds.size.height/2 - 80);
-    [gameButton setTitle:@"Play Against AI" forState:UIControlStateNormal];
-    [gameButton addTarget:self action:@selector(gameButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    UIButton *singlePlayerButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    singlePlayerButton.frame = CGRectMake(0, 0, 200, 40);
+    singlePlayerButton.center = CGPointMake(self.view.bounds.size.width/2, self.view.bounds.size.height/2 - 80);
+    [singlePlayerButton setTitle:@"Single Player" forState:UIControlStateNormal];
+    [singlePlayerButton addTarget:self action:@selector(singlePlayerButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    [self.view addSubview:gameButton];
+    [self.view addSubview:singlePlayerButton];
     
     UIButton *deckButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     deckButton.frame = CGRectMake(0, 0, 200, 40);
@@ -47,14 +49,6 @@
     [deckButton addTarget:self action:@selector(deckButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:deckButton];
-    
-    UIButton *cardButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    cardButton.frame = CGRectMake(0, 0, 200, 40);
-    cardButton.center = CGPointMake(self.view.bounds.size.width/2, self.view.bounds.size.height/2 + 80);
-    [cardButton setTitle:@"Card Editor" forState:UIControlStateNormal];
-    [cardButton addTarget:self action:@selector(cardButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.view addSubview:cardButton];
     
     UIButton *storeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     storeButton.frame = CGRectMake(0, 0, 200, 40);
@@ -72,7 +66,7 @@
         [_gameLoadingView setFrame:self.view.bounds];
         [_gameLoadingView setBackgroundColor:[UIColor colorWithHue:0 saturation:0 brightness:1 alpha:0.8]];
         [_gameLoadingView setUserInteractionEnabled:YES];
-        UILabel *loadingLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
+        loadingLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
         loadingLabel.center = CGPointMake(self.view.bounds.size.width/2, self.view.bounds.size.height/2 + 60);
         loadingLabel.textAlignment = NSTextAlignmentCenter;
         loadingLabel.textColor = COLOUR_INTERFACE_BLUE;
@@ -89,7 +83,12 @@
 //checks for userInfoLoaded flag to be set to YES. Once it does, remove the loading screen.
 -(void)checkForLoadFinish
 {
-    if (userInfoLoaded)
+    if (userInitError)
+    {
+        loadingLabel.text = @"Error loading game.";
+        [_gameLoadingView setColor:[UIColor clearColor]];
+    }
+    else if (userInfoLoaded)
     {
         [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
@@ -109,23 +108,15 @@
     }
 }
 
--(void)gameButtonPressed
+-(void)singlePlayerButtonPressed
 {
-    GameViewController *gvc = [[GameViewController alloc] init];
-    DeckChooserViewController*dcvc = [[DeckChooserViewController alloc]init];
-    dcvc.nextScreen = gvc;
-    [self presentViewController:dcvc animated:YES completion:nil];
+    SinglePlayerMenuViewController *viewController = [[SinglePlayerMenuViewController alloc] init];
+    [self presentViewController:viewController animated:YES completion:nil];
 }
 
 -(void)deckButtonPressed
 {
     DeckEditorViewController *viewController = [[DeckEditorViewController alloc] init];
-    [self presentViewController:viewController animated:YES completion:nil];
-}
-
--(void)cardButtonPressed
-{
-    CardEditorViewController *viewController = [[CardEditorViewController alloc] initWithMode:cardEditorModeCreation WithCard:nil];
     [self presentViewController:viewController animated:YES completion:nil];
 }
 

@@ -14,13 +14,13 @@
 +(void)setupUser;
 +(void)loadAllCards;
 +(void)loadAllDecks;
-+(void)saveDeck:(DeckModel*)deck;
-+(void)deleteDeck:(DeckModel*)deck;
++(BOOL)saveDeck:(DeckModel*)deck;
++(BOOL)deleteDeck:(DeckModel*)deck;
 /** Returns success */
 +(BOOL)publishCard:(CardModel*)card withImage:(UIImage*)image;
-+(void)saveCard:(CardModel*)card;
++(BOOL)saveCard:(CardModel*)card;
 /** Refreshes the parse user by querying from database */
-+(void)updateUser;
++(void)updateUser:(void (^)())onFinishBlock;
 /** Returns true if userAllCards contains a card with same ID */
 +(BOOL)ownsCardWithID:(int)idNumber;
 
@@ -30,6 +30,7 @@
 +(BOOL)setEditedCard:(CardModel*)card;
 /** Uses third bit */
 +(BOOL)setOwnedCard:(CardModel*)card;
++(BOOL)setNotOwnedCard:(CardModel*)card;
 
 +(BOOL)getLikedCard:(CardModel*)card;
 /** Uses second bit */
@@ -39,6 +40,11 @@
 
 +(BOOL)getLikedCardID:(int)idNumber;
 +(BOOL)getOwnedCardID:(int)idNumber;
+
+/** Note that this only removes from userAllCards and userAllDecks, rather than Parse objects */
++(void)removeOwnedCard:(int)idNumber;
+
++(NSArray*)getAllOwnedCardID;
 
 @end
 
@@ -52,6 +58,7 @@ int userDeckLimit;
 int userGold;
 PFObject *userPF;
 BOOL userInfoLoaded;
+BOOL userInitError;
 
 
 /** The number of decks allowed per player at the very beginning of the game. Can gain more via quests etc. */

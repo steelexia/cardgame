@@ -47,7 +47,7 @@ int PLAYER_HERO_WIDTH = 50, PLAYER_HERO_HEIGHT = 50;
 
 UIImage *backgroundMonsterOverlayImage, *selectHighlightImage, *targetHighlightImage, *heroSelectHighlightImage, *heroTargetHighlightImage;
 
-UIImage*placeHolderImage, *heroPlaceHolderImage;
+UIImage*placeHolderImage, *heroPlaceHolderImage, *loadingImage;
 
 /** 2D array of images. First array contains elements, second array contains rarity */
 NSArray*backgroundImages, *backgroundOverlayImages, *abilityIconImages;
@@ -150,6 +150,7 @@ NSMutableDictionary *standardCardImages;
     heroTargetHighlightImage = [UIImage imageNamed:@"hero_glow_target"];
     
     placeHolderImage = [UIImage imageNamed:@"card_image_placeholder"];
+    loadingImage =[UIImage imageNamed:@"card_image_empty"];
     heroPlaceHolderImage = [UIImage imageNamed:@"hero_default"];
     
     abilityTextParagrahStyle = [[NSMutableParagraphStyle alloc] init];
@@ -226,7 +227,9 @@ NSMutableDictionary *standardCardImages;
             if (cardModel.type == cardTypePlayer)
                 self.cardImage = [[UIImageView alloc] initWithImage:heroPlaceHolderImage];
             else
-                self.cardImage = [[UIImageView alloc]initWithImage:placeHolderImage];
+            {
+                self.cardImage = [[UIImageView alloc]initWithImage:loadingImage];
+            }
             
             self.cardImage.frame = CGRectMake(0, 0, CARD_FULL_WIDTH - 16, (CARD_FULL_WIDTH-16) * CARD_IMAGE_RATIO);
             self.cardImage.center = CGPointMake(CARD_FULL_WIDTH/2, 80);
@@ -235,6 +238,9 @@ NSMutableDictionary *standardCardImages;
             
             _reloadAttempts = 0;
             
+            _activityView = [[UIActivityIndicatorView alloc] initWithFrame:self.cardImage.bounds];
+            [self.cardImage addSubview:_activityView];
+            [_activityView startAnimating];
             [self performBlockInBackground:^(void){
                 [self loadImage];
             }];
@@ -900,11 +906,16 @@ NSMutableDictionary *standardCardImages;
     BOOL errorLoading = NO;
     UIImage*image = [CardView getImageForCard:self.cardModel errorLoading:&errorLoading];
     
-    dispatch_sync(dispatch_get_main_queue(), ^(void) {
-        [self.cardImage setImage:image];
-    });
-    
-    if (errorLoading) //TODO!!!!!! assuming that when the cardView is destroyed, this block will also be
+    if (!errorLoading)
+    {
+        dispatch_sync(dispatch_get_main_queue(), ^(void) {
+            [self.cardImage setImage:image];
+            [_activityView stopAnimating];
+            [_activityView removeFromSuperview];
+            _activityView = nil;
+        });
+    }
+    else //TODO!!!!!! assuming that when the cardView is destroyed, this block will also be
     {
         if (_reloadAttempts++ < 15) //stop retrying after some time
         {
@@ -914,7 +925,15 @@ NSMutableDictionary *standardCardImages;
             } afterDelay:10];
         }
         else
-            NSLog(@"MAX RETRY REACHED");
+        {
+            dispatch_sync(dispatch_get_main_queue(), ^(void) {
+                [_activityView stopAnimating];
+                [_activityView removeFromSuperview];
+                _activityView = nil;
+                [self.cardImage setImage:placeHolderImage];
+                NSLog(@"MAX RETRY REACHED");
+            });
+        }
     }
 }
 
@@ -969,6 +988,7 @@ NSMutableDictionary *standardCardImages;
                         UIImage *image = [UIImage imageWithData:data];
                         if (image != nil)
                         {
+                            //TODO EXC_BAD_ACCESS on this line (rather rare)
                             [standardCardImages setObject:image  forKey:@(card.idNumber)];
                             return image;
                         }

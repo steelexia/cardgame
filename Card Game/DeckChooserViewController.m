@@ -157,7 +157,10 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
             
             //todo lots of other info
             
-            [self.chooseDeckButton setEnabled:YES];
+            if (self.currentDeck.isInvalid)
+                [self.chooseDeckButton setEnabled:NO];
+            else
+                [self.chooseDeckButton setEnabled:YES];
         }
     }
     
@@ -178,6 +181,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     self.deckView.viewMode = deckTableViewDecks;
     for (DeckModel*deck in userAllDecks)
     {
+        [DeckModel validateDeck:deck];
         [self.deckView.currentCells addObject:deck];
         
         NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:self.deckView.currentCells.count-1 inSection:0];

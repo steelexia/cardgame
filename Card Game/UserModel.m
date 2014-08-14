@@ -26,7 +26,7 @@ const int INITIAL_DECK_LIMIT = 3;
     
     [UserModel updateUser:^(void)
      {
-         userGold = [userPF[@"gold"] intValue];
+         //set initials values here
          if (userPF[@"decks"] == nil)
              userPF[@"decks"] = @[];
          if (userPF[@"gold"] == nil)
@@ -35,14 +35,29 @@ const int INITIAL_DECK_LIMIT = 3;
              userPF[@"likes"] = @(99);
          if (userPF[@"interactedCards"] == nil)
              userPF[@"interactedCards"] = @{};
+         if (userPF[@"blankCards"] == nil)
+             userPF[@"blankCards"] = @(50);
+         
+         //this variable useless and should be removed later
+         userGold = [userPF[@"gold"] intValue];
+         
          [self loadAllCards]; //also loads decks
-         [userPF saveInBackground];
+         
+         NSError *error;
+         [userPF save:&error];
+         
+         if (error)
+             userInitError = YES;
+         else
+             userInfoLoaded = YES; //TODO move this if other things are loaded
      }
      ];
 }
 
 +(void)updateUser:(void (^)())onFinishBlock
 {
+    //TODO fix this mess
+    NSLog(@"called this");
     PFQuery *query = [PFUser query];
     [query whereKey:@"objectId" equalTo:[PFUser currentUser].objectId];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -107,36 +122,43 @@ const int INITIAL_DECK_LIMIT = 3;
     }
     else
     {
+        __block int loadingCards = cardsIDArray.count;
+        
         for (NSNumber *cardID in cardsIDArray)
         {
             PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
             [cardQuery whereKey:@"idNumber" equalTo:cardID];
             cardQuery.limit = 1;
-            [cardQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                if (!error)
+            NSError *error;
+            NSArray*objects = [cardQuery findObjects:&error];
+            if (!error)
+            {
+                if (objects.count > 0)
                 {
-                    if (objects.count > 0)
-                    {
-                        //add card
+                    //add card
+                    [self performBlockInBackground:^{
                         [userAllCards addObject:[CardModel createCardFromPFObject:objects[0] onFinish:nil]];
-                        
-                        loadedCards++;
-                        
-                        //load all decks once all cards have been loaded
-                        if (loadedCards >= cardsIDArray.count)
-                            [self loadAllDecks];
-                    }
-                    else
-                    {
-                        NSLog(@"ERROR: COULD NOT FIND USER!");
-                    }
+                        loadingCards--;
+                    }];
                 }
                 else
                 {
-                    NSLog(@"ERROR: ERROR FINDING USER!");
+                    NSLog(@"ERROR: COULD NOT FIND USER!");
+                    loadingCards--;
                 }
-            }];
+            }
+            else
+            {
+                NSLog(@"ERROR: ERROR FINDING USER!");
+                loadingCards--;
+            }
         }
+        
+        while(loadingCards != 0)
+            sleep(0.1);
+        
+        //load all decks once all cards have been loaded
+        [self loadAllDecks];
     }
     
     //TODO: load from CD if Parse's hasn't been updated
@@ -157,18 +179,19 @@ const int INITIAL_DECK_LIMIT = 3;
 
 +(void)loadAllDecks
 {
-    [UserModel performBlockInBackground:^(void){
-        NSArray*decksArray = userPF[@"decks"];
-        
-        for (PFObject*deckPF in decksArray)
-        {
-            DeckModel*deck = [self getDeckFromDeckPF:deckPF];
-            if (deck!= nil)
-                [userAllDecks addObject:deck];
-        }
-        
-        userInfoLoaded = YES; //TODO move this if other things are loaded
-    }];
+    //[UserModel performBlockInBackground:^(void){
+    NSArray*decksArray = userPF[@"decks"];
+    
+    for (PFObject*deckPF in decksArray)
+    {
+        DeckModel*deck = [self getDeckFromDeckPF:deckPF];
+        if (deck!= nil)
+            [userAllDecks addObject:deck];
+    }
+    
+    NSLog(@"all decks loaded");
+    
+    //}];
     /*
     NSError *error;
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
@@ -189,9 +212,7 @@ const int INITIAL_DECK_LIMIT = 3;
     for (CardModel*card in userAllCards)
     {
         if (idNumber == card.idNumber)
-        {
             return card;
-        }
     }
     return nil;
 }
@@ -386,7 +407,13 @@ const int INITIAL_DECK_LIMIT = 3;
         deck.objectID = deckPF.objectId;
         
         for (NSNumber*idNumber in deckPF[@"cards"])
-            [deck addCard:[self getCardFromID:[idNumber intValue]]];
+        {
+            CardModel*card = [self getCardFromID:[idNumber intValue]];
+            
+            //a card may have been lost (sold, destroyed)
+            if (card!=nil)
+                [deck addCard:card];
+        }
     }
     @catch (NSException *e) {
         NSLog(@"%@", e);
@@ -395,7 +422,7 @@ const int INITIAL_DECK_LIMIT = 3;
     return deck;
 }
 
-+(void)saveDeck:(DeckModel*)deck
++(BOOL)saveDeck:(DeckModel*)deck
 {
     NSMutableArray*currentDecks = [NSMutableArray arrayWithArray:userPF[@"decks"]];
     
@@ -413,33 +440,44 @@ const int INITIAL_DECK_LIMIT = 3;
             for (CardModel*card in deck.cards)
                 [cardsID addObject:@(card.idNumber)];
             deckPF[@"cards"] = cardsID;
-            [deckPF saveInBackground];
+            
+            NSError *error;
+            [deckPF save:&error];
+            if (error)
+                return NO;
             
             foundDeck = YES;
+            break;
         }
     }
     
     if (!foundDeck)
     {
         PFObject *deckPF = [self getDeckPFFromDeck:deck];
-        [deckPF saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (succeeded)
-            {
-                NSLog(@"success");
-                userPF[@"decks"] = currentDecks;
-                [currentDecks addObject:deckPF];
-                [userPF saveInBackground];
-            }
-            else
-            {
-                NSLog(@"ERROR: FAILED TO SAVE");
-            }
-        }];
+        
+        NSError*error;
+        [deckPF save:&error];
+        
+        if (error)
+            return NO;
+        
+        userPF[@"decks"] = currentDecks;
+        [currentDecks addObject:deckPF];
+        
+        [userPF save:&error];
+        
+        if (error)
+        {
+            //failed to save the deck, delete it
+            [deckPF deleteEventually];
+            return NO;
+        }
     }
     
     if (![userAllDecks containsObject:deck])
         [userAllDecks addObject:deck];
     
+    return YES;
     //TODO readd these later
     /*
     CDDeckModel *cdDeck;
@@ -484,7 +522,7 @@ const int INITIAL_DECK_LIMIT = 3;
      */
 }
 
-+(void)deleteDeck:(DeckModel*)deck
++(BOOL)deleteDeck:(DeckModel*)deck
 {
     NSMutableArray*currentDecks = [NSMutableArray arrayWithArray:userPF[@"decks"]];
     
@@ -494,16 +532,24 @@ const int INITIAL_DECK_LIMIT = 3;
         {
             [currentDecks removeObject:deckPF];
             [userAllDecks removeObject:deck];
-            [deckPF deleteInBackground];
+            NSError *error;
+            [deckPF delete:&error];
+            
+            if (error)
+                return NO;
+            else
+                NSLog(@"deleted");
             break;
         }
     }
     
     userPF[@"decks"] = currentDecks;
+    NSError *error;
+    [userPF save:&error];
+    if (error)
+        return NO;
     
-    [userPF saveInBackground];
-    
-    
+    return YES;
     //TODO readd these later
     /*
     if (deck.cdDeck!=nil)
@@ -545,12 +591,17 @@ const int INITIAL_DECK_LIMIT = 3;
     sale[@"seller"] = [PFUser currentUser].objectId;
     sale[@"stock"] = @10;
     sale[@"card"] = card.cardPF;
+    sale[@"name"] = card.name;
+    sale[@"tags"] = card.cardPF[@"tags"];
     
     NSError *saleError = nil;
     [sale save:&saleError]; //TODO this is only temporary for now, later
     
     if (saleError)
         return NO;
+    
+    userPF[@"blankCards"] = @([userPF[@"blankCards"] intValue] - 1);
+    [userPF save];
     
     //[self saveCard:card];
     
@@ -561,20 +612,25 @@ const int INITIAL_DECK_LIMIT = 3;
 
 +(BOOL)setLikedCard:(CardModel*)card
 {
-    return [self setCardInteraction:card.idNumber atBit:0];
+    return [self setCardInteraction:card.idNumber atBit:0 state:YES];
 }
 
 +(BOOL)setEditedCard:(CardModel*)card
 {
-    return [self setCardInteraction:card.idNumber atBit:1];
+    return [self setCardInteraction:card.idNumber atBit:1 state:YES];
 }
 
 +(BOOL)setOwnedCard:(CardModel*)card
 {
-    return [self setCardInteraction:card.idNumber atBit:2];
+    return [self setCardInteraction:card.idNumber atBit:2 state:YES];
 }
 
-+(BOOL)setCardInteraction:(int)idNumber atBit:(int)bit
++(BOOL)setNotOwnedCard:(CardModel*)card
+{
+    return [self setCardInteraction:card.idNumber atBit:2 state:NO];
+}
+
++(BOOL)setCardInteraction:(int)idNumber atBit:(int)bit state:(BOOL)state
 {
     NSDictionary*dic = userPF[@"interactedCards"];
     if (dic == nil)
@@ -584,16 +640,26 @@ const int INITIAL_DECK_LIMIT = 3;
     
     NSNumber *interactions = interactedCards[[NSString stringWithFormat:@"%d", idNumber]];
     if (interactions == nil)
-        interactions = @(0x1 << bit);
+    {
+        if (state)
+            interactions = @(0x1 << bit);
+        else
+            interactions = @(0x0);
+    }
     else
-        interactions = @([interactions intValue] | 0x1 << bit);
+    {
+        if (state)
+            interactions = @([interactions intValue] | 0x1 << bit);
+        else
+            interactions = @([interactions intValue] & ~(0x1 << bit));
+    }
     NSLog(@"interaction %d", [interactions intValue]);
     
     [interactedCards setObject:interactions forKey:[NSString stringWithFormat:@"%d", idNumber]];
     userPF[@"interactedCards"] = interactedCards;
     
     NSError *error;
-    [userPF save:&error];
+    [userPF save:&error]; //NOTE: Do not remove this as others depend on this save
     
     if (error)
         return NO;
@@ -624,6 +690,43 @@ const int INITIAL_DECK_LIMIT = 3;
 +(BOOL)getOwnedCardID:(int)idNumber
 {
     return [self getCardInteraction:idNumber atBit:2];
+}
+
++(void)removeOwnedCard:(int)idNumber
+{
+    //remove card for userAllCards
+    for (int i = 0; i < userAllCards.count; i++)
+    {
+        CardModel*card = userAllCards[i];
+        if (card.idNumber == idNumber)
+            [userAllCards removeObjectAtIndex:i];
+    }
+    
+    for (DeckModel *deck in userAllDecks)
+    {
+        for (int i = 0; i < deck.count; i++)
+        {
+            CardModel*card = [deck getCardAtIndex:i];
+            if (card.idNumber == idNumber)
+                [deck removeCardAtIndex:i];
+        }
+    }
+}
+
++(NSArray*)getAllOwnedCardID
+{
+    NSMutableArray *ownedCardIDs = [NSMutableArray array];
+    NSDictionary*dic = userPF[@"interactedCards"];
+    if (dic == nil)
+        return ownedCardIDs;
+    for (NSString*key in dic.allKeys)
+    {
+        int idNumber = [key intValue];
+        if ([self getOwnedCardID:idNumber])
+            [ownedCardIDs addObject:@(idNumber)];
+    }
+    
+    return ownedCardIDs;
 }
 
 

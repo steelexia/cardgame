@@ -13,5 +13,8 @@
 @interface GameStore : NSObject
 /** Cost in gold to buy a card depends completely on its rarity. */
 +(int)getCardCost:(CardModel*)card;
++(int)getCardSellPrice:(CardModel*)card;
 
 @end
+
+extern const int LIKE_CARD_GOLD_GAIN;

@@ -69,6 +69,8 @@
 /** For loading image */
 @property int reloadAttempts;
 
+@property UIActivityIndicatorView*activityView;
+
 /** Initializes with attached CardModel, which should be one of its child classes */
 -(instancetype)initWithModel: (CardModel*)cardModel viewMode:(enum CardViewMode)cardViewMode;
 

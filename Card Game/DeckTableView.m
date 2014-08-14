@@ -93,6 +93,13 @@ const double DECK_EDITOR_CARD_SCALE = 0.6;
         //because cell size is wrong in its constructor..
         cell.nameLabel.center = CGPointMake(cell.bounds.size.width/2, cell.nameLabel.center.y);
         
+        cell.invalidLabel.center = CGPointMake(cell.bounds.size.width/2, cell.invalidLabel.center.y);
+        
+        if (deck.isInvalid)
+            [cell addSubview:cell.invalidLabel];
+        else
+            [cell.invalidLabel removeFromSuperview];
+        
         //TODO set to the deck's colour, etc
         
         return cell;
@@ -105,6 +112,20 @@ const double DECK_EDITOR_CARD_SCALE = 0.6;
     //cell.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
     return nil;
+}
+
+-(BOOL)containsCardId:(int)idNumber
+{
+    if (_viewMode == deckTableViewCards)
+    {
+        for (CardModel*card in _currentCells)
+        {
+            if (card.idNumber == idNumber)
+                return YES;
+        }
+    }
+    
+    return NO;
 }
 
 -(void)removeCellAt:(int)index {

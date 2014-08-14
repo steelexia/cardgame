@@ -36,6 +36,15 @@
         _nameLabel.strokeThickness = 2;
         _nameLabel.numberOfLines = 1;
         
+        _invalidLabel = [[StrokedLabel alloc]initWithFrame:CGRectMake(self.bounds.origin.x, self.bounds.size.height/2 - 5, self.bounds.size.width, self.bounds.size.height/2)];
+        _invalidLabel.textAlignment = NSTextAlignmentCenter;
+        _invalidLabel.textColor = [UIColor redColor];
+        _invalidLabel.font = [UIFont fontWithName:cardMainFont size:14];
+        _invalidLabel.text = @"INVALID";
+        _invalidLabel.strokeOn = YES;
+        _invalidLabel.strokeColour = [UIColor blackColor];
+        _invalidLabel.strokeThickness = 2;
+        
         [self setBackgroundView:background];
         [self addSubview:_nameLabel];
     }

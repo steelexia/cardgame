@@ -10,6 +10,8 @@
 
 @implementation GameStore
 
+const int LIKE_CARD_GOLD_GAIN = 15;
+
 +(int)getCardCost:(CardModel*)card
 {
     if (card.rarity == cardRarityCommon)
@@ -24,6 +26,13 @@
         return 4800;
     
     return 100;
+}
+
++(int)getCardSellPrice:(CardModel*)card
+{
+    int buyCost = [GameStore getCardCost:card];
+    
+    return buyCost *= 0.6;
 }
 
 @end

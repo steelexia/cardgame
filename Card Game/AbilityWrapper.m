@@ -162,6 +162,14 @@ NSArray *allAbilities;
     return -1;
 }
 
++(AbilityWrapper*)getWrapperWithId:(int)idNumber
+{
+    if (idNumber >= 0 && idNumber < allAbilities.count)
+        return [[AbilityWrapper alloc] initWithAbilityWrapper:allAbilities[idNumber]];
+    
+    return nil;
+}
+
 //TODO needs a way to access allAbilities from the store
 
 +(void)loadAllAbilities
@@ -386,7 +394,7 @@ NSArray *allAbilities;
                      //---kill---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
                      //kill 1 minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[OFFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:5500 maxPoints:5500 maxCount:2 minCost:1],
+                      [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[OFFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:5500 maxPoints:5500 maxCount:1 minCost:1],
                      //kill all minions
                      [[AbilityWrapper alloc] initWithAbility:
                       [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetAllMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:10000 maxPoints:10000 maxCount:1 minCost:6],
@@ -407,7 +415,7 @@ NSArray *allAbilities;
                       [[Ability alloc] initWithType:abilityKill castType:castOnDeath targetType:targetAllMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[OFFENSIVE_ELEMENTS] rarity:cardRarityCommon minPoints:9600 maxPoints:9600 maxCount:1 minCost:1],
                      //kill all friendly minions on death
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityKill castType:castOnDeath targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:-3500 maxPoints:-3500 maxCount:1 minCost:5],
+                      [[Ability alloc] initWithType:abilityKill castType:castOnDeath targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:-1250 maxPoints:-1250 maxCount:1 minCost:5],
                      //kill attacker on damaged
                      [[AbilityWrapper alloc] initWithAbility:
                       [[Ability alloc] initWithType:abilityKill castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ALL_ELEMENTS] rarity:cardRarityCommon minPoints:1600 maxPoints:1600 maxCount:1 minCost:3],
@@ -776,7 +784,7 @@ NSArray *allAbilities;
                      //---gain resource---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
                      //gain x resources immediately (mostly for spell cards, such as gain 2 resource for 0 cost)
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityAddResource castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:0 withOtherValues:@[@1,@5] withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_EARTH] rarity:cardRarityCommon minPoints:1100 maxPoints:5500 maxCount:2 minCost:0], //costs half if the card has no other abilities (must be spell card)
+                      [[Ability alloc] initWithType:abilityAddResource castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:0 withOtherValues:@[@1,@3] withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_EARTH] rarity:cardRarityCommon minPoints:1100 maxPoints:4950 maxCount:2 minCost:0], //costs half if the card has no other abilities (must be spell card)
                      //gain x resources on hit
                      [[AbilityWrapper alloc] initWithAbility:
                       [[Ability alloc] initWithType:abilityAddResource castType:castOnHit targetType:targetHeroFriendly withDuration:durationForever withValue:0 withOtherValues:@[@1,@2] withDescription:nil] elements:@[ELEMENT_FIRE] rarity:cardRarityCommon minPoints:1000 maxPoints:2000 maxCount:1 minCost:1],

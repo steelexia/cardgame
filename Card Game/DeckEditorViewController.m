@@ -13,6 +13,7 @@
 #import "SinglePlayerCards.h"
 #import "UserModel.h"
 #import "MainScreenViewController.h"
+#import "StrokedLabel.h"
 
 @interface DeckEditorViewController ()
 
@@ -49,17 +50,16 @@ UILabel *cannotAddCardReasonLabel;
 UIButton *addDeckButton;
 
 /** Buttons for pressing the addDeckButton when the deck is invalid */
-UIButton *autoAddCardsButton, *notAutoAddCardsButton, *autoAddCardsFailedButton;
+UIButton *autoAddCardsButton, *notAutoAddCardsButton, *autoAddCardsFailedButton, *notFixDeckButton, *cancelNotFixButton;
 UILabel *autoAddCardsLabel, *autoAddCardsFailedLabel;
+UIView*autoAddView;
+UIView*fixCardView;
 
 /** Used to save and return to organizing decks*/
 UIButton *saveDeckButton;
 
 /** Add a new deck */
 UIButton *addDeckButton;
-
-/** Reminder to select a deck before being able to view their cards */
-UILabel *emptyCardsLabel;
 
 /** Returns to main menu */
 UIButton *backButton;
@@ -68,6 +68,9 @@ UIButton *backButton;
 DeckModel* currentDeck;
 
 UILabel *deleteDeckLabel;
+
+UIButton*invalidDeckButton;
+StrokedLabel*invalidDeckLabel;
 
 /** For unmaximizing */
 enum CardCollectinViewMode lastVCardCollectionViewMode;
@@ -80,6 +83,15 @@ DeckModel * allCards;
     
     SCREEN_WIDTH = self.view.bounds.size.width;
     SCREEN_HEIGHT = self.view.bounds.size.height;
+   
+    //cost 0 to 10
+    _costFilter = [NSMutableArray arrayWithArray: @[@(YES),@(YES),@(YES),@(YES),@(YES),@(YES),@(YES),@(YES),@(YES),@(YES),@(YES)]];
+    
+    //7 elements
+    _elementFilter = [NSMutableArray arrayWithArray: @[@(YES),@(YES),@(YES),@(YES),@(YES),@(YES),@(YES)]];
+    
+    //5 rarities
+    _rarityFilter = [NSMutableArray arrayWithArray: @[@(YES),@(YES),@(YES),@(YES),@(YES)]];
     
     //get the single player deck TODO
     //allCards = userAllCards;
@@ -87,7 +99,7 @@ DeckModel * allCards;
     
     for (CardModel* card in userAllCards)
     {
-        [allCards addCard:card]; //don't thnk it will ever be edited here so it should be safe, plus userAllCards is just a copy of Parse data anyways
+        [allCards addCard:[[CardModel alloc] initWithCardModel: card]];
     }
     
     //sort the cards
@@ -98,8 +110,9 @@ DeckModel * allCards;
     //set up cards view
     UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc] init];
     [layout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
-    self.cardsView = [[CardsCollectionView alloc] initWithFrame:CGRectMake(0, 74, 230, 366) collectionViewLayout:layout];
+    self.cardsView = [[CardsCollectionView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-366-40, SCREEN_WIDTH-90, 366) collectionViewLayout:layout];
     self.cardsView.parentViewController = self; //for callbacks
+    self.cardsView.backgroundColor = COLOUR_INTERFACE_BLUE_TRANSPARENT;
     
     self.view.backgroundColor = [UIColor whiteColor];
     
@@ -113,6 +126,10 @@ DeckModel * allCards;
     
     [self.view addSubview:self.deckView];
     [self.deckView setUserInteractionEnabled:YES];
+    
+    _footerView = [[UIView alloc]initWithFrame:CGRectMake(0,SCREEN_HEIGHT-40,SCREEN_WIDTH, 40)];
+    _footerView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:_footerView];
     
     //set up UI
     darkFilter = [[UILabel alloc] initWithFrame:self.view.bounds];
@@ -132,12 +149,12 @@ DeckModel * allCards;
     [removeCardFromDeckButton addTarget:self action:@selector(removeCardFromDeckPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     //deck count label
-    deckCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH - 115, SCREEN_HEIGHT - 42, 90, 40)];
+    deckCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH - 115, 4, 90, 40)];
     deckCountLabel.textAlignment = NSTextAlignmentCenter;
     deckCountLabel.textColor = [UIColor blackColor];
     deckCountLabel.backgroundColor = [UIColor clearColor];
     deckCountLabel.font = [UIFont fontWithName:cardMainFont size:16];
-    [self.view addSubview:deckCountLabel];
+    [_footerView addSubview:deckCountLabel];
     
     cannotAddCardReasonLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT - 120, 200, 120)];
     cannotAddCardReasonLabel.textColor = [UIColor redColor];
@@ -158,13 +175,22 @@ DeckModel * allCards;
     [addDeckButton setImage:[UIImage imageNamed:@"add_deck_button"] forState:UIControlStateNormal];
     [addDeckButton addTarget:self action:@selector(addDeckButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    backButton = [[UIButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
+    backButton = [[UIButton alloc] initWithFrame:CGRectMake(4, 4, 46, 32)];
     [backButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    self.deleteDeckButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-50, SCREEN_HEIGHT-36, 46, 32)];
+    self.deleteDeckButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-50, 4, 46, 32)];
     [self.deleteDeckButton setImage:[UIImage imageNamed:@"remove_deck_button"] forState:UIControlStateNormal];
     [self.deleteDeckButton addTarget:self action:@selector(deleteButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    autoAddView = [[UIView alloc] initWithFrame:self.view.bounds];
+    
+    //---------------------filter view----------------------//
+    _filterToggleButton = [[UIButton alloc] initWithFrame:CGRectMake(4 + 50, 4, 46, 32)];
+    [_filterToggleButton setImage:[UIImage imageNamed:@"filter_button_small"] forState:UIControlStateNormal];
+    [_filterToggleButton setImage:[UIImage imageNamed:@"filter_button_small_selected"] forState:UIControlStateSelected];
+    [_filterToggleButton addTarget:self action:@selector(filterToggleButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [_footerView addSubview:_filterToggleButton];
     
     //save deck dialog
     autoAddCardsLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/4, SCREEN_WIDTH*6/8, SCREEN_HEIGHT)];
@@ -174,8 +200,9 @@ DeckModel * allCards;
     autoAddCardsLabel.textAlignment = NSTextAlignmentCenter;
     autoAddCardsLabel.lineBreakMode = NSLineBreakByWordWrapping;
     autoAddCardsLabel.numberOfLines = 0;
-    autoAddCardsLabel.text = @"You haven't added enough cards to fill up the deck. Would you like them to be added automatically? You will lose all your changes if you don't.";
+    //autoAddCardsLabel.text;
     [autoAddCardsLabel sizeToFit];
+    [autoAddView addSubview:autoAddCardsLabel];
     
     autoAddCardsButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     autoAddCardsButton.center = CGPointMake(SCREEN_WIDTH/2 - 80, SCREEN_HEIGHT - 60);
@@ -186,6 +213,16 @@ DeckModel * allCards;
     notAutoAddCardsButton.center = CGPointMake(SCREEN_WIDTH/2 + 80, SCREEN_HEIGHT - 60);
     [notAutoAddCardsButton setImage:[UIImage imageNamed:@"no_button"] forState:UIControlStateNormal];
     [notAutoAddCardsButton addTarget:self action:@selector(notAutoAddCardsButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    notFixDeckButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    notFixDeckButton.center = CGPointMake(SCREEN_WIDTH/2 - 80, SCREEN_HEIGHT - 60);
+    [notFixDeckButton setImage:[UIImage imageNamed:@"yes_button"] forState:UIControlStateNormal];
+    [notFixDeckButton addTarget:self action:@selector(notFixDeckButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    cancelNotFixButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    cancelNotFixButton.center = CGPointMake(SCREEN_WIDTH/2 + 80, SCREEN_HEIGHT - 60);
+    [cancelNotFixButton setImage:[UIImage imageNamed:@"no_button"] forState:UIControlStateNormal];
+    [cancelNotFixButton addTarget:self action:@selector(cancelNotFixButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     autoAddCardsFailedLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/4, SCREEN_WIDTH*6/8, SCREEN_HEIGHT)];
     autoAddCardsFailedLabel.textColor = [UIColor whiteColor];
@@ -211,7 +248,7 @@ DeckModel * allCards;
     deleteDeckLabel.lineBreakMode = NSLineBreakByWordWrapping;
     deleteDeckLabel.numberOfLines = 0;
     deleteDeckLabel.text = @"Are you sure you want to delete this deck?";
-    [autoAddCardsLabel sizeToFit];
+    [deleteDeckLabel sizeToFit];
     
     self.deleteDeckConfirmButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     self.deleteDeckConfirmButton.center = CGPointMake(SCREEN_WIDTH/2 - 80, SCREEN_HEIGHT - 60);
@@ -224,24 +261,210 @@ DeckModel * allCards;
     [self.deleteDeckCancelButton addTarget:self action:@selector(deleteDeckCancelButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     
-    emptyCardsLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.cardsView.frame.origin.x + 10, self.cardsView.frame.origin.y + self.cardsView.frame.size.height/2 - 40, self.cardsView.frame.size.width - 20, self.cardsView.frame.size.height)];
-    emptyCardsLabel.textColor = [UIColor blackColor];
-    emptyCardsLabel.backgroundColor = [UIColor clearColor];
-    emptyCardsLabel.font = [UIFont fontWithName:cardMainFont size:20];
-    emptyCardsLabel.textAlignment = NSTextAlignmentCenter;
-    emptyCardsLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    emptyCardsLabel.numberOfLines = 0;
-    emptyCardsLabel.text = @"Select or create a deck to view your cards.";
-    [emptyCardsLabel sizeToFit];
+    _searchResult = [[StrokedLabel alloc] initWithFrame:CGRectMake(10, self.cardsView.frame.size.height/2 - 40, self.cardsView.frame.size.width - 20, self.cardsView.frame.size.height)];
+    _searchResult.textColor = [UIColor whiteColor];
+    _searchResult.backgroundColor = [UIColor clearColor];
+    _searchResult.font = [UIFont fontWithName:cardMainFont size:20];
+    _searchResult.textAlignment = NSTextAlignmentCenter;
+    _searchResult.lineBreakMode = NSLineBreakByWordWrapping;
+    _searchResult.numberOfLines = 0;
+    _searchResult.strokeOn = YES;
+    _searchResult.strokeColour = [UIColor blackColor];
+    _searchResult.strokeThickness = 3;
+    _searchResult.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/2);
+    [_cardsView addSubview:_searchResult];
+    
+    invalidDeckButton = [[UIButton alloc] initWithFrame:CGRectMake(104,SCREEN_HEIGHT-36,120, 32)];
+    [invalidDeckButton setImage:[UIImage imageNamed:@"invalid_deck_button"] forState:UIControlStateNormal];
+    [invalidDeckButton addTarget:self action:@selector(invalidDeckButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+
+    /** Activity */
+    _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [_activityIndicator setFrame:self.view.bounds];
+    [_activityIndicator setBackgroundColor:[UIColor colorWithHue:0 saturation:0 brightness:0 alpha:0.5]];
+    [_activityIndicator setUserInteractionEnabled:YES];
+    _activityLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 40)];
+    _activityLabel.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 60);
+    _activityLabel.textAlignment = NSTextAlignmentCenter;
+    _activityLabel.textColor = [UIColor whiteColor];
+    _activityLabel.font = [UIFont fontWithName:cardMainFont size:20];
+    _activityLabel.text = [NSString stringWithFormat:@"Processing..."];
+    [_activityIndicator addSubview:_activityLabel];
+    
+    _activityFailedButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    _activityFailedButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 60);
+    [_activityFailedButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
+    [_activityFailedButton addTarget:self action:@selector(activityFailedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
     
+    _invalidDeckReasonsLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/4, SCREEN_WIDTH*6/8, SCREEN_HEIGHT)];
+    _invalidDeckReasonsLabel.textColor = [UIColor whiteColor];
+    _invalidDeckReasonsLabel.backgroundColor = [UIColor clearColor];
+    _invalidDeckReasonsLabel.font = [UIFont fontWithName:cardMainFont size:20];
+    _invalidDeckReasonsLabel.textAlignment = NSTextAlignmentCenter;
+    _invalidDeckReasonsLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    _invalidDeckReasonsLabel.numberOfLines = 10;
     
+    _invalidDeckReasonsOkButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    _invalidDeckReasonsOkButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 60);
+    [_invalidDeckReasonsOkButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
+    [_invalidDeckReasonsOkButton addTarget:self action:@selector(invalidDeckReasonsOkButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
-    //DeckModel*deck = [[DeckModel alloc] init];
-    //deck.name = @"New Deck";
-    //[userAllDecks addObject:deck];
+    //property view
+    _propertiesView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH-_deckView.frame.size.width, _cardsView.frame.origin.y)];
+    //_propertiesView.backgroundColor = [UIColor redColor];
     
-    //[self updateCardsViewCards];
+    _tagsPopularButton = [[UIButton alloc] initWithFrame:CGRectMake(_propertiesView.frame.size.width - 50, _propertiesView.frame.size.height - 36, 46, 32)];
+    
+    if (SCREEN_HEIGHT >= 568)
+        _tagsPopularButton.frame = CGRectMake(4, _propertiesView.frame.size.height - 36, 46, 32);
+    
+    [_tagsPopularButton setImage:[UIImage imageNamed:@"popular_tags_button_small"] forState:UIControlStateNormal];
+    [_propertiesView addSubview:_tagsPopularButton];
+    
+    UILabel*deckNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, 45, 25)];
+    deckNameLabel.textColor = [UIColor blackColor];
+    deckNameLabel.font = [UIFont fontWithName:cardMainFont size:16];
+    deckNameLabel.textAlignment = NSTextAlignmentRight;
+    deckNameLabel.text = @"Name:";
+    [_propertiesView addSubview:deckNameLabel];
+    
+    _nameField =  [[UITextField alloc] initWithFrame:CGRectMake(55,4,_propertiesView.frame.size.width - 55 - 4,30)];
+    _nameField.textColor = [UIColor blackColor];
+    _nameField.font = [UIFont fontWithName:cardMainFont size:16];
+    _nameField.returnKeyType = UIReturnKeyDone;
+    [_nameField setPlaceholder:@"Name your deck"];
+    [_nameField setAutocorrectionType:UITextAutocorrectionTypeNo];
+    //[_nameField addTarget:self action:@selector(searchFieldBegan) forControlEvents:UIControlEventEditingDidBegin];
+    //[_nameField addTarget:self action:@selector(searchFieldFinished) forControlEvents:UIControlEventEditingDidEnd];
+    [_nameField setDelegate:self];
+    [_nameField.layer setBorderColor:[UIColor blackColor].CGColor];
+    [_nameField.layer setBorderWidth:2];
+    _nameField.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0);
+    _nameField.layer.cornerRadius = 4.0;
+    
+    [_propertiesView addSubview:_nameField];
+    
+    UILabel*deckTagsLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 40, 45, 25)];
+    deckTagsLabel.textColor = [UIColor blackColor];
+    deckTagsLabel.font = [UIFont fontWithName:cardMainFont size:16];
+    deckTagsLabel.textAlignment = NSTextAlignmentRight;
+    deckTagsLabel.text = @"Tags:";
+    [_propertiesView addSubview:deckTagsLabel];
+    
+    _tagsArea = [[UITextView alloc] initWithFrame:CGRectMake(55, 38, _propertiesView.frame.size.width - 105 - 5, _propertiesView.frame.size.height - 38 - 4)];
+    _tagsArea.textColor = [UIColor blackColor];
+    _tagsArea.font = [UIFont fontWithName:cardMainFont size:16];
+    [_tagsArea setAutocorrectionType:UITextAutocorrectionTypeNo];
+    //[_nameField addTarget:self action:@selector(searchFieldBegan) forControlEvents:UIControlEventEditingDidBegin];
+    //[_nameField addTarget:self action:@selector(searchFieldFinished) forControlEvents:UIControlEventEditingDidEnd];
+    [_tagsArea setDelegate:self];
+    [_tagsArea.layer setBorderColor:[UIColor blackColor].CGColor];
+    [_tagsArea.layer setBorderWidth:2];
+    _tagsArea.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0);
+    _tagsArea.layer.cornerRadius = 4.0;
+    
+    if (SCREEN_HEIGHT >= 568)
+        _tagsArea.frame = CGRectMake(55, 38, _propertiesView.frame.size.width - 55 - 5, _propertiesView.frame.size.height - 38 - 4);
+    
+    [_propertiesView addSubview:_tagsArea];
+    
+    [self.view addSubview:_propertiesView];
+    
+    //-------------------filter view------------------//
+    _filterView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-40, SCREEN_WIDTH, 250)];
+    [self.view insertSubview:_filterView aboveSubview:_deckView];
+    [_filterView setUserInteractionEnabled:YES];
+    [_filterView setBackgroundColor:[UIColor whiteColor]];
+    
+    //cost buttons
+    CGPoint costFilterStartPoint = CGPointMake(20, 20);
+    _costFilterButtons = [NSMutableArray arrayWithCapacity:11];
+    for (int i = 0; i < 11; i++)
+    {
+        UIButton*costFilterButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,28,28)];
+        [costFilterButton setImage:RESOURCE_ICON_IMAGE forState:UIControlStateNormal];
+        [costFilterButton addTarget:self action:@selector(costFilterButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        costFilterButton.center = CGPointMake(costFilterStartPoint.x + i*28, costFilterStartPoint.y);
+        
+        [_filterView addSubview:costFilterButton];
+        
+        StrokedLabel*costLabel = [[StrokedLabel alloc]initWithFrame:costFilterButton.bounds];
+        costLabel.textAlignment = NSTextAlignmentCenter;
+        costLabel.textColor = [UIColor whiteColor];
+        costLabel.backgroundColor = [UIColor clearColor];
+        costLabel.font = [UIFont fontWithName:cardMainFontBlack size:22];
+        costLabel.strokeOn = YES;
+        costLabel.strokeColour = [UIColor blackColor];
+        costLabel.strokeThickness = 3;
+        costLabel.text = [NSString stringWithFormat:@"%d", i];
+        [costFilterButton addSubview:costLabel];
+        //costLabel.center = costFilterButton.center;
+        
+        [_costFilterButtons addObject:costFilterButton];
+    }
+    
+    //rarity buttons
+    CGPoint rarityFilterStartPoint = CGPointMake(SCREEN_WIDTH/3, 60);
+    _rarityFilterButtons = [NSMutableArray arrayWithCapacity:cardRarityLegendary+1];
+    for (int i = 0; i <= cardRarityLegendary; i++)
+    {
+        UIButton*rarityFilterButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
+        [rarityFilterButton setImage:[UIImage imageNamed:@"filter_button"] forState:UIControlStateNormal];
+        [rarityFilterButton addTarget:self action:@selector(rarityFilterButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        rarityFilterButton.center = CGPointMake(rarityFilterStartPoint.x, rarityFilterStartPoint.y + i*28);
+        
+        [_filterView addSubview:rarityFilterButton];
+        
+        StrokedLabel*rarityLabel = [[StrokedLabel alloc]initWithFrame:CGRectMake(0, 0, 90, 25)];
+        rarityLabel.textAlignment = NSTextAlignmentCenter;
+        rarityLabel.textColor = [UIColor whiteColor];
+        rarityLabel.backgroundColor = [UIColor clearColor];
+        rarityLabel.font = [UIFont fontWithName:cardMainFont size:18];
+        //rarityLabel.strokeOn = YES;
+        rarityLabel.strokeColour = [UIColor blackColor];
+        rarityLabel.strokeThickness = 3;
+        rarityLabel.text = [CardModel getRarityText:i];
+        [rarityFilterButton addSubview:rarityLabel];
+        //rarityLabel.backgroundColor = [UIColor blueColor];
+        //costLabel.center = costFilterButton.center;
+        
+        [_rarityFilterButtons addObject:rarityFilterButton];
+    }
+    
+    //element buttons
+    CGPoint elementFilterStartPoint = CGPointMake(SCREEN_WIDTH*2/3, 60);
+    _elementFilterButtons = [NSMutableArray arrayWithCapacity:7];
+    for (int i = 0; i < 7; i++)
+    {
+        UIButton*elementFilterButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
+        [elementFilterButton setImage:[UIImage imageNamed:@"filter_button"] forState:UIControlStateNormal];
+        [elementFilterButton addTarget:self action:@selector(elementFilterButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        elementFilterButton.center = CGPointMake(elementFilterStartPoint.x, elementFilterStartPoint.y + i*28);
+        
+        [_filterView addSubview:elementFilterButton];
+        
+        StrokedLabel*elementLabel = [[StrokedLabel alloc]initWithFrame:CGRectMake(0, 0, 90, 25)];
+        elementLabel.textAlignment = NSTextAlignmentCenter;
+        elementLabel.textColor = [UIColor whiteColor];
+        elementLabel.backgroundColor = [UIColor clearColor];
+        elementLabel.font = [UIFont fontWithName:cardMainFont size:18];
+        //elementLabel.strokeOn = YES;
+        elementLabel.strokeColour = [UIColor blackColor];
+        elementLabel.strokeThickness = 3;
+        elementLabel.text = [CardModel elementToString:i];
+        [elementFilterButton addSubview:elementLabel];
+        //costLabel.center = costFilterButton.center;
+        
+        [_elementFilterButtons addObject:elementFilterButton];
+    }
+    
+    UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
+                                           initWithTarget:self
+                                           action:@selector(tapRegistered)];
+    [tapGesture setCancelsTouchesInView:NO];
+    [self.view addGestureRecognizer:tapGesture];
+    
     [self resetAllViews];
 }
 
@@ -256,11 +479,11 @@ DeckModel * allCards;
 
 -(void) updateCard:(CardModel*)card
 {
-    if ([self.deckView.currentCells containsObject:card])
+    if ([self.deckView containsCardId:card.idNumber])
     {
         card.cardViewState = cardViewStateCardViewerTransparent;
     }
-    else if ([self canAddCardToDeck: card])
+    else if ([[self canAddCardToDeck: card] count] == 0)
     {
         //NSLog(@"can add");
         card.cardViewState = cardViewStateCardViewer;
@@ -271,7 +494,9 @@ DeckModel * allCards;
         card.cardViewState = cardViewStateCardViewerGray;
     }
     
-    card.cardView.cardViewState = card.cardViewState;
+    //prevent updating pointers that wrongly points to the deckview
+    if (card.cardView != nil && card.cardView.superview != nil && [card.cardView.superview isKindOfClass:[CardsCollectionCell class]])
+        card.cardView.cardViewState = card.cardViewState;
 }
 
 
@@ -343,6 +568,8 @@ DeckModel * allCards;
                 //[self.cardsView.collectionView scrollRectToVisible:CGRectMake(cardViewTopLeft.x, cardViewTopLeft.y, cardView.frame.size.width, cardView.frame.size.height) animated:YES];
                 
                 [self maximizeCardAnimation:newMaximizedView originalCard:cardView mode:cardCollectionAddCard];
+                if ([self isFilterOpen])
+                    [self setFilterViewState:NO];
             }
         }
         else if ([cardView.superview isKindOfClass:[UIScrollView class]])
@@ -370,6 +597,8 @@ DeckModel * allCards;
                 CGPoint cardViewCenter = [self.view convertPoint:cardView.center fromView:cardView];
                 
                 [self maximizeCardAnimation:newMaximizedView originalCard:cardView mode:cardCollectionRemoveCard];
+                if ([self isFilterOpen])
+                    [self setFilterViewState:NO];
             }
         }
         else if (cardView == currentCard)
@@ -400,6 +629,7 @@ DeckModel * allCards;
             if ([self.deckView.currentCells[indexPath.row] isKindOfClass:[DeckModel class]])
             {
                 currentDeck = self.deckView.currentCells[indexPath.row];
+                
                 [self setupDeckEditView];
             }
         }
@@ -495,14 +725,20 @@ DeckModel * allCards;
         
         [self.view addSubview:addCardToDeckButton];
         
-        NSMutableArray*reasons = [self canAddCardToDeckWithReason:currentCard.cardModel];
+        NSMutableArray*reasons = [self canAddCardToDeck:currentCard.cardModel];
         if (reasons.count > 0)
         {
+            BOOL currentDeckValid = [self isCurrentDeckValidIgnoreTooFewCards];
+            
             NSString *reasonsText = @"Cannot add this card to deck.\n";
-            for (NSString *reason in reasons)
+            
+            if (currentDeckValid)
             {
+            for (NSString *reason in reasons)
                 reasonsText = [NSString stringWithFormat:@"%@- %@\n", reasonsText, reason];
             }
+            else
+                reasonsText = [NSString stringWithFormat:@"%@- Target deck is currently invalid. Fix the problem first before adding any more cards.", reasonsText];
             
             cannotAddCardReasonLabel.text = reasonsText;
             [cannotAddCardReasonLabel sizeToFit];
@@ -607,6 +843,9 @@ DeckModel * allCards;
     //scroll to the newly inserted position
     [self.deckView.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:insertionIndex inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     
+    if([self isCurrentDeckValid])
+        [invalidDeckButton removeFromSuperview];
+    
     [self updateCardsViewCards];
     [self updateCardsCounterLabel];
 }
@@ -624,6 +863,9 @@ DeckModel * allCards;
     [self.cardsView reloadInputViews];
     [self.cardsView.collectionView reloadData];
     currentIndex = -1;
+    
+    if([self isCurrentDeckValid])
+        [invalidDeckButton removeFromSuperview];
 }
 
 /** Inserts the card into the correct position in the cards view */
@@ -658,63 +900,117 @@ DeckModel * allCards;
     [self.cardsView.collectionView reloadInputViews];
 }*/
 
+-(void) saveDeck
+{
+    DeckModel *deckToSave;
+    if (currentDeck == nil)
+    {
+        //add this new deck to userModel
+        DeckModel* newDeck = [[DeckModel alloc] init];
+        newDeck.name = @"New Deck";
+        
+        for (CardModel* card in self.deckView.currentCells)
+            [newDeck addCard:card];
+     
+        deckToSave = newDeck;
+    }
+    else
+    {
+        //clear the deck and add the new cards in
+        [currentDeck.cards removeAllObjects];
+        
+        for (CardModel* card in self.deckView.currentCells)
+            [currentDeck addCard:card];
+        
+        deckToSave = currentDeck;
+    }
+    
+    if (_nameField.text.length == 0)
+        deckToSave.name = @"New Deck";
+    else
+        deckToSave.name = _nameField.text;
+    
+    if (_tagsArea.text.length > 0)
+    {
+        NSString *tags = [_tagsArea.text stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+        NSArray*stringSplit = [tags componentsSeparatedByString:@" "];
+        NSMutableArray*tagsNoDup = [NSMutableArray array];
+        
+        for (NSString*string in stringSplit)
+        {
+            if (![tagsNoDup containsObject:string])
+                [tagsNoDup addObject:string];
+        }
+        
+        deckToSave.tags = tagsNoDup;
+    }
+    
+    //save the deck only if it actually exists
+    if (deckToSave != nil)
+    {
+        [self showActivityIndicatorWithBlock:^BOOL{
+            BOOL succ = [UserModel saveDeck:deckToSave];
+            if (succ)
+            {
+                [self resetAllViews];
+                return YES;
+            }
+            else
+                return NO;
+        } loadingText:@"Saving..." failedText:@"Failed to save deck."];
+    }
+    else
+        [self resetAllViews];
+}
+
 -(void) saveDeckButtonPressed
 {
     if ([self isCurrentDeckValid])
     {
-        NSLog(@"is valid");
-        if (currentDeck == nil)
-        {
-            //add this new deck to userModel
-            DeckModel* newDeck = [[DeckModel alloc] init];
-            newDeck.name = @"New Deck";
-            
-            for (CardModel* card in self.deckView.currentCells)
-                [newDeck addCard:card];
-            
-            //TODO also store this on Parse
-            [UserModel saveDeck:newDeck];
-        }
-        else
-        {
-            //clear the deck and add the new cards in
-            [currentDeck.cards removeAllObjects];
-            
-            for (CardModel* card in self.deckView.currentCells)
-                [currentDeck addCard:card];
-            
-            [UserModel saveDeck:currentDeck];
-        }
-        
-        [self resetAllViews];
+        [self saveDeck];
     }
     else
     {
         NSLog(@"not valid");
+        
+        DeckModel *deck = [[DeckModel alloc]init];
+        for (CardModel* card in self.deckView.currentCells)
+            [deck addCard:card];
+        
+        for (UIView*view in autoAddView.subviews)
+            [view removeFromSuperview];
+        
+        autoAddCardsLabel.frame = CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/4, SCREEN_WIDTH*6/8, SCREEN_HEIGHT);
+        BOOL deckTooSmall = [DeckModel isDeckInvalidOnlyTooFewCards:deck];
+        if (deckTooSmall)
+        {
+            autoAddCardsLabel.text = @"You haven't added enough cards to fill up the deck. Would you like them to be added automatically?";
+            
+            [autoAddView addSubview:autoAddCardsButton];
+            [autoAddView addSubview:notAutoAddCardsButton];
+        }
+        else
+        {
+            autoAddCardsLabel.text = @"The deck you are trying to save is invalid. Would you like to quit anyways?";
+            
+            [autoAddView addSubview:notFixDeckButton];
+            [autoAddView addSubview:cancelNotFixButton];
+        }
+        
+        [autoAddCardsLabel sizeToFit];
+        
+        [autoAddView addSubview:autoAddCardsLabel];
+        
+        autoAddView.alpha = 0;
+        
         [self darkenScreen];
-        
-        [autoAddCardsLabel setEnabled:NO];
-        [autoAddCardsButton setEnabled:NO];
-        [notAutoAddCardsButton setEnabled:NO];
-        
-        autoAddCardsLabel.alpha = 0;
-        autoAddCardsButton.alpha = 0;
-        notAutoAddCardsButton.alpha = 0;
-        
-        [self.view addSubview:autoAddCardsLabel];
-        [self.view addSubview:autoAddCardsButton];
-        [self.view addSubview:notAutoAddCardsButton];
+        [self.view addSubview:autoAddView];
         
         [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             autoAddCardsLabel.alpha = 1;
-                             autoAddCardsButton.alpha = 1;
-                             notAutoAddCardsButton.alpha = 1;
+                             autoAddView.alpha = 1;
                          }
                          completion:^(BOOL completed){
-                             [autoAddCardsLabel setEnabled:YES];
-                             [autoAddCardsButton setEnabled:YES];
-                             [notAutoAddCardsButton setEnabled:YES];
                          }];
     }
 }
@@ -731,39 +1027,41 @@ DeckModel * allCards;
 }
 
 
-/** Returns empty array if can add to card, otherwise array of NSString as reasons to why card cannot be added. */
--(NSMutableArray*) canAddCardToDeckWithReason: (CardModel*) card
+/** Returns list of reasons why the deck is invalid. If is valid, returns empty array */
+-(NSMutableArray*) canAddCardToDeck: (CardModel*) card
 {
-    NSMutableArray* reasons = [NSMutableArray array];
-    if (self.deckView.currentCells.count >= MAX_CARDS_IN_DECK) //TODO extra card ability
-    {
-        [reasons addObject:@"Maximum card limit reached."];
-    }
-    //TODO element, ability limit
+    DeckModel*deck = [[DeckModel alloc] init];
+    for (CardModel* card in self.deckView.currentCells)
+        [deck addCard:card];
+    [deck addCard:card];
+    [DeckModel validateDeckIgnoreTooFewCards:deck];
     
-    return reasons;
-}
-
-/** Simply returns YES or NO. */
--(BOOL) canAddCardToDeck: (CardModel*) card
-{
-    if (self.deckView.currentCells.count >= MAX_CARDS_IN_DECK) //TODO extra card ability
-        return NO;
-    //TODO element, ability limit
-    
-    return YES;
+    return deck.invalidReasons;
 }
 
 -(BOOL) isCurrentDeckValid
 {
-    if (self.deckView.currentCells.count == MAX_CARDS_IN_DECK) //TODO extra card ability
-        return YES;
-    return NO;
+    DeckModel*deck = [[DeckModel alloc] init];
+    for (CardModel* card in self.deckView.currentCells)
+        [deck addCard:card];
+    [DeckModel validateDeck:deck];
+    
+    return !deck.isInvalid;
+}
+
+-(BOOL)isCurrentDeckValidIgnoreTooFewCards
+{
+    DeckModel*deck = [[DeckModel alloc] init];
+    for (CardModel* card in self.deckView.currentCells)
+        [deck addCard:card];
+    [DeckModel validateDeckIgnoreTooFewCards:deck];
+    
+    return !deck.isInvalid;
 }
 
 -(void)autoAddCardsButtonPressed
 {
-    //TODO temporary method, just as random cards
+    //TODO temporary method, just add random cards
     //TODO later needs to add cards that is actually valid
     NSMutableArray*ownedCards = [NSMutableArray array];
     for (CardModel*card in self.cardsView.currentCardModels)
@@ -792,61 +1090,77 @@ DeckModel * allCards;
         if (insertionIndex == -1)
             insertionIndex = self.deckView.currentCells.count;
         
-        
         [self.deckView.currentCells insertObject:cardModel atIndex:insertionIndex];
         [ownedCards removeObjectAtIndex:randomIndex];
     }
     
-    autoAddCardsLabel.alpha = 1;
-    autoAddCardsButton.alpha = 1;
-    notAutoAddCardsButton.alpha = 1;
-    
-    [autoAddCardsLabel setEnabled:NO];
-    [autoAddCardsButton setEnabled:NO];
-    [notAutoAddCardsButton setEnabled:NO];
+    autoAddView.alpha = 1;
     
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
-                         autoAddCardsLabel.alpha = 0;
-                         autoAddCardsButton.alpha = 0;
-                         notAutoAddCardsButton.alpha = 0;
+                         autoAddView.alpha = 0;
                      }
                      completion:^(BOOL completed){
-                         [autoAddCardsLabel removeFromSuperview];
-                         [autoAddCardsButton removeFromSuperview];
-                         [notAutoAddCardsButton removeFromSuperview];
+                         [autoAddView removeFromSuperview];
                      }];
     [self undarkenScreen];
     
-    [self saveDeckButtonPressed];
+    [self saveDeck];
 }
 
 -(void)notAutoAddCardsButtonPressed
 {
-    autoAddCardsLabel.alpha = 1;
-    autoAddCardsButton.alpha = 1;
-    notAutoAddCardsButton.alpha = 1;
-    
-    [autoAddCardsLabel setEnabled:NO];
-    [autoAddCardsButton setEnabled:NO];
-    [notAutoAddCardsButton setEnabled:NO];
+    autoAddView.alpha = 1;
     
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
-                         autoAddCardsLabel.alpha = 0;
-                         autoAddCardsButton.alpha = 0;
-                         notAutoAddCardsButton.alpha = 0;
+                         autoAddView.alpha = 0;
                      }
                      completion:^(BOOL completed){
-                         [autoAddCardsLabel removeFromSuperview];
-                         [autoAddCardsButton removeFromSuperview];
-                         [notAutoAddCardsButton removeFromSuperview];
+                         [autoAddView removeFromSuperview];
+                     }];
+    
+    [self saveDeck];
+    
+    [self undarkenScreen];
+}
+
+-(void)notFixDeckButtonPressed
+{
+    //return to deck without making any changes
+    
+    autoAddView.alpha = 1;
+    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         autoAddView.alpha = 0;
+                     }
+                     completion:^(BOOL completed){
+                         [autoAddView removeFromSuperview];
                      }];
     
     [self resetAllViews];
     
     [self undarkenScreen];
 }
+
+-(void)cancelNotFixButtonPressed
+{
+    //removes the view and makes no changes
+    
+    autoAddView.alpha = 1;
+    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         autoAddView.alpha = 0;
+                     }
+                     completion:^(BOOL completed){
+                         [autoAddView removeFromSuperview];
+                     }];
+    
+    [self undarkenScreen];
+}
+
 
 /** Resets all views to when it's first opened */
 -(void)resetAllViews
@@ -857,15 +1171,27 @@ DeckModel * allCards;
     [self.deckView removeAllCells];
     currentDeck = nil;
     
-    [self.view addSubview:emptyCardsLabel];
+    _searchResult.text = @"Select or create a deck to view your cards.";
+    _searchResult.frame = CGRectMake(10, self.cardsView.frame.size.height/2 - 40, self.cardsView.frame.size.width - 20, self.cardsView.frame.size.height);
+    [_searchResult sizeToFit];
+    
     [saveDeckButton removeFromSuperview];
+    [_filterToggleButton removeFromSuperview];
+    
+    if ([self isFilterOpen])
+        [self setFilterViewState:NO];
+    
+    for (UIView*view in _propertiesView.subviews)
+        view.alpha = 0;
+    
     [self.view addSubview:addDeckButton];
-    [self.view addSubview:backButton];
+    [_footerView addSubview:backButton];
     
     //add user decks
     self.deckView.viewMode = deckTableViewDecks;
     for (DeckModel*deck in userAllDecks)
     {
+        [DeckModel validateDeck:deck];
         [self.deckView.currentCells addObject:deck];
         
         NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:self.deckView.currentCells.count-1 inSection:0];
@@ -876,6 +1202,8 @@ DeckModel * allCards;
          [self.deckView.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.deckView.currentCells.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
          */
     }
+    
+    [invalidDeckButton removeFromSuperview];
     [self.deckView.tableView reloadInputViews];
     [self.deckView.tableView reloadData];
     [self updateDeckCounterLabel];
@@ -894,33 +1222,34 @@ DeckModel * allCards;
     if (currentDeck!=nil)
     {
         for (CardModel*card in currentDeck.cards)
-        {
-            [self.deckView.currentCells addObject:card];
-        }
-        [self.view addSubview:self.deleteDeckButton];
+            [self.deckView.currentCells addObject:[[CardModel alloc] initWithCardModel:card]];
+        
+        if (currentDeck.isInvalid)
+            [self.view addSubview:invalidDeckButton];
+        
+        _nameField.text = currentDeck.name;
+        NSString*tagsString = @"";
+        for (NSString *tag in currentDeck.tags)
+            tagsString = [NSString stringWithFormat:@"%@%@ ", tagsString, [tag lowercaseString]];
+        _tagsArea.text = tagsString;
     }
     
-    [self.deckView.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+    [_footerView addSubview:self.deleteDeckButton];
     
-    //get the CardView of every card in the deck
-    for (CardModel *card in allCards.cards)
-    {
-        [self updateCard:card];
-        [self.cardsView.currentCardModels addObject:card];
-    }
+    [_footerView addSubview:_filterToggleButton];
+    for (UIView*view in _propertiesView.subviews)
+        view.alpha = 1;
+    
+    
+    [self reloadCardsWithFilter];
     
     [self updateCardsCounterLabel];
     
     [addDeckButton removeFromSuperview];
-    [emptyCardsLabel removeFromSuperview];
+    _searchResult.text = @"";
     
     [self.view addSubview:saveDeckButton];
     
-    [self.cardsView.collectionView performBatchUpdates:^{
-        [self.cardsView.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
-    } completion:^(BOOL finished){
-        [self updateCardsViewCards];
-    }];
     //[self.cardsView.collectionView reloadData];
     //[self.cardsView.collectionView reloadInputViews];
 }
@@ -967,9 +1296,21 @@ DeckModel * allCards;
 
 -(void)deleteDeckConfirmButtonPressed
 {
-    [UserModel deleteDeck:currentDeck];
-    [self deleteDeckCancelButtonPressed]; //just to get rid of the dialogs
-    [self resetAllViews];
+    //delete the deck only if it actually exists
+    if (currentDeck != nil)
+    {
+        [self showActivityIndicatorWithBlock:^BOOL{
+            BOOL succ = [UserModel deleteDeck:currentDeck];
+            if (succ)
+            {
+                [self deleteDeckCancelButtonPressed]; //just to get rid of the dialogs
+                [self resetAllViews];
+                return YES;
+            }
+            else
+                return NO;
+        } loadingText:@"Deleting..." failedText:@"Failed to delete deck."];
+    }
 }
 
 -(void)deleteDeckCancelButtonPressed
@@ -996,100 +1337,269 @@ DeckModel * allCards;
     [self undarkenScreen];
 }
 
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
- {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
-
-/*
-#pragma mark - Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+-(void)invalidDeckButtonPressed
 {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 1;
+    DeckModel*deck = [[DeckModel alloc] init];
+    for (CardModel* card in self.deckView.currentCells)
+        [deck addCard:card];
+    [DeckModel validateDeck:deck];
+    
+    NSString *invalidDeckReasons = @"Problems with the deck:\n";
+    
+    for (NSString *reason in deck.invalidReasons)
+        invalidDeckReasons = [NSString stringWithFormat:@"%@- %@\n", invalidDeckReasons, reason];
+    
+    
+    _invalidDeckReasonsLabel.frame = CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/6, SCREEN_WIDTH*6/8, SCREEN_HEIGHT);
+    _invalidDeckReasonsLabel.text = invalidDeckReasons;
+    
+    [_invalidDeckReasonsLabel sizeToFit];
+    
+    [self darkenScreen];
+    
+    [self.view addSubview:_invalidDeckReasonsLabel];
+    [self.view addSubview:_invalidDeckReasonsOkButton];
+    
+    _invalidDeckReasonsLabel.alpha = 0;
+    _invalidDeckReasonsOkButton.alpha = 0;
+    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _invalidDeckReasonsLabel.alpha = 1;
+                         _invalidDeckReasonsOkButton.alpha = 1;
+                     }
+                     completion:^(BOOL completed){
+                     }];
+}
+
+-(void)invalidDeckReasonsOkButtonPressed
+{
+    [self undarkenScreen];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _invalidDeckReasonsLabel.alpha = 0;
+                         _invalidDeckReasonsOkButton.alpha = 0;
+                     }
+                     completion:^(BOOL completed){
+                         [_invalidDeckReasonsLabel removeFromSuperview];
+                         [_invalidDeckReasonsOkButton removeFromSuperview];
+                     }];
+}
+
+-(void)filterToggleButtonPressed
+{
+    [self setFilterViewState:![self isFilterOpen]];
+}
+
+-(BOOL)isFilterOpen
+{
+    return [_filterToggleButton isSelected];
+}
+
+-(void)setFilterViewState:(BOOL)state
+{
+    _filterToggleButton.selected = state;
+    
+    CGRect filterViewFrame = _filterView.frame;
+    if (state)
+    {
+        _searchResult.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/5);
+        [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             [_filterView setFrame:CGRectMake(filterViewFrame.origin.x, filterViewFrame.origin.y - filterViewFrame.size.height, filterViewFrame.size.width, filterViewFrame.size.height)];
+                         }
+                         completion:^(BOOL completed){
+                             
+                         }];
+    }
+    else
+    {
+        _searchResult.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/2);
+        [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             [_filterView setFrame:CGRectMake(filterViewFrame.origin.x, filterViewFrame.origin.y + filterViewFrame.size.height, filterViewFrame.size.width, filterViewFrame.size.height)];
+                         }
+                         completion:^(BOOL completed){
+                             
+                         }];
+    }
+}
+
+-(void)reloadCardsWithFilter
+{
+    [self.cardsView.currentCardModels removeAllObjects];
+    
+    [self.deckView.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+    
+    //get the CardView of every card in the deck
+    for (CardModel *card in allCards.cards)
+    {
+        if (card.cost >= 0 && card.cost < _costFilter.count)
+        {
+            if ([_costFilter[card.cost] boolValue] == NO)
+                continue;
+        }
+        
+        if ((int)card.element >= 0 && (int)card.element < _elementFilter.count)
+        {
+            if ([_elementFilter[card.element] boolValue] == NO)
+                continue;
+        }
+        
+        if ((int)card.rarity >= 0 && (int)card.rarity < _rarityFilter.count)
+        {
+            if ([_rarityFilter[card.rarity] boolValue] == NO)
+                continue;
+        }
+        
+        [self updateCard:card];
+        [self.cardsView.currentCardModels addObject:card];
+    }
+
+    [self.cardsView.collectionView performBatchUpdates:^{
+        [self.cardsView.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+    } completion:^(BOOL finished){
+        [self updateCardsViewCards];
+    }];
+    
+    CGPoint searchResultCenter = _searchResult.center;
+    if (self.cardsView.currentCardModels.count == 0)
+    {
+        _searchResult.text = @"No cards found. Please double check your filter settings.";
+    }
+    else
+    {
+        _searchResult.text = @"";
+    }
+    _searchResult.frame = CGRectMake(10, self.cardsView.frame.size.height/2 - 40, self.cardsView.frame.size.width - 20, self.cardsView.frame.size.height);
+    [_searchResult sizeToFit];
+    _searchResult.center = searchResultCenter;
+}
+
+-(void)costFilterButtonPressed:(id)sender
+{
+    UIButton*senderButton = sender;
+    
+    int i = 0;
+    for (UIButton*button in _costFilterButtons)
+    {
+        if (senderButton == button)
+        {
+            _costFilter[i] = @(!([_costFilter[i] boolValue]));
+            button.alpha = [_costFilter[i] boolValue] ? 1 : 0.4;
+            break;
+        }
+        i++;
+    }
+    
+    [self reloadCardsWithFilter];
     
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+-(void)rarityFilterButtonPressed:(id)sender
 {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return self.currentCardViews.count;
+    UIButton*senderButton = sender;
+    
+    int i = 0;
+    for (UIButton*button in _rarityFilterButtons)
+    {
+        if (senderButton == button)
+        {
+            _rarityFilter[i] = @(!([_rarityFilter[i] boolValue]));
+            button.alpha = [_rarityFilter[i] boolValue] ? 1 : 0.4;
+            break;
+        }
+        i++;
+    }
+    
+    [self reloadCardsWithFilter];
+}
+
+-(void)elementFilterButtonPressed:(id)sender
+{
+    UIButton*senderButton = sender;
+    
+    int i = 0;
+    for (UIButton*button in _elementFilterButtons)
+    {
+        if (senderButton == button)
+        {
+            _elementFilter[i] = @(!([_elementFilter[i] boolValue]));
+            button.alpha = [_elementFilter[i] boolValue] ? 1 : 0.4;
+            break;
+        }
+        i++;
+    }
+    
+    [self reloadCardsWithFilter];
+}
+
+-(void)showActivityIndicatorWithBlock:(BOOL (^)())block loadingText:(NSString*)loadingText failedText:(NSString*)failedText
+{
+    _activityIndicator.alpha = 0;
+    _activityLabel.text = loadingText;
+    [_activityIndicator setColor:[UIColor whiteColor]];
+    [self.view addSubview:_activityIndicator];
+    [_activityIndicator startAnimating];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _activityIndicator.alpha = 1;
+                     }
+                     completion:^(BOOL completed){
+                         BOOL succ = block();
+                         
+                         if (succ)
+                         {
+                             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                                              animations:^{
+                                                  _activityIndicator.alpha = 0;
+                                              }
+                                              completion:^(BOOL completed){
+                                                  [_activityIndicator stopAnimating];
+                                                  [_activityIndicator removeFromSuperview];
+                                              }];
+                         }
+                         else
+                         {
+                             [_activityIndicator setColor:[UIColor clearColor]];
+                             _activityLabel.text = failedText;
+                             _activityFailedButton.alpha = 0;
+                             [_activityIndicator addSubview:_activityFailedButton];
+                             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                                              animations:^{
+                                                  _activityFailedButton.alpha = 1;
+                                              }
+                                              completion:^(BOOL completed){
+                                                  [_activityFailedButton setUserInteractionEnabled:YES];
+                                              }];
+                         }
+                     }];
+}
+
+-(void)activityFailedButtonPressed
+{
+    [_activityFailedButton setUserInteractionEnabled:NO];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _activityIndicator.alpha = 0;
+                     }
+                     completion:^(BOOL completed){
+                         [_activityFailedButton removeFromSuperview];
+                     }];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return NO;
 }
 
 
- - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
- {
-     
-     
-     
-     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cardCell" forIndexPath:indexPath];
- 
-     CardView *card = self.currentCardViews[indexPath.row];
-     [cell addSubview:card];
-     
-     
-     //cardimg = s
-     
-     //UILabel *attackLabel = (UILabel *)[cell viewWithTag:4];
-     
-     //attackLabel.text = thisCard.creator;
-     
-    
-     
-     
- // Configure the cell...
- 
- return cell;
- }
- */
-
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- } else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
+-(void)tapRegistered
+{
+    [_nameField resignFirstResponder];
+    [_tagsArea resignFirstResponder];
+}
 
 //block delay functions
 - (void)performBlock:(void (^)())block

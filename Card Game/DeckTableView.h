@@ -21,6 +21,8 @@
 
 @property enum DeckTableViewMode viewMode;
 
+-(BOOL)containsCardId:(int)idNumber;
+
 -(void)removeCellAt:(int)index;
 
 -(void)removeAllCells;

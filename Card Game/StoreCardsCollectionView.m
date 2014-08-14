@@ -9,6 +9,7 @@
 #import "StoreCardsCollectionView.h"
 #import "StoreCardCell.h"
 #import "GameStore.h"
+#import "StoreViewController.h"
 
 @implementation StoreCardsCollectionView
 
@@ -37,9 +38,6 @@ const float STORE_CARD_SCALE = 1.1f;
         [self setUserInteractionEnabled:YES];
         
         [self addSubview:self.collectionView];
-        
-        
-        
     }
     return self;
 }
@@ -98,26 +96,59 @@ const float STORE_CARD_SCALE = 1.1f;
 //this function prevents loading for the wrong cell when scrolling is too fast
 -(void)loadCellAtIndexPath:(NSIndexPath*)indexPath
 {
+    //saves the query ID so that when card is loaded, the ID is compared to check if it's out of date
+    int queryID = cardStoreQueryID;
+    NSLog(@"saved query id: %d for indexPath: %d",  queryID, indexPath.row);
     [_loadingCells addObject:indexPath];
     
     NSLog(@"%d got into null", indexPath.row);
     //[self performBlockInBackground:^(void){
     int i = indexPath.row;
     
+    if (i >= self.currentSales.count)
+    {
+        [_loadingCells removeObject:indexPath];
+        NSLog(@"INDEX LARGER THAN SALE COUNT");
+        //try again
+        /*
+        [self performBlockInBackground:^{
+            sleep(0.1);
+        } onFinish:^{
+            dispatch_sync(dispatch_get_main_queue(), ^(void) {
+                if (![_loadingCells containsObject:indexPath])
+                    [self loadCellAtIndexPath:indexPath];
+            });
+        }];
+        */
+        return;
+    }
+    
     PFObject *sale = self.currentSales[i];
     PFObject *cardPF = sale[@"card"];
     
+    [sale save];
     [self performBlockInBackground:^(void){
-        
+        //somehow even query has include, cardPF can still be nil
+        NSError*error;
+        [cardPF fetchIfNeeded:&error];
+        if (error)
+            return;
         //[cardPF fetch];
         self.currentCardsPF[i] = cardPF;
         
+        //TODO this is still not exactly correct, as when a tab/filter is hit, all these cells progresses should be destroyed
         [CardModel createCardFromPFObject:cardPF onFinish:^(CardModel*cardModel){
             dispatch_sync(dispatch_get_main_queue(), ^(void) {
-                if (i < 0 || i >= self.currentCards.count)
+                //if query ID has been updated (i.e. new query sent), then this query is out of date and should be removed
+                NSLog(@"original id: %d currentID %d for path:%d", queryID, cardStoreQueryID, indexPath.row);
+                if (i < 0 || i >= self.currentCards.count || queryID != cardStoreQueryID)
                 {
                     //failed to load this cell, no longer loading
                     [_loadingCells removeObject:indexPath];
+                    
+                    //reload the cell
+                    if (![_loadingCells containsObject:indexPath])
+                        [self loadCellAtIndexPath:indexPath];
                     return;
                 }
                 

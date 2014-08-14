@@ -77,7 +77,7 @@
 /** Gets a specific ability combination with the PFObject. */
 +(Ability*)getAbilityWithPFObject:(PFObject*)abilityPF;
 
-
++(AbilityWrapper*)getWrapperWithId:(int)idNumber;
 
 @end
 

@@ -42,6 +42,9 @@
     POINTS_ICON_IMAGE = [UIImage imageNamed:@"points_icon"];
     GOLD_ICON_IMAGE = [UIImage imageNamed:@"gold_icon"];
     LIKE_ICON_IMAGE = [UIImage imageNamed:@"like_icon"];
+    CARD_ICON_IMAGE = [UIImage imageNamed:@"card_icon"];
+    CARD_ICON_GRAY_IMAGE = [UIImage imageNamed:@"card_icon_gray"];
+    ADD_ICON_IMAGE = [UIImage imageNamed:@"add_icon"];
 }
 
 @end
