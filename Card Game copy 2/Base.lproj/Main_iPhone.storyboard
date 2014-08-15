@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4510" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="E9T-Kz-3NZ">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
+    </dependencies>
+    <scenes>
+        <!--Game View Controller-->
+        <scene sceneID="ufC-wZ-h7g">
+            <objects>
+                <viewController id="vXZ-lx-hvc" customClass="GameViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="aIg-HL-DZB"/>
+                        <viewControllerLayoutGuide type="bottom" id="6ib-5C-car"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="246" y="94"/>
+        </scene>
+        <!--Main Screen View Controller-->
+        <scene sceneID="v0J-Pf-fCo">
+            <objects>
+                <viewController id="E9T-Kz-3NZ" customClass="MainScreenViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="dPT-YV-Q3b"/>
+                        <viewControllerLayoutGuide type="bottom" id="hwY-IN-Kz1"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="biq-TQ-Nff">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yUV-gl-v3X" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="245" y="883"/>
+        </scene>
+        <!--Card Editor View Controller-->
+        <scene sceneID="2ox-yD-pTN">
+            <objects>
+                <viewController id="jCD-Ou-U4V" customClass="CardEditorViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="zrC-XK-M5g"/>
+                        <viewControllerLayoutGuide type="bottom" id="ft2-Gj-9ZJ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bt-k3-MmS">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cCT-1W-u7R" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="670" y="975"/>
+        </scene>
+        <!--Deck Editor View Controller-->
+        <scene sceneID="cGC-qf-ji7">
+            <objects>
+                <viewController storyboardIdentifier="deckEdit" id="w4s-dx-D4Y" customClass="DeckEditorViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="sJL-9w-9zj"/>
+                        <viewControllerLayoutGuide type="bottom" id="hrR-n6-vfE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="4NW-hu-158">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Deck Editor" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nHc-Te-qTq">
+                                <rect key="frame" x="104" y="11" width="112" height="23"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <segmentedControl hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Ztj-VS-pze">
+                                <rect key="frame" x="53" y="31" width="166" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="Deck 1"/>
+                                    <segment title="Deck 2"/>
+                                    <segment title="Deck 3"/>
+                                </segments>
+                                <connections>
+                                    <action selector="DeckSegmentedControl:" destination="w4s-dx-D4Y" eventType="valueChanged" id="8Jd-MW-rHB"/>
+                                </connections>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lSW-qc-B9q">
+                                <rect key="frame" x="5" y="0.0" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Back">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="backBtnPressed:" destination="w4s-dx-D4Y" eventType="touchUpInside" id="v8D-Ot-5I5"/>
+                                </connections>
+                            </button>
+                            <segmentedControl hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="t85-nj-XSo">
+                                <rect key="frame" x="45" y="57" width="183" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="Monsters"/>
+                                    <segment title="Spells"/>
+                                    <segment title="Other"/>
+                                </segments>
+                                <connections>
+                                    <action selector="CardTypeValueChanged:" destination="w4s-dx-D4Y" eventType="valueChanged" id="xg3-eb-10J"/>
+                                </connections>
+                            </segmentedControl>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BoU-RW-Iqp">
+                                <rect key="frame" x="237" y="511" width="83" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Save Deck">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="SaveDeckPressed:" destination="w4s-dx-D4Y" eventType="touchUpInside" id="f3B-8r-VSy"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MPw-Pb-94f">
+                                <rect key="frame" x="0.0" y="511" width="145" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Remove All Cards">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="RemoveAllCardsPressed:" destination="w4s-dx-D4Y" eventType="touchUpInside" id="T9e-yu-1yd"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <connections>
+                        <outlet property="BackBtn" destination="lSW-qc-B9q" id="u9f-if-ldK"/>
+                        <outlet property="CardTypeSegmentedControl" destination="t85-nj-XSo" id="k6c-nA-UkI"/>
+                        <outlet property="DeckSegmentedControl" destination="Ztj-VS-pze" id="Krt-j9-asc"/>
+                        <outlet property="RemoveCardsButton" destination="MPw-Pb-94f" id="bZW-wE-jP9"/>
+                        <outlet property="SaveDeckBtn" destination="BoU-RW-Iqp" id="ZaI-5d-vaD"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ox2-Mf-yrN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="677" y="253"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Iz4-Sc-caO">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="tYh-9K-aZi" sceneMemberID="viewController">
+                    <toolbarItems/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KHB-jU-qw5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1515" y="441"/>
+        </scene>
+    </scenes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
