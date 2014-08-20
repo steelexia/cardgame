@@ -534,6 +534,7 @@ DeckModel * allCards;
             if (cardView != currentCard && currentCard == nil && cardView.cardViewState != cardViewStateCardViewerTransparent)
             {
                 CardView*newMaximizedView = [[CardView alloc] initWithModel:cardView.cardModel viewMode:cardViewModeEditor]; //constructor also modifies monster's cardView pointer
+                newMaximizedView.frontFacing = YES;
                 [newMaximizedView setCardViewState:cardView.cardViewState];
                 
                 newMaximizedView.cardModel.cardView = cardView; //recover the pointer
@@ -578,6 +579,7 @@ DeckModel * allCards;
             if (cardView != currentCard && currentCard == nil)
             {
                 CardView*newMaximizedView = [[CardView alloc] initWithModel:cardView.cardModel viewMode:cardViewModeEditor]; //constructor also modifies monster's cardView pointer
+                newMaximizedView.frontFacing = YES;
                 [newMaximizedView setCardViewState:cardView.cardViewState];
                 
                 newMaximizedView.cardModel.cardView = cardView; //recover the pointer
@@ -938,7 +940,7 @@ DeckModel * allCards;
         
         for (NSString*string in stringSplit)
         {
-            if (![tagsNoDup containsObject:string])
+            if (![tagsNoDup containsObject:string] && string.length > 0)
                 [tagsNoDup addObject:string];
         }
         
@@ -981,6 +983,9 @@ DeckModel * allCards;
             [view removeFromSuperview];
         
         autoAddCardsLabel.frame = CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/4, SCREEN_WIDTH*6/8, SCREEN_HEIGHT);
+        
+        //TODO: algorithm to automatically add decks is probably impossible (or just not very useful) because of the restriction between cards
+        /*
         BOOL deckTooSmall = [DeckModel isDeckInvalidOnlyTooFewCards:deck];
         if (deckTooSmall)
         {
@@ -990,12 +995,12 @@ DeckModel * allCards;
             [autoAddView addSubview:notAutoAddCardsButton];
         }
         else
-        {
+        {*/
             autoAddCardsLabel.text = @"The deck you are trying to save is invalid. Would you like to quit anyways?";
             
             [autoAddView addSubview:notFixDeckButton];
             [autoAddView addSubview:cancelNotFixButton];
-        }
+        //}
         
         [autoAddCardsLabel sizeToFit];
         
@@ -1127,8 +1132,6 @@ DeckModel * allCards;
 
 -(void)notFixDeckButtonPressed
 {
-    //return to deck without making any changes
-    
     autoAddView.alpha = 1;
     
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
@@ -1139,7 +1142,8 @@ DeckModel * allCards;
                          [autoAddView removeFromSuperview];
                      }];
     
-    [self resetAllViews];
+    //save the deck so they can finish it later
+    [self saveDeck];
     
     [self undarkenScreen];
 }
@@ -1230,7 +1234,9 @@ DeckModel * allCards;
         _nameField.text = currentDeck.name;
         NSString*tagsString = @"";
         for (NSString *tag in currentDeck.tags)
+        {
             tagsString = [NSString stringWithFormat:@"%@%@ ", tagsString, [tag lowercaseString]];
+        }
         _tagsArea.text = tagsString;
     }
     

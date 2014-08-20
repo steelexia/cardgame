@@ -56,7 +56,7 @@ NSManagedObjectContext*userCDContext;
 DeckModel *userCurrentDeck;
 int userDeckLimit;
 int userGold;
-PFObject *userPF;
+PFUser *userPF;
 BOOL userInfoLoaded;
 BOOL userInitError;
 

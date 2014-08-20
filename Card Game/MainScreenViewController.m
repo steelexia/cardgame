@@ -46,6 +46,7 @@ UILabel *loadingLabel;
     [self.view addSubview:backgroundImageBottom];
     
     //some temporary stuff
+    /*
     UILabel *tempTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 40)];
     tempTitle.center = CGPointMake(self.view.bounds.size.width/2, 50);
     tempTitle.textAlignment = NSTextAlignmentCenter;
@@ -53,31 +54,49 @@ UILabel *loadingLabel;
     tempTitle.textColor = [UIColor whiteColor];
     
     [self.view addSubview:tempTitle];
+     */
     
-    UIButton *singlePlayerButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    singlePlayerButton.frame = CGRectMake(0, 0, 200, 40);
-    singlePlayerButton.center = CGPointMake(self.view.bounds.size.width/2, self.view.bounds.size.height/2 - 80);
-    [singlePlayerButton setTitle:@"Single Player" forState:UIControlStateNormal];
+    UIImageView*menuLogo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"menu_logo"]];
+    menuLogo.frame = CGRectMake(0,0,250,200);
+    menuLogo.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/4);
+    
+    CFLabel*menuLogoBackground = [[CFLabel alloc] initWithFrame:CGRectInset(menuLogo.frame, 0, 15)];
+    menuLogoBackground.center = menuLogo.center;
+    [self.view addSubview:menuLogoBackground];
+    [self.view addSubview:menuLogo];
+    
+    CFButton *singlePlayerButton = [[CFButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
+    [singlePlayerButton setTextSize:12];
+    singlePlayerButton.frame = CGRectMake(0, 0, 100, 100);
+    singlePlayerButton.center = CGPointMake(self.view.bounds.size.width/3 - 5, self.view.bounds.size.height*2/3 - 58);
+    [singlePlayerButton setTitle:@"Singleplayer" forState:UIControlStateNormal];
     [singlePlayerButton addTarget:self action:@selector(singlePlayerButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-    [singlePlayerButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
     [self.view addSubview:singlePlayerButton];
     
-    UIButton *deckButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    deckButton.frame = CGRectMake(0, 0, 200, 40);
-    deckButton.center = CGPointMake(self.view.bounds.size.width/2, self.view.bounds.size.height/2 - 0);
+    CFButton *multiPlayerButton = [[CFButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
+    [multiPlayerButton setTextSize:12];
+    multiPlayerButton.frame = CGRectMake(0, 0, 100, 100);
+    multiPlayerButton.center = CGPointMake(self.view.bounds.size.width*2/3 + 5, self.view.bounds.size.height*2/3 - 58);
+    [multiPlayerButton setTitle:@"Multiplayer" forState:UIControlStateNormal];
+    [multiPlayerButton addTarget:self action:@selector(multiPlayerButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:multiPlayerButton];
+    
+    CFButton *deckButton = [[CFButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
+    [deckButton setTextSize:12];
+    deckButton.center = CGPointMake(self.view.bounds.size.width/3 - 5, self.view.bounds.size.height*2/3 + 58);
     [deckButton setTitle:@"Deck Builder" forState:UIControlStateNormal];
     [deckButton addTarget:self action:@selector(deckButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-    [deckButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
     [self.view addSubview:deckButton];
     
-    UIButton *storeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    storeButton.frame = CGRectMake(0, 0, 200, 40);
-    storeButton.center = CGPointMake(self.view.bounds.size.width/2, self.view.bounds.size.height/2 + 160);
+    CFButton *storeButton = [[CFButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
+    [storeButton setTextSize:12];
+    storeButton.frame = CGRectMake(0, 0, 100, 100);
+    storeButton.center = CGPointMake(self.view.bounds.size.width*2/3 + 5, self.view.bounds.size.height*2/3 + 58);
     [storeButton setTitle:@"Cards Store" forState:UIControlStateNormal];
     [storeButton addTarget:self action:@selector(storeButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-    [storeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
     [self.view addSubview:storeButton];
     
@@ -134,8 +153,17 @@ UILabel *loadingLabel;
 
 -(void)singlePlayerButtonPressed
 {
+    /*
     CampaignMenuViewController *viewController = [[CampaignMenuViewController alloc] init];
     [self presentViewController:viewController animated:NO completion:nil];
+     */
+    SinglePlayerMenuViewController *viewController = [[SinglePlayerMenuViewController alloc] init];
+    [self presentViewController:viewController animated:NO completion:nil];
+}
+
+-(void)multiPlayerButtonPressed
+{
+    
 }
 
 -(void)deckButtonPressed

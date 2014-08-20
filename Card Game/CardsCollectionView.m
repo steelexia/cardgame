@@ -77,6 +77,7 @@
     CardModel*card = self.currentCardModels[indexPath.row];
     
     cell.cardView = [[CardView alloc] initWithModel:card viewMode:card.cardViewState viewState:card.cardViewState];
+    cell.cardView.frontFacing = YES;
     cell.cardView.cardHighlightType = cardHighlightNone;
     cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_VIEWER_SCALE, CARD_VIEWER_SCALE);
     cell.cardView.center = cell.center;

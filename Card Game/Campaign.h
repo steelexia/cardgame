@@ -13,7 +13,11 @@
 
 +(void)loadResources;
 +(Level*)getLevelWithDifficulty:(int)difficulty withChapter:(int)chapter withLevel:(int)level;
++(Level*)getNextLevelWithLevelID:(NSString*)levelID;
 
 @end
 
-extern const int NUMBER_OF_DIFFICULTIES, NUMBER_OF_ACTS;
+extern const int NUMBER_OF_DIFFICULTIES, NUMBER_OF_CHAPTERS;
+
+//for easier access by GVC
+extern const NSString *TUTORIAL_ONE,*TUTORIAL_TWO,*TUTORIAL_THREE,*TUTORIAL_FOUR;

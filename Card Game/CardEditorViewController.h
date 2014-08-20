@@ -14,6 +14,8 @@
 #import "AbilityTableView.h"
 #import "GKImagePicker.h"
 #import "CardVote.h"
+#import "CFButton.h"
+#import "CFLabel.h"
 
 @interface CardEditorViewController : UIViewController <UITextFieldDelegate, GKImagePickerDelegate>
 
@@ -42,4 +44,10 @@ extern const double CARD_EDITOR_SCALE;
 enum CardEditorMode{
     cardEditorModeCreation,
     cardEditorModeVoting,
+    /** Immediately opens the upload image screen, can only change the card's name. Stats are pre-set. Not uploaded and only used for first level */
+    cardEditorModeTutorialOne,
+    /** Allowed to change cost, damage, life, cooldown, and tags. Only monster card allowed, no abilities are allowed */
+    cardEditorModeTutorialTwo,
+    /** Everything allowed, but helps to describe the abilities a bit */
+    cardEditorModeTutorialThree,
 };

@@ -11,6 +11,7 @@
 #import "UIConstants.h"
 #import "CardView.h"
 
+
 @interface DeckChooserViewController ()
 
 @end
@@ -38,17 +39,24 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [self.view setUserInteractionEnabled:YES];
     
     self.deckBackground = [[UIView alloc]initWithFrame:CGRectMake(20, 160, 190, 230)];
-    [self.deckBackground setBackgroundColor:COLOUR_NEUTRAL];
+    [self.deckBackground setBackgroundColor:COLOUR_NEUTRAL_DARK];
     [self.deckBackground.layer setCornerRadius:8];
     [self.deckBackground.layer setBorderColor:[UIColor blackColor].CGColor];
     [self.deckBackground.layer setBorderWidth:2];
-    
     [self.view addSubview:self.deckBackground];
     
-    self.opponentName = @"Some AI Player";
+    //CFLabel*titleBackground = [[CFLabel alloc] initWithFrame:CGRectMake(-3, 10, self.deckBackground.bounds.size.width+6, 40)];
+    _titleBackground = [[CFLabel alloc] initWithFrame:CGRectMake(0, 0, self.deckBackground.bounds.size.width+6, 40)];
+    _titleBackground.center = CGPointMake(115, 190);
+    _titleBackground.backgroundColor = COLOUR_INTERFACE_BLUE;
+    [self.view addSubview:_titleBackground]; //cannot add to deckbackground due to layer stuff
+    _titleBackground.alpha = 0;
+    
+    self.deckBackground.alpha = 0;
+    
     
     //label showing opponent's name:
-    if (self.opponentName!=nil)
+    if (![self.opponentName isEqualToString:@""])
     {
         UILabel*opponentLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0,200,30)];
         [opponentLabel setFont:[UIFont fontWithName:cardMainFont size:18]];
@@ -59,7 +67,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
         
         [self.view addSubview:opponentLabel];
         
-        self.opponentNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0,200,30)];
+        self.opponentNameLabel = [[StrokedLabel alloc]initWithFrame:CGRectMake(0,0,200,30)];
         [self.opponentNameLabel setFont:[UIFont fontWithName:cardMainFont size:22]];
         [self.opponentNameLabel setText:self.opponentName];
         [self.opponentNameLabel setTextAlignment:NSTextAlignmentCenter];
@@ -81,7 +89,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     
     //name of the deck currently chosen
     self.chosenDeckNameLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,200,40)];
-    self.chosenDeckNameLabel.center = CGPointMake(115, 185);
+    self.chosenDeckNameLabel.center = CGPointMake(_titleBackground.bounds.size.width/2, 20);
     self.chosenDeckNameLabel.textAlignment = NSTextAlignmentCenter;
     self.chosenDeckNameLabel.textColor = [UIColor whiteColor];
     self.chosenDeckNameLabel.backgroundColor = [UIColor clearColor];
@@ -93,16 +101,34 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     self.chosenDeckNameLabel.strokeThickness = 3;
     //self.chosenDeckNameLabel.text = @"New Deck";
     
-    [self.view addSubview: self.chosenDeckNameLabel];
+    [_titleBackground addSubview: self.chosenDeckNameLabel];
     
-    self.chosenDeckTagsLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0,200,30)];
-    [self.chosenDeckTagsLabel setFont:[UIFont fontWithName:cardMainFont size:16]];
     
+    
+    CFLabel*elementsBackground = [[CFLabel alloc] initWithFrame:CGRectMake(6,55,self.deckBackground.bounds.size.width/2-6-3,168)];
+    elementsBackground.backgroundColor = COLOUR_NEUTRAL;
+    [self.deckBackground addSubview:elementsBackground];
+    
+    self.chosenDeckElementSummaryLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,55,self.deckBackground.bounds.size.width-90,160)];
+    self.chosenDeckElementSummaryLabel.numberOfLines = 5;
+    [self.chosenDeckElementSummaryLabel setTextAlignment:NSTextAlignmentLeft];
+    [self.chosenDeckElementSummaryLabel setFont:[UIFont fontWithName:cardMainFont size:14]];
+    [self.chosenDeckElementSummaryLabel setTextColor:[UIColor blackColor]];
+    
+    [self.deckBackground addSubview:self.chosenDeckElementSummaryLabel];
+    
+    CFLabel*tagsBackground = [[CFLabel alloc] initWithFrame:CGRectMake(self.deckBackground.bounds.size.width/2 + 3,55,self.deckBackground.bounds.size.width/2-6-3,168)];
+    tagsBackground.backgroundColor = COLOUR_NEUTRAL;
+    [self.deckBackground addSubview:tagsBackground];
+    
+    self.chosenDeckTagsLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.deckBackground.bounds.size.width/2+5,55,self.deckBackground.bounds.size.width/2-10,180)];
+    [self.chosenDeckTagsLabel setFont:[UIFont fontWithName:cardMainFont size:14]];
+    self.chosenDeckTagsLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    self.chosenDeckTagsLabel.numberOfLines = 8;
     [self.chosenDeckTagsLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.chosenDeckTagsLabel setCenter:CGPointMake(115, 310)];
     [self.chosenDeckTagsLabel setTextColor:[UIColor blackColor]];
     
-    [self.view addSubview:self.chosenDeckTagsLabel];
+    [self.deckBackground addSubview:self.chosenDeckTagsLabel];
     
     self.chooseDeckButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 90, 75)];
     self.chooseDeckButton.center = CGPointMake(115, SCREEN_HEIGHT-41);
@@ -144,18 +170,33 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     {
         if ([self.deckView.currentCells[indexPath.row] isKindOfClass:[DeckModel class]])
         {
-            self.currentDeck = self.deckView.currentCells[indexPath.row];
+            DeckModel *deck = self.deckView.currentCells[indexPath.row];
+            if (deck.isInvalid) //not a valid deck, can't be clicked
+                return;
             
-            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
-                             animations:^{
-                                 self.chosenDeckNameLabel.text = self.currentDeck.name;
-                                 [self.chosenDeckTagsLabel setText:@"TODO additional info"];
-                             }
-                             completion:^(BOOL completed){
-                             }];
+            self.currentDeck = deck;
             
+            self.deckBackground.alpha = 1;
+            self.titleBackground.alpha = 1;
             
-            //todo lots of other info
+            self.chosenDeckElementSummaryLabel.text = [DeckModel getElementSummary:deck];
+            self.chosenDeckElementSummaryLabel.frame = CGRectMake(15,60,self.deckBackground.bounds.size.width/2-24,160);
+            [self.chosenDeckElementSummaryLabel sizeToFit];
+            
+            NSString*tags = @"";
+            for (NSString *tag in deck.tags)
+            {
+                if (tags.length > 0)
+                    tags = [NSString stringWithFormat:@"%@, %@", tags, tag];
+                else
+                    tags = [NSString stringWithFormat:@"%@", tag];
+            }
+            
+            [self.chosenDeckTagsLabel setText:tags];
+            self.chosenDeckTagsLabel.frame = CGRectMake(self.deckBackground.bounds.size.width/2+10,60,self.deckBackground.bounds.size.width/2-24,160);
+            [self.chosenDeckTagsLabel sizeToFit];
+            
+            self.chosenDeckNameLabel.text = self.currentDeck.name;
             
             if (self.currentDeck.isInvalid)
                 [self.chooseDeckButton setEnabled:NO];

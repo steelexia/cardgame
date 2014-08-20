@@ -27,6 +27,12 @@
 @property int goldReward;
 @property int cardReward;
 
+/** For AI */
+@property int difficultyOffset;
+
+/** Set this for battles that have breakBeforeNextLabel set to NO. */
+@property (strong) NSString*endBattleText;
+
 //Level settings
 /** Boss fights has no enemy hero, instead it's a minion on the field */
 @property BOOL isBossFight;

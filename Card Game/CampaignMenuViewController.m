@@ -32,7 +32,6 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     self.view.backgroundColor = [UIColor whiteColor];
     
     SCREEN_WIDTH = self.view.bounds.size.width;
@@ -67,9 +66,9 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
         if (i == 0)
             [difficultyButton setTitle:@"Normal" forState:UIControlStateNormal];
         else if (i == 1)
-            [difficultyButton setTitle:@"Cruel" forState:UIControlStateNormal];
+            [difficultyButton setTitle:@"Hard" forState:UIControlStateNormal];
         else if (i == 2)
-            [difficultyButton setTitle:@"Merciless" forState:UIControlStateNormal];
+            [difficultyButton setTitle:@"Insane" forState:UIControlStateNormal];
         
         if (i == 0)
             [difficultyButton setSelected:YES];
@@ -168,6 +167,106 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [self.view addSubview:_backButton];
     [_backButton addTarget:self action:@selector(backButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
+    _difficulty = 1;
+    _chapter = 1;
+    
+    [self updateCurrentLevelView];
+    [self setToLatestChapter];
+}
+
+
+-(void)setToLatestChapter
+{
+    //slow method but there are barely any levels in total anyways
+    for (int i = NUMBER_OF_DIFFICULTIES - 1; i >= 0; i--)
+    {
+        if ([_difficultyButtons[i] isEnabled])
+        {
+            [self difficultyButtonPressed:_difficultyButtons[i]];
+            break;
+        }
+    }
+    
+    for (int i = NUMBER_OF_CHAPTERS - 1; i >= 0; i--)
+    {
+        if ([_chapterButtons[i] isEnabled])
+        {
+            [self chapterButtonPressed:_chapterButtons[i]];
+            break;
+        }
+    }
+}
+
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [self updateCurrentLevelView];
+    [self setToLatestChapter];
+}
+
+-(void)updateCurrentLevelView
+{
+    //resets states of all buttons
+    NSArray*completedLevels = userPF[@"completedLevels"];
+    
+    for (int diffIndex = 0; diffIndex < NUMBER_OF_DIFFICULTIES; diffIndex++)
+    {
+        //diff 1 is always enabled
+        if (diffIndex == 0)
+            [_difficultyButtons[diffIndex] setEnabled:YES];
+        else
+        {
+            //a difficulty is unlocked if the last level of the previous difficulty is beaten
+            if ([completedLevels containsObject:[NSString stringWithFormat:@"d_%d_c_3_l_4", diffIndex]])
+            {
+                [_difficultyButtons[diffIndex] setEnabled:YES];
+                
+                if ([_difficultyButtons[diffIndex] isSelected])
+                    _difficulty = diffIndex+1;
+            }
+            else
+                [_difficultyButtons[diffIndex] setEnabled:NO];
+        }
+    }
+    
+    for (int chapterIndex = 0; chapterIndex < NUMBER_OF_CHAPTERS; chapterIndex++)
+    {
+        //chapter 1 is always enabled, since difficulty must be enabled to see this
+        if (chapterIndex == 0)
+        {
+            [_chapterButtons[chapterIndex] setEnabled:YES];
+            
+        }
+        else
+        {
+            //a chapter is unlocked if the last level of the previous chapter is beaten
+            if ([completedLevels containsObject:[NSString stringWithFormat:@"d_%d_c_%d_l_4", _difficulty, chapterIndex]])
+            {
+                [_chapterButtons[chapterIndex] setEnabled:YES];
+                
+                if ([_chapterButtons[chapterIndex] isSelected])
+                    _chapter = chapterIndex + 1;
+            }
+            else
+                [_chapterButtons[chapterIndex] setEnabled:NO];
+        }
+    }
+    
+    //levels are sadly hardcoded
+    
+    //level one is always enabled
+    
+    [self setLevelEnabled:1 enabled:YES];
+    
+    if ([completedLevels containsObject:[NSString stringWithFormat:@"d_%d_c_%d_l_1", _difficulty, _chapter]])
+        [self setLevelEnabled:2 enabled:YES];
+    else
+        [self setLevelEnabled:2 enabled:NO];
+    
+    if ([completedLevels containsObject:[NSString stringWithFormat:@"d_%d_c_%d_l_2", _difficulty, _chapter]])
+        [self setLevelEnabled:3 enabled:YES];
+    else
+        [self setLevelEnabled:3 enabled:NO];
 }
 
 -(void)backButtonPressed
@@ -184,17 +283,27 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     {
         if (senderButton == button)
         {
-            [self setDifficulty:i];
+            _difficulty = i+1;
             [_difficultyButtons[i] setSelected:YES];
         }
         else
         {
             if ([_difficultyButtons[i] isEnabled])
                 [_difficultyButtons[i] setSelected:NO];
-            NSLog(@"here");
         }
         i++;
     }
+    
+    //automatically selects the first chapter
+    for (int i = 0; i < _chapterButtons.count; i++)
+    {
+        if (i == 0)
+            [_chapterButtons[i] setSelected:YES];
+        else
+            [_chapterButtons[i] setSelected:NO];
+    }
+    
+    [self updateCurrentLevelView];
 }
 -(void)chapterButtonPressed:(id)sender
 {
@@ -205,18 +314,17 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     {
         if (senderButton == button)
         {
-            [self setChapter:i];
+            _chapter = i+1;
             [_chapterButtons[i] setSelected:YES];
         }
         else
         {
             if ([_chapterButtons[i] isEnabled])
                 [_chapterButtons[i] setSelected:NO];
-            NSLog(@"here");
         }
         i++;
     }
-    
+    [self updateCurrentLevelView];
 }
 
 -(void)levelButtonPressed:(id)sender
@@ -228,7 +336,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     else if (sender == _levelTwoButton)
         levelNumber = 2;
     else if (sender == _levelThreeButton)
-        levelNumber = 3;
+        levelNumber = 4;
     
     int chapterNumber = 0;
     for (UIButton*button in _chapterButtons)
@@ -255,18 +363,24 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     
     dcvc.nextScreen = gvc;
     
-    [self presentViewController:dcvc animated:NO completion:nil];
+    [self presentViewController:dcvc animated:YES completion:nil];
     
 }
 
--(void)setDifficulty:(int)difficulty
+-(void)setLevelEnabled:(int)level enabled:(BOOL)enabled
 {
-    
-}
-
--(void)setChapter:(int)chapter
-{
-    
+    if (level == 1)
+    {
+        [_levelOneButton setEnabled:enabled];
+    }
+    else if (level == 2)
+    {
+        [_levelTwoButton setEnabled:enabled];
+    }
+    else if (level == 3)
+    {
+        [_levelThreeButton setEnabled:enabled];
+    }
 }
 
 - (void)didReceiveMemoryWarning

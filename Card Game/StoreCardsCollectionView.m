@@ -76,6 +76,7 @@ const float STORE_CARD_SCALE = 1.1f;
             PFObject*cardPF = self.currentCardsPF[indexPath.row];
             
             cell.cardView = [[CardView alloc] initWithModel:card viewMode:cardViewStateMaximize viewState:card.cardViewState];
+            cell.cardView.frontFacing = YES;
             cell.cardView.cardHighlightType = cardHighlightNone;
             cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, STORE_CARD_SCALE, STORE_CARD_SCALE);
             cell.cardView.center = cell.center;
@@ -98,17 +99,17 @@ const float STORE_CARD_SCALE = 1.1f;
 {
     //saves the query ID so that when card is loaded, the ID is compared to check if it's out of date
     int queryID = cardStoreQueryID;
-    NSLog(@"saved query id: %d for indexPath: %d",  queryID, indexPath.row);
+    //NSLog(@"saved query id: %d for indexPath: %d",  queryID, indexPath.row);
     [_loadingCells addObject:indexPath];
     
-    NSLog(@"%d got into null", indexPath.row);
+    //NSLog(@"%d got into null", indexPath.row);
     //[self performBlockInBackground:^(void){
     int i = indexPath.row;
     
     if (i >= self.currentSales.count)
     {
         [_loadingCells removeObject:indexPath];
-        NSLog(@"INDEX LARGER THAN SALE COUNT");
+        //NSLog(@"INDEX LARGER THAN SALE COUNT");
         //try again
         /*
         [self performBlockInBackground:^{
@@ -121,6 +122,13 @@ const float STORE_CARD_SCALE = 1.1f;
         }];
         */
         return;
+    }
+    
+    //NSLog(@"%d %d", i, self.currentSales.count-1);
+    if (i == self.currentSales.count-1)
+    {
+        //NSLog(@"reached end");
+        [self scrolledToEnd];
     }
     
     PFObject *sale = self.currentSales[i];
@@ -140,7 +148,7 @@ const float STORE_CARD_SCALE = 1.1f;
         [CardModel createCardFromPFObject:cardPF onFinish:^(CardModel*cardModel){
             dispatch_sync(dispatch_get_main_queue(), ^(void) {
                 //if query ID has been updated (i.e. new query sent), then this query is out of date and should be removed
-                NSLog(@"original id: %d currentID %d for path:%d", queryID, cardStoreQueryID, indexPath.row);
+                //NSLog(@"original id: %d currentID %d for path:%d", queryID, cardStoreQueryID, indexPath.row);
                 if (i < 0 || i >= self.currentCards.count || queryID != cardStoreQueryID)
                 {
                     //failed to load this cell, no longer loading
@@ -155,6 +163,7 @@ const float STORE_CARD_SCALE = 1.1f;
                 self.currentCards[i] = cardModel;
                 StoreCardCell *cell = (StoreCardCell *)[_collectionView cellForItemAtIndexPath:indexPath];
                 cell.cardView = [[CardView alloc] initWithModel:cardModel viewMode:cardViewStateMaximize viewState:cardModel.cardViewState];
+                cell.cardView.frontFacing = YES;
                 cell.cardView.cardHighlightType = cardHighlightNone;
                 cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, STORE_CARD_SCALE, STORE_CARD_SCALE);
                 cell.cardView.center = cell.center;
@@ -177,6 +186,16 @@ const float STORE_CARD_SCALE = 1.1f;
         
     } onFinish:nil];
     
+}
+
+-(void)scrolledToEnd
+{
+    if (_parentViewController != nil && [_parentViewController isKindOfClass:[StoreViewController class]])
+    {
+        NSLog(@"scrolled to end");
+        StoreViewController *svc = (StoreViewController*)_parentViewController;
+        [svc storeScrolledToEnd];
+    }
 }
 
 - (void)performBlockInBackground:(void (^)())block onFinish:(void (^)())onFinish {

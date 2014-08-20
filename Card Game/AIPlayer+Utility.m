@@ -23,12 +23,12 @@
     }
     else if (ability.targetType == targetVictim)
     {
-        if (target!=nil)
+        if (target!=nil && !target.heroic)
             targets = @[target];
     }
     else if (ability.targetType == targetVictimMinion)
     {
-        if (target.type == cardTypePlayer) //do not cast ability if target is not a minion
+        if (target.type == cardTypePlayer || target.heroic) //do not cast ability if target is not a minion
             return @[];
         else if (target!=nil)
             targets = @[target];
@@ -57,6 +57,8 @@
         [allTargets removeObject:attacker]; //remove itself
         [allTargets addObjectsFromArray:self.gameModel.battlefield[oppositeSide]];
         
+        [allTargets removeObject:[self.gameModel.players[OPPONENT_SIDE] playerMonster]]; //boss fight
+        
         targets = [NSArray arrayWithArray:allTargets];
     }
     else if (ability.targetType == targetAllFriendly || ability.targetType == targetOneFriendly || ability.targetType == targetOneRandomFriendly)
@@ -71,6 +73,7 @@
     {
         NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.gameModel.battlefield[side]];
         [allTargets removeObject:attacker]; //remove itself
+        [allTargets removeObject:[self.gameModel.players[OPPONENT_SIDE] playerMonster]]; //boss fight
         targets = [NSArray arrayWithArray:allTargets];
     }
     else if (ability.targetType == targetAllEnemy || ability.targetType == targetOneEnemy || ability.targetType == targetOneRandomEnemy)
@@ -82,7 +85,9 @@
     }
     else if (ability.targetType == targetAllEnemyMinions || ability.targetType == targetOneEnemyMinion || ability.targetType == targetOneRandomEnemyMinion)
     {
-        targets = [NSArray arrayWithArray:self.gameModel.battlefield[oppositeSide]];
+        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.gameModel.battlefield[oppositeSide]];
+        [allTargets removeObject:[self.gameModel.players[OPPONENT_SIDE] playerMonster]]; //boss fight
+        targets = [NSArray arrayWithArray:allTargets];
     }
     else if (ability.targetType == targetHeroAny)
     {
@@ -175,6 +180,16 @@
     int cost = card.cost * -1000;
     if (cost == 0)
         cost = -250;
+    
+    cost += card.cost * -self.levelDifficultyOffset; //negative offset means cards are cheaper, since their stats are worse
+    
+    if (self.isBossFight) //boss cards are worse because the boss monster is extremely strong
+        cost += card.cost * 800;
+    if (self.isTutorial)
+        cost = 0; //all cards are "free" so they will use every card as soon as they get it
+    
+    
+    
     return cost;
 }
 

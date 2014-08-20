@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "CFButton.h"
 #import "CFLabel.h"
+#import "UserModel.h"
 
 @interface CampaignMenuViewController : UIViewController
 
@@ -19,4 +20,5 @@
 @property (strong)UIButton *levelOneButton,*levelTwoButton,*levelThreeButton;
 @property (strong)CFButton*backButton;
 
+@property int difficulty, chapter;
 @end

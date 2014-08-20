@@ -10,6 +10,8 @@
 #import "GameModel.h"
 #import "ViewLayer.h"
 #import "Level.h"
+#import "CFButton.h"
+#import "CFLabel.h"
 
 @class GameModel;
 
@@ -32,6 +34,8 @@
 /** Layer that stores the background, behind everything else */
 @property (strong) ViewLayer *backgroundView;
 
+@property UIView*gameOverBlockingView;
+
 /** Array storing the two player hero's views */
 @property (strong) NSArray *playerHeroViews;
 
@@ -48,7 +52,28 @@
 
 @property enum GameMode gameMode;
 
-@property (strong)Level *level;
+/** Just a convinence variable. If this is set to YES then level must be non-nil */
+@property BOOL isTutorial;
+
+/** Cards are annoying as disabling their parent view doesn't work */
+@property BOOL viewsDisabled;
+
+/** Note that while level is the current level, nextLevel is the level that will be immediately played following the current level. This should only be the case for the 3rd level, where it goes straight to the boss fight */ 
+@property (strong)Level *level, *nextLevel;
+
+//victory screen stuff
+@property (strong)UIView*gameOverScreen;
+@property (strong)StrokedLabel*resultsLabel, *rewardsLabel, *rewardGoldLabel, *rewardCardLabel;
+@property (strong)UIImageView*rewardGoldImage, *rewardCardImage;
+@property (strong)CFButton*gameOverOkButton, *gameOverRetryButton, *gameOverNoRetryButton;
+@property (strong)UIActivityIndicatorView *gameOverProgressIndicator;
+@property (strong)StrokedLabel*gameOverSaveLabel;
+
+
+//tutorial stuff
+@property (strong) CFLabel *tutLabel;
+@property (strong) CFButton*tutOkButton;
+@property (strong) UIImageView*arrowImage;
 
 /** updates the position of all hands with the gameModel, adding views to cards that don't have one yet */
 //-(void)updateHandsView;
@@ -79,12 +104,19 @@
 
 -(void)newGame;
 
+/*
+-(void)modalScreen;
+-(void)unmodalScreen;
+*/
+ 
 /** Quickly enable/disable all views */
 -(void)setAllViews:(BOOL)state;
 
 - (void)performBlock:(void (^)())block;
 
 - (void)performBlock:(void (^)())block afterDelay:(NSTimeInterval)delay;
+
+-(void)gameOver;
 
 @end
 

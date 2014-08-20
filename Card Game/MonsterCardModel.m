@@ -248,6 +248,7 @@ const int HERO_MAX_LIFE = 25000;
     self.cooldown = 0;
     self.side = side;
     self.deployed = YES;
+    self.heroic = YES;
 }
 
 -(void)resetAllStats

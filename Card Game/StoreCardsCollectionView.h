@@ -20,5 +20,7 @@
 @property (strong) NSMutableArray*loadingCells;
 @property (strong) CustomCollectionView *collectionView;
 
+@property (strong) UIViewController*parentViewController;
+
 @end
 

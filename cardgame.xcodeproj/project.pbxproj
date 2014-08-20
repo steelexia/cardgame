@@ -77,7 +77,6 @@
 		907D9BE7192446250037C0CF /* ViewLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 907D9BE6192446250037C0CF /* ViewLayer.m */; };
 		907D9BEA192515E70037C0CF /* Ability.m in Sources */ = {isa = PBXBuildFile; fileRef = 907D9BE9192515E70037C0CF /* Ability.m */; };
 		907D9BF1192D3DFB0037C0CF /* card_image_placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9BF0192D3DFB0037C0CF /* card_image_placeholder.png */; };
-		907D9BF3192D8D680037C0CF /* hero_default.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9BF2192D8D680037C0CF /* hero_default.png */; };
 		907D9BF5192E91290037C0CF /* card_glow_select.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9BF4192E91290037C0CF /* card_glow_select.png */; };
 		907D9BF7192E979C0037C0CF /* hero_glow_select.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9BF6192E979C0037C0CF /* hero_glow_select.png */; };
 		907D9BFD192FD35F0037C0CF /* card_glow_target.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9BFC192FD35F0037C0CF /* card_glow_target.png */; };
@@ -190,11 +189,23 @@
 		90F352D81915C8DB00601130 /* GameModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352D71915C8DB00601130 /* GameModel.m */; };
 		90F352DB1916B48A00601130 /* MonsterCardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352DA1916B48A00601130 /* MonsterCardModel.m */; };
 		90F352DE1916BB9300601130 /* SpellCardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F352DD1916BB9300601130 /* SpellCardModel.m */; };
+		90F63753199E7E94007B96A6 /* cardgame.mobileprovision in Resources */ = {isa = PBXBuildFile; fileRef = 90F63752199E7E94007B96A6 /* cardgame.mobileprovision */; };
 		90F7DAF91999AE5100D4FD97 /* invalid_deck_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F7DAF81999AE5100D4FD97 /* invalid_deck_button.png */; };
 		90F7DAFB199AC1ED00D4FD97 /* card_image_empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F7DAFA199AC1ED00D4FD97 /* card_image_empty.png */; };
 		90F7DAFE199ACAC500D4FD97 /* SinglePlayerMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F7DAFD199ACAC500D4FD97 /* SinglePlayerMenuViewController.m */; };
 		90F7DB01199ACF0C00D4FD97 /* CampaignMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F7DB00199ACF0C00D4FD97 /* CampaignMenuViewController.m */; };
 		90F7DB04199AD69C00D4FD97 /* Campaign.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F7DB03199AD69C00D4FD97 /* Campaign.m */; };
+		90F80F8119A14916007571F4 /* BossBattleScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F80F8019A14916007571F4 /* BossBattleScreenViewController.m */; };
+		90F80F8319A259A3007571F4 /* menu_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F80F8219A259A3007571F4 /* menu_logo.png */; };
+		90F80F8519A26510007571F4 /* card_back_default.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F80F8419A26510007571F4 /* card_back_default.png */; };
+		90F80F9119A27FA5007571F4 /* SSKeychain.strings in Resources */ = {isa = PBXBuildFile; fileRef = 90F80F8B19A27FA5007571F4 /* SSKeychain.strings */; };
+		90F80F9219A27FA5007571F4 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F80F8E19A27FA5007571F4 /* SSKeychain.m */; };
+		90F80F9319A27FA5007571F4 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F80F9019A27FA5007571F4 /* SSKeychainQuery.m */; };
+		90F80F9719A29317007571F4 /* card_1100.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F80F9519A29317007571F4 /* card_1100.png */; };
+		90F80F9819A29317007571F4 /* card_1000.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F80F9619A29317007571F4 /* card_1000.png */; };
+		90F80F9B19A2BEFA007571F4 /* CustomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F80F9A19A2BEFA007571F4 /* CustomView.m */; };
+		90F80F9E19A3D28E007571F4 /* GameViewController+Tutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F80F9D19A3D28E007571F4 /* GameViewController+Tutorial.m */; };
+		90F80FA119A3D3D9007571F4 /* arrow_left_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F80FA019A3D3D9007571F4 /* arrow_left_icon.png */; };
 		FA4025971956331300FCCBAB /* DeckEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4025961956331300FCCBAB /* DeckEditorViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -364,7 +375,6 @@
 		907D9BE8192515E70037C0CF /* Ability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ability.h; sourceTree = "<group>"; };
 		907D9BE9192515E70037C0CF /* Ability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Ability.m; sourceTree = "<group>"; };
 		907D9BF0192D3DFB0037C0CF /* card_image_placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_image_placeholder.png; path = "Card Game/card_image_placeholder.png"; sourceTree = "<group>"; };
-		907D9BF2192D8D680037C0CF /* hero_default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = hero_default.png; path = "Card Game/hero_default.png"; sourceTree = "<group>"; };
 		907D9BF4192E91290037C0CF /* card_glow_select.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_glow_select.png; path = "Card Game/card_glow_select.png"; sourceTree = "<group>"; };
 		907D9BF6192E979C0037C0CF /* hero_glow_select.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = hero_glow_select.png; path = "Card Game/hero_glow_select.png"; sourceTree = "<group>"; };
 		907D9BFC192FD35F0037C0CF /* card_glow_target.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_glow_target.png; path = "Card Game/card_glow_target.png"; sourceTree = "<group>"; };
@@ -519,6 +529,7 @@
 		90F352DA1916B48A00601130 /* MonsterCardModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonsterCardModel.m; sourceTree = "<group>"; };
 		90F352DC1916BB9300601130 /* SpellCardModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpellCardModel.h; sourceTree = "<group>"; };
 		90F352DD1916BB9300601130 /* SpellCardModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpellCardModel.m; sourceTree = "<group>"; };
+		90F63752199E7E94007B96A6 /* cardgame.mobileprovision */ = {isa = PBXFileReference; lastKnownFileType = file; path = cardgame.mobileprovision; sourceTree = "<group>"; };
 		90F7DAF81999AE5100D4FD97 /* invalid_deck_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = invalid_deck_button.png; path = "Card Game/invalid_deck_button.png"; sourceTree = "<group>"; };
 		90F7DAFA199AC1ED00D4FD97 /* card_image_empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_image_empty.png; path = "Card Game/card_image_empty.png"; sourceTree = "<group>"; };
 		90F7DAFC199ACAC500D4FD97 /* SinglePlayerMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SinglePlayerMenuViewController.h; sourceTree = "<group>"; };
@@ -527,6 +538,22 @@
 		90F7DB00199ACF0C00D4FD97 /* CampaignMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CampaignMenuViewController.m; sourceTree = "<group>"; };
 		90F7DB02199AD69C00D4FD97 /* Campaign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Campaign.h; sourceTree = "<group>"; };
 		90F7DB03199AD69C00D4FD97 /* Campaign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Campaign.m; sourceTree = "<group>"; };
+		90F80F7F19A14916007571F4 /* BossBattleScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BossBattleScreenViewController.h; sourceTree = "<group>"; };
+		90F80F8019A14916007571F4 /* BossBattleScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BossBattleScreenViewController.m; sourceTree = "<group>"; };
+		90F80F8219A259A3007571F4 /* menu_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = menu_logo.png; path = "Card Game/menu_logo.png"; sourceTree = "<group>"; };
+		90F80F8419A26510007571F4 /* card_back_default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_back_default.png; path = "Card Game/card_back_default.png"; sourceTree = "<group>"; };
+		90F80F8C19A27FA5007571F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SSKeychain.strings; sourceTree = "<group>"; };
+		90F80F8D19A27FA5007571F4 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychain.h; sourceTree = "<group>"; };
+		90F80F8E19A27FA5007571F4 /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychain.m; sourceTree = "<group>"; };
+		90F80F8F19A27FA5007571F4 /* SSKeychainQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychainQuery.h; sourceTree = "<group>"; };
+		90F80F9019A27FA5007571F4 /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychainQuery.m; sourceTree = "<group>"; };
+		90F80F9519A29317007571F4 /* card_1100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_1100.png; sourceTree = "<group>"; };
+		90F80F9619A29317007571F4 /* card_1000.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_1000.png; sourceTree = "<group>"; };
+		90F80F9919A2BEFA007571F4 /* CustomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomView.h; sourceTree = "<group>"; };
+		90F80F9A19A2BEFA007571F4 /* CustomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomView.m; sourceTree = "<group>"; };
+		90F80F9C19A3D28E007571F4 /* GameViewController+Tutorial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GameViewController+Tutorial.h"; sourceTree = "<group>"; };
+		90F80F9D19A3D28E007571F4 /* GameViewController+Tutorial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GameViewController+Tutorial.m"; sourceTree = "<group>"; };
+		90F80FA019A3D3D9007571F4 /* arrow_left_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = arrow_left_icon.png; path = "Card Game/arrow_left_icon.png"; sourceTree = "<group>"; };
 		FA4025951956331300FCCBAB /* DeckEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeckEditorViewController.h; sourceTree = "<group>"; };
 		FA4025961956331300FCCBAB /* DeckEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeckEditorViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -737,6 +764,8 @@
 		907D9BD919226B4C0037C0CF /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				90F80FA019A3D3D9007571F4 /* arrow_left_icon.png */,
+				90F80F8219A259A3007571F4 /* menu_logo.png */,
 				90C5289F199D613B00750C54 /* screen_background_bottom.png */,
 				90C528A0199D613B00750C54 /* screen_background_center.png */,
 				90C528A1199D613B00750C54 /* screen_background_top.png */,
@@ -815,8 +844,10 @@
 		907D9BDA19226B520037C0CF /* Cards */ = {
 			isa = PBXGroup;
 			children = (
+				90F80F9419A2930B007571F4 /* Singleplayer */,
 				90AB14FB196F2FB20008FCDD /* Abilities */,
 				9069AAD91955019A006D1D98 /* Rarity */,
+				90F80F8419A26510007571F4 /* card_back_default.png */,
 				90F7DAFA199AC1ED00D4FD97 /* card_image_empty.png */,
 				90AB14F4196CA7F90008FCDD /* card_background_front_monster_overlay.png */,
 				907D9BF6192E979C0037C0CF /* hero_glow_select.png */,
@@ -824,7 +855,6 @@
 				907D9BF4192E91290037C0CF /* card_glow_select.png */,
 				907D9BFC192FD35F0037C0CF /* card_glow_target.png */,
 				907D9BF0192D3DFB0037C0CF /* card_image_placeholder.png */,
-				907D9BF2192D8D680037C0CF /* hero_default.png */,
 				90F352CE191595F400601130 /* card_background_front.png */,
 				9069AAD419520003006D1D98 /* card_background_front_overlay.png */,
 			);
@@ -906,6 +936,8 @@
 				90F352AF191595C200601130 /* GameViewController.m */,
 				907D9BDD19229B330037C0CF /* GameViewController+Animation.h */,
 				907D9BDE19229B330037C0CF /* GameViewController+Animation.m */,
+				90F80F9C19A3D28E007571F4 /* GameViewController+Tutorial.h */,
+				90F80F9D19A3D28E007571F4 /* GameViewController+Tutorial.m */,
 				90F352D61915C8DB00601130 /* GameModel.h */,
 				90F352D71915C8DB00601130 /* GameModel.m */,
 				90605406191AA9D3000B3B93 /* PlayerModel.h */,
@@ -916,6 +948,8 @@
 				90AB14ED196B5ECC0008FCDD /* GameInfoTableViewCell.m */,
 				90AB14EF196B5F740008FCDD /* GameInfoTableView.h */,
 				90AB14F0196B5F740008FCDD /* GameInfoTableView.m */,
+				90F80F7F19A14916007571F4 /* BossBattleScreenViewController.h */,
+				90F80F8019A14916007571F4 /* BossBattleScreenViewController.m */,
 			);
 			name = "Game Battle Screen";
 			sourceTree = "<group>";
@@ -982,6 +1016,7 @@
 		90F3529C191595C200601130 /* Card Game */ = {
 			isa = PBXGroup;
 			children = (
+				90F80F8A19A27FA5007571F4 /* SSKeychain */,
 				90456ED0198D715700B807DC /* Store Screen */,
 				90DA4347195B25EE00E44AED /* Game Battle Screen */,
 				90DA4345195B258400E44AED /* Deck Editor Screen */,
@@ -1017,6 +1052,8 @@
 				90DA436D195F833400E44AED /* CustomTextField.m */,
 				90DA4351195DF83D00E44AED /* UIConstants.h */,
 				90DA4352195DF83D00E44AED /* UIConstants.m */,
+				90F80F9919A2BEFA007571F4 /* CustomView.h */,
+				90F80F9A19A2BEFA007571F4 /* CustomView.m */,
 				90F352B1191595C200601130 /* Images.xcassets */,
 				90F3529D191595C200601130 /* Supporting Files */,
 			);
@@ -1026,6 +1063,7 @@
 		90F3529D191595C200601130 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				90F63752199E7E94007B96A6 /* cardgame.mobileprovision */,
 				90F3529E191595C200601130 /* cardgame-Info.plist */,
 				90F3529F191595C200601130 /* InfoPlist.strings */,
 				90F352A2191595C200601130 /* main.m */,
@@ -1073,6 +1111,27 @@
 				9032E12C19953EAE002A6725 /* CardVote.m */,
 			);
 			name = Cards;
+			sourceTree = "<group>";
+		};
+		90F80F8A19A27FA5007571F4 /* SSKeychain */ = {
+			isa = PBXGroup;
+			children = (
+				90F80F8B19A27FA5007571F4 /* SSKeychain.strings */,
+				90F80F8D19A27FA5007571F4 /* SSKeychain.h */,
+				90F80F8E19A27FA5007571F4 /* SSKeychain.m */,
+				90F80F8F19A27FA5007571F4 /* SSKeychainQuery.h */,
+				90F80F9019A27FA5007571F4 /* SSKeychainQuery.m */,
+			);
+			path = SSKeychain;
+			sourceTree = "<group>";
+		};
+		90F80F9419A2930B007571F4 /* Singleplayer */ = {
+			isa = PBXGroup;
+			children = (
+				90F80F9519A29317007571F4 /* card_1100.png */,
+				90F80F9619A29317007571F4 /* card_1000.png */,
+			);
+			name = Singleplayer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1133,8 +1192,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				907020541992A1CB00FDE444 /* upload_from_file_button.png in Resources */,
+				90F80F8519A26510007571F4 /* card_back_default.png in Resources */,
 				90DA434C195B7C0300E44AED /* card_background_front_neutral_common_icon.png in Resources */,
 				90DA4371195F96DB00E44AED /* decrement_button.png in Resources */,
+				90F63753199E7E94007B96A6 /* cardgame.mobileprovision in Resources */,
 				90DA43C51969D21500E44AED /* add_deck_button_gray.png in Resources */,
 				90DA43BC1969D21500E44AED /* back_button.png in Resources */,
 				9032E13D199918F8002A6725 /* category_tab_enabled.png in Resources */,
@@ -1150,6 +1211,7 @@
 				90DA4358195E023600E44AED /* no_button.png in Resources */,
 				90DA4350195DF3C500E44AED /* save_deck_button.png in Resources */,
 				90456EE8198F1B9100B807DC /* like_button.png in Resources */,
+				90F80F9119A27FA5007571F4 /* SSKeychain.strings in Resources */,
 				90AB1500196F2FF20008FCDD /* encode-sans.compressed-bold.ttf in Resources */,
 				90AB15041979FFA40008FCDD /* battle_background_0_overlay.png in Resources */,
 				90DA43C71969D21500E44AED /* remove_deck_button.png in Resources */,
@@ -1164,6 +1226,7 @@
 				90C52897199C2A1300750C54 /* search_button_small.png in Resources */,
 				90AB150D197AE3CF0008FCDD /* card_ability_icon_cast_on_damaged.png in Resources */,
 				90AB14F5196CA7F90008FCDD /* card_background_front_monster_overlay.png in Resources */,
+				90F80F9719A29317007571F4 /* card_1100.png in Resources */,
 				907020741992AC8100FDE444 /* PLCameraSheetButtonPressed@2x.png in Resources */,
 				90DA4372195F96DB00E44AED /* increment_button.png in Resources */,
 				90C5289E199C369100750C54 /* search_button_small_selected.png in Resources */,
@@ -1194,6 +1257,7 @@
 				907020721992AC8100FDE444 /* PLCameraSheetButton@2x.png in Resources */,
 				90DA4355195E022B00E44AED /* yes_button.png in Resources */,
 				9070204C19915FD500FDE444 /* card_background_front_overlay_exceptional.png in Resources */,
+				90F80F8319A259A3007571F4 /* menu_logo.png in Resources */,
 				90C52898199C2A1300750C54 /* filter_button_small.png in Resources */,
 				90AB1509197AD6DA0008FCDD /* card_ability_icon_cast_on_hit.png in Resources */,
 				907020761992AC8100FDE444 /* PLCameraSheetDoneButton@2x.png in Resources */,
@@ -1203,8 +1267,8 @@
 				90DA43C01969D21500E44AED /* spell_button_gray.png in Resources */,
 				90DA43BA1969D21500E44AED /* battle_button_gray.png in Resources */,
 				907020781992AC8100FDE444 /* PLCameraSheetDoneButtonPressed@2x.png in Resources */,
-				907D9BF3192D8D680037C0CF /* hero_default.png in Resources */,
 				907020501992937E00FDE444 /* points_icon_card_creator.png in Resources */,
+				90F80FA119A3D3D9007571F4 /* arrow_left_icon.png in Resources */,
 				90DA437519608F4D00E44AED /* increment_button_gray.png in Resources */,
 				907D9BF7192E979C0037C0CF /* hero_glow_select.png in Resources */,
 				9069AAE2195501AB006D1D98 /* card_background_front_earth_common.png in Resources */,
@@ -1239,6 +1303,7 @@
 				90F7DAFB199AC1ED00D4FD97 /* card_image_empty.png in Resources */,
 				907D9C071932538E0037C0CF /* end_turn_button_disabled.png in Resources */,
 				907020441991437D00FDE444 /* gold_icon.png in Resources */,
+				90F80F9819A29317007571F4 /* card_1000.png in Resources */,
 				9032E13819986121002A6725 /* filter_button.png in Resources */,
 				907D9BFD192FD35F0037C0CF /* card_glow_target.png in Resources */,
 				90456EE3198F1B9100B807DC /* buy_button_gray.png in Resources */,
@@ -1268,6 +1333,7 @@
 				90F352D81915C8DB00601130 /* GameModel.m in Sources */,
 				90F352DB1916B48A00601130 /* MonsterCardModel.m in Sources */,
 				9070206B1992AC8100FDE444 /* GKCropBorderView.m in Sources */,
+				90F80F9319A27FA5007571F4 /* SSKeychainQuery.m in Sources */,
 				90456EC9198AFD6B00B807DC /* CardsCollectionCell.m in Sources */,
 				9070206D1992AC8100FDE444 /* GKImageCropView.m in Sources */,
 				9069AAD819528A7B006D1D98 /* StrokedLabel.m in Sources */,
@@ -1295,6 +1361,7 @@
 				90F352D21915961C00601130 /* CardView.m in Sources */,
 				90DA436B195F6E6000E44AED /* CGPointUtilities.m in Sources */,
 				907D9C1E193F87BE0037C0CF /* AbilityWrapper.m in Sources */,
+				90F80F9219A27FA5007571F4 /* SSKeychain.m in Sources */,
 				9032E13019959483002A6725 /* CardPointsUtility.m in Sources */,
 				90DA4344195B256100E44AED /* DeckTableView.m in Sources */,
 				90C528A7199D6CC100750C54 /* CFButton.m in Sources */,
@@ -1306,6 +1373,7 @@
 				90DA43321959CDF900E44AED /* CardsCollectionView.m in Sources */,
 				90DA43D9196A222800E44AED /* CustomScrollView.m in Sources */,
 				90DA4353195DF83D00E44AED /* UIConstants.m in Sources */,
+				90F80F8119A14916007571F4 /* BossBattleScreenViewController.m in Sources */,
 				907D9C05193247450037C0CF /* AIPlayer.m in Sources */,
 				90DA43CD1969DD9000E44AED /* CDCardModel.m in Sources */,
 				9070206E1992AC8100FDE444 /* GKImageCropViewController.m in Sources */,
@@ -1313,9 +1381,11 @@
 				90F352DE1916BB9300601130 /* SpellCardModel.m in Sources */,
 				9070206C1992AC8100FDE444 /* GKImageCropOverlayView.m in Sources */,
 				FA4025971956331300FCCBAB /* DeckEditorViewController.m in Sources */,
+				90F80F9E19A3D28E007571F4 /* GameViewController+Tutorial.m in Sources */,
 				90DA436E195F833400E44AED /* CustomTextField.m in Sources */,
 				90DA43D31969E4F100E44AED /* CardGameCoreData.xcdatamodeld in Sources */,
 				90456ECF198D588D00B807DC /* DeckCardCell.m in Sources */,
+				90F80F9B19A2BEFA007571F4 /* CustomView.m in Sources */,
 				90F352D519159A0300601130 /* CardModel.m in Sources */,
 				90456ED3198D717200B807DC /* StoreViewController.m in Sources */,
 			);
@@ -1378,6 +1448,14 @@
 				90F352C2191595C300601130 /* en */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		90F80F8B19A27FA5007571F4 /* SSKeychain.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				90F80F8C19A27FA5007571F4 /* en */,
+			);
+			name = SSKeychain.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1488,7 +1566,7 @@
 				GCC_PREFIX_HEADER = "Card Game/cardgame-Prefix.pch";
 				INFOPLIST_FILE = "Card Game/cardgame-Info.plist";
 				PRODUCT_NAME = cardgame;
-				PROVISIONING_PROFILE = "3CC30DCD-1F55-4E15-A2C3-D21D922750C7";
+				PROVISIONING_PROFILE = "944053EC-E75D-45F2-8B8F-9201CB201254";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1520,7 +1598,7 @@
 				GCC_PREFIX_HEADER = "Card Game/cardgame-Prefix.pch";
 				INFOPLIST_FILE = "Card Game/cardgame-Info.plist";
 				PRODUCT_NAME = cardgame;
-				PROVISIONING_PROFILE = "3CC30DCD-1F55-4E15-A2C3-D21D922750C7";
+				PROVISIONING_PROFILE = "944053EC-E75D-45F2-8B8F-9201CB201254";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

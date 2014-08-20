@@ -17,7 +17,10 @@
 @interface SinglePlayerCards : NSObject
 
 +(DeckModel*) getDeckOne;
++(MonsterCardModel*) getCampaignBossWithID:(NSString*)levelID;
 +(DeckModel*) getCampaignDeckWithID:(NSString*)levelID;
+/** Only for tutorials */
++(DeckModel*) getPlayerCampaignDeckWithID:(NSString*)levelID;
 +(void)uploadPlayerDeck;
 
 @end

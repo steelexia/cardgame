@@ -8,12 +8,15 @@
 
 #import "GameViewController.h"
 #import "GameViewController+Animation.h"
+#import "GameViewController+Tutorial.h"
 #import "CardView.h"
 #import "MonsterCardModel.h"
 #import "CGPointUtilities.h"
 #import "MainScreenViewController.h"
 #import "GameInfoTableView.h"
-
+#import "CardEditorViewController.h"
+#import "Campaign.h"
+#import "BossBattleScreenViewController.h"
 
 @interface GameViewController ()
 
@@ -26,6 +29,8 @@
 @synthesize currentAbilities = _currentAbilities;
 @synthesize endTurnButton = _endTurnButton;
 @synthesize currentNumberOfAnimations = _currentNumberOfAnimations;
+@synthesize tutLabel = _tutLabel;
+@synthesize tutOkButton = _tutOkButton;
 
 /** Screen dimension for convinience */
 int SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -91,6 +96,11 @@ BOOL leftHandViewZone = NO;
                 currentSide = PLAYER_SIDE;
             else
                 currentSide = OPPONENT_SIDE;
+            
+            if (!level.breakBeforeNextLevel)
+                _nextLevel = [Campaign getNextLevelWithLevelID:level.levelID];
+            
+            _isTutorial = _level.isTutorial;
         }
     
         //inits array
@@ -106,6 +116,8 @@ BOOL leftHandViewZone = NO;
     
     SCREEN_WIDTH = self.view.bounds.size.width;
     SCREEN_HEIGHT = self.view.bounds.size.height;
+    
+    [self tutorialSetup];
     
     gameControlState = gameControlStateNone;
     
@@ -130,6 +142,11 @@ BOOL leftHandViewZone = NO;
     [self updateResourceView: OPPONENT_SIDE];
     
     self.currentNumberOfAnimations = 0; //init
+    
+    if (_isTutorial)
+    {
+        [self tutorialMessageGameStart];
+    }
 }
 
 /** Purely for organization, called once when the view is first set up */
@@ -296,11 +313,17 @@ BOOL leftHandViewZone = NO;
     //-----Player's heroes-----//
     
     CardView *playerHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[PLAYER_SIDE]).playerMonster viewMode:cardViewModeIngame];
+    playerHeroView.frontFacing = YES;
     playerHeroView.center = CGPointMake((SCREEN_WIDTH - playerFieldEdge.bounds.size.width)/2 + PLAYER_HERO_WIDTH/2, playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*2 + PLAYER_HERO_HEIGHT/2);
     [self.fieldView addSubview:playerHeroView];
     
     CardView *opponentHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[OPPONENT_SIDE]).playerMonster viewMode:cardViewModeIngame];
+    opponentHeroView.frontFacing = YES;
     opponentHeroView.center = CGPointMake((SCREEN_WIDTH - opponentFieldEdge.bounds.size.width)/2 + PLAYER_HERO_WIDTH/2, opponentFieldEdge.center.y - opponentFieldEdge.bounds.size.height/2 - fieldsDistanceHalf*2 - PLAYER_HERO_HEIGHT/2);
+    
+    if (_level.isBossFight)
+        opponentHeroView.center = CGPointMake(SCREEN_WIDTH/2, opponentFieldHighlight.center.y);
+    
     [self.fieldView addSubview:opponentHeroView];
     
     self.playerHeroViews = @[playerHeroView, opponentHeroView];
@@ -327,6 +350,91 @@ BOOL leftHandViewZone = NO;
     giveupAbilityButton.center = CGPointMake(self.view.bounds.size.width/2 + 20, self.view.bounds.size.height-60);
     [giveupAbilityButton setImage:[UIImage imageNamed:@"no_target_button"] forState:UIControlStateNormal];
     [giveupAbilityButton addTarget:self action:@selector(noTargetButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    _gameOverBlockingView = [[UIView alloc] initWithFrame:self.view.bounds];
+    [_gameOverBlockingView setUserInteractionEnabled:YES];
+    
+    //------------------gameover screen------------------//
+    
+    _gameOverScreen = [[UIView alloc] initWithFrame:self.view.bounds];
+    
+    _resultsLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
+    _resultsLabel.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/4);
+    _resultsLabel.textAlignment = NSTextAlignmentCenter;
+    _resultsLabel.textColor = [UIColor whiteColor];
+    _resultsLabel.font = [UIFont fontWithName:cardMainFontBlack size:50];
+    _resultsLabel.strokeColour = [UIColor blackColor];
+    _resultsLabel.strokeThickness = 8;
+    _resultsLabel.strokeOn = YES;
+    
+    [_gameOverScreen addSubview:_resultsLabel];
+    
+    _rewardsLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
+    _rewardsLabel.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+    _rewardsLabel.textAlignment = NSTextAlignmentCenter;
+    _rewardsLabel.textColor = [UIColor whiteColor];
+    _rewardsLabel.font = [UIFont fontWithName:cardMainFont size:24];
+    _rewardsLabel.strokeColour = [UIColor blackColor];
+    _rewardsLabel.strokeThickness = 4;
+    _rewardsLabel.strokeOn = YES;
+    _rewardsLabel.text = @"Rewards:";
+    
+    _rewardGoldImage = [[UIImageView alloc] initWithImage:GOLD_ICON_IMAGE];
+    _rewardGoldImage.frame = CGRectMake(0, 0, 60, 60);
+    
+    _rewardGoldLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 200, 50)];
+    _rewardGoldLabel.textAlignment = NSTextAlignmentCenter;
+    _rewardGoldLabel.textColor = [UIColor whiteColor];
+    _rewardGoldLabel.font = [UIFont fontWithName:cardMainFont size:30];
+    _rewardGoldLabel.strokeColour = [UIColor blackColor];
+    _rewardGoldLabel.strokeThickness = 4;
+    _rewardGoldLabel.strokeOn = YES;
+    
+    _rewardGoldLabel.center = CGPointMake(_rewardGoldImage.bounds.size.width/2, _rewardGoldImage.bounds.size.height*4/3);
+    [_rewardGoldImage addSubview:_rewardGoldLabel];
+    
+    _rewardCardImage = [[UIImageView alloc] initWithImage:CARD_ICON_IMAGE];
+    _rewardCardImage.frame = CGRectMake(0, 0, 38, 60);
+    
+    _rewardCardLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 200, 50)];
+    _rewardCardLabel.textAlignment = NSTextAlignmentCenter;
+    _rewardCardLabel.textColor = [UIColor whiteColor];
+    _rewardCardLabel.font = [UIFont fontWithName:cardMainFont size:30];
+    _rewardCardLabel.strokeColour = [UIColor blackColor];
+    _rewardCardLabel.strokeThickness = 4;
+    _rewardCardLabel.strokeOn = YES;
+    
+    _rewardCardLabel.center = CGPointMake(_rewardCardImage.bounds.size.width/2, _rewardCardImage.bounds.size.height * 4/3);
+    [_rewardCardImage addSubview:_rewardCardLabel];
+    
+    _gameOverOkButton = [[CFButton alloc]initWithFrame:CGRectMake(0, 0,  80, 40)];
+    _gameOverOkButton.label.text = @"Ok";
+    _gameOverOkButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 60);
+    [_gameOverOkButton setTextSize:15];
+    
+    _gameOverProgressIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    _gameOverProgressIndicator.frame = CGRectOffset(self.view.bounds, 0, -50);
+    
+    _gameOverSaveLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 200, 50)];
+    _gameOverSaveLabel.textAlignment = NSTextAlignmentCenter;
+    _gameOverSaveLabel.textColor = [UIColor whiteColor];
+    _gameOverSaveLabel.font = [UIFont fontWithName:cardMainFont size:22];
+    _gameOverSaveLabel.numberOfLines = 0;
+    _gameOverSaveLabel.strokeColour = [UIColor blackColor];
+    _gameOverSaveLabel.strokeThickness = 3;
+    _gameOverSaveLabel.strokeOn = YES;
+    
+    _gameOverRetryButton = [[CFButton alloc]initWithFrame:CGRectMake(0, 0,  80, 40)];
+    _gameOverRetryButton.label.text = @"Retry";
+    _gameOverRetryButton.center = CGPointMake(SCREEN_WIDTH/2 - 50, SCREEN_HEIGHT - 60);
+    [_gameOverRetryButton addTarget:self action:@selector(gameOverRetryButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    [_gameOverRetryButton setTextSize:15];
+    
+    _gameOverNoRetryButton = [[CFButton alloc]initWithFrame:CGRectMake(0, 0,  80, 40)];
+    _gameOverNoRetryButton.label.text = @"Quit";
+    _gameOverNoRetryButton.center = CGPointMake(SCREEN_WIDTH/2 + 50, SCREEN_HEIGHT - 60);
+    [_gameOverNoRetryButton addTarget:self action:@selector(gameOverNoRetryButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    [_gameOverNoRetryButton setTextSize:15];
     
     //for target selection
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
@@ -381,7 +489,7 @@ BOOL leftHandViewZone = NO;
                 
                 //re-enable the disabled views
                 [self.handsView setUserInteractionEnabled:YES];
-                [self.uiView setUserInteractionEnabled:YES];
+                //[self.uiView setUserInteractionEnabled:YES];
                 [self.backgroundView setUserInteractionEnabled:YES];
                 [self.endTurnButton setUserInteractionEnabled:YES];
                 
@@ -424,7 +532,7 @@ BOOL leftHandViewZone = NO;
         if (!tappedOnACard)
             for (CardModel*card in self.gameModel.battlefield[OPPONENT_SIDE])
             {
-                if (hitView == card.cardView)
+                if (hitView == card.cardView && card.cardView.frontFacing)
                 {
                     [self zoomFieldCard:card];
                     tappedOnACard = YES;
@@ -432,7 +540,8 @@ BOOL leftHandViewZone = NO;
                 }
             }
         
-        //temporary for debugging
+        //TODO: remove for debugging
+        /*
         if (!tappedOnACard)
             for (CardModel*card in self.gameModel.hands[OPPONENT_SIDE])
             {
@@ -443,7 +552,7 @@ BOOL leftHandViewZone = NO;
                     break;
                 }
             }
-        
+        */
         if (tappedOnACard)
         {
             gameControlState = gameControlStateNone;
@@ -456,7 +565,7 @@ BOOL leftHandViewZone = NO;
         
         [self.viewingCardView setUserInteractionEnabled:NO];
         
-        [self unmodalScreen];
+        [self setAllViews:YES];
         
         [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
@@ -478,12 +587,12 @@ BOOL leftHandViewZone = NO;
     CardView*originalView = card.cardView; //save original view to point back
     
     self.viewingCardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeZoomedIngame]; //constructor also modifies monster's cardView pointer
-    
+    self.viewingCardView.frontFacing = originalView.frontFacing;
     card.cardView = originalView; //recover the pointer
     
     [self.viewingCardView setCardViewState:cardViewStateMaximize];
     self.viewingCardView.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
-    [self modalScreen];
+    [self setAllViews:NO];
     
     [extraAbilityView.currentStrings removeAllObjects];
     for (Ability *ability in card.abilities)
@@ -595,6 +704,8 @@ BOOL leftHandViewZone = NO;
         {
             CardView *cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeIngame];
             card.cardView = cardView;
+            if (side == PLAYER_SIDE) // NOTE: remove this for debugging
+                [card.cardView flipCard];
             [self.handsView addSubview:card.cardView];
             
             //assuming new cards are always drawn from the deck (TODO: NOT ACTUALLY TRUE! May be summoned from ability etc)
@@ -649,6 +760,8 @@ BOOL leftHandViewZone = NO;
         if (card.cardView == nil)
         {
             CardView *cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeIngame];
+            cardView.frontFacing = YES; //TODO ability can change this
+                
             card.cardView = cardView;
             
             cardView.alpha = 0;
@@ -693,6 +806,9 @@ BOOL leftHandViewZone = NO;
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    if (_gameModel.gameOver)
+        return;
+    
     UITouch *touch = [touches anyObject];
     CGPoint currentPoint = [touch locationInView:self.view];
     
@@ -778,9 +894,12 @@ BOOL leftHandViewZone = NO;
                         if ([self.gameModel validAttack:monsterCard target:enemy])
                             enemy.cardView.cardHighlightType = cardHighlightTarget;
                     
-                    PlayerModel*opponent = self.gameModel.players[OPPONENT_SIDE];
-                    if ([self.gameModel validAttack:monsterCard target:opponent.playerMonster])
-                        opponent.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
+                    if (!_level.isBossFight)
+                    {
+                        PlayerModel*opponent = self.gameModel.players[OPPONENT_SIDE];
+                        if ([self.gameModel validAttack:monsterCard target:opponent.playerMonster])
+                            opponent.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
+                    }
                 }
             }
             
@@ -792,6 +911,9 @@ BOOL leftHandViewZone = NO;
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    if (_gameModel.gameOver || _viewsDisabled)
+        return;
+    
     UITouch *touch = [touches anyObject];
     CGPoint currentPoint = [touch locationInView: self.view];
     
@@ -947,6 +1069,8 @@ BOOL leftHandViewZone = NO;
 
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    if (_gameModel.gameOver || _viewsDisabled)
+        return;
     //dragging card from hand, reverts action
     if (gameControlState == gameControlStateDraggingHandCard)
     {
@@ -971,6 +1095,8 @@ BOOL leftHandViewZone = NO;
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    if (_gameModel.gameOver || _viewsDisabled)
+        return;
     UITouch *touch = [touches anyObject];
     CGPoint currentPoint = [touch locationInView: self.view];
     
@@ -979,8 +1105,6 @@ BOOL leftHandViewZone = NO;
     //when dragging hand card, card is deployed
     if (gameControlState == gameControlStateDraggingHandCard)
     {
-        //if dragged into deployment rect TODO temp position
-        
         //TODO!!! These are only temporary while two-player is enabled, don't need it afterwards
         UIImageView *fieldRect;
         if(currentSide == PLAYER_SIDE)
@@ -1006,7 +1130,7 @@ BOOL leftHandViewZone = NO;
             gameControlState = gameControlStateNone;
             
             //re-insert the card back at its original index in the view
-            [currentCard.cardView removeFromSuperview];
+            //[currentCard.cardView removeFromSuperview];
             [self.handsView insertSubview:currentCard.cardView atIndex:currentCard.cardView.previousViewIndex];
             
             //update hand's view at the end
@@ -1088,6 +1212,10 @@ BOOL leftHandViewZone = NO;
     //update views after the attack
     [card.cardView updateView];
     [targetCard.cardView updateView];
+    
+    //update hero views after attack (may be pierced)
+    [_playerHeroViews[PLAYER_SIDE] updateView];
+    [_playerHeroViews[OPPONENT_SIDE] updateView];
     
     if (side == PLAYER_SIDE)
     {
@@ -1185,7 +1313,7 @@ BOOL leftHandViewZone = NO;
     
     //disable all other views as player must choose a target (no cancelling, for now at least..)
     [self.handsView setUserInteractionEnabled:NO];
-    [self.uiView setUserInteractionEnabled:NO];
+    //[self.uiView setUserInteractionEnabled:NO];
     [self.backgroundView setUserInteractionEnabled:NO];
     [self.endTurnButton setUserInteractionEnabled:NO];
     
@@ -1206,7 +1334,12 @@ BOOL leftHandViewZone = NO;
     if (side == OPPONENT_SIDE)
     {
         CardView*originalView = card.cardView;
+        if (!originalView.frontFacing) //TODO depends on skill
+            [originalView flipCard];
+        
         CardView *cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeZoomedIngame];
+        cardView.frontFacing = YES; //TODO depends on skill
+        
         card.cardView = originalView;
         
         cardView.center = card.cardView.center; //TODO
@@ -1256,9 +1389,11 @@ BOOL leftHandViewZone = NO;
 -(void)setAllViews:(BOOL)state
 {
     [self.handsView setUserInteractionEnabled:state];
-    [self.uiView setUserInteractionEnabled:state];
+    //[self.uiView setUserInteractionEnabled:state];
     [self.backgroundView setUserInteractionEnabled:state];
     [self.fieldView setUserInteractionEnabled:state];
+    [self.endTurnButton setUserInteractionEnabled:state];
+    _viewsDisabled = !state;
 }
 
 -(void)quitButtonPressed
@@ -1286,8 +1421,8 @@ BOOL leftHandViewZone = NO;
 
 -(void)quitConfirmButtonPressed
 {
-    MainScreenViewController *viewController = [[MainScreenViewController alloc] init];
-    [self presentViewController:viewController animated:YES completion:nil];
+    [self.presentingViewController.presentingViewController
+     dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)quitCancelButtonPressed
@@ -1331,6 +1466,271 @@ BOOL leftHandViewZone = NO;
     [self fadeOutAndRemove:giveupAbilityButton inDuration:0.2 withDelay:0];
 }
 
+-(void)gameOver
+{
+    [self.view addSubview:_gameOverBlockingView];
+    
+    [self performBlock:^{
+        [self openGameOverScreen];
+    } afterDelay:2];
+}
+
+-(void)openGameOverScreen
+{
+    [self darkenScreen];
+    
+    CGPoint resultsLabelOriginalPoint = _resultsLabel.center;
+    CGPoint rewardsLabelOriginalPoint = _rewardsLabel.center;
+    
+    _resultsLabel.center = CGPointMake(_resultsLabel.center.x + SCREEN_WIDTH, _resultsLabel.center.y);
+    _rewardsLabel.center = CGPointMake(_rewardsLabel.center.x + SCREEN_WIDTH, _rewardsLabel.center.y);
+
+    [_gameOverScreen addSubview:_rewardsLabel];
+    _gameOverScreen.alpha = 0;
+    [self.view addSubview:_gameOverScreen];
+    
+    int goldReward = 0;
+    int cardReward = 0;
+    
+    BOOL levelAlreadyCompleted = NO;
+    //no reward if already completed
+    for (NSString*completedLevel in userPF[@"completedLevels"])
+    {
+        if ([_level.levelID isEqualToString:completedLevel])
+        {
+            levelAlreadyCompleted = YES;
+            break;
+        }
+    }
+    
+    NSMutableArray*rewards = [NSMutableArray array];
+    
+    //won
+    if (_gameModel.playerTwoDefeated && !_gameModel.playerOneDefeated)
+    {
+        //no next level
+        if (_nextLevel == nil)
+        {
+            if (_level != nil && !levelAlreadyCompleted)
+            {
+                goldReward = _level.goldReward;
+                cardReward = _level.cardReward;
+                
+                [_gameOverOkButton addTarget:self action:@selector(saveLevelProgress)    forControlEvents:UIControlEventTouchUpInside];
+            }
+            //already completed, simply quits TODO: also gets gold from regular battles
+            else
+            {
+                [_gameOverOkButton addTarget:self action:@selector(quitConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+            }
+        }
+        //has next level
+        else
+        {
+            [_gameOverOkButton addTarget:self action:@selector(beginNextLevel)    forControlEvents:UIControlEventTouchUpInside];
+        }
+        
+        if (goldReward > 0)
+        {
+            _rewardGoldLabel.text = [NSString stringWithFormat:@"%d", goldReward];
+            [rewards addObject:_rewardGoldImage];
+        }
+        if (cardReward > 0)
+        {
+            _rewardCardLabel.text = [NSString stringWithFormat:@"%d", cardReward];
+            [rewards addObject:_rewardCardImage];
+        }
+        
+        _resultsLabel.text = @"Victory!";
+    }
+    else
+    {
+        if (_gameModel.playerTwoDefeated && _gameModel.playerOneDefeated)
+        {
+            _resultsLabel.text = @"Draw!";
+        }
+        else if (!_gameModel.playerTwoDefeated && _gameModel.playerOneDefeated)
+        {
+            _resultsLabel.text = @"Defeat!";
+        }
+        
+        [_gameOverOkButton addTarget:self action:@selector(quitConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _gameOverScreen.alpha = 1;
+                     }
+                     completion:^(BOOL completed){
+                         //results animation
+                         
+                         _gameOverOkButton.alpha = 0;
+                         [_gameOverScreen addSubview:_gameOverOkButton];
+                         
+                         [UIView animateWithDuration:0.2
+                                               delay:2
+                              usingSpringWithDamping:0.6
+                               initialSpringVelocity:0.5
+                                             options:UIViewAnimationOptionCurveEaseInOut
+                                          animations:^{
+                                              _gameOverOkButton.alpha = 1;
+                                          }
+                                          completion:nil];
+                         
+                         [UIView animateWithDuration:0.2
+                                               delay:0
+                              usingSpringWithDamping:0.6
+                               initialSpringVelocity:0.5
+                                             options:UIViewAnimationOptionCurveEaseInOut
+                                          animations:^{
+                                              _resultsLabel.center = resultsLabelOriginalPoint;
+                                          }
+                                          completion:^(BOOL completed){
+                                          }];
+                         
+                         if ((goldReward > 0 || cardReward > 0) && _gameModel.playerTwoDefeated && !_gameModel.playerOneDefeated)
+                         {
+                             int i = 0;
+                             double centerPosition = (rewards.count - 1)/2.f;
+                             for (UIView*rewardView in rewards)
+                             {
+                                 rewardView.transform = CGAffineTransformMakeScale(0, 0);
+                                 [_gameOverScreen addSubview:rewardView];
+                                 rewardView.center = CGPointMake(SCREEN_WIDTH/2 + (i-centerPosition)*75, SCREEN_HEIGHT/2 + 70);
+                                 i++;
+                             }
+                             
+                             //rewards animation
+                             [UIView animateWithDuration:0.2
+                                                   delay:0.6
+                                  usingSpringWithDamping:0.6
+                                   initialSpringVelocity:0.5
+                                                 options:UIViewAnimationOptionCurveEaseInOut
+                                              animations:^{
+                                                  _rewardsLabel.center = rewardsLabelOriginalPoint;
+                                              }
+                                              completion:^(BOOL completed){
+                                                  
+                                                  //rewards animation
+                                                  [UIView animateWithDuration:0.3
+                                                                        delay:0.4
+                                                       usingSpringWithDamping:0.6
+                                                        initialSpringVelocity:0.5
+                                                                      options:UIViewAnimationOptionCurveEaseInOut
+                                                                   animations:^{
+                                                                       for (UIView*rewardView in rewards)
+                                                                           rewardView.transform = CGAffineTransformMakeScale(1, 1);
+                                                                   }
+                                                                   completion:^(BOOL completed){
+                                                                       
+                                                                   }];
+                                                  
+                                              }];
+                             
+                         }
+                         
+                     }];
+}
+
+-(void)beginNextLevel
+{
+    BossBattleScreenViewController *bbsvc = [[BossBattleScreenViewController alloc] init];
+    bbsvc.message = _level.endBattleText;
+    GameViewController * nextLevelController = [[GameViewController alloc] initWithGameMode:GameModeSingleplayer withLevel:_nextLevel];
+    bbsvc.nextScreen = nextLevelController;
+    
+    UIViewController*vc = self.presentingViewController.presentingViewController;
+    
+    [vc dismissViewControllerAnimated:NO completion:^{
+         [vc presentViewController:bbsvc animated:NO completion:nil];
+     }];
+}
+
+-(void)saveLevelProgress
+{
+    for (UIView*view in _gameOverScreen.subviews)
+        [view removeFromSuperview];
+    
+    NSMutableArray*completedLevels = [NSMutableArray arrayWithArray: userPF[@"completedLevels"]];
+    if (![completedLevels containsObject:_level.levelID])
+    {
+        [_gameOverScreen addSubview:_gameOverProgressIndicator];
+        [_gameOverProgressIndicator startAnimating];
+        
+        _gameOverSaveLabel.frame = CGRectMake(40, SCREEN_HEIGHT/2, SCREEN_WIDTH-80, SCREEN_HEIGHT/3);
+        _gameOverSaveLabel.text = @"Saving Progress...";
+        //[_gameOverSaveLabel sizeToFit];
+        [_gameOverScreen addSubview:_gameOverSaveLabel];
+        
+        int goldReward = 0;
+        int cardReward = 0;
+        
+        if (_level != nil)
+        {
+            goldReward = _level.goldReward;
+            cardReward = _level.cardReward;
+        }
+        //TODO cloud
+        userPF[@"gold"] = @([userPF[@"gold"] intValue] + goldReward);
+        userPF[@"blankCards"] = @([userPF[@"blankCards"] intValue] + cardReward);
+        [completedLevels addObject:_level.levelID];
+        userPF[@"completedLevels"] = completedLevels;
+        
+        [self updateUserModel];
+    }
+    else{
+        //not supposed to happen, but here anyways
+        [self quitConfirmButtonPressed];
+    }
+}
+
+-(void)updateUserModel
+{
+    [self performBlockInBackground:^{
+        
+        NSError *error;
+        [userPF save:&error];
+        
+        if (!error)
+        {
+            NSLog(@"Progress saved");
+            [self quitConfirmButtonPressed];
+        }
+        else
+        {
+            dispatch_sync(dispatch_get_main_queue(), ^(void) {
+                NSLog(@"ERROR: FAILED TO SAVE LEVEL PROGRESS!!!");
+                
+                [_gameOverProgressIndicator stopAnimating];
+                
+                _gameOverSaveLabel.frame = CGRectMake(40, SCREEN_HEIGHT/2, SCREEN_WIDTH-80, SCREEN_HEIGHT/3);
+                _gameOverSaveLabel.text = @"Failed to save progress. Please check your internet connection and try again. If you quit now, your progress will not be saved.";
+                [_gameOverSaveLabel sizeToFit];
+                
+                [_gameOverScreen addSubview:_gameOverRetryButton];
+                [_gameOverScreen addSubview:_gameOverNoRetryButton];
+            });
+        }
+    }];
+}
+
+-(void)gameOverRetryButtonPressed
+{
+    _gameOverSaveLabel.frame = CGRectMake(40, SCREEN_HEIGHT/2, SCREEN_WIDTH-80, SCREEN_HEIGHT/3);
+    _gameOverSaveLabel.text = @"Retrying...";
+    [_gameOverProgressIndicator startAnimating];
+    [_gameOverRetryButton removeFromSuperview];
+    [_gameOverNoRetryButton removeFromSuperview];
+    //[_gameOverSaveLabel sizeToFit];
+    
+    [self updateUserModel];
+}
+
+-(void)gameOverNoRetryButtonPressed
+{
+    [self quitConfirmButtonPressed];
+}
+
 -(void)darkenScreen
 {
     darkFilter.alpha = 0;
@@ -1353,16 +1753,28 @@ BOOL leftHandViewZone = NO;
                      }];
 }
 
+/*
 -(void)modalScreen
 {
-    darkFilter.alpha = 0.1; //because apparently 0 alpha = cannot be interacted...
-    [self.view addSubview:darkFilter];
+    //darkFilter.alpha = 0.1; //because apparently 0 alpha = cannot be interacted...
+    //[self.view addSubview:darkFilter];
+    [self.handsView setUserInteractionEnabled:NO];
+    //[self.uiView setUserInteractionEnabled:NO];
+    [self.backgroundView setUserInteractionEnabled:NO];
+    [self.endTurnButton setUserInteractionEnabled:NO];
+    [self.fieldView setUserInteractionEnabled:NO];
 }
 
 -(void)unmodalScreen
 {
-    [darkFilter removeFromSuperview];
-}
+    //[darkFilter removeFromSuperview];
+ 
+    [self.handsView setUserInteractionEnabled:YES];
+    //[self.uiView setUserInteractionEnabled:YES];
+    [self.backgroundView setUserInteractionEnabled:YES];
+    [self.endTurnButton setUserInteractionEnabled:YES];
+    [self.fieldView setUserInteractionEnabled:YES];
+}*/
 
 //block delay functions
 - (void)performBlock:(void (^)())block
@@ -1377,5 +1789,11 @@ BOOL leftHandViewZone = NO;
 }
 
 - (BOOL)prefersStatusBarHidden {return YES;}
+
+- (void)performBlockInBackground:(void (^)())block {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        block();
+    });
+}
 
 @end

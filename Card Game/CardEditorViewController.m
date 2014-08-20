@@ -63,9 +63,9 @@ UITextField*tagsField;
 CGSize keyboardSize;
 
 /** Buttons for changing between card types */
-UIButton *monsterCardButton, *spellCardButton;
+CFButton *monsterCardButton, *spellCardButton;
 
-UIButton *saveCardButton, *cancelCardButton, *randomizeCardButton;
+CFButton *saveCardButton, *cancelCardButton, *randomizeCardButton;
 
 UIButton *saveCardConfirmButton, *cancelCardConfirmButton, *confirmCancelButon;
 
@@ -112,11 +112,16 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     
     //card cannot exceed this number of abilities
     
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = COLOUR_INTERFACE_BLUE_DARK;
     
     if (_editorMode == cardEditorModeCreation)
     {
         //no card, start with a new one
+        [self setupNewMonster];
+    }
+    else if (_editorMode == cardEditorModeTutorialOne || _editorMode == cardEditorModeTutorialTwo || _editorMode == cardEditorModeTutorialThree)
+    {
+        //tutorials all start with new card
         [self setupNewMonster];
     }
     
@@ -287,9 +292,13 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     abilityExistingTableView.cevc = self;
     //[self.view addSubview:abilityExistingTableView];
     
+    CFLabel*abilityNewTableViewBackground = [[CFLabel alloc] initWithFrame:CGRectMake(80, 345, 186, SCREEN_HEIGHT - 345 - 28)];
+    [self.view addSubview:abilityNewTableViewBackground];
+    
     //new
-    abilityNewTableView = [[AbilityTableView alloc] initWithFrame:CGRectMake(80, 345, 186, SCREEN_HEIGHT - 345 - 28) mode:abilityTableViewNew];
+    abilityNewTableView = [[AbilityTableView alloc] initWithFrame:CGRectInset(abilityNewTableViewBackground.frame, 8, 6) mode:abilityTableViewNew];
     abilityNewTableView.cevc = self;
+    
     [self.view addSubview:abilityNewTableView];
     
     
@@ -304,11 +313,11 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     [tagsField addTarget:self action:@selector(tagsFieldBegan) forControlEvents:UIControlEventEditingDidBegin];
     [tagsField addTarget:self action:@selector(tagsFieldFinished) forControlEvents:UIControlEventEditingDidEnd];
     [tagsField setDelegate:self];
-    [tagsField.layer setBorderColor:COLOUR_INTERFACE_BLUE.CGColor];
-    [tagsField.layer setBorderWidth:1];
-    //[tagsField setBackgroundColor:];
+    [tagsField.layer setBorderColor:[UIColor blackColor].CGColor];
+    [tagsField.layer setBorderWidth:2];
+    [tagsField setBackgroundColor:COLOUR_INTERFACE_BLUE_LIGHT];
     tagsField.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0);
-    tagsField.layer.cornerRadius = 4.0;
+    //tagsField.layer.cornerRadius = 4.0;
     [tagsField addTarget:self action:@selector(tagsTextFieldEdited) forControlEvents:UIControlEventEditingChanged];
     
     [self.view addSubview:tagsField];
@@ -397,9 +406,11 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     
     //, *lifeEditArea, *costEditArea, *cdEditArea, *imageEditArea;
     
-    monsterCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 50)];
-    [monsterCardButton setImage:[UIImage imageNamed:@"monster_button"] forState:UIControlStateNormal];
-    [monsterCardButton setImage:[UIImage imageNamed:@"monster_button_gray"] forState:UIControlStateDisabled];
+    monsterCardButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 60, 50)];
+    //[monsterCardButton setImage:[UIImage imageNamed:@"monster_button"] forState:UIControlStateNormal];
+    //[monsterCardButton setImage:[UIImage imageNamed:@"monster_button_gray"] forState:UIControlStateDisabled];
+    [monsterCardButton setTextSize:11];
+    monsterCardButton.label.text = @"Monster";
     monsterCardButton.center = CGPointMake(35, 50);
     [monsterCardButton addTarget:self action:@selector(monsterButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:monsterCardButton];
@@ -407,9 +418,11 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     if (_editorMode != cardEditorModeCreation)
         [monsterCardButton setEnabled:NO];
     
-    spellCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 50)];
-    [spellCardButton setImage:[UIImage imageNamed:@"spell_button"] forState:UIControlStateNormal];
-    [spellCardButton setImage:[UIImage imageNamed:@"spell_button_gray"] forState:UIControlStateDisabled];
+    spellCardButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 60, 50)];
+    //[spellCardButton setImage:[UIImage imageNamed:@"spell_button"] forState:UIControlStateNormal];
+    //[spellCardButton setImage:[UIImage imageNamed:@"spell_button_gray"] forState:UIControlStateDisabled];
+    [spellCardButton setTextSize:11];
+    spellCardButton.label.text = @"Spell";
     spellCardButton.center = CGPointMake(35, 105);
     [spellCardButton addTarget:self action:@selector(spellButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:spellCardButton];
@@ -417,15 +430,19 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     if (_editorMode != cardEditorModeCreation)
         [spellCardButton setEnabled:NO];
     
-    saveCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 40)];
-    [saveCardButton setImage:[UIImage imageNamed:@"save_card_button"] forState:UIControlStateNormal];
-    [saveCardButton setImage:[UIImage imageNamed:@"save_card_button_gray"] forState:UIControlStateDisabled];
+    saveCardButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 60, 40)];
+    //[saveCardButton setImage:[UIImage imageNamed:@"save_card_button"] forState:UIControlStateNormal];
+    //[saveCardButton setImage:[UIImage imageNamed:@"save_card_button_gray"] forState:UIControlStateDisabled];
+    [saveCardButton setTextSize:14];
+    saveCardButton.label.text = @"Save";
     saveCardButton.center = CGPointMake(35, SCREEN_HEIGHT - 25);
     [saveCardButton addTarget:self action:@selector(saveCardButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:saveCardButton];
     
-    cancelCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 40)];
-    [cancelCardButton setImage:[UIImage imageNamed:@"cancel_card_button"] forState:UIControlStateNormal];
+    cancelCardButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 60, 40)];
+    //[cancelCardButton setImage:[UIImage imageNamed:@"cancel_card_button"] forState:UIControlStateNormal];
+    [cancelCardButton setTextSize:14];
+    cancelCardButton.label.text = @"Cancel";
     cancelCardButton.center = CGPointMake(35, SCREEN_HEIGHT - 70);
     [cancelCardButton addTarget:self action:@selector(cancelCardButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:cancelCardButton];
@@ -660,6 +677,31 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
         abilityNewTableView.currentCard = _currentCardModel;
         abilityExistingTableView.currentCard = _currentCardModel;
     }
+    else if (_editorMode == cardEditorModeTutorialOne)
+    {
+        //disable most views
+        [damageEditArea removeFromSuperview];
+        [lifeEditArea removeFromSuperview];
+        [costEditArea removeFromSuperview];
+        [cdEditArea removeFromSuperview];
+        [elementEditArea removeFromSuperview];
+        [abilityEditArea removeFromSuperview];
+        [tagsField setEnabled:NO];
+        [spellCardButton setEnabled:NO];
+        [cancelCardButton setEnabled:NO];
+        abilityNewTableView.tableView.alpha = 0.5;
+    }
+    else if (_editorMode == cardEditorModeTutorialTwo)
+    {
+        //disable element and ability views
+        [elementEditArea removeFromSuperview];
+        [abilityEditArea removeFromSuperview];
+        [spellCardButton setEnabled:NO];
+        [cancelCardButton setEnabled:NO];
+        abilityNewTableView.tableView.alpha = 0.5;
+    }
+    
+    //UIView*damageEditArea, *lifeEditArea, *costEditArea, *cdEditArea, *imageEditArea, *elementEditArea, *abilityEditArea;
     
     [self resetAbilityViews];
     [self selectElement: _currentCardModel.element];
@@ -668,6 +710,12 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
         [self setupExistingCard];
     
     [self updateCost:self.currentCardModel];
+    
+    //opens up image selection
+    if (_editorMode == cardEditorModeTutorialOne)
+    {
+        [self openImageUploadScreen];
+    }
 }
 
 -(void)tapRegistered
@@ -1200,6 +1248,7 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     [_currentCardView removeFromSuperview];
     
     _currentCardView = [[CardView alloc] initWithModel:_currentCardModel withImage:originalImage viewMode:cardViewModeEditor];
+    _currentCardView.frontFacing = YES;
     _currentCardView.cardViewState = cardViewStateCardViewer;
     _currentCardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_EDITOR_SCALE, CARD_EDITOR_SCALE);
     _currentCardView.nameLabel.alpha = 0; //don't ever show the name label, since it's taken over by nameTextField
@@ -1323,6 +1372,18 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     monster.damage = 1000;
     monster.cost = 1;
     monster.cooldown = monster.maximumCooldown = 1;
+    
+    //TUTORIAL default stats
+    if (_editorMode == cardEditorModeTutorialOne)
+    {
+        monster.damage = 1400;
+        monster.life = monster.maximumLife = 2600;
+    }
+    else if (_editorMode == cardEditorModeTutorialTwo)
+    {
+        monster.damage = 1400;
+        monster.life = monster.maximumLife = 2600;
+    }
     
     if (self.currentCardModel!=nil)
     {
@@ -2110,7 +2171,7 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     
     for (NSString*string in lowerTagsArray)
     {
-        if (![noDupTags containsObject:string])
+        if (![noDupTags containsObject:string] && string.length > 0)
             [noDupTags addObject:string];
     }
     

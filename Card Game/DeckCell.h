@@ -13,5 +13,6 @@
 
 @property (strong) StrokedLabel * nameLabel;
 @property (strong) StrokedLabel* invalidLabel;
+@property (strong) NSMutableArray* elementIcons;
 
 @end

@@ -9,12 +9,16 @@
 #import "AppDelegate.h"
 #import "AbilityWrapper.h"
 #import "Campaign.h"
+#import "SSKeychain.h"
 
 @implementation AppDelegate
 
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+
+NSString*SERVICE_NAME = @"com.contentgames.cardgame";
+NSString*ACCOUNT_NAME = @"default_account";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -31,15 +35,91 @@
     //TODO should be in main screen
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
-    [PFUser enableAutomaticUser];
+    NSError*error;
+    NSString *password = [SSKeychain passwordForService:SERVICE_NAME account:ACCOUNT_NAME error:&error];
     
+    if (error)
+    {
+        NSLog(@"%@", [error localizedDescription]);
+        //TODO handle this
+    }
+    else{
+        //new account
+        if (password == nil)
+        {
+            NSString *idfv = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+            NSError*error;
+            [SSKeychain setPassword:idfv forService:SERVICE_NAME account:ACCOUNT_NAME error:&error];
+            
+            if (error)
+            {
+                NSLog(@"%@", [error localizedDescription]);
+                //TODO handle this
+            }
+            else
+            {
+                NSLog(@"creation success: %@", idfv);
+                password = idfv;
+            }
+        }
+        //already have account
+        else{
+            NSLog(@"already have account: %@", password);
+        }
+    }
+    
+    NSString *username = [password substringToIndex:7];
+    
+    //TODO, username is that for now
+    [PFUser logInWithUsernameInBackground:username password:password
+                                    block:^(PFUser *user, NSError *error) {
+                                        if (user) {
+                                            [UserModel setupUser];
+                                        } else {
+                                            if(error)
+                                            {
+                                                NSLog(@"%d", [error code]);
+                                                //no username, register one
+                                                if ([error code] == 101) //101 is invalid login credentials
+                                                {
+                                                    userPF = [PFUser user];
+                                                    userPF.username = username;
+                                                    userPF.password = password;
+                                                    NSError*error;
+                                                    [userPF signUp:&error];
+                                                    
+                                                    if (error)
+                                                    {
+                                                        NSLog(@"%@", [error localizedDescription]);
+                                                    }
+                                                    else
+                                                    {
+                                                        NSLog(@"signup succecss");
+                                                        [UserModel setupUser];
+                                                    }
+                                                }
+                                                else{
+                                                    NSLog(@"%@", [error localizedDescription]);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                NSLog(@"no error but no user. not suppose to happen");
+                                            }
+                                        }
+                                    }];
+    
+    //[PFUser enableAutomaticUser];
+    
+    /*
     [[PFUser currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         
         //NSLog(@"%d", succeeded);
         
         //load resources
         [UserModel setupUser]; //also loads user data such as gold
-    }];
+    }];*/
+    
     
     /*
      CDCardModel *card = [NSEntityDescription

@@ -13,11 +13,14 @@
 +(void)loadResources
 {
     COLOUR_INTERFACE_BLUE = [[UIColor alloc] initWithRed:0 green:0.45 blue:1 alpha:1];
+    COLOUR_INTERFACE_BLUE_DARK = [[UIColor alloc] initWithRed:51/255.f green:130/255.f blue:204/255.f alpha:1];
     COLOUR_INTERFACE_BLUE_PRESSED = [[UIColor alloc] initWithRed:21/255.f green:59/255.f blue:110/255.f alpha:1];
     COLOUR_INTERFACE_BLUE_TRANSPARENT = [[UIColor alloc] initWithRed:0 green:0.45 blue:1 alpha:0.5];
     COLOUR_INTERFACE_BLUE_TOGGLE = [[UIColor alloc] initWithRed:55/255.f green:100/255.f blue:160/255.f alpha:1];
     COLOUR_INTERFACE_BLUE_LIGHT = [[UIColor alloc] initWithRed:64/255.f green:163/255.f blue:255/255.f alpha:1];
+    COLOUR_INTERFACE_GRAY_TRANSPARENT = [[UIColor alloc] initWithRed:0.35 green:0.35 blue:0.35 alpha:0.5];
     COLOUR_INTERFACE_GRAY = [[UIColor alloc] initWithRed:0.47 green:0.47 blue:0.47 alpha:1];
+    COLOUR_BACKGROUND_GRAY = [[UIColor alloc] initWithRed:70/255.f green:70/255.f blue:70/255.f alpha:1];
     
     COLOUR_NEUTRAL = [[UIColor alloc] initWithRed:0.82 green:0.72 blue:0.52 alpha:1];
     COLOUR_FIRE = [[UIColor alloc] initWithRed:218/255.f green:67/255.f blue:32/255.f alpha:1];
@@ -27,6 +30,7 @@
     COLOUR_LIGHT = [[UIColor alloc] initWithRed:226/255.f green:226/255.f blue:226/255.f alpha:1];
     COLOUR_DARK = [[UIColor alloc] initWithRed:20/255.f green:20/255.f blue:20/255.f alpha:1];
     
+    COLOUR_NEUTRAL_DARK = [[UIColor alloc] initWithRed:144/255.f green:124/255.f blue:82/255.f alpha:1];
     COLOUR_NEUTRAL_OUTLINE = [[UIColor alloc] initWithRed:81/255.f green:75/255.f blue:63/255.f alpha:1];
     COLOUR_FIRE_OUTLINE = [[UIColor alloc] initWithRed:101/255.f green:35/255.f blue:20/255.f alpha:1];
     COLOUR_ICE_OUTLINE = [[UIColor alloc] initWithRed:31/255.f green:62/255.f blue:78/255.f alpha:1];
@@ -48,6 +52,47 @@
     CARD_ICON_IMAGE = [UIImage imageNamed:@"card_icon"];
     CARD_ICON_GRAY_IMAGE = [UIImage imageNamed:@"card_icon_gray"];
     ADD_ICON_IMAGE = [UIImage imageNamed:@"add_icon"];
+    ARROW_LEFT_ICON_IMAGE = [UIImage imageNamed:@"arrow_left_icon"];
+}
+
++(UIColor*)getElementColor:(enum CardElement)element
+{
+    if (element == elementNeutral)
+        return COLOUR_NEUTRAL;
+    else if (element == elementFire)
+        return COLOUR_FIRE;
+    else if (element == elementIce)
+        return COLOUR_ICE;
+    else if (element == elementLightning)
+        return COLOUR_LIGHTNING;
+    else if (element == elementEarth)
+        return COLOUR_EARTH;
+    else if (element == elementLight)
+        return COLOUR_LIGHT;
+    else if (element == elementDark)
+        return COLOUR_DARK;
+    
+    return COLOUR_NEUTRAL;
+}
+
++(UIColor*)getElementOutlineColor:(enum CardElement)element
+{
+    if (element == elementNeutral)
+        return COLOUR_NEUTRAL_OUTLINE;
+    else if (element == elementFire)
+        return COLOUR_FIRE_OUTLINE;
+    else if (element == elementIce)
+        return COLOUR_ICE_OUTLINE;
+    else if (element == elementLightning)
+        return COLOUR_LIGHTNING_OUTLINE;
+    else if (element == elementEarth)
+        return COLOUR_EARTH_OUTLINE;
+    else if (element == elementLight)
+        return COLOUR_LIGHT_OUTLINE;
+    else if (element == elementDark)
+        return COLOUR_DARK_OUTLINE;
+    
+    return COLOUR_NEUTRAL_OUTLINE;
 }
 
 @end

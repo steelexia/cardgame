@@ -57,6 +57,9 @@
 
 +(void) validateDeckIgnoreTooFewCards:(DeckModel*)deck;
 
++(NSArray*)getElementArraySummary:(DeckModel*)deck;
++(NSString*)getElementSummary:(DeckModel*)deck;
+
 @end
 
 /** Max number of cards allowed in a deck during regular gameplay. This is not a hard limit in the code but should be obeyed in the deck construction UI */

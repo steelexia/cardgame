@@ -213,4 +213,35 @@ const int MAX_CARDS_IN_DECK = 20;
     }
 }
 
++(NSArray*)getElementArraySummary:(DeckModel*)deck
+{
+    NSMutableArray *elementCount = [NSMutableArray arrayWithArray:@[@0,@0,@0,@0,@0,@0,@0]];
+    
+    for (CardModel*card in deck.cards)
+    {
+        if (card.element < 7)
+            elementCount[card.element] = @([elementCount[card.element] intValue] + 1);
+    }
+    
+    return elementCount;
+}
+
++(NSString*)getElementSummary:(DeckModel*)deck
+{
+    NSArray* elementCount = [DeckModel getElementArraySummary:deck];
+    
+    NSString*summary = @"";
+    
+    for (int i = 0; i < elementCount.count; i++)
+    {
+        NSString*elementName = [CardModel elementToString:i];
+        int cardCount = [elementCount[i] intValue];
+        
+        if (cardCount > 0)
+            summary = [NSString stringWithFormat:@"%@%@: %d\n", summary, elementName, cardCount];
+    }
+    
+    return summary;
+}
+
 @end

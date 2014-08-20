@@ -11,6 +11,7 @@
 #import "CardView.h"
 #import "AbilityTableViewCell.h"
 #import "CardEditorViewController.h"
+#import "UIConstants.h"
 
 @implementation AbilityTableView
 
@@ -26,7 +27,7 @@ const int ABILITY_TABLE_VIEW_ROW_HEIGHT = 20;
         _tableView = [[UITableView alloc] initWithFrame:self.bounds];
         [_tableView setBackgroundColor:[UIColor clearColor]];
         
-        //_tableView.separatorColor = [UIColor clearColor];
+        _tableView.separatorColor = COLOUR_INTERFACE_GRAY_TRANSPARENT;
         //_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
         
@@ -103,7 +104,7 @@ const int ABILITY_TABLE_VIEW_ROW_HEIGHT = 20;
     }
     
     if (!wrapper.enabled)
-    [cell.abilityText setTextColor:[UIColor lightGrayColor]];
+        [cell.abilityText setTextColor:COLOUR_INTERFACE_GRAY_TRANSPARENT];
     
     /*
     NSLog(@"cell %@ scroll %@ text %@", cell.bounds, cell.scrollView.contentSize, cell.abilityText.frame);

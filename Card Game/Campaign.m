@@ -12,7 +12,9 @@
 @implementation Campaign
 
 const int NUMBER_OF_DIFFICULTIES = 3;
-const int NUMBER_OF_ACTS = 3;
+const int NUMBER_OF_CHAPTERS = 3;
+
+const NSString *TUTORIAL_ONE = @"d_1_c_1_l_1",*TUTORIAL_TWO = @"d_1_c_1_l_2",*TUTORIAL_THREE = @"d_1_c_1_l_3",*TUTORIAL_FOUR = @"d_1_c_1_l_4";
 
 /** 2D array storing all levels */
 NSMutableArray*campaignLevels;
@@ -22,53 +24,93 @@ NSMutableArray*campaignLevels;
     campaignLevels = [NSMutableArray arrayWithCapacity:3*3*4];
     Level *level;
     
+    /**
+     NOTES:
+     - 3rd level should not have any rewards, because beating it goes straight to the boss fight
+     */
+    
     //------------difficulty 1------------//
     //----chapter 1----//
     level = [[Level alloc] initWithID:@"d_1_c_1_l_1"];
+    level.opponentName = @"Level one";
     level.isTutorial = YES;
+    level.cardReward = 1;
+    level.goldReward = 150;
+    level.opponentShuffleDeck = NO;
+    level.playerShuffleDeck = NO;
+    level.opponentHealth = 10000;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_1_l_2"];
+    level.opponentName = @"Level two";
     level.isTutorial = YES;
+    level.cardReward = 1;
+    level.goldReward = 250;
+    level.opponentShuffleDeck = NO;
+    level.playerShuffleDeck = NO;
+    level.opponentHealth = 12000;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_1_l_3"];
+    level.opponentName = @"Level three";
     level.isTutorial = YES;
     level.breakBeforeNextLevel = NO;
+    level.opponentShuffleDeck = NO;
+    level.playerShuffleDeck = NO;
+    level.opponentHealth = 14000;
+    level.endBattleText = @"Some text talking about how the current level is beaten but a boss has shown up to stop you.";
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_1_l_4"];
+    level.opponentName = @"Chapter one boss";
     level.isTutorial = YES;
     level.isBossFight = YES;
+    level.goldReward = 1000; //basically starting gold for the player to spend. 14 common cards + 2 created
     [campaignLevels addObject:level];
     
     //----chapter 2----//
     level = [[Level alloc] initWithID:@"d_1_c_2_l_1"];
+    level.opponentName = @"Level four";
+    level.difficultyOffset = -1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_2_l_2"];
+    level.opponentName = @"Level five";
+    level.difficultyOffset = -1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_2_l_3"];
+    level.opponentName = @"Level six";
+    level.difficultyOffset = -1;
     level.breakBeforeNextLevel = NO;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_2_l_4"];
+    level.opponentName = @"Chapter two boss";
+    level.difficultyOffset = -1;
     level.isBossFight = YES;
     [campaignLevels addObject:level];
     
     //----chapter 3----//
     level = [[Level alloc] initWithID:@"d_1_c_3_l_1"];
+    level.opponentName = @"Level seven";
+    level.difficultyOffset = -1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_3_l_2"];
+    level.opponentName = @"Level eight";
+    level.difficultyOffset = -1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_3_l_3"];
+    level.opponentName = @"Level nine";
+    level.difficultyOffset = -1;
     level.breakBeforeNextLevel = NO;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_3_l_4"];
+    level.opponentName = @"Chapter three boss";
+    level.difficultyOffset = -1;
     level.isBossFight = YES;
     [campaignLevels addObject:level];
     
@@ -120,46 +162,58 @@ NSMutableArray*campaignLevels;
     //------------difficulty 3-----------//
     //----chapter 1----//
     level = [[Level alloc] initWithID:@"d_3_c_1_l_1"];
+    level.difficultyOffset = 1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_3_c_1_l_2"];
+    level.difficultyOffset = 1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_3_c_1_l_3"];
+    level.difficultyOffset = 1;
     level.breakBeforeNextLevel = NO;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_3_c_1_l_4"];
+    level.difficultyOffset = 1;
     level.isBossFight = YES;
     [campaignLevels addObject:level];
     
     //----chapter 2----//
     level = [[Level alloc] initWithID:@"d_3_c_2_l_1"];
+    level.difficultyOffset = 1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_3_c_2_l_2"];
+    level.difficultyOffset = 1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_3_c_2_l_3"];
+    level.difficultyOffset = 1;
     level.breakBeforeNextLevel = NO;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_3_c_2_l_4"];
+    level.difficultyOffset = 1;
     level.isBossFight = YES;
     [campaignLevels addObject:level];
     
     //----chapter 3----//
     level = [[Level alloc] initWithID:@"d_3_c_3_l_1"];
+    level.difficultyOffset = 1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_3_c_3_l_2"];
+    level.difficultyOffset = 1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_3_c_3_l_3"];
+    level.difficultyOffset = 1;
     level.breakBeforeNextLevel = NO;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_3_c_3_l_4"];
+    level.difficultyOffset = 1;
     level.isBossFight = YES;
     [campaignLevels addObject:level];
 }
@@ -175,6 +229,25 @@ NSMutableArray*campaignLevels;
     }
     
     return nil;
+}
+
++(Level*)getNextLevelWithLevelID:(NSString*)levelID
+{
+    int index = -1;
+    for (int i = 0; i < [campaignLevels count]; i++)
+    {
+        Level*level = campaignLevels[i];
+        if ([level.levelID isEqualToString:levelID])
+        {
+            index = i;
+            break;
+        }
+    }
+    
+    if (index == -1 || index+1 >= campaignLevels.count)
+        return nil;
+    else
+        return campaignLevels[index+1];
 }
 
 @end

@@ -73,7 +73,9 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 @property (strong)Level*level;
 
 /** Stores if the game has ended */
-@property bool gameOver;
+@property BOOL gameOver;
+@property BOOL playerOneDefeated, playerTwoDefeated;
+
 
 /** Initialies the GameModel with an attached controller for drawing */
 -(instancetype)initWithViewController:(GameViewController *)gameViewController gameMode: (enum GameMode)gameMode withLevel:(Level*)level;

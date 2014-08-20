@@ -60,6 +60,9 @@ int enemyTotalStrength, friendlyTotalStrength;
 
 -(void)makeOneMove
 {
+    if (_gameModel.gameOver)
+        return;
+    
     //if there is running animation, wait until it's over before making another move
     if (self.gameViewController.currentNumberOfAnimations > 0)
     {
@@ -342,6 +345,25 @@ int enemyTotalStrength, friendlyTotalStrength;
     
     int damageReceived = monster.life < target.damage ? monster.life : target.damage;
     int overDamageReceived = target.damage > monster.life ? target.damage - monster.life : 0;
+    
+    
+    for (Ability*ability in monster.abilities)
+    {
+        //check if attacker has assassin
+        if (!ability.expired && ability.abilityType==abilityAssassin && ability.targetType == targetSelf && ability.castType == castAlways)
+            damageReceived = 0;
+        //check if attacker has pierce
+        if (!ability.expired && ability.abilityType==abilityPierce && ability.targetType == targetSelf && ability.castType == castAlways)
+        {
+            //piercing damage can kill, victory move
+            if (overDamage >= enemyPlayer.playerMonster.life)
+                return VICTORY_MOVE;
+            
+            //otherwise pierce means no damage is wasted
+            overDamage = 0;
+            damageDealt = monster.damage;
+        }
+    }
     
     NSLog(@"AI: Evaluating move: Monster %d %d targetting Monster %d %d.", monster.damage, monster.life, target.damage, target.life);
     
@@ -1356,7 +1378,6 @@ int enemyTotalStrength, friendlyTotalStrength;
                 else
                 {
                     points += cardChange * 2500;
-                    NSLog(@"here");
                 }
             }
             
@@ -1378,7 +1399,6 @@ int enemyTotalStrength, friendlyTotalStrength;
                         points = 0;
                     
                     points += cardChange * -2500;
-                    NSLog(@"here2");
                 }
             }
         }

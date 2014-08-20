@@ -24,6 +24,14 @@
 /** Screen dimension for convinience */
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
+/*
+int STORE_INITIAL_LOAD_AMOUNT = 96;
+int STORE_ADDITIONAL_INCREMENT = 16;
+ */
+
+int STORE_INITIAL_LOAD_AMOUNT = 96;
+int STORE_ADDITIONAL_INCREMENT = 16;
+
 CGSize keyboardSize;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -63,7 +71,7 @@ CGSize keyboardSize;
     _footerView.backgroundColor = [UIColor whiteColor];
     
     _cardsView = [[StoreCardsCollectionView alloc] initWithFrame:CGRectMake(0, _headerView.frame.size.height, self.view.bounds.size.width, self.view.bounds.size.height-_headerView.frame.size.height-_footerView.frame.size.height)];
-    
+    _cardsView.parentViewController = self;
     _cardsView.backgroundColor = COLOUR_INTERFACE_BLUE;
     
     self.view.backgroundColor = [UIColor whiteColor];
@@ -1048,7 +1056,7 @@ CGSize keyboardSize;
     }
 }
 
--(void)viewDidAppear:(BOOL)animated
+-(void)viewWillAppear:(BOOL)animated
 {
     [self updateFooterViews];
     [self updateBlankCardView];
@@ -1107,102 +1115,75 @@ CGSize keyboardSize;
                      }];
 }
 
--(void)updateFilter
+-(BOOL)shouldFilterCardPF:(PFObject*)cardPF withSalePF:(PFObject*)salePF
 {
-    _searchResult.text = @"Searching...";
-    cardStoreQueryID++;
-    _cardsView.currentSales = [NSMutableArray array];
+    int cost = [cardPF[@"cost"] intValue];
+    int element = [cardPF[@"element"] intValue];
+    int rarity = [cardPF[@"rarity"] intValue];
     
-    for (PFObject *salePF in _currentLoadedCards)
+    if (cost >= 0 && cost < _costFilter.count)
     {
-        PFObject *cardPF = salePF[@"card"];
-        
-        int cost = [cardPF[@"cost"] intValue];
-        int element = [cardPF[@"element"] intValue];
-        int rarity = [cardPF[@"rarity"] intValue];
-        
-        if (cost >= 0 && cost < _costFilter.count)
-        {
-            if ([_costFilter[cost] boolValue] == NO)
-                continue;
-        }
-        
-        if (element >= 0 && element < _elementFilter.count)
-        {
-            if ([_elementFilter[element] boolValue] == NO)
-                continue;
-        }
-        
-        if (rarity >= 0 && rarity < _rarityFilter.count)
-        {
-            if ([_rarityFilter[rarity] boolValue] == NO)
-                continue;
-        }
-        
-        //hide cards with stock 0
-        if (_stockedFilter && [salePF[@"stock"] intValue] == 0)
-            continue;
-        
-        //hide cards already liked
-        if (_likedFilter && [UserModel getLikedCardID:[cardPF[@"idNumber"] intValue]])
-            continue;
-        
-        //hide cards already owned
-        if (_ownedFilter && [UserModel getOwnedCardID:[cardPF[@"idNumber"] intValue]])
-            continue;
-        
-        if (_deckTagsFilter)
-        {
-            NSMutableArray*deckTags = [NSMutableArray array];
-            for (DeckModel *deck in userAllDecks)
-            {
-                for (NSString *tag in deck.tags)
-                {
-                    if (![deckTags containsObject:tag])
-                        [deckTags addObject:tag];
-                }
-            }
-            
-            BOOL foundTag = NO;
-            for (NSString*cardTag in cardPF[@"tags"])
-            {
-                for (NSString *deckTag in deckTags)
-                {
-                    if ([cardTag isEqualToString:deckTag])
-                    {
-                        foundTag = YES;
-                        break;
-                    }
-                }
-                
-                if (foundTag)
-                    break;
-            }
-            
-            if (!foundTag)
-                continue;
-        }
-        
-        //TODO only cards with same tags as decks
-        
-        [_cardsView.currentSales addObject:salePF];
+        if ([_costFilter[cost] boolValue] == NO)
+            return NO;
     }
     
-    _cardsView.currentCards = [NSMutableArray arrayWithCapacity:_cardsView.currentSales.count];
-    _cardsView.currentCardsPF = [NSMutableArray arrayWithCapacity:_cardsView.currentSales.count];
-    for (int i = 0; i < _cardsView.currentSales.count; i++)
-        [_cardsView.currentCards addObject:[NSNull null]];
-    for (int i = 0; i < _cardsView.currentSales.count; i++)
-        [_cardsView.currentCardsPF addObject:[NSNull null]];
+    if (element >= 0 && element < _elementFilter.count)
+    {
+        if ([_elementFilter[element] boolValue] == NO)
+            return NO;
+    }
     
-    [self.cardsView.loadingCells removeAllObjects];
-    [self.cardsView reloadInputViews];
-    [self.cardsView.collectionView reloadData];
+    if (rarity >= 0 && rarity < _rarityFilter.count)
+    {
+        if ([_rarityFilter[rarity] boolValue] == NO)
+            return NO;
+    }
     
-    if (_cardsView.currentCards.count == 0)
-        _searchResult.text = @"Found no match.";
-    else
-        _searchResult.text = @"";
+    //hide cards with stock 0
+    if (_stockedFilter && [salePF[@"stock"] intValue] == 0)
+        return NO;
+    
+    //hide cards already liked
+    if (_likedFilter && [UserModel getLikedCardID:[cardPF[@"idNumber"] intValue]])
+        return NO;
+    
+    //hide cards already owned
+    if (_ownedFilter && [UserModel getOwnedCardID:[cardPF[@"idNumber"] intValue]])
+        return NO;
+    
+    if (_deckTagsFilter)
+    {
+        NSMutableArray*deckTags = [NSMutableArray array];
+        for (DeckModel *deck in userAllDecks)
+        {
+            for (NSString *tag in deck.tags)
+            {
+                if (![deckTags containsObject:tag])
+                    [deckTags addObject:tag];
+            }
+        }
+        
+        BOOL foundTag = NO;
+        for (NSString*cardTag in cardPF[@"tags"])
+        {
+            for (NSString *deckTag in deckTags)
+            {
+                if ([cardTag isEqualToString:deckTag])
+                {
+                    foundTag = YES;
+                    break;
+                }
+            }
+            
+            if (foundTag)
+                break;
+        }
+        
+        if (!foundTag)
+            return NO;
+    }
+    
+    return YES;
 }
 
 -(void)backButtonPressed
@@ -1283,6 +1264,7 @@ CGSize keyboardSize;
     
     CardView*originalView = cardModel.cardView;
     _cardView = [[CardView alloc] initWithModel:cardModel viewMode:cardViewModeEditor];
+    _cardView.frontFacing = YES;
     cardModel.cardView = originalView;
     _cardView.cardViewState = cardViewStateCardViewer;
     
@@ -1315,6 +1297,8 @@ CGSize keyboardSize;
     
     [_buyButton removeFromSuperview];
     [_sellButton removeFromSuperview];
+    [_cardInfoView addSubview:_likeButton];
+    [_cardInfoView addSubview:_editButton];
     
     int currentCardIndex = (int)[_cardsView.currentCards indexOfObject:_cardView.cardModel];
     PFObject *salePF = _cardsView.currentSales[currentCardIndex];
@@ -1364,6 +1348,21 @@ CGSize keyboardSize;
     {
         _editHintLabel.text = @"Like it first";
         [_editButton setEnabled:NO];
+    }
+    
+    //do not get the three buttons if is the card's creator
+    if ([_cardView.cardModel.creator isEqualToString:userPF.objectId])
+    {
+        [_buyButton removeFromSuperview];
+        [_editButton removeFromSuperview];
+        [_sellButton removeFromSuperview];
+        [_likeButton removeFromSuperview];
+        
+        _buyHintLabel.text = @"";
+        _likeHintLabel.text = @"";
+        _editHintLabel.text = @"";
+        
+        //TODO additional stuff in future, such as bumping to featured
     }
     
     NSString*tagString = @"Tags:\n";
@@ -1710,7 +1709,7 @@ CGSize keyboardSize;
 
 -(void)applyFiltersToQuery:(PFQuery*)salesQuery
 {
-    salesQuery.limit = 100; //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    _currentQueryLocation = 0;
     [salesQuery includeKey:@"card"];
     
     if (_storeCategoryTab == storeCategoryFeatured)
@@ -1729,20 +1728,21 @@ CGSize keyboardSize;
     }
     else if (_storeCategoryTab == storeCategoryOwned)
     {
-        salesQuery.limit = 1000;
         NSArray*allOwnedCards = [UserModel getAllOwnedCardID];
         [salesQuery whereKey:@"cardID" containedIn:allOwnedCards];
+        [salesQuery orderByDescending:@"createdAt"];
     }
-    else if (_storeCategoryTab != storeCategoryDesigned)
+    else if (_storeCategoryTab == storeCategoryDesigned)
     {
-        salesQuery.limit = 0;
-        //TODO
-        //by checking sale's seller
+        [salesQuery whereKey:@"seller" equalTo:userPF.objectId];
+        [salesQuery orderByDescending:@"createdAt"];
     }
 }
 
+//initial search
 -(void)loadCards
 {
+    _scrolledToDatabaseEnd = NO;
     _searchResult.text = @"Searching...";
     cardStoreQueryID++;
     //clear all cells
@@ -1754,6 +1754,7 @@ CGSize keyboardSize;
     
     NSLog(@"load card start");
     PFQuery *salesQuery = [PFQuery queryWithClassName:@"Sale"];
+    salesQuery.limit = STORE_INITIAL_LOAD_AMOUNT;
     
     [self applyFiltersToQuery:salesQuery];
     
@@ -1771,6 +1772,166 @@ CGSize keyboardSize;
         }
     }];
 }
+
+//TODO: this and updateFilterToExistingSearchToObjects are buggy as crap and needs to be fixed eventually, but less terrible when store increment is set to 16. Often has duplication when set to 2 and has filters on
+-(void)loadMoreCardsFromBottom
+{
+    if (_scrolledToDatabaseEnd) //nothing to load
+        return;
+    
+    [self performBlockInBackground:^{
+        while (_loadingMoreCards) //already loading
+            sleep(0.1);
+        
+        _loadingMoreCards = YES;
+        
+        //clear all cells
+        NSLog(@"load more card start");
+        PFQuery *salesQuery = [PFQuery queryWithClassName:@"Sale"];
+        salesQuery.limit = STORE_ADDITIONAL_INCREMENT;
+        salesQuery.skip = _currentQueryLocation + _currentLoadedCards.count;
+        NSLog(@"SKIPPING: %d",salesQuery.skip);
+        [self applyFiltersToQuery:salesQuery];
+        
+        [salesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if(!error){
+                if (objects.count == 0)
+                {
+                    _scrolledToDatabaseEnd = YES; //no more to search
+                    if (_cardsView.currentSales.count == 0)
+                        _searchResult.text = @"Found no match.";
+                    else
+                        _searchResult.text = @"";
+                }
+                else
+                {
+                    //load all sales without the cards
+                    [_currentLoadedCards addObjectsFromArray:objects];
+                    NSLog(@"CURRENT TOTAL: %d",_currentLoadedCards.count);
+                    
+                    [self updateFilterToExistingSearchToObjects:objects];
+                    
+                }
+            }
+            else
+            {
+                _searchResult.text = @"Error while searching.";
+                NSLog(@"ERROR SEARCHING SALES");
+            }
+            _loadingMoreCards = NO; //done
+        }];
+    }];
+    
+}
+
+
+-(void)updateFilter
+{
+    int originalCount = _cardsView.currentSales.count;
+    
+    _searchResult.text = @"Searching...";
+    cardStoreQueryID++;
+    _cardsView.currentSales = [NSMutableArray array];
+    
+    for (PFObject *salePF in _currentLoadedCards)
+    {
+        PFObject *cardPF = salePF[@"card"];
+        
+        BOOL shouldFilter = [self shouldFilterCardPF:cardPF withSalePF:salePF];
+        
+        if (shouldFilter && ![_cardsView.currentSales containsObject:salePF])
+            [_cardsView.currentSales addObject:salePF];
+    }
+    
+    _cardsView.currentCards = [NSMutableArray arrayWithCapacity:_cardsView.currentSales.count];
+    _cardsView.currentCardsPF = [NSMutableArray arrayWithCapacity:_cardsView.currentSales.count];
+    for (int i = 0; i < _cardsView.currentSales.count; i++)
+        [_cardsView.currentCards addObject:[NSNull null]];
+    for (int i = 0; i < _cardsView.currentSales.count; i++)
+        [_cardsView.currentCardsPF addObject:[NSNull null]];
+    
+    [self.cardsView.loadingCells removeAllObjects];
+    [self.cardsView reloadInputViews];
+    [self.cardsView.collectionView reloadData];
+    
+    /*
+     if (_cardsView.currentCards.count == 0)
+     _searchResult.text = @"Found no match.";
+     else
+     _searchResult.text = @"";
+     */
+    
+    if (originalCount == _cardsView.currentSales.count)
+        [self loadMoreCardsFromBottom];
+    else
+    {
+        if (_cardsView.currentSales.count == 0)
+            _searchResult.text = @"Found no match.";
+        else
+            _searchResult.text = @"";
+    }
+    
+}
+
+-(void)updateFilterToExistingSearchToObjects:(NSArray*)salePFArray
+{
+    int oldSaleSize = _cardsView.currentSales.count;
+    
+    cardStoreQueryID++;
+    NSMutableArray *updateArray = [NSMutableArray arrayWithCapacity:salePFArray.count];
+    for (int i = 0; i < salePFArray.count; i++)
+    {
+        PFObject *salePF = salePFArray[i];
+        PFObject *cardPF = salePF[@"card"];
+        
+        BOOL shouldInclude = [self shouldFilterCardPF:cardPF withSalePF:salePF];
+        
+        if (shouldInclude && ![_cardsView.currentSales containsObject:salePF])
+        {
+            [_cardsView.currentSales addObject:salePF];
+            //NSLog(@"%d", _cardsView.currentSales.count-1);
+            [updateArray addObject: [NSIndexPath indexPathForRow:_cardsView.currentSales.count-1 inSection:0]];
+        }
+    }
+    
+    for (int i = 0; i < salePFArray.count; i++)
+        [_cardsView.currentCards addObject:[NSNull null]];
+    for (int i = 0; i < salePFArray.count; i++)
+        [_cardsView.currentCardsPF addObject:[NSNull null]];
+    
+    if (updateArray.count > 0)
+    {
+        //if the first one is 0 then it crashes
+        if ([updateArray[0] row] == 0)
+            [self.cardsView.collectionView reloadData];
+        else
+            [self.cardsView.collectionView insertItemsAtIndexPaths:updateArray];
+    }
+    
+    //[self.cardsView reloadInputViews];
+    /*
+     @try {
+     [self.cardsView.collectionView insertItemsAtIndexPaths:updateArray];
+     }
+     @catch (NSException *exception) {
+     NSLog(@"%@", exception);
+     }*/
+    
+    //if didn't load any more with this configuration, keep loading
+    if (oldSaleSize == _cardsView.currentSales.count && !_scrolledToDatabaseEnd)
+    {
+        _searchResult.text = @"";
+        NSLog(@"keep loading");
+        [self loadMoreCardsFromBottom];
+    }
+    else if (_cardsView.currentSales.count == 0)
+    {
+        _searchResult.text = @"Found no match.";
+    }
+    else
+        _searchResult.text = @"";
+}
+
 
 -(void)searchCards
 {
@@ -1952,6 +2113,11 @@ CGSize keyboardSize;
                                                   }];
                              }
                      }];
+}
+
+-(void)storeScrolledToEnd
+{
+    [self loadMoreCardsFromBottom];
 }
 
 -(void)activityFailedButtonPressed

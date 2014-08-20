@@ -40,6 +40,9 @@
 /** For correctly iterating through turn start and ends for each card */
 @property BOOL turnEnded;
 
+/** For single player bosses, monster card with this property treats it as a hero. It won */
+@property BOOL heroic;
+
 /** Used for AI to keep track of the original card when copying them for states. */
 @property (weak) MonsterCardModel*originalCard;
 

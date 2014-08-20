@@ -282,7 +282,7 @@ NSArray *allAbilities;
                       [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:0 withOtherValues:@[@1000,@8000] withDescription:nil] elements:@[ELEMENT_NEUTRAL, ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:800 maxPoints:6400 maxCount:2 minCost:0],
                      //direct damage to one random enemy minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:0 withOtherValues:@[@1000,@8000] withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:850 maxPoints:6800 maxCount:2 minCost:1],
+                      [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:0 withOtherValues:@[@1000,@8000] withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:850 maxPoints:6800 maxCount:2 minCost:1],
                      //direct damage to one random friendly minion
                      [[AbilityWrapper alloc] initWithAbility:
                       [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomFriendlyMinion withDuration:durationInstant withValue:0 withOtherValues:@[@1000,@8000] withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:-400 maxPoints:-3200 maxCount:2 minCost:3],

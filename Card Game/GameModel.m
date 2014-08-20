@@ -9,6 +9,7 @@
 #import "GameModel.h"
 #import "GameViewController+Animation.h"
 #import "UserModel.h"
+#import "Campaign.h"
 
 @implementation GameModel
 
@@ -64,6 +65,23 @@ int cardIDCount = 0;
             
             opponentHeroModel.life = opponentHeroModel.maximumLife = level.opponentHealth;
             opponentHeroModel.name = level.opponentName;
+            
+            if (_level.isBossFight)
+            {
+                self.aiPlayer.isBossFight = YES;
+                
+                MonsterCardModel*boss = [SinglePlayerCards getCampaignBossWithID:_level.levelID];
+                
+                if (boss)
+                {
+                    opponent.playerMonster = [[MonsterCardModel alloc] initWithCardModel:boss];
+                    opponent.playerMonster.side = OPPONENT_SIDE;
+                    [self addCardToBattlefield:opponent.playerMonster side:OPPONENT_SIDE];
+                }
+            }
+            if (_level.isTutorial)
+                self.aiPlayer.isTutorial = YES;
+            //levelDifficultyOffset
         }
     }
     
@@ -80,7 +98,17 @@ int cardIDCount = 0;
     {
         DeckModel *deck = self.decks[side];
         //shuffle deck
-        [deck shuffleDeck]; //TURN THIS ON/OFF FOR DEBUGGING
+        
+        if (side == OPPONENT_SIDE && _level != nil && !_level.opponentShuffleDeck)
+        {
+            //NO SHUFFLE
+        }
+        else if (side == PLAYER_SIDE && _level != nil && !_level.playerShuffleDeck)
+        {
+            //NO SHUFFLE
+        }
+        else
+            [deck shuffleDeck];
         
         //draw 4 cards
         for (int i = 0; i < 4; i++)
@@ -101,14 +129,12 @@ int cardIDCount = 0;
     NSMutableArray* playerHand = self.hands[PLAYER_SIDE];
     NSMutableArray* aiHand = self.hands[OPPONENT_SIDE];
     
-   
-    
     /*
     MonsterCardModel*monster;
     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     monster.name = @"Nameless card";
-    monster.life = monster.maximumLife = 100;
-    monster.damage = 100;
+    monster.life = monster.maximumLife = 99999;
+    monster.damage = 99999;
     monster.cost = 0;
     monster.cooldown = monster.maximumCooldown = 0;
     monster.side = PLAYER_SIDE;
@@ -281,6 +307,22 @@ int cardIDCount = 0;
     NSArray* battlefield = self.battlefield[side];
     BOOL allCardsEnded = NO;
     
+    //expire all abilities that only lasts until end of turn
+    for (MonsterCardModel*monsterCard in self.battlefield[PLAYER_SIDE])
+    {
+        //cast type must also be always since that means it's already casted
+        for (Ability *ability in monsterCard.abilities)
+            if (ability.durationType == durationUntilEndOfTurn && ability.castType == castAlways)
+                ability.expired = YES;
+    }
+    for (MonsterCardModel*monsterCard in self.battlefield[OPPONENT_SIDE])
+    {
+        //cast type must also be always since that means it's already casted
+        for (Ability *ability in monsterCard.abilities)
+            if (ability.durationType == durationUntilEndOfTurn && ability.castType == castAlways)
+                ability.expired = YES;
+    }
+    
     //this ensures every single card has its turn ended even if the array has been modified
     while (!allCardsEnded)
     {
@@ -304,17 +346,6 @@ int cardIDCount = 0;
         if ([battlefield count] == 0)
             break;
     }
-    
-    //end turn effects to all cards (e.g. deduct cooldown)
-    /*
-    for (int i = 0; i < [battlefield count]; i++)
-    {
-        MonsterCardModel* monsterCard = battlefield[i];
-        [self cardEndTurn:monsterCard fromSide: side];
-        [monsterCard.cardView updateView];
-    }
-    */
-    
 }
 
 -(BOOL)drawCard:(int)side
@@ -332,11 +363,8 @@ int cardIDCount = 0;
             monster.side = side;
         }
         
-
-        
         [hand addObject: card];
     }
-    
     
     //TODO deal damage to player maybe
     
@@ -350,6 +378,7 @@ int cardIDCount = 0;
     //[SinglePlayerCards uploadPlayerDeck];
     
     DeckModel *aiDeck;
+    DeckModel *playerDeck;
     
     if (_gameMode == GameModeSingleplayer)
     {
@@ -359,6 +388,19 @@ int cardIDCount = 0;
         for (CardModel*card in _level.cards.cards)
             [aiDeck addCard:[[CardModel alloc] initWithCardModel:card]];
         
+        //get player's preconstructed campaign deck
+        DeckModel*campaignPlayerDeck = [SinglePlayerCards getPlayerCampaignDeckWithID:_level.levelID];
+        if (campaignPlayerDeck != nil)
+        {
+            playerDeck = [[DeckModel alloc] init];
+            for (CardModel*card in campaignPlayerDeck.cards)
+                [playerDeck addCard:[[CardModel alloc] initWithCardModel:card]];
+            
+            NSLog(@"player cards count %d",playerDeck.cards.count);
+        }
+        
+        //this is for old stuff, cards are shuffled in start game now
+        /*
         if (_level.opponentShuffleDeck)
         {
             if (aiDeck.count > 0)
@@ -369,6 +411,7 @@ int cardIDCount = 0;
                     [aiDeck removeCardAtIndex:0];
             }
         }
+         */
     }
     else if (_gameMode == GameModeMultiplayer)
     {
@@ -383,28 +426,26 @@ int cardIDCount = 0;
     }
     
    
-    
-    DeckModel *playerDeck = [[DeckModel alloc] init];
-    
-    DeckModel *deckOne;
-    
-    //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! should not actually be hard coded in GameModel. Instead GameViewController tells what deck to choose
-    if (userCurrentDeck != nil)
+    if (playerDeck == nil)
     {
-        NSLog(@"here");
-        deckOne = userCurrentDeck;
+        playerDeck = [[DeckModel alloc] init];
+        
+        DeckModel *deckOne;
+        
+        //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! should not actually be hard coded in GameModel. Instead GameViewController tells what deck to choose
+        if (userCurrentDeck != nil)
+        {
+            deckOne = userCurrentDeck;
+        }
+        else
+        {
+            deckOne = userAllDecks[0];
+            NSLog(@"ERROR: NO DECK FOUND");
+        }
+        
+        for (CardModel*card in deckOne.cards)
+            [playerDeck addCard:[[CardModel alloc] initWithCardModel:card]];
     }
-    else
-    {
-        NSLog(@"here 2");
-        deckOne = userAllDecks[0];
-    }
-    
-    for (CardModel*card in deckOne.cards)
-        [playerDeck addCard:[[CardModel alloc] initWithCardModel:card]];
-    
-    if (playerDeck.count > 0)
-        [playerDeck shuffleDeck];
     //while ([playerDeck count] > 20) //limit to 20 cards
     //    [playerDeck removeCardAtIndex:0];
     
@@ -664,7 +705,7 @@ int cardIDCount = 0;
         targetType == targetOneFriendlyMinion)
     {
         for (MonsterCardModel*monster in friendlyField)
-            if ([self canAddAbility:monster ability:ability])
+            if ([self canAddAbility:monster ability:ability] && !monster.heroic)
                 return YES;
         
         return NO;
@@ -674,7 +715,7 @@ int cardIDCount = 0;
             targetType == targetOneEnemyMinion)
     {
         for (MonsterCardModel*monster in enemyField)
-            if ([self canAddAbility:monster ability:ability])
+            if ([self canAddAbility:monster ability:ability] && !monster.heroic)
                 return YES;
         
         return NO;
@@ -684,11 +725,11 @@ int cardIDCount = 0;
              targetType == targetOneAnyMinion)
     {
         for (MonsterCardModel*monster in friendlyField)
-            if ([self canAddAbility:monster ability:ability])
+            if ([self canAddAbility:monster ability:ability] && !monster.heroic)
                 return YES;
         
         for (MonsterCardModel*monster in enemyField)
-            if ([self canAddAbility:monster ability:ability])
+            if ([self canAddAbility:monster ability:ability] && !monster.heroic)
                 return YES;
         
         return NO;
@@ -725,7 +766,6 @@ int cardIDCount = 0;
                 }
             }
             [self.gameViewController decAnimationCounter];
-            [self checkForGameOver];
         } afterDelay:0.4];
     }
     else if ([card isKindOfClass: [SpellCardModel class]])
@@ -740,7 +780,6 @@ int cardIDCount = 0;
                 [self castAbility:ability byMonsterCard:nil toMonsterCard:nil fromSide:side];
             }
         }
-        [self checkForGameOver];
     }
     
     //remove card and use up cost
@@ -801,11 +840,6 @@ int cardIDCount = 0;
             [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:nil fromSide:side];
         }
     }
-    
-    //cast type must also be always since that means it's already casted
-    for (Ability *ability in monsterCard.abilities)
-        if (ability.durationType == durationUntilEndOfTurn && ability.castType == castAlways)
-            ability.expired = YES;
     
     //check for dead
     if (monsterCard.dead)
@@ -965,8 +999,6 @@ int cardIDCount = 0;
         return @[[NSNumber numberWithInt:dealtDamageTarget],[NSNumber numberWithInt:dealtDamageAttacker]];
     }
     
-    [self checkForGameOver];
-    
     return 0;
 }
 
@@ -1066,6 +1098,8 @@ int cardIDCount = 0;
     }
     
     [self.graveyard[side] addObject:card]; //add it to the graveyard
+    
+    [self checkForGameOver];
 }
 
 /**
@@ -1089,10 +1123,15 @@ int cardIDCount = 0;
     if (ability.targetType == targetSelf)
         targets = @[attacker];
     else if (ability.targetType == targetVictim)
+    {
+        if (target.heroic)
+            return;
+        
         targets = @[target];
+    }
     else if (ability.targetType == targetVictimMinion)
     {
-        if (target.type == cardTypePlayer) //do not cast ability if target is not a minion
+        if (target.heroic) //do not cast ability if target is not a minion
             return;
         else
             targets = @[target];
@@ -1117,7 +1156,6 @@ int cardIDCount = 0;
                 [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
                 [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
                 [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
-                
                 
                 for (MonsterCardModel *monster in allTargets)
                 {
@@ -1168,6 +1206,8 @@ int cardIDCount = 0;
                     if (![self canAddAbility:monster ability:ability])
                         continue;
                     else if (monster == attacker) //cannot target self
+                        continue;
+                    else if (monster.heroic)
                         continue;
                     
                     monster.cardView.cardHighlightType = cardHighlightTarget;
@@ -1253,6 +1293,8 @@ int cardIDCount = 0;
                         continue;
                     else if (monster == attacker) //cannot target self
                         continue;
+                    else if (monster.heroic)
+                        continue;
                     
                     monster.cardView.cardHighlightType = cardHighlightTarget;
                 }
@@ -1336,6 +1378,8 @@ int cardIDCount = 0;
                         continue;
                     else if (monster == attacker) //cannot target self
                         continue;
+                    else if (monster.heroic)
+                        continue;
                     
                     monster.cardView.cardHighlightType = cardHighlightTarget;
                 }
@@ -1374,7 +1418,7 @@ int cardIDCount = 0;
         NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
         [allTargets removeObject:attacker]; //remove itself
         [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
-        
+        [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
         targets = [NSArray arrayWithArray:allTargets];
     }
     else if (ability.targetType == targetAllFriendly)
@@ -1389,6 +1433,7 @@ int cardIDCount = 0;
     {
         NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
         [allTargets removeObject:attacker]; //remove itself
+        [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
         targets = [NSArray arrayWithArray:allTargets];
     }
     else if (ability.targetType == targetAllEnemy)
@@ -1400,8 +1445,9 @@ int cardIDCount = 0;
     }
     else if (ability.targetType == targetAllEnemyMinions)
     {
-        targets = [NSArray arrayWithArray:self.battlefield[oppositeSide]];
-        
+        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
+        [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
+        targets = [NSArray arrayWithArray:allTargets];
     }
     else if (ability.targetType == targetOneRandomAny)
     {
@@ -1411,6 +1457,9 @@ int cardIDCount = 0;
         [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
         [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
         
+        if (allTargets.count == 0)
+            return;
+        
         targets = @[allTargets[arc4random_uniform(allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomMinion)
@@ -1418,6 +1467,10 @@ int cardIDCount = 0;
         NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
         [allTargets removeObject:attacker]; //remove itself
         [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
+        [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
+        
+        if (allTargets.count == 0)
+            return;
         
         targets = @[allTargets[arc4random_uniform(allTargets.count)]];
     }
@@ -1427,12 +1480,18 @@ int cardIDCount = 0;
         [allTargets removeObject:attacker]; //remove itself
         [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
         
+        if (allTargets.count == 0)
+            return;
+        
         targets = @[allTargets[arc4random_uniform(allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomFriendlyMinion)
     {
         NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
         [allTargets removeObject:attacker]; //remove itself
+        [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
+        if (allTargets.count == 0)
+            return;
         
         targets = @[allTargets[arc4random_uniform(allTargets.count)]];
     }
@@ -1441,11 +1500,17 @@ int cardIDCount = 0;
         NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
         [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
         
+        if (allTargets.count == 0)
+            return;
+        
         targets = @[allTargets[arc4random_uniform(allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomEnemyMinion)
     {
         NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
+        [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
+        if (allTargets.count == 0)
+            return;
         
         targets = @[allTargets[arc4random_uniform(allTargets.count)]];
     }
@@ -1495,11 +1560,17 @@ int cardIDCount = 0;
     else if (ability.targetType == targetHeroFriendly)
     {
         PlayerModel *player = self.players[side];
+        if (player.playerMonster == nil)
+            return;
+            
         targets = @[player.playerMonster];
     }
     else if (ability.targetType == targetHeroEnemy)
     {
         PlayerModel *enemy = self.players[oppositeSide];
+        if (enemy.playerMonster == nil)
+            return;
+        
         targets = @[enemy.playerMonster];
     }
     
@@ -1525,6 +1596,7 @@ int cardIDCount = 0;
         Ability * appliedAbility;
         //all effects are first added to the abilities: add the ability to the object with castType as castAlways as they're already casted, and pass all other values on. Instant effects are applied right after
         appliedAbility = [[Ability alloc] initWithType:ability.abilityType castType:castAlways targetType:targetSelf withDuration:ability.durationType withValue:ability.value withOtherValues:ability.otherValues];
+        appliedAbility.isBaseAbility = NO;
         
         //if the ability has an instant effect (e.g. deal some damage, draw some cards), cast the effect immediately
         BOOL castedInstantAbility = [self castInstantAbility:appliedAbility onMonsterCard:target fromSide:side];
@@ -1550,17 +1622,20 @@ int cardIDCount = 0;
                 //also removes all existing abilities
                 else if (ability.abilityType == abilityRemoveAbility)
                 {
-                    //remove all abilities that are not the removeAbility itself
-                    //delete this way to prevent concurrent mod
-                    for (int i = 0; i < [target.abilities count];)
+                    if (target.heroic) //cannot silence hero
+                        return;
+                    
+                    for (int i = 0; i < [target.abilities count]; i++)
                     {
                         Ability*targetAbility = target.abilities[i];
                         
                         //skip all abilityRemoveAbility that targets itself
-                        if (targetAbility.abilityType == abilityRemoveAbility && targetAbility.targetType == targetSelf)
-                            i++;
+                        if (!targetAbility.expired && targetAbility.abilityType == abilityRemoveAbility && targetAbility.targetType == targetSelf)
+                        {
+                            //skip
+                        }
                         else
-                            [target.abilities removeObjectAtIndex:i];
+                            targetAbility.expired = YES;
                     }
                     
                     //reset life and cooldown to max if they're above
@@ -1605,6 +1680,9 @@ int cardIDCount = 0;
     }
     else if (ability.abilityType == abilityKill)
     {
+        if (monster.heroic) //immune to kill
+            return YES;
+        
         int lifeLost = monster.life;
         [monster loseLife:monster.life];
         [self.gameViewController animateCardDamage:monster.cardView forDamage:lifeLost fromSide:monster.side];
@@ -1704,6 +1782,9 @@ int cardIDCount = 0;
             return YES;
         }
         
+        if (monster.heroic)
+            return YES;
+        
         //TODO needs to reset any silenced abilty (instead of removing abilities with silence, set them to expired
         
         int monsterSide = monster.side;
@@ -1719,13 +1800,21 @@ int cardIDCount = 0;
         
         [self.gameViewController updateBattlefieldView:monsterSide];
         [self.gameViewController updateHandsView:monsterSide];
-        [monster.cardView updateView];
+        
+        if (monster.side == OPPONENT_SIDE && monster.cardView.frontFacing)
+            [monster.cardView flipCard]; //includes update view
+        else
+            [monster.cardView updateView];
+        
         //[monster.cardView updateView];
         
         return YES; //if it's returned to hand, it cannot die or have anything else happen to it
     }
     else if (ability.abilityType == abilityFracture)
     {
+        if (monster.heroic)
+            return YES;
+        
         int cost = monster.baseCost;
         int damage = monster.baseDamage;
         int life = monster.baseMaxLife;
@@ -1765,12 +1854,7 @@ int cardIDCount = 0;
                 currentMonsterCount--;
             
             if (currentMonsterCount < MAX_BATTLEFIELD_SIZE)
-            {
                 [self addCardToBattlefield:fracture side:monster.side];
-                
-                //CardView *fractureView = [[CardView alloc]initWithModel:fracture cardImage:monster.cardView.cardImage viewMode:monster.cardView.cardViewMode];
-                //fractureView.center = monster.cardView.center;
-            }
         }
         
         return YES;
@@ -1804,7 +1888,7 @@ int cardIDCount = 0;
             if (ability.abilityType == abilityTaunt || ability.abilityType == abilityPierce || ability.abilityType == abilityAssassin || ability.abilityType == abilityRemoveAbility)
             {
                 //all settings are identical
-                if (monsterAbility.targetType == ability.targetType && monsterAbility.durationType == ability.durationType && monsterAbility.castType == ability.castType)
+                if (monsterAbility.targetType == targetSelf && monsterAbility.durationType == ability.durationType && monsterAbility.castType == castAlways)
                     return YES;
             }
         }
@@ -1815,17 +1899,31 @@ int cardIDCount = 0;
 /** Checks if it's possible to add this ability to the target. */
 -(BOOL)canAddAbility:(MonsterCardModel*)target ability:(Ability*)ability
 {
+    if (target.heroic)
+    {
+        if (ability.abilityType == abilityTaunt || ability.abilityType == abilityAddMaxCooldown|| ability.abilityType == abilityAddMaxLife)
+            return NO;
+    }
+    
     //instant ability don't worry about can add or not TODO maybe new ability that prevents it from being targetted
     if (ability.durationType != durationInstant)
     {
         //cannot add if contains the abilityRemoveAbility ability.
         for (Ability *ability in target.abilities)
+        {
             if (ability.abilityType == abilityRemoveAbility && ability.targetType == targetSelf && ability.castType == castAlways && !ability.expired)
+            {
+                //NSLog(@"Cannot add ability: target is already muted");
                 return NO;
+            }
+        }
         
         //cannot add duplicate ability
         if ([self containsDuplicateAbility:target ability:ability])
+        {
+            //NSLog(@"Cannot add ability: target contains identical ability that does not allow duplication");
             return NO;
+        }
     }
     
     //if targetting an attacker, ability is avoided if target has abilityAssassin
@@ -1841,27 +1939,32 @@ int cardIDCount = 0;
 
 -(void) checkForGameOver
 {
-    //game already over, can't check
-    if (self.gameOver)
-        return;
+    BOOL alreadyOver = NO;
+    if (_gameOver)
+        alreadyOver = YES;
     
     PlayerModel *player = self.players[PLAYER_SIDE];
     PlayerModel *enemy = self.players[OPPONENT_SIDE];
     
+    //TODO this actually won't ever happen because one player will always die first
     if (player.playerMonster.dead && enemy.playerMonster.dead)
     {
         NSLog(@"Game ended in a draw!");
         self.gameOver = YES;
+        _playerOneDefeated = YES;
+        _playerTwoDefeated = YES;
     }
     else if (player.playerMonster.dead)
     {
         NSLog(@"Player 1 lost!");
         self.gameOver = YES;
+        _playerOneDefeated = YES;
     }
     else if (enemy.playerMonster.dead)
     {
         NSLog(@"Player 2 lost!");
         self.gameOver = YES;
+        _playerTwoDefeated = YES;
     }
     
     if (self.gameOver)
@@ -1870,6 +1973,9 @@ int cardIDCount = 0;
         [self.gameViewController.handsView setUserInteractionEnabled:NO];
         [self.gameViewController.fieldView setUserInteractionEnabled:NO];
         [self.gameViewController.uiView setUserInteractionEnabled:NO];
+        
+        if (!alreadyOver)
+            [self.gameViewController gameOver];
     }
 }
 

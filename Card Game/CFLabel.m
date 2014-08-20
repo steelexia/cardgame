@@ -32,16 +32,26 @@
         
         self.backgroundColor = COLOUR_INTERFACE_BLUE_LIGHT;
         
-        _label = [[StrokedLabel alloc] initWithFrame:CGRectInset(self.bounds, 10, 5)];
+        _label = [[StrokedLabel alloc] initWithFrame:CGRectInset(self.bounds, 10, 10)];
         _label.textColor = [UIColor whiteColor];
         _label.backgroundColor = [UIColor clearColor];
         _label.font = [UIFont fontWithName:cardMainFont size:14];
         _label.textAlignment = NSTextAlignmentLeft;
         _label.lineBreakMode = NSLineBreakByWordWrapping;
-        _label.numberOfLines = 6;
+        _label.numberOfLines = 0;
         [self addSubview:_label];
     }
     return self;
+}
+
+-(void)setTextSize:(int)size
+{
+    _label.font = [UIFont fontWithName:cardMainFont size:size];
+}
+
+-(void)setupAsDialog
+{
+    _label.frame = CGRectMake(_label.frame.origin.x, _label.frame.origin.y, _label.frame.size.width, _label.frame.size.height-50);
 }
 
 /*

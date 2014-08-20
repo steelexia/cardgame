@@ -106,7 +106,7 @@
     if (self.state == UIControlStateDisabled)
     {
         _label.textColor = [UIColor lightGrayColor];
-        self.backgroundColor = COLOUR_INTERFACE_BLUE_TRANSPARENT;
+        self.backgroundColor = COLOUR_INTERFACE_GRAY;
     }
     else if (self.state == UIControlStateSelected)
     {
@@ -137,6 +137,9 @@
 -(void)setEnabled:(BOOL)enabled
 {
     [super setEnabled:enabled];
+    if (!enabled)
+        self.selected = NO;
+    
     [self updateView];
 }
 

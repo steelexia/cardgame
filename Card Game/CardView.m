@@ -26,6 +26,7 @@
 @synthesize cooldownViewNeedsUpdate = _cooldownViewNeedsUpdate;
 @synthesize cardViewMode = _cardViewMode;
 @synthesize mask = _mask;
+@synthesize frontFacing = _frontFacing;
 
 const int CARD_WIDTH_RATIO = 5;
 const int CARD_HEIGHT_RATIO = 8;
@@ -47,6 +48,8 @@ int PLAYER_HERO_WIDTH = 50, PLAYER_HERO_HEIGHT = 50;
 
 UIImage *backgroundMonsterOverlayImage, *selectHighlightImage, *targetHighlightImage, *heroSelectHighlightImage, *heroTargetHighlightImage;
 
+UIImage *cardBackImage;
+
 UIImage *heroPlaceHolderImage, *loadingImage;
 
 /** 2D array of images. First array contains elements, second array contains rarity */
@@ -59,6 +62,7 @@ NSString *cardMainFont = @"EncodeSansCompressed-Bold";
 NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
 
 NSMutableDictionary *standardCardImages;
+NSDictionary *singlePlayerCardImages;
 
 +(void) loadResources
 {
@@ -141,8 +145,12 @@ NSMutableDictionary *standardCardImages;
      [UIImage imageNamed:@"card_background_front_overlay_legendary"],
     ];
     
-    backgroundMonsterOverlayImage = [UIImage imageNamed:@"card_background_front_monster_overlay"];
+    singlePlayerCardImages = @{
+                               @"1000" : [UIImage imageNamed:@"card_1000"],
+                               @"1100" : [UIImage imageNamed:@"card_1100"],
+                               };
     
+    backgroundMonsterOverlayImage = [UIImage imageNamed:@"card_background_front_monster_overlay"];
     
     selectHighlightImage = [UIImage imageNamed:@"card_glow_select"];
     heroSelectHighlightImage = [UIImage imageNamed:@"hero_glow_select"];
@@ -151,7 +159,8 @@ NSMutableDictionary *standardCardImages;
     
     placeHolderImage = [UIImage imageNamed:@"card_image_placeholder"];
     loadingImage =[UIImage imageNamed:@"card_image_empty"];
-    heroPlaceHolderImage = [UIImage imageNamed:@"hero_default"];
+    heroPlaceHolderImage = [UIImage imageNamed:@"card_image_placeholder"];
+    cardBackImage = [UIImage imageNamed:@"card_back_default"];
     
     abilityTextParagrahStyle = [[NSMutableParagraphStyle alloc] init];
     //[abilityTextParagrahStyle setLineSpacing:];
@@ -212,20 +221,41 @@ NSMutableDictionary *standardCardImages;
         
         self.abilityIcons = [NSMutableArray array];
         
-        UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:elementArray[0]];
-        backgroundImageView.bounds = CGRectMake(0, 0, CARD_FULL_WIDTH, CARD_FULL_HEIGHT);
-        backgroundImageView.center = CGPointMake(CARD_FULL_WIDTH/2, CARD_FULL_HEIGHT/2);
-        [self addSubview: backgroundImageView];
-
+        _transformView = [[UIView alloc] initWithFrame:self.bounds];
+        //[_transformView setUserInteractionEnabled:YES];
+        [self addSubview:_transformView];
+        
+        _backgroundImageView = [[UIImageView alloc] initWithImage:elementArray[0]];
+        _backgroundImageView.bounds = CGRectMake(0, 0, CARD_FULL_WIDTH, CARD_FULL_HEIGHT);
+        _backgroundImageView.center = CGPointMake(CARD_FULL_WIDTH/2, CARD_FULL_HEIGHT/2);
+        [_transformView addSubview: _backgroundImageView];
+        
+        _frontViews = [[UIView alloc] initWithFrame:self.bounds];
+        //[_frontViews setUserInteractionEnabled:YES];
+        [_transformView addSubview:_frontViews];
+        
         UIView*imageBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CARD_FULL_WIDTH - 16, (CARD_FULL_WIDTH-16) * CARD_IMAGE_RATIO)];
         [imageBackgroundView setBackgroundColor:[UIColor whiteColor]];
         imageBackgroundView.center = CGPointMake(CARD_FULL_WIDTH/2, 80);
         //[backgroundImageView addSubview:imageBackgroundView]; //for providing a view if card image has transparent areas, not using cardImage's background since it has problems when loading in store
-        
+       
         if (cardImage == nil)
         {
-            if (cardModel.type == cardTypePlayer)
+            if (cardModel.type == cardTypeSinglePlayer)
+            {
+                UIImage* image = singlePlayerCardImages[[NSString stringWithFormat:@"%d", _cardModel.idNumber]];
+                if (image != nil)
+                {
+                    self.cardImage = [[UIImageView alloc] initWithImage:image];
+                }
+                else
+                    self.cardImage = [[UIImageView alloc] initWithImage:placeHolderImage];
+            }
+            else if (cardModel.type == cardTypePlayer)
+            {
+                //TODO
                 self.cardImage = [[UIImageView alloc] initWithImage:heroPlaceHolderImage];
+            }
             else
             {
                 self.cardImage = [[UIImageView alloc]initWithImage:loadingImage];
@@ -234,16 +264,18 @@ NSMutableDictionary *standardCardImages;
             self.cardImage.frame = CGRectMake(0, 0, CARD_FULL_WIDTH - 16, (CARD_FULL_WIDTH-16) * CARD_IMAGE_RATIO);
             self.cardImage.center = CGPointMake(CARD_FULL_WIDTH/2, 80);
             self.cardImage.backgroundColor = [UIColor whiteColor];
-            [self addSubview:self.cardImage];
+            [_frontViews addSubview:self.cardImage];
             
-            _reloadAttempts = 0;
-            
-            _activityView = [[UIActivityIndicatorView alloc] initWithFrame:self.cardImage.bounds];
-            [self.cardImage addSubview:_activityView];
-            [_activityView startAnimating];
-            [self performBlockInBackground:^(void){
-                [self loadImage];
-            }];
+            if (cardModel.type != cardTypeSinglePlayer)
+            {
+                _reloadAttempts = 0;
+                _activityView = [[UIActivityIndicatorView alloc] initWithFrame:self.cardImage.bounds];
+                [self.cardImage addSubview:_activityView];
+                [_activityView startAnimating];
+                [self performBlockInBackground:^(void){
+                    [self loadImage];
+                }];
+            }
         }
         else
         {
@@ -252,25 +284,25 @@ NSMutableDictionary *standardCardImages;
             self.cardImage.frame = CGRectMake(0, 0, CARD_FULL_WIDTH - 16, (CARD_FULL_WIDTH-16) * CARD_IMAGE_RATIO);
             self.cardImage.center = CGPointMake(CARD_FULL_WIDTH/2, 80);
             self.cardImage.backgroundColor = [UIColor whiteColor];
-            [self addSubview:self.cardImage];
+            [_frontViews addSubview:self.cardImage];
         }
         
         UIImageView *cardOverlay = [[UIImageView alloc] initWithImage:backgroundOverlayImages[cardModel.rarity]];
         cardOverlay.bounds = CGRectMake(0, 0, CARD_FULL_WIDTH, CARD_FULL_HEIGHT);
         cardOverlay.center = CGPointMake(CARD_FULL_WIDTH/2, CARD_FULL_HEIGHT/2);
-        [self addSubview:cardOverlay];
+        [_frontViews addSubview:cardOverlay];
         
         self.userInteractionEnabled = true; //allows interaction
         
         self.frame = CGRectMake(0,0,CARD_FULL_WIDTH,CARD_FULL_HEIGHT);
         
-        CGRect highlightBounds = CGRectMake(0,0,self.frame.size.width+14,self.frame.size.height+14);
+        CGRect highlightBounds = CGRectMake(0,0,self.frame.size.width+28,self.frame.size.height+28);
         self.highlight = [[UIImageView alloc] initWithImage:selectHighlightImage];
         self.highlight.bounds = highlightBounds;
         self.highlight.center = CGPointMake(CARD_FULL_WIDTH/2, CARD_FULL_HEIGHT/2);
         self.highlight.alpha = 0.5;
         
-        [self insertSubview:self.highlight atIndex:0];
+        [_transformView insertSubview:self.highlight atIndex:0];
         
         //draws common card elements such as name and cost
         self.nameLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,96,30)];
@@ -281,8 +313,8 @@ NSMutableDictionary *standardCardImages;
         self.nameLabel.font = [UIFont fontWithName:cardMainFont size:15];
         [self.nameLabel setMinimumScaleFactor:6.f/15];
         self.nameLabel.adjustsFontSizeToFitWidth = YES;
-        
-        [self addSubview: nameLabel];
+
+        [_frontViews addSubview: nameLabel];
         
         self.costLabel = [[StrokedLabel alloc] initWithFrame:self.bounds];
         self.costLabel.center = CGPointMake(21, 19);
@@ -294,7 +326,7 @@ NSMutableDictionary *standardCardImages;
         self.costLabel.strokeColour = [UIColor blackColor];
         self.costLabel.strokeThickness = 3;
         
-        [self addSubview: costLabel];
+        [_frontViews addSubview: costLabel];
         
         self.elementLabel = [[StrokedLabel alloc] initWithFrame:self.bounds];
         self.elementLabel.center = CGPointMake(CARD_FULL_WIDTH/2, 150);
@@ -314,6 +346,7 @@ NSMutableDictionary *standardCardImages;
         self.baseAbilityLabel.backgroundColor = [UIColor clearColor];
         self.baseAbilityLabel.editable = NO;
         self.baseAbilityLabel.selectable = NO;
+        
         //self.baseAbilityLabel.numberOfLines = 0;
         self.baseAbilityLabel.textAlignment = NSTextAlignmentLeft;
         //self.baseAbilityLabel.lineBreakMode = NSLineBreakByTruncatingTail;
@@ -343,7 +376,7 @@ NSMutableDictionary *standardCardImages;
                 self.lifeLabel.font = [UIFont fontWithName:cardMainFont size:20];
                 self.lifeLabel.text = [NSString stringWithFormat:@"%d", monsterCard.life];
                 
-                [self addSubview: lifeLabel];
+                [_frontViews addSubview: lifeLabel];
                 
                 //change the background and size
                 //change the main image size
@@ -353,7 +386,7 @@ NSMutableDictionary *standardCardImages;
                 [self.costLabel removeFromSuperview];
                 
                 self.frame = CGRectMake(0,0,PLAYER_HERO_WIDTH,PLAYER_HERO_WIDTH);
-                backgroundImageView.frame = CGRectMake(0,0,PLAYER_HERO_WIDTH,PLAYER_HERO_WIDTH);
+                _backgroundImageView.frame = CGRectMake(0,0,PLAYER_HERO_WIDTH,PLAYER_HERO_WIDTH);
                 
                 self.highlight.image = heroSelectHighlightImage;
                 //change the highlight size
@@ -372,7 +405,7 @@ NSMutableDictionary *standardCardImages;
                 UIImageView *monsterOverlay = [[UIImageView alloc] initWithImage:backgroundMonsterOverlayImage];
                 monsterOverlay.bounds = CGRectMake(0, 0, CARD_FULL_WIDTH, CARD_FULL_HEIGHT);
                 monsterOverlay.center = CGPointMake(CARD_FULL_WIDTH/2, CARD_FULL_HEIGHT/2);
-                [self addSubview:monsterOverlay];
+                [_frontViews addSubview:monsterOverlay];
                 
                 self.attackLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,CARD_FULL_WIDTH/2,20)];
                 self.attackLabel.center = CGPointMake(35, 138);
@@ -385,7 +418,7 @@ NSMutableDictionary *standardCardImages;
                 self.attackLabel.strokeThickness = 2.5;
                 self.attackLabel.text = [NSString stringWithFormat:@"%d", monsterCard.damage];
                 
-                [self addSubview: attackLabel];
+                [_frontViews addSubview: attackLabel];
                 
                 self.lifeLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,CARD_FULL_WIDTH/2,20)];
                 self.lifeLabel.center = CGPointMake(CARD_FULL_WIDTH - 33, 138);
@@ -398,7 +431,7 @@ NSMutableDictionary *standardCardImages;
                 self.lifeLabel.font = [UIFont fontWithName:cardMainFont size:18];
                 self.lifeLabel.text = [NSString stringWithFormat:@"%d", monsterCard.life];
                 
-                [self addSubview: lifeLabel];
+                [_frontViews addSubview: lifeLabel];
                 
                 self.cooldownLabel = [[StrokedLabel alloc] initWithFrame:self.bounds];
                 self.cooldownLabel.center = CGPointMake(CARD_FULL_WIDTH/2, 129);
@@ -411,9 +444,9 @@ NSMutableDictionary *standardCardImages;
                 self.cooldownLabel.font = [UIFont fontWithName:cardMainFont size:18];
                 self.cooldownLabel.text = [NSString stringWithFormat:@"%d", monsterCard.cooldown];
                 
-                [self addSubview: cooldownLabel];
+                [_frontViews addSubview: cooldownLabel];
                 
-                [self addSubview: elementLabel];
+                [_frontViews addSubview: elementLabel];
             }
         }
         //draws specific card elements for spell card
@@ -424,7 +457,7 @@ NSMutableDictionary *standardCardImages;
             
             //element is a little higher
             self.elementLabel.center = CGPointMake(CARD_FULL_WIDTH/2, 144);
-            [self addSubview: elementLabel];
+            [_frontViews addSubview: elementLabel];
         }
         
         self.damagePopup = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 300, 50)];
@@ -449,6 +482,7 @@ NSMutableDictionary *standardCardImages;
     [self.mask setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.7]];
     self.mask.alpha = 0;
     [self addSubview:self.mask];
+    self.frontFacing = NO; //default to backfacing
     
     self.cardHighlightType = cardHighlightNone;
     self.cardViewState = cardViewStateNone;
@@ -456,202 +490,266 @@ NSMutableDictionary *standardCardImages;
     return self;
 }
 
--(void)updateView{
-    self.nameLabel.text = self.cardModel.name;
-    self.costLabel.text = [NSString stringWithFormat:@"%d", self.cardModel.cost];
-    
-    if ([self.cardModel isKindOfClass:[MonsterCardModel class]])
-    {
-        MonsterCardModel* monsterCard = (MonsterCardModel*) self.cardModel;
+-(BOOL)frontFacing
+{
+    return _frontFacing;
+}
 
-        //update damage label
-        UIColor *newDamageColour;
-        if (monsterCard.damage != monsterCard.baseDamage)
-            newDamageColour = [UIColor redColor];
-        else
-            newDamageColour = [UIColor whiteColor];
-        
-        NSString *newDamageString = [NSString stringWithFormat:@"%d", monsterCard.damage];
-        
-        if ((self.damageViewNeedsUpdate || ![newDamageString isEqualToString:self.attackLabel.text]) && self.cardViewMode == cardViewModeIngame)
+-(void)setFrontFacing:(BOOL)frontFacing
+{
+    _frontFacing = frontFacing;
+    
+    if (YES) //TODO debugging
+    {
+        if (_cardModel.element < backgroundImages.count)
         {
-            self.damageViewNeedsUpdate = NO;
-            [CardView animateUILabelChange:self.attackLabel changeTo:newDamageString newColour:newDamageColour];
+            NSArray*elementArray = backgroundImages[_cardModel.element];
+            _backgroundImageView.image = elementArray[0]; //TODO change if has rarity difference per element
         }
         else
+            _backgroundImageView.image = backgroundImages[elementNeutral][0];
+        
+        _frontViews.alpha = 1;
+        self.baseAbilityLabel.alpha = 1;
+    }
+    else
+    {
+        _backgroundImageView.image = cardBackImage;
+        _frontViews.alpha = 0;
+        self.baseAbilityLabel.alpha = 0;
+    }
+    
+    [self updateView];
+}
+
+-(void)flipCard
+{
+    CGAffineTransform originalTransform = _transformView.transform;
+    self.baseAbilityLabel.alpha = 0;
+    
+    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         _transformView.transform = CGAffineTransformScale(originalTransform, 0.1, 1);
+                     }
+                     completion:^(BOOL finished) {
+                         self.frontFacing = !_frontFacing;
+                         self.baseAbilityLabel.alpha = 0;
+                         [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseOut
+                                          animations:^{
+                                              _transformView.transform = originalTransform;
+                                          }
+                                          completion:^(BOOL finished) {
+                                              self.baseAbilityLabel.alpha = 1;
+                                          }];
+                     }];
+}
+
+-(void)updateView{
+    if (_frontFacing)
+    {
+        self.nameLabel.text = self.cardModel.name;
+        self.costLabel.text = [NSString stringWithFormat:@"%d", self.cardModel.cost];
+        
+        if ([self.cardModel isKindOfClass:[MonsterCardModel class]])
         {
-            self.attackLabel.text = newDamageString;
-            self.attackLabel.textColor = newDamageColour;
-        }
-        
-        //update life label
-        UIColor *newLifeColour;
-        if (monsterCard.life > monsterCard.maximumLife || monsterCard.maximumLife > [monsterCard baseMaxLife])
-            newLifeColour = [UIColor redColor];
-        else
-            newLifeColour = [UIColor whiteColor];
-        
-        NSString *newLifeString = [NSString stringWithFormat:@"%d", monsterCard.life];
-        
-        if (self.lifeViewNeedsUpdate && self.cardViewMode == cardViewModeIngame)
-        {
-            self.lifeViewNeedsUpdate = NO;
-            [CardView animateUILabelChange:self.lifeLabel changeTo:newLifeString newColour:newLifeColour];
-        }
-        else
-        {
-            self.lifeLabel.text = newLifeString;
-            self.lifeLabel.textColor = newLifeColour;
-        }
-        
-        //update cooldown label
-        UIColor *newCooldownColour;
-        if (monsterCard.cooldown == 0)
-            newCooldownColour = [UIColor greenColor]; //green when at 0 cooldown
-        else if (monsterCard.cooldown > monsterCard.maximumCooldown || monsterCard.cooldown > monsterCard.baseMaxCooldown || monsterCard.maximumCooldown > monsterCard.baseMaxCooldown)
-            newCooldownColour = [UIColor redColor];
-        else
-            newCooldownColour = [UIColor whiteColor];
-        
-        NSString* newCooldownString = [NSString stringWithFormat:@"%d", monsterCard.cooldown];
-        
-        if (self.cooldownViewNeedsUpdate && self.cardViewMode == cardViewModeIngame)
-        {
-            self.cooldownViewNeedsUpdate = NO;
-            [CardView animateUILabelChange:self.cooldownLabel changeTo:newCooldownString newColour:newCooldownColour];
-        }
-        else
-        {
-            self.cooldownLabel.text = newCooldownString;
-            self.cooldownLabel.textColor = newCooldownColour;
-        }
-        
-        if (self.cardViewMode == cardViewModeIngame || self.cardViewMode == cardViewModeZoomedIngame)
-        {
-            NSMutableArray *currentAbilityIconImages = [NSMutableArray array];
+            MonsterCardModel* monsterCard = (MonsterCardModel*) self.cardModel;
             
-            for (Ability *ability in monsterCard.abilities)
+            //update damage label
+            UIColor *newDamageColour;
+            if (monsterCard.damage != monsterCard.baseDamage)
+                newDamageColour = [UIColor redColor];
+            else
+                newDamageColour = [UIColor whiteColor];
+            
+            NSString *newDamageString = [NSString stringWithFormat:@"%d", monsterCard.damage];
+            
+            if ((self.damageViewNeedsUpdate || ![newDamageString isEqualToString:self.attackLabel.text]) && self.cardViewMode == cardViewModeIngame)
             {
-                UIImage *iconImage;
-                if (ability.castType == castOnMove || ability.castType == castOnEndOfTurn)
-                    iconImage = abilityIconImages[abilityIconCastOnMove];
-                else if (ability.castType == castOnDeath)
-                    iconImage = abilityIconImages[abilityIconCastOnDeath];
-                else if (ability.castType == castOnHit)
-                    iconImage = abilityIconImages[abilityIconCastOnHit];
-                else if (ability.castType == castOnDamaged)
-                    iconImage = abilityIconImages[abilityIconCastOnDamaged];
-                else if (ability.targetType == targetSelf)
-                {
-                    if (ability.abilityType == abilityTaunt)
-                        iconImage = abilityIconImages[abilityIconTaunt];
-                    else if (ability.abilityType == abilityAssassin)
-                        iconImage = abilityIconImages[abilityIconAssassin];
-                    else if (ability.abilityType == abilityPierce)
-                        iconImage = abilityIconImages[abilityIconPierce];
-                    else if (ability.abilityType == abilityRemoveAbility)
-                        iconImage = abilityIconImages[abilityIconRemoveAbility];
-                }
-                
-                if (iconImage != nil && ![currentAbilityIconImages containsObject:iconImage])
-                    [currentAbilityIconImages addObject:iconImage];
+                self.damageViewNeedsUpdate = NO;
+                [CardView animateUILabelChange:self.attackLabel changeTo:newDamageString newColour:newDamageColour];
+            }
+            else
+            {
+                self.attackLabel.text = newDamageString;
+                self.attackLabel.textColor = newDamageColour;
             }
             
-            NSMutableArray*abilityIcons = [NSMutableArray array];
+            //update life label
+            UIColor *newLifeColour;
+            if (monsterCard.life > monsterCard.maximumLife || monsterCard.maximumLife > [monsterCard baseMaxLife])
+                newLifeColour = [UIColor redColor];
+            else
+                newLifeColour = [UIColor whiteColor];
             
-            //first step, remove all icons that no longer exists
-            //loop backwards to prevent con cur mod
-            for (int i = self.abilityIcons.count-1; i >= 0 ; i--)
+            NSString *newLifeString = [NSString stringWithFormat:@"%d", monsterCard.life];
+            
+            if (self.lifeViewNeedsUpdate && self.cardViewMode == cardViewModeIngame)
             {
-                UIImageView*iconImageView = self.abilityIcons[i];
-                
-                //remove if doesn't exist
-                if (![currentAbilityIconImages containsObject:iconImageView.image])
-                {
-                    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut
-                                     animations:^{
-                                         iconImageView.alpha = 0;
-                                     }
-                                     completion:^(BOOL finished){
-                                         [iconImageView removeFromSuperview];
-                                     }];
-                    [self.abilityIcons removeObjectAtIndex:i];
-                }
+                self.lifeViewNeedsUpdate = NO;
+                [CardView animateUILabelChange:self.lifeLabel changeTo:newLifeString newColour:newLifeColour];
+            }
+            else
+            {
+                self.lifeLabel.text = newLifeString;
+                self.lifeLabel.textColor = newLifeColour;
             }
             
+            //update cooldown label
+            UIColor *newCooldownColour;
+            if (monsterCard.cooldown == 0)
+                newCooldownColour = [UIColor greenColor]; //green when at 0 cooldown
+            else if (monsterCard.cooldown > monsterCard.maximumCooldown || monsterCard.cooldown > monsterCard.baseMaxCooldown || monsterCard.maximumCooldown > monsterCard.baseMaxCooldown)
+                newCooldownColour = [UIColor redColor];
+            else
+                newCooldownColour = [UIColor whiteColor];
             
-            float iconCenterIndex = currentAbilityIconImages.count/2; //for positioning the cards
-            if (currentAbilityIconImages.count % 2 == 0)
-                iconCenterIndex -= 0.5;
+            NSString* newCooldownString = [NSString stringWithFormat:@"%d", monsterCard.cooldown];
             
-            int index = 0;
-            
-            //go through every new iconImage
-            for (UIImage *iconImage in currentAbilityIconImages)
+            if (self.cooldownViewNeedsUpdate && self.cardViewMode == cardViewModeIngame)
             {
-                UIImageView*icon;
-                //go through existing images and update them
-                for (UIImageView*iconImageView in self.abilityIcons)
+                self.cooldownViewNeedsUpdate = NO;
+                [CardView animateUILabelChange:self.cooldownLabel changeTo:newCooldownString newColour:newCooldownColour];
+            }
+            else
+            {
+                self.cooldownLabel.text = newCooldownString;
+                self.cooldownLabel.textColor = newCooldownColour;
+            }
+            
+            if (self.cardViewMode == cardViewModeIngame || self.cardViewMode == cardViewModeZoomedIngame)
+            {
+                NSMutableArray *currentAbilityIconImages = [NSMutableArray array];
+                
+                for (Ability *ability in monsterCard.abilities)
                 {
-                    //already exist, move it here
-                    if (iconImageView.image == iconImage)
+                    if (ability.expired)
+                        continue;
+                    
+                    UIImage *iconImage;
+                    if (ability.castType == castOnMove || ability.castType == castOnEndOfTurn)
+                        iconImage = abilityIconImages[abilityIconCastOnMove];
+                    else if (ability.castType == castOnDeath)
+                        iconImage = abilityIconImages[abilityIconCastOnDeath];
+                    else if (ability.castType == castOnHit)
+                        iconImage = abilityIconImages[abilityIconCastOnHit];
+                    else if (ability.castType == castOnDamaged)
+                        iconImage = abilityIconImages[abilityIconCastOnDamaged];
+                    else if (ability.targetType == targetSelf)
                     {
-                        icon = iconImageView;
-                        break;
+                        if (ability.abilityType == abilityTaunt)
+                            iconImage = abilityIconImages[abilityIconTaunt];
+                        else if (ability.abilityType == abilityAssassin)
+                            iconImage = abilityIconImages[abilityIconAssassin];
+                        else if (ability.abilityType == abilityPierce)
+                            iconImage = abilityIconImages[abilityIconPierce];
+                        else if (ability.abilityType == abilityRemoveAbility)
+                            iconImage = abilityIconImages[abilityIconRemoveAbility];
+                    }
+                    
+                    if (iconImage != nil && ![currentAbilityIconImages containsObject:iconImage])
+                        [currentAbilityIconImages addObject:iconImage];
+                }
+                
+                NSMutableArray*abilityIcons = [NSMutableArray array];
+                
+                //first step, remove all icons that no longer exists
+                //loop backwards to prevent con cur mod
+                for (int i = self.abilityIcons.count-1; i >= 0 ; i--)
+                {
+                    UIImageView*iconImageView = self.abilityIcons[i];
+                    
+                    //remove if doesn't exist
+                    if (![currentAbilityIconImages containsObject:iconImageView.image])
+                    {
+                        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut
+                                         animations:^{
+                                             iconImageView.alpha = 0;
+                                         }
+                                         completion:^(BOOL finished){
+                                             [iconImageView removeFromSuperview];
+                                         }];
+                        [self.abilityIcons removeObjectAtIndex:i];
                     }
                 }
                 
-                int x = (index-iconCenterIndex) * 15 + ((currentAbilityIconImages.count+1)%2 * 3) + self.bounds.size.width/2;
                 
-                //this is a new icon, create it
-                if (icon==nil)
+                float iconCenterIndex = currentAbilityIconImages.count/2; //for positioning the cards
+                if (currentAbilityIconImages.count % 2 == 0)
+                    iconCenterIndex -= 0.5;
+                
+                int index = 0;
+                
+                //go through every new iconImage
+                for (UIImage *iconImage in currentAbilityIconImages)
                 {
-                    icon = [[UIImageView alloc] initWithImage:iconImage];
-                    icon.frame = CGRectMake(0, 0, 20, 20);
-                    icon.center = CGPointMake(x, self.bounds.size.height - 4);
-                    icon.alpha = 0;
+                    UIImageView*icon;
+                    //go through existing images and update them
+                    for (UIImageView*iconImageView in self.abilityIcons)
+                    {
+                        //already exist, move it here
+                        if (iconImageView.image == iconImage)
+                        {
+                            icon = iconImageView;
+                            break;
+                        }
+                    }
                     
-                    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut
-                                     animations:^{
-                                         icon.alpha = 1;
-                                     }
-                                     completion:nil];
+                    int x = (index-iconCenterIndex) * 15 + ((currentAbilityIconImages.count+1)%2 * 3) + self.bounds.size.width/2;
                     
-                    [self addSubview:icon];
-                }
-                else
-                {
-                    //already exist, simply animate to new position
-                    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut
-                                     animations:^{
-                                         icon.center = CGPointMake(x, self.bounds.size.height - 4);
-                                     }
-                                     completion:nil];
+                    //this is a new icon, create it
+                    if (icon==nil)
+                    {
+                        icon = [[UIImageView alloc] initWithImage:iconImage];
+                        icon.frame = CGRectMake(0, 0, 20, 20);
+                        icon.center = CGPointMake(x, self.bounds.size.height - 4);
+                        icon.alpha = 0;
+                        
+                        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut
+                                         animations:^{
+                                             icon.alpha = 1;
+                                         }
+                                         completion:nil];
+                        
+                        [_frontViews addSubview:icon];
+                    }
+                    else
+                    {
+                        //already exist, simply animate to new position
+                        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut
+                                         animations:^{
+                                             icon.center = CGPointMake(x, self.bounds.size.height - 4);
+                                         }
+                                         completion:nil];
+                    }
+                    
+                    [abilityIcons addObject:icon]; //add to new array
+                    index++;
                 }
                 
-                [abilityIcons addObject:icon]; //add to new array
-                index++;
+                //point to new array
+                self.abilityIcons = abilityIcons;
             }
             
-            //point to new array
-            self.abilityIcons = abilityIcons;
+            //TODO: need a special view to show both current and max values
+            
+        }
+        else if ([self.cardModel isKindOfClass:[SpellCardModel class]])
+        {
+            SpellCardModel* spellCard = (SpellCardModel*) self.cardModel;
+            
+            //TODO
         }
         
-        //TODO: need a special view to show both current and max values
+        NSString *abilityDescription = [Ability getDescriptionForBaseAbilities:self.cardModel];
         
+        self.baseAbilityLabel.attributedText = [[NSAttributedString alloc] initWithString:abilityDescription
+                                                                               attributes:abilityTextAttributtes];
     }
-    else if ([self.cardModel isKindOfClass:[SpellCardModel class]])
+    //back facing
+    else
     {
-        SpellCardModel* spellCard = (SpellCardModel*) self.cardModel;
         
-        //TODO
     }
-    
-    NSString *abilityDescription = [Ability getDescriptionForBaseAbilities:self.cardModel];
-
-    self.baseAbilityLabel.attributedText = [[NSAttributedString alloc] initWithString:abilityDescription
-                                                                           attributes:abilityTextAttributtes];
-    
     //self.baseAbilityLabel.frame = CGRectMake(10, 157, CARD_FULL_WIDTH - 20, 140);
     //[self.baseAbilityLabel sizeToFit];
 }
@@ -1004,7 +1102,9 @@ NSMutableDictionary *standardCardImages;
                     *errorLoading = YES;
             }
             else
-                NSLog(@"%d imagePF nil", card.idNumber);
+            {
+                //NSLog(@"%d imagePF nil", card.idNumber);
+            }
             
         }
     }
@@ -1111,5 +1211,31 @@ NSMutableDictionary *standardCardImages;
     
     return COLOUR_COMMON;
 }
+
+/*
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [super touchesBegan:touches withEvent:event];
+    [self.baseAbilityLabel touchesBegan:touches withEvent:event];
+}
+
+-(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [super touchesCancelled:touches withEvent:event];
+    [self.baseAbilityLabel touchesCancelled:touches withEvent:event];
+}
+
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [super touchesEnded:touches withEvent:event];
+    [self.baseAbilityLabel touchesEnded:touches withEvent:event];
+}
+
+-(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [super touchesMoved:touches withEvent:event];
+    [self.baseAbilityLabel touchesMoved:touches withEvent:event];
+}
+*/
 
 @end

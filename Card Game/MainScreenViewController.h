@@ -10,6 +10,7 @@
 #import "DeckEditorViewController.h"
 #import "GameViewController.h"
 #import "UserModel.h"
+#import "CFButton.h"
 
 @interface MainScreenViewController : UIViewController
 

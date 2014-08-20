@@ -22,6 +22,15 @@
 
 @property (weak) GameViewController* gameViewController;
 
+/** Boss fight AI slightly adjusted */
+@property BOOL isBossFight;
+
+/** Tutorial AI also adjusted. They will play any card possible */
+@property BOOL isTutorial;
+
+/** Easier difficulties have cards cost less since the cards are weaker, while higher difficulties have cards cost more. At 0 there is no difference and is the default calculation */
+@property int levelDifficultyOffset;
+
 /** When AI casts a spell that requires targetting, it will set it to this variable. */
 @property (weak) MonsterCardModel* currentTarget;
 

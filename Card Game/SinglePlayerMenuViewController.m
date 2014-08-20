@@ -9,6 +9,7 @@
 #import "SinglePlayerMenuViewController.h"
 #import "GameViewController.h"
 #import "DeckChooserViewController.h"
+#import "CampaignMenuViewController.h"
 
 @interface SinglePlayerMenuViewController ()
 
@@ -31,47 +32,65 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [UIColor whiteColor];
-    
     SCREEN_WIDTH = self.view.bounds.size.width;
     SCREEN_HEIGHT = self.view.bounds.size.height;
     
-    UILabel*singlePlayerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 80)];
-    singlePlayerLabel.textAlignment = NSTextAlignmentCenter;
-    singlePlayerLabel.text = @"Single Player";
-    singlePlayerLabel.center = CGPointMake(SCREEN_WIDTH/2, 80);
-    [self.view addSubview:singlePlayerLabel];
+    //background view
+    UIImageView*backgroundImageTop = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_top"]];
+    backgroundImageTop.frame = CGRectMake(0, 0, SCREEN_WIDTH, 40);
+    [self.view addSubview:backgroundImageTop];
     
-    UIButton*quickMatchButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    quickMatchButton.frame = CGRectMake(0, 0, 120, 120);
-    quickMatchButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    UIImageView*backgroundImageMiddle = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_center"]];
+    backgroundImageMiddle.frame = CGRectMake(0, 40, SCREEN_WIDTH, SCREEN_HEIGHT - 40 - 40);
+    [self.view addSubview:backgroundImageMiddle];
+    
+    UIImageView*backgroundImageBottom = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_bottom"]];
+    backgroundImageBottom.frame = CGRectMake(0, SCREEN_HEIGHT-40, SCREEN_WIDTH, 40);
+    [self.view addSubview:backgroundImageBottom];
+    
+    
+    CFLabel*menuLogoBackground = [[CFLabel alloc] initWithFrame:CGRectMake(0,0,250,100)];
+    menuLogoBackground.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/4);
+    menuLogoBackground.label.textAlignment = NSTextAlignmentCenter;
+    [menuLogoBackground setTextSize:30];
+    menuLogoBackground.label.text = @"Singleplayer";
+    [self.view addSubview:menuLogoBackground];
+    
+    CFButton *quickMatchButton = [[CFButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
+    [quickMatchButton setTextSize:12];
+    quickMatchButton.frame = CGRectMake(0, 0, 100, 100);
+    quickMatchButton.center = CGPointMake(self.view.bounds.size.width/3 - 5, self.view.bounds.size.height*2/3 - 58);
     [quickMatchButton setTitle:@"Quick Match" forState:UIControlStateNormal];
-    quickMatchButton.center = CGPointMake(SCREEN_WIDTH/2 - 70, SCREEN_HEIGHT/2 - 50);
     [quickMatchButton addTarget:self action:@selector(quickMatchButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
     [self.view addSubview:quickMatchButton];
     
-    UIButton*campaignButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    campaignButton.frame = CGRectMake(0, 0, 120, 120);
-    campaignButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    CFButton *campaignButton = [[CFButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
+    [campaignButton setTextSize:12];
+    campaignButton.frame = CGRectMake(0, 0, 100, 100);
+    campaignButton.center = CGPointMake(self.view.bounds.size.width*2/3 + 5, self.view.bounds.size.height*2/3 - 58);
     [campaignButton setTitle:@"Campaign" forState:UIControlStateNormal];
-    campaignButton.center = CGPointMake(SCREEN_WIDTH/2 + 70, SCREEN_HEIGHT/2 - 50);
     [campaignButton addTarget:self action:@selector(campaignButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
     [self.view addSubview:campaignButton];
     
-    UIButton*challengeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    challengeButton.frame = CGRectMake(0, 0, 120, 120);
-    challengeButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [challengeButton setTitle:@"Challenges" forState:UIControlStateNormal];
-    challengeButton.center = CGPointMake(SCREEN_WIDTH/2 - 70, SCREEN_HEIGHT/2 + 50);
-    [challengeButton addTarget:self action:@selector(challengeButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:challengeButton];
+    /*
+    CFButton *deckButton = [[CFButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
+    [deckButton setTextSize:12];
+    deckButton.center = CGPointMake(self.view.bounds.size.width/3 - 5, self.view.bounds.size.height*2/3 + 58);
+    [deckButton setTitle:@"Deck Builder" forState:UIControlStateNormal];
+    [deckButton addTarget:self action:@selector(deckButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    UIButton*backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    backButton.frame = CGRectMake(0, 0, 120, 120);
-    backButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:deckButton];
+     */
+    
+    CFButton *backButton = [[CFButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
+    [backButton setTextSize:12];
+    backButton.frame = CGRectMake(0, 0, 100, 100);
+    backButton.center = CGPointMake(self.view.bounds.size.width*2/3 + 5, self.view.bounds.size.height*2/3 + 58);
     [backButton setTitle:@"Main Menu" forState:UIControlStateNormal];
-    backButton.center = CGPointMake(SCREEN_WIDTH/2 + 70, SCREEN_HEIGHT/2 + 50);
     [backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
     [self.view addSubview:backButton];
 }
 
@@ -85,7 +104,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void)campaignButtonPressed
 {
-    
+    CampaignMenuViewController *viewController = [[CampaignMenuViewController alloc] init];
+    [self presentViewController:viewController animated:NO completion:nil];
 }
 
 -(void)challengeButtonPressed
@@ -95,7 +115,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void)backButtonPressed
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 

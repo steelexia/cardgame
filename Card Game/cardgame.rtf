@@ -13,10 +13,8 @@ fire 		////- ////- ////- ////- ////- ////- /\
 ice 		////- ////- ////- ////- ////- ////- /\
 thunder 	////- ////- ////- ////- ////- ////- ////- ////- ////- /\
 earth     	////- ////- ////- ////- ////- ////- ////- ////- ///\
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
-\cf0 dark      	////- ////- ////- ////- ////- ////- ////- ////- //\
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
-\cf0 light		////- ////- ////- ////- ////- ////- ////- ////-\
+dark      	////- ////- ////- ////- ////- ////- ////- ////- //\
+light		////- ////- ////- ////- ////- ////- ////- ////-\
 \
 \
 \pard\tx529\pardeftab529\pardirnatural
@@ -95,22 +93,40 @@ stock level\
         [\cf2 uploadFromCameraButton\cf1  \cf3 setEnabled\cf1 :\cf5 NO\cf1 ];
 \f0\fs24 \cf0 \CocoaLigature1 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
-\cf0 UI bugs:\
+\cf0 \
+store has cards flickering\
+\
+view abilities and elements that cannot be included anymore in a deck\
+\
+load more cards in store\
+\
+hide unliked\
+\
+remove unlimited edits soon\
+\
+initial game load should use a inbackgroundwithblok\
 \
 tap + hold can select multiple cells in tableview\
 opponent's cards fade in rather than fly in (iPod only)\
-hand cards' order gets messed up (iPod only)\
+\
+need to realize suicidal units (deal damage on death) needs to die asap\
 \
 do not allow cards without name or image. warn when no tags\
 \
-still very possible to have more text than possible to fit\
+AI still can't silence enemy minions correctly (doesn't silence 8000 added life, doesn't silence draw card on attack etc) (might be calculating points properly but not picking correctly? muted an enemy that had no abilities)\
 \
-card duplicated\
+random is still hitting the first guy always?\
+\
+suicidal unit actually has AI bug: dealing damage to enemy is negative points\
 \
 notlookinga multipleabilities?\
 friend or foe?\
 \
+\
+\
 different types of draw cards ability should increase cost when put together (or just not in one element)\
+\
+maybe want to hardcore recoil ability for AI\
 \
 draw card for hero & deal damage to hero has text conflicts\
 \
@@ -158,6 +174,7 @@ parse is creating a new user for every new version\
 \
 add keyword for on hit etc.\
 \
+double check that no class jumps to main menu by creating a new one\
 \
 deficiencies:\
 summoned minion AFTER casting +damage to all \
@@ -175,4 +192,4 @@ destroy after mute\
 \
 \
 \
-\{"0":1,"1":1,"5":5,"6":1,"9":1,"18":4,"20":1,"23":1,"37":5,"38":4,"40":4,"41":5,"42":4,"43":4,"44":4,"45":4,"46":0,"47":4,"48":0,"49":4,"50":4,"51":5,"52":4,"53":5,"54":5,"55":5,"57":5,"58":4,"59":4,"60":4,"61":4,"62":4,"63":4,"64":4,"65":4,"66":1,"67":4\}}
+["d_1_c_1_l_1","d_1_c_1_l_2","d_1_c_1_l_4","d_1_c_2_l_1","d_1_c_2_l_2","d_1_c_2_l_4","d_1_c_3_l_1","d_1_c_3_l_2","d_1_c_3_l_4"]}

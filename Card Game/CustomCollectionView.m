@@ -12,7 +12,6 @@
 @implementation CustomCollectionView
 
 
-
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if (self.superview)
@@ -36,6 +35,7 @@
     if (self.superview)
         [self.superview touchesCancelled:touches withEvent:event];
 }
+
 
 /*
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView

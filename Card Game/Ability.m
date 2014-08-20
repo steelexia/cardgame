@@ -295,7 +295,7 @@
         [sortedAbilities removeObjectAtIndex:0];
         
         //non-base abilities are not shown since they are on separate menu
-        if (!ability.isBaseAbility)
+        if (!ability.isBaseAbility || ability.expired)
             continue;
         
         enum AbilityType abilityType = ability.abilityType;
@@ -314,14 +314,15 @@
                 description = [NSString stringWithFormat:@"%@%@", description, castTypeString];
         }
         else
-        {
             description = [NSString stringWithFormat:@"%@. ", description];
-        }
         
         description = [NSString stringWithFormat:@"%@%@", description, [Ability getAbilityTypeDescriptionFromAbility:ability withValueDescription: [NSString stringWithFormat:@"%@", ability.value]]];
         
         for (int i = [sortedAbilities count] - 1; i >= 0; i--)
         {
+            if (!ability.isBaseAbility || ability.expired)
+                continue;
+            
             Ability*otherAbility = sortedAbilities[i];
 
             //all cast types are the same
@@ -483,9 +484,9 @@
     }
     else if (abilityType == abilityTaunt){
         if (ability.targetType == targetSelf)
-            description = [NSString stringWithFormat:@"%@Taunt%@.", castDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Guardian%@.", castDescription, durationDescription];
         else
-            description = [NSString stringWithFormat:@"%@Give Taunt to %@%@.", castDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Give Guardian to %@%@.", castDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityDrawCard){
         if (ability.targetType == targetHeroEnemy)
@@ -532,6 +533,10 @@
             description = [NSString stringWithFormat:@"%@Fractures into %@ pieces%@.", castDescription, valueDescription, durationDescription];
         else
             description = [NSString stringWithFormat:@"%@Gives Fracture %@ to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
+    }
+    else if (abilityType == abilityHeroic)
+    {
+        description = [NSString stringWithFormat:@"Heroic"];
     }
     else
         description = [NSString stringWithFormat:@"ability no name %d", ability.abilityType];
@@ -594,7 +599,7 @@
             description = [NSString stringWithFormat:@"-%@ maximum cooldown", valueDescription];
     }
     else if (abilityType == abilityTaunt){
-            description = [NSString stringWithFormat:@"Taunt"];
+            description = [NSString stringWithFormat:@"Guardian"];
     }
     else if (abilityType == abilityDrawCard){
         if (ability.targetType == targetHeroEnemy)
@@ -636,6 +641,10 @@
         else
             description = [NSString stringWithFormat:@"Gives Fracture %@", valueDescription];
     }
+    else if (abilityType == abilityHeroic)
+    {
+        description = [NSString stringWithFormat:@"Heroic"];
+    }
     else
         description = [NSString stringWithFormat:@"ability no name %d", ability.abilityType];
     
@@ -651,45 +660,45 @@
     else if (targetType == targetVictim)
         return [NSString stringWithFormat:@"target"];
     else if (targetType == targetVictimMinion)
-        return [NSString stringWithFormat:@"minion target"];
+        return [NSString stringWithFormat:@"creature target"];
     else if (targetType == targetAttacker)
         return [NSString stringWithFormat:@"attacker"];
     else if (targetType == targetOneAny)
         return [NSString stringWithFormat:@"a character"];
     else if (targetType == targetOneAnyMinion)
-        return [NSString stringWithFormat:@"a minion"];
+        return [NSString stringWithFormat:@"a creature"];
     else if (targetType == targetOneFriendly)
         return [NSString stringWithFormat:@"a friendly character"];
     else if (targetType == targetOneFriendlyMinion)
-        return [NSString stringWithFormat:@"a friendly minion"];
+        return [NSString stringWithFormat:@"a friendly creature"];
     else if (targetType == targetOneEnemy)
         return [NSString stringWithFormat:@"an enemy character"];
     else if (targetType == targetOneEnemyMinion)
-        return [NSString stringWithFormat:@"an enemy minion"];
+        return [NSString stringWithFormat:@"an enemy creature"];
     else if (targetType == targetAll)
         return [NSString stringWithFormat:@"all characters"];
     else if (targetType == targetAllMinion)
-        return [NSString stringWithFormat:@"all other minions"];
+        return [NSString stringWithFormat:@"all other creatures"];
     else if (targetType == targetAllFriendly)
         return [NSString stringWithFormat:@"all other friendly characters"];
     else if (targetType == targetAllFriendlyMinions)
-        return [NSString stringWithFormat:@"all other friendly minions"];
+        return [NSString stringWithFormat:@"all other friendly creatures"];
     else if (targetType == targetAllEnemy)
         return [NSString stringWithFormat:@"all enemy characters"];
     else if (targetType == targetAllEnemyMinions)
-        return [NSString stringWithFormat:@"all enemy minions"];
+        return [NSString stringWithFormat:@"all enemy creatures"];
     else if (targetType == targetOneRandomAny)
         return [NSString stringWithFormat:@"a random character"];
     else if (targetType == targetOneRandomMinion)
-        return [NSString stringWithFormat:@"a random minion"];
+        return [NSString stringWithFormat:@"a random creature"];
     else if (targetType == targetOneRandomFriendly)
         return [NSString stringWithFormat:@"a random friendly character"];
     else if (targetType == targetOneRandomFriendlyMinion)
-        return [NSString stringWithFormat:@"a random friendly minion"];
+        return [NSString stringWithFormat:@"a random friendly creature"];
     else if (targetType == targetOneRandomEnemy)
         return [NSString stringWithFormat:@"a random enemy character"];
     else if (targetType == targetOneRandomEnemyMinion)
-        return [NSString stringWithFormat:@"a random enemy minion"];
+        return [NSString stringWithFormat:@"a random enemy creature"];
     else if (targetType == targetHeroAny)
         return [NSString stringWithFormat:@"a hero"];
     else if (targetType == targetHeroFriendly)
@@ -747,7 +756,7 @@
 +(NSString*)getAbilityKeywordDescription: (Ability*)ability
 {
     if (ability.abilityType == abilityTaunt)
-        return @"Taunt: Enemy minions must attack this minion.";
+        return @"Guardian: Enemy creatures must attack this creature.";
     else if (ability.abilityType == abilityRemoveAbility)
         return @"Mute: Target cannot have any abilities.";
     else if (ability.abilityType == abilityAssassin)
@@ -758,6 +767,8 @@
         return @"Pierce: Attack damage dealt above target's health is deal to the enemy hero.";
     else if (ability.abilityType == abilityFracture)
         return @"Fracture: Summons weaker copies of itself that has no abilities.";
+    else if (ability.abilityType == abilityHeroic)
+        return @"Heoric: Acts as the hero.";
     
     return nil;
 }
@@ -767,6 +778,9 @@
     NSMutableArray *descriptions = [NSMutableArray array];
     for (Ability*ability in card.abilities)
     {
+        if (ability.expired)
+            continue;
+        
         NSString*description = [Ability getAbilityKeywordDescription:ability];
         
         if (description == nil)

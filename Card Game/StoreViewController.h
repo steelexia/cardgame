@@ -80,7 +80,19 @@
 //tabs, stores UIButtons
 @property(strong)NSMutableArray*categoryTabs;
 
+/** Index number for the first object in the collection view. */
+@property int currentQueryLocation;
+
 /** PFObjects of class Sale currenting being viewed */
+
+@property BOOL scrolledToDatabaseEnd;
+
+@property BOOL loadingMoreCards;
+
+/** Called by StoreCardsCollectionView */
+-(void)storeScrolledToEnd;
+
+
 
 @end
 

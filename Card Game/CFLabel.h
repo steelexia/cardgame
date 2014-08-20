@@ -13,4 +13,8 @@
 
 @property (strong)StrokedLabel*label;
 
+-(void)setTextSize:(int)size;
+/** Didn't have time to make a dialog class so this just makes it look better as a dialog box */
+-(void)setupAsDialog;
+
 @end

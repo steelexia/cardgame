@@ -112,6 +112,8 @@ enum AbilityType
     abilityPierce,
     /** split into ~1-3 monsters with 60%, 25%, and 10% original stats, but no abilities */
     abilityFracture,
+    /** Doesn't actually do anything. Instead the monster will have the heroic variable set to YES, which treats it as a hero. This means it cannot be targetted by any ability that targets only minions. SINGLE PLAYER ONLY! */
+    abilityHeroic,
     
     //------------------NOT YET IMPLEMENTED-----------------//
     /* kill a card if its health is below x. Good for low number such as below 1000 to kill off monsters that would have died if damage/life were 1000 times smaller. TODO */

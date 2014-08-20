@@ -12,7 +12,7 @@
 #import "SpellCardModel.h"
 #import "Ability.h"
 #import "StrokedLabel.h"
-
+#import "CustomView.h"
 /**
  Handles the view aspect of the card. Draws the card based on the model object.
  The attached cardModel can be any of the child classes, such as MonsterCardModel or SpellCardModel.
@@ -21,6 +21,14 @@
 
 /** Attached model for storing data of the card */
 @property (strong) CardModel *cardModel;
+
+/** Main view used for second layer of transformations */
+@property (strong)UIView*transformView;
+
+/** Views that are visible in the front facing mode */
+@property (strong)UIView*frontViews;
+
+@property (strong)UIImageView*backgroundImageView;
 
 /** Unique image of the card */
 @property (strong) UIImageView *cardImage;
@@ -71,6 +79,9 @@
 
 @property UIActivityIndicatorView*activityView;
 
+/** When set to NO, card back is displayed instead */
+@property BOOL frontFacing;
+
 /** Initializes with attached CardModel, which should be one of its child classes */
 -(instancetype)initWithModel: (CardModel*)cardModel viewMode:(enum CardViewMode)cardViewMode;
 
@@ -92,6 +103,11 @@
 -(void)castedAbility:(Ability*)ability;
 
 -(UIColor*)getRarityColor;
+
+-(void)switchFacingTo:(BOOL)isFront;
+
+/** Flips the card with animation */
+-(void)flipCard;
 
 /** Loads images for drawing cards ahead of time */
 +(void) loadResources;

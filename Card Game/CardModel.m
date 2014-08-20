@@ -12,6 +12,7 @@
 #import "AbilityWrapper.h"
 #import "CardView.h"
 #import "CardVote.h"
+#import "UserModel.h"
 
 @implementation CardModel
 
@@ -88,6 +89,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1, NO_ID = -1;
             selfMonster.side = otherMonster.side;
             selfMonster.dead = otherMonster.dead;
             selfMonster.turnEnded = otherMonster.turnEnded;
+            selfMonster.heroic = otherMonster.heroic;
             self = selfMonster;
         }
         else if ([card isKindOfClass:[SpellCardModel class]])
@@ -243,16 +245,19 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1, NO_ID = -1;
     if (creator != nil && ![creator isEqualToString:@"Unknown"])
     {
         card.creator = creator;
-        card.creatorName = @"Loading..."; //TODO
+        //card.creatorName = @"Loading..."; //TODO
         
         //grabs the user's name to cache it
-        PFQuery *query = [PFQuery queryWithClassName:@"User"];
-        [query getObjectInBackgroundWithId:creator block:^(PFObject *user, NSError *error) {
-            if (!error)
-                card.creatorName = user[@"username"];
-            else
-                card.creatorName = @"Unknown";
-        }];
+        PFQuery *query = [PFUser query];
+        
+        NSError*error;
+        PFUser *user = (PFUser*)[query getObjectWithId:card.creator error:&error];
+        if (!error)
+            card.creatorName = user.username;
+        else
+        {
+            card.creatorName = @"Unknown";
+        }
     }
     
     //NOTE: make sure abilities are always loaded after stats otherwise maxLife etc may be modified by ability
@@ -319,7 +324,7 @@ const int MONSTER_CARD = 0, SPELL_CARD = 1, NO_ID = -1;
     cardPF[@"name"] = card.name;
     cardPF[@"cost"] = [NSNumber numberWithInt:card.cost];
     cardPF[@"rarity"] = [NSNumber numberWithInt:card.rarity];
-    cardPF[@"creator"] = card.creator;
+    cardPF[@"creator"] = userPF.objectId;
     cardPF[@"likes"] = @(card.likes);
     cardPF[@"tags"] = card.tags;
     cardPF[@"image"] = imagePF;

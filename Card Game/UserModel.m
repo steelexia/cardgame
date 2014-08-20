@@ -37,6 +37,8 @@ const int INITIAL_DECK_LIMIT = 3;
              userPF[@"interactedCards"] = @{};
          if (userPF[@"blankCards"] == nil)
              userPF[@"blankCards"] = @(50);
+         if (userPF[@"completedLevels"] == nil)
+             userPF[@"completedLevels"] = @[];
          
          //this variable useless and should be removed later
          userGold = [userPF[@"gold"] intValue];
@@ -601,7 +603,11 @@ const int INITIAL_DECK_LIMIT = 3;
         return NO;
     
     userPF[@"blankCards"] = @([userPF[@"blankCards"] intValue] - 1);
-    [userPF save];
+    BOOL succ = [self setOwnedCard:card];
+    
+    if (!succ)
+        return NO;
+    //[userPF save];
     
     //[self saveCard:card];
     

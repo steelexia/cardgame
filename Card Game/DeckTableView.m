@@ -71,6 +71,7 @@ const double DECK_EDITOR_CARD_SCALE = 0.6;
         CardModel*card = self.currentCells[indexPath.row];
         CardView*originalView = card.cardView;
         CardView*cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeEditor];
+        cardView.frontFacing = YES;
         card.cardView = originalView; //recover pointer
         cardView.cardHighlightType = cardHighlightNone;
         cardView.cardViewState = cardViewStateCardViewer;
@@ -91,16 +92,41 @@ const double DECK_EDITOR_CARD_SCALE = 0.6;
         
         cell.nameLabel.text = deck.name;
         //because cell size is wrong in its constructor..
+        cell.nameLabel.frame = CGRectMake(0,0,cell.bounds.size.width - 20, 20);
         cell.nameLabel.center = CGPointMake(cell.bounds.size.width/2, cell.nameLabel.center.y);
         
         cell.invalidLabel.center = CGPointMake(cell.bounds.size.width/2, cell.invalidLabel.center.y);
+        
+        //remove all element icons
+        for (UIView*elementIcon in cell.elementIcons)
+            [elementIcon removeFromSuperview];
+        
+        NSArray*elementSummary = [DeckModel getElementArraySummary:deck];
+        NSMutableArray*includedElements = [NSMutableArray array];
+        
+        //add all element icons that are in the deck
+        for (int i = 0; i < elementSummary.count; i++)
+        {
+            NSNumber*elementCount = elementSummary[i];
+            if ([elementCount intValue] > 0)
+                [includedElements addObject:cell.elementIcons[i]];
+        }
+        
+        double centerIndex = (includedElements.count-1)/2.f;
+        
+        //add the element icons to cell
+        for (int i = 0; i < includedElements.count; i++)
+        {
+            UIView*elementIcon = includedElements[i];
+            elementIcon.center = CGPointMake(cell.bounds.size.width/2 + (i-centerIndex)*elementIcon.frame.size.width,cell.bounds.size.height-10);
+            [cell addSubview:elementIcon];
+        }
         
         if (deck.isInvalid)
             [cell addSubview:cell.invalidLabel];
         else
             [cell.invalidLabel removeFromSuperview];
-        
-        //TODO set to the deck's colour, etc
+
         
         return cell;
     }

@@ -24,16 +24,19 @@
         _goldReward = 0;
         _cardReward = 0;
         _opponentHealth = HERO_MAX_LIFE;
-        
+        _endBattleText = @"";
         _breakBeforeNextLevel = YES;
         _isBossFight = NO;
         _opponentShuffleDeck = YES;
         _playerShuffleDeck = YES;
         _playerGoesFirst = YES;
         _isTutorial = NO;
+        _difficultyOffset = 0;
     }
     
     return self;
 }
+
+
 
 @end
