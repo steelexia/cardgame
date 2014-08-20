@@ -88,6 +88,10 @@ NSArray *allAbilities;
     
     for (Ability*cardAbility in card.abilities)
     {
+        if (cardAbility.expired)
+            continue;
+        
+        //cannot have same card
         if (cardAbility != self.ability && ![cardAbility isCompatibleTo:self.ability])
             return NO;
     }

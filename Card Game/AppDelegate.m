@@ -38,34 +38,28 @@ NSString*ACCOUNT_NAME = @"default_account";
     NSError*error;
     NSString *password = [SSKeychain passwordForService:SERVICE_NAME account:ACCOUNT_NAME error:&error];
     
-    if (error)
+    
+    //new account
+    if (error || password == nil)
     {
-        NSLog(@"%@", [error localizedDescription]);
-        //TODO handle this
-    }
-    else{
-        //new account
-        if (password == nil)
+        NSString *idfv = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+        NSError*error;
+        [SSKeychain setPassword:idfv forService:SERVICE_NAME account:ACCOUNT_NAME error:&error];
+        
+        if (error)
         {
-            NSString *idfv = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-            NSError*error;
-            [SSKeychain setPassword:idfv forService:SERVICE_NAME account:ACCOUNT_NAME error:&error];
-            
-            if (error)
-            {
-                NSLog(@"%@", [error localizedDescription]);
-                //TODO handle this
-            }
-            else
-            {
-                NSLog(@"creation success: %@", idfv);
-                password = idfv;
-            }
+            NSLog(@"%@", [error localizedDescription]);
+            //TODO handle this
         }
-        //already have account
-        else{
-            NSLog(@"already have account: %@", password);
+        else
+        {
+            NSLog(@"creation success: %@", idfv);
+            password = idfv;
         }
+    }
+    //already have account
+    else{
+        NSLog(@"already have account: %@", password);
     }
     
     NSString *username = [password substringToIndex:7];

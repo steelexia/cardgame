@@ -84,6 +84,12 @@
 
 -(BOOL)isCompatibleTo:(Ability*)ability
 {
+    //if any ability is Mute then no ability is compatible
+    if (ability.abilityType == abilityRemoveAbility && ability.castType == castAlways && ability.targetType == targetSelf)
+        return NO;
+    if (self.abilityType == abilityRemoveAbility && self.castType == castAlways && self.targetType == targetSelf)
+        return NO;
+    
     //TODO probably should have used a better structure, but probably not that many rules anyways
     
     //abilities with opposite effect can co-exist only if their target or cast types are different
