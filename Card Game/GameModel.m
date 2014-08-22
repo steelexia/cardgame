@@ -26,6 +26,8 @@ const char PLAYER_SIDE = 0, OPPONENT_SIDE = 1;
 @synthesize gameOver = _gameOver;
 @synthesize aiPlayer = _aiPlayer;
 
+const int INITIAL_CARD_DRAW = 4;
+
 //TEMPORARY
 int cardIDCount = 0;
 
@@ -90,8 +92,9 @@ int cardIDCount = 0;
 
 -(void)startGame
 {
-    //TODO load decks from database
+    //TODO load decks from database for multiplayer (not here though)
     
+    int cardDraw = INITIAL_CARD_DRAW;
     
     //draw three cards per side
     for (int side = 0; side < 2; side++)
@@ -110,8 +113,12 @@ int cardIDCount = 0;
         else
             [deck shuffleDeck];
         
+        //fist tutorial draws only one card at start
+        if ([TUTORIAL_ONE isEqualToString:_level.levelID])
+            cardDraw = 1;
+        
         //draw 4 cards
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < cardDraw; i++)
         {
             [self.gameViewController performBlock:^{
                 [self drawCard:side];
@@ -122,7 +129,7 @@ int cardIDCount = 0;
     
     [self.gameViewController performBlock:^{
         [self.gameViewController newGame];
-    } afterDelay:0.5*(5)];
+    } afterDelay:0.5*(cardDraw+1)];
     
     //add a card to player hand for quick testing
     
@@ -346,6 +353,8 @@ int cardIDCount = 0;
         if ([battlefield count] == 0)
             break;
     }
+    
+    _turnNumber++;
 }
 
 -(BOOL)drawCard:(int)side

@@ -243,13 +243,24 @@ NSDictionary *singlePlayerCardImages;
         {
             if (cardModel.type == cardTypeSinglePlayer)
             {
-                UIImage* image = singlePlayerCardImages[[NSString stringWithFormat:@"%d", _cardModel.idNumber]];
-                if (image != nil)
+                //special cases here
+                if (cardModel.idNumber == PLAYER_FIRST_CARD_ID)
                 {
-                    self.cardImage = [[UIImageView alloc] initWithImage:image];
+                    if (PLAYER_FIRST_CARD_IMAGE!=nil)
+                        self.cardImage = [[UIImageView alloc] initWithImage:PLAYER_FIRST_CARD_IMAGE];
+                    else
+                        self.cardImage = [[UIImageView alloc] initWithImage:placeHolderImage];
                 }
                 else
-                    self.cardImage = [[UIImageView alloc] initWithImage:placeHolderImage];
+                {
+                    UIImage* image = singlePlayerCardImages[[NSString stringWithFormat:@"%d", _cardModel.idNumber]];
+                    if (image != nil)
+                    {
+                        self.cardImage = [[UIImageView alloc] initWithImage:image];
+                    }
+                    else
+                        self.cardImage = [[UIImageView alloc] initWithImage:placeHolderImage];
+                }
             }
             else if (cardModel.type == cardTypePlayer)
             {
@@ -452,9 +463,6 @@ NSDictionary *singlePlayerCardImages;
         //draws specific card elements for spell card
         else if ([cardModel isKindOfClass:[SpellCardModel class]])
         {
-            
-            //TODO
-            
             //element is a little higher
             self.elementLabel.center = CGPointMake(CARD_FULL_WIDTH/2, 144);
             [_frontViews addSubview: elementLabel];
@@ -499,7 +507,8 @@ NSDictionary *singlePlayerCardImages;
 {
     _frontFacing = frontFacing;
     
-    if (YES) //TODO debugging
+    //if (YES) //TODO debugging, shows all cards
+    if (frontFacing)
     {
         if (_cardModel.element < backgroundImages.count)
         {

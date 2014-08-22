@@ -38,7 +38,7 @@ CardView *originalCurrentCard;
 /** Index of currentCard in the collection */
 int currentIndex = -1;
 
-UIButton *addCardToDeckButton, *removeCardFromDeckButton;
+CFButton *addCardToDeckButton, *removeCardFromDeckButton;
 
 /** Shows the number of cards currently in the deck */
 UILabel *deckCountLabel;
@@ -47,29 +47,29 @@ UILabel *deckCountLabel;
 UILabel *cannotAddCardReasonLabel;
 
 /** Used to add another deck */
-UIButton *addDeckButton;
+CFButton *addDeckButton;
 
 /** Buttons for pressing the addDeckButton when the deck is invalid */
-UIButton *autoAddCardsButton, *notAutoAddCardsButton, *autoAddCardsFailedButton, *notFixDeckButton, *cancelNotFixButton;
+CFButton *autoAddCardsButton, *notAutoAddCardsButton, *autoAddCardsFailedButton, *notFixDeckButton, *cancelNotFixButton;
 UILabel *autoAddCardsLabel, *autoAddCardsFailedLabel;
 UIView*autoAddView;
 UIView*fixCardView;
 
 /** Used to save and return to organizing decks*/
-UIButton *saveDeckButton;
+CFButton *saveDeckButton;
 
 /** Add a new deck */
-UIButton *addDeckButton;
+CFButton *addDeckButton;
 
 /** Returns to main menu */
-UIButton *backButton;
+CFButton *backButton;
 
 /** The current deck being organized when deckView is in card mode if is nil, a new deck is being created. */
 DeckModel* currentDeck;
 
 UILabel *deleteDeckLabel;
 
-UIButton*invalidDeckButton;
+CFButton*invalidDeckButton;
 StrokedLabel*invalidDeckLabel;
 
 /** For unmaximizing */
@@ -136,13 +136,12 @@ DeckModel * allCards;
     darkFilter.backgroundColor = [[UIColor alloc]initWithHue:0 saturation:0 brightness:0 alpha:0.8];
     [darkFilter setUserInteractionEnabled:YES]; //blocks all interaction behind it
     
-    addCardToDeckButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 75, 75)];
+    addCardToDeckButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 75, 75)];
     addCardToDeckButton.center = CGPointMake(SCREEN_WIDTH - 45, SCREEN_HEIGHT-85);
     [addCardToDeckButton setImage:[UIImage imageNamed:@"add_button"] forState:UIControlStateNormal];
-    [addCardToDeckButton setImage:[UIImage imageNamed:@"add_button_gray"] forState:UIControlStateDisabled];
     [addCardToDeckButton addTarget:self action:@selector(addCardToDeckPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    removeCardFromDeckButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 75, 75)];
+    removeCardFromDeckButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 75, 75)];
     removeCardFromDeckButton.center = CGPointMake(SCREEN_WIDTH - 50, SCREEN_HEIGHT-80);
     [removeCardFromDeckButton setImage:[UIImage imageNamed:@"remove_button"] forState:UIControlStateNormal];
     
@@ -165,30 +164,30 @@ DeckModel * allCards;
     cannotAddCardReasonLabel.numberOfLines = 6;
     
     //save deck button
-    saveDeckButton = [[UIButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
+    saveDeckButton = [[CFButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
     [saveDeckButton setImage:[UIImage imageNamed:@"save_deck_button"] forState:UIControlStateNormal];
     [saveDeckButton addTarget:self action:@selector(saveDeckButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:saveDeckButton];
     
-    addDeckButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-50, SCREEN_HEIGHT-36, 46, 32)];
+    addDeckButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-50, SCREEN_HEIGHT-36, 46, 32)];
     [addDeckButton setImage:[UIImage imageNamed:@"add_deck_button"] forState:UIControlStateNormal];
     [addDeckButton addTarget:self action:@selector(addDeckButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    backButton = [[UIButton alloc] initWithFrame:CGRectMake(4, 4, 46, 32)];
+    backButton = [[CFButton alloc] initWithFrame:CGRectMake(4, 4, 46, 32)];
     [backButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    self.deleteDeckButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-50, 4, 46, 32)];
+    self.deleteDeckButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-50, 4, 46, 32)];
     [self.deleteDeckButton setImage:[UIImage imageNamed:@"remove_deck_button"] forState:UIControlStateNormal];
     [self.deleteDeckButton addTarget:self action:@selector(deleteButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     autoAddView = [[UIView alloc] initWithFrame:self.view.bounds];
     
     //---------------------filter view----------------------//
-    _filterToggleButton = [[UIButton alloc] initWithFrame:CGRectMake(4 + 50, 4, 46, 32)];
-    [_filterToggleButton setImage:[UIImage imageNamed:@"filter_button_small"] forState:UIControlStateNormal];
-    [_filterToggleButton setImage:[UIImage imageNamed:@"filter_button_small_selected"] forState:UIControlStateSelected];
+    _filterToggleButton = [[CFButton alloc] initWithFrame:CGRectMake(4 + 50, 4, 46, 32)];
+    _filterToggleButton.label.text = @"Filter";
+    [_filterToggleButton setTextSize:10];
     [_filterToggleButton addTarget:self action:@selector(filterToggleButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_footerView addSubview:_filterToggleButton];
     
@@ -204,24 +203,28 @@ DeckModel * allCards;
     [autoAddCardsLabel sizeToFit];
     [autoAddView addSubview:autoAddCardsLabel];
     
-    autoAddCardsButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    autoAddCardsButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     autoAddCardsButton.center = CGPointMake(SCREEN_WIDTH/2 - 80, SCREEN_HEIGHT - 60);
-    [autoAddCardsButton setImage:[UIImage imageNamed:@"yes_button"] forState:UIControlStateNormal];
+    autoAddCardsButton.label.text = @"Yes";
+    [autoAddCardsButton setTextSize:18];
     [autoAddCardsButton addTarget:self action:@selector(autoAddCardsButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    notAutoAddCardsButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    notAutoAddCardsButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     notAutoAddCardsButton.center = CGPointMake(SCREEN_WIDTH/2 + 80, SCREEN_HEIGHT - 60);
-    [notAutoAddCardsButton setImage:[UIImage imageNamed:@"no_button"] forState:UIControlStateNormal];
+    notAutoAddCardsButton.label.text = @"No";
+    [notAutoAddCardsButton setTextSize:18];
     [notAutoAddCardsButton addTarget:self action:@selector(notAutoAddCardsButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    notFixDeckButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    notFixDeckButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     notFixDeckButton.center = CGPointMake(SCREEN_WIDTH/2 - 80, SCREEN_HEIGHT - 60);
-    [notFixDeckButton setImage:[UIImage imageNamed:@"yes_button"] forState:UIControlStateNormal];
+    notFixDeckButton.label.text = @"Yes";
+    [notFixDeckButton setTextSize:18];
     [notFixDeckButton addTarget:self action:@selector(notFixDeckButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    cancelNotFixButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    cancelNotFixButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     cancelNotFixButton.center = CGPointMake(SCREEN_WIDTH/2 + 80, SCREEN_HEIGHT - 60);
-    [cancelNotFixButton setImage:[UIImage imageNamed:@"no_button"] forState:UIControlStateNormal];
+    cancelNotFixButton.label.text = @"No";
+    [cancelNotFixButton setTextSize:18];
     [cancelNotFixButton addTarget:self action:@selector(cancelNotFixButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     autoAddCardsFailedLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/4, SCREEN_WIDTH*6/8, SCREEN_HEIGHT)];
@@ -234,8 +237,10 @@ DeckModel * allCards;
     autoAddCardsFailedLabel.text = @"Sorry, you don't have enough valid cards to fill up this deck. Please try again with different cards.";
     [autoAddCardsFailedLabel sizeToFit];
     
-    autoAddCardsFailedButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    autoAddCardsFailedButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     autoAddCardsFailedButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 60);
+    autoAddCardsFailedButton.label.text = @"Ok";
+    [autoAddCardsFailedButton setTextSize:18];
     [autoAddCardsFailedButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
     //[saveDeckButton addTarget:self action:@selector(saveDeckButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
@@ -250,14 +255,16 @@ DeckModel * allCards;
     deleteDeckLabel.text = @"Are you sure you want to delete this deck?";
     [deleteDeckLabel sizeToFit];
     
-    self.deleteDeckConfirmButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    self.deleteDeckConfirmButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     self.deleteDeckConfirmButton.center = CGPointMake(SCREEN_WIDTH/2 - 80, SCREEN_HEIGHT - 60);
-    [self.deleteDeckConfirmButton setImage:[UIImage imageNamed:@"yes_button"] forState:UIControlStateNormal];
+    self.deleteDeckConfirmButton.label.text = @"Ok";
+    [self.deleteDeckConfirmButton setTextSize:18];
     [self.deleteDeckConfirmButton addTarget:self action:@selector(deleteDeckConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    self.deleteDeckCancelButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    self.deleteDeckCancelButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     self.deleteDeckCancelButton.center = CGPointMake(SCREEN_WIDTH/2 + 80, SCREEN_HEIGHT - 60);
-    [self.deleteDeckCancelButton setImage:[UIImage imageNamed:@"no_button"] forState:UIControlStateNormal];
+    self.deleteDeckCancelButton.label.text = @"No";
+    [self.deleteDeckCancelButton setTextSize:18];
     [self.deleteDeckCancelButton addTarget:self action:@selector(deleteDeckCancelButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     
@@ -274,9 +281,16 @@ DeckModel * allCards;
     _searchResult.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/2);
     [_cardsView addSubview:_searchResult];
     
-    invalidDeckButton = [[UIButton alloc] initWithFrame:CGRectMake(104,SCREEN_HEIGHT-36,120, 32)];
-    [invalidDeckButton setImage:[UIImage imageNamed:@"invalid_deck_button"] forState:UIControlStateNormal];
+    invalidDeckButton = [[CFButton alloc] initWithFrame:CGRectMake(104,SCREEN_HEIGHT-36,58, 32)];
+    invalidDeckButton.buttonStyle = CFButtonStyleWarning;
+    invalidDeckButton.label.text = @"Problems";
+    [invalidDeckButton setTextSize:9];
     [invalidDeckButton addTarget:self action:@selector(invalidDeckButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    _deckLimitationsButton = [[CFButton alloc] initWithFrame:CGRectMake(164,SCREEN_HEIGHT-36,58, 32)];
+    _deckLimitationsButton.label.text = @"Limits";
+    [_deckLimitationsButton setTextSize:10];
+    [_deckLimitationsButton addTarget:self action:@selector(deckLimitationsButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
 
     /** Activity */
     _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
@@ -291,9 +305,10 @@ DeckModel * allCards;
     _activityLabel.text = [NSString stringWithFormat:@"Processing..."];
     [_activityIndicator addSubview:_activityLabel];
     
-    _activityFailedButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    _activityFailedButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     _activityFailedButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 60);
-    [_activityFailedButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
+    _activityFailedButton.label.text = @"Ok";
+    [_activityFailedButton setTextSize:18];
     [_activityFailedButton addTarget:self action:@selector(activityFailedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
     
@@ -305,21 +320,24 @@ DeckModel * allCards;
     _invalidDeckReasonsLabel.lineBreakMode = NSLineBreakByWordWrapping;
     _invalidDeckReasonsLabel.numberOfLines = 10;
     
-    _invalidDeckReasonsOkButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    _invalidDeckReasonsOkButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     _invalidDeckReasonsOkButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 60);
-    [_invalidDeckReasonsOkButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
+    _invalidDeckReasonsOkButton.label.text = @"Ok";
+    [_invalidDeckReasonsOkButton setTextSize:18];
     [_invalidDeckReasonsOkButton addTarget:self action:@selector(invalidDeckReasonsOkButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
     //property view
     _propertiesView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH-_deckView.frame.size.width, _cardsView.frame.origin.y)];
     //_propertiesView.backgroundColor = [UIColor redColor];
     
-    _tagsPopularButton = [[UIButton alloc] initWithFrame:CGRectMake(_propertiesView.frame.size.width - 50, _propertiesView.frame.size.height - 36, 46, 32)];
-    
+    _tagsPopularButton = [[CFButton alloc] initWithFrame:CGRectMake(_propertiesView.frame.size.width - 52, _propertiesView.frame.size.height - 36, 50, 32)];
     if (SCREEN_HEIGHT >= 568)
-        _tagsPopularButton.frame = CGRectMake(4, _propertiesView.frame.size.height - 36, 46, 32);
+        _tagsPopularButton = [[CFButton alloc] initWithFrame:CGRectMake(2, _propertiesView.frame.size.height - 36, 50, 32)];
+    _tagsPopularButton.label.text = @"Suggest";
+    [_tagsPopularButton setTextSize:9];
     
-    [_tagsPopularButton setImage:[UIImage imageNamed:@"popular_tags_button_small"] forState:UIControlStateNormal];
+    
+
     [_propertiesView addSubview:_tagsPopularButton];
     
     UILabel*deckNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, 45, 25)];
@@ -409,13 +427,17 @@ DeckModel * allCards;
     _rarityFilterButtons = [NSMutableArray arrayWithCapacity:cardRarityLegendary+1];
     for (int i = 0; i <= cardRarityLegendary; i++)
     {
-        UIButton*rarityFilterButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
-        [rarityFilterButton setImage:[UIImage imageNamed:@"filter_button"] forState:UIControlStateNormal];
+        CFButton*rarityFilterButton = [[CFButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
+        [rarityFilterButton.dottedBorder removeFromSuperlayer];
+        rarityFilterButton.label.text = [CardModel getRarityText:i];
+        [rarityFilterButton setTextSize:14];
+        //[rarityFilterButton setImage:[UIImage imageNamed:@"filter_button"] forState:UIControlStateNormal];
         [rarityFilterButton addTarget:self action:@selector(rarityFilterButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         rarityFilterButton.center = CGPointMake(rarityFilterStartPoint.x, rarityFilterStartPoint.y + i*28);
         
         [_filterView addSubview:rarityFilterButton];
         
+        /*
         StrokedLabel*rarityLabel = [[StrokedLabel alloc]initWithFrame:CGRectMake(0, 0, 90, 25)];
         rarityLabel.textAlignment = NSTextAlignmentCenter;
         rarityLabel.textColor = [UIColor whiteColor];
@@ -428,7 +450,7 @@ DeckModel * allCards;
         [rarityFilterButton addSubview:rarityLabel];
         //rarityLabel.backgroundColor = [UIColor blueColor];
         //costLabel.center = costFilterButton.center;
-        
+        */
         [_rarityFilterButtons addObject:rarityFilterButton];
     }
     
@@ -437,23 +459,15 @@ DeckModel * allCards;
     _elementFilterButtons = [NSMutableArray arrayWithCapacity:7];
     for (int i = 0; i < 7; i++)
     {
-        UIButton*elementFilterButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
-        [elementFilterButton setImage:[UIImage imageNamed:@"filter_button"] forState:UIControlStateNormal];
+        CFButton*elementFilterButton = [[CFButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
+        [elementFilterButton.dottedBorder removeFromSuperlayer];
+        elementFilterButton.label.text = [CardModel elementToString:i];
+        [elementFilterButton setTextSize:14];
         [elementFilterButton addTarget:self action:@selector(elementFilterButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         elementFilterButton.center = CGPointMake(elementFilterStartPoint.x, elementFilterStartPoint.y + i*28);
         
         [_filterView addSubview:elementFilterButton];
-        
-        StrokedLabel*elementLabel = [[StrokedLabel alloc]initWithFrame:CGRectMake(0, 0, 90, 25)];
-        elementLabel.textAlignment = NSTextAlignmentCenter;
-        elementLabel.textColor = [UIColor whiteColor];
-        elementLabel.backgroundColor = [UIColor clearColor];
-        elementLabel.font = [UIFont fontWithName:cardMainFont size:18];
-        //elementLabel.strokeOn = YES;
-        elementLabel.strokeColour = [UIColor blackColor];
-        elementLabel.strokeThickness = 3;
-        elementLabel.text = [CardModel elementToString:i];
-        [elementFilterButton addSubview:elementLabel];
+
         //costLabel.center = costFilterButton.center;
         
         [_elementFilterButtons addObject:elementFilterButton];
@@ -1181,6 +1195,7 @@ DeckModel * allCards;
     
     [saveDeckButton removeFromSuperview];
     [_filterToggleButton removeFromSuperview];
+    [_deckLimitationsButton removeFromSuperview];
     
     if ([self isFilterOpen])
         [self setFilterViewState:NO];
@@ -1230,6 +1245,8 @@ DeckModel * allCards;
         
         if (currentDeck.isInvalid)
             [self.view addSubview:invalidDeckButton];
+        
+        [self.view addSubview:_deckLimitationsButton];
         
         _nameField.text = currentDeck.name;
         NSString*tagsString = @"";
@@ -1376,6 +1393,24 @@ DeckModel * allCards;
                      }
                      completion:^(BOOL completed){
                      }];
+}
+
+-(void)deckLimitationsButtonPressed
+{
+    //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
 
 -(void)invalidDeckReasonsOkButtonPressed

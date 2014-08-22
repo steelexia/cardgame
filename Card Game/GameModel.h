@@ -76,6 +76,8 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 @property BOOL gameOver;
 @property BOOL playerOneDefeated, playerTwoDefeated;
 
+/** Note that turn number increases every time end turn is pressed */
+@property int turnNumber;
 
 /** Initialies the GameModel with an attached controller for drawing */
 -(instancetype)initWithViewController:(GameViewController *)gameViewController gameMode: (enum GameMode)gameMode withLevel:(Level*)level;
@@ -166,3 +168,5 @@ enum GameMode
     GameModeSingleplayer,
     GameModeMultiplayer,
 };
+
+extern const int INITIAL_CARD_DRAW;

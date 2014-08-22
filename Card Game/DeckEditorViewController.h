@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "CardsCollectionView.h"
 #import "DeckTableView.h"
+#import "CFButton.h"
 
 @interface DeckEditorViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate>
 
@@ -18,18 +19,20 @@
 
 @property (strong)StrokedLabel*searchResult;
 
-@property (strong) UIButton *deleteDeckButton;
+@property (strong) CFButton *deleteDeckButton;
 
-@property (strong) UIButton *deleteDeckConfirmButton, *deleteDeckCancelButton;
+@property (strong) CFButton *deleteDeckConfirmButton, *deleteDeckCancelButton;
 
 @property (strong)UIActivityIndicatorView*activityIndicator;
 @property(strong) UILabel *activityLabel;
-@property (strong)UIButton*activityFailedButton;
+@property (strong)CFButton*activityFailedButton;
 
 @property(strong)UILabel*invalidDeckReasonsLabel;
-@property(strong)UIButton*invalidDeckReasonsOkButton;
+@property(strong)CFButton*invalidDeckReasonsOkButton;
 
-@property(strong)UIButton*filterToggleButton;
+@property(strong)CFButton*filterToggleButton;
+
+@property (strong)CFButton*deckLimitationsButton;
 
 @property(strong)UIView*footerView;
 
@@ -37,11 +40,11 @@
 @property(strong)UIView*propertiesView;
 @property(strong)UITextField*nameField;
 @property(strong)UITextView*tagsArea;
-@property(strong)UIButton*tagsPopularButton;
+@property(strong)CFButton*tagsPopularButton;
 
 //filter view
 @property(strong)UIView*filterView;
-@property(strong)UIButton*deckTagsButton;
+@property(strong)CFButton*deckTagsButton;
 @property (strong)NSMutableArray*costFilterButtons,*rarityFilterButtons,*elementFilterButtons;
 @property(strong)NSMutableArray*costFilter;
 @property(strong)NSMutableArray*elementFilter;

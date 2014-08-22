@@ -12,9 +12,9 @@
 @interface CFLabel : UIView
 
 @property (strong)StrokedLabel*label;
-
+@property (strong)CAShapeLayer * border;
 -(void)setTextSize:(int)size;
 /** Didn't have time to make a dialog class so this just makes it look better as a dialog box */
--(void)setupAsDialog;
+-(void)setIsDialog:(BOOL)state;
 
 @end

@@ -16,7 +16,12 @@
 
 -(void)tutorialMessageGameStart;
 
+-(void)returnedFromCardEditorTutorial;
 
+-(void)summonedCardTutorial:(CardModel*)card fromSide:(int)side;
 
+-(void)endTurnTutorial;
+
+-(void)cardAttacksTutorial;
 
 @end

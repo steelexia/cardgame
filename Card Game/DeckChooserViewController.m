@@ -130,16 +130,21 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     
     [self.deckBackground addSubview:self.chosenDeckTagsLabel];
     
-    self.chooseDeckButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 90, 75)];
+    self.chooseDeckButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 90, 75)];
+    self.chooseDeckButton.buttonStyle = CFButtonStyleWarning;
     self.chooseDeckButton.center = CGPointMake(115, SCREEN_HEIGHT-41);
-    [self.chooseDeckButton setImage:[UIImage imageNamed:@"battle_button"] forState:UIControlStateNormal];
-    [self.chooseDeckButton setImage:[UIImage imageNamed:@"battle_button_gray"] forState:UIControlStateDisabled];
+    self.chooseDeckButton.label.text = @"Battle";
+    [self.chooseDeckButton setTextSize:22];
+    
+    //[self.chooseDeckButton setImage:[UIImage imageNamed:@"battle_button"] forState:UIControlStateNormal];
+    //[self.chooseDeckButton setImage:[UIImage imageNamed:@"battle_button_gray"] forState:UIControlStateDisabled];
     [self.chooseDeckButton addTarget:self action:@selector(battleButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.chooseDeckButton setEnabled:NO];
     
     [self.view addSubview:self.chooseDeckButton];
     
-    self.backButton = [[UIButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
+    self.backButton = [[CFButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
+    
     [self.backButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
     [self.backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     

@@ -16,20 +16,6 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        CAShapeLayer * _border;
-        _border = [CAShapeLayer layer];
-        _border.strokeColor = [UIColor blackColor].CGColor;
-        _border.fillColor = nil;
-        _border.lineWidth = 2;
-        _border.lineDashPattern = @[@5, @8];
-        CGRect boundsRect = CGRectInset(self.bounds, 5, 5);
-        UIBezierPath *path = [UIBezierPath bezierPathWithRect:boundsRect];
-        _border.path = path.CGPath;
-        _border.frame = self.bounds;
-        [self.layer addSublayer:_border];
-        self.layer.borderWidth = 2;
-        self.layer.borderColor = [UIColor blackColor].CGColor;
-        
         self.backgroundColor = COLOUR_INTERFACE_BLUE_LIGHT;
         
         _label = [[StrokedLabel alloc] initWithFrame:CGRectInset(self.bounds, 10, 10)];
@@ -49,9 +35,33 @@
     _label.font = [UIFont fontWithName:cardMainFont size:size];
 }
 
--(void)setupAsDialog
+-(void)setIsDialog:(BOOL)state
 {
-    _label.frame = CGRectMake(_label.frame.origin.x, _label.frame.origin.y, _label.frame.size.width, _label.frame.size.height-50);
+    if (state)
+        _label.frame = CGRectMake(_label.frame.origin.x, _label.frame.origin.y, _label.frame.size.width, _label.frame.size.height-50);
+    else
+        _label.frame = CGRectInset(self.bounds, 10, 10);
+}
+
+-(void)setFrame:(CGRect)frame
+{
+    [super setFrame:frame];
+    
+    [_border removeFromSuperlayer];
+    _border = [CAShapeLayer layer];
+    _border.strokeColor = [UIColor blackColor].CGColor;
+    _border.fillColor = nil;
+    _border.lineWidth = 2;
+    _border.lineDashPattern = @[@5, @8];
+    CGRect boundsRect = CGRectInset(self.bounds, 5, 5);
+    UIBezierPath *path = [UIBezierPath bezierPathWithRect:boundsRect];
+    _border.path = path.CGPath;
+    _border.frame = self.bounds;
+    [self.layer addSublayer:_border];
+    self.layer.borderWidth = 2;
+    self.layer.borderColor = [UIColor blackColor].CGColor;
+    
+    self.label.frame = CGRectInset(self.bounds, 10, 10);
 }
 
 /*

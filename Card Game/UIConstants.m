@@ -22,6 +22,9 @@
     COLOUR_INTERFACE_GRAY = [[UIColor alloc] initWithRed:0.47 green:0.47 blue:0.47 alpha:1];
     COLOUR_BACKGROUND_GRAY = [[UIColor alloc] initWithRed:70/255.f green:70/255.f blue:70/255.f alpha:1];
     
+    COLOUR_INTERFACE_RED = [[UIColor alloc] initWithRed:255/255.f green:36/255.f blue:0/255.f alpha:1];
+    COLOUR_INTERFACE_RED_PRESSED = [[UIColor alloc] initWithRed:141/255.f green:71/255.f blue:59/255.f alpha:1];
+    
     COLOUR_NEUTRAL = [[UIColor alloc] initWithRed:0.82 green:0.72 blue:0.52 alpha:1];
     COLOUR_FIRE = [[UIColor alloc] initWithRed:218/255.f green:67/255.f blue:32/255.f alpha:1];
     COLOUR_ICE = [[UIColor alloc] initWithRed:84/255.f green:171/255.f blue:216/255.f alpha:1];
@@ -53,6 +56,7 @@
     CARD_ICON_GRAY_IMAGE = [UIImage imageNamed:@"card_icon_gray"];
     ADD_ICON_IMAGE = [UIImage imageNamed:@"add_icon"];
     ARROW_LEFT_ICON_IMAGE = [UIImage imageNamed:@"arrow_left_icon"];
+    ARROW_RIGHT_ICON_IMAGE = [UIImage imageNamed:@"arrow_right_icon"];
 }
 
 +(UIColor*)getElementColor:(enum CardElement)element

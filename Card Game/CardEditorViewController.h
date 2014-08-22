@@ -28,7 +28,11 @@
 @property (strong)GKImagePicker *imagePicker;
 @property (strong)UIActivityIndicatorView*cardUploadIndicator, *cardVoteIndicator;
 @property (strong)UILabel*cardUploadLabel;
-@property (strong)UIButton*cardUploadFailedButton,*cardVoteFailedButton;
+@property (strong)CFButton*cardUploadFailedButton,*cardVoteFailedButton;
+@property (strong) UIView*modalFilter;
+@property (strong) CFLabel*tutLabel;
+@property (strong) CFButton*tutOkButton;
+
 @property enum CardEditorMode editorMode;
 /** Set to YES if save button is pressed during voting */
 @property BOOL voteConfirmed;

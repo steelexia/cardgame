@@ -151,6 +151,6 @@ enum CardElement
     //TODO single player AI cards may have other elements
 };
 
-extern const int MONSTER_CARD, SPELL_CARD, NO_ID;
+extern const int MONSTER_CARD, SPELL_CARD, NO_ID, PLAYER_FIRST_CARD_ID;
 
 

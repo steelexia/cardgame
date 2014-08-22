@@ -83,7 +83,7 @@ CGSize keyboardSize;
     
     //------------------footer views------------------//
     
-    self.backButton = [[UIButton alloc] initWithFrame:CGRectMake(4, 4, 46, 32)];
+    self.backButton = [[CFButton alloc] initWithFrame:CGRectMake(4, 4, 46, 32)];
     [self.backButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
     [self.backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
@@ -152,14 +152,15 @@ CGSize keyboardSize;
     [_darkFilter setUserInteractionEnabled:YES]; //blocks all interaction behind it
     [_cardInfoView addSubview:_darkFilter];
     
-    _buyButton = [[UIButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT - 125, 80, 60)];
-    [_buyButton setImage:[UIImage imageNamed:@"buy_button"] forState:UIControlStateNormal];
-    [_buyButton setImage:[UIImage imageNamed:@"buy_button_gray"] forState:UIControlStateDisabled];
+    _buyButton = [[CFButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT - 125, 80, 60)];
+    _buyButton.label.text = @"Buy";
+    [_buyButton setTextSize:22];
     [_buyButton addTarget:self action:@selector(buyButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_cardInfoView addSubview:_buyButton];
     
-    _sellButton = [[UIButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT - 125, 80, 60)];
-    [_sellButton setImage:[UIImage imageNamed:@"sell_button"] forState:UIControlStateNormal];
+    _sellButton = [[CFButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT - 125, 80, 60)];
+    _sellButton.label.text = @"Sell";
+    [_sellButton setTextSize:22];
     [_sellButton addTarget:self action:@selector(sellButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_cardInfoView addSubview:_sellButton];
     
@@ -173,9 +174,9 @@ CGSize keyboardSize;
     _buyHintLabel.center = CGPointMake(60, SCREEN_HEIGHT-55);
     [_cardInfoView addSubview:_buyHintLabel];
     
-    _editButton = [[UIButton alloc] initWithFrame:CGRectMake(120, SCREEN_HEIGHT - 125, 80, 60)];
-    [_editButton setImage:[UIImage imageNamed:@"edit_button"] forState:UIControlStateNormal];
-    [_editButton setImage:[UIImage imageNamed:@"edit_button_gray"] forState:UIControlStateDisabled];
+    _editButton = [[CFButton alloc] initWithFrame:CGRectMake(120, SCREEN_HEIGHT - 125, 80, 60)];
+    _editButton.label.text = @"Edit";
+    [_editButton setTextSize:22];
     [_editButton addTarget:self action:@selector(editButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_cardInfoView addSubview:_editButton];
     
@@ -189,9 +190,9 @@ CGSize keyboardSize;
     _editHintLabel.center = CGPointMake(160, SCREEN_HEIGHT-55);
     [_cardInfoView addSubview:_editHintLabel];
     
-    _likeButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-20-80, SCREEN_HEIGHT - 125, 80, 60)];
-    [_likeButton setImage:[UIImage imageNamed:@"like_button"] forState:UIControlStateNormal];
-    [_likeButton setImage:[UIImage imageNamed:@"like_button_gray"] forState:UIControlStateDisabled];
+    _likeButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-20-80, SCREEN_HEIGHT - 125, 80, 60)];
+    _likeButton.label.text = @"Like";
+    [_likeButton setTextSize:22];
     [_likeButton addTarget:self action:@selector(likeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_cardInfoView addSubview:_likeButton];
     
@@ -285,9 +286,13 @@ CGSize keyboardSize;
     [_cardInfoView addSubview:_cardTagsLabel];
     
     //---------------search view-------------------//
-    _searchToggleButton = [[UIButton alloc] initWithFrame:CGRectMake(4 + 100, 4, 46, 32)];
-    [_searchToggleButton setImage:[UIImage imageNamed:@"search_button_small"] forState:UIControlStateNormal];
-    [_searchToggleButton setImage:[UIImage imageNamed:@"search_button_small_selected"] forState:UIControlStateSelected];
+    _searchToggleButton = [[CFButton alloc] initWithFrame:CGRectMake(4 + 100, 4, 46, 32)];
+    _searchToggleButton.buttonStyle = CFButtonStyleToggle;
+    [_searchToggleButton setTextSize:9];
+    _searchToggleButton.label.text = @"Search";
+    _searchToggleButton.selected = YES;
+    //[_searchToggleButton setImage:[UIImage imageNamed:@"search_button_small"] forState:UIControlStateNormal];
+    //[_searchToggleButton setImage:[UIImage imageNamed:@"search_button_small_selected"] forState:UIControlStateSelected];
     [_searchToggleButton addTarget:self action:@selector(searchToggleButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
     [_footerView addSubview:_searchToggleButton];
@@ -377,8 +382,10 @@ CGSize keyboardSize;
     searchIDLabel.textAlignment = NSTextAlignmentRight;
     [_searchView addSubview:searchIDLabel];
     
-    UIButton*searchButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 80, 50)];
-    [searchButton setImage:[UIImage imageNamed:@"search_button"] forState:UIControlStateNormal];
+    CFButton*searchButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 50)];
+    [searchButton setTextSize:16];
+    searchButton.label.text = @"Search";
+    //[searchButton setImage:[UIImage imageNamed:@"search_button"] forState:UIControlStateNormal];
     [searchButton addTarget:self action:@selector(searchButtonPressed) forControlEvents:UIControlEventTouchDown];
     searchButton.center = CGPointMake(SCREEN_WIDTH/2, 60 + 150);
     [_searchView addSubview:searchButton];
@@ -389,66 +396,50 @@ CGSize keyboardSize;
     [_filterView setUserInteractionEnabled:YES];
     [_filterView setBackgroundColor:[UIColor whiteColor]];
     
-    _filterToggleButton = [[UIButton alloc] initWithFrame:CGRectMake(4 + 50, 4, 46, 32)];
-    [_filterToggleButton setImage:[UIImage imageNamed:@"filter_button_small"] forState:UIControlStateNormal];
-    [_filterToggleButton setImage:[UIImage imageNamed:@"filter_button_small_selected"] forState:UIControlStateSelected];
+    _filterToggleButton = [[CFButton alloc] initWithFrame:CGRectMake(4 + 50, 4, 46, 32)];
+    _filterToggleButton.buttonStyle = CFButtonStyleToggle;
+    _filterToggleButton.label.text = @"Filter";
+    [_filterToggleButton setTextSize:9];
+    _filterToggleButton.selected = YES;
+    //[_filterToggleButton setImage:[UIImage imageNamed:@"filter_button_small"] forState:UIControlStateNormal];
+    //[_filterToggleButton setImage:[UIImage imageNamed:@"filter_button_small_selected"] forState:UIControlStateSelected];
     [_filterToggleButton addTarget:self action:@selector(filterToggleButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_footerView addSubview:_filterToggleButton];
     
-    _likedButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
-    [_likedButton setImage:[UIImage imageNamed:@"filter_button"] forState:UIControlStateNormal];
+    _likedButton = [[CFButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
     [_likedButton addTarget:self action:@selector(likedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [_likedButton.dottedBorder removeFromSuperlayer];
+    _likedButton.label.text = @"Hide liked";
+    [_likedButton setTextSize:11];
     _likedButton.center = CGPointMake(60, 60);
     [_filterView addSubview:_likedButton];
-    UILabel*likedLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 90, 25)];
-    likedLabel.textAlignment = NSTextAlignmentCenter;
-    likedLabel.textColor = [UIColor whiteColor];
-    likedLabel.backgroundColor = [UIColor clearColor];
-    likedLabel.font = [UIFont fontWithName:cardMainFont size:16];
-    likedLabel.text = @"Hide liked";
-    [_likedButton addSubview:likedLabel];
     _likedButton.alpha = 0.4;
     
-    _ownedButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
-    [_ownedButton setImage:[UIImage imageNamed:@"filter_button"] forState:UIControlStateNormal];
+    _ownedButton = [[CFButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
     [_ownedButton addTarget:self action:@selector(ownedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [_ownedButton.dottedBorder removeFromSuperlayer];
+    _ownedButton.label.text = @"Hide bought";
+    [_ownedButton setTextSize:11];
     _ownedButton.center = CGPointMake(60, 88);
     [_filterView addSubview:_ownedButton];
-    UILabel*ownedLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 90, 25)];
-    ownedLabel.textAlignment = NSTextAlignmentCenter;
-    ownedLabel.textColor = [UIColor whiteColor];
-    ownedLabel.backgroundColor = [UIColor clearColor];
-    ownedLabel.font = [UIFont fontWithName:cardMainFont size:16];
-    ownedLabel.text = @"Hide bought";
-    [_ownedButton addSubview:ownedLabel];
     _ownedButton.alpha = 0.4;
     
-    _stockedButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
-    [_stockedButton setImage:[UIImage imageNamed:@"filter_button"] forState:UIControlStateNormal];
+    _stockedButton = [[CFButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
     [_stockedButton addTarget:self action:@selector(stockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [_stockedButton.dottedBorder removeFromSuperlayer];
+    _stockedButton.label.text = @"Hide 0 stock";
+    [_stockedButton setTextSize:11];
     _stockedButton.center = CGPointMake(60, 116);
     [_filterView addSubview:_stockedButton];
-    UILabel*stockedLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 90, 25)];
-    stockedLabel.textAlignment = NSTextAlignmentCenter;
-    stockedLabel.textColor = [UIColor whiteColor];
-    stockedLabel.backgroundColor = [UIColor clearColor];
-    stockedLabel.font = [UIFont fontWithName:cardMainFont size:16];
-    stockedLabel.text = @"Hide 0 stock";
-    [_stockedButton addSubview:stockedLabel];
     _stockedButton.alpha = 0.4;
     
-    _deckTagsButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
-    [_deckTagsButton setImage:[UIImage imageNamed:@"filter_button"] forState:UIControlStateNormal];
+    _deckTagsButton = [[CFButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
     [_deckTagsButton addTarget:self action:@selector(deckTagsButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [_deckTagsButton.dottedBorder removeFromSuperlayer];
+    _deckTagsButton.label.text = @"Only deck tags";
+    [_deckTagsButton setTextSize:11];
     _deckTagsButton.center = CGPointMake(60, 144);
     [_filterView addSubview:_deckTagsButton];
-    UILabel*_deckTagsLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 90, 25)];
-    _deckTagsLabel.textAlignment = NSTextAlignmentCenter;
-    _deckTagsLabel.textColor = [UIColor whiteColor];
-    _deckTagsLabel.backgroundColor = [UIColor clearColor];
-    _deckTagsLabel.font = [UIFont fontWithName:cardMainFont size:14];
-    _deckTagsLabel.text = @"Only deck tags";
-    [_deckTagsButton addSubview:_deckTagsLabel];
     _deckTagsButton.alpha = 0.4;
     
     //cost buttons
@@ -483,13 +474,16 @@ CGSize keyboardSize;
     _rarityFilterButtons = [NSMutableArray arrayWithCapacity:cardRarityLegendary+1];
     for (int i = 0; i <= cardRarityLegendary; i++)
     {
-        UIButton*rarityFilterButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
-        [rarityFilterButton setImage:[UIImage imageNamed:@"filter_button"] forState:UIControlStateNormal];
+        CFButton*rarityFilterButton = [[CFButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
+        [rarityFilterButton setTextSize:14];
+        [rarityFilterButton.dottedBorder removeFromSuperlayer];
+        //[rarityFilterButton setImage:[UIImage imageNamed:@"filter_button"] forState:UIControlStateNormal];
         [rarityFilterButton addTarget:self action:@selector(rarityFilterButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         rarityFilterButton.center = CGPointMake(rarityFilterStartPoint.x, rarityFilterStartPoint.y + i*28);
-        
+        rarityFilterButton.label.text = [CardModel getRarityText:i];
         [_filterView addSubview:rarityFilterButton];
         
+        /*
         StrokedLabel*rarityLabel = [[StrokedLabel alloc]initWithFrame:CGRectMake(0, 0, 90, 25)];
         rarityLabel.textAlignment = NSTextAlignmentCenter;
         rarityLabel.textColor = [UIColor whiteColor];
@@ -502,7 +496,7 @@ CGSize keyboardSize;
         [rarityFilterButton addSubview:rarityLabel];
         //rarityLabel.backgroundColor = [UIColor blueColor];
         //costLabel.center = costFilterButton.center;
-        
+        */
         [_rarityFilterButtons addObject:rarityFilterButton];
     }
     
@@ -511,23 +505,15 @@ CGSize keyboardSize;
     _elementFilterButtons = [NSMutableArray arrayWithCapacity:7];
     for (int i = 0; i < 7; i++)
     {
-        UIButton*elementFilterButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
-        [elementFilterButton setImage:[UIImage imageNamed:@"filter_button"] forState:UIControlStateNormal];
+        CFButton*elementFilterButton = [[CFButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
+        [elementFilterButton setTextSize:14];
+        [elementFilterButton.dottedBorder removeFromSuperlayer];
+        //[elementFilterButton setImage:[UIImage imageNamed:@"filter_button"] forState:UIControlStateNormal];
         [elementFilterButton addTarget:self action:@selector(elementFilterButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         elementFilterButton.center = CGPointMake(elementFilterStartPoint.x, elementFilterStartPoint.y + i*28);
-        
+        elementFilterButton.label.text = [CardModel elementToString:i];
         [_filterView addSubview:elementFilterButton];
         
-        StrokedLabel*elementLabel = [[StrokedLabel alloc]initWithFrame:CGRectMake(0, 0, 90, 25)];
-        elementLabel.textAlignment = NSTextAlignmentCenter;
-        elementLabel.textColor = [UIColor whiteColor];
-        elementLabel.backgroundColor = [UIColor clearColor];
-        elementLabel.font = [UIFont fontWithName:cardMainFont size:18];
-        //elementLabel.strokeOn = YES;
-        elementLabel.strokeColour = [UIColor blackColor];
-        elementLabel.strokeThickness = 3;
-        elementLabel.text = [CardModel elementToString:i];
-        [elementFilterButton addSubview:elementLabel];
         //costLabel.center = costFilterButton.center;
         
         [_elementFilterButtons addObject:elementFilterButton];
@@ -583,7 +569,7 @@ CGSize keyboardSize;
     [blankCardDarkFilter setUserInteractionEnabled:YES]; //blocks all interaction behind it
     [_blankCardView addSubview:blankCardDarkFilter];
     
-    UIButton*blankCardBackButton = [[UIButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-40-40 + 4, 46, 32)];
+    CFButton*blankCardBackButton = [[CFButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-40-40 + 4, 46, 32)];
     [blankCardBackButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
     [blankCardBackButton addTarget:self action:@selector(blankCardBackButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [_blankCardView addSubview:blankCardBackButton];
@@ -712,7 +698,7 @@ CGSize keyboardSize;
     buyGoldLabel.center = CGPointMake(SCREEN_WIDTH/2, 100);
     [_buyGoldView addSubview:buyGoldLabel];
     
-    UIButton*buyGoldBackButton = [[UIButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-40-40 + 4, 46, 32)];
+    CFButton*buyGoldBackButton = [[CFButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-40-40 + 4, 46, 32)];
     [buyGoldBackButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
     [buyGoldBackButton addTarget:self action:@selector(buyGoldBackButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [_buyGoldView addSubview:buyGoldBackButton];
@@ -806,9 +792,10 @@ CGSize keyboardSize;
     _activityLabel.text = [NSString stringWithFormat:@"Processing..."];
     [_activityIndicator addSubview:_activityLabel];
     
-    _activityFailedButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    _activityFailedButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     _activityFailedButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 60);
-    [_activityFailedButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
+    _activityFailedButton.label.text = @"Ok";
+    [_activityFailedButton setTextSize:18];
     [_activityFailedButton addTarget:self action:@selector(activityFailedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
     //-----------------search result----------------//
@@ -840,18 +827,19 @@ CGSize keyboardSize;
 {
     //[_filterToggleButton setSelected:![_filterToggleButton isSelected]];
     [self setFilterViewState:![self isFilterOpen]];
+    
     if([self isFilterOpen] && [self isSearchOpen])
         [self searchToggleButtonPressed];
 }
 
 -(BOOL)isFilterOpen
 {
-    return [_filterToggleButton isSelected];
+    return ![_filterToggleButton isSelected];
 }
 
 -(void)setFilterViewState:(BOOL)state
 {
-    _filterToggleButton.selected = state;
+    [_filterToggleButton setSelected:!state];
     
     CGRect filterViewFrame = _filterView.frame;
     if (state)
@@ -881,18 +869,19 @@ CGSize keyboardSize;
 -(void)searchToggleButtonPressed
 {
     [self setSearchViewState:![self isSearchOpen]];
+    
     if([self isFilterOpen] && [self isSearchOpen])
         [self filterToggleButtonPressed];
 }
 
 -(BOOL)isSearchOpen
 {
-    return [_searchToggleButton isSelected];
+    return ![_searchToggleButton isSelected];
 }
 
 -(void)setSearchViewState:(BOOL)state
 {
-    _searchToggleButton.selected = state;
+    [_searchToggleButton setSelected:!state];
     CGRect searchViewFrame = _searchView.frame;
     
     if (state)

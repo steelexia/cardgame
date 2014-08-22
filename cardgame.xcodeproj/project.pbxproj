@@ -206,6 +206,7 @@
 		90F80F9B19A2BEFA007571F4 /* CustomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F80F9A19A2BEFA007571F4 /* CustomView.m */; };
 		90F80F9E19A3D28E007571F4 /* GameViewController+Tutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F80F9D19A3D28E007571F4 /* GameViewController+Tutorial.m */; };
 		90F80FA119A3D3D9007571F4 /* arrow_left_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F80FA019A3D3D9007571F4 /* arrow_left_icon.png */; };
+		90F80FA319A63F4C007571F4 /* card_image_cardeditor_empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F80FA219A63F4B007571F4 /* card_image_cardeditor_empty.png */; };
 		FA4025971956331300FCCBAB /* DeckEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4025961956331300FCCBAB /* DeckEditorViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -554,6 +555,7 @@
 		90F80F9C19A3D28E007571F4 /* GameViewController+Tutorial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GameViewController+Tutorial.h"; sourceTree = "<group>"; };
 		90F80F9D19A3D28E007571F4 /* GameViewController+Tutorial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GameViewController+Tutorial.m"; sourceTree = "<group>"; };
 		90F80FA019A3D3D9007571F4 /* arrow_left_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = arrow_left_icon.png; path = "Card Game/arrow_left_icon.png"; sourceTree = "<group>"; };
+		90F80FA219A63F4B007571F4 /* card_image_cardeditor_empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_image_cardeditor_empty.png; path = "Card Game/card_image_cardeditor_empty.png"; sourceTree = "<group>"; };
 		FA4025951956331300FCCBAB /* DeckEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeckEditorViewController.h; sourceTree = "<group>"; };
 		FA4025961956331300FCCBAB /* DeckEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeckEditorViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -847,6 +849,7 @@
 				90F80F9419A2930B007571F4 /* Singleplayer */,
 				90AB14FB196F2FB20008FCDD /* Abilities */,
 				9069AAD91955019A006D1D98 /* Rarity */,
+				90F80FA219A63F4B007571F4 /* card_image_cardeditor_empty.png */,
 				90F80F8419A26510007571F4 /* card_back_default.png */,
 				90F7DAFA199AC1ED00D4FD97 /* card_image_empty.png */,
 				90AB14F4196CA7F90008FCDD /* card_background_front_monster_overlay.png */,
@@ -1305,6 +1308,7 @@
 				907020441991437D00FDE444 /* gold_icon.png in Resources */,
 				90F80F9819A29317007571F4 /* card_1000.png in Resources */,
 				9032E13819986121002A6725 /* filter_button.png in Resources */,
+				90F80FA319A63F4C007571F4 /* card_image_cardeditor_empty.png in Resources */,
 				907D9BFD192FD35F0037C0CF /* card_glow_target.png in Resources */,
 				90456EE3198F1B9100B807DC /* buy_button_gray.png in Resources */,
 				907020711992AC8100FDE444 /* PLCameraSheetButton.png in Resources */,

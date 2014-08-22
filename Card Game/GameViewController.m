@@ -14,7 +14,6 @@
 #import "CGPointUtilities.h"
 #import "MainScreenViewController.h"
 #import "GameInfoTableView.h"
-#import "CardEditorViewController.h"
 #import "Campaign.h"
 #import "BossBattleScreenViewController.h"
 
@@ -53,11 +52,11 @@ UIImageView *playerFieldHighlight, *opponentFieldHighlight, *playerFieldEdge, *o
 
 UIImageView *battlefieldBackground;
 
-UIButton *quitButton, *quitConfirmButton, *quitCancelButton;
+CFButton *quitButton, *quitConfirmButton, *quitCancelButton;
 UILabel *quitConfirmLabel;
 
 StrokedLabel *pickATargetLabel;
-UIButton *giveupAbilityButton;
+CFButton *giveupAbilityButton;
 
 GameInfoTableView*extraAbilityView, *abilityDescriptionView;
 
@@ -133,13 +132,20 @@ BOOL leftHandViewZone = NO;
     [self setupUI];
     
     //start a new game, each player draws three cards
-    [self.gameModel startGame];
-    
+    if ([TUTORIAL_ONE isEqualToString:_level.levelID] || [TUTORIAL_TWO isEqualToString:_level.levelID])
+    {
+        //these tutorials do not start game immediately
+    }
+    else
+    {
+        [self.gameModel startGame];
+    }
     //add all cards onto screen
     [self updateHandsView: PLAYER_SIDE];
     [self updateHandsView: OPPONENT_SIDE];
     [self updateResourceView: PLAYER_SIDE];
     [self updateResourceView: OPPONENT_SIDE];
+        
     
     self.currentNumberOfAnimations = 0; //init
     
@@ -269,14 +275,17 @@ BOOL leftHandViewZone = NO;
     [self.backgroundView addSubview:backgroundOverlay];
     
     //----end turn button----//
-    UIImage* endTurnImage = [UIImage imageNamed:@"end_turn_button_up.png"]; //TODO all these images to load function
-    UIImage* endTurnDisabledImage = [UIImage imageNamed:@"end_turn_button_disabled.png"];
-    self.endTurnButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    self.endTurnButton.frame = CGRectMake(0, 0, 60, 45);
+    //UIImage* endTurnImage = [UIImage imageNamed:@"end_turn_button_up.png"]; //TODO all these images to load function
+    //UIImage* endTurnDisabledImage = [UIImage imageNamed:@"end_turn_button_disabled.png"];
+    self.endTurnButton = [[CFButton alloc]initWithFrame:CGRectMake(0, 0, 60, 45)];
+    self.endTurnButton.buttonStyle = CFButtonStyleWarning;
+    self.endTurnButton.label.text = @"END\nTURN";
+    [self.endTurnButton setTextSize:13];
     //[button setTitle:@"test" forState:UIControlStateNormal];
     [self.endTurnButton setTitleColor: [UIColor blackColor] forState:UIControlStateNormal];
-    [self.endTurnButton setBackgroundImage:endTurnImage forState:UIControlStateNormal];
-    [self.endTurnButton setBackgroundImage:endTurnDisabledImage forState:UIControlStateDisabled];
+    
+    //[self.endTurnButton setBackgroundImage:endTurnImage forState:UIControlStateNormal];
+    //[self.endTurnButton setBackgroundImage:endTurnDisabledImage forState:UIControlStateDisabled];
     [self.endTurnButton addTarget:self action:@selector(endTurn)    forControlEvents:UIControlEventTouchUpInside];
     
     //end button is aligned with field's right border and has same distance away as the distance between the two fields
@@ -284,7 +293,7 @@ BOOL leftHandViewZone = NO;
     [self.backgroundView addSubview: self.endTurnButton];
     
     //quit button
-    quitButton = [[UIButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
+    quitButton = [[CFButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
     [quitButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
     [quitButton addTarget:self action:@selector(quitButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
@@ -300,14 +309,18 @@ BOOL leftHandViewZone = NO;
     quitConfirmLabel.text = @"Are you sure you want to quit? You will lose this game.";
     [quitConfirmLabel sizeToFit];
     
-    quitConfirmButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    quitConfirmButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     quitConfirmButton.center = CGPointMake(SCREEN_WIDTH/2 - 80, SCREEN_HEIGHT - 60);
-    [quitConfirmButton setImage:[UIImage imageNamed:@"yes_button"] forState:UIControlStateNormal];
+    quitConfirmButton.label.text = @"Yes";
+    [quitConfirmButton setTextSize:16];
+    //[quitConfirmButton setImage:[UIImage imageNamed:@"yes_button"] forState:UIControlStateNormal];
     [quitConfirmButton addTarget:self action:@selector(quitConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    quitCancelButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    quitCancelButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     quitCancelButton.center = CGPointMake(SCREEN_WIDTH/2 + 80, SCREEN_HEIGHT - 60);
-    [quitCancelButton setImage:[UIImage imageNamed:@"no_button"] forState:UIControlStateNormal];
+    quitCancelButton.label.text = @"No";
+    [quitCancelButton setTextSize:16];
+    //[quitCancelButton setImage:[UIImage imageNamed:@"no_button"] forState:UIControlStateNormal];
     [quitCancelButton addTarget:self action:@selector(quitCancelButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     //-----Player's heroes-----//
@@ -346,9 +359,12 @@ BOOL leftHandViewZone = NO;
     pickATargetLabel.strokeThickness = 2;
     pickATargetLabel.strokeOn = YES;
     
-    giveupAbilityButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 45)];
+    giveupAbilityButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 60, 45)];
     giveupAbilityButton.center = CGPointMake(self.view.bounds.size.width/2 + 20, self.view.bounds.size.height-60);
-    [giveupAbilityButton setImage:[UIImage imageNamed:@"no_target_button"] forState:UIControlStateNormal];
+    giveupAbilityButton.buttonStyle = CFButtonStyleWarning;
+    giveupAbilityButton.label.text = @"No Target";
+    [giveupAbilityButton setTextSize:10];
+    //[giveupAbilityButton setImage:[UIImage imageNamed:@"no_target_button"] forState:UIControlStateNormal];
     [giveupAbilityButton addTarget:self action:@selector(noTargetButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     _gameOverBlockingView = [[UIView alloc] initWithFrame:self.view.bounds];
@@ -630,6 +646,8 @@ BOOL leftHandViewZone = NO;
 -(void) endTurn{
     //tell the gameModel to end turn
     [self.gameModel endTurn: currentSide];
+    
+    [self endTurnTutorial];
     
     int previousSide = currentSide;
     
@@ -1161,7 +1179,10 @@ BOOL leftHandViewZone = NO;
         if (CGRectContainsPoint(enemyHeroView.bounds, relativePoint))
         {
             if ([self.gameModel validAttack:currentCard target:(MonsterCardModel*)enemyHeroView.cardModel])
+            {
                 [self attackHero:currentCard target:(MonsterCardModel*) enemyHeroView.cardModel fromSide:currentSide];
+                [self cardAttacksTutorial];
+            }
         }
         else
         {
@@ -1177,7 +1198,10 @@ BOOL leftHandViewZone = NO;
                 if (CGRectContainsPoint(cardView.bounds, relativePoint))
                 {
                     if ([self.gameModel validAttack:currentCard target:(MonsterCardModel*)card])
+                    {
                         [self attackCard:currentCard target:(MonsterCardModel*)card fromSide:currentSide];
+                        [self cardAttacksTutorial];
+                    }
                     break;
                 }
             }
@@ -1359,7 +1383,7 @@ BOOL leftHandViewZone = NO;
         //cardView.center = self.view.center;
     }
     
-    [self.gameModel summonCard: card side: side];
+    [self.gameModel summonCard:card side:side];
     
     if ([card isKindOfClass: [MonsterCardModel class]])
     {
@@ -1384,6 +1408,9 @@ BOOL leftHandViewZone = NO;
     
     //update hand's view at the end
     [self updateHandsView:side];
+    
+    if (_isTutorial)
+        [self summonedCardTutorial:card fromSide:side];
 }
 
 -(void)setAllViews:(BOOL)state
@@ -1753,11 +1780,25 @@ BOOL leftHandViewZone = NO;
                      }];
 }
 
-/*
+-(void)viewWillAppear:(BOOL)animated
+{
+    UIViewController *vc = [self presentedViewController];
+    
+    if (_isTutorial)
+    {
+        
+        if ([vc isKindOfClass:[CardEditorViewController class]])
+        {
+            [self returnedFromCardEditorTutorial];
+        }
+    }
+}
+
 -(void)modalScreen
 {
-    //darkFilter.alpha = 0.1; //because apparently 0 alpha = cannot be interacted...
-    //[self.view addSubview:darkFilter];
+    darkFilter.alpha = 3.f/255; //because apparently 0 alpha = cannot be interacted...
+    [self.view addSubview:darkFilter];
+    
     [self.handsView setUserInteractionEnabled:NO];
     //[self.uiView setUserInteractionEnabled:NO];
     [self.backgroundView setUserInteractionEnabled:NO];
@@ -1767,14 +1808,14 @@ BOOL leftHandViewZone = NO;
 
 -(void)unmodalScreen
 {
-    //[darkFilter removeFromSuperview];
+    [darkFilter removeFromSuperview];
  
     [self.handsView setUserInteractionEnabled:YES];
     //[self.uiView setUserInteractionEnabled:YES];
     [self.backgroundView setUserInteractionEnabled:YES];
     [self.endTurnButton setUserInteractionEnabled:YES];
     [self.fieldView setUserInteractionEnabled:YES];
-}*/
+}
 
 //block delay functions
 - (void)performBlock:(void (^)())block

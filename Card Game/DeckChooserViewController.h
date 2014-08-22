@@ -10,6 +10,7 @@
 #import "DeckTableView.h"
 #import "DeckModel.h"
 #import "CFLabel.h"
+#import "CFButton.h"
 
 @interface DeckChooserViewController : UIViewController
 
@@ -21,7 +22,7 @@
 @property (strong)CFLabel*titleBackground;
 @property(strong)StrokedLabel*chosenDeckNameLabel;
 @property (strong)UILabel*chosenDeckElementSummaryLabel, *chosenDeckTagsLabel;
-@property (strong)UIButton*chooseDeckButton,*backButton;
+@property (strong)CFButton*chooseDeckButton,*backButton;
 @property (strong)DeckModel*currentDeck;
 @property(strong)UIViewController *nextScreen;
 

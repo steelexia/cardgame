@@ -11,12 +11,13 @@
 #import "CardView.h"
 #import "StrokedLabel.h"
 #import "CardEditorViewController.h"
+#import "CFButton.h"
 
 @interface StoreViewController : UIViewController <UITextFieldDelegate>
 
 @property (strong) StoreCardsCollectionView *cardsView;
 
-@property (strong)UIButton*backButton;
+@property (strong)CFButton*backButton;
 @property (strong)UIViewController*previousScreen;
 @property (strong)StrokedLabel *userGoldLabel, *userLikesLabel, *userCardLabel;
 /** Cards loaded from last query. No query is required if only filters are being changed. */
@@ -32,24 +33,24 @@
 @property (strong)UIView*darkFilter;
 @property (strong)CardView*cardView;
 @property (strong)PFObject*cardPF;
-@property (strong)UIButton*buyButton,*sellButton,*editButton,*likeButton;
+@property (strong)CFButton*buyButton,*sellButton,*editButton,*likeButton;
 @property (strong)StrokedLabel*creatorLabel, *idLabel, *rarityLabel, *rarityTextLabel, *likesLabel, *goldLabel;
 @property (strong)StrokedLabel*likeHintLabel, *editHintLabel, *buyHintLabel;
 @property (strong)UILabel*cardTagsLabel;
 
 @property (strong)UIActivityIndicatorView*activityIndicator;
 @property(strong) UILabel *activityLabel;
-@property (strong)UIButton*activityFailedButton;
+@property (strong)CFButton*activityFailedButton;
 
 //search views
 @property (strong)UIView*searchView;
-@property (strong)UIButton*searchToggleButton;
+@property (strong)CFButton*searchToggleButton;
 @property (strong)UITextField*searchNameField, *searchTagsField, *searchIDField;
 
 //filter views
 @property (strong)UIView*filterView;
-@property (strong)UIButton*filterToggleButton;
-@property (strong)UIButton*likedButton, *ownedButton, *stockedButton, *deckTagsButton;
+@property (strong)CFButton*filterToggleButton;
+@property (strong)CFButton*likedButton, *ownedButton, *stockedButton, *deckTagsButton;
 @property (strong)NSMutableArray*costFilterButtons,*rarityFilterButtons,*elementFilterButtons;
 
 /** Hides card already owned if YES */

@@ -183,3 +183,4 @@ NSString *cardMainFont;
 NSString *cardMainFontBlack;
 
 UIImage*placeHolderImage;
+UIImage*PLAYER_FIRST_CARD_IMAGE;

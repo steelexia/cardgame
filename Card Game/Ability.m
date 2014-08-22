@@ -552,7 +552,7 @@
     if (shouldHighlightValue)
     {
         NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
-        [attributes addEntriesFromDictionary:@{NSForegroundColorAttributeName:COLOUR_INTERFACE_BLUE}];
+        [attributes addEntriesFromDictionary:@{NSForegroundColorAttributeName:COLOUR_INTERFACE_BLUE_PRESSED}];
         
         [attriDescription setAttributes:attributes range:[description rangeOfString:valueDescription]];
     }

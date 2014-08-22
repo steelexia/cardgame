@@ -22,6 +22,7 @@
         _label.textColor = [UIColor whiteColor];
         _label.backgroundColor = [UIColor clearColor];
         _label.font = [UIFont fontWithName:cardMainFont size:10];
+        _label.numberOfLines = 0;
         //[_label setMinimumScaleFactor:10.f/30];
         _label.textAlignment = NSTextAlignmentCenter;
         _label.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
@@ -80,7 +81,7 @@
     {
         //no effect
     }
-    else if (self.state != UIControlStateDisabled)
+    else if (self.enabled)
         [self updateViewPressed];
 }
 
@@ -92,26 +93,43 @@
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    BOOL originalSelected = self.selected;
     [super touchesEnded:touches withEvent:event];
     
-    if (_buttonStyle == CFButtonStyleRadio)
-        [self setSelected:self.selected];
-    else
-        [self setSelected:!self.selected];
+    CGPoint touchPoint = [[touches anyObject] locationInView:self];
+    //touches ended inside
+    if (CGRectContainsPoint(self.bounds, touchPoint))
+    {
+        if (_buttonStyle == CFButtonStyleRadio)
+            [self setSelected:YES];
+        else
+            [self setSelected:!originalSelected];
+        
+        NSLog(@"touched up inside");
+    }
+    
     [self updateView];
 }
 
 -(void)updateView
 {
-    if (self.state == UIControlStateDisabled)
+    if (!self.enabled)
     {
         _label.textColor = [UIColor lightGrayColor];
         self.backgroundColor = COLOUR_INTERFACE_GRAY;
     }
-    else if (self.state == UIControlStateSelected)
+    else if (self.selected)
     {
-        _label.textColor = [UIColor whiteColor];
-        self.backgroundColor = COLOUR_INTERFACE_BLUE;
+        if (_buttonStyle == CFButtonStyleWarning)
+        {
+            _label.textColor = [UIColor whiteColor];
+            self.backgroundColor = COLOUR_INTERFACE_RED;
+        }
+        else
+        {
+            _label.textColor = [UIColor whiteColor];
+            self.backgroundColor = COLOUR_INTERFACE_BLUE;
+        }
     }
     else
     {
@@ -122,20 +140,37 @@
         }
         else
         {
-            _label.textColor = [UIColor whiteColor];
-            self.backgroundColor = COLOUR_INTERFACE_BLUE;
+            if (_buttonStyle == CFButtonStyleWarning)
+            {
+                _label.textColor = [UIColor whiteColor];
+                self.backgroundColor = COLOUR_INTERFACE_RED;
+            }
+            else
+            {
+                _label.textColor = [UIColor whiteColor];
+                self.backgroundColor = COLOUR_INTERFACE_BLUE;
+            }
         }
     }
 }
 
 -(void)updateViewPressed
 {
-    self.backgroundColor = COLOUR_INTERFACE_BLUE_PRESSED;
-    _label.textColor = [UIColor lightGrayColor];
+    if (_buttonStyle == CFButtonStyleWarning)
+    {
+        _label.textColor = [UIColor lightGrayColor];
+        self.backgroundColor = COLOUR_INTERFACE_RED_PRESSED;
+    }
+    else
+    {
+        self.backgroundColor = COLOUR_INTERFACE_BLUE_PRESSED;
+        _label.textColor = [UIColor lightGrayColor];
+    }
 }
 
 -(void)setEnabled:(BOOL)enabled
 {
+    NSLog(@"button enabled to: %d", enabled);
     [super setEnabled:enabled];
     if (!enabled)
         self.selected = NO;
@@ -145,6 +180,7 @@
 
 -(void)setSelected:(BOOL)selected
 {
+    NSLog(@"button selected to: %d", selected);
     [super setSelected:selected];
     [self updateView];
 }

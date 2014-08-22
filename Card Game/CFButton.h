@@ -25,6 +25,8 @@
 enum CFButtonStyle
 {
     CFButtonStyleRegular,
+    /** Only changes looks */
+    CFButtonStyleWarning,
     CFButtonStyleToggle,
     CFButtonStyleRadio,
 };

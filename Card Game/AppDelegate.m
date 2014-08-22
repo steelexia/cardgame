@@ -38,7 +38,6 @@ NSString*ACCOUNT_NAME = @"default_account";
     NSError*error;
     NSString *password = [SSKeychain passwordForService:SERVICE_NAME account:ACCOUNT_NAME error:&error];
     
-    
     //new account
     if (error || password == nil)
     {

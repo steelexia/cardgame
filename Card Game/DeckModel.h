@@ -37,6 +37,7 @@
 
 /** Adds a CardModel into cards. Returns NO if contains duplicate, not a CardModel, or deck is full */
 -(BOOL) addCard: (CardModel*) cardModel;
+-(BOOL) insertCard: (CardModel*) cardModel atIndex:(NSUInteger)index;
 
 /** Returns the card at the index */
 -(CardModel*) getCardAtIndex: (int) index;

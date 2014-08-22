@@ -45,6 +45,16 @@ const int MAX_CARDS_IN_DECK = 20;
     return YES;
 }
 
+-(BOOL) insertCard: (CardModel*) cardModel atIndex:(NSUInteger)index
+{
+    //TODO check for dup?
+    if (![cardModel isKindOfClass: [CardModel class]])
+        return NO;
+    
+    [_cards insertObject:cardModel atIndex:index];
+    return YES;
+}
+
 -(CardModel*) getCardAtIndex: (int) index
 {
     return [self.cards objectAtIndex:index];

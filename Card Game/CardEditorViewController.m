@@ -41,7 +41,7 @@ const int MIN_COST = 0, COST_INCREMENT = 1; //maxCost is an array
 
 UITextField *nameTextField;
 
-UIButton *damageIncButton, *damageDecButton, *lifeIncButton, *lifeDecButton, *cdIncButton, *cdDecButton, *costIncButton, *costDecButton;
+CFButton *damageIncButton, *damageDecButton, *lifeIncButton, *lifeDecButton, *cdIncButton, *cdDecButton, *costIncButton, *costDecButton;
 
 /** Transparent views used to register touch events for enabling the buttons for editing the stats. */
 UIView*damageEditArea, *lifeEditArea, *costEditArea, *cdEditArea, *imageEditArea, *elementEditArea, *abilityEditArea;
@@ -55,7 +55,7 @@ StrokedLabel*currentCostLabel, *maxCostLabel;
 AbilityTableView *abilityNewTableView, *abilityExistingTableView;
 
 UILabel*abilityValueLabel;
-UIButton *abilityIncButton, *abilityDecButton, *abilityAddButton, *abilityRemoveButton;
+CFButton *abilityIncButton, *abilityDecButton, *abilityAddButton, *abilityRemoveButton;
 
 UILabel*tagsLabel;
 UITextField*tagsField;
@@ -67,7 +67,7 @@ CFButton *monsterCardButton, *spellCardButton;
 
 CFButton *saveCardButton, *cancelCardButton, *randomizeCardButton;
 
-UIButton *saveCardConfirmButton, *cancelCardConfirmButton, *confirmCancelButon;
+CFButton *saveCardConfirmButton, *cancelCardConfirmButton, *confirmCancelButon;
 
 UILabel *saveCardConfirmLabel, *cancelCardConfirmLabel;
 
@@ -77,7 +77,7 @@ UILabel *darkFilter;
 /** Stuff for element selection */
 StrokedLabel *neutralLabel, *fireLabel, *iceLabel, *lightningLabel, *earthLabel, *lightLabel, *darkLabel;
 
-UIButton*elementConfirmButton;
+CFButton*elementConfirmButton;
 
 UILabel *elementDescriptionLabel;
 
@@ -85,14 +85,16 @@ UIImageView*pointsImageBackground;
 
 /** Image upload stuff */
 UIView*imageUploadView;
-UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
+CFButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
 
+UIImage*CARD_EDITOR_EMPTY_IMAGE;
 
 - (id)initWithMode: (enum CardEditorMode)editorMode WithCard:(CardModel*)card
 {
     self = [super init];
     if (self) {
         _editorMode = editorMode;
+        CARD_EDITOR_EMPTY_IMAGE = [UIImage imageNamed:@"card_image_cardeditor_empty"];
         
         if (card != nil)
         {
@@ -155,69 +157,69 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     
     
     CGPoint attackLabelPoint = [self.view convertPoint:self.currentCardView.attackLabel.center fromView:self.currentCardView];
-    damageIncButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
+    damageIncButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
     damageIncButton.center = CGPointMake(attackLabelPoint.x, attackLabelPoint.y - 28);
     [damageIncButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateNormal];
-    [damageIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
+    //[damageIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
     [damageIncButton addTarget:self action:@selector(damageIncButtonPressed)    forControlEvents:UIControlEventTouchDown];
     
     //[self.view addSubview:damageIncButton];
     
-    damageDecButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
+    damageDecButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
     damageDecButton.center = CGPointMake(attackLabelPoint.x, attackLabelPoint.y + 32);
     [damageDecButton setImage:[UIImage imageNamed:@"decrement_button"] forState:UIControlStateNormal];
-    [damageDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
+    //[damageDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
     [damageDecButton addTarget:self action:@selector(damageDecButtonPressed)    forControlEvents:UIControlEventTouchDown];
     
     //[self.view addSubview:damageDecButton];
     
     CGPoint lifeLabelPoint = [self.view convertPoint:self.currentCardView.lifeLabel.center fromView:self.currentCardView];
-    lifeIncButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
+    lifeIncButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
     lifeIncButton.center = CGPointMake(lifeLabelPoint.x, lifeLabelPoint.y - 28);
     [lifeIncButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateNormal];
-    [lifeIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
+    //[lifeIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
     [lifeIncButton addTarget:self action:@selector(lifeIncButtonPressed)    forControlEvents:UIControlEventTouchDown];
     
     //[self.view addSubview:lifeIncButton];
     
-    lifeDecButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
+    lifeDecButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
     lifeDecButton.center = CGPointMake(lifeLabelPoint.x, lifeLabelPoint.y + 32);
     [lifeDecButton setImage:[UIImage imageNamed:@"decrement_button"] forState:UIControlStateNormal];
-    [lifeDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
+    //[lifeDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
     [lifeDecButton addTarget:self action:@selector(lifeDecButtonPressed)    forControlEvents:UIControlEventTouchDown];
     
     //[self.view addSubview:lifeDecButton];
     
     CGPoint cdLabelPoint = [self.view convertPoint:self.currentCardView.cooldownLabel.center fromView:self.currentCardView];
-    cdIncButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
+    cdIncButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
     cdIncButton.center = CGPointMake(cdLabelPoint.x, cdLabelPoint.y - 32);
     [cdIncButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateNormal];
-    [cdIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
+    //[cdIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
     [cdIncButton addTarget:self action:@selector(cdIncButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     //[self.view addSubview:cdIncButton];
     
-    cdDecButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
+    cdDecButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
     cdDecButton.center = CGPointMake(cdLabelPoint.x, cdLabelPoint.y + 34);
     [cdDecButton setImage:[UIImage imageNamed:@"decrement_button"] forState:UIControlStateNormal];
-    [cdDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
+    //[cdDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
     [cdDecButton addTarget:self action:@selector(cdDecButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     //[self.view addSubview:cdDecButton];
     
     CGPoint costLabelPoint = [self.view convertPoint:self.currentCardView.costLabel.center fromView:self.currentCardView];
-    costIncButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
+    costIncButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
     costIncButton.center = CGPointMake(costLabelPoint.x, costLabelPoint.y - 36);
     [costIncButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateNormal];
-    [costIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
+    //[costIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
     [costIncButton addTarget:self action:@selector(costIncButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     //[self.view addSubview:costIncButton];
     
-    costDecButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
+    costDecButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
     costDecButton.center = CGPointMake(costLabelPoint.x, costLabelPoint.y + 38);
     [costDecButton setImage:[UIImage imageNamed:@"decrement_button"] forState:UIControlStateNormal];
-    [costDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
+    //[costDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
     [costDecButton addTarget:self action:@selector(costDecButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     //[self.view addSubview:costDecButton];
@@ -230,9 +232,7 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     
     //imageEditArea.backgroundColor = [UIColor redColor];
     //imageEditArea.alpha = 0.5;
-    
-    if (_editorMode == cardEditorModeCreation)
-        [self.view addSubview:imageEditArea];
+    [self.view addSubview:imageEditArea];
     
     damageEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 60, 36)];
     damageEditArea.center = CGPointMake(attackLabelPoint.x, attackLabelPoint.y);
@@ -322,49 +322,39 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     
     [self.view addSubview:tagsField];
     
-    if (_editorMode != cardEditorModeCreation)
-    {
-        [tagsField setEnabled:NO];
-        [tagsField setBackgroundColor:COLOUR_INTERFACE_GRAY];
-        [tagsField setPlaceholder:@""];
-    }
-    
     tagsLabel = [[UILabel alloc] initWithFrame:CGRectMake(80, SCREEN_HEIGHT-24, 80, 20)];
     tagsLabel.font = [UIFont fontWithName:cardMainFont size:16];
     tagsLabel.textColor = [UIColor blackColor];
     tagsLabel.text = @"Tags:";
     [self.view addSubview:tagsLabel];
     
-    if (_editorMode != cardEditorModeCreation)
-        [tagsLabel setTextColor:COLOUR_INTERFACE_GRAY];
-    
-    abilityIncButton = [[UIButton alloc] initWithFrame:CGRectMake(270, 222, 46, 32)];
+    abilityIncButton = [[CFButton alloc] initWithFrame:CGRectMake(270, 222, 46, 32)];
     [abilityIncButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateNormal];
-    [abilityIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
+    //[abilityIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
     [abilityIncButton addTarget:self action:@selector(abilityIncButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [abilityIncButton setEnabled:NO];
     
     //[self.view addSubview:abilityIncButton];
     
-    abilityDecButton = [[UIButton alloc] initWithFrame:CGRectMake(270, 258, 46, 32)];
+    abilityDecButton = [[CFButton alloc] initWithFrame:CGRectMake(270, 258, 46, 32)];
     [abilityDecButton setImage:[UIImage imageNamed:@"decrement_button"] forState:UIControlStateNormal];
-    [abilityDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
+    //[abilityDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
     [abilityDecButton addTarget:self action:@selector(abilityDecButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [abilityDecButton setEnabled:NO];
     
     //[self.view addSubview:abilityDecButton];
     
-    abilityRemoveButton = [[UIButton alloc] initWithFrame:CGRectMake(270, 314, 46, 32)];
+    abilityRemoveButton = [[CFButton alloc] initWithFrame:CGRectMake(270, 314, 46, 32)];
     [abilityRemoveButton setImage:[UIImage imageNamed:@"remove_deck_button"] forState:UIControlStateNormal];
-    [abilityRemoveButton setImage:[UIImage imageNamed:@"remove_deck_button_gray"] forState:UIControlStateDisabled];
+    //[abilityRemoveButton setImage:[UIImage imageNamed:@"remove_deck_button_gray"] forState:UIControlStateDisabled];
     [abilityRemoveButton addTarget:self action:@selector(abilityRemoveButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [abilityRemoveButton setEnabled:NO];
     
     //[self.view addSubview:abilityRemoveButton];
     
-    abilityAddButton = [[UIButton alloc] initWithFrame:CGRectMake(270, SCREEN_HEIGHT - 60, 46, 32)];
+    abilityAddButton = [[CFButton alloc] initWithFrame:CGRectMake(270, SCREEN_HEIGHT - 60, 46, 32)];
     [abilityAddButton setImage:[UIImage imageNamed:@"add_deck_button"] forState:UIControlStateNormal];
-    [abilityAddButton setImage:[UIImage imageNamed:@"add_deck_button_gray"] forState:UIControlStateDisabled];
+    //[abilityAddButton setImage:[UIImage imageNamed:@"add_deck_button_gray"] forState:UIControlStateDisabled];
     [abilityAddButton addTarget:self action:@selector(abilityAddButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [abilityAddButton setEnabled:NO];
     
@@ -415,9 +405,6 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     [monsterCardButton addTarget:self action:@selector(monsterButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:monsterCardButton];
     
-    if (_editorMode != cardEditorModeCreation)
-        [monsterCardButton setEnabled:NO];
-    
     spellCardButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 60, 50)];
     //[spellCardButton setImage:[UIImage imageNamed:@"spell_button"] forState:UIControlStateNormal];
     //[spellCardButton setImage:[UIImage imageNamed:@"spell_button_gray"] forState:UIControlStateDisabled];
@@ -426,9 +413,6 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     spellCardButton.center = CGPointMake(35, 105);
     [spellCardButton addTarget:self action:@selector(spellButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:spellCardButton];
-    
-    if (_editorMode != cardEditorModeCreation)
-        [spellCardButton setEnabled:NO];
     
     saveCardButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 60, 40)];
     //[saveCardButton setImage:[UIImage imageNamed:@"save_card_button"] forState:UIControlStateNormal];
@@ -465,24 +449,23 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     saveCardConfirmLabel.textAlignment = NSTextAlignmentCenter;
     saveCardConfirmLabel.lineBreakMode = NSLineBreakByWordWrapping;
     saveCardConfirmLabel.numberOfLines = 0;
-    if (_editorMode == cardEditorModeCreation)
-        saveCardConfirmLabel.text = @"Are you sure you want to create this card? You will not be able to edit it again.";
     if (_editorMode == cardEditorModeVoting)
         saveCardConfirmLabel.text = @"Are you sure you want to cast your vote? You will not be able to edit it again.";
+    else
+        saveCardConfirmLabel.text = @"Are you sure you want to create this card? You will not be able to edit it again.";
     [saveCardConfirmLabel sizeToFit];
     
-    saveCardConfirmButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    saveCardConfirmButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    [saveCardConfirmButton setTextSize:16];
+    saveCardConfirmButton.label.text = @"Yes";
     saveCardConfirmButton.center = CGPointMake(SCREEN_WIDTH/2 - 80, SCREEN_HEIGHT - 60);
-    [saveCardConfirmButton setImage:[UIImage imageNamed:@"yes_button"] forState:UIControlStateNormal];
+    //[saveCardConfirmButton setImage:[UIImage imageNamed:@"yes_button"] forState:UIControlStateNormal];
     
-    if (_editorMode == cardEditorModeCreation)
-        [saveCardConfirmButton addTarget:self action:@selector(saveCardConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-    else if (_editorMode == cardEditorModeVoting)
-        [saveCardConfirmButton addTarget:self action:@selector(voteCardConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-    
-    confirmCancelButon = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    confirmCancelButon = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    [confirmCancelButon setTextSize:16];
+    confirmCancelButon.label.text = @"No";
     confirmCancelButon.center = CGPointMake(SCREEN_WIDTH/2 + 80, SCREEN_HEIGHT - 60);
-    [confirmCancelButon setImage:[UIImage imageNamed:@"no_button"] forState:UIControlStateNormal];
+    //[confirmCancelButon setImage:[UIImage imageNamed:@"no_button"] forState:UIControlStateNormal];
     [confirmCancelButon addTarget:self action:@selector(confirmCancelButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     cancelCardConfirmLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/4, SCREEN_WIDTH*6/8, SCREEN_HEIGHT)];
@@ -495,14 +478,20 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     cancelCardConfirmLabel.text = @"Are you sure you want to cancel? All progress will be lost.";
     [cancelCardConfirmLabel sizeToFit];
     
-    cancelCardConfirmButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    cancelCardConfirmButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    [cancelCardConfirmButton setTextSize:16];
     cancelCardConfirmButton.center = CGPointMake(SCREEN_WIDTH/2 - 80, SCREEN_HEIGHT - 60);
-    [cancelCardConfirmButton setImage:[UIImage imageNamed:@"yes_button"] forState:UIControlStateNormal];
+    cancelCardConfirmButton.label.text = @"Yes";
+    //[cancelCardConfirmButton setImage:[UIImage imageNamed:@"yes_button"] forState:UIControlStateNormal];
     [cancelCardConfirmButton addTarget:self action:@selector(cancelCardConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     darkFilter = [[UILabel alloc] initWithFrame:self.view.bounds];
     darkFilter.backgroundColor = [[UIColor alloc]initWithHue:0 saturation:0 brightness:0 alpha:0.8];
     [darkFilter setUserInteractionEnabled:YES]; //blocks all interaction behind it
+    
+    _modalFilter = [[UILabel alloc] initWithFrame:self.view.bounds];
+    _modalFilter.backgroundColor = [[UIColor alloc]initWithHue:0 saturation:0 brightness:0 alpha:0.8];
+    [_modalFilter setUserInteractionEnabled:YES]; //blocks all interaction behind it
     
     //----------------------element edit screen--------------------//
     neutralLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
@@ -576,9 +565,11 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     [darkLabel setTextColor:COLOUR_DARK];
     [darkLabel setText:[CardModel elementToString:elementDark]];
     
-    elementConfirmButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    elementConfirmButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     elementConfirmButton.center = CGPointMake(SCREEN_WIDTH/2 + 80, SCREEN_HEIGHT - 60);
-    [elementConfirmButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
+    elementConfirmButton.label.text = @"Ok";
+    [elementConfirmButton setTextSize:16];
+    //[elementConfirmButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
     [elementConfirmButton addTarget:self action:@selector(elementConfirmButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
     elementDescriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(140, SCREEN_HEIGHT/6, SCREEN_WIDTH-140-20, SCREEN_HEIGHT)];
@@ -615,20 +606,24 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     upload2Label.text = @"Upload from:";
     [imageUploadView addSubview:upload2Label];
     
-    uploadFromFileButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
-    [uploadFromFileButton setImage:[UIImage imageNamed:@"upload_from_file_button"] forState:UIControlStateNormal];
+    uploadFromFileButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
+    uploadFromFileButton.label.text = @"File";
+    [uploadFromFileButton setTextSize:18];
+    //[uploadFromFileButton setImage:[UIImage imageNamed:@"upload_from_file_button"] forState:UIControlStateNormal];
     uploadFromFileButton.center = CGPointMake(SCREEN_WIDTH/3, SCREEN_HEIGHT/2+50);
     [imageUploadView addSubview:uploadFromFileButton];
     [uploadFromFileButton addTarget:self action:@selector(uploadFromFileButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
-    uploadFromCameraButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
-    [uploadFromCameraButton setImage:[UIImage imageNamed:@"upload_from_camera_button"] forState:UIControlStateNormal];
-    [uploadFromCameraButton setImage:[UIImage imageNamed:@"upload_from_camera_button_gray"] forState:UIControlStateDisabled];
+    uploadFromCameraButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
+    uploadFromCameraButton.label.text = @"Camera";
+    [uploadFromCameraButton setTextSize:18];
+    //[uploadFromCameraButton setImage:[UIImage imageNamed:@"upload_from_camera_button"] forState:UIControlStateNormal];
+    //[uploadFromCameraButton setImage:[UIImage imageNamed:@"upload_from_camera_button_gray"] forState:UIControlStateDisabled];
     uploadFromCameraButton.center = CGPointMake(SCREEN_WIDTH*2/3, SCREEN_HEIGHT/2+50);
     [imageUploadView addSubview:uploadFromCameraButton];
     [uploadFromCameraButton addTarget:self action:@selector(uploadFromCameraButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
-    uploadBackButton = [[UIButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
+    uploadBackButton = [[CFButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
     [uploadBackButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
     [uploadBackButton addTarget:self action:@selector(uploadBackButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [imageUploadView addSubview:uploadBackButton];
@@ -649,14 +644,18 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     _cardUploadLabel.text = [NSString stringWithFormat:@"Uploading Card..."];
     [_cardUploadIndicator addSubview:_cardUploadLabel];
     
-    _cardUploadFailedButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    _cardUploadFailedButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     _cardUploadFailedButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 60);
-    [_cardUploadFailedButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
+    [_cardUploadFailedButton setTextSize:16];
+    _cardUploadFailedButton.label.text = @"Ok";
+    //[_cardUploadFailedButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
     [_cardUploadFailedButton addTarget:self action:@selector(cardUploadFailedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
-    _cardVoteFailedButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    _cardVoteFailedButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    [_cardVoteFailedButton setTextSize:16];
     _cardVoteFailedButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 60);
-    [_cardVoteFailedButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
+    _cardVoteFailedButton.label.text = @"Ok";
+    //[_cardVoteFailedButton setImage:[UIImage imageNamed:@"ok_button"] forState:UIControlStateNormal];
     [_cardVoteFailedButton addTarget:self action:@selector(cardVoteFailedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
@@ -672,8 +671,20 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     [tapGesture setCancelsTouchesInView:NO];
     [self.view addGestureRecognizer:tapGesture];
     
+    
+    if (_editorMode == cardEditorModeVoting)
+        [saveCardConfirmButton addTarget:self action:@selector(voteCardConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    else
+        [saveCardConfirmButton addTarget:self action:@selector(saveCardConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
     if (_editorMode == cardEditorModeVoting)
     {
+        [tagsField setEnabled:NO];
+        [tagsField setBackgroundColor:COLOUR_INTERFACE_GRAY];
+        [tagsField setPlaceholder:@""];
+        [tagsLabel setTextColor:COLOUR_INTERFACE_GRAY];
+        [monsterCardButton setEnabled:NO];
+        [spellCardButton setEnabled:NO];
         abilityNewTableView.currentCard = _currentCardModel;
         abilityExistingTableView.currentCard = _currentCardModel;
     }
@@ -687,35 +698,134 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
         [elementEditArea removeFromSuperview];
         [abilityEditArea removeFromSuperview];
         [tagsField setEnabled:NO];
+        [tagsField setBackgroundColor:COLOUR_INTERFACE_GRAY];
+        [tagsField setPlaceholder:@""];
+        [tagsLabel setTextColor:COLOUR_INTERFACE_GRAY];
         [spellCardButton setEnabled:NO];
+        [monsterCardButton setEnabled:NO];
         [cancelCardButton setEnabled:NO];
         abilityNewTableView.tableView.alpha = 0.5;
+        [abilityNewTableView setUserInteractionEnabled:NO];
+        
+        CFLabel*tutorialOneLabel = [[CFLabel alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH*3/4,  SCREEN_HEIGHT/4)];
+        tutorialOneLabel.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - SCREEN_HEIGHT/3);
+        tutorialOneLabel.label.text = @"This is the card forging interface. Give your card an image and a name before pressing save. We'll ignore the other buttons for now.";
+        
+        [self.view addSubview:tutorialOneLabel];
     }
     else if (_editorMode == cardEditorModeTutorialTwo)
     {
+        if (userTutorialOneCardName != nil)
+            nameTextField.text = userTutorialOneCardName;
+        
         //disable element and ability views
-        [elementEditArea removeFromSuperview];
-        [abilityEditArea removeFromSuperview];
+        //[elementEditArea removeFromSuperview];
+        //[abilityEditArea removeFromSuperview];
         [spellCardButton setEnabled:NO];
+        [monsterCardButton setEnabled:NO];
         [cancelCardButton setEnabled:NO];
-        abilityNewTableView.tableView.alpha = 0.5;
+        [abilityEditArea removeFromSuperview];
+        
+        //unlocked after
+        [abilityNewTableView setUserInteractionEnabled:NO];
+        [elementEditArea removeFromSuperview];
+        
+        //[self modalScreen];
+        
+        self.tutOkButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
+        self.tutOkButton.label.text = @"Ok";
+        
+        self.tutLabel = [[CFLabel alloc] initWithFrame:CGRectMake(0,0,260,180)];
+        [self setTutLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT*3/4)];
+        [self.tutLabel setIsDialog:YES];
+        self.tutLabel.label.text = @"You can modify the cost, damage, life, and cooldown of the card by tapping on its icons.";
+        [self.tutOkButton addTarget:self action:@selector(tutorialPoints) forControlEvents:UIControlEventTouchUpInside];
+        [self.tutLabel.label setTextAlignment:NSTextAlignmentCenter];
+        [self.view addSubview:_tutLabel];
+        [self.view addSubview:_tutOkButton];
+        
+        [saveCardButton setUserInteractionEnabled:NO];
     }
-    
     //UIView*damageEditArea, *lifeEditArea, *costEditArea, *cdEditArea, *imageEditArea, *elementEditArea, *abilityEditArea;
     
     [self resetAbilityViews];
     [self selectElement: _currentCardModel.element];
     
     if (_editorMode == cardEditorModeVoting)
+    {
         [self setupExistingCard];
+        [imageEditArea removeFromSuperview];
+    }
     
     [self updateCost:self.currentCardModel];
     
     //opens up image selection
     if (_editorMode == cardEditorModeTutorialOne)
     {
-        [self openImageUploadScreen];
+        //[self openImageUploadScreen];
     }
+}
+
+-(void)tutorialPoints
+{
+    [self removeAllStatButtons];
+    self.tutLabel.label.text = @"Increasing the strength of the card will also increase the points indicated by the star icon. This number cannot exceed the maximum points, which can only be raised by increasing the resource cost of the card.";
+    
+    [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [self.tutOkButton addTarget:self action:@selector(tutorialAbility) forControlEvents:UIControlEventTouchUpInside];
+}
+
+-(void)tutorialAbility
+{
+    [self removeAllStatButtons];
+    [abilityExistingTableView setUserInteractionEnabled:YES];
+    [abilityNewTableView setUserInteractionEnabled:YES];
+    [damageEditArea removeFromSuperview];
+    [lifeEditArea removeFromSuperview];
+    [costEditArea removeFromSuperview];
+    [cdEditArea removeFromSuperview];
+    [self.view addSubview:abilityEditArea];
+    
+    [self setTutLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/4)];
+    
+    self.tutLabel.label.text = @"The list below shows the abilities you can add to the card. Abilities can have its specific value adjusted, and having different combinations of abilities can give bonuses and penalties to your points.";
+    
+    [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [self.tutOkButton addTarget:self action:@selector(tutorialElement) forControlEvents:UIControlEventTouchUpInside];
+}
+
+-(void)tutorialElement
+{
+    [self.view addSubview:elementEditArea];
+    self.tutLabel.label.text = @"You can also change the element of the card by clicking on the element icon, \"Neutral\" in this case. Elements do not directly affect the card, instead they allow different abilities to be added.";
+    
+    [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [self.tutOkButton addTarget:self action:@selector(tutorialTags) forControlEvents:UIControlEventTouchUpInside];
+}
+
+-(void)tutorialTags
+{
+    [self modalScreen];
+    
+    [self.view addSubview:damageEditArea];
+    [self.view addSubview:lifeEditArea];
+    [self.view addSubview:costEditArea];
+    [self.view addSubview:cdEditArea];
+    
+    self.tutLabel.label.text = @"Be sure to include at least 3 descriptive words as Tags for your card. This will help other players find it on the store. Press save after you're satisfied with your card.";
+    
+    [self.view bringSubviewToFront:self.tutOkButton];
+    [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
+}
+
+-(void)removeAllTutorialViews
+{
+    [self unmodalScreen];
+    
+    [saveCardButton setUserInteractionEnabled:YES];
+    [self.tutOkButton removeFromSuperview];
+    [self.tutLabel removeFromSuperview];
 }
 
 -(void)tapRegistered
@@ -1247,7 +1357,18 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     UIImage*originalImage = _currentCardView.cardImage.image;
     [_currentCardView removeFromSuperview];
     
-    _currentCardView = [[CardView alloc] initWithModel:_currentCardModel withImage:originalImage viewMode:cardViewModeEditor];
+    if (_editorMode == cardEditorModeTutorialTwo)
+    {
+        if (PLAYER_FIRST_CARD_IMAGE!=nil)
+            _currentCardView = [[CardView alloc] initWithModel:_currentCardModel withImage:PLAYER_FIRST_CARD_IMAGE viewMode:cardViewModeEditor];
+        else
+            _currentCardView = [[CardView alloc] initWithModel:_currentCardModel withImage:CARD_EDITOR_EMPTY_IMAGE viewMode:cardViewModeEditor];
+    }
+    else if (_currentCardModel.idNumber == NO_ID)
+        _currentCardView = [[CardView alloc] initWithModel:_currentCardModel withImage:CARD_EDITOR_EMPTY_IMAGE viewMode:cardViewModeEditor];
+    else
+        _currentCardView = [[CardView alloc] initWithModel:_currentCardModel withImage:originalImage viewMode:cardViewModeEditor];
+    
     _currentCardView.frontFacing = YES;
     _currentCardView.cardViewState = cardViewStateCardViewer;
     _currentCardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_EDITOR_SCALE, CARD_EDITOR_SCALE);
@@ -1361,6 +1482,8 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     
     [self updateCardTypeButtons];
     [self removeAllStatButtons];
+    [self abilityEditAreaSetEnabled:NO];
+    
     [self reloadCardView];
 }
 
@@ -1383,6 +1506,8 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     {
         monster.damage = 1400;
         monster.life = monster.maximumLife = 2600;
+        if (userTutorialOneCardName!=nil)
+            monster.name = userTutorialOneCardName;
     }
     
     if (self.currentCardModel!=nil)
@@ -1409,6 +1534,8 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     
     [self updateCardTypeButtons];
     [self removeAllStatButtons];
+    [self abilityEditAreaSetEnabled:NO];
+    
     [self reloadCardView];
 }
 
@@ -1497,7 +1624,6 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
                                                       [_cardUploadIndicator stopAnimating];
                                                       [_cardUploadIndicator removeFromSuperview];
                                                       
-                                                      //TODO
                                                       [self dismissViewControllerAnimated:YES completion:nil];
                                                   }];
                              }
@@ -2116,6 +2242,13 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
 {
     [self darkenScreen];
     
+    //tutorial one has no confirmation since the card is not actually sent online
+    if (_editorMode == cardEditorModeTutorialOne)
+    {
+        [self saveCardConfirmButtonPressed];
+        return;
+    }
+    
     saveCardConfirmLabel.alpha = 0;
     saveCardConfirmButton.alpha = 0;
     confirmCancelButon.alpha = 0;
@@ -2164,6 +2297,20 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
 -(void)saveCardConfirmButtonPressed
 {
     self.currentCardModel.name = nameTextField.text; //TODO not exactly the best place
+
+    //first tutorial's card is not actually published
+    if (_editorMode == cardEditorModeTutorialOne)
+    {
+        [self dismissViewControllerAnimated:YES completion:nil];
+        return;
+    }
+    
+    //TODO THIS IS JUST FOR TESTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if (_editorMode == cardEditorModeTutorialTwo)
+    {
+        [self dismissViewControllerAnimated:YES completion:nil];
+        return;
+    }
     
     NSString *lowerTags = [tagsField.text lowercaseString];
     NSMutableArray*lowerTagsArray = [NSMutableArray arrayWithArray:[lowerTags componentsSeparatedByString:@" "]];
@@ -2176,7 +2323,7 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     }
     
     self.currentCardModel.tags = noDupTags;
-    [userAllCards addObject:self.currentCardModel]; //TODO might not be needed once using parse
+    [userAllCards addObject:self.currentCardModel]; 
     [self publishCurrentCard];
 }
 
@@ -2339,6 +2486,23 @@ UIButton*uploadFromFileButton, *uploadFromCameraButton, *uploadBackButton;
     UIGraphicsEndImageContext();
     
     return newImage;
+}
+
+-(void)modalScreen
+{
+    _modalFilter.alpha = 3.f/255; //because apparently 0 alpha = cannot be interacted...
+    [self.view addSubview:_modalFilter];
+}
+
+-(void)unmodalScreen
+{
+    [_modalFilter removeFromSuperview];
+}
+
+-(void)setTutLabelCenter:(CGPoint) center
+{
+    self.tutLabel.center = center;
+    self.tutOkButton.center = CGPointMake(center.x, center.y + self.tutLabel.bounds.size.height/2 - 40);
 }
 
 //block delay functions

@@ -62,6 +62,8 @@
         [monster addBaseAbility: [[Ability alloc] initWithType:abilityHeroic castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
         [monster addBaseAbility: [[Ability alloc] initWithType:abilityAssassin castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
         [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:600]]];
+        
+        return monster;
     }
     else if ([levelID isEqualToString:@"d_2_c_2_l_4"])
     {
@@ -114,6 +116,7 @@
         [deck addCard:monster];
         
         //so the hand appears to be full but won't play any card
+        /*
         for (int i = 0; i < 2; i++)
         {
             monster = [[MonsterCardModel alloc] initWithIdNumber:999999 type:cardTypeSinglePlayer];
@@ -124,7 +127,7 @@
             monster.cooldown = monster.maximumCooldown = 1;
             
             [deck addCard:monster];
-        }
+        }*/
         
         //turn 2
         monster = [[MonsterCardModel alloc] initWithIdNumber:1003 type:cardTypeSinglePlayer];
@@ -136,7 +139,7 @@
         
         [deck addCard:monster];
         
-        //turn 3 shows taunt ability
+        //turn 3 shows taunt ability WARNING: do not change ID, do not add another spearman
         monster = [[MonsterCardModel alloc] initWithIdNumber:1002 type:cardTypeSinglePlayer];
         monster.rarity = cardRarityUncommon;
         monster.name = @"Goblin Spearman";
@@ -149,13 +152,14 @@
         [deck addCard:monster];
 
         //turn 4
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1001 type:cardTypeSinglePlayer];
-        monster.name = @"Goblin Skirmisher";
+        monster = [[MonsterCardModel alloc] initWithIdNumber:1004 type:cardTypeSinglePlayer];
+        monster.rarity = cardRarityUncommon;
+        monster.name = @"Goblin Petard";
         monster.damage = 600;
-        monster.life = monster.maximumLife = 1800;
-        monster.cost = 2;
+        monster.life = monster.maximumLife = 1000;
+        monster.cost = 4;
         monster.cooldown = monster.maximumCooldown = 1;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1200]]];
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:600]]];
         
         [deck addCard:monster];
         
@@ -170,17 +174,16 @@
         [deck addCard:monster];
         
         //turn 5
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1004 type:cardTypeSinglePlayer];
-        monster.rarity = cardRarityUncommon;
-        monster.name = @"Goblin Petard";
+        monster = [[MonsterCardModel alloc] initWithIdNumber:1001 type:cardTypeSinglePlayer];
+        monster.name = @"Goblin Skirmisher";
         monster.damage = 600;
-        monster.life = monster.maximumLife = 1000;
-        monster.cost = 4;
+        monster.life = monster.maximumLife = 1800;
+        monster.cost = 2;
         monster.cooldown = monster.maximumCooldown = 1;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:600]]];
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1200]]];
         
         [deck addCard:monster];
-
+        
         //turn 6
         monster = [[MonsterCardModel alloc] initWithIdNumber:1001 type:cardTypeSinglePlayer];
         monster.name = @"Goblin Skirmisher";
@@ -1277,6 +1280,8 @@
     //----chapter 1----//
     if ([levelID isEqualToString:@"d_1_c_1_l_1"])
     {
+        //not added here
+        /*
         monster = [[MonsterCardModel alloc] initWithIdNumber:900000 type:cardTypeSinglePlayer];
         monster.name = @"Custom Card";
         monster.damage = 1400;
@@ -1284,7 +1289,7 @@
         monster.cost = 1;
         monster.cooldown = monster.maximumCooldown = 1;
         
-        [deck addCard:monster];
+        [deck addCard:monster];*/
         
         monster = [[MonsterCardModel alloc] initWithIdNumber:900002 type:cardTypeSinglePlayer];
         monster.name = @"Card 1";
@@ -1333,6 +1338,8 @@
     }
     else if ([levelID isEqualToString:@"d_1_c_1_l_2"])
     {
+        //not actually added here
+        /*
         monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
         monster.name = @"Custom Card Stats Vary";
         monster.damage = 6000;
@@ -1341,6 +1348,7 @@
         monster.cooldown = monster.maximumCooldown = 1;
         
         [deck addCard:monster];
+         */
         
         monster = [[MonsterCardModel alloc] initWithIdNumber:900001 type:cardTypeSinglePlayer];
         monster.name = @"Card 0";

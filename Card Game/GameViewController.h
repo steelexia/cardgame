@@ -12,6 +12,7 @@
 #import "Level.h"
 #import "CFButton.h"
 #import "CFLabel.h"
+#import "CardEditorViewController.h"
 
 @class GameModel;
 
@@ -42,7 +43,7 @@
 /** Holds an array of abilities that are currently waiting to be casted on a selected target. Assumes all targetType is identical to the first ability. If this array is not empty, then it is assumed that the game is waiting for the player to pick a target. */
 @property (strong) NSMutableArray *currentAbilities;
 
-@property (strong) UIButton* endTurnButton;
+@property (strong) CFButton* endTurnButton;
 
 /** The card that has currently been maximized for viewing. While this is open, all other actions are disabled. This not only shows the card in large but also all the applied abilities that don't fit on the card. */
 @property (strong) CardView* viewingCardView;
@@ -74,6 +75,8 @@
 @property (strong) CFLabel *tutLabel;
 @property (strong) CFButton*tutOkButton;
 @property (strong) UIImageView*arrowImage;
+/** Keeps the CEVC to access the card that has been created for tutorial one */
+@property (strong)CardEditorViewController *cevc;
 
 /** updates the position of all hands with the gameModel, adding views to cards that don't have one yet */
 //-(void)updateHandsView;
@@ -104,10 +107,8 @@
 
 -(void)newGame;
 
-/*
 -(void)modalScreen;
 -(void)unmodalScreen;
-*/
  
 /** Quickly enable/disable all views */
 -(void)setAllViews:(BOOL)state;
