@@ -10,6 +10,8 @@
 #import "AbilityWrapper.h"
 #import "Campaign.h"
 #import "SSKeychain.h"
+#import "PickIAPHelper.h"
+
 
 @implementation AppDelegate
 
@@ -129,6 +131,7 @@ NSString*ACCOUNT_NAME = @"default_account";
      }
      */
     
+     [PickIAPHelper sharedInstance];
     
     
     
