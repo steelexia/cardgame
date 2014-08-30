@@ -205,7 +205,13 @@
 		90F80F9B19A2BEFA007571F4 /* CustomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F80F9A19A2BEFA007571F4 /* CustomView.m */; };
 		90F80F9E19A3D28E007571F4 /* GameViewController+Tutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F80F9D19A3D28E007571F4 /* GameViewController+Tutorial.m */; };
 		90F80FA119A3D3D9007571F4 /* arrow_left_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F80FA019A3D3D9007571F4 /* arrow_left_icon.png */; };
+<<<<<<< HEAD
 		90F80FA319A63F4C007571F4 /* card_image_cardeditor_empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F80FA219A63F4B007571F4 /* card_image_cardeditor_empty.png */; };
+=======
+		D394EE3119AE799400B6FEEA /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D394EE3019AE799400B6FEEA /* Parse.framework */; };
+		D394EE3519AE7F0400B6FEEA /* PickIAPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D394EE3419AE7F0400B6FEEA /* PickIAPHelper.m */; };
+		D394EE3719AE7F0A00B6FEEA /* IAPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D394EE3619AE7F0A00B6FEEA /* IAPHelper.m */; };
+>>>>>>> origin/inAppPurchase
 		FA4025971956331300FCCBAB /* DeckEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4025961956331300FCCBAB /* DeckEditorViewController.m */; };
 		FA543CB119A9784000E70529 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA543CB019A9784000E70529 /* Parse.framework */; };
 		FA6D50BB19B2203C0084F492 /* card_1001.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6D50B819B2203C0084F492 /* card_1001.png */; };
@@ -483,7 +489,15 @@
 		90F80F9C19A3D28E007571F4 /* GameViewController+Tutorial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GameViewController+Tutorial.h"; sourceTree = "<group>"; };
 		90F80F9D19A3D28E007571F4 /* GameViewController+Tutorial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GameViewController+Tutorial.m"; sourceTree = "<group>"; };
 		90F80FA019A3D3D9007571F4 /* arrow_left_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = arrow_left_icon.png; path = "Card Game/arrow_left_icon.png"; sourceTree = "<group>"; };
+<<<<<<< HEAD
 		90F80FA219A63F4B007571F4 /* card_image_cardeditor_empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_image_cardeditor_empty.png; path = "Card Game/card_image_cardeditor_empty.png"; sourceTree = "<group>"; };
+=======
+		D394EE3019AE799400B6FEEA /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "Card Game/Parse.framework"; sourceTree = "<group>"; };
+		D394EE3319AE7EFE00B6FEEA /* PickIAPHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PickIAPHelper.h; sourceTree = "<group>"; };
+		D394EE3419AE7F0400B6FEEA /* PickIAPHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickIAPHelper.m; sourceTree = "<group>"; };
+		D394EE3619AE7F0A00B6FEEA /* IAPHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IAPHelper.m; sourceTree = "<group>"; };
+		D394EE3819AE7F1100B6FEEA /* IAPHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IAPHelper.h; sourceTree = "<group>"; };
+>>>>>>> origin/inAppPurchase
 		FA4025951956331300FCCBAB /* DeckEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeckEditorViewController.h; sourceTree = "<group>"; };
 		FA4025961956331300FCCBAB /* DeckEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeckEditorViewController.m; sourceTree = "<group>"; };
 		FA543CB019A9784000E70529 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "Card Game/Parse.framework"; sourceTree = "<group>"; };
@@ -497,7 +511,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+<<<<<<< HEAD
 				FA543CB119A9784000E70529 /* Parse.framework in Frameworks */,
+=======
+				D394EE3119AE799400B6FEEA /* Parse.framework in Frameworks */,
+>>>>>>> origin/inAppPurchase
 				907D9C1B193E43A80037C0CF /* SystemConfiguration.framework in Frameworks */,
 				907D9C19193E439B0037C0CF /* StoreKit.framework in Frameworks */,
 				907D9C17193E43950037C0CF /* Security.framework in Frameworks */,
@@ -848,7 +866,11 @@
 		90F35295191595C200601130 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+<<<<<<< HEAD
 				FA543CB019A9784000E70529 /* Parse.framework */,
+=======
+				D394EE3019AE799400B6FEEA /* Parse.framework */,
+>>>>>>> origin/inAppPurchase
 				907D9C1A193E43A80037C0CF /* SystemConfiguration.framework */,
 				907D9C18193E439B0037C0CF /* StoreKit.framework */,
 				907D9C16193E43950037C0CF /* Security.framework */,
@@ -869,6 +891,7 @@
 		90F3529C191595C200601130 /* Card Game */ = {
 			isa = PBXGroup;
 			children = (
+				D394EE3219AE7EF000B6FEEA /* In App Purchase Code */,
 				90F80F8A19A27FA5007571F4 /* SSKeychain */,
 				90456ED0198D715700B807DC /* Store Screen */,
 				90DA4347195B25EE00E44AED /* Game Battle Screen */,
@@ -987,6 +1010,7 @@
 			name = Singleplayer;
 			sourceTree = "<group>";
 		};
+<<<<<<< HEAD
 		FA6D50B419AA41860084F492 /* CFViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -996,6 +1020,17 @@
 				90C528A6199D6CC100750C54 /* CFButton.m */,
 			);
 			name = CFViews;
+=======
+		D394EE3219AE7EF000B6FEEA /* In App Purchase Code */ = {
+			isa = PBXGroup;
+			children = (
+				D394EE3419AE7F0400B6FEEA /* PickIAPHelper.m */,
+				D394EE3319AE7EFE00B6FEEA /* PickIAPHelper.h */,
+				D394EE3819AE7F1100B6FEEA /* IAPHelper.h */,
+				D394EE3619AE7F0A00B6FEEA /* IAPHelper.m */,
+			);
+			name = "In App Purchase Code";
+>>>>>>> origin/inAppPurchase
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1196,6 +1231,7 @@
 				90DA4361195E6EA800E44AED /* UserModel.m in Sources */,
 				907D9BEA192515E70037C0CF /* Ability.m in Sources */,
 				90DA4368195F6D0800E44AED /* StrokedTextField.m in Sources */,
+				D394EE3719AE7F0A00B6FEEA /* IAPHelper.m in Sources */,
 				90F352B0191595C200601130 /* GameViewController.m in Sources */,
 				90DA43D01969DD9D00E44AED /* CDDeckModel.m in Sources */,
 				90F352D81915C8DB00601130 /* GameModel.m in Sources */,
@@ -1210,6 +1246,7 @@
 				90DA43351959D75700E44AED /* CustomCollectionView.m in Sources */,
 				90F7DB04199AD69C00D4FD97 /* Campaign.m in Sources */,
 				9032E12D19953EAE002A6725 /* CardVote.m in Sources */,
+				D394EE3519AE7F0400B6FEEA /* PickIAPHelper.m in Sources */,
 				90DA434A195B271900E44AED /* CustomTableView.m in Sources */,
 				90456ECC198D4DB500B807DC /* DeckCell.m in Sources */,
 				90F7DB01199ACF0C00D4FD97 /* CampaignMenuViewController.m in Sources */,
@@ -1392,8 +1429,28 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+<<<<<<< HEAD
 					"$(SRCROOT)/",
 					"\"$(PROJECT_DIR)/Card Game\"",
+=======
+					/Users/dmadmin/Desktop/Card,
+					Game/Card,
+					Game,
+					"$(PROJECT_DIR)/Card",
+					Game,
+					/Users/dmadmin/Desktop/Card,
+					Game/Card,
+					Game,
+					"$(PROJECT_DIR)/Card",
+					Game,
+					"$(PROJECT_DIR)/Card",
+					Game,
+					/Users/dmadmin/Desktop/Card,
+					Game/Card,
+					Game,
+					"$(PROJECT_DIR)/Card",
+					Game,
+>>>>>>> origin/inAppPurchase
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Card Game/cardgame-Prefix.pch";
@@ -1413,8 +1470,28 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+<<<<<<< HEAD
 					"$(SRCROOT)/",
 					"\"$(PROJECT_DIR)/Card Game\"",
+=======
+					/Users/dmadmin/Desktop/Card,
+					Game/Card,
+					Game,
+					"$(PROJECT_DIR)/Card",
+					Game,
+					/Users/dmadmin/Desktop/Card,
+					Game/Card,
+					Game,
+					"$(PROJECT_DIR)/Card",
+					Game,
+					"$(PROJECT_DIR)/Card",
+					Game,
+					/Users/dmadmin/Desktop/Card,
+					Game/Card,
+					Game,
+					"$(PROJECT_DIR)/Card",
+					Game,
+>>>>>>> origin/inAppPurchase
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Card Game/cardgame-Prefix.pch";

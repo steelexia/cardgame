@@ -11,6 +11,7 @@
 #import "UserModel.h"
 #import "SinglePlayerCards.h"
 #import "GameStore.h"
+#import "PickIAPHelper.h"
 
 @interface StoreViewController ()
 
@@ -33,6 +34,8 @@ int STORE_INITIAL_LOAD_AMOUNT = 96;
 int STORE_ADDITIONAL_INCREMENT = 16;
 
 CGSize keyboardSize;
+
+NSArray *_products;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -57,6 +60,8 @@ CGSize keyboardSize;
     }
     return self;
 }
+
+
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -2259,5 +2264,29 @@ CGSize keyboardSize;
 }
 
 - (BOOL)prefersStatusBarHidden {return YES;}
+
+-(void)viewDidAppear:(BOOL) animated{
+    [self getIAPData];
+}
+
+- (void)getIAPData {
+    _products = nil;
+    
+    [[PickIAPHelper sharedInstance] requestProductsWithCompletionHandler:^(BOOL success, NSArray *products) {
+        if (success) {
+            _products = products;
+            //[self setPricesAndValues];
+            
+            //[HUD hide:YES];
+            
+        }
+        else
+        {
+            NSLog(@"failure on get iap data");
+            
+        }
+        
+    }];
+}
 
 @end

@@ -10,6 +10,8 @@
 #import "AbilityWrapper.h"
 #import "Campaign.h"
 #import "SSKeychain.h"
+#import "PickIAPHelper.h"
+
 
 @implementation AppDelegate
 
@@ -134,6 +136,7 @@ const BOOL OFFLINE_DEBUGGING = NO;
      }
      */
     
+     [PickIAPHelper sharedInstance];
     
     
     
