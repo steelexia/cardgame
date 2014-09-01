@@ -315,14 +315,15 @@ DeckModel * allCards;
     [_activityFailedButton setTextSize:18];
     [_activityFailedButton addTarget:self action:@selector(activityFailedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
-    
-    _invalidDeckReasonsLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/4, SCREEN_WIDTH*6/8, SCREEN_HEIGHT)];
+    _invalidDeckReasonsLabel = [[UITextView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/8, SCREEN_WIDTH*6/8, SCREEN_HEIGHT*2/3)];
     _invalidDeckReasonsLabel.textColor = [UIColor whiteColor];
     _invalidDeckReasonsLabel.backgroundColor = [UIColor clearColor];
-    _invalidDeckReasonsLabel.font = [UIFont fontWithName:cardMainFont size:20];
-    _invalidDeckReasonsLabel.textAlignment = NSTextAlignmentCenter;
-    _invalidDeckReasonsLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    _invalidDeckReasonsLabel.numberOfLines = 10;
+    _invalidDeckReasonsLabel.font = [UIFont fontWithName:cardMainFont size:14];
+    [_invalidDeckReasonsLabel setDelegate:self];
+    //_invalidDeckReasonsLabel.textAlignment = NSTextAlignmentCenter;
+    [_invalidDeckReasonsLabel setUserInteractionEnabled:YES];
+    //_invalidDeckReasonsLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    //_invalidDeckReasonsLabel.numberOfLines = 30;
     
     _invalidDeckReasonsOkButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     _invalidDeckReasonsOkButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 60);
@@ -402,13 +403,13 @@ DeckModel * allCards;
     [self.view addSubview:_propertiesView];
     
     //-------------------filter view------------------//
-    _filterView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-40, SCREEN_WIDTH, 250)];
+    _filterView = [[CFLabel alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-40, self.view.bounds.size.width, 258)];
     [self.view insertSubview:_filterView aboveSubview:_deckView];
     [_filterView setUserInteractionEnabled:YES];
-    [_filterView setBackgroundColor:[UIColor whiteColor]];
+    [_filterView setBackgroundColor:COLOUR_INTERFACE_BLUE_DARK];
     
     //cost buttons
-    CGPoint costFilterStartPoint = CGPointMake(20, 20);
+    CGPoint costFilterStartPoint = CGPointMake(20, 24);
     _costFilterButtons = [NSMutableArray arrayWithCapacity:11];
     for (int i = 0; i < 11; i++)
     {
@@ -1394,10 +1395,10 @@ DeckModel * allCards;
         invalidDeckReasons = [NSString stringWithFormat:@"%@- %@\n", invalidDeckReasons, reason];
     
     
-    _invalidDeckReasonsLabel.frame = CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/6, SCREEN_WIDTH*6/8, SCREEN_HEIGHT);
+    //_invalidDeckReasonsLabel.frame = CGRectMake(SCREEN_WIDTH*1/10, SCREEN_HEIGHT/8, SCREEN_WIDTH*8/10, SCREEN_HEIGHT);
     _invalidDeckReasonsLabel.text = invalidDeckReasons;
     
-    [_invalidDeckReasonsLabel sizeToFit];
+    //[_invalidDeckReasonsLabel sizeToFit];
     
     [self darkenScreen];
     
@@ -1418,20 +1419,36 @@ DeckModel * allCards;
 
 -(void)deckLimitationsButtonPressed
 {
-    //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    DeckModel*deck = [[DeckModel alloc] init];
+    for (CardModel* card in self.deckView.currentCells)
+        [deck addCard:card];
+    NSArray*limits = [DeckModel getLimits:deck];
     
+    NSString *invalidDeckReasons = @"Limits in the deck:\n";
     
+    for (NSString *reason in limits)
+        invalidDeckReasons = [NSString stringWithFormat:@"%@- %@\n", invalidDeckReasons, reason];
     
+    //_invalidDeckReasonsLabel.frame = CGRectMake(SCREEN_WIDTH*1/10, SCREEN_HEIGHT/8, SCREEN_WIDTH*8/10, SCREEN_HEIGHT);
+    _invalidDeckReasonsLabel.text = invalidDeckReasons;
     
+    //[_invalidDeckReasonsLabel sizeToFit];
     
+    [self darkenScreen];
     
+    [self.view addSubview:_invalidDeckReasonsLabel];
+    [self.view addSubview:_invalidDeckReasonsOkButton];
     
+    _invalidDeckReasonsLabel.alpha = 0;
+    _invalidDeckReasonsOkButton.alpha = 0;
     
-    
-    
-    
-    
-    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _invalidDeckReasonsLabel.alpha = 1;
+                         _invalidDeckReasonsOkButton.alpha = 1;
+                     }
+                     completion:^(BOOL completed){
+                     }];
 }
 
 -(void)invalidDeckReasonsOkButtonPressed
@@ -1468,7 +1485,7 @@ DeckModel * allCards;
         _searchResult.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/5);
         [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             [_filterView setFrame:CGRectMake(filterViewFrame.origin.x, filterViewFrame.origin.y - filterViewFrame.size.height, filterViewFrame.size.width, filterViewFrame.size.height)];
+                             [_filterView setFrame:CGRectMake(filterViewFrame.origin.x, filterViewFrame.origin.y - filterViewFrame.size.height, filterViewFrame.size.width, filterViewFrame.size.height+8)];
                          }
                          completion:^(BOOL completed){
                              
@@ -1594,6 +1611,12 @@ DeckModel * allCards;
     }
     
     [self reloadCardsWithFilter];
+}
+
+-(void)textViewDidBeginEditing:(UITextView *)textView{
+    //not editable
+    if (textView == _invalidDeckReasonsLabel)
+        [textView resignFirstResponder];
 }
 
 -(void)showActivityIndicatorWithBlock:(BOOL (^)())block loadingText:(NSString*)loadingText failedText:(NSString*)failedText

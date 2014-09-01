@@ -1850,7 +1850,7 @@ int cardIDCount = 0;
         {
             MonsterCardModel*fracture = [[MonsterCardModel alloc] initWithCardModel:monster];
             fracture.dead = NO;
-            fracture.turnEnded = NO;
+            fracture.turnEnded = YES;
             fracture.abilities = [NSMutableArray array]; //clear all abilities
             fracture.cost = cost;
             fracture.damage = damage;

@@ -17,7 +17,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         [self setBackgroundColor:[UIColor clearColor]];
-        self.scrollView = [[UIScrollView alloc]initWithFrame:CGRectInset(self.bounds,-6,0)];
+        self.scrollView = [[CustomScrollView alloc]initWithFrame:CGRectInset(self.bounds,-6,0)];
         [self.scrollView setBackgroundColor:[UIColor clearColor]];
         
         self.abilityText = [[UILabel alloc] initWithFrame:self.scrollView.frame];

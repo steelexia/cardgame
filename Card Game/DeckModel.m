@@ -223,6 +223,76 @@ const int MAX_CARDS_IN_DECK = 20;
     }
 }
 
++(NSArray*)getLimits:(DeckModel*)deck
+{
+    NSMutableArray*limits = [NSMutableArray array];
+    
+    //keeps track of elements in deck
+    NSMutableDictionary*elements = [NSMutableDictionary dictionary];
+    //keeps track of abilities in deck
+    NSMutableDictionary*abilities = [NSMutableDictionary dictionary];
+    
+    for (CardModel *card in deck.cards)
+    {
+        //ability limit
+        for (Ability* ability in card.abilities)
+        {
+            int wrapperID = [AbilityWrapper getIdWithAbility:ability];
+            
+            if (wrapperID != -1)
+            {
+                NSString *key = [NSString stringWithFormat:@"%d", wrapperID];
+                NSNumber *value = abilities[key];
+                
+                if (value == nil)
+                    [abilities setValue:@(1) forKey:key];
+                else
+                    [abilities setValue:@([value intValue] + 1) forKey:key];
+            }
+        }
+        
+        //element limit
+        NSString *elementString = [NSString stringWithFormat:@"%d", card.element];
+        
+        //already added, keep going
+        if ([elements[elementString] intValue] == YES)
+            continue;
+        
+        [elements setValue:@(YES) forKey:elementString];
+        
+        if (card.element == elementFire)
+            [limits addObject:@"Cannot add Ice cards."];
+        else if (card.element == elementIce)
+            [limits addObject:@"Cannot add Fire cards."];
+        else if (card.element == elementLightning)
+            [limits addObject:@"Cannot add Earth cards."];
+        else if (card.element == elementEarth)
+            [limits addObject:@"Cannot add Thunder cards."];
+        else if (card.element == elementLight)
+            [limits addObject:@"Cannot add Dark cards."];
+        else if (card.element == elementDark)
+            [limits addObject:@"Cannot add Light cards."];
+    }
+    
+    //check which ability has reached limit
+    for(NSString* key in abilities) {
+        NSNumber *value = [abilities objectForKey:key];
+        
+        AbilityWrapper*wrapper = [AbilityWrapper getWrapperWithId:[key intValue]];
+        
+        if (wrapper.maxCount <= [value intValue])
+        {
+            NSString*abilityDescription = [[Ability getDescription:wrapper.ability fromCard:[[SpellCardModel alloc]initWithIdNumber:-1]] string];
+            [limits addObject:[NSString stringWithFormat: @"Reached limit of ability \"%@\".", abilityDescription]];
+        }
+    }
+    
+    if (limits.count == 0)
+        [limits addObject:@"No current limits."];
+    
+    return limits;
+}
+
 +(NSArray*)getElementArraySummary:(DeckModel*)deck
 {
     NSMutableArray *elementCount = [NSMutableArray arrayWithArray:@[@0,@0,@0,@0,@0,@0,@0]];

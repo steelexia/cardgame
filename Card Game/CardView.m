@@ -147,6 +147,9 @@ NSDictionary *singlePlayerCardImages;
     
     singlePlayerCardImages = @{
                                @"1000" : [UIImage imageNamed:@"card_1000"],
+                               @"1001" : [UIImage imageNamed:@"card_1001"],
+                               @"1002" : [UIImage imageNamed:@"card_1002"],
+                               @"1003" : [UIImage imageNamed:@"card_1003"],
                                @"1100" : [UIImage imageNamed:@"card_1100"],
                                };
     
@@ -217,7 +220,6 @@ NSDictionary *singlePlayerCardImages;
         self.cardViewMode = cardViewMode;
         
         NSArray*elementArray = backgroundImages[cardModel.element];
-        //TODO
         
         self.abilityIcons = [NSMutableArray array];
         
@@ -569,7 +571,7 @@ NSDictionary *singlePlayerCardImages;
             //update damage label
             UIColor *newDamageColour;
             if (monsterCard.damage != monsterCard.baseDamage)
-                newDamageColour = [UIColor redColor];
+                newDamageColour = COLOUR_STAT_MODED;
             else
                 newDamageColour = [UIColor whiteColor];
             
@@ -589,7 +591,7 @@ NSDictionary *singlePlayerCardImages;
             //update life label
             UIColor *newLifeColour;
             if (monsterCard.life > monsterCard.maximumLife || monsterCard.maximumLife > [monsterCard baseMaxLife])
-                newLifeColour = [UIColor redColor];
+                newLifeColour = COLOUR_STAT_MODED;
             else
                 newLifeColour = [UIColor whiteColor];
             
@@ -611,7 +613,7 @@ NSDictionary *singlePlayerCardImages;
             if (monsterCard.cooldown == 0)
                 newCooldownColour = [UIColor greenColor]; //green when at 0 cooldown
             else if (monsterCard.cooldown > monsterCard.maximumCooldown || monsterCard.cooldown > monsterCard.baseMaxCooldown || monsterCard.maximumCooldown > monsterCard.baseMaxCooldown)
-                newCooldownColour = [UIColor redColor];
+                newCooldownColour = COLOUR_STAT_MODED;
             else
                 newCooldownColour = [UIColor whiteColor];
             

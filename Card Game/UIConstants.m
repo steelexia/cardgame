@@ -48,6 +48,8 @@
     COLOUR_EXCEPTIONAL = [[UIColor alloc] initWithRed:232/255.f green:204/255.f blue:19/255.f alpha:1];
     COLOUR_LEGENDARY = [[UIColor alloc] initWithRed:207/255.f green:111/255.f blue:34/255.f alpha:1];
     
+    COLOUR_STAT_MODED = [[UIColor alloc] initWithRed:255/255.f green:191/255.f blue:191/255.f alpha:1];
+    
     RESOURCE_ICON_IMAGE = [UIImage imageNamed:@"resource_icon"];
     POINTS_ICON_IMAGE = [UIImage imageNamed:@"points_icon"];
     GOLD_ICON_IMAGE = [UIImage imageNamed:@"gold_icon"];
@@ -55,6 +57,8 @@
     CARD_ICON_IMAGE = [UIImage imageNamed:@"card_icon"];
     CARD_ICON_GRAY_IMAGE = [UIImage imageNamed:@"card_icon_gray"];
     ADD_ICON_IMAGE = [UIImage imageNamed:@"add_icon"];
+    OPTION_ICON_IMAGE = [UIImage imageNamed:@"gear_icon"];
+    MESSAGE_ICON_IMAGE = [UIImage imageNamed:@"message_icon"];
     ARROW_LEFT_ICON_IMAGE = [UIImage imageNamed:@"arrow_left_icon"];
     ARROW_RIGHT_ICON_IMAGE = [UIImage imageNamed:@"arrow_right_icon"];
 }

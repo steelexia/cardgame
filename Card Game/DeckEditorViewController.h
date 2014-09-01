@@ -27,7 +27,7 @@
 @property(strong) UILabel *activityLabel;
 @property (strong)CFButton*activityFailedButton;
 
-@property(strong)UILabel*invalidDeckReasonsLabel;
+@property(strong)UITextView*invalidDeckReasonsLabel;
 @property(strong)CFButton*invalidDeckReasonsOkButton;
 
 @property(strong)CFButton*filterToggleButton;

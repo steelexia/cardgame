@@ -11,9 +11,12 @@
 #import "GameViewController.h"
 #import "UserModel.h"
 #import "CFButton.h"
+#import "MessagesViewController.h"
 
 @interface MainScreenViewController : UIViewController
 
 @property (strong) UIActivityIndicatorView*gameLoadingView;
+
+@property (strong) StrokedLabel *messageCountLabel;
 
 @end

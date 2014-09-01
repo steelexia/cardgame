@@ -18,7 +18,7 @@
 @property (strong)DeckTableView*deckView;
 @property (strong)NSString*opponentName;
 @property (strong)StrokedLabel*opponentNameLabel;
-@property (strong)UILabel*chooseDeckLabel;
+@property (strong)StrokedLabel*chooseDeckLabel;
 @property (strong)CFLabel*titleBackground;
 @property(strong)StrokedLabel*chosenDeckNameLabel;
 @property (strong)UILabel*chosenDeckElementSummaryLabel, *chosenDeckTagsLabel;

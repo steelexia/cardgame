@@ -100,6 +100,31 @@ UILabel *loadingLabel;
     
     [self.view addSubview:storeButton];
     
+    UIButton *messageButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,30,30)];
+    [messageButton setImage:MESSAGE_ICON_IMAGE forState:UIControlStateNormal];
+    messageButton.center = CGPointMake(SCREEN_WIDTH - 95, SCREEN_HEIGHT - 32);
+    [self.view addSubview:messageButton];
+    _messageCountLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(-10, 6, 50, 30)];
+    _messageCountLabel.textAlignment = NSTextAlignmentCenter;
+    _messageCountLabel.textColor = [UIColor whiteColor];
+    _messageCountLabel.font = [UIFont fontWithName:cardMainFont size:16];
+    _messageCountLabel.strokeOn = YES;
+    _messageCountLabel.strokeColour = [UIColor blackColor];
+    _messageCountLabel.strokeThickness = 3;
+    [messageButton addTarget:self action:@selector(messageButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    //TODO
+    //_messageCountLabel.text = [NSString stringWithFormat:@"%d", 999];
+    
+    [messageButton addSubview:_messageCountLabel];
+    
+    UIButton *optionsButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,30,30)];
+    [optionsButton setImage:OPTION_ICON_IMAGE forState:UIControlStateNormal];
+    optionsButton.center = CGPointMake(SCREEN_WIDTH - 60, SCREEN_HEIGHT - 32);
+    [self.view addSubview:optionsButton];
+    
+    [optionsButton addTarget:self action:@selector(optionButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
     //initial loading TODO
     if (!userInfoLoaded)
     {
@@ -122,6 +147,16 @@ UILabel *loadingLabel;
     }
 }
 
+-(void)messageButtonPressed
+{
+    MessagesViewController *vc = [[MessagesViewController alloc] init];
+    [self presentViewController:vc animated:NO completion:nil];
+}
+
+-(void)optionButtonPressed
+{
+    
+}
 
 //checks for userInfoLoaded flag to be set to YES. Once it does, remove the loading screen.
 -(void)checkForLoadFinish

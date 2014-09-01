@@ -7,10 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CustomScrollView.h"
 
 @interface GameInfoTableViewCell : UITableViewCell
 
-@property UIScrollView*scrollView;
+@property CustomScrollView*scrollView;
 @property UILabel*abilityText;
 
 @end

@@ -205,18 +205,18 @@
 		90F80F9B19A2BEFA007571F4 /* CustomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F80F9A19A2BEFA007571F4 /* CustomView.m */; };
 		90F80F9E19A3D28E007571F4 /* GameViewController+Tutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F80F9D19A3D28E007571F4 /* GameViewController+Tutorial.m */; };
 		90F80FA119A3D3D9007571F4 /* arrow_left_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F80FA019A3D3D9007571F4 /* arrow_left_icon.png */; };
-<<<<<<< HEAD
 		90F80FA319A63F4C007571F4 /* card_image_cardeditor_empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F80FA219A63F4B007571F4 /* card_image_cardeditor_empty.png */; };
-=======
-		D394EE3119AE799400B6FEEA /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D394EE3019AE799400B6FEEA /* Parse.framework */; };
-		D394EE3519AE7F0400B6FEEA /* PickIAPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D394EE3419AE7F0400B6FEEA /* PickIAPHelper.m */; };
-		D394EE3719AE7F0A00B6FEEA /* IAPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D394EE3619AE7F0A00B6FEEA /* IAPHelper.m */; };
->>>>>>> origin/inAppPurchase
+		FA19FC8519B232F100B38943 /* IAPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = FA19FC8419B232F100B38943 /* IAPHelper.m */; };
+		FA19FC8819B2336100B38943 /* PickIAPHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = FA19FC8719B2336100B38943 /* PickIAPHelper.m */; };
+		FA19FC8C19B2580900B38943 /* card_1001.png in Resources */ = {isa = PBXBuildFile; fileRef = FA19FC8919B2580900B38943 /* card_1001.png */; };
+		FA19FC8E19B2580900B38943 /* card_1003.png in Resources */ = {isa = PBXBuildFile; fileRef = FA19FC8B19B2580900B38943 /* card_1003.png */; };
+		FA19FC9019B258D200B38943 /* card_1002.png in Resources */ = {isa = PBXBuildFile; fileRef = FA19FC8F19B258D200B38943 /* card_1002.png */; };
+		FA19FC9319B3D00400B38943 /* gear_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FA19FC9119B3D00400B38943 /* gear_icon.png */; };
+		FA19FC9419B3D00400B38943 /* message_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FA19FC9219B3D00400B38943 /* message_icon.png */; };
+		FA19FC9E19B3F24E00B38943 /* MessageTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA19FC9D19B3F24E00B38943 /* MessageTableView.m */; };
+		FA19FCA119B3F39500B38943 /* MessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA19FCA019B3F39500B38943 /* MessagesViewController.m */; };
 		FA4025971956331300FCCBAB /* DeckEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4025961956331300FCCBAB /* DeckEditorViewController.m */; };
 		FA543CB119A9784000E70529 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA543CB019A9784000E70529 /* Parse.framework */; };
-		FA6D50BB19B2203C0084F492 /* card_1001.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6D50B819B2203C0084F492 /* card_1001.png */; };
-		FA6D50BC19B2203D0084F492 /* card_1002.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FA6D50B919B2203C0084F492 /* card_1002.jpg */; };
-		FA6D50BD19B2203D0084F492 /* card_1003.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6D50BA19B2203C0084F492 /* card_1003.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -489,21 +489,23 @@
 		90F80F9C19A3D28E007571F4 /* GameViewController+Tutorial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GameViewController+Tutorial.h"; sourceTree = "<group>"; };
 		90F80F9D19A3D28E007571F4 /* GameViewController+Tutorial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GameViewController+Tutorial.m"; sourceTree = "<group>"; };
 		90F80FA019A3D3D9007571F4 /* arrow_left_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = arrow_left_icon.png; path = "Card Game/arrow_left_icon.png"; sourceTree = "<group>"; };
-<<<<<<< HEAD
 		90F80FA219A63F4B007571F4 /* card_image_cardeditor_empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_image_cardeditor_empty.png; path = "Card Game/card_image_cardeditor_empty.png"; sourceTree = "<group>"; };
-=======
-		D394EE3019AE799400B6FEEA /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "Card Game/Parse.framework"; sourceTree = "<group>"; };
-		D394EE3319AE7EFE00B6FEEA /* PickIAPHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PickIAPHelper.h; sourceTree = "<group>"; };
-		D394EE3419AE7F0400B6FEEA /* PickIAPHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickIAPHelper.m; sourceTree = "<group>"; };
-		D394EE3619AE7F0A00B6FEEA /* IAPHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IAPHelper.m; sourceTree = "<group>"; };
-		D394EE3819AE7F1100B6FEEA /* IAPHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IAPHelper.h; sourceTree = "<group>"; };
->>>>>>> origin/inAppPurchase
+		FA19FC8319B232F100B38943 /* IAPHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAPHelper.h; sourceTree = "<group>"; };
+		FA19FC8419B232F100B38943 /* IAPHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IAPHelper.m; sourceTree = "<group>"; };
+		FA19FC8619B2336100B38943 /* PickIAPHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickIAPHelper.h; sourceTree = "<group>"; };
+		FA19FC8719B2336100B38943 /* PickIAPHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickIAPHelper.m; sourceTree = "<group>"; };
+		FA19FC8919B2580900B38943 /* card_1001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_1001.png; sourceTree = "<group>"; };
+		FA19FC8B19B2580900B38943 /* card_1003.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_1003.png; sourceTree = "<group>"; };
+		FA19FC8F19B258D200B38943 /* card_1002.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_1002.png; sourceTree = "<group>"; };
+		FA19FC9119B3D00400B38943 /* gear_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gear_icon.png; sourceTree = "<group>"; };
+		FA19FC9219B3D00400B38943 /* message_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = message_icon.png; sourceTree = "<group>"; };
+		FA19FC9C19B3F24E00B38943 /* MessageTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableView.h; sourceTree = "<group>"; };
+		FA19FC9D19B3F24E00B38943 /* MessageTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableView.m; sourceTree = "<group>"; };
+		FA19FC9F19B3F39500B38943 /* MessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagesViewController.h; sourceTree = "<group>"; };
+		FA19FCA019B3F39500B38943 /* MessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesViewController.m; sourceTree = "<group>"; };
 		FA4025951956331300FCCBAB /* DeckEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeckEditorViewController.h; sourceTree = "<group>"; };
 		FA4025961956331300FCCBAB /* DeckEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeckEditorViewController.m; sourceTree = "<group>"; };
 		FA543CB019A9784000E70529 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "Card Game/Parse.framework"; sourceTree = "<group>"; };
-		FA6D50B819B2203C0084F492 /* card_1001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_1001.png; sourceTree = "<group>"; };
-		FA6D50B919B2203C0084F492 /* card_1002.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = card_1002.jpg; sourceTree = "<group>"; };
-		FA6D50BA19B2203C0084F492 /* card_1003.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_1003.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -511,11 +513,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-<<<<<<< HEAD
 				FA543CB119A9784000E70529 /* Parse.framework in Frameworks */,
-=======
-				D394EE3119AE799400B6FEEA /* Parse.framework in Frameworks */,
->>>>>>> origin/inAppPurchase
 				907D9C1B193E43A80037C0CF /* SystemConfiguration.framework in Frameworks */,
 				907D9C19193E439B0037C0CF /* StoreKit.framework in Frameworks */,
 				907D9C17193E43950037C0CF /* Security.framework in Frameworks */,
@@ -634,6 +632,8 @@
 		907D9BD919226B4C0037C0CF /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				FA19FC9119B3D00400B38943 /* gear_icon.png */,
+				FA19FC9219B3D00400B38943 /* message_icon.png */,
 				90F80FA019A3D3D9007571F4 /* arrow_left_icon.png */,
 				90F80F8219A259A3007571F4 /* menu_logo.png */,
 				90C5289F199D613B00750C54 /* screen_background_bottom.png */,
@@ -866,11 +866,7 @@
 		90F35295191595C200601130 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-<<<<<<< HEAD
 				FA543CB019A9784000E70529 /* Parse.framework */,
-=======
-				D394EE3019AE799400B6FEEA /* Parse.framework */,
->>>>>>> origin/inAppPurchase
 				907D9C1A193E43A80037C0CF /* SystemConfiguration.framework */,
 				907D9C18193E439B0037C0CF /* StoreKit.framework */,
 				907D9C16193E43950037C0CF /* Security.framework */,
@@ -891,7 +887,6 @@
 		90F3529C191595C200601130 /* Card Game */ = {
 			isa = PBXGroup;
 			children = (
-				D394EE3219AE7EF000B6FEEA /* In App Purchase Code */,
 				90F80F8A19A27FA5007571F4 /* SSKeychain */,
 				90456ED0198D715700B807DC /* Store Screen */,
 				90DA4347195B25EE00E44AED /* Game Battle Screen */,
@@ -900,6 +895,7 @@
 				90F352DF1916BBCC00601130 /* Cards */,
 				90DA4346195B25CC00E44AED /* Single Player */,
 				FA6D50B419AA41860084F492 /* CFViews */,
+				FA19FC9519B3ECE100B38943 /* Main Screen */,
 				90F352A8191595C200601130 /* Main_iPhone.storyboard */,
 				90F352AB191595C200601130 /* Main_iPad.storyboard */,
 				90DA43D11969E4F100E44AED /* CardGame.xcdatamodeld */,
@@ -911,8 +907,6 @@
 				90DA43CF1969DD9D00E44AED /* CDDeckModel.m */,
 				90DA4369195F6E6000E44AED /* CGPointUtilities.h */,
 				90DA436A195F6E6000E44AED /* CGPointUtilities.m */,
-				90DA435C195E45B500E44AED /* MainScreenViewController.h */,
-				90DA435D195E45B500E44AED /* MainScreenViewController.m */,
 				90DA435F195E6EA800E44AED /* UserModel.h */,
 				90DA4360195E6EA800E44AED /* UserModel.m */,
 				907D9BE5192446250037C0CF /* ViewLayer.h */,
@@ -927,6 +921,10 @@
 				90DA4352195DF83D00E44AED /* UIConstants.m */,
 				90F80F9919A2BEFA007571F4 /* CustomView.h */,
 				90F80F9A19A2BEFA007571F4 /* CustomView.m */,
+				FA19FC8319B232F100B38943 /* IAPHelper.h */,
+				FA19FC8419B232F100B38943 /* IAPHelper.m */,
+				FA19FC8619B2336100B38943 /* PickIAPHelper.h */,
+				FA19FC8719B2336100B38943 /* PickIAPHelper.m */,
 				90F352B1191595C200601130 /* Images.xcassets */,
 				90F3529D191595C200601130 /* Supporting Files */,
 			);
@@ -1002,15 +1000,27 @@
 			isa = PBXGroup;
 			children = (
 				90F80F9619A29317007571F4 /* card_1000.png */,
-				FA6D50B819B2203C0084F492 /* card_1001.png */,
-				FA6D50B919B2203C0084F492 /* card_1002.jpg */,
-				FA6D50BA19B2203C0084F492 /* card_1003.png */,
+				FA19FC8919B2580900B38943 /* card_1001.png */,
+				FA19FC8F19B258D200B38943 /* card_1002.png */,
+				FA19FC8B19B2580900B38943 /* card_1003.png */,
 				90F80F9519A29317007571F4 /* card_1100.png */,
 			);
 			name = Singleplayer;
 			sourceTree = "<group>";
 		};
-<<<<<<< HEAD
+		FA19FC9519B3ECE100B38943 /* Main Screen */ = {
+			isa = PBXGroup;
+			children = (
+				90DA435C195E45B500E44AED /* MainScreenViewController.h */,
+				90DA435D195E45B500E44AED /* MainScreenViewController.m */,
+				FA19FC9F19B3F39500B38943 /* MessagesViewController.h */,
+				FA19FCA019B3F39500B38943 /* MessagesViewController.m */,
+				FA19FC9C19B3F24E00B38943 /* MessageTableView.h */,
+				FA19FC9D19B3F24E00B38943 /* MessageTableView.m */,
+			);
+			name = "Main Screen";
+			sourceTree = "<group>";
+		};
 		FA6D50B419AA41860084F492 /* CFViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -1020,17 +1030,6 @@
 				90C528A6199D6CC100750C54 /* CFButton.m */,
 			);
 			name = CFViews;
-=======
-		D394EE3219AE7EF000B6FEEA /* In App Purchase Code */ = {
-			isa = PBXGroup;
-			children = (
-				D394EE3419AE7F0400B6FEEA /* PickIAPHelper.m */,
-				D394EE3319AE7EFE00B6FEEA /* PickIAPHelper.h */,
-				D394EE3819AE7F1100B6FEEA /* IAPHelper.h */,
-				D394EE3619AE7F0A00B6FEEA /* IAPHelper.m */,
-			);
-			name = "In App Purchase Code";
->>>>>>> origin/inAppPurchase
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1119,7 +1118,7 @@
 				90DA435B195E0BD900E44AED /* add_deck_button.png in Resources */,
 				90AB14FF196F2FF20008FCDD /* encode-sans.compressed-black.ttf in Resources */,
 				90C5289D199C369100750C54 /* filter_button_small_selected.png in Resources */,
-				FA6D50BD19B2203D0084F492 /* card_1003.png in Resources */,
+				FA19FC8E19B2580900B38943 /* card_1003.png in Resources */,
 				90AB14F3196CA7E60008FCDD /* card_background_front_overlay_common.png in Resources */,
 				90456EE5198F1B9100B807DC /* edit_button_gray.png in Resources */,
 				907020731992AC8100FDE444 /* PLCameraSheetButtonPressed.png in Resources */,
@@ -1147,7 +1146,6 @@
 				9032E13619986006002A6725 /* dummy_button.png in Resources */,
 				9032E13A19991146002A6725 /* filter_toggle_button.png in Resources */,
 				9032E140199936B2002A6725 /* card_icon.png in Resources */,
-				FA6D50BC19B2203D0084F492 /* card_1002.jpg in Resources */,
 				90C52890199BE53E00750C54 /* search_button.png in Resources */,
 				9070204D19915FD500FDE444 /* card_background_front_overlay_rare.png in Resources */,
 				90DA434E195C941400E44AED /* add_button_gray.png in Resources */,
@@ -1163,7 +1161,7 @@
 				90AB1509197AD6DA0008FCDD /* card_ability_icon_cast_on_hit.png in Resources */,
 				907020761992AC8100FDE444 /* PLCameraSheetDoneButton@2x.png in Resources */,
 				90DA43BE1969D21500E44AED /* monster_button_gray.png in Resources */,
-				FA6D50BB19B2203C0084F492 /* card_1001.png in Resources */,
+				FA19FC8C19B2580900B38943 /* card_1001.png in Resources */,
 				90AB150A197AD6DA0008FCDD /* card_ability_icon_cast_on_move.png in Resources */,
 				90AB1516198355F00008FCDD /* points_icon.png in Resources */,
 				90DA43C01969D21500E44AED /* spell_button_gray.png in Resources */,
@@ -1179,6 +1177,7 @@
 				907D9BF1192D3DFB0037C0CF /* card_image_placeholder.png in Resources */,
 				9069AAE6195501AB006D1D98 /* card_background_front_lightning_common.png in Resources */,
 				907D9BDC192270DE0037C0CF /* field_edge.png in Resources */,
+				FA19FC9019B258D200B38943 /* card_1002.png in Resources */,
 				90DA433D195A451000E44AED /* arrow_right_button.png in Resources */,
 				90C5289A199C304D00750C54 /* popular_tags_button_small.png in Resources */,
 				90DA433C195A451000E44AED /* arrow_left_button.png in Resources */,
@@ -1202,9 +1201,11 @@
 				90C52892199BE87500750C54 /* search_toggle_button.png in Resources */,
 				90C528A2199D613B00750C54 /* screen_background_bottom.png in Resources */,
 				90F352A1191595C200601130 /* InfoPlist.strings in Resources */,
+				FA19FC9419B3D00400B38943 /* message_icon.png in Resources */,
 				90F7DAFB199AC1ED00D4FD97 /* card_image_empty.png in Resources */,
 				907D9C071932538E0037C0CF /* end_turn_button_disabled.png in Resources */,
 				907020441991437D00FDE444 /* gold_icon.png in Resources */,
+				FA19FC9319B3D00400B38943 /* gear_icon.png in Resources */,
 				90F80F9819A29317007571F4 /* card_1000.png in Resources */,
 				9032E13819986121002A6725 /* filter_button.png in Resources */,
 				90F80FA319A63F4C007571F4 /* card_image_cardeditor_empty.png in Resources */,
@@ -1227,11 +1228,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				9060540B191AAE1B000B3B93 /* DeckModel.m in Sources */,
+				FA19FC8819B2336100B38943 /* PickIAPHelper.m in Sources */,
 				90AB14EE196B5ECC0008FCDD /* GameInfoTableViewCell.m in Sources */,
 				90DA4361195E6EA800E44AED /* UserModel.m in Sources */,
 				907D9BEA192515E70037C0CF /* Ability.m in Sources */,
 				90DA4368195F6D0800E44AED /* StrokedTextField.m in Sources */,
-				D394EE3719AE7F0A00B6FEEA /* IAPHelper.m in Sources */,
 				90F352B0191595C200601130 /* GameViewController.m in Sources */,
 				90DA43D01969DD9D00E44AED /* CDDeckModel.m in Sources */,
 				90F352D81915C8DB00601130 /* GameModel.m in Sources */,
@@ -1246,7 +1247,6 @@
 				90DA43351959D75700E44AED /* CustomCollectionView.m in Sources */,
 				90F7DB04199AD69C00D4FD97 /* Campaign.m in Sources */,
 				9032E12D19953EAE002A6725 /* CardVote.m in Sources */,
-				D394EE3519AE7F0400B6FEEA /* PickIAPHelper.m in Sources */,
 				90DA434A195B271900E44AED /* CustomTableView.m in Sources */,
 				90456ECC198D4DB500B807DC /* DeckCell.m in Sources */,
 				90F7DB01199ACF0C00D4FD97 /* CampaignMenuViewController.m in Sources */,
@@ -1256,10 +1256,12 @@
 				90DA435E195E45B500E44AED /* MainScreenViewController.m in Sources */,
 				907020701992AC8100FDE444 /* GKResizeableCropOverlayView.m in Sources */,
 				90DA4364195F5DE700E44AED /* CardEditorViewController.m in Sources */,
+				FA19FC8519B232F100B38943 /* IAPHelper.m in Sources */,
 				90AB14F1196B5F740008FCDD /* GameInfoTableView.m in Sources */,
 				90456ED9198DAAE700B807DC /* StoreCardCell.m in Sources */,
 				907D9C02193045BA0037C0CF /* SinglePlayerCards.m in Sources */,
 				90C528AD199E59ED00750C54 /* Level.m in Sources */,
+				FA19FC9E19B3F24E00B38943 /* MessageTableView.m in Sources */,
 				9070206F1992AC8100FDE444 /* GKImagePicker.m in Sources */,
 				90F352A7191595C200601130 /* AppDelegate.m in Sources */,
 				907D9BE7192446250037C0CF /* ViewLayer.m in Sources */,
@@ -1281,6 +1283,7 @@
 				90F80F8119A14916007571F4 /* BossBattleScreenViewController.m in Sources */,
 				907D9C05193247450037C0CF /* AIPlayer.m in Sources */,
 				90DA43CD1969DD9000E44AED /* CDCardModel.m in Sources */,
+				FA19FCA119B3F39500B38943 /* MessagesViewController.m in Sources */,
 				9070206E1992AC8100FDE444 /* GKImageCropViewController.m in Sources */,
 				90DA43791960B7EA00E44AED /* AbilityTableView.m in Sources */,
 				90F352DE1916BB9300601130 /* SpellCardModel.m in Sources */,
@@ -1429,28 +1432,8 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-<<<<<<< HEAD
 					"$(SRCROOT)/",
 					"\"$(PROJECT_DIR)/Card Game\"",
-=======
-					/Users/dmadmin/Desktop/Card,
-					Game/Card,
-					Game,
-					"$(PROJECT_DIR)/Card",
-					Game,
-					/Users/dmadmin/Desktop/Card,
-					Game/Card,
-					Game,
-					"$(PROJECT_DIR)/Card",
-					Game,
-					"$(PROJECT_DIR)/Card",
-					Game,
-					/Users/dmadmin/Desktop/Card,
-					Game/Card,
-					Game,
-					"$(PROJECT_DIR)/Card",
-					Game,
->>>>>>> origin/inAppPurchase
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Card Game/cardgame-Prefix.pch";
@@ -1470,28 +1453,8 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-<<<<<<< HEAD
 					"$(SRCROOT)/",
 					"\"$(PROJECT_DIR)/Card Game\"",
-=======
-					/Users/dmadmin/Desktop/Card,
-					Game/Card,
-					Game,
-					"$(PROJECT_DIR)/Card",
-					Game,
-					/Users/dmadmin/Desktop/Card,
-					Game/Card,
-					Game,
-					"$(PROJECT_DIR)/Card",
-					Game,
-					"$(PROJECT_DIR)/Card",
-					Game,
-					/Users/dmadmin/Desktop/Card,
-					Game/Card,
-					Game,
-					"$(PROJECT_DIR)/Card",
-					Game,
->>>>>>> origin/inAppPurchase
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Card Game/cardgame-Prefix.pch";

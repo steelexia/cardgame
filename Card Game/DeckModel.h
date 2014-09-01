@@ -58,6 +58,9 @@
 
 +(void) validateDeckIgnoreTooFewCards:(DeckModel*)deck;
 
+/** Returns the elements and abilities that can no longer be added to the deck. */
++(NSArray*)getLimits:(DeckModel*)deck;
+
 +(NSArray*)getElementArraySummary:(DeckModel*)deck;
 +(NSString*)getElementSummary:(DeckModel*)deck;
 

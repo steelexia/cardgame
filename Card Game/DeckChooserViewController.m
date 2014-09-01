@@ -51,19 +51,20 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     _titleBackground.backgroundColor = COLOUR_INTERFACE_BLUE;
     [self.view addSubview:_titleBackground]; //cannot add to deckbackground due to layer stuff
     _titleBackground.alpha = 0;
-    
     self.deckBackground.alpha = 0;
-    
     
     //label showing opponent's name:
     if (![self.opponentName isEqualToString:@""])
     {
-        UILabel*opponentLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0,200,30)];
+        StrokedLabel*opponentLabel = [[StrokedLabel alloc]initWithFrame:CGRectMake(0,0,200,30)];
         [opponentLabel setFont:[UIFont fontWithName:cardMainFont size:18]];
         [opponentLabel setText:@"Your Opponent:"];
         [opponentLabel setTextAlignment:NSTextAlignmentCenter];
         [opponentLabel setCenter:CGPointMake(115, 40)];
-        [opponentLabel setTextColor:[UIColor blackColor]];
+        [opponentLabel setTextColor:[UIColor whiteColor]];
+        opponentLabel.strokeColour = [UIColor blackColor];
+        opponentLabel.strokeOn = YES;
+        opponentLabel.strokeThickness = 3;
         
         [self.view addSubview:opponentLabel];
         
@@ -72,18 +73,24 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
         [self.opponentNameLabel setText:self.opponentName];
         [self.opponentNameLabel setTextAlignment:NSTextAlignmentCenter];
         [self.opponentNameLabel setCenter:CGPointMake(115, 70)];
-        [self.opponentNameLabel setTextColor:[UIColor blackColor]];
+        [self.opponentNameLabel setTextColor:[UIColor whiteColor]];
+        self.opponentNameLabel.strokeColour = [UIColor blackColor];
+        self.opponentNameLabel.strokeOn = YES;
+        self.opponentNameLabel.strokeThickness = 3;
         
         [self.view addSubview:self.opponentNameLabel];
     }
     
     //label that informs the player to choose a deck
-    self.chooseDeckLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,0,200,30)];
+    self.chooseDeckLabel = [[StrokedLabel alloc]initWithFrame:CGRectMake(0,0,200,30)];
     [self.chooseDeckLabel setFont:[UIFont fontWithName:cardMainFont size:18]];
     [self.chooseDeckLabel setText:@"Choose A Deck"];
     [self.chooseDeckLabel setTextAlignment:NSTextAlignmentCenter];
     [self.chooseDeckLabel setCenter:CGPointMake(115, 130)];
-    [self.chooseDeckLabel setTextColor:[UIColor blackColor]];
+    [self.chooseDeckLabel setTextColor:[UIColor whiteColor]];
+    self.chooseDeckLabel.strokeColour = [UIColor blackColor];
+    self.chooseDeckLabel.strokeOn = YES;
+    self.chooseDeckLabel.strokeThickness = 3;
     
     [self.view addSubview:self.chooseDeckLabel];
     
@@ -102,8 +109,6 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     //self.chosenDeckNameLabel.text = @"New Deck";
     
     [_titleBackground addSubview: self.chosenDeckNameLabel];
-    
-    
     
     CFLabel*elementsBackground = [[CFLabel alloc] initWithFrame:CGRectMake(6,55,self.deckBackground.bounds.size.width/2-6-3,168)];
     elementsBackground.backgroundColor = COLOUR_NEUTRAL;

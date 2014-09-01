@@ -25,11 +25,6 @@
 /** Screen dimension for convinience */
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
-/*
-int STORE_INITIAL_LOAD_AMOUNT = 96;
-int STORE_ADDITIONAL_INCREMENT = 16;
- */
-
 int STORE_INITIAL_LOAD_AMOUNT = 96;
 int STORE_ADDITIONAL_INCREMENT = 16;
 
@@ -455,7 +450,7 @@ NSArray *_products;
     _deckTagsButton.alpha = 0.4;
     
     //cost buttons
-    CGPoint costFilterStartPoint = CGPointMake(20, 20);
+    CGPoint costFilterStartPoint = CGPointMake(20, 24);
     _costFilterButtons = [NSMutableArray arrayWithCapacity:11];
     for (int i = 0; i < 11; i++)
     {
