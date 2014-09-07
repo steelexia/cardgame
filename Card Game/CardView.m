@@ -146,12 +146,45 @@ NSDictionary *singlePlayerCardImages;
     ];
     
     singlePlayerCardImages = @{
+                               //starting deck
+                               @"1" : [UIImage imageNamed:@"card_0001"],
+                               @"2" : [UIImage imageNamed:@"card_0002"],
+                               @"3" : [UIImage imageNamed:@"card_0003"],
+                               @"4" : [UIImage imageNamed:@"card_0004"],
+                               @"5" : [UIImage imageNamed:@"card_0005"],
+                               @"6" : [UIImage imageNamed:@"card_0006"],
+                               @"7" : [UIImage imageNamed:@"card_0007"],
+                               @"8" : [UIImage imageNamed:@"card_0008"],
+                               @"9" : [UIImage imageNamed:@"card_0009"],
+                               @"10" : [UIImage imageNamed:@"card_0010"],
+                               @"11" : [UIImage imageNamed:@"card_0011"],
+                               @"12" : [UIImage imageNamed:@"card_0012"],
+                               @"13" : [UIImage imageNamed:@"card_0013"],
+                               @"14" : [UIImage imageNamed:@"card_0014"],
+                               @"15" : [UIImage imageNamed:@"card_0015"],
+                               @"16" : [UIImage imageNamed:@"card_0016"],
+                               @"17" : [UIImage imageNamed:@"card_0017"],
+                               @"18" : [UIImage imageNamed:@"card_0018"],
+                               @"19" : [UIImage imageNamed:@"card_0019"],
+                               @"20" : [UIImage imageNamed:@"card_0020"],
+                               
                                @"1000" : [UIImage imageNamed:@"card_1000"],
                                @"1001" : [UIImage imageNamed:@"card_1001"],
                                @"1002" : [UIImage imageNamed:@"card_1002"],
                                @"1003" : [UIImage imageNamed:@"card_1003"],
+                               @"1004" : [UIImage imageNamed:@"card_1004"],
+                               @"1005" : [UIImage imageNamed:@"card_1005"],
+                               @"1006" : [UIImage imageNamed:@"card_1006"],
                                @"1100" : [UIImage imageNamed:@"card_1100"],
+                               
+                               @"hero_1" : [UIImage imageNamed:@"hero_1"],
                                };
+    
+    
+    campaignHeroImages = @{
+                               @"c_1_l_1" : [UIImage imageNamed:@"hero_c_1_l_1"],
+                               };
+    
     
     backgroundMonsterOverlayImage = [UIImage imageNamed:@"card_background_front_monster_overlay"];
     
@@ -266,8 +299,24 @@ NSDictionary *singlePlayerCardImages;
             }
             else if (cardModel.type == cardTypePlayer)
             {
-                //TODO
-                self.cardImage = [[UIImageView alloc] initWithImage:heroPlaceHolderImage];
+                if (cardModel.idNumber != NO_ID)
+                {
+                    NSString *imageKey = [NSString stringWithFormat:@"hero_%d", cardModel.idNumber];
+                    
+                    UIImage *heroImage = singlePlayerCardImages[imageKey];
+                    if (heroImage == nil)
+                    {
+                        self.cardImage = [[UIImageView alloc] initWithImage:heroPlaceHolderImage];
+                    }
+                    else
+                    {
+                        self.cardImage = [[UIImageView alloc] initWithImage:heroImage];
+                    }
+                }
+                else
+                    self.cardImage = [[UIImageView alloc] initWithImage:heroPlaceHolderImage];
+                 
+                //self.cardImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"card_1000"]];
             }
             else
             {
@@ -279,7 +328,20 @@ NSDictionary *singlePlayerCardImages;
             self.cardImage.backgroundColor = [UIColor whiteColor];
             [_frontViews addSubview:self.cardImage];
             
-            if (cardModel.type != cardTypeSinglePlayer)
+            //special starting hand, these are stored on phone
+            if (cardModel.type == cardTypeStandard && cardModel.idNumber < CARD_ID_START)
+            {
+                //same method as single player cards
+                UIImage* image = singlePlayerCardImages[[NSString stringWithFormat:@"%d", _cardModel.idNumber]];
+                if (image != nil)
+                {
+                    [self.cardImage setImage: image];
+                }
+                else
+                    [self.cardImage setImage: placeHolderImage];
+            }
+            //TODO cardTypePlayer use a different algorithm
+            else if (cardModel.type != cardTypeSinglePlayer && cardModel.type != cardTypePlayer)
             {
                 _reloadAttempts = 0;
                 _activityView = [[UIActivityIndicatorView alloc] initWithFrame:self.cardImage.bounds];
@@ -393,7 +455,7 @@ NSDictionary *singlePlayerCardImages;
                 
                 //change the background and size
                 //change the main image size
-                self.cardImage.bounds = CGRectMake(5, 20, PLAYER_HERO_WIDTH - 10, (PLAYER_HERO_WIDTH-20) * CARD_IMAGE_RATIO);
+                self.cardImage.bounds = CGRectMake(5, 20, PLAYER_HERO_WIDTH - 20, (PLAYER_HERO_WIDTH-20) * CARD_IMAGE_RATIO);
                 self.cardImage.center = CGPointMake(PLAYER_HERO_WIDTH/2, self.cardImage.bounds.size.height/2 + self.cardImage.bounds.origin.y);
                 
                 [self.costLabel removeFromSuperview];
@@ -403,7 +465,7 @@ NSDictionary *singlePlayerCardImages;
                 
                 self.highlight.image = heroSelectHighlightImage;
                 //change the highlight size
-                CGRect highlightBounds = CGRectMake(0,0,self.frame.size.width+5,self.frame.size.height+5);
+                CGRect highlightBounds = CGRectMake(0,0,self.frame.size.width+15,self.frame.size.height+15);
                 self.highlight.bounds = highlightBounds;
                 self.highlight.center = CGPointMake(PLAYER_HERO_WIDTH/2, PLAYER_HERO_HEIGHT/2);
                 

@@ -311,11 +311,13 @@
         
         NSString*castTypeString = [Ability getCastTypeDescription:castType fromCard:card];
         
+        //checks if cast type is already written
         if ([description rangeOfString:castTypeString].location == NSNotFound)
         {
             //add a period if this is not the first cast type
             if (description.length > 0)
                 description = [NSString stringWithFormat:@"%@.\n%@", description, castTypeString];
+            //first ability of cast type, put the cast type in
             else
                 description = [NSString stringWithFormat:@"%@%@", description, castTypeString];
         }
@@ -324,6 +326,9 @@
         
         description = [NSString stringWithFormat:@"%@%@", description, [Ability getAbilityTypeDescriptionFromAbility:ability withValueDescription: [NSString stringWithFormat:@"%@", ability.value]]];
         
+        Ability*lastAbility = ability; //keeps track of the last ability in the sentence
+        
+        //look for abilities with same cast type
         for (int i = [sortedAbilities count] - 1; i >= 0; i--)
         {
             if (!ability.isBaseAbility || ability.expired)
@@ -331,24 +336,29 @@
             
             Ability*otherAbility = sortedAbilities[i];
 
-            //all cast types are the same
+            //all types are the same
             if (otherAbility.castType == castType && otherAbility.durationType == durationType && otherAbility.targetType == targetType)
             {
+                //do not add for these special cases
+                if (otherAbility.abilityType == abilityAddResource || otherAbility.abilityType == abilityDrawCard)
+                    continue;
+                
                 description = [NSString stringWithFormat:@"%@, %@", description, [Ability getAbilityTypeDescriptionFromAbility:otherAbility withValueDescription: [NSString stringWithFormat:@"%@", otherAbility.value]]];
                 [sortedAbilities removeObjectAtIndex:i];
+                lastAbility = otherAbility;
             }
         }
         
         if (targetType != targetSelf)
         {
             //TODO: ADD SPECIAL CASES
-            if (abilityType == abilityAddResource || abilityType == abilityDrawCard)
+            if (lastAbility.abilityType == abilityAddResource || lastAbility.abilityType == abilityDrawCard)
             {
                 //do nothing, these don't use the generic target strings
             }
             else
             {
-                description = [NSString stringWithFormat:@"%@ %@ %@", description, [Ability getAbilityPreposition:ability], [Ability getTargetTypeDescription:targetType]];
+                description = [NSString stringWithFormat:@"%@ %@ %@", description, [Ability getAbilityPreposition:lastAbility], [Ability getTargetTypeDescription:targetType]];
             }
         }
         

@@ -81,6 +81,9 @@ DeckModel * allCards;
 {
     [super viewDidLoad];
     
+    if ([userPF[@"deckTutorialDone"] boolValue] == NO)
+        _isTutorial = YES;
+    
     SCREEN_WIDTH = self.view.bounds.size.width;
     SCREEN_HEIGHT = self.view.bounds.size.height;
    
@@ -486,6 +489,26 @@ DeckModel * allCards;
         [_elementFilterButtons addObject:elementFilterButton];
     }
     
+    _modalFilter = [[UILabel alloc] initWithFrame:self.view.bounds];
+    _modalFilter.backgroundColor = [[UIColor alloc]initWithHue:0 saturation:0 brightness:0 alpha:0.8];
+    [_modalFilter setUserInteractionEnabled:YES]; //blocks all interaction behind it
+    
+    if (_isTutorial)
+    {
+        [self modalScreen];
+        self.tutOkButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
+        self.tutOkButton.label.text = @"Ok";
+        
+        self.tutLabel = [[CFLabel alloc] initWithFrame:CGRectMake(0,0,260,180)];
+        [self setTutLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)];
+        [self.tutLabel setIsDialog:YES];
+        self.tutLabel.label.text = @"This is the deck editor. Here you can browse through your cards and either edit an existing deck, or build a new one.";
+        [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
+        [self.tutLabel.label setTextAlignment:NSTextAlignmentCenter];
+        [self.view addSubview:_tutLabel];
+        [self.view addSubview:_tutOkButton];
+    }
+    
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
                                            initWithTarget:self
                                            action:@selector(tapRegistered)];
@@ -499,9 +522,7 @@ DeckModel * allCards;
 - (void) updateCardsViewCards
 {
     for (CardModel* card in self.cardsView.currentCardModels)
-    {
         [self updateCard:card];
-    }
 }
 
 -(void) updateCard:(CardModel*)card
@@ -546,12 +567,16 @@ DeckModel * allCards;
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    if (_isModal)
+        return;
+    
     UITouch *touch = [touches anyObject];
     UIView*touchedView = touch.view;
     
     //touched a card in current list of cards
     if ([touchedView isKindOfClass:[CardView class]])
     {
+        NSLog(@"touched");
         CardView*cardView = (CardView*)touchedView;
         UIView*view = cardView.superview;
         
@@ -560,6 +585,7 @@ DeckModel * allCards;
         {
             if (cardView != currentCard && currentCard == nil && cardView.cardViewState != cardViewStateCardViewerTransparent)
             {
+                NSLog(@"maxed");
                 CardView*newMaximizedView = [[CardView alloc] initWithModel:cardView.cardModel viewMode:cardViewModeEditor]; //constructor also modifies monster's cardView pointer
                 newMaximizedView.frontFacing = YES;
                 [newMaximizedView setCardViewState:cardView.cardViewState];
@@ -570,6 +596,7 @@ DeckModel * allCards;
                 for (int i = 0; i < self.cardsView.currentCardModels.count; i++)
                     if (self.cardsView.currentCardModels[i] == [cardView cardModel])
                     {
+                        NSLog(@"found current index");
                         currentIndex = i;
                         break;
                     }
@@ -690,10 +717,12 @@ DeckModel * allCards;
     [self performBlock:^{
         if (self.cardsView.isScrolling)
         {
+            NSLog(@"is scrolling");
             [self maximizeCardAnimation:newMaximizedView originalCard:cardView mode:mode];
         }
         else
         {
+            NSLog(@"scrolling done");
             //darken the background (also disables views)
             [self maximizeCard:mode];
             
@@ -1002,9 +1031,10 @@ DeckModel * allCards;
     {
         NSLog(@"not valid");
         
+        /*
         DeckModel *deck = [[DeckModel alloc]init];
         for (CardModel* card in self.deckView.currentCells)
-            [deck addCard:card];
+            [deck addCard:card];*/
         
         for (UIView*view in autoAddView.subviews)
             [view removeFromSuperview];
@@ -1216,7 +1246,12 @@ DeckModel * allCards;
     for (UIView*view in _propertiesView.subviews)
         view.alpha = 0;
     
-    [self.view addSubview:addDeckButton];
+    if (userAllDecks.count >= [userPF[@"maxDecks"] intValue])
+        [addDeckButton setEnabled:NO];
+    else
+        [addDeckButton setEnabled:YES];
+    
+    [self.view insertSubview:addDeckButton aboveSubview:_footerView];
     [_footerView addSubview:backButton];
     
     //add user decks
@@ -1272,6 +1307,8 @@ DeckModel * allCards;
     else{
         _nameField.text = @"";
         _tagsArea.text = @"";
+        
+        [self.view addSubview:_deckLimitationsButton];
     }
     
     [_footerView addSubview:self.deleteDeckButton];
@@ -1279,7 +1316,6 @@ DeckModel * allCards;
     [_footerView addSubview:_filterToggleButton];
     for (UIView*view in _propertiesView.subviews)
         view.alpha = 1;
-    
     
     [self reloadCardsWithFilter];
     
@@ -1290,8 +1326,49 @@ DeckModel * allCards;
     
     [self.view addSubview:saveDeckButton];
     
+    if (_isTutorial)
+        [self tutorialLimits];
+    
+    self.cardsView.isScrolling = NO;
+    
     //[self.cardsView.collectionView reloadData];
     //[self.cardsView.collectionView reloadInputViews];
+}
+
+-(void)tutorialLimits
+{
+    [self modalScreen];
+    //self.tutOkButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
+    //self.tutOkButton.label.text = @"Ok";
+    [self.view addSubview:self.tutLabel];
+    [self.view addSubview:self.tutOkButton];
+    
+    self.tutLabel.label.text = @"There are some restrictions in building a deck in CardForge: you cannot have cards of opposite elements, and there is a limit to how many cards with a particular ability you can have.";
+    [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [self.tutOkButton addTarget:self action:@selector(tutorialLimitsButton) forControlEvents:UIControlEventTouchUpInside];
+    [self.tutLabel.label setTextAlignment:NSTextAlignmentCenter];
+    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         self.tutOkButton.alpha = 1;
+                         self.tutLabel.alpha = 1;
+                     }
+                     completion:^(BOOL completed){
+                     }];
+}
+
+-(void)tutorialLimitsButton
+{
+    self.tutLabel.label.text = @"You should always tap the Limits button to review them before purchasing new cards.";
+    
+    //TODO arrow
+    
+    [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
+    
+    _isTutorial = NO; //tutorial's over
+    userPF[@"deckTutorialDone"] = @(YES);
+    [userPF saveInBackground]; //not important if failed
 }
 
 -(void)addDeckButtonPressed
@@ -1343,16 +1420,21 @@ DeckModel * allCards;
             BOOL succ = [UserModel deleteDeck:currentDeck];
             if (succ)
             {
+                NSLog(@"success deleting");
                 [self deleteDeckCancelButtonPressed]; //just to get rid of the dialogs
                 [self resetAllViews];
                 return YES;
             }
             else
+            {
+                NSLog(@"faild deleting");
                 return NO;
+            }
         } loadingText:@"Deleting..." failedText:@"Failed to delete deck."];
     }
     else
     {
+        NSLog(@"here");
         [self deleteDeckCancelButtonPressed]; //just to get rid of the dialogs
         [self resetAllViews];
     }
@@ -1684,6 +1766,33 @@ DeckModel * allCards;
 {
     [_nameField resignFirstResponder];
     [_tagsArea resignFirstResponder];
+}
+
+-(void)modalScreen
+{
+    _modalFilter.alpha = 3.f/255; //because apparently 0 alpha = cannot be interacted...
+    [self.view addSubview:_modalFilter];
+    _isModal = YES;
+}
+
+-(void)removeAllTutorialViews
+{
+    [self unmodalScreen];
+    
+    [self.tutOkButton removeFromSuperview];
+    [self.tutLabel removeFromSuperview];
+}
+
+-(void)unmodalScreen
+{
+    _isModal = NO;
+    [_modalFilter removeFromSuperview];
+}
+
+-(void)setTutLabelCenter:(CGPoint) center
+{
+    self.tutLabel.center = center;
+    self.tutOkButton.center = CGPointMake(center.x, center.y + self.tutLabel.bounds.size.height/2 - 40);
 }
 
 //block delay functions

@@ -174,11 +174,11 @@
             abilityCost += monster.life * 0.5;
             
             if (castType == castOnDamaged)
-                abilityCost *= 2;
+                abilityCost *= 1.5;
             else if (castType == castOnEndOfTurn)
-                abilityCost *= 3;
+                abilityCost *= 2.25;
             else if (castType == castOnMove)
-                abilityCost *= 3;
+                abilityCost *= 2.25;
         }
         else if (abilityType == abilityLoseDamage)
         {
@@ -215,9 +215,9 @@
                     if (![CardPointsUtility cardHasTaunt:card]) //taunt removes the bonus
                     {
                         if (abilityType == abilityAddCooldown)
-                            abilityCost = -monster.damage*0.1;
+                            abilityCost = -monster.damage*0.05;
                         else if (abilityType == abilityAddMaxCooldown)
-                            abilityCost = -monster.damage*0.2;
+                            abilityCost = -monster.damage*0.1;
                     }
                 }
             }
@@ -246,7 +246,7 @@
                 }
                 else if (abilityType == abilityPierce)
                 {
-                    abilityCost += monster.damage * 0.1;
+                    abilityCost += monster.damage * 0.4;
                 }
             }
         }
@@ -255,7 +255,7 @@
             //if is charge (assuming value = 0)
             if (abilityType == abilitySetCooldown && targetType == targetSelf)
             {
-                abilityCost += monster.damage; //having charge is equivalent in cost as having a deal damage ability
+                abilityCost += monster.damage * 0.8; //having charge is equivalent in cost as having a deal damage ability
                 //NOTE: affects cast on hit abilities' cost
             }
         }

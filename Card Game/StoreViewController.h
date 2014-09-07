@@ -90,6 +90,14 @@
 
 @property BOOL loadingMoreCards;
 
+@property (strong) CFLabel*tutLabel;
+@property (strong) CFButton*tutOkButton;
+@property (strong) UIView*modalFilter;
+@property BOOL isModal;
+
+/** Set itself automatically */
+@property BOOL isTutorial;
+
 /** Called by StoreCardsCollectionView */
 -(void)storeScrolledToEnd;
 

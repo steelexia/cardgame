@@ -29,7 +29,8 @@
 @synthesize likes = _likes;
 
 const int MONSTER_CARD = 0, SPELL_CARD = 1;
-const int NO_ID = -1, PLAYER_FIRST_CARD_ID = 0;
+const int NO_ID = -1, PLAYER_FIRST_CARD_ID = 0, PLAYER_SECOND_CARD_ID = 1;
+const int CARD_ID_START = 1000;
 
 /** constructor with id number, all other fields will be defaut values */
 -(instancetype)initWithIdNumber: (int)idNumber

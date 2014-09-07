@@ -25,5 +25,6 @@
 @property (strong)CFButton*chooseDeckButton,*backButton;
 @property (strong)DeckModel*currentDeck;
 @property(strong)UIViewController *nextScreen;
+@property BOOL noPickDeck;
 
 @end

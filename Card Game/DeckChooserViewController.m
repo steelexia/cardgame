@@ -35,7 +35,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     self.deckView = [[DeckTableView alloc] initWithFrame:CGRectMake(230,0,90,SCREEN_HEIGHT)];
     
     [self.view addSubview:self.deckView];
-    [self.deckView setUserInteractionEnabled:YES];
+    if (!_noPickDeck)
+        [self.deckView setUserInteractionEnabled:YES];
     [self.view setUserInteractionEnabled:YES];
     
     self.deckBackground = [[UIView alloc]initWithFrame:CGRectMake(20, 160, 190, 230)];
@@ -50,8 +51,11 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     _titleBackground.center = CGPointMake(115, 190);
     _titleBackground.backgroundColor = COLOUR_INTERFACE_BLUE;
     [self.view addSubview:_titleBackground]; //cannot add to deckbackground due to layer stuff
-    _titleBackground.alpha = 0;
-    self.deckBackground.alpha = 0;
+    if (!_noPickDeck)
+    {
+        self.deckBackground.alpha = 0;
+        _titleBackground.alpha = 0;
+    }
     
     //label showing opponent's name:
     if (![self.opponentName isEqualToString:@""])
@@ -92,7 +96,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     self.chooseDeckLabel.strokeOn = YES;
     self.chooseDeckLabel.strokeThickness = 3;
     
-    [self.view addSubview:self.chooseDeckLabel];
+    if (!_noPickDeck)
+        [self.view addSubview:self.chooseDeckLabel];
     
     //name of the deck currently chosen
     self.chosenDeckNameLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,200,40)];
@@ -107,6 +112,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     self.chosenDeckNameLabel.strokeOn = YES;
     self.chosenDeckNameLabel.strokeThickness = 3;
     //self.chosenDeckNameLabel.text = @"New Deck";
+    if (_noPickDeck)
+        self.chosenDeckNameLabel.text = @"Starting Deck";
     
     [_titleBackground addSubview: self.chosenDeckNameLabel];
     
@@ -144,7 +151,9 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     //[self.chooseDeckButton setImage:[UIImage imageNamed:@"battle_button"] forState:UIControlStateNormal];
     //[self.chooseDeckButton setImage:[UIImage imageNamed:@"battle_button_gray"] forState:UIControlStateDisabled];
     [self.chooseDeckButton addTarget:self action:@selector(battleButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-    [self.chooseDeckButton setEnabled:NO];
+    if (!_noPickDeck)
+        [self.chooseDeckButton setEnabled:NO];
+    
     
     [self.view addSubview:self.chooseDeckButton];
     
@@ -155,7 +164,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     
     [self.view addSubview:self.backButton];
     
-    [self resetAllViews];
+    if (!_noPickDeck)
+        [self resetAllViews];
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

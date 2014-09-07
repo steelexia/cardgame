@@ -62,10 +62,15 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
         [self.tutLabel.label setTextAlignment:NSTextAlignmentCenter];
         [self setLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)];
         [self.view addSubview:self.tutLabel];
-        
         [self.view addSubview:self.tutOkButton];
         
-        [self.tutOkButton addTarget:self action:@selector(openCardEditorTutorialTwo) forControlEvents:UIControlEventTouchUpInside];
+        NSArray*completedLevels = userPF[@"completedLevels"];
+        if (![completedLevels containsObject:self.level.levelID] && userPF[@"cardOneID"] == nil)
+            [self.tutOkButton addTarget:self action:@selector(openCardEditorTutorialTwo) forControlEvents:UIControlEventTouchUpInside];
+        else
+        {
+            [self.tutOkButton addTarget:self action:@selector(tutorialTwoRetry) forControlEvents:UIControlEventTouchUpInside];
+        }
     }
     else if ([TUTORIAL_THREE isEqualToString:self.level.levelID])
     {
@@ -73,14 +78,20 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
         
         self.tutLabel = [[CFLabel alloc] initWithFrame:CGRectMake(0,0,260,200)];
         [self.tutLabel setIsDialog:YES];
-        self.tutLabel.label.text = @"Defeat your opponent!";
+        self.tutLabel.label.text = @"Before we begin, let's forge your second card.";
         [self.tutLabel.label setTextAlignment:NSTextAlignmentCenter];
         [self setLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)];
         [self.view addSubview:self.tutLabel];
         
         [self.view addSubview:self.tutOkButton];
         
-        [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
+        NSArray*completedLevels = userPF[@"completedLevels"];
+        
+        //NOTE: hardcoded the string because lvl 3 actually is never "completed"
+        if (![completedLevels containsObject:@"d_1_c_1_l_4"] && userPF[@"cardTwoID"] == nil)
+                [self.tutOkButton addTarget:self action:@selector(openCardEditorTutorialThree) forControlEvents:UIControlEventTouchUpInside];
+        else
+            [self.tutOkButton addTarget:self action:@selector(tutorialThreeRetry) forControlEvents:UIControlEventTouchUpInside];
     }
     else if ([TUTORIAL_FOUR isEqualToString:self.level.levelID])
     {
@@ -88,14 +99,64 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
         
         self.tutLabel = [[CFLabel alloc] initWithFrame:CGRectMake(0,0,260,200)];
         [self.tutLabel setIsDialog:YES];
-        self.tutLabel.label.text = @"The last level of every chapter always includes a boss battle. During boss battles, your opponent hero is a powerful heroic creature that is immune to abilities that target regular creatures.";
+        self.tutLabel.label.text = @"The last level of every chapter always includes a boss battle. During boss battles, your opponent's hero is a powerful heroic creature that is immune to abilities that target regular creatures.";
         [self.tutLabel.label setTextAlignment:NSTextAlignmentCenter];
         [self setLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT*3/4)];
         [self.view addSubview:self.tutLabel];
-        
         [self.view addSubview:self.tutOkButton];
         
         [self.tutOkButton addTarget:self action:@selector(tutorialBoss) forControlEvents:UIControlEventTouchUpInside];
+        
+        CardModel *cardOne;
+        if (userPF[@"cardOneID"] != nil)
+        {
+            int cardOneID = [userPF[@"cardOneID"] intValue];
+            
+            for (CardModel *card in userAllCards)
+            {
+                if (card.idNumber == cardOneID)
+                {
+                    cardOne = [[CardModel alloc] initWithCardModel:card];
+                    break;
+                }
+            }
+        }
+        else
+        {
+            //this only happens if there was an error uploading the cardOneID earlier. In this case, grab the first card the user owns. NOTE that this will always end up as a duplicate from the starting hand..
+            if (userAllCards.count > 0)
+                cardOne = [[CardModel alloc] initWithCardModel:userAllCards[0]];
+        }
+        
+        CardModel *cardTwo;
+        if (userPF[@"cardTwoID"] != nil)
+        {
+            int cardTwoID = [userPF[@"cardTwoID"] intValue];
+            
+            for (CardModel *card in userAllCards)
+            {
+                if (card.idNumber == cardTwoID)
+                {
+                    cardTwo = [[CardModel alloc] initWithCardModel:card];
+                    break;
+                }
+            }
+        }
+        else
+        {
+            //this only happens if there was an error uploading the cardOneID earlier. In this case, grab the first card the user owns
+            if (userAllCards.count > 1)
+                cardTwo = [[CardModel alloc] initWithCardModel:userAllCards[1]];
+        }
+        
+        DeckModel *playerDeck = self.gameModel.decks[PLAYER_SIDE];
+        
+        if (cardTwo != nil)
+            [playerDeck insertCard:cardTwo atIndex:0];
+        if (cardOne != nil)
+            [playerDeck insertCard:cardOne atIndex:0];
+        
+        [self.gameModel startGame];
     }
 }
 
@@ -124,13 +185,10 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     }
     else if ([TUTORIAL_TWO isEqualToString:self.level.levelID])
     {
-        //still uses a fake local copy rather than online copy just to be lazy
-        CardModel*customCard = self.cevc.currentCardModel;
-        PLAYER_FIRST_CARD_IMAGE = customCard.cardView.cardImage.image; //save the image
-        userTutorialOneCardName = customCard.name;
-        customCard.idNumber = PLAYER_FIRST_CARD_ID;
-        customCard.type = cardTypeSinglePlayer;
-        customCard.cardView = nil; //delete the original card view from cevc
+        userPF[@"cardOneID"] = self.cevc.currentCardModel.cardPF[@"idNumber"];
+        [userPF saveInBackground]; //if this failed, not too big of a deal. next time will just search for first owned card
+        
+        CardModel *customCard = [[CardModel alloc] initWithCardModel:self.cevc.currentCardModel];
         DeckModel *playerDeck = self.gameModel.decks[PLAYER_SIDE];
         [playerDeck insertCard:customCard atIndex:0];
         
@@ -142,7 +200,50 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
         [self setLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/3)];
         [self.view addSubview:self.tutLabel];
         
-        [self tutorialHowToPlayCards];
+        [self tutorialHand];
+    }
+    else if ([TUTORIAL_THREE isEqualToString:self.level.levelID])
+    {
+        userPF[@"cardTwoID"] = self.cevc.currentCardModel.cardPF[@"idNumber"];
+        [userPF saveInBackground]; //if this failed, not too big of a deal. next time will just search for first owned card
+        
+        CardModel *customCard = [[CardModel alloc] initWithCardModel:self.cevc.currentCardModel];
+        DeckModel *playerDeck = self.gameModel.decks[PLAYER_SIDE];
+        [playerDeck insertCard:customCard atIndex:0];
+        
+        //get card one
+        CardModel *cardOne;
+        if (userPF[@"cardOneID"] != nil)
+        {
+            int cardOneID = [userPF[@"cardOneID"] intValue];
+            
+            for (CardModel *card in userAllCards)
+            {
+                if (card.idNumber == cardOneID)
+                {
+                    cardOne = [[CardModel alloc] initWithCardModel:card];
+                    break;
+                }
+            }
+        }
+        else
+        {
+            //this only happens if there was an error uploading the cardOneID earlier. In this case, grab the first card the user owns
+            if (userAllCards.count > 0)
+                cardOne = [[CardModel alloc] initWithCardModel:userAllCards[0]];
+        }
+        
+        [playerDeck insertCard:cardOne atIndex:0];
+        
+        //destroy the cevc to save space
+        self.cevc = nil;
+        
+        [self.gameModel startGame];
+        
+        [self setLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/3)];
+        [self.view addSubview:self.tutLabel];
+        
+        [self tutorialThreeBegin];
     }
 }
 
@@ -173,6 +274,13 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
         else if (self.gameModel.turnNumber == 2)
         {
             [self tutorialAttack];
+        }
+    }
+    if ([TUTORIAL_TWO isEqualToString:self.level.levelID])
+    {
+        if (self.gameModel.turnNumber == 2)
+        {
+            [self tutorialSpell];
         }
     }
 }
@@ -263,7 +371,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [self modalScreen];
     [self.view bringSubviewToFront:self.tutOkButton];
     [self.tutLabel setIsDialog:YES];
-    self.tutLabel.label.text = @"Creature cards all have cooldown, indicated by the number on the hourglass icon. Their cooldown decrease by 1 at the start of every turn, and they can attack once it reaches 0.";
+    self.tutLabel.label.text = @"Creature cards all have cooldown, indicated by the hourglass icon. Their cooldown decrease by 1 at the start of every turn, and they can attack once it reaches 0.";
     [self.view addSubview:self.tutOkButton];
 
     [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
@@ -287,7 +395,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [self.endTurnButton setUserInteractionEnabled:NO];
     [self setLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT*4/5)];
     
-    self.tutLabel.label.text = @"Now that the cooldown is 0, you can order it to attack by dragging it across to your opponent's creature, or your opponent's hero.";
+    self.tutLabel.label.text = @"You can now order it to attack by dragging it across to your opponent's creature, or your opponent's hero.";
     
     [self fadeIn:self.tutLabel inDuration:0.2];
 }
@@ -314,7 +422,11 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     self.tutLabel.frame = CGRectMake(0,0,260,200);
     [self.tutLabel setIsDialog:YES];
     [self setLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)];
-    self.tutLabel.label.text = @"You can also summon the new card you have drawn this turn. Each card costs resources indicated by the blue icon on the top left corner of the card. Your resource, shown at the bottom right, refill and increase by one every turn.";
+    self.tutLabel.label.text = @"Summoning a card costs resources indicated by the blue icon on the top left corner of the card. Your resource, shown at the bottom right, refill and increase by one every turn.";
+    
+    self.arrowImage.image = ARROW_RIGHT_ICON_IMAGE;
+    self.arrowImage.center = CGPointMake(SCREEN_WIDTH - 90, SCREEN_HEIGHT - 30);
+    [self fadeIn:self.arrowImage inDuration:0.2];
     
     [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
     [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
@@ -343,19 +455,59 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void)tutorialAbilitiyHint
 {
-    self.tutLabel.label.text = @"The icons appearing at the bottom of the card serve as reminders for these abilities. You can also tap the card or drag it into the help box at the bottom left corner to view its abilities.";
+    self.tutLabel.label.text = @"The icons appearing at the bottom of the card serve as reminders for these abilities. You can also tap the card or drag it into the help box at the bottom left corner to view them.";
     [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
     [self.tutOkButton addTarget:self action:@selector(tutorialOneWin) forControlEvents:UIControlEventTouchUpInside];
 }
 
 -(void)tutorialOneWin
 {
-    self.tutLabel.label.text = @"Now defeat your opponent!";
+    self.tutLabel.label.text = @"Now, defeat your opponent!";
     [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
     [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
 }
 
 //-----------tutorial two---------------//
+
+//this happens if the player fails the tutorial, or decides to play again later. They do not get to create another card.
+-(void)tutorialTwoRetry
+{
+    CardModel *cardOne;
+    if (userPF[@"cardOneID"] != nil)
+    {
+        int cardOneID = [userPF[@"cardOneID"] intValue];
+        
+        for (CardModel *card in userAllCards)
+        {
+            if (card.idNumber == cardOneID)
+            {
+                cardOne = [[CardModel alloc] initWithCardModel:card];
+                break;
+            }
+        }
+    }
+    else
+    {
+        //this only happens if there was an error uploading the cardOneID earlier. In this case, grab the first card the user owns
+        if (userAllCards.count > 0)
+        {
+            cardOne = [[CardModel alloc] initWithCardModel:userAllCards[0]];
+        }
+    }
+    
+    if (cardOne != nil) //should never be nil, but if really happened then player don't get the card
+    {
+        DeckModel *playerDeck = self.gameModel.decks[PLAYER_SIDE];
+        [playerDeck insertCard:cardOne atIndex:0];
+    }
+    
+    [self.gameModel startGame];
+    
+    [self setLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/3)];
+    [self.view addSubview:self.tutLabel];
+    
+    [self tutorialHand];
+}
 
 -(void)openCardEditorTutorialTwo
 {
@@ -366,24 +518,129 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void)tutorialHand
 {
+    [self setAllViews:NO];
+    [self modalScreen];
+    
+    [self.view addSubview:self.tutOkButton];
+    
     self.tutLabel.label.text = @"When you have several cards in your hand, it can be easier to view the cards by dragging horizontally.";
+    [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
 }
 
 -(void)tutorialSpell
 {
+    [self setAllViews:NO];
+    [self modalScreen];
+    
     self.tutLabel.label.text = @"Other than creature cards, spell cards are single-use cards that have an effect when casted.";
-    //[self.tutOkButton addTarget:self action:@selector(tutorialHowToPlayCards) forControlEvents:UIControlEventTouchUpInside];
+    [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [self.tutOkButton addTarget:self action:@selector(tutorialCastSpell) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.arrowImage.image = ARROW_RIGHT_ICON_IMAGE;
+    [self.view addSubview:self.arrowImage];
+    self.arrowImage.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 50);
+    [self fadeIn:self.arrowImage inDuration:0.2];
+    
+    [self.view addSubview:self.tutLabel];
+    [self.view addSubview:self.tutOkButton];
+    [self fadeIn:self.tutLabel inDuration:0.2];
+    [self fadeIn:self.tutOkButton inDuration:0.2];
 }
 
 -(void)tutorialCastSpell
 {
-    self.tutLabel.label.text = @"To cast a spell, drag it onto the battlefield just like when summoning a creature. If the spell allows picking the target, you can choose to abandon it, if you don't have a good target.";
-    //[self.tutOkButton addTarget:self action:@selector(tutorialHowToPlayCards) forControlEvents:UIControlEventTouchUpInside];
+    self.tutLabel.label.text = @"To cast a spell, drag it onto the battlefield just like when summoning a creature. If the spell requires picking a target, tap the target you chose.";
+    
+    [self fadeOut:self.arrowImage inDuration:0.2];
+    
+    [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
 }
 
 //-----------tutorial three---------------//
 
+-(void)openCardEditorTutorialThree
+{
+    self.arrowImage.alpha = 0;
+    self.cevc = [[CardEditorViewController alloc] initWithMode:cardEditorModeTutorialThree WithCard:nil];
+    [self presentViewController:self.cevc animated:YES completion:nil];
+}
 
+-(void)tutorialThreeRetry
+{
+    CardModel *cardOne;
+    if (userPF[@"cardOneID"] != nil)
+    {
+        int cardOneID = [userPF[@"cardOneID"] intValue];
+        
+        for (CardModel *card in userAllCards)
+        {
+            if (card.idNumber == cardOneID)
+            {
+                cardOne = [[CardModel alloc] initWithCardModel:card];
+                break;
+            }
+        }
+    }
+    else
+    {
+        //this only happens if there was an error uploading the cardOneID earlier. In this case, grab the first card the user owns
+        if (userAllCards.count > 0)
+        {
+            cardOne = [[CardModel alloc] initWithCardModel:userAllCards[0]];
+        }
+    }
+    
+    CardModel *cardTwo;
+    if (userPF[@"cardTwoID"] != nil)
+    {
+        int cardTwoID = [userPF[@"cardTwoID"] intValue];
+        
+        for (CardModel *card in userAllCards)
+        {
+            if (card.idNumber == cardTwoID)
+            {
+                cardTwo = [[CardModel alloc] initWithCardModel:card];
+                break;
+            }
+        }
+    }
+    else
+    {
+        //this only happens if there was an error uploading the cardOneID earlier. In this case, grab the first card the user owns
+        if (userAllCards.count > 1)
+        {
+            cardTwo = [[CardModel alloc] initWithCardModel:userAllCards[1]];
+        }
+    }
+    
+    DeckModel *playerDeck = self.gameModel.decks[PLAYER_SIDE];
+    
+    if (cardTwo != nil)
+        [playerDeck insertCard:cardTwo atIndex:0];
+    if (cardOne != nil)
+        [playerDeck insertCard:cardOne atIndex:0];
+    
+    [self.gameModel startGame];
+    
+    [self setLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/3)];
+    [self.view addSubview:self.tutLabel];
+    
+    [self tutorialThreeBegin];
+}
+
+-(void)tutorialThreeBegin
+{
+    [self setAllViews:NO];
+    [self modalScreen];
+    
+    [self.view addSubview:self.tutOkButton];
+    
+    self.tutLabel.label.text = @"Now, defeat your opponent!";
+    [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
+}
 
 //-----------tutorial four---------------//
 -(void)tutorialBoss
@@ -406,7 +663,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
                      completion:^(BOOL finished){
                          [self.tutLabel removeFromSuperview];
                          [self.tutOkButton removeFromSuperview];
-                         [self.arrowImage removeFromSuperview];
+                         //[self.arrowImage removeFromSuperview];
                      }];
        
 }

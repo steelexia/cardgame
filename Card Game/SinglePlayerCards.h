@@ -21,6 +21,8 @@
 +(DeckModel*) getCampaignDeckWithID:(NSString*)levelID;
 /** Only for tutorials */
 +(DeckModel*) getPlayerCampaignDeckWithID:(NSString*)levelID;
++(DeckModel*) getStartingDeck;
+
 +(void)uploadPlayerDeck;
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "MessageTableView.h"
+#import "MessagesViewController.h"
 
 @implementation MessageTableView
 
@@ -14,12 +15,11 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _currentStrings = [NSMutableArray array];
+        _currentMessages = [NSMutableArray array];
         
         _tableView = [[UITableView alloc] initWithFrame:self.bounds];
         
         [_tableView setBackgroundColor:[UIColor clearColor]];
-        
         
         _tableView.rowHeight = 20;
         [_tableView registerClass:[GameInfoTableViewCell class] forCellReuseIdentifier:@"messageTableCell"];
@@ -36,9 +36,9 @@
     return self;
 }
 
--(int)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+-(long)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.currentStrings count];
+    return [self.currentMessages count];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -58,7 +58,8 @@
      const CGSize textSize = [text sizeWithAttributes: userAttributes];
      */
     
-    NSString*text = self.currentStrings[indexPath.row];
+    MessageModel *message = self.currentMessages[indexPath.row];
+    NSString*text = message.title;
     
     [cell.abilityText setFont: [UIFont fontWithName:cell.abilityText.font.familyName size:16]];
     CGSize textSize = [text sizeWithFont:[cell.abilityText font]];
@@ -78,13 +79,18 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"selected");
+    if ([_parent isKindOfClass:[MessagesViewController class]])
+    {
+        MessagesViewController *mvc = (MessagesViewController*)_parent;
+        MessageModel *message = self.currentMessages[indexPath.row];
+        [mvc selectedMessage:message];
+    }
 }
 
 -(void)removeCellAt:(int)index {
-    if (index < self.currentStrings.count)
+    if (index < self.currentMessages.count)
     {
-        [self.currentStrings removeObjectAtIndex:index];
+        [self.currentMessages removeObjectAtIndex:index];
         NSIndexPath *indexPath =[NSIndexPath indexPathForRow:index inSection:0];
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
     }
@@ -92,7 +98,7 @@
 
 -(void)removeAllCells
 {
-    [self.currentStrings removeAllObjects];
+    [self.currentMessages removeAllObjects];
     [self.tableView reloadData];
 }
 

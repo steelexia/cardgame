@@ -10,9 +10,12 @@
 #import "CFLabel.h"
 #import "MessageTableView.h"
 #import "CFButton.h"
+#import "MessageModel.h"
 
 @interface MessagesViewController : UIViewController <UITextViewDelegate>
 @property (strong) MessageTableView *messageTableView;
 @property (strong) UITextView*messageBodyView;
+
+-(void)selectedMessage:(MessageModel*)message;
 
 @end

@@ -9,13 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "GameInfoTableViewCell.h"
 #import "UIConstants.h"
+#import "MessageModel.h"
 
 @interface MessageTableView : UIView <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong) UITableView *tableView;
 
-@property (strong) NSMutableArray *currentStrings;
-
+@property (strong) NSMutableArray *currentMessages;
+@property (strong) UIViewController*parent;
 
 -(void)removeCellAt:(int)index;
 

@@ -61,6 +61,9 @@ NSArray *_products;
 -(void)viewDidLoad{
     [super viewDidLoad];
     
+    if ([userPF[@"storeTutorialDone"] boolValue] == NO)
+        _isTutorial = YES;
+    
     SCREEN_WIDTH = self.view.bounds.size.width;
     SCREEN_HEIGHT = self.view.bounds.size.height;
     
@@ -845,6 +848,83 @@ NSArray *_products;
     
     [self updateFooterViews];
     [self loadCards];
+    
+    _modalFilter = [[UILabel alloc] initWithFrame:self.view.bounds];
+    _modalFilter.backgroundColor = [[UIColor alloc]initWithHue:0 saturation:0 brightness:0 alpha:0.8];
+    [_modalFilter setUserInteractionEnabled:YES]; //blocks all interaction behind it
+    
+    if (_isTutorial)
+    {
+        [self modalScreen];
+        self.tutOkButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
+        self.tutOkButton.label.text = @"Ok";
+        
+        self.tutLabel = [[CFLabel alloc] initWithFrame:CGRectMake(0,0,260,180)];
+        [self setTutLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)];
+        [self.tutLabel setIsDialog:YES];
+        
+        self.tutLabel.label.text = @"This is the card store. Here you can interact with cards designed by other players.";
+        [self.tutOkButton addTarget:self action:@selector(tutorialCreateCard) forControlEvents:UIControlEventTouchUpInside];
+        [self.tutLabel.label setTextAlignment:NSTextAlignmentCenter];
+        [self.view addSubview:_tutLabel];
+        [self.view addSubview:_tutOkButton];
+    }
+}
+
+-(void)tutorialCreateCard
+{
+    self.tutLabel.label.text = @"You can create more cards by tapping the card icon. Additional blank cards can be gained for free by playing the campaign.";
+    
+    //TODO arrow
+    
+    [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
+}
+
+-(void)tutorialLikeCard
+{
+    [self modalScreen];
+    
+    self.tutLabel.label.text = @"When browsing cards, you can \"Like\" cards that you are interested in. Liking a card will give you a small gold reward, and increase the likelihood of the card becoming more rare.";
+    [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [self.tutOkButton addTarget:self action:@selector(tutorialLikeRefill) forControlEvents:UIControlEventTouchUpInside];
+    
+    //TODO ARROW
+    
+    [self.view addSubview:_tutLabel];
+    [self.view addSubview:_tutOkButton];
+    
+    _tutLabel.alpha = 0;
+    _tutOkButton.alpha = 0;
+    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _tutLabel.alpha = 1;
+                         _tutOkButton.alpha = 1;
+                     }
+                     completion:^(BOOL completed){
+                         
+                     }];
+}
+
+-(void)tutorialLikeRefill
+{
+    self.tutLabel.label.text = @"It will cost you a Like when liking cards, and these will refill by one every 30 minutes.";
+    [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [self.tutOkButton addTarget:self action:@selector(tutorialEdit) forControlEvents:UIControlEventTouchUpInside];
+}
+
+-(void)tutorialEdit
+{
+    self.tutLabel.label.text = @"After liking a card, you can click \"Edit\" to vote its stats and abilities. These votes will be tallied every day, so your cards are always changing.";
+    [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
+    
+    //TODO ARROW
+    
+    _isTutorial = NO;
+    userPF[@"storeTutorialDone"] = @(YES);
+    [userPF saveInBackground]; //not important if failed
 }
 
 -(void)filterToggleButtonPressed
@@ -1245,7 +1325,10 @@ NSArray *_products;
                          _backButton.alpha = 0;
                      }
                      completion:^(BOOL completed){
-                         
+                         if (_isTutorial)
+                         {
+                             [self tutorialLikeCard];
+                         }
                      }];
 }
 
@@ -2170,6 +2253,33 @@ NSArray *_products;
                      }
                      completion:nil];
     return NO;
+}
+
+-(void)modalScreen
+{
+    _modalFilter.alpha = 3.f/255; //because apparently 0 alpha = cannot be interacted...
+    [self.view addSubview:_modalFilter];
+    _isModal = YES;
+}
+
+-(void)removeAllTutorialViews
+{
+    [self unmodalScreen];
+    
+    [self.tutOkButton removeFromSuperview];
+    [self.tutLabel removeFromSuperview];
+}
+
+-(void)unmodalScreen
+{
+    _isModal = NO;
+    [_modalFilter removeFromSuperview];
+}
+
+-(void)setTutLabelCenter:(CGPoint) center
+{
+    self.tutLabel.center = center;
+    self.tutOkButton.center = CGPointMake(center.x, center.y + self.tutLabel.bounds.size.height/2 - 40);
 }
 
 -(void)tapRegistered

@@ -32,6 +32,7 @@
         _playerGoesFirst = YES;
         _isTutorial = NO;
         _difficultyOffset = 0;
+        _heroId = NO_ID;
     }
     
     return self;

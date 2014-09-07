@@ -33,6 +33,7 @@ NSMutableArray*campaignLevels;
     //----chapter 1----//
     level = [[Level alloc] initWithID:@"d_1_c_1_l_1"];
     level.opponentName = @"Level one";
+    level.heroId = 1;
     level.isTutorial = YES;
     level.cardReward = 1;
     level.goldReward = 150;
@@ -43,6 +44,7 @@ NSMutableArray*campaignLevels;
     
     level = [[Level alloc] initWithID:@"d_1_c_1_l_2"];
     level.opponentName = @"Level two";
+    level.heroId = 2;
     level.isTutorial = YES;
     level.cardReward = 1;
     level.goldReward = 250;
@@ -53,40 +55,48 @@ NSMutableArray*campaignLevels;
     
     level = [[Level alloc] initWithID:@"d_1_c_1_l_3"];
     level.opponentName = @"Level three";
+    level.heroId = 3;
     level.isTutorial = YES;
     level.breakBeforeNextLevel = NO;
     level.opponentShuffleDeck = NO;
     level.playerShuffleDeck = NO;
-    level.opponentHealth = 14000;
+    level.opponentHealth = 18000;
     level.endBattleText = @"Some text talking about how the current level is beaten but a boss has shown up to stop you.";
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_1_l_4"];
     level.opponentName = @"Chapter one boss";
+    level.heroId = 4;
     level.isTutorial = YES;
     level.isBossFight = YES;
+    //level.opponentShuffleDeck = NO;
+    level.playerShuffleDeck = NO;
     level.goldReward = 1000; //basically starting gold for the player to spend. 14 common cards + 2 created
     [campaignLevels addObject:level];
     
     //----chapter 2----//
     level = [[Level alloc] initWithID:@"d_1_c_2_l_1"];
     level.opponentName = @"Level four";
+    level.heroId = 5;
     level.difficultyOffset = -1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_2_l_2"];
     level.opponentName = @"Level five";
+    level.heroId = 6;
     level.difficultyOffset = -1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_2_l_3"];
     level.opponentName = @"Level six";
+    level.heroId = 7;
     level.difficultyOffset = -1;
     level.breakBeforeNextLevel = NO;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_2_l_4"];
     level.opponentName = @"Chapter two boss";
+    level.heroId = 8;
     level.difficultyOffset = -1;
     level.isBossFight = YES;
     [campaignLevels addObject:level];
@@ -94,22 +104,26 @@ NSMutableArray*campaignLevels;
     //----chapter 3----//
     level = [[Level alloc] initWithID:@"d_1_c_3_l_1"];
     level.opponentName = @"Level seven";
+    level.heroId = 9;
     level.difficultyOffset = -1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_3_l_2"];
     level.opponentName = @"Level eight";
+    level.heroId = 10;
     level.difficultyOffset = -1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_3_l_3"];
     level.opponentName = @"Level nine";
+    level.heroId = 11;
     level.difficultyOffset = -1;
     level.breakBeforeNextLevel = NO;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_3_l_4"];
     level.opponentName = @"Chapter three boss";
+    level.heroId = 12;
     level.difficultyOffset = -1;
     level.isBossFight = YES;
     [campaignLevels addObject:level];
@@ -117,21 +131,30 @@ NSMutableArray*campaignLevels;
     //------------difficulty 2------------//
     //----chapter 1----//
     level = [[Level alloc] initWithID:@"d_2_c_1_l_1"];
+    level.opponentName = @"Level one hero";
+    level.heroId = 1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_2_c_1_l_2"];
+    level.opponentName = @"Level two hero";
+    level.heroId = 2;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_2_c_1_l_3"];
+    level.opponentName = @"Level three hero";
+    level.heroId = 3;
     level.breakBeforeNextLevel = NO;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_2_c_1_l_4"];
+    level.opponentName = @"Level four hero";
+    level.heroId = 4;
     level.isBossFight = YES;
     [campaignLevels addObject:level];
     
     //----chapter 2----//
     level = [[Level alloc] initWithID:@"d_2_c_2_l_1"];
+    //TODO keep adding id's
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_2_c_2_l_2"];
@@ -249,6 +272,19 @@ NSMutableArray*campaignLevels;
     else
         return campaignLevels[index+1];
 }
+
++(NSString*)getChapterDescription:(int)chapter
+{
+    if (chapter == 1)
+        return @"Chapter one description...";
+    else if (chapter == 2)
+        return @"Chapter two description...";
+    else if (chapter == 3)
+        return @"Chapter three description...";
+    
+    return @"NO DESCRIPTION";
+}
+
 
 @end
 

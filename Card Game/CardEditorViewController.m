@@ -273,7 +273,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     //elementEditArea.backgroundColor = [UIColor redColor];
     //elementEditArea.alpha = 0.5;
     
-    if (_editorMode == cardEditorModeCreation)
+    if (_editorMode == cardEditorModeCreation || _editorMode == cardEditorModeTutorialTwo || _editorMode == cardEditorModeTutorialThree)
         [self.view addSubview:elementEditArea];
     
     abilityEditArea = [[UIView alloc] initWithFrame: CGRectMake(80, 242, 186, 90)];
@@ -282,8 +282,6 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     //abilityEditArea.alpha = 0.5;
     
     [self.view addSubview:abilityEditArea];
-    
-    
     
     //-------------------------ability views------------------------//
     
@@ -671,6 +669,9 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     [tapGesture setCancelsTouchesInView:NO];
     [self.view addGestureRecognizer:tapGesture];
     
+    _arrowImage = [[UIImageView alloc] initWithImage:ARROW_RIGHT_ICON_IMAGE];
+    _arrowImage.frame = CGRectMake(0,0,80,80);
+    _arrowImage.alpha = 0.0;
     
     if (_editorMode == cardEditorModeVoting)
         [saveCardConfirmButton addTarget:self action:@selector(voteCardConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
@@ -712,6 +713,53 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         tutorialOneLabel.label.text = @"This is the card forging interface. Give your card an image and a name before pressing save. We'll ignore the other buttons for now.";
         
         [self.view addSubview:tutorialOneLabel];
+        
+        [self.view addSubview:_arrowImage];
+        _arrowImage.center = CGPointMake(60, 130);
+        
+        //arow showing image
+        [self performBlock:^{
+            [UIView animateWithDuration:0.2
+                                  delay:0
+                                options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 _arrowImage.alpha = 1.0;
+                             }
+                             completion:^(BOOL finished) {
+                                 [UIView animateWithDuration:0.2
+                                                       delay:2
+                                                     options:UIViewAnimationOptionCurveEaseInOut
+                                                  animations:^{
+                                                      _arrowImage.alpha = 0.0;
+                                                  }
+                                                  completion:^(BOOL finished) {
+                                                      
+                                                  }];
+                             }];
+        } afterDelay:2];
+        
+        //arrow showing name
+        [self performBlock:^{
+            _arrowImage.center = CGPointMake(90, 50);
+            [UIView animateWithDuration:0.2
+                                  delay:0
+                                options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 _arrowImage.alpha = 1.0;
+                             }
+                             completion:^(BOOL finished) {
+                                 [UIView animateWithDuration:0.2
+                                                       delay:2
+                                                     options:UIViewAnimationOptionCurveEaseInOut
+                                                  animations:^{
+                                                      _arrowImage.alpha = 0.0;
+                                                  }
+                                                  completion:^(BOOL finished) {
+                                                      
+                                                  }];
+                             }];
+        } afterDelay:5];
+        
     }
     else if (_editorMode == cardEditorModeTutorialTwo)
     {
@@ -724,7 +772,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [spellCardButton setEnabled:NO];
         [monsterCardButton setEnabled:NO];
         [cancelCardButton setEnabled:NO];
-        [abilityEditArea removeFromSuperview];
+        //[abilityEditArea removeFromSuperview];
         
         //unlocked after
         [abilityNewTableView setUserInteractionEnabled:NO];
@@ -738,14 +786,133 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         self.tutLabel = [[CFLabel alloc] initWithFrame:CGRectMake(0,0,260,180)];
         [self setTutLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT*3/4)];
         [self.tutLabel setIsDialog:YES];
-        self.tutLabel.label.text = @"You can modify the cost, damage, life, and cooldown of the card by tapping on its icons.";
+        self.tutLabel.label.text = @"You can modify the cost, damage, life, and cooldown of the card by tapping on their icons.";
         [self.tutOkButton addTarget:self action:@selector(tutorialPoints) forControlEvents:UIControlEventTouchUpInside];
         [self.tutLabel.label setTextAlignment:NSTextAlignmentCenter];
         [self.view addSubview:_tutLabel];
         [self.view addSubview:_tutOkButton];
         
+        UIImageView *arrowImage1 = [[UIImageView alloc] initWithImage:ARROW_RIGHT_ICON_IMAGE];
+        arrowImage1.frame = CGRectMake(0,0,80,80);
+        arrowImage1.alpha = 0.0;
+        
+        [self.view addSubview:arrowImage1];
+        
+        //arrow showing cost
+        [self performBlock:^{
+            CGPoint target = [self.view convertPoint:self.currentCardView.costLabel.center fromView:self.currentCardView];
+            arrowImage1.center = CGPointMake(target.x - 50, target.y);
+            [UIView animateWithDuration:0.2
+                                  delay:0
+                                options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 arrowImage1.alpha = 1.0;
+                             }
+                             completion:^(BOOL finished) {
+                                 [UIView animateWithDuration:0.2
+                                                       delay:1.5
+                                                     options:UIViewAnimationOptionCurveEaseInOut
+                                                  animations:^{
+                                                      arrowImage1.alpha = 0.0;
+                                                  }
+                                                  completion:^(BOOL finished) {
+                                                      
+                                                  }];
+                             }];
+        } afterDelay:1];
+        
+        //arrow showing damage
+        [self performBlock:^{
+            CGPoint target = [self.view convertPoint:self.currentCardView.attackLabel.center fromView:self.currentCardView];
+            arrowImage1.center = CGPointMake(target.x - 70, target.y);
+            [UIView animateWithDuration:0.2
+                                  delay:0
+                                options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 arrowImage1.alpha = 1.0;
+                             }
+                             completion:^(BOOL finished) {
+                                 [UIView animateWithDuration:0.2
+                                                       delay:1.5
+                                                     options:UIViewAnimationOptionCurveEaseInOut
+                                                  animations:^{
+                                                      arrowImage1.alpha = 0.0;
+                                                  }
+                                                  completion:^(BOOL finished) {
+                                                      
+                                                  }];
+                             }];
+        } afterDelay:3];
+        
+        //arrow showing life
+        [self performBlock:^{
+            CGPoint target = [self.view convertPoint:self.currentCardView.lifeLabel.center fromView:self.currentCardView];
+            arrowImage1.center = CGPointMake(target.x - 70, target.y);
+            [UIView animateWithDuration:0.2
+                                  delay:0
+                                options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 arrowImage1.alpha = 1.0;
+                             }
+                             completion:^(BOOL finished) {
+                                 [UIView animateWithDuration:0.2
+                                                       delay:1.5
+                                                     options:UIViewAnimationOptionCurveEaseInOut
+                                                  animations:^{
+                                                      arrowImage1.alpha = 0.0;
+                                                  }
+                                                  completion:^(BOOL finished) {
+                                                      
+                                                  }];
+                             }];
+        } afterDelay:5];
+        
+        //arrow showing cd
+        [self performBlock:^{
+            CGPoint target = [self.view convertPoint:self.currentCardView.cooldownLabel.center fromView:self.currentCardView];
+            arrowImage1.center = CGPointMake(target.x - 50, target.y);
+            [UIView animateWithDuration:0.2
+                                  delay:0
+                                options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 arrowImage1.alpha = 1.0;
+                             }
+                             completion:^(BOOL finished) {
+                                 [UIView animateWithDuration:0.2
+                                                       delay:1.5
+                                                     options:UIViewAnimationOptionCurveEaseInOut
+                                                  animations:^{
+                                                      arrowImage1.alpha = 0.0;
+                                                  }
+                                                  completion:^(BOOL finished) {
+                                                      [arrowImage1 removeFromSuperview]; //deleted
+                                                  }];
+                             }];
+        } afterDelay:7];
+        
         [saveCardButton setUserInteractionEnabled:NO];
     }
+    else if (_editorMode == cardEditorModeTutorialThree)
+    {
+        [cancelCardButton setEnabled:NO];
+        
+        //just a short instruction
+        self.tutOkButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
+        self.tutOkButton.label.text = @"Ok";
+        
+        self.tutLabel = [[CFLabel alloc] initWithFrame:CGRectMake(0,0,260,180)];
+        [self setTutLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)];
+        [self.tutLabel setIsDialog:YES];
+        self.tutLabel.label.text = @"This time you're free to create any card you want.";
+        [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
+        self.tutLabel.label.textAlignment = NSTextAlignmentCenter;
+        
+        [self modalScreen];
+        
+        [self.view addSubview:_tutLabel];
+        [self.view addSubview:_tutOkButton];
+    }
+    
     //UIView*damageEditArea, *lifeEditArea, *costEditArea, *cdEditArea, *imageEditArea, *elementEditArea, *abilityEditArea;
     
     [self resetAbilityViews];
@@ -771,6 +938,19 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     [self removeAllStatButtons];
     self.tutLabel.label.text = @"Increasing the strength of the card will also increase the points indicated by the star icon. This number cannot exceed the maximum points, which can only be raised by increasing the resource cost of the card.";
     
+    _arrowImage.image = ARROW_LEFT_ICON_IMAGE;
+    [self.view addSubview:_arrowImage];
+    _arrowImage.center = CGPointMake(pointsImageBackground.center.x + 70, pointsImageBackground.center.y);
+    
+    [UIView animateWithDuration:0.2
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _arrowImage.alpha = 1.0;
+                     }
+                     completion:^(BOOL finished) {
+                     }];
+    
     [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
     [self.tutOkButton addTarget:self action:@selector(tutorialAbility) forControlEvents:UIControlEventTouchUpInside];
 }
@@ -792,12 +972,57 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     
     [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
     [self.tutOkButton addTarget:self action:@selector(tutorialElement) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    [UIView animateWithDuration:0.2
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _arrowImage.alpha = 0.0;
+                     }
+                     completion:^(BOOL finished) {
+                         _arrowImage.image = ARROW_DOWN_ICON_IMAGE;
+                         _arrowImage.center = CGPointMake(abilityNewTableView.center.x, abilityNewTableView.frame.origin.y - 40);
+                         
+                         [UIView animateWithDuration:0.2
+                                               delay:0
+                                             options:UIViewAnimationOptionCurveEaseInOut
+                                          animations:^{
+                                              _arrowImage.alpha = 1.0;
+                                          }
+                                          completion:^(BOOL finished) {
+                                              
+                                          }];
+                     }];
+    
 }
 
 -(void)tutorialElement
 {
     [self.view addSubview:elementEditArea];
-    self.tutLabel.label.text = @"You can also change the element of the card by clicking on the element icon, \"Neutral\" in this case. Elements do not directly affect the card, instead they allow different abilities to be added.";
+    self.tutLabel.label.text = @"You can also change the element of the card by tapping on the element icon, \"Neutral\" in this case. Elements do not directly affect the card, instead they allow different abilities to be added.";
+    
+    [UIView animateWithDuration:0.2
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _arrowImage.alpha = 0.0;
+                     }
+                     completion:^(BOOL finished) {
+                         _arrowImage.image = ARROW_RIGHT_ICON_IMAGE;
+                         CGPoint target = [self.view convertPoint:self.currentCardView.elementLabel.center fromView:self.currentCardView];
+                         _arrowImage.center = CGPointMake(target.x - 60, target.y);
+                         
+                         [UIView animateWithDuration:0.2
+                                               delay:0
+                                             options:UIViewAnimationOptionCurveEaseInOut
+                                          animations:^{
+                                              _arrowImage.alpha = 1.0;
+                                          }
+                                          completion:^(BOOL finished) {
+                                              
+                                          }];
+                     }];
     
     [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
     [self.tutOkButton addTarget:self action:@selector(tutorialTags) forControlEvents:UIControlEventTouchUpInside];
@@ -812,7 +1037,28 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     [self.view addSubview:costEditArea];
     [self.view addSubview:cdEditArea];
     
-    self.tutLabel.label.text = @"Be sure to include at least 3 descriptive words as Tags for your card. This will help other players find it on the store. Press save after you're satisfied with your card.";
+    self.tutLabel.label.text = @"Be sure to include at least 3 descriptive words as Tags for your card. This will help other players find it on the store. Press save after you're satisfied with everything.";
+    
+    [UIView animateWithDuration:0.2
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _arrowImage.alpha = 0.0;
+                     }
+                     completion:^(BOOL finished) {
+                         _arrowImage.image = ARROW_DOWN_ICON_IMAGE;
+                         _arrowImage.center = CGPointMake(tagsField.center.x, tagsField.center.y - 50);
+                         
+                         [UIView animateWithDuration:0.2
+                                               delay:0
+                                             options:UIViewAnimationOptionCurveEaseInOut
+                                          animations:^{
+                                              _arrowImage.alpha = 1.0;
+                                          }
+                                          completion:^(BOOL finished) {
+                                              
+                                          }];
+                     }];
     
     [self.view bringSubviewToFront:self.tutOkButton];
     [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
@@ -822,6 +1068,15 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
 -(void)removeAllTutorialViews
 {
     [self unmodalScreen];
+    
+    [UIView animateWithDuration:0.2
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _arrowImage.alpha = 0.0;
+                     }
+                     completion:^(BOOL finished) {
+                     }];
     
     [saveCardButton setUserInteractionEnabled:YES];
     [self.tutOkButton removeFromSuperview];
@@ -897,7 +1152,6 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
 -(void)keyboardOnScreen:(NSNotification *)notification
 {
     keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    
 }
 
 -(void)tagsFieldBegan
@@ -1362,7 +1616,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         if (PLAYER_FIRST_CARD_IMAGE!=nil)
             _currentCardView = [[CardView alloc] initWithModel:_currentCardModel withImage:PLAYER_FIRST_CARD_IMAGE viewMode:cardViewModeEditor];
         else
-            _currentCardView = [[CardView alloc] initWithModel:_currentCardModel withImage:CARD_EDITOR_EMPTY_IMAGE viewMode:cardViewModeEditor];
+            _currentCardView = [[CardView alloc] initWithModel:_currentCardModel withImage:originalImage viewMode:cardViewModeEditor];
     }
     else if (_currentCardModel.idNumber == NO_ID && originalImage == nil)
         _currentCardView = [[CardView alloc] initWithModel:_currentCardModel withImage:CARD_EDITOR_EMPTY_IMAGE viewMode:cardViewModeEditor];
@@ -1574,7 +1828,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
 
 -(void)updateCardTypeButtons
 {
-    if (_editorMode == cardEditorModeCreation)
+    if (_editorMode == cardEditorModeCreation || _editorMode == cardEditorModeTutorialThree)
     {
         if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
         {
@@ -1940,7 +2194,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [self.view addSubview:abilityIncButton];
         [self.view addSubview:abilityDecButton];
         [self.view addSubview:abilityRemoveButton];
-        [self.view addSubview:abilityExistingTableView];
+        [self.view insertSubview:abilityExistingTableView aboveSubview:abilityEditArea];
         abilityIncButton.alpha = 0;
         abilityDecButton.alpha = 0;
         abilityRemoveButton.alpha = 0;
@@ -2306,12 +2560,20 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     }
     
     //TODO THIS IS JUST FOR TESTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    
+    /*
     if (_editorMode == cardEditorModeTutorialTwo)
     {
         [self dismissViewControllerAnimated:YES completion:nil];
         return;
     }
-    
+    //also TODO
+    if (_editorMode == cardEditorModeTutorialThree)
+    {
+        [self dismissViewControllerAnimated:YES completion:nil];
+        return;
+    }
+    */
     NSString *lowerTags = [tagsField.text lowercaseString];
     NSMutableArray*lowerTagsArray = [NSMutableArray arrayWithArray:[lowerTags componentsSeparatedByString:@" "]];
     NSMutableArray*noDupTags = [NSMutableArray array];
@@ -2321,7 +2583,6 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         if (![noDupTags containsObject:string] && string.length > 0)
             [noDupTags addObject:string];
     }
-    
     
     self.currentCardModel.tags = noDupTags;
     [userAllCards addObject:self.currentCardModel]; 

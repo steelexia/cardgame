@@ -61,6 +61,7 @@
     MESSAGE_ICON_IMAGE = [UIImage imageNamed:@"message_icon"];
     ARROW_LEFT_ICON_IMAGE = [UIImage imageNamed:@"arrow_left_icon"];
     ARROW_RIGHT_ICON_IMAGE = [UIImage imageNamed:@"arrow_right_icon"];
+    ARROW_DOWN_ICON_IMAGE = [UIImage imageNamed:@"arrow_down_icon"];
 }
 
 +(UIColor*)getElementColor:(enum CardElement)element

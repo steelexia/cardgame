@@ -338,7 +338,7 @@
         monster = [[MonsterCardModel alloc] initWithIdNumber:1100 type:cardTypeSinglePlayer];
         monster.rarity = cardRarityRare;
         monster.element = elementDark;
-        monster.name = @"Headslayer"; //TODO name
+        monster.name = @"Headslayer Vanguard"; //TODO name
         monster.damage = 4500;
         monster.life = monster.maximumLife = 4300;
         monster.cost = 6;
@@ -619,7 +619,7 @@
             spell.name = @"Roar";
             spell.cost = 5;
             
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:3000]]];
+            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
             [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:500]]];
             
             [deck addCard:spell];
@@ -632,7 +632,7 @@
             spell.name = @"Fire Breath";
             spell.cost = 7;
             
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:1900]]];
+            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:2200]]];
             
             [deck addCard:spell];
         }
@@ -925,7 +925,7 @@
             monster = [[MonsterCardModel alloc] initWithIdNumber:1100 type:cardTypeSinglePlayer];
             monster.rarity = cardRarityRare;
             monster.element = elementDark;
-            monster.name = @"Headslayer"; //TODO name
+            monster.name = @"Headslayer Vanguard"; //TODO name
             monster.damage = 6500;
             monster.life = monster.maximumLife = 6300;
             monster.cost = 6;
@@ -1274,163 +1274,267 @@
 {
     DeckModel *deck = [[DeckModel alloc] init];
     
-    MonsterCardModel*monster;
-    SpellCardModel*spell;
+    DeckModel *starterDeck = [self getStartingDeck];
     
     //----chapter 1----//
     if ([levelID isEqualToString:@"d_1_c_1_l_1"])
     {
-        //not added here
-        /*
-        monster = [[MonsterCardModel alloc] initWithIdNumber:900000 type:cardTypeSinglePlayer];
-        monster.name = @"Custom Card";
-        monster.damage = 1400;
-        monster.life = monster.maximumLife = 2600;
-        monster.cost = 1;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];*/
-        
-        monster = [[MonsterCardModel alloc] initWithIdNumber:900002 type:cardTypeSinglePlayer];
-        monster.name = @"Card 1";
-        monster.damage = 2100;
-        monster.life = monster.maximumLife = 2900;
-        monster.cost = 2;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];
-        
-        monster = [[MonsterCardModel alloc] initWithIdNumber:900003 type:cardTypeSinglePlayer];
-        monster.name = @"Card 2";
-        monster.damage = 3900;
-        monster.life = monster.maximumLife = 3000;
-        monster.cost = 3;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];
-        
-        monster = [[MonsterCardModel alloc] initWithIdNumber:900004 type:cardTypeSinglePlayer];
-        monster.name = @"Card 3";
-        monster.damage = 4100;
-        monster.life = monster.maximumLife = 4700;
-        monster.cost = 4;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];
-        
-        monster = [[MonsterCardModel alloc] initWithIdNumber:900005 type:cardTypeSinglePlayer];
-        monster.name = @"Card 4";
-        monster.damage = 4800;
-        monster.life = monster.maximumLife = 5600;
-        monster.cost = 5;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];
-        
-        monster = [[MonsterCardModel alloc] initWithIdNumber:900006 type:cardTypeSinglePlayer];
-        monster.name = @"Card 5";
-        monster.damage = 2500;
-        monster.life = monster.maximumLife = 6100;
-        monster.cost = 4;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];
+        [deck addCard:starterDeck.cards[1]];
+        [deck addCard:starterDeck.cards[2]];
+        [deck addCard:starterDeck.cards[3]];
+        [deck addCard:starterDeck.cards[4]];
+        [deck addCard:starterDeck.cards[5]];
     }
     else if ([levelID isEqualToString:@"d_1_c_1_l_2"])
     {
-        //not actually added here
-        /*
-        monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
-        monster.name = @"Custom Card Stats Vary";
-        monster.damage = 6000;
-        monster.life = monster.maximumLife = 6000;
-        monster.cost = 5;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];
-         */
-        
-        monster = [[MonsterCardModel alloc] initWithIdNumber:900001 type:cardTypeSinglePlayer];
-        monster.name = @"Card 0";
-        monster.damage = 1200;
-        monster.life = monster.maximumLife = 1800;
-        monster.cost = 1;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];
-        
-        monster = [[MonsterCardModel alloc] initWithIdNumber:900002 type:cardTypeSinglePlayer];
-        monster.name = @"Card 1";
-        monster.damage = 2100;
-        monster.life = monster.maximumLife = 2900;
-        monster.cost = 2;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];
-        
-        monster = [[MonsterCardModel alloc] initWithIdNumber:900005 type:cardTypeSinglePlayer];
-        monster.name = @"Card 4";
-        monster.damage = 4800;
-        monster.life = monster.maximumLife = 5600;
-        monster.cost = 5;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];
-        
-        monster = [[MonsterCardModel alloc] initWithIdNumber:900006 type:cardTypeSinglePlayer];
-        monster.name = @"Card 5";
-        monster.damage = 2500;
-        monster.life = monster.maximumLife = 6100;
-        monster.cost = 4;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];
-        
-        spell = [[SpellCardModel alloc] initWithIdNumber:1404 type:cardTypeSinglePlayer];
-        spell.name = @"Spell";
-        spell.cost = 3;
-        
-        [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
-        
-        [deck addCard:spell];
-        
-        monster = [[MonsterCardModel alloc] initWithIdNumber:900003 type:cardTypeSinglePlayer];
-        monster.name = @"Card 2";
-        monster.damage = 3900;
-        monster.life = monster.maximumLife = 3000;
-        monster.cost = 3;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];
-        
-        monster = [[MonsterCardModel alloc] initWithIdNumber:900004 type:cardTypeSinglePlayer];
-        monster.name = @"Card 3";
-        monster.damage = 4100;
-        monster.life = monster.maximumLife = 4700;
-        monster.cost = 4;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];
-        
-        spell = [[SpellCardModel alloc] initWithIdNumber:1404 type:cardTypeSinglePlayer];
-        spell.name = @"Spell";
-        spell.cost = 2;
-        
-        [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:1700]]];
-        [spell addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-        
-        [deck addCard:spell];
+        [deck addCard:starterDeck.cards[0]];
+        [deck addCard:starterDeck.cards[1]];
+        [deck addCard:starterDeck.cards[4]];
+        [deck addCard:starterDeck.cards[6]];
+        [deck addCard:starterDeck.cards[5]];
+        [deck addCard:starterDeck.cards[2]];
+        [deck addCard:starterDeck.cards[7]];
+        [deck addCard:starterDeck.cards[3]];
+        [deck addCard:starterDeck.cards[8]];
+        [deck addCard:starterDeck.cards[9]];
     }
     else if ([levelID isEqualToString:@"d_1_c_1_l_3"])
     {
-        
+        [deck addCard:starterDeck.cards[8]];
+        [deck addCard:starterDeck.cards[10]];
+        [deck addCard:starterDeck.cards[16]];
+        [deck addCard:starterDeck.cards[0]];
+        [deck addCard:starterDeck.cards[7]];
+        [deck addCard:starterDeck.cards[2]];
+        [deck addCard:starterDeck.cards[19]];
+        [deck addCard:starterDeck.cards[14]];
+        [deck addCard:starterDeck.cards[1]];
+        [deck addCard:starterDeck.cards[15]];
+        [deck addCard:starterDeck.cards[17]];
+        [deck addCard:starterDeck.cards[9]];
+        [deck addCard:starterDeck.cards[18]];
+        [deck addCard:starterDeck.cards[11]];
+        [deck addCard:starterDeck.cards[13]];
+        [deck addCard:starterDeck.cards[12]];
     }
     else if ([levelID isEqualToString:@"d_1_c_1_l_4"])
     {
-        
+        [deck addCard:starterDeck.cards[0]];
+        [deck addCard:starterDeck.cards[9]];
+        [deck addCard:starterDeck.cards[17]];
+        [deck addCard:starterDeck.cards[12]];
+        [deck addCard:starterDeck.cards[7]];
+        [deck addCard:starterDeck.cards[1]];
+        [deck addCard:starterDeck.cards[8]];
+        [deck addCard:starterDeck.cards[2]];
+        [deck addCard:starterDeck.cards[4]];
+        [deck addCard:starterDeck.cards[19]];
+        [deck addCard:starterDeck.cards[10]];
+        [deck addCard:starterDeck.cards[15]];
+        [deck addCard:starterDeck.cards[6]];
+        [deck addCard:starterDeck.cards[11]];
+        [deck addCard:starterDeck.cards[5]];
+        [deck addCard:starterDeck.cards[14]];
     }
     else
         return nil;
+    
+    return deck;
+}
+
+/** This is just for testing */
++(DeckModel*)getStartingDeck
+{
+    DeckModel *deck = [[DeckModel alloc] init];
+    
+    MonsterCardModel* monster;
+    SpellCardModel* spell;
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1 type:cardTypeStandard];
+    monster.name = @"Foxy"; //?
+    monster.damage = 1200;
+    monster.life = monster.maximumLife = 1800;
+    monster.cost = 1;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [deck addCard:monster];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2 type:cardTypeStandard];
+    monster.name = @"Pigman Chief";
+    monster.damage = 2100;
+    monster.life = monster.maximumLife = 2900;
+    monster.cost = 2;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [deck addCard:monster];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:3 type:cardTypeStandard];
+    monster.name = @"Ratmen";
+    monster.damage = 3900;
+    monster.life = monster.maximumLife = 3000;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [deck addCard:monster];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:4 type:cardTypeStandard];
+    monster.name = @"Snow Harpy";
+    monster.damage = 2800;
+    monster.life = monster.maximumLife = 1900;
+    monster.cost = 4;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+    
+    [deck addCard:monster];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:5 type:cardTypeStandard];
+    monster.name = @"Sand Dragon Summoner";
+    monster.damage = 4800;
+    monster.life = monster.maximumLife = 5600;
+    monster.cost = 5;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [deck addCard:monster];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:6 type:cardTypeStandard];
+    monster.name = @"Swampling";
+    monster.damage = 2500;
+    monster.life = monster.maximumLife = 6100;
+    monster.cost = 4;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [deck addCard:monster];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:7 type:cardTypeStandard];
+    spell.name = @"Meteor Strike";
+    spell.cost = 2;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:2300]]];
+    
+    [deck addCard:spell];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:8 type:cardTypeStandard];
+    spell.name = @"Fountain of Youth";
+    spell.cost = 2;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:2700]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    
+    [deck addCard:spell];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:9 type:cardTypeStandard];
+    monster.name = @"Sorceress"; //?
+    monster.damage = 2900;
+    monster.life = monster.maximumLife = 4600;
+    monster.cost = 4;
+    monster.cooldown = monster.maximumCooldown = 2;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:3400]]];
+    
+    [deck addCard:monster];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:10 type:cardTypeStandard];
+    spell.name = @"Migration";
+    spell.cost = 1;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    
+    [deck addCard:spell];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:11 type:cardTypeStandard];
+    monster.name = @"Redbeard Shaman";
+    monster.damage = 2500;
+    monster.life = monster.maximumLife = 1200;
+    monster.cost = 1;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnMove targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
+    
+    [deck addCard:monster];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:12 type:cardTypeStandard];
+    monster.name = @"Fenlong";
+    monster.damage = 2600;
+    monster.life = monster.maximumLife = 4800;
+    monster.cost = 4;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    
+    [deck addCard:monster];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:13 type:cardTypeStandard];
+    monster.name = @"Water Colossus";
+    monster.damage = 3400;
+    monster.life = monster.maximumLife = 4400;
+    monster.cost = 5;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
+    
+    [deck addCard:monster];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:14 type:cardTypeStandard];
+    spell.name = @"Leviathan Returns"; //?
+    spell.cost = 5;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:4900]]];
+    
+    [deck addCard:spell];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:15 type:cardTypeStandard];
+    spell.name = @"Last Stand";
+    spell.cost = 4;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:1700]]];
+    
+    [deck addCard:spell];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:16 type:cardTypeStandard];
+    monster.name = @"Gugu";
+    monster.damage = 0;
+    monster.life = monster.maximumLife = 5300;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnMove targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:1200]]];
+    
+    [deck addCard:monster];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:17 type:cardTypeStandard];
+    monster.name = @"Fireball Slinger";
+    monster.damage = 1200;
+    monster.life = monster.maximumLife = 1600;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:1600]]];
+    
+    [deck addCard:monster];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:18 type:cardTypeStandard];
+    monster.name = @"Shrimpman";
+    monster.damage = 1300;
+    monster.life = monster.maximumLife = 3400;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnHit targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    
+    [deck addCard:monster];
+
+    monster = [[MonsterCardModel alloc] initWithIdNumber:19 type:cardTypeStandard];
+    monster.name = @"Deity of Magic"; //?
+    monster.damage = 4800;
+    monster.life = monster.maximumLife = 6600;
+    monster.cost = 6;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnHit targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:1400]]];
+    
+    [deck addCard:monster];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:20 type:cardTypeStandard];
+    spell.name = @"Hariya's Curse";
+    spell.cost = 2;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxCooldown castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
+    
+    [deck addCard:spell];
     
     return deck;
 }

@@ -321,6 +321,8 @@ int cardIDCount = 0;
         for (Ability *ability in monsterCard.abilities)
             if (ability.durationType == durationUntilEndOfTurn && ability.castType == castAlways)
                 ability.expired = YES;
+        
+        [monsterCard.cardView updateView];
     }
     for (MonsterCardModel*monsterCard in self.battlefield[OPPONENT_SIDE])
     {
@@ -328,6 +330,8 @@ int cardIDCount = 0;
         for (Ability *ability in monsterCard.abilities)
             if (ability.durationType == durationUntilEndOfTurn && ability.castType == castAlways)
                 ability.expired = YES;
+        
+        [monsterCard.cardView updateView];
     }
     
     //this ensures every single card has its turn ended even if the array has been modified
@@ -901,20 +905,25 @@ int cardIDCount = 0;
             [attackerMonsterCard loseLife: defenderDamage];
             dealtDamageAttacker = (originalLifeAttacker - attackerMonsterCard.life);
             overDamageAttacker = defenderDamage - (originalLifeAttacker - attackerMonsterCard.life);
-            
-            //CastType castOnDamaged is casted here by defender
-            for (int i = 0; i < [target.abilities count]; i++) //castAbility may insert objects in end
-            {
-                Ability*ability = target.abilities[i];
-                if (ability.castType == castOnDamaged)
-                {
-                    [target.cardView castedAbility:ability];
-                    [self castAbility:ability byMonsterCard:target toMonsterCard:attackerMonsterCard fromSide:oppositeSide];
-                }
-            }
         }
         else
             defenderDamage = 0; //will not receive damage
+        
+        //CastType castOnDamaged is casted here by defender (even if !willReceiveAttack)
+        for (int i = 0; i < [target.abilities count]; i++) //castAbility may insert objects in end
+        {
+            Ability*ability = target.abilities[i];
+            if (ability.castType == castOnDamaged)
+            {
+                [target.cardView castedAbility:ability];
+                
+                if (willReceiveAttack)
+                    [self castAbility:ability byMonsterCard:target toMonsterCard:attackerMonsterCard fromSide:oppositeSide];
+                //assassin will dodge the targeting (but still get hit if for example it was deal damage to all)
+                else
+                    [self castAbility:ability byMonsterCard:target toMonsterCard:nil fromSide:oppositeSide];
+            }
+        }
         
         //CastType castOnHit is casted here by attacker
         for (int i = 0; i < [attackerMonsterCard.abilities count]; i++) //castAbility may insert objects in end
@@ -1262,6 +1271,7 @@ int cardIDCount = 0;
                     else if (monster == attacker) //cannot target self
                         continue;
                     
+                    //NSLog(@"name: %@", monster.name);
                     monster.cardView.cardHighlightType = cardHighlightTarget;
                 }
                 [self.gameViewController pickAbilityTarget:ability castedBy:attacker];
@@ -1791,7 +1801,7 @@ int cardIDCount = 0;
             return YES;
         }
         
-        if (monster.heroic)
+        if (monster.heroic) //cannot return heroic
             return YES;
         
         //TODO needs to reset any silenced abilty (instead of removing abilities with silence, set them to expired

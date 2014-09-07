@@ -96,7 +96,7 @@
     [super touchesBegan:touches withEvent:event];
     
     //no clue what 5 is but that's when it's pressed
-    if (_buttonStyle == CFButtonStyleRadio && self.state == 5)
+    if (_buttonStyle == CFButtonStyleRadio && self.enabled)
     {
         //no effect
     }
@@ -113,16 +113,24 @@
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     BOOL originalSelected = self.selected;
-    [super touchesEnded:touches withEvent:event];
     
     CGPoint touchPoint = [[touches anyObject] locationInView:self];
     //touches ended inside
     if (CGRectContainsPoint(self.bounds, touchPoint))
     {
         if (_buttonStyle == CFButtonStyleRadio)
-            [self setSelected:YES];
+        {
+            if (!self.selected)
+            {
+                [self setSelected:YES];
+                [super touchesEnded:touches withEvent:event];
+            }
+        }
         else
+        {
             [self setSelected:!originalSelected];
+            [super touchesEnded:touches withEvent:event];
+        }
     }
     
     [self updateView];

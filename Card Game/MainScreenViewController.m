@@ -155,7 +155,8 @@ UILabel *loadingLabel;
 
 -(void)optionButtonPressed
 {
-    
+    OptionsViewController *vc = [[OptionsViewController alloc] init];
+    [self presentViewController:vc animated:NO completion:nil];
 }
 
 //checks for userInfoLoaded flag to be set to YES. Once it does, remove the loading screen.

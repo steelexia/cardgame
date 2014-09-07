@@ -30,6 +30,9 @@
 /** For AI */
 @property int difficultyOffset;
 
+/** For single player images */
+@property int heroId;
+
 /** Set this for battles that have breakBeforeNextLabel set to NO. */
 @property (strong) NSString*endBattleText;
 

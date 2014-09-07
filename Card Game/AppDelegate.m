@@ -19,8 +19,10 @@
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
-NSString*SERVICE_NAME = @"com.contentgames.cardgame";
-NSString*ACCOUNT_NAME = @"default_account";
+//TODO needs to move this probably to UserModel
+const NSString*SERVICE_NAME = @"com.contentgames.cardgame";
+const NSString*ACCOUNT_NAME = @"username";
+const NSString*PASSWORD_NAME = @"password";
 
 const BOOL OFFLINE_DEBUGGING = NO;
 
@@ -44,24 +46,59 @@ const BOOL OFFLINE_DEBUGGING = NO;
         [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
         
         NSError*error;
-        NSString *password = [SSKeychain passwordForService:SERVICE_NAME account:ACCOUNT_NAME error:&error];
+        NSString *account = [SSKeychain passwordForService:SERVICE_NAME account:ACCOUNT_NAME error:&error];
+        
+        //-25300 is when it's not found
+        if (error && error.code != -25300)
+        {
+            
+            NSLog(@"ERROR GETTING ACCOUNT: %@", [error localizedDescription]);
+            return NO;
+        }
+        
+        NSString *password = [SSKeychain passwordForService:SERVICE_NAME account:PASSWORD_NAME error:&error];
+        
+        if (error && error.code != -25300)
+        {
+            NSLog(@"ERROR GETTING PASSWORD: %@", [error localizedDescription]);
+            return NO;
+        }
+        
+        //password = @"123456";
+        
+        NSString *idfv = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+        NSLog(@"%@", idfv);
+        
+        NSString *defaultUsername = [idfv substringToIndex:7]; //TODO!!!
         
         //new account
-        if (error || password == nil)
+        if (account == nil || password == nil)
         {
-            NSString *idfv = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
             NSError*error;
             [SSKeychain setPassword:idfv forService:SERVICE_NAME account:ACCOUNT_NAME error:&error];
             
             if (error)
             {
                 NSLog(@"%@", [error localizedDescription]);
-                //TODO handle this
+                return NO;
             }
             else
             {
-                NSLog(@"creation success: %@", idfv);
+                NSLog(@"account success: %@", idfv);
                 password = idfv;
+            }
+            
+            [SSKeychain setPassword:defaultUsername forService:SERVICE_NAME account:PASSWORD_NAME error:&error];
+            
+            if (error)
+            {
+                NSLog(@"%@", [error localizedDescription]);
+                return NO;
+            }
+            else
+            {
+                NSLog(@"password success: %@", defaultUsername);
+                account = defaultUsername;
             }
         }
         //already have account
@@ -69,10 +106,22 @@ const BOOL OFFLINE_DEBUGGING = NO;
             NSLog(@"already have account: %@", password);
         }
         
-        NSString *username = [password substringToIndex:7];
+        BOOL accountExists = NO;
+        PFQuery *accountQuery = [PFUser query];
+        [accountQuery whereKey:@"username" equalTo:account];
+        PFObject *user = [accountQuery getFirstObject:&error];
         
-        //TODO, username is that for now
-        [PFUser logInWithUsernameInBackground:username password:password
+        if (error && error.code != kPFErrorObjectNotFound)
+        {
+            NSLog(@"failed to query for user %@", error);
+            return NO;
+        }
+        
+        if (user!=nil)
+            accountExists = YES;
+        
+        //TODO, username is that for now, and password needs to be made working
+        [PFUser logInWithUsernameInBackground:account password:password
                                         block:^(PFUser *user, NSError *error) {
                                             if (user) {
                                                 [UserModel setupUser];
@@ -81,10 +130,10 @@ const BOOL OFFLINE_DEBUGGING = NO;
                                                 {
                                                     NSLog(@"%d", [error code]);
                                                     //no username, register one
-                                                    if ([error code] == 101) //101 is invalid login credentials
+                                                    if ([error code] == 101 && !accountExists) //101 is invalid login credentials
                                                     {
                                                         userPF = [PFUser user];
-                                                        userPF.username = username;
+                                                        userPF.username = account;
                                                         userPF.password = password;
                                                         NSError*error;
                                                         [userPF signUp:&error];
@@ -100,7 +149,7 @@ const BOOL OFFLINE_DEBUGGING = NO;
                                                         }
                                                     }
                                                     else{
-                                                        NSLog(@"%@", [error localizedDescription]);
+                                                        NSLog(@"FAILED TO LOG IN: %@", [error localizedDescription]);
                                                     }
                                                 }
                                                 else

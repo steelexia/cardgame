@@ -132,7 +132,7 @@ BOOL leftHandViewZone = NO;
     [self setupUI];
     
     //start a new game, each player draws three cards
-    if ([TUTORIAL_ONE isEqualToString:_level.levelID] || [TUTORIAL_TWO isEqualToString:_level.levelID])
+    if ([TUTORIAL_ONE isEqualToString:_level.levelID] || [TUTORIAL_TWO isEqualToString:_level.levelID]|| [TUTORIAL_THREE isEqualToString:_level.levelID]|| [TUTORIAL_FOUR isEqualToString:_level.levelID])
     {
         //these tutorials do not start game immediately
     }
@@ -330,13 +330,20 @@ BOOL leftHandViewZone = NO;
     playerHeroView.center = CGPointMake((SCREEN_WIDTH - playerFieldEdge.bounds.size.width)/2 + PLAYER_HERO_WIDTH/2, playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*2 + PLAYER_HERO_HEIGHT/2);
     [self.fieldView addSubview:playerHeroView];
     
+    if (_level!=nil && !_level.isBossFight) //boss fight's is not the same
+    {
+        ((PlayerModel*)self.gameModel.players[OPPONENT_SIDE]).playerMonster.idNumber = _level.heroId;
+    }
+    
     CardView *opponentHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[OPPONENT_SIDE]).playerMonster viewMode:cardViewModeIngame];
     opponentHeroView.frontFacing = YES;
     opponentHeroView.center = CGPointMake((SCREEN_WIDTH - opponentFieldEdge.bounds.size.width)/2 + PLAYER_HERO_WIDTH/2, opponentFieldEdge.center.y - opponentFieldEdge.bounds.size.height/2 - fieldsDistanceHalf*2 - PLAYER_HERO_HEIGHT/2);
     
-    if (_level.isBossFight)
-        opponentHeroView.center = CGPointMake(SCREEN_WIDTH/2, opponentFieldHighlight.center.y);
-    
+    if (_level != nil)
+    {
+        if (_level.isBossFight)
+            opponentHeroView.center = CGPointMake(SCREEN_WIDTH/2, opponentFieldHighlight.center.y);
+    }
     [self.fieldView addSubview:opponentHeroView];
     
     self.playerHeroViews = @[playerHeroView, opponentHeroView];
@@ -805,7 +812,8 @@ BOOL leftHandViewZone = NO;
     
     //update hero
     CardView*player = self.playerHeroViews[side];
-    player.cardHighlightType = cardHighlightNone;
+    if ([self.currentAbilities count] == 0)
+        player.cardHighlightType = cardHighlightNone;
 }
 
 /** update the corresponding resource label with the number of resource the player has */

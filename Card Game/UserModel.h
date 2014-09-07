@@ -60,7 +60,3 @@ PFUser *userPF;
 BOOL userInfoLoaded;
 BOOL userInitError;
 NSString*userTutorialOneCardName;
-
-
-/** The number of decks allowed per player at the very beginning of the game. Can gain more via quests etc. */
-extern const int INITIAL_DECK_LIMIT;

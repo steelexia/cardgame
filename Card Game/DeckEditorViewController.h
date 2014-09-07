@@ -10,6 +10,7 @@
 #import "CardsCollectionView.h"
 #import "DeckTableView.h"
 #import "CFButton.h"
+#import "CFLabel.h"
 
 @interface DeckEditorViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate>
 
@@ -49,6 +50,14 @@
 @property(strong)NSMutableArray*costFilter;
 @property(strong)NSMutableArray*elementFilter;
 @property(strong)NSMutableArray*rarityFilter;
+
+@property (strong) CFLabel*tutLabel;
+@property (strong) CFButton*tutOkButton;
+@property (strong) UIView*modalFilter;
+@property BOOL isModal;
+
+/** Set itself automatically */
+@property BOOL isTutorial;
 
 -(void)cardsViewFinishedScrollingAnimation;
 

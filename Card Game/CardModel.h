@@ -151,6 +151,10 @@ enum CardElement
     //TODO single player AI cards may have other elements
 };
 
-extern const int MONSTER_CARD, SPELL_CARD, NO_ID, PLAYER_FIRST_CARD_ID;
+extern const int MONSTER_CARD, SPELL_CARD, NO_ID, PLAYER_FIRST_CARD_ID,
+    PLAYER_SECOND_CARD_ID;
 
-
+/** all card from players start at this ID. Anything less is for special cards (starting hand in this case)
+    NOTE: this number is also on cloud
+ */
+extern const int CARD_ID_START;

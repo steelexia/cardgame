@@ -60,10 +60,16 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [self.view addSubview:messageTitlesBackground];
     
     _messageTableView = [[MessageTableView alloc] initWithFrame:CGRectInset(messageTitlesBackground.frame, 6, 6)];
-    [_messageTableView.currentStrings addObject:@"Message 1 adfasdf asdf asdf asf sadf asdf"];
-    [_messageTableView.currentStrings addObject:@"Message 2"];
+    /*
+    MessageModel *dummy = [[MessageModel alloc] init];
+    dummy.title = @"title 1";
+    dummy.body = @"body asdfas dfa sdfa sdfsfg\n adfas dfasd fasd asdf asdf asdf asdf asf ";
+    [_messageTableView.currentMessages addObject:dummy];
+     */
+     
     [_messageTableView.tableView reloadData];
     [_messageTableView.tableView reloadInputViews];
+    _messageTableView.parent = self;
     [self.view addSubview:_messageTableView];
     
     CFLabel*messageBodyBackground = [[CFLabel alloc] initWithFrame:CGRectMake(0, 0, 250, SCREEN_HEIGHT/2 - 60)];
@@ -74,7 +80,6 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [_messageBodyView setFont:[UIFont fontWithName:cardMainFont size:16]];
     [_messageBodyView setTextColor:[UIColor whiteColor]];
     _messageBodyView.backgroundColor = [UIColor clearColor];
-    [_messageBodyView setText:@"asdfasdfasdfas asdf asdf sa\n asdfas dsf asdf asdf asdf"];
     [_messageBodyView setDelegate:self];
     [self.view addSubview:_messageBodyView];
     
@@ -82,6 +87,11 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [backButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backButton];
+}
+
+-(void)selectedMessage:(MessageModel*)message
+{
+    [_messageBodyView setText:message.body];
 }
 
 -(void)backButtonPressed

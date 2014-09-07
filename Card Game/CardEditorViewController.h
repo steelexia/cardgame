@@ -25,13 +25,14 @@
 @property CardView*currentCardView;
 @property int currentCost;
 @property int maxCost;
-@property (strong)GKImagePicker *imagePicker;
-@property (strong)UIActivityIndicatorView*cardUploadIndicator, *cardVoteIndicator;
-@property (strong)UILabel*cardUploadLabel;
-@property (strong)CFButton*cardUploadFailedButton,*cardVoteFailedButton;
+@property (strong) GKImagePicker *imagePicker;
+@property (strong) UIActivityIndicatorView*cardUploadIndicator, *cardVoteIndicator;
+@property (strong) UILabel*cardUploadLabel;
+@property (strong) CFButton*cardUploadFailedButton,*cardVoteFailedButton;
 @property (strong) UIView*modalFilter;
 @property (strong) CFLabel*tutLabel;
 @property (strong) CFButton*tutOkButton;
+@property (strong) UIImageView*arrowImage;
 
 @property enum CardEditorMode editorMode;
 /** Set to YES if save button is pressed during voting */
@@ -50,7 +51,7 @@ enum CardEditorMode{
     cardEditorModeVoting,
     /** Immediately opens the upload image screen, can only change the card's name. Stats are pre-set. Not uploaded and only used for first level */
     cardEditorModeTutorialOne,
-    /** Allowed to change cost, damage, life, cooldown, and tags. Only monster card allowed, no abilities are allowed */
+    /** Allowed to change cost, damage, life, cooldown, abilities, and tags. Only monster card allowed */
     cardEditorModeTutorialTwo,
     /** Everything allowed, but helps to describe the abilities a bit */
     cardEditorModeTutorialThree,

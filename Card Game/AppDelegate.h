@@ -26,3 +26,5 @@
 @property (strong, nonatomic) UIWindow *window;
 
 @end
+
+extern const NSString*SERVICE_NAME, *ACCOUNT_NAME, *PASSWORD_NAME;

@@ -109,7 +109,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     else
         _chapterDescriptionLabel = [[CFLabel alloc]initWithFrame:CGRectMake(25, 110, SCREEN_WIDTH-50, 70)];
     
-    _chapterDescriptionLabel.label.text = @"This text will be later replaced by the actual chapter description. It will introduce the setting to the players.";
+    _chapterDescriptionLabel.label.text = @"";
     [self.view addSubview:_chapterDescriptionLabel];
     
     if (SCREEN_HEIGHT >= 568)
@@ -200,8 +200,10 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    [self updateCurrentLevelView];
-    [self setToLatestChapter];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self updateCurrentLevelView];
+        [self setToLatestChapter];
+    });
 }
 
 -(void)updateCurrentLevelView
@@ -233,10 +235,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     {
         //chapter 1 is always enabled, since difficulty must be enabled to see this
         if (chapterIndex == 0)
-        {
             [_chapterButtons[chapterIndex] setEnabled:YES];
-            
-        }
         else
         {
             //a chapter is unlocked if the last level of the previous chapter is beaten
@@ -267,6 +266,32 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
         [self setLevelEnabled:3 enabled:YES];
     else
         [self setLevelEnabled:3 enabled:NO];
+    
+    for (int i = 1; i < 4; i++)
+    {
+        NSString*imageKey = [NSString stringWithFormat:@"c_%d_l_%d", _chapter, i];
+        UIImage *heroImage = campaignHeroImages[imageKey];
+        
+        if (heroImage==nil)
+        {
+            heroImage = placeHolderImage;
+        }
+        
+        if (i == 1)
+        {
+            [_levelOneButton setImage:heroImage forState:UIControlStateNormal];
+        }
+        else if (i == 2)
+        {
+            [_levelTwoButton setImage:heroImage forState:UIControlStateNormal];
+        }
+        else if (i == 3)
+        {
+            [_levelThreeButton setImage:heroImage forState:UIControlStateNormal];
+        }
+    }
+    
+    _chapterDescriptionLabel.label.text = [Campaign getChapterDescription:_chapter];
 }
 
 -(void)backButtonPressed
@@ -298,7 +323,10 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     for (int i = 0; i < _chapterButtons.count; i++)
     {
         if (i == 0)
+        {
             [_chapterButtons[i] setSelected:YES];
+            _chapter = i + 1;
+        }
         else
             [_chapterButtons[i] setSelected:NO];
     }
@@ -359,12 +387,13 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     GameViewController *gvc = [[GameViewController alloc] initWithGameMode:GameModeSingleplayer withLevel:level];
     
     DeckChooserViewController *dcvc = [[DeckChooserViewController alloc] init];
+    if (level.isTutorial)
+        dcvc.noPickDeck = YES;
     dcvc.opponentName = level.opponentName;
     
     dcvc.nextScreen = gvc;
     
     [self presentViewController:dcvc animated:YES completion:nil];
-    
 }
 
 -(void)setLevelEnabled:(int)level enabled:(BOOL)enabled
