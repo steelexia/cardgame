@@ -17,9 +17,11 @@
 #import "Campaign.h"
 #import "BossBattleScreenViewController.h"
 
-@interface GameViewController ()
+
+@interface GameViewController () 
 
 @end
+
 
 @implementation GameViewController
 
@@ -154,6 +156,8 @@ BOOL leftHandViewZone = NO;
         [self tutorialMessageGameStart];
     }
 }
+
+
 
 /** Purely for organization, called once when the view is first set up */
 -(void) setupUI
@@ -1858,5 +1862,7 @@ BOOL leftHandViewZone = NO;
         block();
     });
 }
+
+
 
 @end

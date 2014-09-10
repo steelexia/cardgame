@@ -14,12 +14,14 @@
 #import "CFLabel.h"
 #import "CardEditorViewController.h"
 
+
 @class GameModel;
 
 /**
  Main class of the game that handles the view and controls
  */
-@interface GameViewController : UIViewController
+
+@interface GameViewController : UIViewController 
 
 @property (strong) GameModel *gameModel;
 

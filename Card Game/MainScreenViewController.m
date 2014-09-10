@@ -12,7 +12,10 @@
 #import "StoreViewController.h"
 #import "UIConstants.h"
 #import "SinglePlayerMenuViewController.h"
+#import "MultiplayerGameViewController.h"
 #import "CampaignMenuViewController.h"
+
+
 
 @interface MainScreenViewController ()
 
@@ -147,6 +150,8 @@ UILabel *loadingLabel;
     }
 }
 
+
+
 -(void)messageButtonPressed
 {
     MessagesViewController *vc = [[MessagesViewController alloc] init];
@@ -199,6 +204,8 @@ UILabel *loadingLabel;
 
 -(void)multiPlayerButtonPressed
 {
+    MultiplayerGameViewController *viewController = [[MultiplayerGameViewController alloc] init];
+    [self presentViewController:viewController animated:NO completion:nil];
     
 }
 
