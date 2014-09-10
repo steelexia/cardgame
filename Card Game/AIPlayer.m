@@ -172,6 +172,10 @@ int enemyTotalStrength, friendlyTotalStrength;
                     bestPoints = points;
                     bestCard = card;
                     bestTarget = self.currentTarget; //assume it's placed here
+                    if (bestTarget == nil)
+                        NSLog(@"AI: Spell %@: Best target is nil", card.name);
+                    else
+                        NSLog(@"AI: Spell %@: Best target is %@", card.name, bestTarget.name);
                 }
             }
         }

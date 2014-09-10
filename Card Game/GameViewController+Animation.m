@@ -164,12 +164,12 @@
         //[self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
         [self decAnimationCounter];
         
-        NSLog(@"in animation");
+        NSLog(@"in animation %@", cardView.cardModel.name);
     }
     else
     {
-        NSLog(@"not in animation");
         cardView.inDamageAnimation = YES;
+        NSLog(@"not in animation %@", cardView.cardModel.name);
         
         float power = (damage / 1000.f) + (damage / 1000.f) * arc4random_uniform(100) * 0.01/5 + 1;
         
@@ -233,6 +233,16 @@
 
 -(void) animateCardAttack: (CardView*) cardView fromSide:(int) side
 {
+    if (cardView.inDamageAnimation)
+    {
+        NSLog(@"attacking: is in animation %@", cardView.cardModel.name);
+    }
+    else
+    {
+        NSLog(@"attacking: not in animation %@", cardView.cardModel.name);
+    }
+    
+    cardView.inDamageAnimation = YES;
     CGPoint startPosition = cardView.center;
     
     CGPoint target = startPosition;
@@ -250,7 +260,9 @@
                                           animations:^{
                                               cardView.center = startPosition;
                                           }
-                                          completion:nil];
+                                          completion:^(BOOL finished) {
+                                              cardView.inDamageAnimation = NO;
+                                          }];
                      }];
 }
 

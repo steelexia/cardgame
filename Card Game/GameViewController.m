@@ -693,6 +693,11 @@ BOOL leftHandViewZone = NO;
     //if playing against AI, AI now makes a move
     if (self.gameModel.gameMode == GameModeSingleplayer && currentSide == OPPONENT_SIDE)
         [self.gameModel.aiPlayer newTurn];
+    
+    if (giveupAbilityButton.superview != nil)
+    {
+        [self noTargetButtonPressed];
+    }
 }
 
 -(void)updateHandsView: (int)side
@@ -1224,11 +1229,13 @@ BOOL leftHandViewZone = NO;
 {
     int oppositeSide = currentSide == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE;
     
-    //deal the damage and return it to animate
-    NSArray *damages = [self.gameModel attackCard:card fromSide:side target:targetCard];
+    NSLog(@"not even attacked yet, in animation: %d", card.cardView.inDamageAnimation);
     
     //animate the damage effects, if card dies, death animation is played
     [self animateCardAttack:card.cardView fromSide:side];
+    
+    //deal the damage and return it to animate
+    NSArray *damages = [self.gameModel attackCard:card fromSide:side target:targetCard];
     
     [self performBlock:^{
         [self animateCardDamage:targetCard.cardView forDamage:[damages[0] integerValue] fromSide:oppositeSide];
@@ -1268,11 +1275,15 @@ BOOL leftHandViewZone = NO;
 {
     int oppositeSide = side == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE;
     
-    //deal the damage and return it to animate
-    NSArray *damages = [self.gameModel attackCard:card fromSide:side target:targetCard];
+    NSLog(@"not even attacked yet, in animation: %d", card.cardView.inDamageAnimation);
     
     //animate the damage effects for defender, if card dies, death animation is played
     [self animateCardAttack:card.cardView fromSide:side];
+    
+    //deal the damage and return it to animate
+    NSArray *damages = [self.gameModel attackCard:card fromSide:side target:targetCard];
+    
+    
     
     [self performBlock:^{
         [self animateCardDamage:targetCard.cardView forDamage:[damages[0] integerValue] fromSide:oppositeSide];

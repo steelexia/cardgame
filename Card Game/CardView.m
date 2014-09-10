@@ -1138,8 +1138,9 @@ NSDictionary *singlePlayerCardImages;
                 PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
                 cardQuery.limit = 1;
                 [cardQuery whereKey:@"idNumber" equalTo:@(card.idNumber)];
-                NSArray*cardArray = [cardQuery findObjects];
-                if (cardArray.count == 0)
+                NSError*error;
+                NSArray*cardArray = [cardQuery findObjects:&error];
+                if (cardArray.count == 0 || error)
                 {
                     *errorLoading = YES;
                     return placeHolderImage;
@@ -1150,7 +1151,11 @@ NSDictionary *singlePlayerCardImages;
             else
                 cardPF = card.cardPF;
             
-            [cardPF[@"image"] fetchIfNeeded];
+            NSError*error;
+            [cardPF[@"image"] fetchIfNeeded:&error];
+            if (error)
+                return placeHolderImage;
+            
             PFObject *imagePF = cardPF[@"image"];
             
             if (imagePF != nil)

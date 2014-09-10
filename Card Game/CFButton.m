@@ -122,14 +122,14 @@
         {
             if (!self.selected)
             {
-                [self setSelected:YES];
                 [super touchesEnded:touches withEvent:event];
+                [self setSelected:YES];
             }
         }
         else
         {
-            [self setSelected:!originalSelected];
             [super touchesEnded:touches withEvent:event];
+            [self setSelected:!originalSelected];
         }
     }
     

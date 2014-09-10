@@ -136,6 +136,36 @@ int cardIDCount = 0;
     NSMutableArray* playerHand = self.hands[PLAYER_SIDE];
     NSMutableArray* aiHand = self.hands[OPPONENT_SIDE];
     
+    //TODO testing
+    MonsterCardModel*monster;
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10025 type:cardTypeSinglePlayer];
+    monster.name = @"Monster";
+    monster.life = monster.maximumLife = 7500;
+    monster.damage = 5000;
+    monster.cost = 1;
+    monster.cooldown = monster.maximumCooldown = 1;
+    monster.side = PLAYER_SIDE;
+    
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityPierce castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    
+    [playerHand addObject:monster];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:10025 type:cardTypeSinglePlayer];
+    monster.name = @"Monster";
+    monster.life = monster.maximumLife = 7500;
+    monster.damage = 5000;
+    monster.cost = 1;
+    monster.cooldown = monster.maximumCooldown = 1;
+    monster.side = PLAYER_SIDE;
+    
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnHit targetType:targetHeroEnemy withDuration:durationForever withValue:[NSNumber numberWithInt:5000]]];
+    
+    [playerHand addObject:monster];
+    
+    
+    
+    
     /*
     MonsterCardModel*monster;
     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
@@ -459,6 +489,9 @@ int cardIDCount = 0;
         for (CardModel*card in deckOne.cards)
             [playerDeck addCard:[[CardModel alloc] initWithCardModel:card]];
     }
+    
+    self.decks = @[playerDeck, aiDeck];
+    
     //while ([playerDeck count] > 20) //limit to 20 cards
     //    [playerDeck removeCardAtIndex:0];
     
@@ -553,8 +586,6 @@ int cardIDCount = 0;
     
     [aiDeck addCard:monster];
     */
-    self.decks = @[playerDeck, aiDeck];
-    
     
     
     //temporary function that grabs 20 cards from Parse database.
@@ -572,92 +603,6 @@ int cardIDCount = 0;
     
     
     //NSLog(@"loaded %d cards for player.", [playerDeck count]);
-    
-    /*
-    for (int side = 0; side < 2; side++)
-    {
-        //add 10 random spell cards
-        for (int i = 0; i < 3; i++)
-        {
-            SpellCardModel *card = [[SpellCardModel alloc] initWithIdNumber:cardIDCount++];
-            card.name = @"No Name";
-            
-            card.cost = 1;
-            
-            Ability *ability;
-            
-            int random = arc4random_uniform(4);
-            
-            if (random == 0)
-            {
-                ability = [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1000]];
-                card.cost = 2;
-            }
-            else if (random == 1){
-                card.cost = 2;
-                ability = [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]];
-            }
-            else if (random == 2){
-                card.cost = 3;
-                ability = [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1]];}
-            else if (random == 3){
-                ability = [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetOneRandomFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:3000]];}
-            else if (random == 4){
-                ability = [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneRandomFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:2000]];}
-            
-            //if (i == 0)
-            //{
-                ability = [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneRandomMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1]];
-                
-                //Ability *ability = [[Ability alloc] initWithType:abilityAddCooldown castType:castOnDamaged targetType:targetAttacker withDuration:durationInstant withValue:[NSNumber numberWithInt:2]];
-                
-            //}
-            
-            [card.abilities addObject:ability];
-            
-            [self.decks[side] addCard:card];
-        }
-        
-        //add 20 random monster cards
-        for (int i = 0; i < 20; i++)
-        {
-            MonsterCardModel *card = [[MonsterCardModel alloc] initWithIdNumber:cardIDCount++];
-            
-            card.name = @"No Name";
-            
-            card.cost = arc4random_uniform(6);
-            card.cost -= 2; //just for a little bit of fake distribution
-            if (card.cost == 0) card.cost = 1;
-            
-            card.damage = (10 + arc4random_uniform(10 * pow(card.cost,1.5)) + 10 * card.cost) * 50;
-            card.maximumLife = card.life = (20 + arc4random_uniform(15 * pow(card.cost,1.5)) + 15 * card.cost) * 50;
-            card.side = side;
-            
-            //high cost cards may have cooldown
-            if (card.cost > 2)
-                card.maximumCooldown = card.cooldown = arc4random_uniform(2) + 1;
-            if (card.cost > 4)
-                card.maximumCooldown = card.cooldown += arc4random_uniform(1);
-            
-            //TODO temporary testing ability
-            
-            //for (int j = 0; j < card.cost; j++)
-            //{
-            
-
-            
-            if (i == 0)
-            {
-                Ability *ability = [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]];
-
-                                    
-                [card.abilities addObject:ability];
-            }
-        
-            [self.decks[side] addCard:card];
-        }
-    }
-     */
 }
 
 -(void)addCardToBattlefield: (MonsterCardModel*)monsterCard side:(char)side
@@ -918,10 +863,19 @@ int cardIDCount = 0;
                 [target.cardView castedAbility:ability];
                 
                 if (willReceiveAttack)
-                    [self castAbility:ability byMonsterCard:target toMonsterCard:attackerMonsterCard fromSide:oppositeSide];
+                {
+                    if (ability.castType == castOnDamaged)
+                    {
+                        [self castAbility:ability byMonsterCard:target toMonsterCard:attackerMonsterCard fromSide:oppositeSide];
+                    }
+                    
+                }
                 //assassin will dodge the targeting (but still get hit if for example it was deal damage to all)
                 else
-                    [self castAbility:ability byMonsterCard:target toMonsterCard:nil fromSide:oppositeSide];
+                {
+                    //to fix the animation
+                    [self castAbility:ability byMonsterCard:target toMonsterCard:attackerMonsterCard fromSide:oppositeSide];
+                }
             }
         }
         
@@ -973,6 +927,8 @@ int cardIDCount = 0;
                             [self.gameViewController performBlock:^{
                                 [self.gameViewController animateCardDamage:targetPlayer.playerMonster.cardView forDamage:dealtDamage  fromSide:attackerMonsterCard.side];
                             } afterDelay:0.1];
+                            
+                            [self checkForGameOver];
                         }
                     }
                 }
@@ -1081,6 +1037,7 @@ int cardIDCount = 0;
 
 -(void)cardDies: (CardModel*) card destroyedBy: (CardModel*) attacker fromSide: (int) side
 {
+    NSLog(@"monster died");
     if ([card isKindOfClass:[MonsterCardModel class]])
     {
         MonsterCardModel *monsterCard = (MonsterCardModel*)card;
@@ -1093,12 +1050,16 @@ int cardIDCount = 0;
         if ([attacker isKindOfClass:[MonsterCardModel class]])
             attackerMonster = (MonsterCardModel*)attacker;
         
+        NSLog(@"monster died 2");
+        
         //CastType castOnDeath is casted here
         for (int i = 0; i < [monsterCard.abilities count]; i++) //castAbility may insert objects in end
         {
+            NSLog(@"looping ondeath");
             Ability*ability = monsterCard.abilities[i];
             if (ability.castType == castOnDeath)
             {
+                NSLog(@"casted ondeath");
                 [monsterCard.cardView castedAbility:ability];
                 [self.gameViewController addAnimationCounter]; //counts as animation
                 //casting after a slight delay makes chain reactions less chaotic
@@ -1686,13 +1647,15 @@ int cardIDCount = 0;
     {
         int originalLife = monster.life;
         [monster loseLife:[ability.value intValue]];
-        [self.gameViewController animateCardDamage:monster.cardView forDamage:monster.life-originalLife fromSide:monster.side];
+        int lostAmount = [ability.value intValue] < originalLife ? [ability.value intValue] : originalLife;
+        [self.gameViewController animateCardDamage:monster.cardView forDamage:lostAmount fromSide:monster.side];
         
         //cast on damanged is casted here by monster
         //CastType castOnDamaged is casted here by defender
         for (int i = 0; i < [monster.abilities count]; i++) //castAbility may insert objects in end
         {
             Ability*ability = monster.abilities[i];
+            
             if (ability.castType == castOnDamaged)
                 [self castAbility:ability byMonsterCard:monster toMonsterCard:nil fromSide:oppositeSide];
         }
@@ -1997,5 +1960,18 @@ int cardIDCount = 0;
             [self.gameViewController gameOver];
     }
 }
+
+//block delay functions
+- (void)performBlock:(void (^)())block
+{
+    block();
+}
+
+- (void)performBlock:(void (^)())block afterDelay:(NSTimeInterval)delay
+{
+    void (^block_)() = [block copy]; // autorelease this if you're not using ARC
+    [self performSelector:@selector(performBlock:) withObject:block_ afterDelay:delay];
+}
+
 
 @end
