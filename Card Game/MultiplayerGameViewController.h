@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MultiplayerNetworking.h"
 
-@interface MultiplayerGameViewController : UIViewController
-
+@interface MultiplayerGameViewController : UIViewController<MultiplayerNetworkingProtocol>
+@property (nonatomic, copy) void (^gameOverBlock)(BOOL didWin);
+@property (nonatomic, copy) void (^gameEndedBlock)();
+@property (nonatomic, strong) MultiplayerNetworking *networkingEngine;
 @end

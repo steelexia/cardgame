@@ -20,7 +20,7 @@ extern NSString *const LocalPlayerIsAuthenticated;
 
 // Modify @interface line to support protocols as follows
 @interface GameKitHelper : NSObject <GKMatchmakerViewControllerDelegate, GKMatchDelegate>
-
+@property (nonatomic, strong) NSMutableDictionary *playersDict;
 // Add after @interface
 @property (nonatomic, strong) GKMatch *match;
 @property (nonatomic, assign) id <GameKitHelperDelegate> delegate;

@@ -8,13 +8,15 @@
 
 #import "MultiplayerGameViewController.h"
 //brian sep 9
+#import "MultiplayerNetworking.h"
 #import "GameKitHelper.h"
-@interface MultiplayerGameViewController () <GameKitHelperDelegate>
+@interface MultiplayerGameViewController () <MultiplayerNetworkingProtocol>
 
 @end
 
 @implementation MultiplayerGameViewController
-
+MultiplayerNetworking *_networkingEngine;
+ NSUInteger _currentPlayerIndex;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -74,7 +76,10 @@
 }
 
 - (void)playerAuthenticated {
-    [[GameKitHelper sharedGameKitHelper] findMatchWithMinPlayers:2 maxPlayers:2 viewController:self delegate:self];
+    _networkingEngine = [[MultiplayerNetworking alloc] init];
+    _networkingEngine.delegate = self;
+    self.networkingEngine = _networkingEngine;
+     [[GameKitHelper sharedGameKitHelper] findMatchWithMinPlayers:2 maxPlayers:2 viewController:self delegate:_networkingEngine];
 }
 
 
@@ -90,20 +95,17 @@
 }
 */
 
-//brian sep 9
-// Add new methods to bottom of file
-#pragma mark GameKitHelperDelegate
-
-- (void)matchStarted {
-    NSLog(@"Match started");
+- (void)setCurrentPlayerIndex:(NSUInteger)index {
+    _currentPlayerIndex = index;
 }
+
+//brian sep9
+#pragma mark MultiplayerNetworkingProtocol
 
 - (void)matchEnded {
-    NSLog(@"Match ended");
-}
-
-- (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
-    NSLog(@"Received data");
+    if (self.gameEndedBlock) {
+        self.gameEndedBlock();
+    }
 }
 
 @end
