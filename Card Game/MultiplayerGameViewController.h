@@ -12,5 +12,7 @@
 @interface MultiplayerGameViewController : UIViewController<MultiplayerNetworkingProtocol>
 @property (nonatomic, copy) void (^gameOverBlock)(BOOL didWin);
 @property (nonatomic, copy) void (^gameEndedBlock)();
+- (IBAction)touchMoveButton:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *messageStateLabel;
 @property (nonatomic, strong) MultiplayerNetworking *networkingEngine;
 @end

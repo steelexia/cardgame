@@ -15,6 +15,16 @@
 @end
 
 @implementation MultiplayerGameViewController
+
+- (IBAction)touchMoveButton:(id)sender {
+    //do code to send a move to other player via network engine
+    if (_currentPlayerIndex == -1) {
+        return;
+    }
+    
+    [_networkingEngine sendMove];
+}
+
 MultiplayerNetworking *_networkingEngine;
  NSUInteger _currentPlayerIndex;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -84,6 +94,8 @@ MultiplayerNetworking *_networkingEngine;
 
 
 
+
+
 /*
 #pragma mark - Navigation
 
@@ -107,5 +119,35 @@ MultiplayerNetworking *_networkingEngine;
         self.gameEndedBlock();
     }
 }
+
+- (void)movePlayerAtIndex:(NSUInteger)index {
+    NSString *indexString = [NSString stringWithFormat:@"%i", index];
+    
+    self.messageStateLabel.text = [indexString stringByAppendingString:@" Player"];
+    
+    
+    
+}
+
+- (void)gameOver:(BOOL)player1Won {
+    BOOL didLocalPlayerWin = YES;
+    if (player1Won) {
+        didLocalPlayerWin = NO;
+    }
+    if (self.gameOverBlock) {
+        self.gameOverBlock(didLocalPlayerWin);
+    }
+}
+
+- (void)setPlayerAliases:(NSArray*)playerAliases {
+    [playerAliases enumerateObjectsUsingBlock:^(NSString *playerAlias, NSUInteger idx, BOOL *stop) {
+        //[_players[idx] setPlayerAliasText:playerAlias];
+        NSLog(@"Player Alias is..");
+        
+        NSLog(playerAlias);
+        
+    }];
+}
+
 
 @end

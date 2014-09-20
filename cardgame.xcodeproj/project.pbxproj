@@ -1609,8 +1609,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Brian Allen (U536PJZFA3)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Brian Allen (U536PJZFA3)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/",
@@ -1620,7 +1620,7 @@
 				GCC_PREFIX_HEADER = "Card Game/cardgame-Prefix.pch";
 				INFOPLIST_FILE = "Card Game/cardgame-Info.plist";
 				PRODUCT_NAME = cardgame;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3a4eb5a8-06aa-428d-b828-046a1b0c76cf";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1630,8 +1630,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Brian Allen (U536PJZFA3)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Brian Allen (U536PJZFA3)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/",
@@ -1641,7 +1641,7 @@
 				GCC_PREFIX_HEADER = "Card Game/cardgame-Prefix.pch";
 				INFOPLIST_FILE = "Card Game/cardgame-Info.plist";
 				PRODUCT_NAME = cardgame;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3a4eb5a8-06aa-428d-b828-046a1b0c76cf";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

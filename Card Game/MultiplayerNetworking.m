@@ -128,6 +128,8 @@ typedef struct {
         
         //first player
         [self.delegate setCurrentPlayerIndex:0];
+        
+         [self processPlayerAliases];
     }
 }
 
@@ -175,11 +177,15 @@ typedef struct {
         NSLog(@"Begin game message received");
         [self.delegate setCurrentPlayerIndex:[self indexForLocalPlayer]];
         _gameState = kGameStateActive;
+        [self processPlayerAliases];
     } else if (message->messageType == kMessageTypeMove) {
         NSLog(@"Move message received");
         MessageMove *messageMove = (MessageMove*)[data bytes];
+        [self.delegate movePlayerAtIndex:[self indexForPlayerWithId:playerID]];
     } else if(message->messageType == kMessageTypeGameOver) {
         NSLog(@"Game over message received");
+        MessageGameOver * messageGameOver = (MessageGameOver *) [data bytes];
+        [self.delegate gameOver:messageGameOver->player1Won];
     }
 }
 
@@ -254,5 +260,35 @@ typedef struct {
     }];
     return index;
 }
+
+- (void)sendMove {
+    MessageMove messageMove;
+    messageMove.message.messageType = kMessageTypeMove;
+    NSData *data = [NSData dataWithBytes:&messageMove
+                                  length:sizeof(MessageMove)];
+    [self sendData:data];
+}
+
+- (void)sendGameEnd:(BOOL)player1Won {
+    MessageGameOver message;
+    message.message.messageType = kMessageTypeGameOver;
+    message.player1Won = player1Won;
+    NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageGameOver)];
+    [self sendData:data];
+}
+
+- (void)processPlayerAliases {
+    if ([self allRandomNumbersAreReceived]) {
+        NSMutableArray *playerAliases = [NSMutableArray arrayWithCapacity:_orderOfPlayers.count];
+        for (NSDictionary *playerDetails in _orderOfPlayers) {
+            NSString *playerId = playerDetails[playerIdKey];
+            [playerAliases addObject:((GKPlayer*)[GameKitHelper sharedGameKitHelper].playersDict[playerId]).alias];
+        }
+        if (playerAliases.count > 0) {
+            [self.delegate setPlayerAliases:playerAliases];
+        }
+    }
+}
+
 
 @end
