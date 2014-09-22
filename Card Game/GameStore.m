@@ -12,6 +12,8 @@
 
 const int LIKE_CARD_GOLD_GAIN = 15;
 
+const int FLAVOUR_TEXT_COST = 400;
+
 +(int)getCardCost:(CardModel*)card
 {
     if (card.rarity == cardRarityCommon)

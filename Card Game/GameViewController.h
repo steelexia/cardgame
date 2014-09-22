@@ -59,6 +59,9 @@
 /** Cards are annoying as disabling their parent view doesn't work */
 @property BOOL viewsDisabled;
 
+/** Will know how many viewControllers to dismiss. General levels has a deck selector, but tutorials don't. When set to YES, will only dismiss one */
+@property BOOL noPreviousView;
+
 /** Note that while level is the current level, nextLevel is the level that will be immediately played following the current level. This should only be the case for the 3rd level, where it goes straight to the boss fight */ 
 @property (strong)Level *level, *nextLevel;
 
@@ -70,6 +73,7 @@
 @property (strong)UIActivityIndicatorView *gameOverProgressIndicator;
 @property (strong)StrokedLabel*gameOverSaveLabel;
 
+@property (strong)CFButton*quitButton;
 
 //tutorial stuff
 @property (strong) CFLabel *tutLabel;

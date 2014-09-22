@@ -15,6 +15,7 @@
 
 @implementation GameViewController (Tutorial)
 
+BOOL tutorialAbilityDone;
 
 /** Screen dimension for convinience */
 int SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -251,14 +252,18 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 {
     if ([TUTORIAL_ONE isEqualToString:self.level.levelID])
     {
-        if (side == PLAYER_SIDE && card.idNumber == PLAYER_FIRST_CARD_ID)
+        if (side == PLAYER_SIDE && self.gameModel.turnNumber == 0)
         {
             [self tutorialCooldown];
         }
         //spearman
         else if (side == OPPONENT_SIDE && card.idNumber == 1002)
         {
-            [self tutorialAbilitiy];
+            if (!tutorialAbilityDone)
+            {
+                [self tutorialAbilitiy];
+                tutorialAbilityDone = YES;
+            }
         }
     }
 }

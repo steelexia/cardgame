@@ -17,6 +17,8 @@
 #import "AbilityTableView.h"
 #import "CardPointsUtility.h"
 
+#import "GameStore.h"
+
 @interface CardEditorViewController ()
 
 @end
@@ -65,7 +67,7 @@ CGSize keyboardSize;
 /** Buttons for changing between card types */
 CFButton *monsterCardButton, *spellCardButton;
 
-CFButton *saveCardButton, *cancelCardButton, *randomizeCardButton;
+CFButton *saveCardButton, *cancelCardButton, *customizeCardButton;
 
 CFButton *saveCardConfirmButton, *cancelCardConfirmButton, *confirmCancelButon;
 
@@ -429,29 +431,103 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     [cancelCardButton addTarget:self action:@selector(cancelCardButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:cancelCardButton];
     
-    /*
-    randomizeCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 40)];
-    [randomizeCardButton setImage:[UIImage imageNamed:@"randomize_card_button"] forState:UIControlStateNormal];
-    randomizeCardButton.center = CGPointMake(35, SCREEN_HEIGHT - 115);
-    [randomizeCardButton addTarget:self action:@selector(randomizeCardButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:randomizeCardButton];
-    if (_editorMode != cardEditorModeCreation)
-        [randomizeCardButton setEnabled:NO];
-    */
-        
+    customizeCardButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 60, 40)];
+    [customizeCardButton setTextSize:12];
+    customizeCardButton.label.text = @"Custom";
+    customizeCardButton.center = CGPointMake(35, SCREEN_HEIGHT - 115);
+    [customizeCardButton addTarget:self action:@selector(customizeButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:customizeCardButton];
+    
+    if (_editorMode == cardEditorModeVoting)
+        [customizeCardButton setEnabled:NO];
+    
+    //customization view
+    _customizeView = [[UIView alloc] initWithFrame:self.view.bounds];
+    
+    _customizeBackButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    [_customizeBackButton setTextSize:14];
+    _customizeBackButton.label.text = @"Ok";
+    _customizeBackButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT-60);
+    [_customizeBackButton addTarget:self action:@selector(customizeBackButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    [_customizeView addSubview:_customizeBackButton];
+    
+    _customizeBackLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
+    _customizeBackLabel.textAlignment = NSTextAlignmentCenter;
+    _customizeBackLabel.font = [UIFont fontWithName:cardMainFont size:14];
+    [_customizeBackLabel setTextColor:[UIColor whiteColor]];
+    _customizeBackLabel.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT-110);
+    _customizeBackLabel.text = @"";
+    _customizeBackLabel.strokeOn = YES;
+    _customizeBackLabel.strokeColour = [UIColor blackColor];
+    _customizeBackLabel.strokeThickness = 2;
+    [_customizeView addSubview:_customizeBackLabel];
+    
+    StrokedLabel *flavourTextLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 40)];
+    flavourTextLabel.textAlignment = NSTextAlignmentCenter;
+    flavourTextLabel.font = [UIFont fontWithName:cardMainFont size:22];
+    [flavourTextLabel setTextColor:[UIColor whiteColor]];
+    flavourTextLabel.center = CGPointMake(SCREEN_WIDTH/2 - 20, 60);
+    flavourTextLabel.text = @"Flavour Text:";
+    flavourTextLabel.strokeOn = YES;
+    flavourTextLabel.strokeColour = [UIColor blackColor];
+    flavourTextLabel.strokeThickness = 3;
+    [_customizeView addSubview:flavourTextLabel];
+    
+    UIImageView *flavourTextCostImage = [[UIImageView alloc] initWithImage:GOLD_ICON_IMAGE];
+    flavourTextCostImage.frame = CGRectMake(0, 0, 35, 35);
+    flavourTextCostImage.center = CGPointMake(SCREEN_WIDTH/2 + 70, 55);
+    
+    StrokedLabel*flavourTextCostLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
+    flavourTextCostLabel.textAlignment = NSTextAlignmentCenter;
+    flavourTextCostLabel.font = [UIFont fontWithName:cardMainFont size:20];
+    [flavourTextCostLabel setTextColor:[UIColor whiteColor]];
+    flavourTextCostLabel.center = CGPointMake(20, 35);
+    flavourTextCostLabel.text = [NSString stringWithFormat:@"%d", FLAVOUR_TEXT_COST];
+    flavourTextCostLabel.strokeOn = YES;
+    flavourTextCostLabel.strokeColour = [UIColor blackColor];
+    flavourTextCostLabel.strokeThickness = 3;
+    [flavourTextCostImage addSubview:flavourTextCostLabel];
+    
+    [_customizeView addSubview:flavourTextCostImage];
+    
+    _flavourTextView = [[UITextView alloc] initWithFrame:CGRectMake(0,0,SCREEN_WIDTH*2/3, 120) ];
+    _flavourTextView.center = CGPointMake(SCREEN_WIDTH/2, 150);
+    [_flavourTextView setFont:[UIFont fontWithName:cardFlavourTextFont size:16]];
+    _flavourTextView.backgroundColor = [UIColor whiteColor];
+    _flavourTextView.layer.cornerRadius = 5;
+    _flavourTextView.layer.borderWidth = 2;
+    [_flavourTextView setDelegate:self];
+    
+    //CFLabel *flavourTextBackground = [[CFLabel alloc] initWithFrame:CGRectInset(_flavourTextView.frame, -5, -5)];
+    //[_customizeView addSubview:flavourTextBackground];
+    [_customizeView addSubview:_flavourTextView];
+    
+    UIImageView *userGoldImage = [[UIImageView alloc] initWithImage:GOLD_ICON_IMAGE];
+    userGoldImage.frame = CGRectMake(0, 0, 35, 35);
+    userGoldImage.center = CGPointMake(SCREEN_WIDTH - 50, SCREEN_HEIGHT - 50);
+    
+    StrokedLabel*userGoldLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
+    userGoldLabel.textAlignment = NSTextAlignmentCenter;
+    userGoldLabel.font = [UIFont fontWithName:cardMainFont size:20];
+    [userGoldLabel setTextColor:[UIColor whiteColor]];
+    userGoldLabel.center = CGPointMake(20, 35);
+    userGoldLabel.text = [NSString stringWithFormat:@"%@", userPF[@"gold"]];
+    userGoldLabel.strokeOn = YES;
+    userGoldLabel.strokeColour = [UIColor blackColor];
+    userGoldLabel.strokeThickness = 3;
+    [userGoldImage addSubview:userGoldLabel];
+    [_customizeView addSubview:userGoldImage];
+    
     //confirmation dialogs
-    saveCardConfirmLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/4, SCREEN_WIDTH*6/8, SCREEN_HEIGHT)];
+    saveCardConfirmLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/5, SCREEN_WIDTH*6/8, SCREEN_HEIGHT/2)];
     saveCardConfirmLabel.textColor = [UIColor whiteColor];
     saveCardConfirmLabel.backgroundColor = [UIColor clearColor];
     saveCardConfirmLabel.font = [UIFont fontWithName:cardMainFont size:25];
     saveCardConfirmLabel.textAlignment = NSTextAlignmentCenter;
     saveCardConfirmLabel.lineBreakMode = NSLineBreakByWordWrapping;
     saveCardConfirmLabel.numberOfLines = 0;
-    if (_editorMode == cardEditorModeVoting)
-        saveCardConfirmLabel.text = @"Are you sure you want to cast your vote? You will not be able to edit it again.";
-    else
-        saveCardConfirmLabel.text = @"Are you sure you want to create this card? You will not be able to edit it again.";
-    [saveCardConfirmLabel sizeToFit];
+    
+    //[saveCardConfirmLabel sizeToFit];
     
     saveCardConfirmButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     [saveCardConfirmButton setTextSize:16];
@@ -1087,6 +1163,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
 {
     [nameTextField resignFirstResponder];
     [tagsField resignFirstResponder];
+    [_flavourTextView resignFirstResponder];
 }
 
 -(void)nameTextFieldEdited
@@ -2492,9 +2569,16 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
 {
 }
 
+-(void)tutorialThreeSaveWarning
+{
+    
+}
+
 -(void)saveCardButtonPressed
 {
     [self darkenScreen];
+    
+    BOOL tutThreeWarning = NO;
     
     //tutorial one has no confirmation since the card is not actually sent online
     if (_editorMode == cardEditorModeTutorialOne)
@@ -2502,6 +2586,36 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [self saveCardConfirmButtonPressed];
         return;
     }
+    else if (_editorMode == cardEditorModeTutorialThree)
+    {
+        NSNumber *cardOneID = userPF[@"cardOneID"];
+        if (cardOneID != nil)
+        {
+            for (CardModel*card in userAllCards)
+            {
+                if (card.idNumber == [cardOneID intValue])
+                {
+                    //put the two cards into a deck to check its validity
+                    DeckModel*tempDeck = [[DeckModel alloc]init];
+                    [tempDeck addCard:_currentCardModel];
+                    [tempDeck addCard:card];
+                    
+                    [DeckModel validateDeckIgnoreTooFewCards:tempDeck];
+                    if (tempDeck.isInvalid)
+                        tutThreeWarning = YES;
+                    
+                    break;
+                }
+            }
+        }
+    }
+    
+    if (tutThreeWarning)
+        saveCardConfirmLabel.text = @"Warning: This card is not compatible with your last card and cannot be placed into the same deck after the tutorial. Are you sure you want to create it?";
+    else if (_editorMode == cardEditorModeVoting)
+        saveCardConfirmLabel.text = @"Are you sure you want to cast your vote? You will not be able to edit it again.";
+    else
+        saveCardConfirmLabel.text = @"Are you sure you want to create this card? You will not be able to edit it again.";
     
     saveCardConfirmLabel.alpha = 0;
     saveCardConfirmButton.alpha = 0;
@@ -2543,9 +2657,79 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
                      }];
 }
 
--(void)randomizeCardButtonPressed
+/** Limits the flavour text's size */
+-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-    NSLog(@"TODO"); //TODO
+    if (textView == _flavourTextView)
+    {
+        NSString *string = _flavourTextView.text;
+        int lineCount = [text length] - [[text stringByReplacingOccurrencesOfString:@"\n" withString:@""] length];
+        
+        if (lineCount > 4)
+            return NO;
+        
+        int characterCount = textView.text.length + (text.length - range.length);
+        
+        if (characterCount > 80)
+            return NO;
+        else
+            return YES;
+    }
+    return YES;
+};
+
+-(void)textViewDidChange:(UITextView *)textView
+{
+    if (textView == _flavourTextView)
+    {
+        [_customizeBackButton setEnabled:YES];
+        
+        //has text, will cost gold
+        if (_flavourTextView.text.length > 0)
+        {
+            if ([userPF[@"gold"] intValue] < FLAVOUR_TEXT_COST)
+            {
+                _customizeBackLabel.text = @"Not enough gold";
+                
+                [_customizeBackButton setEnabled:NO];
+            }
+            else
+                _customizeBackLabel.text = @"";
+        }
+        else
+            _customizeBackLabel.text = @"";
+    }
+}
+
+
+-(void)customizeButtonPressed
+{
+    [self darkenScreen];
+    
+    _customizeView.alpha = 0;
+    [self.view addSubview:_customizeView];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _customizeView.alpha = 1;
+                     }
+                     completion:^(BOOL completed){
+                     }];
+    
+}
+
+-(void)customizeBackButtonPressed
+{
+    [self undarkenScreen];
+    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _customizeView.alpha = 0;
+                     }
+                     completion:^(BOOL completed){
+                         [_customizeView removeFromSuperview];
+                         _currentCardModel.flavourText = _flavourTextView.text;
+                         [_currentCardView updateView];
+                     }];
 }
 
 -(void)saveCardConfirmButtonPressed
@@ -2558,22 +2742,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [self dismissViewControllerAnimated:YES completion:nil];
         return;
     }
-    
-    //TODO THIS IS JUST FOR TESTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    
-    /*
-    if (_editorMode == cardEditorModeTutorialTwo)
-    {
-        [self dismissViewControllerAnimated:YES completion:nil];
-        return;
-    }
-    //also TODO
-    if (_editorMode == cardEditorModeTutorialThree)
-    {
-        [self dismissViewControllerAnimated:YES completion:nil];
-        return;
-    }
-    */
+   
     NSString *lowerTags = [tagsField.text lowercaseString];
     NSMutableArray*lowerTagsArray = [NSMutableArray arrayWithArray:[lowerTags componentsSeparatedByString:@" "]];
     NSMutableArray*noDupTags = [NSMutableArray array];

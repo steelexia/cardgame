@@ -11,6 +11,7 @@
 #import "Campaign.h"
 #import "SSKeychain.h"
 #import "PickIAPHelper.h"
+#import "LoginViewController.h"
 
 
 @implementation AppDelegate
@@ -20,11 +21,9 @@
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
 //TODO needs to move this probably to UserModel
-const NSString*SERVICE_NAME = @"com.contentgames.cardgame";
-const NSString*ACCOUNT_NAME = @"username";
-const NSString*PASSWORD_NAME = @"password";
 
-const BOOL OFFLINE_DEBUGGING = NO;
+
+const BOOL OFFLINE_DEBUGGING = YES;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -38,12 +37,17 @@ const BOOL OFFLINE_DEBUGGING = NO;
     
     userCDContext = [self managedObjectContext];
     
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    
     if (OFFLINE_DEBUGGING)
-        userInfoLoaded = YES;
+    {
+        //userInfoLoaded = YES;
+    }
     else
     {
+        /*
         //TODO should be in main screen
-        [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+        
         
         NSError*error;
         NSString *account = [SSKeychain passwordForService:SERVICE_NAME account:ACCOUNT_NAME error:&error];
@@ -158,17 +162,18 @@ const BOOL OFFLINE_DEBUGGING = NO;
                                                 }
                                             }
                                         }];
+         */
     }
     //[PFUser enableAutomaticUser];
     
     /*
-    [[PFUser currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        
-        //NSLog(@"%d", succeeded);
-        
-        //load resources
-        [UserModel setupUser]; //also loads user data such as gold
-    }];*/
+     [[PFUser currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+     
+     //NSLog(@"%d", succeeded);
+     
+     //load resources
+     [UserModel setupUser]; //also loads user data such as gold
+     }];*/
     
     
     /*
@@ -185,9 +190,7 @@ const BOOL OFFLINE_DEBUGGING = NO;
      }
      */
     
-     [PickIAPHelper sharedInstance];
-    
-    
+    [PickIAPHelper sharedInstance];
     
     return YES;
 }

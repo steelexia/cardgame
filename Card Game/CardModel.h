@@ -50,6 +50,9 @@
 /** Number of likes a card has received. Only relevant for standard cards */
 @property int likes;
 
+/** Text appearing beneath ability for flavour */
+@property NSString* flavourText;
+
 //----------------Card battle stats values----------------//
 
 @property enum CardElement element;

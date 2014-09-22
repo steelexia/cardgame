@@ -137,6 +137,7 @@ int cardIDCount = 0;
     NSMutableArray* aiHand = self.hands[OPPONENT_SIDE];
     
     //TODO testing
+    /*
     MonsterCardModel*monster;
     
     monster = [[MonsterCardModel alloc] initWithIdNumber:10025 type:cardTypeSinglePlayer];
@@ -162,9 +163,16 @@ int cardIDCount = 0;
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnHit targetType:targetHeroEnemy withDuration:durationForever withValue:[NSNumber numberWithInt:5000]]];
     
     [playerHand addObject:monster];
+    */
     
+    SpellCardModel*spell;
     
-    
+    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    spell.element = elementLightning;
+    spell.name = @"Insta Win";
+    spell.cost = 0;
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:400000]]];
+    //[playerHand addObject:spell];
     
     /*
     MonsterCardModel*monster;
@@ -964,6 +972,8 @@ int cardIDCount = 0;
                             [self.gameViewController performBlock:^{
                                 [self.gameViewController animateCardDamage:attackerPlayer.playerMonster.cardView forDamage:dealtDamage  fromSide:target.side];
                             } afterDelay:0.1];
+                            
+                            [self checkForGameOver];
                         }
                     }
                 }

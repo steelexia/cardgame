@@ -18,3 +18,5 @@
 @end
 
 extern const int LIKE_CARD_GOLD_GAIN;
+
+extern const int FLAVOUR_TEXT_COST;

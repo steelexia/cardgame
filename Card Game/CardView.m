@@ -56,10 +56,11 @@ UIImage *heroPlaceHolderImage, *loadingImage;
 NSArray*backgroundImages, *backgroundOverlayImages, *abilityIconImages;
 
 NSMutableParagraphStyle *abilityTextParagrahStyle;
-NSDictionary *abilityTextAttributtes;
+NSDictionary *abilityTextAttributtes, *flavourTextAttributes;
 
 NSString *cardMainFont = @"EncodeSansCompressed-Bold";
 NSString *cardMainFontBlack = @"EncodeSansCompressed-Black";
+NSString *cardFlavourTextFont = @"LiberationSans-BoldItalic";
 
 NSMutableDictionary *standardCardImages;
 NSDictionary *singlePlayerCardImages;
@@ -74,9 +75,21 @@ NSDictionary *singlePlayerCardImages;
     
     CARD_IMAGE_WIDTH = 265;
     CARD_IMAGE_HEIGHT = 225;
-
+    
     PLAYER_HERO_WIDTH = PLAYER_HERO_HEIGHT = CARD_HEIGHT;
     
+    //for checking fonts
+    /*
+    for (NSString* family in [UIFont familyNames])
+    {
+        NSLog(@"%@", family);
+        
+        for (NSString* name in [UIFont fontNamesForFamilyName: family])
+        {
+            NSLog(@"  %@", name);
+        }
+    }
+    */
     backgroundImages = @[
                          @[[UIImage imageNamed:@"card_background_front_neutral_common"],
                            //TODO replace with additional rarity here
@@ -137,13 +150,13 @@ NSDictionary *singlePlayerCardImages;
                           ];
     
     backgroundOverlayImages = @[
-     [UIImage imageNamed:@"card_background_front_overlay_common"],
-     //TODO other rarities
-     [UIImage imageNamed:@"card_background_front_overlay_uncommon"],
-     [UIImage imageNamed:@"card_background_front_overlay_rare"],
-     [UIImage imageNamed:@"card_background_front_overlay_exceptional"],
-     [UIImage imageNamed:@"card_background_front_overlay_legendary"],
-    ];
+                                [UIImage imageNamed:@"card_background_front_overlay_common"],
+                                //TODO other rarities
+                                [UIImage imageNamed:@"card_background_front_overlay_uncommon"],
+                                [UIImage imageNamed:@"card_background_front_overlay_rare"],
+                                [UIImage imageNamed:@"card_background_front_overlay_exceptional"],
+                                [UIImage imageNamed:@"card_background_front_overlay_legendary"],
+                                ];
     
     singlePlayerCardImages = @{
                                //starting deck
@@ -182,8 +195,8 @@ NSDictionary *singlePlayerCardImages;
     
     
     campaignHeroImages = @{
-                               @"c_1_l_1" : [UIImage imageNamed:@"hero_c_1_l_1"],
-                               };
+                           @"c_1_l_1" : [UIImage imageNamed:@"hero_c_1_l_1"],
+                           };
     
     
     backgroundMonsterOverlayImage = [UIImage imageNamed:@"card_background_front_monster_overlay"];
@@ -203,6 +216,8 @@ NSDictionary *singlePlayerCardImages;
     [abilityTextParagrahStyle setMaximumLineHeight:10];
     abilityTextAttributtes = @{NSParagraphStyleAttributeName : abilityTextParagrahStyle, NSFontAttributeName : [UIFont fontWithName:cardMainFont size:10]};
     
+    flavourTextAttributes = @{NSParagraphStyleAttributeName : abilityTextParagrahStyle, NSFontAttributeName : [UIFont fontWithName:cardFlavourTextFont size:9]};
+    
     standardCardImages = [[NSMutableDictionary alloc] init];
 }
 
@@ -221,7 +236,7 @@ NSDictionary *singlePlayerCardImages;
         
         //do the changes without animation
         super.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_VIEWER_SCALE, CARD_VIEWER_SCALE);
-
+        
         if (cardViewState == cardViewStateCardViewer)
             self.mask.alpha = 0.0;
         else if (cardViewState == cardViewStateCardViewerGray)
@@ -273,7 +288,7 @@ NSDictionary *singlePlayerCardImages;
         [imageBackgroundView setBackgroundColor:[UIColor whiteColor]];
         imageBackgroundView.center = CGPointMake(CARD_FULL_WIDTH/2, 80);
         //[backgroundImageView addSubview:imageBackgroundView]; //for providing a view if card image has transparent areas, not using cardImage's background since it has problems when loading in store
-       
+        
         if (cardImage == nil)
         {
             if (cardModel.type == cardTypeSinglePlayer)
@@ -315,7 +330,7 @@ NSDictionary *singlePlayerCardImages;
                 }
                 else
                     self.cardImage = [[UIImageView alloc] initWithImage:heroPlaceHolderImage];
-                 
+                
                 //self.cardImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"card_1000"]];
             }
             else
@@ -388,7 +403,7 @@ NSDictionary *singlePlayerCardImages;
         self.nameLabel.font = [UIFont fontWithName:cardMainFont size:15];
         [self.nameLabel setMinimumScaleFactor:6.f/15];
         self.nameLabel.adjustsFontSizeToFitWidth = YES;
-
+        
         [_frontViews addSubview: nameLabel];
         
         self.costLabel = [[StrokedLabel alloc] initWithFrame:self.bounds];
@@ -416,7 +431,7 @@ NSDictionary *singlePlayerCardImages;
         //NOTE added above other stuff
         
         self.baseAbilityLabel = [[UITextView alloc] initWithFrame:CGRectMake(5, 157, CARD_FULL_WIDTH - 10, 60)]; //NOTE changing this is useless, do it down below
-       [self.baseAbilityLabel  setTextContainerInset:UIEdgeInsetsMake(0, 0, 0, 0)];
+        [self.baseAbilityLabel  setTextContainerInset:UIEdgeInsetsMake(0, 0, 0, 0)];
         self.baseAbilityLabel.textColor = [UIColor blackColor];
         self.baseAbilityLabel.backgroundColor = [UIColor clearColor];
         self.baseAbilityLabel.editable = NO;
@@ -426,7 +441,7 @@ NSDictionary *singlePlayerCardImages;
         self.baseAbilityLabel.textAlignment = NSTextAlignmentLeft;
         //self.baseAbilityLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         //self.baseAbilityLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-
+        
         //[self.baseAbilityLabel sizeToFit];
         [self addSubview: baseAbilityLabel];
         
@@ -434,7 +449,7 @@ NSDictionary *singlePlayerCardImages;
         if ([cardModel isKindOfClass:[MonsterCardModel class]])
         {
             MonsterCardModel*monsterCard = (MonsterCardModel*)cardModel;
-
+            
             //player hero's card only has life (TODO maybe damage or spells in future)
             if (cardModel.type == cardTypePlayer)
             {
@@ -547,17 +562,17 @@ NSDictionary *singlePlayerCardImages;
         
         //adds correct text to all of the labels
         [self updateView];
+        
+        self.mask = [[UIView alloc] initWithFrame:self.bounds];
+        [self.mask setUserInteractionEnabled:NO];
+        [self.mask setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.7]];
+        self.mask.alpha = 0;
+        [self addSubview:self.mask];
+        self.frontFacing = NO; //default to backfacing
+        
+        self.cardHighlightType = cardHighlightNone;
+        self.cardViewState = cardViewStateNone;
     }
-    
-    self.mask = [[UIView alloc] initWithFrame:self.bounds];
-    [self.mask setUserInteractionEnabled:NO];
-    [self.mask setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.7]];
-    self.mask.alpha = 0;
-    [self addSubview:self.mask];
-    self.frontFacing = NO; //default to backfacing
-    
-    self.cardHighlightType = cardHighlightNone;
-    self.cardViewState = cardViewStateNone;
     
     return self;
 }
@@ -806,7 +821,7 @@ NSDictionary *singlePlayerCardImages;
                 self.abilityIcons = abilityIcons;
             }
             
-            //TODO: need a special view to show both current and max values
+            //TODO: maybe put a special view to show both current and max values
             
         }
         else if ([self.cardModel isKindOfClass:[SpellCardModel class]])
@@ -816,10 +831,33 @@ NSDictionary *singlePlayerCardImages;
             //TODO
         }
         
+        //text area for ability & flavour text
         NSString *abilityDescription = [Ability getDescriptionForBaseAbilities:self.cardModel];
         
-        self.baseAbilityLabel.attributedText = [[NSAttributedString alloc] initWithString:abilityDescription
-                                                                               attributes:abilityTextAttributtes];
+        //add a new line if has text
+        if (abilityDescription.length > 0)
+            abilityDescription = [NSString stringWithFormat:@"%@\n", abilityDescription];
+        
+        NSAttributedString *abilityDescriptionAS = [[NSAttributedString alloc] initWithString:abilityDescription
+                                                                                   attributes:abilityTextAttributtes];
+        
+        
+        
+        NSString*flavourText;
+        
+        //new line if has ability
+        if (abilityDescription.length > 0)
+            flavourText = [NSString stringWithFormat:@"\n%@", _cardModel.flavourText];
+        else
+            flavourText = [NSString stringWithFormat:@"%@", _cardModel.flavourText];
+        
+        NSAttributedString *flavourStringAS = [[NSAttributedString alloc] initWithString:flavourText
+                                                                                   attributes:flavourTextAttributes];
+        
+        NSMutableAttributedString *finalString = [[NSMutableAttributedString alloc] initWithAttributedString:abilityDescriptionAS] ;
+        [finalString appendAttributedString:flavourStringAS];
+        
+        self.baseAbilityLabel.attributedText = finalString;
     }
     //back facing
     else
@@ -946,7 +984,7 @@ NSDictionary *singlePlayerCardImages;
 
 -(void)setPopupDamage:(int)damage
 {
-     //assuming this will always be animated in this scale
+    //assuming this will always be animated in this scale
     
     //new damage
     if ([self.damagePopup.text isEqualToString:@""])
@@ -1294,29 +1332,29 @@ NSDictionary *singlePlayerCardImages;
 }
 
 /*
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [super touchesBegan:touches withEvent:event];
-    [self.baseAbilityLabel touchesBegan:touches withEvent:event];
-}
-
--(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [super touchesCancelled:touches withEvent:event];
-    [self.baseAbilityLabel touchesCancelled:touches withEvent:event];
-}
-
--(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [super touchesEnded:touches withEvent:event];
-    [self.baseAbilityLabel touchesEnded:touches withEvent:event];
-}
-
--(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [super touchesMoved:touches withEvent:event];
-    [self.baseAbilityLabel touchesMoved:touches withEvent:event];
-}
-*/
+ -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+ {
+ [super touchesBegan:touches withEvent:event];
+ [self.baseAbilityLabel touchesBegan:touches withEvent:event];
+ }
+ 
+ -(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+ {
+ [super touchesCancelled:touches withEvent:event];
+ [self.baseAbilityLabel touchesCancelled:touches withEvent:event];
+ }
+ 
+ -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+ {
+ [super touchesEnded:touches withEvent:event];
+ [self.baseAbilityLabel touchesEnded:touches withEvent:event];
+ }
+ 
+ -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+ {
+ [super touchesMoved:touches withEvent:event];
+ [self.baseAbilityLabel touchesMoved:touches withEvent:event];
+ }
+ */
 
 @end

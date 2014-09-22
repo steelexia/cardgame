@@ -180,7 +180,7 @@ enum CardAbilityIcon
 
 
 NSString *cardMainFont;
-NSString *cardMainFontBlack;
+NSString *cardMainFontBlack, *cardFlavourTextFont;
 
 UIImage*placeHolderImage;
 UIImage*PLAYER_FIRST_CARD_IMAGE;

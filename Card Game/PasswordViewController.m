@@ -10,7 +10,7 @@
 #import "CardView.h"
 #import "UserModel.h"
 #import "SSKeychain.h"
-#import "AppDelegate.h" //TODO will be moved to UserModel
+#import "LoginViewController.h"
 
 @interface PasswordViewController ()
 

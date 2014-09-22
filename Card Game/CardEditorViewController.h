@@ -17,7 +17,7 @@
 #import "CFButton.h"
 #import "CFLabel.h"
 
-@interface CardEditorViewController : UIViewController <UITextFieldDelegate, GKImagePickerDelegate>
+@interface CardEditorViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate, GKImagePickerDelegate>
 
 @property CardModel*currentCardModel;
 /** Used for voting. Will not edit it */
@@ -33,6 +33,10 @@
 @property (strong) CFLabel*tutLabel;
 @property (strong) CFButton*tutOkButton;
 @property (strong) UIImageView*arrowImage;
+@property (strong) UIView*customizeView;
+@property (strong) UITextView *flavourTextView;
+@property (strong) StrokedLabel *customizeBackLabel;
+@property (strong) CFButton* customizeBackButton;
 
 @property enum CardEditorMode editorMode;
 /** Set to YES if save button is pressed during voting */

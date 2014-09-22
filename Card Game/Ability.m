@@ -292,6 +292,14 @@
         Ability*abilityB = (Ability*)b;
         return [[Ability getCastTypeOrder:abilityA.castType] compare:[Ability getCastTypeOrder:abilityB.castType]];
     }]];
+    
+    //remove all non-base or expired abilities
+    for (int i = [sortedAbilities count] - 1; i >= 0; i--)
+    {
+        Ability*ability = sortedAbilities[i];
+        if (ability.expired || !ability.isBaseAbility)
+            [sortedAbilities removeObjectAtIndex:i];
+    }
    
     NSString*description = @"";
     
@@ -299,10 +307,6 @@
     {
         Ability*ability = sortedAbilities[0];
         [sortedAbilities removeObjectAtIndex:0];
-        
-        //non-base abilities are not shown since they are on separate menu
-        if (!ability.isBaseAbility || ability.expired)
-            continue;
         
         enum AbilityType abilityType = ability.abilityType;
         enum CastType castType = ability.castType;
@@ -331,9 +335,6 @@
         //look for abilities with same cast type
         for (int i = [sortedAbilities count] - 1; i >= 0; i--)
         {
-            if (!ability.isBaseAbility || ability.expired)
-                continue;
-            
             Ability*otherAbility = sortedAbilities[i];
 
             //all types are the same

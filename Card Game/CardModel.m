@@ -53,6 +53,7 @@ const int CARD_ID_START = 1000;
         self.cardViewState = cardViewStateCardViewer;
         self.likes = 0;
         self.tags = [NSMutableArray array];
+        self.flavourText = @"";
     }
     
     return self;
@@ -106,6 +107,7 @@ const int CARD_ID_START = 1000;
         self.likes = card.likes;
         self.tags = card.tags;
         self.cardPF = card.cardPF;
+        self.flavourText = card.flavourText;
         
         for (Ability*ability in card.abilities)
             [self.abilities addObject: [[Ability alloc] initWithAbility:ability]];
@@ -242,6 +244,7 @@ const int CARD_ID_START = 1000;
     NSNumber *element = cardPF[@"element"];
     NSNumber *likes = cardPF[@"likes"];
     NSArray *tags = cardPF[@"tags"];
+    NSString *flavourText = cardPF[@"flavourText"];
     
     //TODO in future this should [probably] never be nil
     if (creator != nil && ![creator isEqualToString:@"Unknown"])
@@ -269,7 +272,7 @@ const int CARD_ID_START = 1000;
         NSError*error;
         do{
             [abilityPF fetch:&error];
-            if (abilityPF != nil)
+            if (!error && abilityPF != nil)
                 [card addBaseAbility:[AbilityWrapper getAbilityWithPFObject:abilityPF]];
             retryCount++;
             
@@ -285,6 +288,11 @@ const int CARD_ID_START = 1000;
     card.likes = [likes intValue];
     card.tags = [NSMutableArray arrayWithArray:tags];
     card.cardPF = cardPF;
+    
+    if (flavourText != nil) //just for old cards that have no text
+        card.flavourText = flavourText;
+    else
+        card.flavourText = @"";
     
     if (block!=nil)
         block(card);
@@ -341,6 +349,7 @@ const int CARD_ID_START = 1000;
     cardPF[@"likes"] = @(card.likes);
     cardPF[@"tags"] = card.tags;
     cardPF[@"image"] = imagePF;
+    cardPF[@"flavourText"] = card.flavourText;
     
     cardPF[@"element"] = [NSNumber numberWithInt:card.element];
     

@@ -52,7 +52,7 @@ UIImageView *playerFieldHighlight, *opponentFieldHighlight, *playerFieldEdge, *o
 
 UIImageView *battlefieldBackground;
 
-CFButton *quitButton, *quitConfirmButton, *quitCancelButton;
+CFButton *quitConfirmButton, *quitCancelButton;
 UILabel *quitConfirmLabel;
 
 StrokedLabel *pickATargetLabel;
@@ -158,18 +158,8 @@ BOOL leftHandViewZone = NO;
 /** Purely for organization, called once when the view is first set up */
 -(void) setupUI
 {
-    //for checking fonts
-    /*
-     for (NSString* family in [UIFont familyNames])
-     {
-     NSLog(@"%@", family);
-     
-     for (NSString* name in [UIFont fontNamesForFamilyName: family])
-     {
-     NSLog(@"  %@", name);
-     }
-     }
-     */
+    
+    
     
     //set up UI
     darkFilter = [[UIView alloc] initWithFrame:self.view.bounds];
@@ -293,11 +283,21 @@ BOOL leftHandViewZone = NO;
     [self.backgroundView addSubview: self.endTurnButton];
     
     //quit button
-    quitButton = [[CFButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
-    [quitButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
-    [quitButton addTarget:self action:@selector(quitButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    _quitButton = [[CFButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
+    [_quitButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
+    [_quitButton addTarget:self action:@selector(quitButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    [self.uiView addSubview:quitButton];
+    [self.uiView addSubview:_quitButton];
+    if (_level.isTutorial)
+    {
+        NSArray*completedLevels = userPF[@"completedLevels"];
+        
+        //cannot quit if playing the tutorial level for first time
+        if (![completedLevels containsObject:_level.levelID])
+        {
+            [_quitButton setEnabled:NO];
+        }
+    }
     
     quitConfirmLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/4, SCREEN_WIDTH*6/8, SCREEN_HEIGHT)];
     quitConfirmLabel.textColor = [UIColor whiteColor];
@@ -1467,8 +1467,12 @@ BOOL leftHandViewZone = NO;
 
 -(void)quitConfirmButtonPressed
 {
-    [self.presentingViewController.presentingViewController
-     dismissViewControllerAnimated:YES completion:nil];
+    if (_noPreviousView)
+        [self.presentingViewController
+         dismissViewControllerAnimated:YES completion:nil];
+    else
+        [self.presentingViewController.presentingViewController
+         dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)quitCancelButtonPressed
@@ -1555,26 +1559,49 @@ BOOL leftHandViewZone = NO;
     if (_gameModel.playerTwoDefeated && !_gameModel.playerOneDefeated)
     {
         //no next level
-        if (_nextLevel == nil)
+        //if (_nextLevel == nil)
+        //{
+        
+        //if hasn't completed current level
+        if (_level != nil && !levelAlreadyCompleted)
         {
-            if (_level != nil && !levelAlreadyCompleted)
+            //next level is not a boss fight (tutorial), save progress. OR no next level
+            if ((_nextLevel != nil && !_nextLevel.isBossFight) || _nextLevel == nil)
             {
                 goldReward = _level.goldReward;
                 cardReward = _level.cardReward;
                 
                 [_gameOverOkButton addTarget:self action:@selector(saveLevelProgress)    forControlEvents:UIControlEventTouchUpInside];
             }
-            //already completed, simply quits TODO: also gets gold from regular battles
-            else
+            //next level is boss fight, just go
+            else if (_nextLevel != nil && _nextLevel.isBossFight)
+            {
+                [_gameOverOkButton addTarget:self action:@selector(beginNextLevel)    forControlEvents:UIControlEventTouchUpInside];
+            }
+            //no next level, quit
+            /*else
             {
                 [_gameOverOkButton addTarget:self action:@selector(quitConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-            }
+            }*/
         }
+        //already completed, simply quits TODO: also gets gold from regular battles
+        else
+        {
+            //begin next level immediately if exists
+            if (_nextLevel != nil)
+            {
+                [_gameOverOkButton addTarget:self action:@selector(beginNextLevel)    forControlEvents:UIControlEventTouchUpInside];
+            }
+            //back to main menu
+            else
+                [_gameOverOkButton addTarget:self action:@selector(quitConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+        }
+        /*}
         //has next level
         else
         {
             [_gameOverOkButton addTarget:self action:@selector(beginNextLevel)    forControlEvents:UIControlEventTouchUpInside];
-        }
+        }*/
         
         if (goldReward > 0)
         {
@@ -1680,16 +1707,50 @@ BOOL leftHandViewZone = NO;
 
 -(void)beginNextLevel
 {
-    BossBattleScreenViewController *bbsvc = [[BossBattleScreenViewController alloc] init];
-    bbsvc.message = _level.endBattleText;
-    GameViewController * nextLevelController = [[GameViewController alloc] initWithGameMode:GameModeSingleplayer withLevel:_nextLevel];
-    bbsvc.nextScreen = nextLevelController;
+    if (_nextLevel.isBossFight)
+    {
+        BossBattleScreenViewController *bbsvc = [[BossBattleScreenViewController alloc] init];
+        bbsvc.message = _level.endBattleText;
+        GameViewController * nextLevelController = [[GameViewController alloc] initWithGameMode:GameModeSingleplayer withLevel:_nextLevel];
+        bbsvc.nextScreen = nextLevelController;
+        
+        UIViewController*vc;
+        
+        if (_noPreviousView)
+        {
+            vc = self.presentingViewController;
+        }
+        else
+            vc = self.presentingViewController.presentingViewController;
+        
+        [vc dismissViewControllerAnimated:NO completion:^{
+            //dispatch_sync(dispatch_get_main_queue(), ^{
+            NSLog(@"switched");
+                [vc presentViewController:bbsvc animated:NO completion:nil];
+            //});
+        }];
+    }
+    //this must be tutorial
+    else{
+        GameViewController * nextLevelController = [[GameViewController alloc] initWithGameMode:GameModeSingleplayer withLevel:_nextLevel];
+        
+        UIViewController*vc;
+        
+        if (_noPreviousView)
+        {
+            vc = self.presentingViewController;
+            nextLevelController.noPreviousView = YES;
+        }
+        else
+            vc = self.presentingViewController.presentingViewController;
+        
+        [vc dismissViewControllerAnimated:NO completion:^{
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [vc presentViewController:nextLevelController animated:NO completion:nil];
+            });
+        }];
+    }
     
-    UIViewController*vc = self.presentingViewController.presentingViewController;
-    
-    [vc dismissViewControllerAnimated:NO completion:^{
-        [vc presentViewController:bbsvc animated:NO completion:nil];
-    }];
 }
 
 -(void)saveLevelProgress
@@ -1746,7 +1807,10 @@ BOOL leftHandViewZone = NO;
                 [userPF fetch];
                 
                 NSLog(@"Progress saved");
-                [self quitConfirmButtonPressed];
+                if (_nextLevel != nil)
+                    [self beginNextLevel];
+                else
+                    [self quitConfirmButtonPressed];
             }
             else{
                 dispatch_sync(dispatch_get_main_queue(), ^(void) {

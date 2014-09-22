@@ -27,4 +27,4 @@
 
 @end
 
-extern const NSString*SERVICE_NAME, *ACCOUNT_NAME, *PASSWORD_NAME;
+

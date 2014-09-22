@@ -16,8 +16,8 @@
 
 @interface MainScreenViewController : UIViewController
 
-@property (strong) UIActivityIndicatorView*gameLoadingView;
-
 @property (strong) StrokedLabel *messageCountLabel;
+@property BOOL loadedTutorial;
+@property (strong) CFButton *singlePlayerButton, *multiPlayerButton, *deckButton, *storeButton;
 
 @end
