@@ -206,6 +206,11 @@
 		90F80F9E19A3D28E007571F4 /* GameViewController+Tutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F80F9D19A3D28E007571F4 /* GameViewController+Tutorial.m */; };
 		90F80FA119A3D3D9007571F4 /* arrow_left_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F80FA019A3D3D9007571F4 /* arrow_left_icon.png */; };
 		90F80FA319A63F4C007571F4 /* card_image_cardeditor_empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F80FA219A63F4B007571F4 /* card_image_cardeditor_empty.png */; };
+		D31E2CA419BF5A41002E1934 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31E2CA319BF5A41002E1934 /* GameKit.framework */; };
+		D31E2CA819BF5BE8002E1934 /* GameKitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D31E2CA719BF5BE8002E1934 /* GameKitHelper.m */; };
+		D31E2CAB19BFBECF002E1934 /* MultiplayerGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D31E2CAA19BFBECF002E1934 /* MultiplayerGameViewController.m */; };
+		D31E2CAF19BFE999002E1934 /* MultiplayerGameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D31E2CAE19BFE999002E1934 /* MultiplayerGameViewController.xib */; };
+		D31E2CB419BFF502002E1934 /* MultiplayerNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = D31E2CB319BFF502002E1934 /* MultiplayerNetworking.m */; };
 		FA033FC619BCFF6600EFEBD8 /* card_0001.png in Resources */ = {isa = PBXBuildFile; fileRef = FA033FB219BCFF6600EFEBD8 /* card_0001.png */; };
 		FA033FC719BCFF6600EFEBD8 /* card_0002.png in Resources */ = {isa = PBXBuildFile; fileRef = FA033FB319BCFF6600EFEBD8 /* card_0002.png */; };
 		FA033FC819BCFF6600EFEBD8 /* card_0003.png in Resources */ = {isa = PBXBuildFile; fileRef = FA033FB419BCFF6600EFEBD8 /* card_0003.png */; };
@@ -528,6 +533,14 @@
 		90F80F9D19A3D28E007571F4 /* GameViewController+Tutorial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GameViewController+Tutorial.m"; sourceTree = "<group>"; };
 		90F80FA019A3D3D9007571F4 /* arrow_left_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = arrow_left_icon.png; path = "Card Game/arrow_left_icon.png"; sourceTree = "<group>"; };
 		90F80FA219A63F4B007571F4 /* card_image_cardeditor_empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_image_cardeditor_empty.png; path = "Card Game/card_image_cardeditor_empty.png"; sourceTree = "<group>"; };
+		D31E2CA319BF5A41002E1934 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		D31E2CA619BF5BE8002E1934 /* GameKitHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameKitHelper.h; sourceTree = "<group>"; };
+		D31E2CA719BF5BE8002E1934 /* GameKitHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameKitHelper.m; sourceTree = "<group>"; };
+		D31E2CA919BFBECF002E1934 /* MultiplayerGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiplayerGameViewController.h; sourceTree = "<group>"; };
+		D31E2CAA19BFBECF002E1934 /* MultiplayerGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiplayerGameViewController.m; sourceTree = "<group>"; };
+		D31E2CAE19BFE999002E1934 /* MultiplayerGameViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MultiplayerGameViewController.xib; sourceTree = "<group>"; };
+		D31E2CB219BFF502002E1934 /* MultiplayerNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiplayerNetworking.h; sourceTree = "<group>"; };
+		D31E2CB319BFF502002E1934 /* MultiplayerNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiplayerNetworking.m; sourceTree = "<group>"; };
 		FA033FB219BCFF6600EFEBD8 /* card_0001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_0001.png; sourceTree = "<group>"; };
 		FA033FB319BCFF6600EFEBD8 /* card_0002.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_0002.png; sourceTree = "<group>"; };
 		FA033FB419BCFF6600EFEBD8 /* card_0003.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_0003.png; sourceTree = "<group>"; };
@@ -602,6 +615,7 @@
 				907D9C11193E43800037C0CF /* libz.dylib in Frameworks */,
 				907D9C0F193E43740037C0CF /* CoreLocation.framework in Frameworks */,
 				907D9C0D193E436B0037C0CF /* CFNetwork.framework in Frameworks */,
+				D31E2CA419BF5A41002E1934 /* GameKit.framework in Frameworks */,
 				907D9C0B193E43640037C0CF /* AudioToolbox.framework in Frameworks */,
 				90F35299191595C200601130 /* CoreGraphics.framework in Frameworks */,
 				90F3529B191595C200601130 /* UIKit.framework in Frameworks */,
@@ -954,6 +968,7 @@
 		90F35295191595C200601130 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D31E2CA319BF5A41002E1934 /* GameKit.framework */,
 				FA543CB019A9784000E70529 /* Parse.framework */,
 				907D9C1A193E43A80037C0CF /* SystemConfiguration.framework */,
 				907D9C18193E439B0037C0CF /* StoreKit.framework */,
@@ -975,12 +990,14 @@
 		90F3529C191595C200601130 /* Card Game */ = {
 			isa = PBXGroup;
 			children = (
+				D31E2CA519BF5BBE002E1934 /* GameKit */,
 				90F80F8A19A27FA5007571F4 /* SSKeychain */,
 				90456ED0198D715700B807DC /* Store Screen */,
 				90DA4347195B25EE00E44AED /* Game Battle Screen */,
 				90DA4345195B258400E44AED /* Deck Editor Screen */,
 				90DA4365195F5DF300E44AED /* Card Editor Screen */,
 				90F352DF1916BBCC00601130 /* Cards */,
+				D31E2CB119BFEA3C002E1934 /* Multiplayer */,
 				90DA4346195B25CC00E44AED /* Single Player */,
 				FA6D50B419AA41860084F492 /* CFViews */,
 				FA19FC9519B3ECE100B38943 /* Main Screen */,
@@ -1105,6 +1122,27 @@
 			name = Singleplayer;
 			sourceTree = "<group>";
 		};
+		D31E2CA519BF5BBE002E1934 /* GameKit */ = {
+			isa = PBXGroup;
+			children = (
+				D31E2CA619BF5BE8002E1934 /* GameKitHelper.h */,
+				D31E2CA719BF5BE8002E1934 /* GameKitHelper.m */,
+				D31E2CB219BFF502002E1934 /* MultiplayerNetworking.h */,
+				D31E2CB319BFF502002E1934 /* MultiplayerNetworking.m */,
+			);
+			name = GameKit;
+			sourceTree = "<group>";
+		};
+		D31E2CB119BFEA3C002E1934 /* Multiplayer */ = {
+			isa = PBXGroup;
+			children = (
+				D31E2CA919BFBECF002E1934 /* MultiplayerGameViewController.h */,
+				D31E2CAA19BFBECF002E1934 /* MultiplayerGameViewController.m */,
+				D31E2CAE19BFE999002E1934 /* MultiplayerGameViewController.xib */,
+			);
+			name = Multiplayer;
+			sourceTree = "<group>";
+		};
 		FA033FB119BCFF5500EFEBD8 /* Starting Deck */ = {
 			isa = PBXGroup;
 			children = (
@@ -1193,6 +1231,11 @@
 				TargetAttributes = {
 					90F35292191595C200601130 = {
 						DevelopmentTeam = U536PJZFA3;
+						SystemCapabilities = {
+							com.apple.GameCenter = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -1359,6 +1402,7 @@
 				90C528A3199D613B00750C54 /* screen_background_center.png in Resources */,
 				9032E13E199918F8002A6725 /* category_tab_disabled.png in Resources */,
 				90C52892199BE87500750C54 /* search_toggle_button.png in Resources */,
+				D31E2CAF19BFE999002E1934 /* MultiplayerGameViewController.xib in Resources */,
 				FA033FCB19BCFF6600EFEBD8 /* card_0006.png in Resources */,
 				90C528A2199D613B00750C54 /* screen_background_bottom.png in Resources */,
 				90F352A1191595C200601130 /* InfoPlist.strings in Resources */,
@@ -1438,6 +1482,7 @@
 				90F80F9219A27FA5007571F4 /* SSKeychain.m in Sources */,
 				9032E13019959483002A6725 /* CardPointsUtility.m in Sources */,
 				90DA4344195B256100E44AED /* DeckTableView.m in Sources */,
+				D31E2CB419BFF502002E1934 /* MultiplayerNetworking.m in Sources */,
 				90C528A7199D6CC100750C54 /* CFButton.m in Sources */,
 				90AB14FA196EF4360008FCDD /* AIPlayer+Utility.m in Sources */,
 				90F352A3191595C200601130 /* main.m in Sources */,
@@ -1445,7 +1490,9 @@
 				90C528AA199D90D800750C54 /* CFLabel.m in Sources */,
 				90456ED6198D72AA00B807DC /* StoreCardsCollectionView.m in Sources */,
 				90DA43321959CDF900E44AED /* CardsCollectionView.m in Sources */,
+				D31E2CA819BF5BE8002E1934 /* GameKitHelper.m in Sources */,
 				FA19FCAA19B4EBA200B38943 /* PasswordViewController.m in Sources */,
+				D31E2CAB19BFBECF002E1934 /* MultiplayerGameViewController.m in Sources */,
 				90DA43D9196A222800E44AED /* CustomScrollView.m in Sources */,
 				90DA4353195DF83D00E44AED /* UIConstants.m in Sources */,
 				90F80F8119A14916007571F4 /* BossBattleScreenViewController.m in Sources */,
@@ -1596,8 +1643,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Brian Allen (U536PJZFA3)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Brian Allen (U536PJZFA3)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/",
@@ -1617,8 +1664,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Brian Allen (U536PJZFA3)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Brian Allen (U536PJZFA3)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/",

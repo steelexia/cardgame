@@ -12,8 +12,11 @@
 #import "StoreViewController.h"
 #import "UIConstants.h"
 #import "SinglePlayerMenuViewController.h"
+#import "MultiplayerGameViewController.h"
 #import "CampaignMenuViewController.h"
 #import "Campaign.h"
+
+
 
 @interface MainScreenViewController ()
 
@@ -171,6 +174,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     }
 }
 
+
+
 -(void)messageButtonPressed
 {
     MessagesViewController *vc = [[MessagesViewController alloc] init];
@@ -195,6 +200,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void)multiPlayerButtonPressed
 {
+    MultiplayerGameViewController *viewController = [[MultiplayerGameViewController alloc] init];
+    [self presentViewController:viewController animated:NO completion:nil];
     
 }
 
