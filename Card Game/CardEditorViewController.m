@@ -1012,7 +1012,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
 -(void)tutorialPoints
 {
     [self removeAllStatButtons];
-    self.tutLabel.label.text = @"Increasing the strength of the card will also increase the points indicated by the star icon. This number cannot exceed the maximum points, which can only be raised by increasing the resource cost of the card.";
+    self.tutLabel.label.text = @"The points on the star icon represents the card's overall strength. Increasing the card's strength requires more points, which can only be raised by increasing the card's resource cost.";
     
     _arrowImage.image = ARROW_LEFT_ICON_IMAGE;
     [self.view addSubview:_arrowImage];
@@ -1044,7 +1044,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     
     [self setTutLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/4)];
     
-    self.tutLabel.label.text = @"The list below shows the abilities you can add to the card. Abilities can have its specific value adjusted, and having different combinations of abilities can give bonuses and penalties to your points.";
+    self.tutLabel.label.text = @"The list below shows the abilities you can add to the card. Some abilities have adjustable values, and having different combinations of abilities can give bonuses and penalties to your points.";
     
     [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
     [self.tutOkButton addTarget:self action:@selector(tutorialElement) forControlEvents:UIControlEventTouchUpInside];
@@ -2401,6 +2401,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     [self loadAllValidAbilities];
     [self updateNewAbilityList];
     [self reloadCardView];
+    [self updateCost:_currentCardModel];
 }
 
 -(void)openImageUploadScreen
@@ -2735,6 +2736,8 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
 -(void)saveCardConfirmButtonPressed
 {
     self.currentCardModel.name = nameTextField.text; //TODO not exactly the best place
+    if (self.currentCardModel.name.length > 100)
+        [self.currentCardModel.name substringToIndex:100];
 
     //first tutorial's card is not actually published
     if (_editorMode == cardEditorModeTutorialOne)
@@ -2744,6 +2747,9 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     }
    
     NSString *lowerTags = [tagsField.text lowercaseString];
+    if (lowerTags.length > 100)
+        [lowerTags substringToIndex:100];
+    
     NSMutableArray*lowerTagsArray = [NSMutableArray arrayWithArray:[lowerTags componentsSeparatedByString:@" "]];
     NSMutableArray*noDupTags = [NSMutableArray array];
     

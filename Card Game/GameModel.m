@@ -1009,6 +1009,7 @@ int cardIDCount = 0;
     if (!target.deployed || target.dead)
         return NO;
     
+    //if no attacker and attacker is monster card (spell can target freely)
     if (attacker != nil && [attacker isKindOfClass:[MonsterCardModel class]])
     {
         MonsterCardModel *attackerMonsterCard = (MonsterCardModel*)attacker;

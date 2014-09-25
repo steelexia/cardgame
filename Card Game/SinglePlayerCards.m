@@ -1807,6 +1807,8 @@
         [deck addCard:starterDeck.cards[11]];
         [deck addCard:starterDeck.cards[5]];
         [deck addCard:starterDeck.cards[14]];
+        [deck addCard:starterDeck.cards[18]];
+        [deck addCard:starterDeck.cards[3]];
     }
     else
         return nil;
@@ -1993,7 +1995,7 @@
     [deck addCard:monster];
 
     monster = [[MonsterCardModel alloc] initWithIdNumber:19 type:cardTypeStandard];
-    monster.name = @"Deity of Magic"; //?
+    monster.name = @"Deity of Magic";
     monster.damage = 4800;
     monster.life = monster.maximumLife = 6600;
     monster.cost = 6;

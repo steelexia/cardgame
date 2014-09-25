@@ -393,7 +393,7 @@ NSArray *allAbilities;
                       [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnMove targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:@[@1000,@8000] withDescription:nil] elements:@[ELEMENT_FIRE] rarity:cardRarityCommon minPoints:1000 maxPoints:12000 maxCount:1 minCost:1],
                      //add to self on end of turn
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnEndOfTurn targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:@[@1000,@4000] withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:1400 maxPoints:6400 maxCount:1 minCost:0],
+                      [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnEndOfTurn targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:@[@1000,@4000] withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:1400 maxPoints:6400 maxCount:2 minCost:0],
     
                      //---kill---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
                      //kill 1 minion
@@ -597,7 +597,7 @@ NSArray *allAbilities;
                       [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetAllMinion withDuration:durationInstant withValue:0 withOtherValues:@[@1,@3] withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityCommon minPoints:3000 maxPoints:6000 maxCount:1 minCost:4],
                      //set a random enemy minion to 2 on end of turn
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilitySetCooldown castType:castOnEndOfTurn targetType:targetOneFriendlyMinion withDuration:durationForever withValue:0 withOtherValues:@[@2,@2] withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:5000 maxPoints:5000 maxCount:1 minCost:4],
+                      [[Ability alloc] initWithType:abilitySetCooldown castType:castOnEndOfTurn targetType:targetOneFriendlyMinion withDuration:durationForever withValue:0 withOtherValues:@[@3,@3] withDescription:nil] elements:@[ELEMENT_EARTH] rarity:cardRarityCommon minPoints:5000 maxPoints:5000 maxCount:1 minCost:4],
                      //set all random friendly minion to 0 on death
                      [[AbilityWrapper alloc] initWithAbility:
                       [[Ability alloc] initWithType:abilitySetCooldown castType:castOnDeath targetType:targetOneFriendlyMinion withDuration:durationInstant withValue:0 withOtherValues:@[@0,@1] withDescription:nil] elements:@[ELEMENT_LIGHTNING] rarity:cardRarityCommon minPoints:4000 maxPoints:2000 maxCount:1 minCost:5], //might be too OP (for the set to 0), hopefully minCost makes it less. set to 1 would be identical to 0 if died on enemy's turn
@@ -750,7 +750,7 @@ NSArray *allAbilities;
                      //---remove abilities---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
                      //minion with no abilities, but cannot receive debuffs
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castAlways targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_NEUTRAL] rarity:cardRarityCommon minPoints:500 maxPoints:500 maxCount:2 minCost:2],
+                      [[Ability alloc] initWithType:abilityRemoveAbility castType:castAlways targetType:targetSelf withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_NEUTRAL] rarity:cardRarityCommon minPoints:0 maxPoints:0 maxCount:2 minCost:2], //cost depends on creature stats
                      //silence a minion
                      [[AbilityWrapper alloc] initWithAbility:
                       [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_LIGHT] rarity:cardRarityCommon minPoints:1050 maxPoints:1050 maxCount:2 minCost:0],

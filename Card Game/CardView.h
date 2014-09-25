@@ -178,7 +178,6 @@ enum CardAbilityIcon
     abilityIconRemoveAbility,
 };
 
-
 NSString *cardMainFont;
 NSString *cardMainFontBlack, *cardFlavourTextFont;
 

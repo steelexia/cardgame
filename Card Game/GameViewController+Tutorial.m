@@ -42,7 +42,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
         
         self.tutLabel = [[CFLabel alloc] initWithFrame:CGRectMake(0,0,260,200)];
         [self.tutLabel setIsDialog:YES];
-        self.tutLabel.label.text = @"CardForge is a card battle game where two opponents take turns in playing cards to defeat each other.";
+        self.tutLabel.label.text = @"CardForge is a card battle game where two heroes take turns playing cards to defeat each other.";
         [self.tutLabel.label setTextAlignment:NSTextAlignmentCenter];
         [self setLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)];
         [self.view addSubview:self.tutLabel];
@@ -122,12 +122,11 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
                 }
             }
         }
-        else
-        {
             //this only happens if there was an error uploading the cardOneID earlier. In this case, grab the first card the user owns. NOTE that this will always end up as a duplicate from the starting hand..
+        if (cardOne == nil)
             if (userAllCards.count > 0)
                 cardOne = [[CardModel alloc] initWithCardModel:userAllCards[0]];
-        }
+        
         
         CardModel *cardTwo;
         if (userPF[@"cardTwoID"] != nil)
@@ -143,12 +142,10 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
                 }
             }
         }
-        else
-        {
             //this only happens if there was an error uploading the cardOneID earlier. In this case, grab the first card the user owns
+        if (cardTwo == nil)
             if (userAllCards.count > 1)
                 cardTwo = [[CardModel alloc] initWithCardModel:userAllCards[1]];
-        }
         
         DeckModel *playerDeck = self.gameModel.decks[PLAYER_SIDE];
         
@@ -227,12 +224,10 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
                 }
             }
         }
-        else
-        {
             //this only happens if there was an error uploading the cardOneID earlier. In this case, grab the first card the user owns
+        if (cardOne == nil)
             if (userAllCards.count > 0)
                 cardOne = [[CardModel alloc] initWithCardModel:userAllCards[0]];
-        }
         
         [playerDeck insertCard:cardOne atIndex:0];
         
@@ -365,7 +360,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [self.tutLabel setIsDialog:NO];
     self.tutLabel.frame = CGRectMake(0,0,260,170);
     [self setLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/4)]; //reset button position
-    self.tutLabel.label.text = @"To summon the card you forged, drag it into the battlefield, marked by the yellow box.";
+    self.tutLabel.label.text = @"To summon the card you forged, drag it up to the battlefield, marked by the yellow box.";
     //[self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
     //[self.tutOkButton addTarget:self action:@selector(tutorialCooldown) forControlEvents:UIControlEventTouchUpInside];
 }
@@ -376,7 +371,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [self modalScreen];
     [self.view bringSubviewToFront:self.tutOkButton];
     [self.tutLabel setIsDialog:YES];
-    self.tutLabel.label.text = @"Creature cards all have cooldown, indicated by the hourglass icon. Their cooldown decrease by 1 at the start of every turn, and they can attack once it reaches 0.";
+    self.tutLabel.label.text = @"All creatures' cooldowns decrease by 1 at the start of every turn, and they can attack once it reaches 0.";
     [self.view addSubview:self.tutOkButton];
 
     [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
@@ -400,7 +395,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [self.endTurnButton setUserInteractionEnabled:NO];
     [self setLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT*4/5)];
     
-    self.tutLabel.label.text = @"You can now order it to attack by dragging it across to your opponent's creature, or your opponent's hero.";
+    self.tutLabel.label.text = @"You can now order it to attack by dragging it across to your opponent's creature or your opponent's hero.";
     
     [self fadeIn:self.tutLabel inDuration:0.2];
 }
@@ -414,7 +409,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [self.tutLabel setIsDialog:YES];
     [self setLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT*4/5)];
     
-    self.tutLabel.label.text = @"Each creature has a Damage and Life value. It dies when its life reaches 0. Both creatures take damage when attacking each other.";
+    self.tutLabel.label.text = @"Each creature has a Damage and Life value. It dies when its life reaches 0.\nBoth creatures take damage when attacking each other.";
     self.tutOkButton.alpha = 1;
 
     [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
@@ -427,7 +422,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     self.tutLabel.frame = CGRectMake(0,0,260,200);
     [self.tutLabel setIsDialog:YES];
     [self setLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)];
-    self.tutLabel.label.text = @"Summoning a card costs resources indicated by the blue icon on the top left corner of the card. Your resource, shown at the bottom right, refill and increase by one every turn.";
+    self.tutLabel.label.text = @"Summoning a card costs resources indicated by the blue icon on the top left corner of the card.\nYour resources, shown at the bottom right, refill and increase by one every turn.";
     
     self.arrowImage.image = ARROW_RIGHT_ICON_IMAGE;
     self.arrowImage.center = CGPointMake(SCREEN_WIDTH - 90, SCREEN_HEIGHT - 30);
@@ -491,14 +486,12 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
             }
         }
     }
-    else
-    {
         //this only happens if there was an error uploading the cardOneID earlier. In this case, grab the first card the user owns
+    if (cardOne == nil)
         if (userAllCards.count > 0)
         {
             cardOne = [[CardModel alloc] initWithCardModel:userAllCards[0]];
         }
-    }
     
     if (cardOne != nil) //should never be nil, but if really happened then player don't get the card
     {
@@ -523,6 +516,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void)tutorialHand
 {
+    //TODO probably say something else
+    /*
     [self setAllViews:NO];
     [self modalScreen];
     
@@ -531,6 +526,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     self.tutLabel.label.text = @"When you have several cards in your hand, it can be easier to view the cards by dragging horizontally.";
     [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
     [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
+     */
 }
 
 -(void)tutorialSpell
@@ -588,14 +584,12 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
             }
         }
     }
-    else
-    {
         //this only happens if there was an error uploading the cardOneID earlier. In this case, grab the first card the user owns
+    if (cardOne == nil)
         if (userAllCards.count > 0)
         {
             cardOne = [[CardModel alloc] initWithCardModel:userAllCards[0]];
         }
-    }
     
     CardModel *cardTwo;
     if (userPF[@"cardTwoID"] != nil)
@@ -611,14 +605,12 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
             }
         }
     }
-    else
-    {
         //this only happens if there was an error uploading the cardOneID earlier. In this case, grab the first card the user owns
+    if (cardTwo == nil)
         if (userAllCards.count > 1)
         {
             cardTwo = [[CardModel alloc] initWithCardModel:userAllCards[1]];
         }
-    }
     
     DeckModel *playerDeck = self.gameModel.decks[PLAYER_SIDE];
     

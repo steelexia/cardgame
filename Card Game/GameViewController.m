@@ -158,9 +158,6 @@ BOOL leftHandViewZone = NO;
 /** Purely for organization, called once when the view is first set up */
 -(void) setupUI
 {
-    
-    
-    
     //set up UI
     darkFilter = [[UIView alloc] initWithFrame:self.view.bounds];
     darkFilter.backgroundColor = [[UIColor alloc]initWithHue:0 saturation:0 brightness:0 alpha:0.8];

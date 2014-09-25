@@ -268,6 +268,9 @@ const int CARD_ID_START = 1000;
     //NOTE: make sure abilities are always loaded after stats otherwise maxLife etc may be modified by ability
     for (PFObject *abilityPF in abilities)
     {
+        //TODO lots here
+        
+        /*
         int retryCount = 0;
         NSError*error;
         do{
@@ -279,6 +282,19 @@ const int CARD_ID_START = 1000;
             if (retryCount>5) //failed to get ability, returns nil
                 return nil;
         } while(error);
+         */
+        
+        if (abilityPF != nil && abilityPF != (NSObject*)[NSNull null])
+        {
+            NSError*error;
+            [abilityPF fetchIfNeeded: &error]; //for whatever reason this is still needed
+            if (!error)
+                [card addBaseAbility:[AbilityWrapper getAbilityWithPFObject:abilityPF]];
+            else
+                return nil;
+        }
+        else
+            return nil;
     }
     
     card.name = name;

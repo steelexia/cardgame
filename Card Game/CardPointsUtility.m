@@ -231,13 +231,13 @@
                 {
                     //costs 10% of stats
                     abilityCost += monster.damage * 0.1;
-                    abilityCost += monster.life * 0.1;
+                    abilityCost += monster.maximumLife * 0.1;
                 }
                 else if (abilityType == abilityAssassin)
                 {
                     //costs 40% of stats
                     abilityCost += monster.damage * 0.25;
-                    abilityCost += monster.life * 0.25;
+                    abilityCost += monster.maximumLife * 0.25;
                     abilityCost /= monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown;
                     
                     //damageless assassin has it cheaper
@@ -247,6 +247,11 @@
                 else if (abilityType == abilityPierce)
                 {
                     abilityCost += monster.damage * 0.4;
+                }
+                else if (abilityType == abilityRemoveAbility)
+                {
+                    abilityCost += monster.damage * 0.1;
+                    abilityCost += monster.maximumLife * 0.1;
                 }
             }
         }

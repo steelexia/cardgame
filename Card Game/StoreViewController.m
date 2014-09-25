@@ -873,7 +873,7 @@ NSArray *_products;
 
 -(void)tutorialCreateCard
 {
-    self.tutLabel.label.text = @"You can create more cards by tapping the card icon. Additional blank cards can be gained for free by playing the campaign.";
+    self.tutLabel.label.text = @"You can create more cards by tapping the card icon at the bottom right. Additional blank cards can be gained for free by playing the campaign.";
     
     //TODO arrow
     

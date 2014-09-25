@@ -657,7 +657,7 @@ NSDictionary *singlePlayerCardImages;
             if ((self.damageViewNeedsUpdate || ![newDamageString isEqualToString:self.attackLabel.text]) && self.cardViewMode == cardViewModeIngame)
             {
                 self.damageViewNeedsUpdate = NO;
-                [CardView animateUILabelChange:self.attackLabel changeTo:newDamageString newColour:newDamageColour];
+                [CardView animateUILabelChange:self.attackLabel newColour:newDamageColour forCardView:self];
             }
             else
             {
@@ -677,7 +677,7 @@ NSDictionary *singlePlayerCardImages;
             if (self.lifeViewNeedsUpdate && self.cardViewMode == cardViewModeIngame)
             {
                 self.lifeViewNeedsUpdate = NO;
-                [CardView animateUILabelChange:self.lifeLabel changeTo:newLifeString newColour:newLifeColour];
+                [CardView animateUILabelChange:self.lifeLabel newColour:newLifeColour forCardView:self];
             }
             else
             {
@@ -699,7 +699,7 @@ NSDictionary *singlePlayerCardImages;
             if (self.cooldownViewNeedsUpdate && self.cardViewMode == cardViewModeIngame)
             {
                 self.cooldownViewNeedsUpdate = NO;
-                [CardView animateUILabelChange:self.cooldownLabel changeTo:newCooldownString newColour:newCooldownColour];
+                [CardView animateUILabelChange:self.cooldownLabel  newColour:newCooldownColour forCardView:self];
             }
             else
             {
@@ -1264,14 +1264,37 @@ NSDictionary *singlePlayerCardImages;
                      }];
 }
 
-+(void)animateUILabelChange: (UILabel*)label changeTo:(NSString*)newString newColour:(UIColor*)newColour
++(void)animateUILabelChange: (UILabel*)label newColour:(UIColor*)newColour forCardView:(CardView*)cardView
 {
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          label.transform = CGAffineTransformMakeScale(2, 2);
                      }
                      completion:^(BOOL finished){
-                         label.text = newString;
+                         NSString*newString;
+                         
+                         if (label == cardView.attackLabel)
+                         {
+                             MonsterCardModel*monsterCard = (MonsterCardModel*)cardView.cardModel;
+                             newString = [NSString stringWithFormat:@"%d", monsterCard.damage];
+                         }
+                         else if (label == cardView.lifeLabel)
+                         {
+                             MonsterCardModel*monsterCard = (MonsterCardModel*)cardView.cardModel;
+                             newString = [NSString stringWithFormat:@"%d", monsterCard.life];
+                         }
+                         else if (label == cardView.cooldownLabel)
+                         {
+                             MonsterCardModel*monsterCard = (MonsterCardModel*)cardView.cardModel;
+                             newString = [NSString stringWithFormat:@"%d", monsterCard.cooldown];
+                         }
+                         else if (label == cardView.costLabel)
+                         {
+                             newString = [NSString stringWithFormat:@"%d", cardView.cardModel.cost];
+                         }
+                         
+                         if (newString != nil)
+                             label.text = newString;
                          label.textColor = newColour;
                          [UIView animateWithDuration:0.25 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut
                                           animations:^{

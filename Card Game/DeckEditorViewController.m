@@ -362,13 +362,13 @@ DeckModel * allCards;
     deckNameLabel.text = @"Name:";
     [_propertiesView addSubview:deckNameLabel];
     
-    _nameField =  [[UITextField alloc] initWithFrame:CGRectMake(59,4,_propertiesView.frame.size.width - 55 - 12,30)];
+    _nameField = [[UITextField alloc] initWithFrame:CGRectMake(59,4,_propertiesView.frame.size.width - 55 - 12,30)];
     _nameField.textColor = [UIColor blackColor];
     _nameField.font = [UIFont fontWithName:cardMainFont size:16];
     _nameField.returnKeyType = UIReturnKeyDone;
     [_nameField setPlaceholder:@"Name your deck"];
     [_nameField setAutocorrectionType:UITextAutocorrectionTypeNo];
-    //[_nameField addTarget:self action:@selector(searchFieldBegan) forControlEvents:UIControlEventEditingDidBegin];
+    [_nameField addTarget:self action:@selector(nameFieldBegan) forControlEvents:UIControlEventEditingChanged];
     //[_nameField addTarget:self action:@selector(searchFieldFinished) forControlEvents:UIControlEventEditingDidEnd];
     [_nameField setDelegate:self];
     [_nameField.layer setBorderColor:[UIColor blackColor].CGColor];
@@ -554,6 +554,23 @@ DeckModel * allCards;
     // Dispose of any resources that can be recreated.
 }
 
+-(void)nameFieldBegan
+{
+    while (_nameField.text.length > 100)
+        _nameField.text = [_nameField.text substringToIndex:[_nameField.text length]-1];
+}
+
+-(void)textViewDidChange:(UITextView *)textView
+{
+    if (textView == _tagsArea)
+    {
+        while (textView.text.length > 100)
+            textView.text = [textView.text substringToIndex:[textView.text length]-1];
+    }
+    //not editable
+    else if (textView == _invalidDeckReasonsLabel)
+            [textView resignFirstResponder];
+}
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
@@ -1695,11 +1712,6 @@ DeckModel * allCards;
     [self reloadCardsWithFilter];
 }
 
--(void)textViewDidBeginEditing:(UITextView *)textView{
-    //not editable
-    if (textView == _invalidDeckReasonsLabel)
-        [textView resignFirstResponder];
-}
 
 -(void)showActivityIndicatorWithBlock:(BOOL (^)())block loadingText:(NSString*)loadingText failedText:(NSString*)failedText
 {

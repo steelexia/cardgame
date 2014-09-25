@@ -121,6 +121,7 @@
     NSLog(@"called this");
     PFQuery *query = [PFUser query];
     [query whereKey:@"objectId" equalTo:[PFUser currentUser].objectId];
+    [query includeKey:@"decks"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error)
         {
@@ -162,6 +163,8 @@
         for (NSString*idString in dic)
         {
             int idNumber = [idString intValue];
+            if (idNumber < CARD_ID_START) //skip starting cards
+                continue;
             
             if ([UserModel getOwnedCardID:idNumber])
                 [cardIDs addObject:@(idNumber)];
@@ -186,52 +189,63 @@
     {
         __block int loadingCards = cardsIDArray.count;
         
-        for (NSNumber *cardID in cardsIDArray)
-        {
+        //for (NSNumber *cardID in cardsIDArray)
+        //{
             //skip starting cards because they're not on database
+        /*
+        for (int i = cardsIDArray.count-1; i >= 0; i--)
+        {
+            NSNumber *cardID = cardsIDArray[i];
             if ([cardID intValue] < CARD_ID_START)
+                [cardsIDArray remo]
+                
+        }
+         */
+        //        loadingCards--;
+        
+        PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
+        [cardQuery whereKey:@"idNumber" containedIn:cardsIDArray];
+        cardQuery.limit = 1000; //TODO this is bad but no one would have this many cards..
+        [cardQuery includeKey:@"abilities"];
+        NSError *error;
+        NSArray*objects = [cardQuery findObjects:&error];
+        if (!error)
+        {
+            loadingCards = objects.count;
+            __block int counter = 0;
+            NSLog(@"%d", loadingCards);
+            //NSLog(@"number of cards to load: %d", loadingCards);
+            for (PFObject *cardPF in objects)
             {
-                loadingCards--;
-            }
-            
-            PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
-            [cardQuery whereKey:@"idNumber" equalTo:cardID];
-            cardQuery.limit = 1;
-            NSError *error;
-            NSArray*objects = [cardQuery findObjects:&error];
-            if (!error)
-            {
-                if (objects.count > 0)
-                {
-                    //add card
-                    [self performBlockInBackground:^{
-                        CardModel*cardModel = [CardModel createCardFromPFObject:objects[0] onFinish:nil];
-                        if (cardModel == nil)
-                        {
-                             NSLog(@"ERROR: Create card from parse returned nil in UserModel");
-                            //TODO might have to show error to restart game
-                        }
-                        else
-                            [userAllCards addObject:cardModel];
-                        loadingCards--;
-                    }];
-                }
-                else
-                {
-                    NSLog(@"ERROR: COULD NOT FIND USER!");
+                //add card
+                [self performBlockInBackground:^{
+                    CardModel*cardModel = [CardModel createCardFromPFObject:cardPF onFinish:nil];
+                    if (cardModel == nil)
+                    {
+                        NSLog(@"ERROR: Create card from parse returned nil in UserModel");
+                        //TODO might have to show error to restart game
+                    }
+                    else
+                        [userAllCards addObject:cardModel];
                     loadingCards--;
-                }
-            }
-            else
-            {
-                NSLog(@"ERROR: ERROR FINDING USER!");
-                loadingCards--;
+                    counter++;
+                    NSLog(@"%d", counter);
+                }];
             }
         }
+        else
+        {
+            NSLog(@"ERROR: ERROR FINDING USER!");
+            loadingCards = 0;
+        }
+        //}
         
         //wait until cards are all loaded
         while(loadingCards != 0)
-            sleep(0.1);
+        {
+            //NSLog(@"%d", loadingCards);
+            sleep(1);
+        }
         
         //loads the starting deck
         [userAllCards addObjectsFromArray:[SinglePlayerCards getStartingDeck].cards];
@@ -477,7 +491,7 @@
 
 +(DeckModel*)getDeckFromDeckPF:(PFObject*)deckPF
 {
-    [deckPF fetchIfNeeded];
+    //[deckPF fetchIfNeeded]; //used includeKey in userPF fetch
     DeckModel*deck = [[DeckModel alloc]init];
     @try
     {
