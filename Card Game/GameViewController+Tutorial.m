@@ -516,6 +516,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void)tutorialHand
 {
+    [self removeAllTutorialViews];
+    
     //TODO probably say something else
     /*
     [self setAllViews:NO];
