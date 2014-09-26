@@ -25,6 +25,7 @@
 @implementation MainScreenViewController
 
 int SCREEN_WIDTH, SCREEN_HEIGHT;
+UILabel *loadingLabel;
 
 - (void)viewDidLoad
 {
@@ -202,7 +203,6 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 {
     MultiplayerGameViewController *viewController = [[MultiplayerGameViewController alloc] init];
     [self presentViewController:viewController animated:NO completion:nil];
-    
 }
 
 -(void)deckButtonPressed

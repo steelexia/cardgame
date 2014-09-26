@@ -1654,7 +1654,7 @@
 				GCC_PREFIX_HEADER = "Card Game/cardgame-Prefix.pch";
 				INFOPLIST_FILE = "Card Game/cardgame-Info.plist";
 				PRODUCT_NAME = cardgame;
-				PROVISIONING_PROFILE = "aa9930b8-ba20-433a-9672-c8e9b1270594";
+				PROVISIONING_PROFILE = "3a4eb5a8-06aa-428d-b828-046a1b0c76cf";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1675,7 +1675,7 @@
 				GCC_PREFIX_HEADER = "Card Game/cardgame-Prefix.pch";
 				INFOPLIST_FILE = "Card Game/cardgame-Info.plist";
 				PRODUCT_NAME = cardgame;
-				PROVISIONING_PROFILE = "aa9930b8-ba20-433a-9672-c8e9b1270594";
+				PROVISIONING_PROFILE = "3a4eb5a8-06aa-428d-b828-046a1b0c76cf";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
