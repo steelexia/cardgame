@@ -138,6 +138,10 @@ BOOL leftHandViewZone = NO;
     {
         //these tutorials do not start game immediately
     }
+    else if (_gameMode == GameModeMultiplayer)
+    {
+        //gotta wait for cards to arrive before starting
+    }
     else
     {
         [self.gameModel startGame];
@@ -1838,6 +1842,11 @@ BOOL leftHandViewZone = NO;
 -(void)updateUserModel
 {
     
+}
+
+-(void)setOpponentDeck: (DeckModel*)deck
+{
+    _gameModel.opponentDeck = deck;
 }
 
 -(void)gameOverRetryButtonPressed

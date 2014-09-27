@@ -72,6 +72,9 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 
 @property (strong)Level*level;
 
+/** For multiplayer */
+@property (strong) DeckModel*opponentDeck;
+
 /** Stores if the game has ended */
 @property BOOL gameOver;
 @property BOOL playerOneDefeated, playerTwoDefeated;
@@ -160,6 +163,7 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 -(void) checkForGameOver;
 
 -(void)startGame;
+
 
 @end
 

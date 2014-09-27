@@ -22,7 +22,9 @@ typedef NS_ENUM(NSUInteger, MessageType) {
     kMessageTypeRandomNumber = 0,
     kMessageTypeGameBegin,
     kMessageTypeMove,
-    kMessageTypeGameOver
+    kMessageTypeGameOver,
+    kMessageTypeDeckID,
+    kMessageTypeDeckIDReceived,
 };
 
 typedef struct {
@@ -44,10 +46,20 @@ typedef struct {
 
 typedef struct {
     Message message;
+    __unsafe_unretained NSString* deckID;
+} MessageDeckID;
+
+typedef struct {
+    Message message;
+} MessageDeckIDReceived;
+
+typedef struct {
+    Message message;
     BOOL player1Won;
 } MessageGameOver;
 
 #import "MultiplayerNetworking.h"
+#import "MultiplayerGameViewController.h"
 
 @implementation MultiplayerNetworking
 
@@ -97,8 +109,14 @@ typedef struct {
     } else {
         _gameState = kGameStateWaitingForRandomNumber;
     }
+    
     [self sendRandomNumber];
     [self tryStartGame];
+}
+
+-(void)playersFound
+{
+    [_delegate playersFound];
 }
 
 - (void)sendRandomNumber
@@ -120,6 +138,22 @@ typedef struct {
     
 }
 
+-(void)sendDeckID:(NSString*)deckID{
+    MessageDeckID message;
+    message.message.messageType = kMessageTypeDeckID;
+    message.deckID = deckID;
+    NSData*data = [NSData dataWithBytes:&message length:sizeof(MessageGameBegin)];
+    [self sendData:data];
+}
+
+-(void)sendReceivedDeck
+{
+    MessageDeckIDReceived message;
+    message.message.messageType = kMessageTypeDeckIDReceived;
+    NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageDeckIDReceived)];
+    [self sendData:data];
+}
+
 // Fill the contents of tryStartGame as shown
 - (void)tryStartGame {
     if (_isPlayer1 && _gameState == kGameStateWaitingForStart) {
@@ -129,7 +163,7 @@ typedef struct {
         //first player
         [self.delegate setCurrentPlayerIndex:0];
         
-         [self processPlayerAliases];
+        [self processPlayerAliases];
     }
 }
 
@@ -186,7 +220,16 @@ typedef struct {
         NSLog(@"Game over message received");
         MessageGameOver * messageGameOver = (MessageGameOver *) [data bytes];
         [self.delegate gameOver:messageGameOver->player1Won];
+    } else if(message->messageType == kMessageTypeDeckID) {
+        NSLog(@"Deck ID received");
+        MessageDeckID * messageDeckID = (MessageDeckID*) [data bytes];
+        [self.delegate receivedOpponentDeck: messageDeckID->deckID];
+    } else if(message->messageType == kMessageTypeDeckIDReceived) {
+        NSLog(@"Opponent received deck");
+        MessageDeckIDReceived * messageDeckIDReceived = (MessageDeckIDReceived*) [data bytes];
+        [self.deckChooserDelegate opponentReceivedDeck];
     }
+    
 }
 
 -(void)processReceivedRandomNumber:(NSDictionary*)randomNumberDetails {

@@ -12,6 +12,7 @@ extern NSString *const PresentAuthenticationViewController;
 extern NSString *const LocalPlayerIsAuthenticated;
 
 @protocol GameKitHelperDelegate
+- (void)playersFound;
 - (void)matchStarted;
 - (void)matchEnded;
 - (void)match:(GKMatch *)match didReceiveData:(NSData *)data

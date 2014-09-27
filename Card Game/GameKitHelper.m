@@ -148,7 +148,9 @@ NSString *const PresentAuthenticationViewController = @"present_authentication_v
 
 // A peer-to-peer match has been found, the game should start
 - (void)matchmakerViewController:(GKMatchmakerViewController *)viewController didFindMatch:(GKMatch *)match {
-    [viewController dismissViewControllerAnimated:YES completion:nil];
+    [viewController dismissViewControllerAnimated:YES completion:^{
+        [_delegate playersFound];
+    }];
     self.match = match;
     match.delegate = self;
     if (!_matchStarted && match.expectedPlayerCount == 0) {

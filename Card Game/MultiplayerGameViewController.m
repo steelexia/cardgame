@@ -11,7 +11,10 @@
 #import "MultiplayerNetworking.h"
 #import "GameKitHelper.h"
 #import "CardView.h"
+#import "GameViewController.h"
+#import "DeckChooserViewController.h"
 @interface MultiplayerGameViewController () <MultiplayerNetworkingProtocol>
+
 
 @end
 
@@ -22,13 +25,17 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 BOOL playerAuthenticated;
 
-//brian sep 9
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+MultiplayerNetworking *_networkingEngine;
+NSUInteger _currentPlayerIndex;
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
     
     SCREEN_WIDTH = self.view.bounds.size.width;
     SCREEN_HEIGHT = self.view.bounds.size.height;
-
+    
     //background view
     UIImageView*backgroundImageTop = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_top"]];
     backgroundImageTop.frame = CGRectMake(0, 0, SCREEN_WIDTH, 40);
@@ -83,8 +90,15 @@ BOOL playerAuthenticated;
     [_activityFailedButton setTextSize:18];
     [_activityFailedButton addTarget:self action:@selector(activityFailedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
-    
+    //TODO prompt before this
     [self startGameCenterButtonPressed];
+}
+
+//brian sep 9
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    NSLog(@"appeared");
 }
 
 -(void)startGameCenterButtonPressed
@@ -122,17 +136,6 @@ BOOL playerAuthenticated;
 }
 
 
-- (IBAction)touchMoveButton:(id)sender {
-    //do code to send a move to other player via network engine
-    if (_currentPlayerIndex == -1) {
-        return;
-    }
-    
-    [_networkingEngine sendMove];
-}
-
-MultiplayerNetworking *_networkingEngine;
-NSUInteger _currentPlayerIndex;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -142,11 +145,7 @@ NSUInteger _currentPlayerIndex;
     return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -210,6 +209,30 @@ NSUInteger _currentPlayerIndex;
 //brian sep9
 #pragma mark MultiplayerNetworkingProtocol
 
+
+-(void)playersFound
+{
+    //[self.navigationController pushViewController:dcvc animated:YES];
+    //[self addChildViewController:dcvc];
+    NSLog(@"deck chooser");
+    _gvc = [[GameViewController alloc] initWithGameMode:GameModeMultiplayer withLevel:nil];
+    _gvc.networkingEngine = _networkingEngine;
+    
+    _dcvc = [[DeckChooserViewController alloc] init];
+    _dcvc.isMultiplayer = YES;
+    _dcvc.networkingEngine = _networkingEngine;
+    
+    if ([_networkingEngine indexForLocalPlayer] == 0)
+        _dcvc.opponentName = _playerTwoAlias;
+    else
+        _dcvc.opponentName = _playerOneAlias;
+    
+    _dcvc.nextScreen = _gvc;
+    
+    [self presentViewController:_dcvc animated:YES completion:nil];
+}
+
+
 - (void)matchEnded {
     if (self.gameEndedBlock) {
         self.gameEndedBlock();
@@ -220,9 +243,6 @@ NSUInteger _currentPlayerIndex;
     NSString *indexString = [NSString stringWithFormat:@"%i", index];
     
     self.messageStateLabel.text = [indexString stringByAppendingString:@" Player"];
-    
-    
-    
 }
 
 - (void)gameOver:(BOOL)player1Won {
@@ -237,12 +257,43 @@ NSUInteger _currentPlayerIndex;
 
 - (void)setPlayerAliases:(NSArray*)playerAliases {
     [playerAliases enumerateObjectsUsingBlock:^(NSString *playerAlias, NSUInteger idx, BOOL *stop) {
-        //[_players[idx] setPlayerAliasText:playerAlias];
+        if (idx == 0)
+            _playerOneAlias = playerAlias;
+        else
+            _playerTwoAlias = playerAlias;
         NSLog(@"Player Alias is..");
         
         NSLog(playerAlias);
-        
     }];
+}
+
+-(void)receivedOpponentDeck: (NSString*) deckID
+{
+    NSLog(@"receiving opponent deck...");
+    PFQuery *deckQuery = [PFQuery queryWithClassName:@"Deck"];
+    NSError*error;
+    PFObject *deckPF = [deckQuery getObjectWithId:deckID error:&error];
+    if (!error)
+    {
+        DeckModel *deck = [UserModel getDeckFromDeckPF:deckPF];
+        
+        if (deck != nil)
+        {
+            [_gvc setOpponentDeck:deck];
+            [_dcvc receivedOpponentDeck];
+            [_networkingEngine sendReceivedDeck]; //tells other player deck is received
+            
+            NSLog(@"received opponent deck");
+        }
+        else
+        {
+            //TODO ERROR
+        }
+    }
+    else{
+            //TODO ERROR
+    
+    }
 }
 
 

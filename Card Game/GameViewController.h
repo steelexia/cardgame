@@ -13,7 +13,7 @@
 #import "CFButton.h"
 #import "CFLabel.h"
 #import "CardEditorViewController.h"
-
+#import "MultiplayerNetworking.h"
 
 @class GameModel;
 
@@ -21,7 +21,7 @@
  Main class of the game that handles the view and controls
  */
 
-@interface GameViewController : UIViewController 
+@interface GameViewController : UIViewController <MultiplayerGameProtocol>
 
 @property (strong) GameModel *gameModel;
 
@@ -84,6 +84,9 @@
 /** Keeps the CEVC to access the card that has been created for tutorial one */
 @property (strong)CardEditorViewController *cevc;
 
+/** for multiplayer */
+@property (nonatomic, strong) MultiplayerNetworking *networkingEngine;
+
 /** updates the position of all hands with the gameModel, adding views to cards that don't have one yet */
 //-(void)updateHandsView;
 
@@ -124,6 +127,7 @@
 - (void)performBlock:(void (^)())block afterDelay:(NSTimeInterval)delay;
 
 -(void)gameOver;
+-(void)setOpponentDeck: (DeckModel*)deck;
 
 @end
 

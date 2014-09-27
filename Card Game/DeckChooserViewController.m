@@ -13,6 +13,10 @@
 
 
 @interface DeckChooserViewController ()
+/** Received opponent's deck */
+@property BOOL deckReceived;
+/** Opponent received player's deck */
+@property BOOL opponentReceivedDeck;
 
 @end
 
@@ -229,6 +233,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    
 }
 
 -(void)resetAllViews
@@ -257,10 +262,31 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+-(void)receivedOpponentDeck
+{
+    _deckReceived = YES;
+    
+    //opponent also received deck, start
+    if(_opponentReceivedDeck)
+    {
+        [self presentViewController:self.nextScreen animated:YES completion:nil];
+    }
+}
+
 -(void)battleButtonPressed
 {
     userCurrentDeck = self.currentDeck;
-    [self presentViewController:self.nextScreen animated:YES completion:nil];
+    
+    if (!_isMultiplayer)
+        [self presentViewController:self.nextScreen animated:YES completion:nil];
+    else
+    {
+        [_chooseDeckButton setEnabled:NO];
+        [_deckView removeFromSuperview]; //TODO temp
+        _deckPicked = YES;
+        [_networkingEngine sendDeckID:self.currentDeck.objectID];
+        //TODO show message
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -270,5 +296,18 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 }
 
 - (BOOL)prefersStatusBarHidden {return YES;}
+
+#pragma mark MultiplayerDeckChooserProtocol
+
+-(void)opponentReceivedDeck
+{
+    _opponentReceivedDeck = YES;
+    
+    //also received opponent's deck, both are ready
+    if (_deckReceived)
+    {
+        [self presentViewController:self.nextScreen animated:YES completion:nil];
+    }
+}
 
 @end

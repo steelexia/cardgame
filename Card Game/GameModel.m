@@ -428,16 +428,16 @@ int cardIDCount = 0;
     //self.decks = @[ [SinglePlayerCards getDeckOne], [SinglePlayerCards getDeckOne]];
     //[SinglePlayerCards uploadPlayerDeck];
     
-    DeckModel *aiDeck;
+    DeckModel *opponentDeck;
     DeckModel *playerDeck;
     
     if (_gameMode == GameModeSingleplayer)
     {
-        aiDeck = [[DeckModel alloc]init];
+        opponentDeck = [[DeckModel alloc]init];
         
         //dup the cards
         for (CardModel*card in _level.cards.cards)
-            [aiDeck addCard:[[CardModel alloc] initWithCardModel:card]];
+            [opponentDeck addCard:[[CardModel alloc] initWithCardModel:card]];
         
         //get player's preconstructed campaign deck
         DeckModel*campaignPlayerDeck = [SinglePlayerCards getPlayerCampaignDeckWithID:_level.levelID];
@@ -466,14 +466,14 @@ int cardIDCount = 0;
     }
     else if (_gameMode == GameModeMultiplayer)
     {
-        aiDeck = [SinglePlayerCards getDeckOne]; //TODO
+        opponentDeck = _opponentDeck; //TODO
     
         //note do not shuffle enemy deck since it's already shuffled on their client
     }
     else
     {
         //NOT SUPPOSE TO HAPPEN
-        aiDeck = [[DeckModel alloc] init];
+        opponentDeck = [[DeckModel alloc] init];
     }
     
    
@@ -498,7 +498,7 @@ int cardIDCount = 0;
             [playerDeck addCard:[[CardModel alloc] initWithCardModel:card]];
     }
     
-    self.decks = @[playerDeck, aiDeck];
+    self.decks = @[playerDeck, opponentDeck];
     
     //while ([playerDeck count] > 20) //limit to 20 cards
     //    [playerDeck removeCardAtIndex:0];

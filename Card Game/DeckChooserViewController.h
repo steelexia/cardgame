@@ -11,8 +11,9 @@
 #import "DeckModel.h"
 #import "CFLabel.h"
 #import "CFButton.h"
+#import "MultiplayerNetworking.h"
 
-@interface DeckChooserViewController : UIViewController
+@interface DeckChooserViewController  : UIViewController<MultiplayerDeckChooserProtocol>
 
 @property (strong)UIView* deckBackground;
 @property (strong)DeckTableView*deckView;
@@ -26,5 +27,13 @@
 @property (strong)DeckModel*currentDeck;
 @property(strong)UIViewController *nextScreen;
 @property BOOL noPickDeck;
+@property BOOL isMultiplayer;
+@property BOOL deckPicked;
+
+
+-(void)receivedOpponentDeck;
+
+/** For multiplayer */
+@property (nonatomic, strong) MultiplayerNetworking *networkingEngine;
 
 @end
