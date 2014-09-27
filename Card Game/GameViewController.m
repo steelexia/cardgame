@@ -125,6 +125,7 @@ BOOL leftHandViewZone = NO;
     //inits the game model storing the game's data
     self.gameModel = [[GameModel alloc] initWithViewController:(self) gameMode:_gameMode withLevel:_level];
     self.gameModel.opponentDeck = _opponentDeck;
+    [self.gameModel loadDecks];
     
     //TODO this is really stupid, currentSide should be gameModel's property..
     PlayerModel *player = self.gameModel.players[currentSide];
@@ -139,10 +140,11 @@ BOOL leftHandViewZone = NO;
     {
         //these tutorials do not start game immediately
     }
+    /*
     else if (_gameMode == GameModeMultiplayer)
     {
         //gotta wait for cards to arrive before starting
-    }
+    }*/
     else
     {
         [self.gameModel startGame];
@@ -1850,8 +1852,6 @@ BOOL leftHandViewZone = NO;
     _opponentDeck = deck;
     
     NSLog(@"set opponent deck");
-    
-    
 }
 
 -(void)gameOverRetryButtonPressed

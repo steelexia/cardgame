@@ -46,7 +46,8 @@ int cardIDCount = 0;
         self.hands = @[[NSMutableArray array],[NSMutableArray array]];
         self.decks = @[[[DeckModel alloc] init], [[DeckModel alloc] init ]];
         
-        [self loadDecks];
+        if (gameMode != GameModeMultiplayer)
+            [self loadDecks];
         
         //temporary players are hardcoded
         MonsterCardModel *playerHeroModel = [[MonsterCardModel alloc] initWithIdNumber:0];

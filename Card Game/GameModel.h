@@ -163,7 +163,7 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 -(void) checkForGameOver;
 
 -(void)startGame;
-
+-(void)loadDecks;
 
 @end
 
