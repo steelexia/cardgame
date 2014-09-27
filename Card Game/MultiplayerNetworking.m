@@ -142,7 +142,7 @@ typedef struct {
     MessageDeckID message;
     message.message.messageType = kMessageTypeDeckID;
     message.deckID = deckID;
-    NSData*data = [NSData dataWithBytes:&message length:sizeof(MessageDeckID)];
+    NSData*data = [NSData dataWithBytes:&message length:sizeof(message)];
     [self sendData:data];
 }
 
