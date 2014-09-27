@@ -222,6 +222,9 @@ NSUInteger _currentPlayerIndex;
     _dcvc.isMultiplayer = YES;
     _dcvc.networkingEngine = _networkingEngine;
     
+    _networkingEngine.deckChooserDelegate = _dcvc;
+    _networkingEngine.gameDelegate = _gvc;
+    
     if ([_networkingEngine indexForLocalPlayer] == 0)
         _dcvc.opponentName = _playerTwoAlias;
     else
