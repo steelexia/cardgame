@@ -467,6 +467,8 @@ int cardIDCount = 0;
     else if (_gameMode == GameModeMultiplayer)
     {
         opponentDeck = _opponentDeck; //TODO
+        NSLog(@"Opponent deck set");
+        
     
         //note do not shuffle enemy deck since it's already shuffled on their client
     }

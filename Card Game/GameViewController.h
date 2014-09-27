@@ -87,6 +87,10 @@
 /** for multiplayer */
 @property (nonatomic, strong) MultiplayerNetworking *networkingEngine;
 
+/** For multiplayer */
+@property (strong) DeckModel*opponentDeck;
+
+
 /** updates the position of all hands with the gameModel, adding views to cards that don't have one yet */
 //-(void)updateHandsView;
 

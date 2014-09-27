@@ -124,6 +124,7 @@ BOOL leftHandViewZone = NO;
     
     //inits the game model storing the game's data
     self.gameModel = [[GameModel alloc] initWithViewController:(self) gameMode:_gameMode withLevel:_level];
+    self.gameModel.opponentDeck = _opponentDeck;
     
     //TODO this is really stupid, currentSide should be gameModel's property..
     PlayerModel *player = self.gameModel.players[currentSide];
@@ -1846,7 +1847,11 @@ BOOL leftHandViewZone = NO;
 
 -(void)setOpponentDeck: (DeckModel*)deck
 {
-    _gameModel.opponentDeck = deck;
+    _opponentDeck = deck;
+    
+    NSLog(@"set opponent deck");
+    
+    
 }
 
 -(void)gameOverRetryButtonPressed
