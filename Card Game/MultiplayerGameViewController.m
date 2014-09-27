@@ -288,11 +288,12 @@ NSUInteger _currentPlayerIndex;
         else
         {
             //TODO ERROR
+            NSLog(@"getDeckFromPF returned nil");
         }
     }
     else{
             //TODO ERROR
-    
+        NSLog(@"Couldn't find deck");
     }
 }
 

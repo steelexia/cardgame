@@ -16,7 +16,7 @@
 /** Received opponent's deck */
 @property BOOL deckReceived;
 /** Opponent received player's deck */
-@property BOOL opponentReceivedDeck;
+@property BOOL opponentHasReceivedDeck;
 
 @end
 
@@ -264,11 +264,13 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void)receivedOpponentDeck
 {
+    NSLog(@"deckChooser receivedOpponentDeck");
     _deckReceived = YES;
     
     //opponent also received deck, start
-    if(_opponentReceivedDeck)
+    if(_opponentHasReceivedDeck)
     {
+        NSLog(@"start!");
         [self presentViewController:self.nextScreen animated:YES completion:nil];
     }
 }
@@ -301,11 +303,13 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void)opponentReceivedDeck
 {
-    _opponentReceivedDeck = YES;
+    NSLog(@"deckChooser opponentReceivedDeck");
+    _opponentHasReceivedDeck = YES;
     
     //also received opponent's deck, both are ready
     if (_deckReceived)
     {
+        NSLog(@"start!");
         [self presentViewController:self.nextScreen animated:YES completion:nil];
     }
 }

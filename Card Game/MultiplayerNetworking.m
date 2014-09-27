@@ -226,7 +226,6 @@ typedef struct {
         [self.delegate receivedOpponentDeck: messageDeckID->deckID];
     } else if(message->messageType == kMessageTypeDeckIDReceived) {
         NSLog(@"Opponent received deck");
-        MessageDeckIDReceived * messageDeckIDReceived = (MessageDeckIDReceived*) [data bytes];
         [self.deckChooserDelegate opponentReceivedDeck];
     }
     
