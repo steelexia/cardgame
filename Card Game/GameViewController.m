@@ -164,8 +164,6 @@ BOOL leftHandViewZone = NO;
     }
 }
 
-
-
 /** Purely for organization, called once when the view is first set up */
 -(void) setupUI
 {

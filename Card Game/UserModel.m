@@ -300,6 +300,8 @@
      */
 }
 
+
+
 +(CardModel*)getCardFromID:(int)idNumber
 {
     for (CardModel*card in userAllCards)
@@ -506,6 +508,50 @@
             //a card may have been lost (sold, destroyed)
             if (card!=nil)
                 [deck addCard:card];
+        }
+    }
+    @catch (NSException *e) {
+        NSLog(@"%@", e);
+        return nil;
+    }
+    return deck;
+}
+
++(DeckModel*)downloadDeckFromPF:(PFObject*)deckPF
+{
+    DeckModel*deck = [[DeckModel alloc]init];
+    @try
+    {
+        deck.name = deckPF[@"name"];
+        deck.tags = deckPF[@"tags"];
+        deck.objectID = deckPF.objectId;
+        
+        PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
+        [cardQuery whereKey:@"idNumber" containedIn:deckPF[@"cards"]];
+        NSError *error;
+        NSArray*cardPFs = [cardQuery findObjects:&error];
+        
+        if (error)
+            return nil;
+        else if (cardPFs.count != [deckPF[@"cards"] count])
+        {
+            NSLog(@"cardPF doesn't match deck cards count");
+            return nil;
+            
+        }
+        else
+        {
+            for (PFObject *cardPF in cardPFs)
+            {
+                CardModel *card = [CardModel createCardFromPFObject:cardPF onFinish:nil];
+                
+                if (card == nil)
+                {
+                    NSLog(@"Error creating a card from cardPF");
+                    return nil;
+                }
+                [deck addCard:card];
+            }
         }
     }
     @catch (NSException *e) {

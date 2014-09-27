@@ -278,7 +278,7 @@ NSUInteger _currentPlayerIndex;
     PFObject *deckPF = [deckQuery getObjectWithId:deckID error:&error];
     if (!error)
     {
-        DeckModel *deck = [UserModel getDeckFromDeckPF:deckPF];
+        DeckModel *deck = [UserModel downloadDeckFromPF:deckPF];
         
         if (deck != nil)
         {

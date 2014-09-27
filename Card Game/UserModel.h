@@ -45,7 +45,9 @@
 +(void)removeOwnedCard:(int)idNumber;
 
 +(NSArray*)getAllOwnedCardID;
-+(DeckModel*)getDeckFromDeckPF:(PFObject*)deckPF;
+
++(DeckModel*)downloadDeckFromPF:(PFObject*)deckPF;
+
 @end
 
 /** Array of CardModel's that the player has. */
