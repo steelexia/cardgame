@@ -287,6 +287,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
         [_deckView removeFromSuperview]; //TODO temp
         _deckPicked = YES;
         [_networkingEngine sendDeckID:self.currentDeck.objectID];
+        NSLog(@"sending deck id");
         //TODO show message
     }
 }

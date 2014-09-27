@@ -46,7 +46,7 @@ typedef struct {
 
 typedef struct {
     Message message;
-    __unsafe_unretained NSString* deckID;
+    char *deckID;
 } MessageDeckID;
 
 typedef struct {
@@ -141,7 +141,7 @@ typedef struct {
 -(void)sendDeckID:(NSString*)deckID{
     MessageDeckID message;
     message.message.messageType = kMessageTypeDeckID;
-    message.deckID = deckID;
+    message.deckID = [deckID UTF8String];
     NSData*data = [NSData dataWithBytes:&message length:sizeof(message)];
     [self sendData:data];
 }
@@ -223,8 +223,9 @@ typedef struct {
     } else if(message->messageType == kMessageTypeDeckID) {
         NSLog(@"Deck ID received");
         MessageDeckID * messageDeckID = (MessageDeckID*) [data bytes];
-        NSLog(@"received deck ID: %@", messageDeckID->deckID);
-        [self.delegate receivedOpponentDeck: messageDeckID->deckID];
+        
+        NSLog(@"received deck ID: %s", messageDeckID->deckID);
+        [self.delegate receivedOpponentDeck: [NSString stringWithUTF8String: messageDeckID->deckID]];
     } else if(message->messageType == kMessageTypeDeckIDReceived) {
         NSLog(@"Opponent received deck");
         [self.deckChooserDelegate opponentReceivedDeck];
