@@ -142,7 +142,7 @@ typedef struct {
     MessageDeckID message;
     message.message.messageType = kMessageTypeDeckID;
     message.deckID = deckID;
-    NSData*data = [NSData dataWithBytes:&message length:sizeof(MessageGameBegin)];
+    NSData*data = [NSData dataWithBytes:&message length:sizeof(MessageDeckID)];
     [self sendData:data];
 }
 
@@ -223,6 +223,7 @@ typedef struct {
     } else if(message->messageType == kMessageTypeDeckID) {
         NSLog(@"Deck ID received");
         MessageDeckID * messageDeckID = (MessageDeckID*) [data bytes];
+        NSLog(@"received deck ID: %@", messageDeckID->deckID);
         [self.delegate receivedOpponentDeck: messageDeckID->deckID];
     } else if(message->messageType == kMessageTypeDeckIDReceived) {
         NSLog(@"Opponent received deck");

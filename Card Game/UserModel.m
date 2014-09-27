@@ -527,6 +527,7 @@
         deck.objectID = deckPF.objectId;
         
         PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
+        cardQuery.limit = 100;
         [cardQuery whereKey:@"idNumber" containedIn:deckPF[@"cards"]];
         NSError *error;
         NSArray*cardPFs = [cardQuery findObjects:&error];

@@ -272,13 +272,15 @@ NSUInteger _currentPlayerIndex;
 
 -(void)receivedOpponentDeck: (NSString*) deckID
 {
-    NSLog(@"receiving opponent deck...");
+    NSLog(@"receiving opponent deck... %@", deckID);
     PFQuery *deckQuery = [PFQuery queryWithClassName:@"Deck"];
     NSError*error;
     PFObject *deckPF = [deckQuery getObjectWithId:deckID error:&error];
     if (!error)
     {
+        
         DeckModel *deck = [UserModel downloadDeckFromPF:deckPF];
+        NSLog(@"count %d", [deckPF[@"cards"] count]);
         
         if (deck != nil)
         {
@@ -286,7 +288,7 @@ NSUInteger _currentPlayerIndex;
             [_dcvc receivedOpponentDeck];
             [_networkingEngine sendReceivedDeck]; //tells other player deck is received
             
-            NSLog(@"received opponent deck");
+            NSLog(@"finished receiving opponent deck");
         }
         else
         {
