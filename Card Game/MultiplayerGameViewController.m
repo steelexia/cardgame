@@ -89,6 +89,11 @@ BOOL playerAuthenticated;
 
 -(void)startGameCenterButtonPressed
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:LocalPlayerIsAuthenticated object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerAuthenticated)
+                                                 name:LocalPlayerIsAuthenticated object:nil];
+    
     _activityIndicator.alpha = 0;
     _activityLabel.text = @"Loading Game Center...";
     [_activityIndicator setColor:[UIColor whiteColor]];
@@ -109,10 +114,6 @@ BOOL playerAuthenticated;
     
     [[GameKitHelper sharedGameKitHelper]
      authenticateLocalPlayer];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerAuthenticated)
-                                                 name:LocalPlayerIsAuthenticated object:nil];
-    
 }
 
 -(void)backButtonPressed
