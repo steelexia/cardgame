@@ -142,7 +142,7 @@ typedef struct {
     MessageDeckID message;
     message.message.messageType = kMessageTypeDeckID;
     message.deckID = [deckID UTF8String];
-    NSData*data = [NSData dataWithBytes:&message length:sizeof(message)];
+    NSData*data = [NSData dataWithBytes:&message length:sizeof(MessageDeckID)];
     [self sendData:data];
 }
 
@@ -230,7 +230,6 @@ typedef struct {
         NSLog(@"Opponent received deck");
         [self.deckChooserDelegate opponentReceivedDeck];
     }
-    
 }
 
 -(void)processReceivedRandomNumber:(NSDictionary*)randomNumberDetails {
