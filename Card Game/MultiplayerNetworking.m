@@ -46,7 +46,7 @@ typedef struct {
 
 typedef struct {
     Message message;
-    char *deckID;
+    char deckID[10]; //TODO becareful that parse data doesn't change size
 } MessageDeckID;
 
 typedef struct {
@@ -141,9 +141,19 @@ typedef struct {
 -(void)sendDeckID:(NSString*)deckID{
     MessageDeckID message;
     message.message.messageType = kMessageTypeDeckID;
-    message.deckID = [deckID UTF8String];
-    //NSData*data = [NSData dataWithBytes:&message length:sizeof(MessageDeckID)];
-    NSData*data = [deckID dataUsingEncoding:NSUTF8StringEncoding];
+    
+    if (deckID.length != 10)
+    {
+        NSLog(@"Error: Deck ID's length is not 10.");
+        return;
+    }
+    
+    for (int i = 0; i < deckID.length; i++)
+        message.deckID[i] = [deckID characterAtIndex:i];
+    
+    //message.deckID = [deckID UTF8String];
+    NSData*data = [NSData dataWithBytes:&message length:sizeof(MessageDeckID)];
+    //NSData*data = [deckID dataUsingEncoding:NSUTF8StringEncoding];
     [self sendData:data];
 }
 
