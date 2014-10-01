@@ -236,7 +236,9 @@ typedef struct {
         MessageDeckID * messageDeckID = (MessageDeckID*) [data bytes];
         
         NSLog(@"received deck ID: %s", messageDeckID->deckID);
-        [self.delegate receivedOpponentDeck: [NSString stringWithUTF8String: messageDeckID->deckID]];
+        NSString *deckID = [[NSString alloc] initWithBytes:messageDeckID->deckID  length:10 encoding:NSUTF8StringEncoding];
+        //[self.delegate receivedOpponentDeck: [NSString stringWithUTF8String: messageDeckID->deckID]];
+        [self.delegate receivedOpponentDeck: deckID];
     } else if(message->messageType == kMessageTypeDeckIDReceived) {
         NSLog(@"Opponent received deck");
         [self.deckChooserDelegate opponentReceivedDeck];
