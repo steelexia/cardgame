@@ -278,7 +278,6 @@ NSUInteger _currentPlayerIndex;
     PFObject *deckPF = [deckQuery getObjectWithId:deckID error:&error];
     if (!error)
     {
-        
         DeckModel *deck = [UserModel downloadDeckFromPF:deckPF];
         NSLog(@"count %d", [deckPF[@"cards"] count]);
         

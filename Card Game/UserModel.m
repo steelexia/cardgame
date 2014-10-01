@@ -547,13 +547,27 @@
         NSError *error;
         NSArray*cardPFs = [cardQuery findObjects:&error];
         
+        //NSMutableArray *cards = [NSMutableArray arrayWithCapacity:[deckPF[@"cards"] count]];
+        
+        DeckModel *startDeck = [SinglePlayerCards getStartingDeck];
+        for (NSNumber *cardID in deckPF[@"cards"])
+        {
+            if ([cardID intValue] < CARD_ID_START)
+            {
+                [deck addCard:startDeck.cards[[cardID intValue]]];
+            }
+        }
+        
         if (error)
             return nil;
+        //this doesn't work because some cards are starting cards
+        /*
         else if (cardPFs.count != [deckPF[@"cards"] count])
         {
-            NSLog(@"cardPF doesn't match deck cards count");
+            NSLog(@"cardPF doesn't match deck cards count %d %d", cardPFs.count, [deckPF[@"cards"] count]);
             return nil;
         }
+         */
         else
         {
             for (PFObject *cardPF in cardPFs)
@@ -573,6 +587,13 @@
         NSLog(@"%@", e);
         return nil;
     }
+    
+    if (deck.count != [deckPF[@"cards"] count])
+    {
+        NSLog(@"cardPF doesn't match deck cards count %d %d", deck.count, [deckPF[@"cards"] count]);
+        return nil;
+    }
+    
     return deck;
 }
 
