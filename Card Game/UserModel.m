@@ -219,17 +219,28 @@
             {
                 //add card
                 [self performBlockInBackground:^{
+                    //NSLog(@"pre-pre-start");
                     CardModel*cardModel = [CardModel createCardFromPFObject:cardPF onFinish:nil];
-                    if (cardModel == nil)
-                    {
-                        NSLog(@"ERROR: Create card from parse returned nil in UserModel");
-                        //TODO might have to show error to restart game
-                    }
-                    else
-                        [userAllCards addObject:cardModel];
-                    loadingCards--;
-                    counter++;
-                    NSLog(@"%d", counter);
+                    //NSLog(@"pre-start");
+                    
+                    //dispatch_async(dispatch_get_main_queue(), ^{
+                        //NSLog(@"start");
+                        if (cardModel == nil)
+                        {
+                            NSLog(@"ERROR: Create card from parse returned nil in UserModel %d %d", [cardPF[@"idNumber"] intValue], counter++);
+                            //TODO might have to show error to restart game
+                        }
+                        else
+                        {
+                            NSLog(@"before add %d", userAllCards.count);
+                            [userAllCards addObject:cardModel];
+                            NSLog(@"after add %d", userAllCards.count);
+                            NSLog(@"Added card %d %d", [cardPF[@"idNumber"] intValue], counter++);
+                        }
+                        loadingCards--;
+                    //});
+                    //counter++;
+                    //NSLog(@"%d", counter);
                 }];
             }
         }
@@ -508,10 +519,14 @@
             //a card may have been lost (sold, destroyed)
             if (card!=nil)
                 [deck addCard:card];
+            else
+            {
+                NSLog(@"ERROR: getDeckFromDeckPF couldn't get %d", [idNumber intValue]);
+            }
         }
     }
     @catch (NSException *e) {
-        NSLog(@"%@", e);
+        NSLog(@"ERROR: getDeckFromDeckPF: %@", e);
         return nil;
     }
     return deck;
@@ -538,7 +553,6 @@
         {
             NSLog(@"cardPF doesn't match deck cards count");
             return nil;
-            
         }
         else
         {
@@ -924,7 +938,7 @@
 }
 
 + (void)performBlockInBackground:(void (^)())block {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         block();
     });
 }

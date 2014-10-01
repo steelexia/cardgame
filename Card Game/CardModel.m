@@ -287,7 +287,7 @@ const int CARD_ID_START = 1000;
         if (abilityPF != nil && abilityPF != (NSObject*)[NSNull null])
         {
             NSError*error;
-            [abilityPF fetchIfNeeded: &error]; //for whatever reason this is still needed
+            [abilityPF fetchIfNeeded: &error]; //for whatever reason this is still needed (TODO actually might be due to broken abilities)
             if (!error)
                 [card addBaseAbility:[AbilityWrapper getAbilityWithPFObject:abilityPF]];
             else

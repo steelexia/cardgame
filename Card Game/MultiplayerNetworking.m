@@ -142,7 +142,8 @@ typedef struct {
     MessageDeckID message;
     message.message.messageType = kMessageTypeDeckID;
     message.deckID = [deckID UTF8String];
-    NSData*data = [NSData dataWithBytes:&message length:sizeof(MessageDeckID)];
+    //NSData*data = [NSData dataWithBytes:&message length:sizeof(MessageDeckID)];
+    NSData*data = [deckID dataUsingEncoding:NSUTF8StringEncoding];
     [self sendData:data];
 }
 
