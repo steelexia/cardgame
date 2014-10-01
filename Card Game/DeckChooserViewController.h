@@ -30,7 +30,6 @@
 @property BOOL isMultiplayer;
 @property BOOL deckPicked;
 
-
 -(void)receivedOpponentDeck;
 
 /** For multiplayer */

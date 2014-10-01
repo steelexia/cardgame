@@ -586,8 +586,8 @@ NSDictionary *singlePlayerCardImages;
 {
     _frontFacing = frontFacing;
     
-    //if (YES) //TODO debugging, shows all cards
-    if (frontFacing)
+    if (YES) //TODO debugging, shows all cards
+    //if (frontFacing)
     {
         if (_cardModel.element < backgroundImages.count)
         {

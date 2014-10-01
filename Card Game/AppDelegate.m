@@ -27,6 +27,8 @@ const BOOL OFFLINE_DEBUGGING = YES;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    srand48(time(0));
+    
     [Parse setApplicationId:@"yekARh373R6T7z42RzFD8R1ywZVYELpOS1gCVD5C"
                   clientKey:@"Y46eRRr2QOFIu9kJGmmJldxV0xbPdtdbC6DJ7Q53"];
     

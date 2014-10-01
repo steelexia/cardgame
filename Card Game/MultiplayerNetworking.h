@@ -34,6 +34,7 @@
 @property (nonatomic, assign) id<MultiplayerDeckChooserProtocol> deckChooserDelegate;
 @property (nonatomic, assign) id<MultiplayerGameProtocol> gameDelegate;
 
+
 - (void)sendMove;
 - (void)sendGameEnd:(BOOL)player1Won;
 - (void)sendDeckID:(NSString*)deckID;

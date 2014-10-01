@@ -20,6 +20,8 @@ typedef NS_ENUM(NSUInteger, GameState) {
 
 typedef NS_ENUM(NSUInteger, MessageType) {
     kMessageTypeRandomNumber = 0,
+    kMessageTypeSeed,
+    kMessageTypeSeedReceived,
     kMessageTypeGameBegin,
     kMessageTypeMove,
     kMessageTypeGameOver,
@@ -35,6 +37,15 @@ typedef struct {
     Message message;
     uint32_t randomNumber;
 } MessageRandomNumber;
+
+typedef struct {
+    Message message;
+    uint32_t seed;
+} MessageSeed;
+
+typedef struct {
+    Message message;
+} MessageSeedReceived;
 
 typedef struct {
     Message message;
@@ -110,17 +121,24 @@ typedef struct {
         _gameState = kGameStateWaitingForRandomNumber;
     }
     
+    if (_isPlayer1)
+        [self sendSeed];
+    
     [self sendRandomNumber];
     [self tryStartGame];
 }
 
 -(void)playersFound
 {
-    [_delegate playersFound];
+    if (_isPlayer1)
+    {
+        [self sendSeed];
+    }
 }
 
 - (void)sendRandomNumber
 {
+    NSLog(@"sending seed");
     MessageRandomNumber message;
     message.message.messageType = kMessageTypeRandomNumber;
     message.randomNumber = _ourRandomNumber;
@@ -128,14 +146,24 @@ typedef struct {
     [self sendData:data];
 }
 
+-(void)sendSeed
+{
+    int randomNumber = time(0);
+    srand48(randomNumber);
+    
+    MessageSeed message;
+    message.message.messageType = kMessageTypeSeed;
+    message.seed = randomNumber;
+    NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageSeed)];
+    [self sendData:data];
+}
+
 // Add right after sendRandomNumber
 - (void)sendGameBegin {
-    
     MessageGameBegin message;
     message.message.messageType = kMessageTypeGameBegin;
     NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageGameBegin)];
     [self sendData:data];
-    
 }
 
 -(void)sendDeckID:(NSString*)deckID{
@@ -217,6 +245,25 @@ typedef struct {
             }
             [self tryStartGame];
         }
+    }
+    else if (message->messageType == kMessageTypeSeed) {
+        NSLog(@"received seed");
+        MessageRandomNumber *messageRandomNumber = (MessageRandomNumber*)[data bytes];
+        srand48(messageRandomNumber->randomNumber);
+        
+        //respond notifying seed received
+        MessageSeedReceived message;
+        message.message.messageType = kMessageTypeSeedReceived;
+        NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageSeedReceived)];
+        [self sendData:data];
+        
+        //received seed, start
+        [_delegate playersFound];
+    }
+    else if (message->messageType == kMessageTypeSeedReceived)
+    {
+        //other player got the seed, start
+        [_delegate playersFound];
     }
     else if (message->messageType == kMessageTypeGameBegin) {
         NSLog(@"Begin game message received");

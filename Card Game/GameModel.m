@@ -1454,7 +1454,7 @@ int cardIDCount = 0;
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[arc4random_uniform(allTargets.count)]];
+        targets = @[allTargets[(int)(drand48()*allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomMinion)
     {
@@ -1466,7 +1466,7 @@ int cardIDCount = 0;
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[arc4random_uniform(allTargets.count)]];
+        targets = @[allTargets[(int)(drand48()*allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomFriendly)
     {
@@ -1477,7 +1477,7 @@ int cardIDCount = 0;
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[arc4random_uniform(allTargets.count)]];
+        targets = @[allTargets[(int)(drand48()*allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomFriendlyMinion)
     {
@@ -1487,7 +1487,7 @@ int cardIDCount = 0;
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[arc4random_uniform(allTargets.count)]];
+        targets = @[allTargets[(int)(drand48()*allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomEnemy)
     {
@@ -1497,7 +1497,7 @@ int cardIDCount = 0;
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[arc4random_uniform(allTargets.count)]];
+        targets = @[allTargets[(int)(drand48()*allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomEnemyMinion)
     {
@@ -1506,7 +1506,7 @@ int cardIDCount = 0;
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[arc4random_uniform(allTargets.count)]];
+        targets = @[allTargets[(int)(drand48()*allTargets.count)]];
     }
     else if (ability.targetType == targetHeroAny)
     {
