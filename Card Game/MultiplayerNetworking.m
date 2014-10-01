@@ -134,6 +134,12 @@ typedef struct {
     {
         [self sendSeed];
     }
+    else if (_seedReceived)
+    {
+        [_delegate playersFound];
+    }
+    
+    _matchMakerPresented = YES;
 }
 
 - (void)sendRandomNumber
@@ -258,7 +264,10 @@ typedef struct {
         [self sendData:data];
         
         //received seed, start
-        [_delegate playersFound];
+        if (_matchMakerPresented)
+            [_delegate playersFound];
+        
+        _seedReceived = YES;
     }
     else if (message->messageType == kMessageTypeSeedReceived)
     {

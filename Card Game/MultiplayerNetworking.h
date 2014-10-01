@@ -34,6 +34,8 @@
 @property (nonatomic, assign) id<MultiplayerDeckChooserProtocol> deckChooserDelegate;
 @property (nonatomic, assign) id<MultiplayerGameProtocol> gameDelegate;
 
+@property BOOL matchMakerPresented;
+@property BOOL seedReceived;
 
 - (void)sendMove;
 - (void)sendGameEnd:(BOOL)player1Won;
@@ -41,6 +43,8 @@
 - (void)sendReceivedDeck;
 
 - (NSUInteger)indexForLocalPlayer;
+
+
 
 
 @end
