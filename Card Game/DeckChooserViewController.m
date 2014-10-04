@@ -271,7 +271,9 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     if(_opponentHasReceivedDeck)
     {
         NSLog(@"start!");
-        [self presentViewController:self.nextScreen animated:YES completion:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self presentViewController:self.nextScreen animated:YES completion:nil];
+        });
     }
 }
 
@@ -312,7 +314,9 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     {
         NSLog(@"start!");
         
-        [self presentViewController:self.nextScreen animated:YES completion:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self presentViewController:self.nextScreen animated:YES completion:nil];
+        });
     }
 }
 
