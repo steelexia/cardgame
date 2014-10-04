@@ -683,6 +683,14 @@ BOOL leftHandViewZone = NO;
 
 
 -(void) endTurn{
+    if (giveupAbilityButton.superview != nil)
+    {
+        [self noTargetButtonPressed];
+    }
+    
+    if (currentSide == PLAYER_SIDE)
+        [_networkingEngine sendEndTurn];
+    
     //tell the gameModel to end turn
     [self.gameModel endTurn: currentSide];
     
@@ -725,14 +733,6 @@ BOOL leftHandViewZone = NO;
     //if playing against AI, AI now makes a move
     if (self.gameModel.gameMode == GameModeSingleplayer && currentSide == OPPONENT_SIDE)
         [self.gameModel.aiPlayer newTurn];
-    
-    if (giveupAbilityButton.superview != nil)
-    {
-        [self noTargetButtonPressed];
-    }
-    
-    if (currentSide == PLAYER_SIDE)
-        [_networkingEngine sendEndTurn];
 }
 
 -(void)updateHandsView: (int)side
