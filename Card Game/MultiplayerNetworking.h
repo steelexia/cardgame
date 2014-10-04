@@ -40,6 +40,7 @@
 @property BOOL matchMakerPresented;
 @property BOOL receivedOpponentSeed;
 @property BOOL opponentReceivedSeed;
+@property int playerSeed, opponentSeed;
 
 - (void)sendMove;
 - (void)sendGameEnd:(BOOL)player1Won;

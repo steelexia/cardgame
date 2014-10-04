@@ -155,7 +155,7 @@ typedef struct {
     NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageSeed)];
     [self sendData:data];
     
-    [_gameDelegate setPlayerSeed:randomNumber];
+    _playerSeed = randomNumber;
 }
 
 // Add right after sendRandomNumber
@@ -258,11 +258,12 @@ typedef struct {
         [self sendData:data];
         
         _receivedOpponentSeed = YES;
+        //[_gameDelegate setOpponentSeed:messageRandomNumber->seed];
+        _opponentSeed = messageRandomNumber->seed;
         
         //both have seed, start
         if (_matchMakerPresented && _opponentReceivedSeed)
         {
-            [_gameDelegate setOpponentSeed:messageRandomNumber->seed];
             [_delegate playersFound];
         }
     }

@@ -217,6 +217,8 @@ NSUInteger _currentPlayerIndex;
     NSLog(@"deck chooser");
     _gvc = [[GameViewController alloc] initWithGameMode:GameModeMultiplayer withLevel:nil];
     _gvc.networkingEngine = _networkingEngine;
+    [_gvc setPlayerSeed:_networkingEngine.playerSeed];
+    [_gvc setOpponentSeed:_networkingEngine.opponentSeed];
     
     _dcvc = [[DeckChooserViewController alloc] init];
     _dcvc.isMultiplayer = YES;

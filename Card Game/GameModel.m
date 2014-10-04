@@ -2015,6 +2015,7 @@ int cardIDCount = 0;
 
 -(void)setOpponentSeed:(int)seed
 {
+    NSLog(@"oppo seed: %d", seed);
     oppo_xor128_x = seed;
     oppo_xor128_y = seed + 13;
     oppo_xor128_z = seed + 19571;
@@ -2023,6 +2024,7 @@ int cardIDCount = 0;
 
 -(void)setPlayerSeed:(int)seed
 {
+    NSLog(@"player seed: %d", seed);
     player_xor128_x = seed;
     player_xor128_y = seed + 13;
     player_xor128_z = seed + 19571;
@@ -2043,7 +2045,9 @@ uint32_t xor128(void) {
     //take a random card from original array and place into new array
     while ([deck.cards count] > 0)
     {
-        int cardIndex = xor128()%([deck.cards count]-1);
+        int random = xor128();
+        int count = [deck.cards count]-1;
+        int cardIndex = random%count;
         
         [newCards addObject:deck.cards[cardIndex]];
         [deck.cards removeObjectAtIndex:cardIndex];
