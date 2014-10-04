@@ -165,8 +165,8 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 -(void)startGame;
 -(void)loadDecks;
 
--(void)setOpponentSeed:(int)seed;
--(void)setPlayerSeed:(int)seed;
+-(void)setOpponentSeed:(uint32_t)seed;
+-(void)setPlayerSeed:(uint32_t)seed;
 
 @end
 

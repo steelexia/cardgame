@@ -521,6 +521,7 @@
                 [deck addCard:card];
             else
             {
+                //TODO need to check difference between card doesn't exist and failed to find card
                 NSLog(@"ERROR: getDeckFromDeckPF couldn't get %d", [idNumber intValue]);
             }
         }

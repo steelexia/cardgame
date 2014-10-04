@@ -484,7 +484,8 @@ BOOL leftHandViewZone = NO;
 
 -(void)newGame
 {
-    [self animatePlayerTurn];
+    if (currentSide == PLAYER_SIDE)
+        [self animatePlayerTurn];
 }
 
 -(void)setCurrentSide:(int)newSide
@@ -1971,12 +1972,12 @@ BOOL leftHandViewZone = NO;
 
 #pragma mark MultiplayerGameProtocol
 
--(void)setPlayerSeed:(int)seed
+-(void)setPlayerSeed:(uint32_t)seed
 {
     _playerSeed = seed;
 }
 
--(void)setOpponentSeed:(int)seed
+-(void)setOpponentSeed:(uint32_t)seed
 {
     _opponentSeed = seed;
 }

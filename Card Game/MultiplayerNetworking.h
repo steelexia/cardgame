@@ -27,8 +27,8 @@
 
 @protocol MultiplayerGameProtocol <NSObject>
 
--(void)setPlayerSeed:(int)seed;
--(void)setOpponentSeed:(int)seed;
+-(void)setPlayerSeed:(uint32_t)seed;
+-(void)setOpponentSeed:(uint32_t)seed;
 -(void)opponentEndTurn;
 
 @end
@@ -41,7 +41,7 @@
 @property BOOL matchMakerPresented;
 @property BOOL receivedOpponentSeed;
 @property BOOL opponentReceivedSeed;
-@property int playerSeed, opponentSeed;
+@property uint32_t playerSeed, opponentSeed;
 
 - (void)sendMove;
 - (void)sendGameEnd:(BOOL)player1Won;

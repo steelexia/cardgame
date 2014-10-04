@@ -90,7 +90,7 @@
 /** For multiplayer */
 @property (strong) DeckModel*opponentDeck;
 
-@property int playerSeed, opponentSeed;
+@property uint32_t playerSeed, opponentSeed;
 
 /** updates the position of all hands with the gameModel, adding views to cards that don't have one yet */
 //-(void)updateHandsView;

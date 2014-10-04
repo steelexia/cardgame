@@ -2013,7 +2013,7 @@ int cardIDCount = 0;
     [self performSelector:@selector(performBlock:) withObject:block_ afterDelay:delay];
 }
 
--(void)setOpponentSeed:(int)seed
+-(void)setOpponentSeed:(uint32_t)seed
 {
     NSLog(@"oppo seed: %d", seed);
     oppo_xor128_x = seed;
@@ -2022,7 +2022,7 @@ int cardIDCount = 0;
     oppo_xor128_w = seed + 576377;
 }
 
--(void)setPlayerSeed:(int)seed
+-(void)setPlayerSeed:(uint32_t)seed
 {
     NSLog(@"player seed: %d", seed);
     player_xor128_x = seed;
