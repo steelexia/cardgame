@@ -142,7 +142,6 @@ typedef struct {
 
 - (void)sendRandomNumber
 {
-    NSLog(@"sending seed");
     MessageRandomNumber message;
     message.message.messageType = kMessageTypeRandomNumber;
     message.randomNumber = _ourRandomNumber;
@@ -154,6 +153,8 @@ typedef struct {
 {
     uint32_t randomNumber = arc4random();
     //srand48(randomNumber);
+    
+    NSLog(@"sent seed %ud", randomNumber);
     
     MessageSeed message;
     message.message.messageType = kMessageTypeSeed;
@@ -261,7 +262,7 @@ typedef struct {
         }
     }
     else if (message->messageType == kMessageTypeSeed) {
-        NSLog(@"received seed");
+        
         MessageSeed *messageRandomNumber = (MessageSeed*)[data bytes];
         //srand48(messageRandomNumber->seed);
         
@@ -274,6 +275,8 @@ typedef struct {
         _receivedOpponentSeed = YES;
         //[_gameDelegate setOpponentSeed:messageRandomNumber->seed];
         _opponentSeed = messageRandomNumber->seed;
+        
+        NSLog(@"received seed %ud", _opponentSeed);
         
         //both have seed, start
         if (_matchMakerPresented && _opponentReceivedSeed)
