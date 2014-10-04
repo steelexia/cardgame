@@ -484,6 +484,18 @@ BOOL leftHandViewZone = NO;
     [self animatePlayerTurn];
 }
 
+-(void)setCurrentSide:(int)newSide
+{
+    currentSide = newSide;
+    if (currentSide != PLAYER_SIDE)
+        [self.endTurnButton setEnabled:NO];
+}
+
+-(void)opponentEndTurn
+{
+    [self endTurn];
+}
+
 -(void)tapRegistered: (UITapGestureRecognizer *)recognizer
 {
     CGPoint location = [recognizer locationInView:self.view];
@@ -663,6 +675,9 @@ BOOL leftHandViewZone = NO;
 
 
 -(void) endTurn{
+    if (currentSide == PLAYER_SIDE)
+        [_networkingEngine sendEndTurn];
+    
     //tell the gameModel to end turn
     [self.gameModel endTurn: currentSide];
     

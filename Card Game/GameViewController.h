@@ -133,6 +133,7 @@
 
 -(void)gameOver;
 -(void)setOpponentDeck: (DeckModel*)deck;
+-(void)setCurrentSide:(int)side;
 
 @end
 

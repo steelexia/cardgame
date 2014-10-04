@@ -29,6 +29,7 @@
 
 -(void)setPlayerSeed:(int)seed;
 -(void)setOpponentSeed:(int)seed;
+-(void)opponentEndTurn;
 
 @end
 
@@ -46,6 +47,8 @@
 - (void)sendGameEnd:(BOOL)player1Won;
 - (void)sendDeckID:(NSString*)deckID;
 - (void)sendReceivedDeck;
+-(void)sendEndTurn;
+- (BOOL)isLocalPlayerPlayer1;
 
 - (NSUInteger)indexForLocalPlayer;
 

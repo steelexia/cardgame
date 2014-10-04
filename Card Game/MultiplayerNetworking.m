@@ -27,6 +27,8 @@ typedef NS_ENUM(NSUInteger, MessageType) {
     kMessageTypeGameOver,
     kMessageTypeDeckID,
     kMessageTypeDeckIDReceived,
+    //---------in-game---------//
+    kMessageTypeEndTurn,
 };
 
 typedef struct {
@@ -68,6 +70,10 @@ typedef struct {
     Message message;
     BOOL player1Won;
 } MessageGameOver;
+
+typedef struct {
+    Message message;
+} MessageEndTurn;
 
 #import "MultiplayerNetworking.h"
 #import "MultiplayerGameViewController.h"
@@ -193,6 +199,14 @@ typedef struct {
     [self sendData:data];
 }
 
+-(void)sendEndTurn
+{
+    MessageEndTurn message;
+    message.message.messageType = kMessageTypeEndTurn;
+    NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageEndTurn)];
+    [self sendData:data];
+}
+
 // Fill the contents of tryStartGame as shown
 - (void)tryStartGame {
     if (_isPlayer1 && _gameState == kGameStateWaitingForStart) {
@@ -300,6 +314,9 @@ typedef struct {
     } else if(message->messageType == kMessageTypeDeckIDReceived) {
         NSLog(@"Opponent received deck");
         [self.deckChooserDelegate opponentReceivedDeck];
+    } else if(message->messageType == kMessageTypeEndTurn) {
+        NSLog(@"Opponent ended turn");
+        [self.gameDelegate opponentEndTurn];
     }
 }
 

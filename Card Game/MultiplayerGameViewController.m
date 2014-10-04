@@ -225,6 +225,11 @@ NSUInteger _currentPlayerIndex;
     [_gvc setPlayerSeed:_networkingEngine.playerSeed];
     [_gvc setOpponentSeed:_networkingEngine.opponentSeed];
     
+    if (![_networkingEngine isLocalPlayerPlayer1])
+    {
+        [_gvc setCurrentSide:OPPONENT_SIDE];
+    }
+    
     _dcvc = [[DeckChooserViewController alloc] init];
     _dcvc.isMultiplayer = YES;
     _dcvc.networkingEngine = _networkingEngine;
@@ -285,22 +290,25 @@ NSUInteger _currentPlayerIndex;
     PFObject *deckPF = [deckQuery getObjectWithId:deckID error:&error];
     if (!error)
     {
-        DeckModel *deck = [UserModel downloadDeckFromPF:deckPF];
-        NSLog(@"count %d", [deckPF[@"cards"] count]);
-        
-        if (deck != nil)
-        {
-            [_gvc setOpponentDeck:deck];
-            [_dcvc receivedOpponentDeck];
-            [_networkingEngine sendReceivedDeck]; //tells other player deck is received
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             
-            NSLog(@"finished receiving opponent deck");
-        }
-        else
-        {
-            //TODO ERROR
-            NSLog(@"getDeckFromPF returned nil");
-        }
+            DeckModel *deck = [UserModel downloadDeckFromPF:deckPF];
+            NSLog(@"count %d", [deckPF[@"cards"] count]);
+            
+            if (deck != nil)
+            {
+                [_gvc setOpponentDeck:deck];
+                [_dcvc receivedOpponentDeck];
+                [_networkingEngine sendReceivedDeck]; //tells other player deck is received
+                
+                NSLog(@"finished receiving opponent deck");
+            }
+            else
+            {
+                //TODO ERROR
+                NSLog(@"getDeckFromPF returned nil");
+            }
+        });
     }
     else{
             //TODO ERROR
