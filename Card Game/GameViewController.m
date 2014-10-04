@@ -1439,11 +1439,10 @@ BOOL leftHandViewZone = NO;
     
     if (side == PLAYER_SIDE && _gameMode == GameModeMultiplayer)
     {
-        /*
         //player side during multiplayer requires sending info to opponent
         NSMutableArray*hand = _gameModel.hands[PLAYER_SIDE];
         _currentCardIndex = [hand indexOfObject:card];
-        */
+        
         [self.gameModel summonCard:card side:side];
         
         /*
@@ -1453,6 +1452,7 @@ BOOL leftHandViewZone = NO;
             //int targetIndex = [self.gameModel getCurrentTargetIndex];
             [_networkingEngine sendSummonCard:_currentCardIndex withTarget:positionNoPosition];
         }*/
+        
     }
     else
     {

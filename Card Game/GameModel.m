@@ -763,10 +763,8 @@ int cardIDCount = 0;
             [self.gameViewController decAnimationCounter];
             
             //send multiplayer data on summon if no targets
-            if (_gameMode == GameModeMultiplayer && _gameViewController.currentAbilities.count == 0)
+            if (_gameMode == GameModeMultiplayer && side == PLAYER_SIDE && _gameViewController.currentAbilities.count == 0)
             {
-                NSMutableArray*hand = _hands[PLAYER_SIDE];
-                _gameViewController.currentCardIndex = [hand indexOfObject:card];
                 [_gameViewController.networkingEngine sendSummonCard:_gameViewController.currentCardIndex withTarget:positionNoPosition];
             }
         } afterDelay:0.4];
@@ -785,10 +783,8 @@ int cardIDCount = 0;
         }
         
         //send multiplayer data on summon
-        if (_gameMode == GameModeMultiplayer && _gameViewController.currentAbilities.count == 0)
+        if (_gameMode == GameModeMultiplayer && side == PLAYER_SIDE && _gameViewController.currentAbilities.count == 0)
         {
-            NSMutableArray*hand = _hands[PLAYER_SIDE];
-            _gameViewController.currentCardIndex = [hand indexOfObject:card];
             [_gameViewController.networkingEngine sendSummonCard:_gameViewController.currentCardIndex withTarget:positionNoPosition];
         }
     }
