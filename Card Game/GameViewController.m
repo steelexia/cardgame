@@ -147,6 +147,12 @@ BOOL leftHandViewZone = NO;
     }*/
     else
     {
+        if (_gameMode == GameModeMultiplayer)
+        {
+            [_gameModel setPlayerSeed:_playerSeed];
+            [_gameModel setOpponentSeed:_opponentSeed];
+        }
+        
         [self.gameModel startGame];
     }
     //add all cards onto screen
@@ -1951,12 +1957,12 @@ BOOL leftHandViewZone = NO;
 
 -(void)setPlayerSeed:(int)seed
 {
-    [_gameModel setPlayerSeed:seed];
+    _playerSeed = seed;
 }
 
 -(void)setOpponentSeed:(int)seed
 {
-    [_gameModel setOpponentSeed:seed];
+    _opponentSeed = seed;
 }
 
 @end
