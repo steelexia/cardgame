@@ -547,7 +547,7 @@ BOOL leftHandViewZone = NO;
                 
                 if (_gameMode == GameModeMultiplayer)
                 {
-                    int targetIndex = [self.gameModel getCurrentTargetIndex];
+                    int targetIndex = [self.gameModel getTargetIndex:target];
                     [_networkingEngine sendSummonCard:_currentCardIndex withTarget:targetIndex];
                 }
                 
@@ -1445,11 +1445,12 @@ BOOL leftHandViewZone = NO;
         
         [self.gameModel summonCard:card side:side];
         
-        int targetIndex = [self.gameModel getCurrentTargetIndex];
-        
         //only send if no abilities, otherwise player is busy choosing ability
         if (_currentAbilities.count == 0)
-            [_networkingEngine sendSummonCard:_currentCardIndex withTarget:targetIndex];
+        {
+            //int targetIndex = [self.gameModel getCurrentTargetIndex];
+            [_networkingEngine sendSummonCard:_currentCardIndex withTarget:positionNoPosition];
+        }
     }
     else
     {

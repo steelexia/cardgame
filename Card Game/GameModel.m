@@ -2074,13 +2074,13 @@ uint32_t xor128(void) {
         [deck addCard:card];
 }
 
--(int)getCurrentTargetIndex
+-(int)getTargetIndex: (MonsterCardModel*)target
 {
-    if (_opponentCurrentTarget == [_players[PLAYER_SIDE] playerMonster])
+    if (target == [_players[PLAYER_SIDE] playerMonster])
     {
         return positionHeroA;
     }
-    else if (_opponentCurrentTarget == [_players[OPPONENT_SIDE] playerMonster])
+    else if (target == [_players[OPPONENT_SIDE] playerMonster])
     {
         return positionHeroB;
     }
@@ -2090,14 +2090,14 @@ uint32_t xor128(void) {
         {
             MonsterCardModel* monster = _battlefield[PLAYER_SIDE][i];
             
-            if (_opponentCurrentTarget == monster)
+            if (target == monster)
                 return positionA1 + i;
         }
         for (int i = 0; i < [_battlefield[OPPONENT_SIDE] count]; i++)
         {
             MonsterCardModel* monster = _battlefield[OPPONENT_SIDE][i];
             
-            if (_opponentCurrentTarget == monster)
+            if (target == monster)
                 return positionB1 + i;
         }
     }
