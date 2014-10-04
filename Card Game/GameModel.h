@@ -168,12 +168,32 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 -(void)setOpponentSeed:(uint32_t)seed;
 -(void)setPlayerSeed:(uint32_t)seed;
 
++(enum CardPosition) getReversedPosition:(enum CardPosition)position;
+
 @end
 
 enum GameMode
 {
     GameModeSingleplayer,
     GameModeMultiplayer,
+};
+
+/** Card positions on the battlefield for multiplayer purposes */
+enum CardPosition
+{
+    positionNoPosition,
+    positionHeroA,
+    positionHeroB,
+    positionA1,
+    positionA2,
+    positionA3,
+    positionA4,
+    positionA5,
+    positionB1,
+    positionB2,
+    positionB3,
+    positionB4,
+    positionB5,
 };
 
 extern const int INITIAL_CARD_DRAW;

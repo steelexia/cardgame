@@ -2035,7 +2035,7 @@ uint32_t xor128(void) {
     uint32_t t = xor128_x ^ (xor128_x << 11);
     xor128_x = xor128_y; xor128_y = xor128_z; xor128_z = xor128_w;
     xor128_w = xor128_w ^ (xor128_w >> 19) ^ (t ^ (t >> 8));
-    NSLog(@"random: %u", xor128_w);
+    //NSLog(@"random: %u", xor128_w);
     return xor128_w;
 }
 
@@ -2043,11 +2043,14 @@ uint32_t xor128(void) {
 -(void)multiplayerShuffleDeck:(DeckModel*)deck
 {
     [deck sortDeck];
+    
+    /*
     NSLog(@"shuffle start, deck sorted");
     for (CardModel* card in deck.cards)
     {
         NSLog(@"%d", card.idNumber);
     }
+     */
     
     NSMutableArray *newCards = [NSMutableArray array];
     
@@ -2069,6 +2072,36 @@ uint32_t xor128(void) {
     
     for (CardModel*card in newCards)
         [deck addCard:card];
+}
+
++(enum CardPosition) getReversedPosition:(enum CardPosition)position
+{
+    if (position == positionHeroA)
+        return positionHeroB;
+    else if (position == positionHeroB)
+        return positionHeroA;
+    else if (position == positionA1)
+        return positionB1;
+    else if (position == positionA2)
+        return positionB2;
+    else if (position == positionA3)
+        return positionB3;
+    else if (position == positionA4)
+        return positionB4;
+    else if (position == positionA5)
+        return positionB5;
+    else if (position == positionB1)
+        return positionA1;
+    else if (position == positionB2)
+        return positionA2;
+    else if (position == positionB3)
+        return positionA3;
+    else if (position == positionB4)
+        return positionA4;
+    else if (position == positionB5)
+        return positionA5;
+    
+    return position;
 }
 
 @end

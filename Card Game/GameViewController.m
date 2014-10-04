@@ -1430,6 +1430,13 @@ BOOL leftHandViewZone = NO;
         
         //cardView.center = self.view.center;
     }
+    else
+    {
+        NSMutableArray*hand = _gameModel.hands[PLAYER_SIDE];
+        int index = [hand indexOfObject:card];
+        
+        [_networkingEngine sendSummonCard:index withTarget:positionNoPosition];
+    }
     
     [self.gameModel summonCard:card side:side];
     
@@ -1980,6 +1987,20 @@ BOOL leftHandViewZone = NO;
 -(void)setOpponentSeed:(uint32_t)seed
 {
     _opponentSeed = seed;
+}
+
+-(void)opponentSummonedCard:(int)cardIndex withTarget:(int)target
+{
+    NSMutableArray *hand = _gameModel.hands[OPPONENT_SIDE];
+    
+    if (cardIndex < 0 || cardIndex >= hand.count)
+    {
+        NSLog(@"ERROR: Opponent tried to summon a card with invalid index");
+    }
+    else
+    {
+        [self summonCard:hand[cardIndex] fromSide:OPPONENT_SIDE];
+    }
 }
 
 @end

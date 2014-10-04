@@ -29,6 +29,8 @@ typedef NS_ENUM(NSUInteger, MessageType) {
     kMessageTypeDeckIDReceived,
     //---------in-game---------//
     kMessageTypeEndTurn,
+    kMessageTypeSummonCard,
+    kMessageTypeAttackCard,
 };
 
 typedef struct {
@@ -75,8 +77,21 @@ typedef struct {
     Message message;
 } MessageEndTurn;
 
+typedef struct {
+    Message message;
+    int cardIndex;
+    int targetPosition;
+} MessageSummonCard;
+
+typedef struct {
+    Message message;
+    int attackerPosition;
+    int targetPosition;
+} MessageAttackCard;
+
 #import "MultiplayerNetworking.h"
 #import "MultiplayerGameViewController.h"
+#import "GameModel.h"
 
 @implementation MultiplayerNetworking
 
@@ -208,6 +223,18 @@ typedef struct {
     [self sendData:data];
 }
 
+-(void)sendSummonCard:(int)cardIndex withTarget:(int)targetPosition
+{
+    int target = [GameModel getReversedPosition:targetPosition];
+    
+    MessageSummonCard message;
+    message.message.messageType = kMessageTypeSummonCard;
+    message.cardIndex = cardIndex;
+    message.targetPosition = target;
+    NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageSummonCard)];
+    [self sendData:data];
+}
+
 // Fill the contents of tryStartGame as shown
 - (void)tryStartGame {
     if (_isPlayer1 && _gameState == kGameStateWaitingForStart) {
@@ -320,6 +347,16 @@ typedef struct {
     } else if(message->messageType == kMessageTypeEndTurn) {
         NSLog(@"Opponent ended turn");
         [self.gameDelegate opponentEndTurn];
+    } else if (message->messageType == kMessageTypeSummonCard)
+    {
+        MessageSummonCard *messageSummon = (MessageSummonCard*)[data bytes];
+        
+        int cardIndex = messageSummon->cardIndex;
+        int targetPosition = messageSummon->targetPosition;
+        
+        NSLog(@"opponent summoned card %d %d", cardIndex, targetPosition);
+        
+        [_gameDelegate opponentSummonedCard:cardIndex withTarget:targetPosition];
     }
 }
 
