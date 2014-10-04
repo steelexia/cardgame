@@ -2040,6 +2040,8 @@ uint32_t xor128(void) {
 /** Uses xor128 to sort */
 -(void)multiplayerShuffleDeck:(DeckModel*)deck
 {
+    [deck sortDeck];
+    
     NSMutableArray *newCards = [NSMutableArray array];
     
     //take a random card from original array and place into new array

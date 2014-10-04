@@ -51,6 +51,9 @@
 /** Reorders all cards in the deck. Used during games */
 -(void) shuffleDeck;
 
+/** Sort the deck according to idNumber */
+-(void)sortDeck;
+
 +(void) validateDeck:(DeckModel*)deck;
 
 /** Assumes deck is already invalid! */

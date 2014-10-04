@@ -90,6 +90,18 @@ const int MAX_CARDS_IN_DECK = 20;
     _cards = newCards;
 }
 
+-(void)sortDeck
+{
+    NSArray *sortedCards;
+    sortedCards = [_cards sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+        int first = [(CardModel*)a idNumber];
+        int second = [(CardModel*)b idNumber];
+        return [@(first) compare:@(second)];
+    }];
+    
+    _cards = [NSMutableArray arrayWithArray:sortedCards];
+}
+
 
 
 +(void) validateDeck:(DeckModel*)deck
@@ -325,5 +337,6 @@ const int MAX_CARDS_IN_DECK = 20;
     
     return summary;
 }
+
 
 @end
