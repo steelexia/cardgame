@@ -1195,12 +1195,12 @@ int cardIDCount = 0;
             else
             {
                 //AI must have already picked a target
-                MonsterCardModel* aiTarget = self.aiPlayer.currentTarget;
-                if (aiTarget != nil && [self validAttack:nil target:aiTarget])
-                    targets = @[aiTarget];
+                MonsterCardModel* opponentTarget = _opponentCurrentTarget;
+                if (opponentTarget != nil && [self validAttack:nil target:opponentTarget])
+                    targets = @[opponentTarget];
                 else
                 {
-                    if (aiTarget != nil)
+                    if (opponentTarget != nil)
                         NSLog(@"WARNING: AI tried to attack an invalid target!");
                     return;
                 }
@@ -1240,12 +1240,12 @@ int cardIDCount = 0;
             else
             {
                 //AI must have already picked a target
-                MonsterCardModel* aiTarget = self.aiPlayer.currentTarget;
-                if (aiTarget != nil && [self validAttack:nil target:aiTarget])
-                    targets = @[aiTarget];
+                MonsterCardModel* opponentTarget = _opponentCurrentTarget;
+                if (opponentTarget != nil && [self validAttack:nil target:opponentTarget])
+                    targets = @[opponentTarget];
                 else
                 {
-                    if (aiTarget != nil)
+                    if (opponentTarget != nil)
                         NSLog(@"WARNING: AI tried to attack an invalid target!");
                     return;
                 }
@@ -1283,12 +1283,12 @@ int cardIDCount = 0;
             else
             {
                 //AI must have already picked a target
-                MonsterCardModel* aiTarget = self.aiPlayer.currentTarget;
-                if (aiTarget != nil && [self validAttack:nil target:aiTarget])
-                    targets = @[aiTarget];
+                MonsterCardModel* opponentTarget = _opponentCurrentTarget;
+                if (opponentTarget != nil && [self validAttack:nil target:opponentTarget])
+                    targets = @[opponentTarget];
                 else
                 {
-                    if (aiTarget != nil)
+                    if (opponentTarget != nil)
                         NSLog(@"WARNING: AI tried to attack an invalid target!");
                     return;
                 }
@@ -1327,12 +1327,12 @@ int cardIDCount = 0;
             else
             {
                 //AI must have already picked a target
-                MonsterCardModel* aiTarget = self.aiPlayer.currentTarget;
-                if (aiTarget != nil && [self validAttack:nil target:aiTarget])
-                    targets = @[aiTarget];
+                MonsterCardModel* opponentTarget = _opponentCurrentTarget;
+                if (opponentTarget != nil && [self validAttack:nil target:opponentTarget])
+                    targets = @[opponentTarget];
                 else
                 {
-                    if (aiTarget != nil)
+                    if (opponentTarget != nil)
                         NSLog(@"WARNING: AI tried to attack an invalid target!");
                     return;
                 }
@@ -1369,12 +1369,12 @@ int cardIDCount = 0;
             else
             {
                 //AI must have already picked a target
-                MonsterCardModel* aiTarget = self.aiPlayer.currentTarget;
-                if (aiTarget != nil && [self validAttack:nil target:aiTarget])
-                    targets = @[aiTarget];
+                MonsterCardModel* opponentTarget = _opponentCurrentTarget;
+                if (opponentTarget != nil && [self validAttack:nil target:opponentTarget])
+                    targets = @[opponentTarget];
                 else
                 {
-                    if (aiTarget != nil)
+                    if (opponentTarget != nil)
                         NSLog(@"WARNING: AI tried to attack an invalid target!");
                     return;
                 }
@@ -1411,12 +1411,12 @@ int cardIDCount = 0;
             else
             {
                 //AI must have already picked a target
-                MonsterCardModel* aiTarget = self.aiPlayer.currentTarget;
-                if (aiTarget != nil && [self validAttack:nil target:aiTarget])
-                    targets = @[aiTarget];
+                MonsterCardModel* opponentTarget = _opponentCurrentTarget;
+                if (opponentTarget != nil && [self validAttack:nil target:opponentTarget])
+                    targets = @[opponentTarget];
                 else
                 {
-                    if (aiTarget != nil)
+                    if (opponentTarget != nil)
                         NSLog(@"WARNING: AI tried to attack an invalid target!");
                     return;
                 }
@@ -1564,12 +1564,12 @@ int cardIDCount = 0;
             else
             {
                 //AI must have already picked a target
-                MonsterCardModel* aiTarget = self.aiPlayer.currentTarget;
-                if (aiTarget != nil && [self validAttack:nil target:aiTarget])
-                    targets = @[aiTarget];
+                MonsterCardModel* opponentTarget = _opponentCurrentTarget;
+                if (opponentTarget != nil && [self validAttack:nil target:opponentTarget])
+                    targets = @[opponentTarget];
                 else
                 {
-                    if (aiTarget != nil)
+                    if (opponentTarget != nil)
                         NSLog(@"WARNING: AI tried to attack an invalid target!");
                     return;
                 }
@@ -2072,6 +2072,69 @@ uint32_t xor128(void) {
     
     for (CardModel*card in newCards)
         [deck addCard:card];
+}
+
+-(int)getCurrentTargetIndex
+{
+    if (_opponentCurrentTarget == [_players[PLAYER_SIDE] playerMonster])
+    {
+        return positionHeroA;
+    }
+    else if (_opponentCurrentTarget == [_players[OPPONENT_SIDE] playerMonster])
+    {
+        return positionHeroB;
+    }
+    else
+    {
+        for (int i = 0; i < [_battlefield[PLAYER_SIDE] count]; i++)
+        {
+            MonsterCardModel* monster = _battlefield[PLAYER_SIDE][i];
+            
+            if (_opponentCurrentTarget == monster)
+                return positionA1 + i;
+        }
+        for (int i = 0; i < [_battlefield[OPPONENT_SIDE] count]; i++)
+        {
+            MonsterCardModel* monster = _battlefield[OPPONENT_SIDE][i];
+            
+            if (_opponentCurrentTarget == monster)
+                return positionB1 + i;
+        }
+    }
+    
+    return positionNoPosition;
+}
+
+-(void)setCurrentTarget:(int)targetPosition
+{
+    if (targetPosition == positionHeroA)
+    {
+        _opponentCurrentTarget = [_players[PLAYER_SIDE] playerMonster];
+    }
+    else if (targetPosition == positionHeroB)
+    {
+        _opponentCurrentTarget = [_players[OPPONENT_SIDE] playerMonster];
+    }
+    else if (targetPosition >= positionA1 && targetPosition <= positionA5)
+    {
+        int index = targetPosition - positionA1;
+        NSMutableArray*field = _battlefield[PLAYER_SIDE];
+        
+        if (index < field.count)
+            _opponentCurrentTarget = field[index];
+        else
+            NSLog(@"ERROR: Opponent tried to target an empty position on player's side");
+    }
+    else if (targetPosition >= positionB1 && targetPosition <= positionB5)
+    {
+        int index = targetPosition - positionB1;
+        NSMutableArray*field = _battlefield[OPPONENT_SIDE];
+        
+        if (index < field.count)
+            _opponentCurrentTarget = field[index];
+        else
+            NSLog(@"ERROR: Opponent tried to target an empty position on their side");
+    }
 }
 
 +(enum CardPosition) getReversedPosition:(enum CardPosition)position

@@ -124,7 +124,7 @@ int enemyTotalStrength, friendlyTotalStrength;
                 {
                     bestCard = card;
                     bestPoints = points;
-                    bestTarget = self.currentTarget; //assume it's placed here
+                    bestTarget = _gameModel.opponentCurrentTarget; //assume it's placed here
                 }
                 
                 NSLog(@"points for summoning %d %d minion: %d", monster.damage, monster.life, points);
@@ -171,7 +171,7 @@ int enemyTotalStrength, friendlyTotalStrength;
                 {
                     bestPoints = points;
                     bestCard = card;
-                    bestTarget = self.currentTarget; //assume it's placed here
+                    bestTarget = _gameModel.opponentCurrentTarget; //assume it's placed here
                     if (bestTarget == nil)
                         NSLog(@"AI: Spell %@: Best target is nil", card.name);
                     else
@@ -216,22 +216,22 @@ int enemyTotalStrength, friendlyTotalStrength;
         if (bestPoints > moveThreshold)
         {
             //sets the current target to the correct object since algorithm will pick a copy of the original card
-            self.currentTarget = bestTarget;
+            _gameModel.opponentCurrentTarget = bestTarget;
             
-            if(self.currentTarget!=nil)
+            if(_gameModel.opponentCurrentTarget!=nil)
             {
                 NSLog(@"AI: current target is not nil, pointing back to original card.");
-                while(self.currentTarget.originalCard!=nil)
-                    self.currentTarget = self.currentTarget.originalCard;
+                while(_gameModel.opponentCurrentTarget.originalCard!=nil)
+                    _gameModel.opponentCurrentTarget = _gameModel.opponentCurrentTarget.originalCard;
             }
             
-            if (self.currentTarget == nil)
+            if (_gameModel.opponentCurrentTarget == nil)
             {
                 NSLog(@"AI: current target is nil. May be using ability without target.");
             }
             else
             {
-                NSLog(@"AI: targetting minion %d %d", self.currentTarget.damage, self.currentTarget.life);
+                NSLog(@"AI: targetting minion %d %d", _gameModel.opponentCurrentTarget.damage, _gameModel.opponentCurrentTarget.life);
             }
             
             [self.gameViewController summonCard:bestCard fromSide:OPPONENT_SIDE];
@@ -696,7 +696,7 @@ int enemyTotalStrength, friendlyTotalStrength;
             if (targetPoint > points)
             {
                 points = targetPoint;
-                self.currentTarget = target; //TODO for these all end up getting casted to the monster for AI state, should only be casted on the chosen one
+                _gameModel.opponentCurrentTarget = target; //TODO for these all end up getting casted to the monster for AI state, should only be casted on the chosen one
             }
         }
         //all being casted, add them together
@@ -1632,7 +1632,7 @@ int enemyTotalStrength, friendlyTotalStrength;
 
 -(int)getCastOnSummonValue:(CardModel*)card fromSide:(int)side
 {
-    self.currentTarget = nil; //reset current target
+    _gameModel.opponentCurrentTarget = nil; //reset current target
     
     int points = USELESS_MOVE;
     int selectableTargetPoints = 0;
@@ -1655,8 +1655,8 @@ int enemyTotalStrength, friendlyTotalStrength;
         NSArray *targets;
         
         //if this is a selectable target type and target has already been chosen, cannot choose a different target. (e.g. +1000 life and +1000 damage to any minion can't be casted on two different minions)
-        if ([Ability abilityIsSelectableTargetType:ability] && self.currentTarget!=nil)
-            targets = @[self.currentTarget];
+        if ([Ability abilityIsSelectableTargetType:ability] && _gameModel.opponentCurrentTarget!=nil)
+            targets = @[_gameModel.opponentCurrentTarget];
         else
         {
             if ([card isKindOfClass:[MonsterCardModel class]])
@@ -1712,7 +1712,7 @@ int enemyTotalStrength, friendlyTotalStrength;
             if (selectableTargetPoints != IMPOSSIBLE_MOVE)
                 points -= selectableTargetPoints; //discard the selectable target's points
             
-            self.currentTarget = nil; //discard the target
+            _gameModel.opponentCurrentTarget = nil; //discard the target
         }
     }
     

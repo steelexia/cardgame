@@ -32,7 +32,8 @@
 @property int levelDifficultyOffset;
 
 /** When AI casts a spell that requires targetting, it will set it to this variable. */
-@property (weak) MonsterCardModel* currentTarget;
+//NOTE: this has been moved to GameModel's opponentCurrentTarget
+//@property (weak) MonsterCardModel* currentTarget;
 
 -(instancetype)initWithPlayerModel: (PlayerModel*) playerModel gameViewController:(GameViewController*)gameViewController gameModel:(GameModel*) gameModel;
 

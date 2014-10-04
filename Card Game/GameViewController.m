@@ -1430,15 +1430,14 @@ BOOL leftHandViewZone = NO;
         
         //cardView.center = self.view.center;
     }
-    else
-    {
-        NSMutableArray*hand = _gameModel.hands[PLAYER_SIDE];
-        int index = [hand indexOfObject:card];
-        
-        [_networkingEngine sendSummonCard:index withTarget:positionNoPosition];
-    }
+    
+    NSMutableArray*hand = _gameModel.hands[PLAYER_SIDE];
+    int cardIndex = [hand indexOfObject:card];
     
     [self.gameModel summonCard:card side:side];
+    
+    int targetIndex = [self.gameModel getCurrentTargetIndex];
+    [_networkingEngine sendSummonCard:cardIndex withTarget:targetIndex];
     
     if ([card isKindOfClass: [MonsterCardModel class]])
     {
