@@ -545,6 +545,12 @@ BOOL leftHandViewZone = NO;
                 [self fadeOutAndRemove:pickATargetLabel inDuration:0.2 withDelay:0];
                 [self fadeOutAndRemove:giveupAbilityButton inDuration:0.2 withDelay:0];
                 
+                if (_gameMode == GameModeMultiplayer)
+                {
+                    int targetIndex = [self.gameModel getCurrentTargetIndex];
+                    [_networkingEngine sendSummonCard:_currentCardIndex withTarget:targetIndex];
+                }
+                
                 return; //prevent the other events happening
             }
         }
@@ -1432,12 +1438,15 @@ BOOL leftHandViewZone = NO;
     }
     
     NSMutableArray*hand = _gameModel.hands[PLAYER_SIDE];
-    int cardIndex = [hand indexOfObject:card];
+    _currentCardIndex = [hand indexOfObject:card];
     
     [self.gameModel summonCard:card side:side];
     
     int targetIndex = [self.gameModel getCurrentTargetIndex];
-    [_networkingEngine sendSummonCard:cardIndex withTarget:targetIndex];
+    
+    //only send if no abilities, otherwise player is busy choosing ability
+    if (_gameMode == GameModeMultiplayer && _currentAbilities.count == 0)
+        [_networkingEngine sendSummonCard:_currentCardIndex withTarget:targetIndex];
     
     if ([card isKindOfClass: [MonsterCardModel class]])
     {
@@ -1529,6 +1538,9 @@ BOOL leftHandViewZone = NO;
 
 -(void)noTargetButtonPressed
 {
+    if (_gameMode == GameModeMultiplayer)
+        [_networkingEngine sendSummonCard:_currentCardIndex withTarget:positionNoPosition];
+    
     //reset all cards' highlight back to none
     for (MonsterCardModel *card in self.gameModel.battlefield[PLAYER_SIDE])
         card.cardView.cardHighlightType = cardHighlightNone;
