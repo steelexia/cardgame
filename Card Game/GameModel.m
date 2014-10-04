@@ -2047,7 +2047,12 @@ uint32_t xor128(void) {
     {
         uint32_t random = xor128();
         int count = [deck.cards count]-1;
-        int cardIndex = random%count;
+        int cardIndex;
+        
+        if (count == 0)
+            cardIndex = 0;
+        else
+            cardIndex = random%count;
         
         [newCards addObject:deck.cards[cardIndex]];
         [deck.cards removeObjectAtIndex:cardIndex];
