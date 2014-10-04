@@ -294,6 +294,9 @@ BOOL leftHandViewZone = NO;
     self.endTurnButton.center = CGPointMake(SCREEN_WIDTH - (SCREEN_WIDTH - playerFieldEdge.bounds.size.width)/2 - self.endTurnButton.frame.size.width/2, playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*2 + self.endTurnButton.frame.size.height/2);
     [self.backgroundView addSubview: self.endTurnButton];
     
+    if (currentSide != PLAYER_SIDE)
+        [self.endTurnButton setEnabled:NO];
+    
     //quit button
     _quitButton = [[CFButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
     [_quitButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
@@ -487,8 +490,6 @@ BOOL leftHandViewZone = NO;
 -(void)setCurrentSide:(int)newSide
 {
     currentSide = newSide;
-    if (currentSide != PLAYER_SIDE)
-        [self.endTurnButton setEnabled:NO];
 }
 
 -(void)opponentEndTurn
