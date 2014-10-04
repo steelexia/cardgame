@@ -683,9 +683,6 @@ BOOL leftHandViewZone = NO;
 
 
 -(void) endTurn{
-    if (currentSide == PLAYER_SIDE)
-        [_networkingEngine sendEndTurn];
-    
     //tell the gameModel to end turn
     [self.gameModel endTurn: currentSide];
     
@@ -733,6 +730,9 @@ BOOL leftHandViewZone = NO;
     {
         [self noTargetButtonPressed];
     }
+    
+    if (currentSide == PLAYER_SIDE)
+        [_networkingEngine sendEndTurn];
 }
 
 -(void)updateHandsView: (int)side
@@ -1547,9 +1547,6 @@ BOOL leftHandViewZone = NO;
 
 -(void)noTargetButtonPressed
 {
-    if (_gameMode == GameModeMultiplayer)
-        [_networkingEngine sendSummonCard:_currentCardIndex withTarget:positionNoPosition];
-    
     //reset all cards' highlight back to none
     for (MonsterCardModel *card in self.gameModel.battlefield[PLAYER_SIDE])
         card.cardView.cardHighlightType = cardHighlightNone;
@@ -1570,6 +1567,9 @@ BOOL leftHandViewZone = NO;
     
     [self fadeOutAndRemove:pickATargetLabel inDuration:0.2 withDelay:0];
     [self fadeOutAndRemove:giveupAbilityButton inDuration:0.2 withDelay:0];
+    
+    if (_gameMode == GameModeMultiplayer)
+        [_networkingEngine sendSummonCard:_currentCardIndex withTarget:positionNoPosition];
 }
 
 -(void)gameOver

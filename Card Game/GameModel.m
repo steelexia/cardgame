@@ -2102,6 +2102,8 @@ uint32_t xor128(void) {
         }
     }
     
+    NSLog(@"DEBUG: no target position for this move");
+    
     return positionNoPosition;
 }
 
