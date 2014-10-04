@@ -514,6 +514,12 @@ BOOL leftHandViewZone = NO;
             //if card is highlighted, then it must be valid target
             if (target.cardView.cardHighlightType == cardHighlightTarget)
             {
+                if (_gameMode == GameModeMultiplayer)
+                {
+                    int targetIndex = [self.gameModel getTargetIndex:target];
+                    [_networkingEngine sendSummonCard:_currentCardIndex withTarget:targetIndex];
+                }
+                
                 //cast all abilities at this card
                 for (Ability *ability in self.currentAbilities){
                     [self.gameModel castAbility:ability byMonsterCard:nil toMonsterCard:target fromSide:PLAYER_SIDE];
@@ -544,12 +550,6 @@ BOOL leftHandViewZone = NO;
                 
                 [self fadeOutAndRemove:pickATargetLabel inDuration:0.2 withDelay:0];
                 [self fadeOutAndRemove:giveupAbilityButton inDuration:0.2 withDelay:0];
-                
-                if (_gameMode == GameModeMultiplayer)
-                {
-                    int targetIndex = [self.gameModel getTargetIndex:target];
-                    [_networkingEngine sendSummonCard:_currentCardIndex withTarget:targetIndex];
-                }
                 
                 return; //prevent the other events happening
             }
@@ -1439,18 +1439,20 @@ BOOL leftHandViewZone = NO;
     
     if (side == PLAYER_SIDE && _gameMode == GameModeMultiplayer)
     {
+        /*
         //player side during multiplayer requires sending info to opponent
         NSMutableArray*hand = _gameModel.hands[PLAYER_SIDE];
         _currentCardIndex = [hand indexOfObject:card];
-        
+        */
         [self.gameModel summonCard:card side:side];
         
+        /*
         //only send if no abilities, otherwise player is busy choosing ability
-        if (_currentAbilities.count == 0)
+        if (giveupAbilityButton.superview == nil) //TODO
         {
             //int targetIndex = [self.gameModel getCurrentTargetIndex];
             [_networkingEngine sendSummonCard:_currentCardIndex withTarget:positionNoPosition];
-        }
+        }*/
     }
     else
     {

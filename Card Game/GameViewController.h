@@ -135,6 +135,7 @@
 -(void)gameOver;
 -(void)setOpponentDeck: (DeckModel*)deck;
 -(void)setCurrentSide:(int)side;
+-(void)opponentSummonedCard:(int)cardIndex withTarget:(int)target;
 
 @end
 
