@@ -2045,7 +2045,7 @@ uint32_t xor128(void) {
     //take a random card from original array and place into new array
     while ([deck.cards count] > 0)
     {
-        int random = xor128();
+        uint32_t random = xor128();
         int count = [deck.cards count]-1;
         int cardIndex = random%count;
         
