@@ -212,6 +212,11 @@ NSUInteger _currentPlayerIndex;
 
 -(void)playersFound
 {
+    if (_playersFound)
+        return;
+    else
+        _playersFound = YES;
+    
     //[self.navigationController pushViewController:dcvc animated:YES];
     //[self addChildViewController:dcvc];
     NSLog(@"deck chooser");

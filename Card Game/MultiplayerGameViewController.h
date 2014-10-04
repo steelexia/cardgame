@@ -25,6 +25,8 @@
 @property (strong)GameViewController *gvc;
 @property (strong)DeckChooserViewController *dcvc;
 
+@property BOOL playersFound;
+
 //loading view
 @property (strong)UIActivityIndicatorView*activityIndicator;
 @property(strong) UILabel *activityLabel;

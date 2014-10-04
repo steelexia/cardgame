@@ -146,7 +146,7 @@ typedef struct {
 
 -(void)sendSeed
 {
-    int randomNumber = drand48();
+    int randomNumber = arc4random();
     //srand48(randomNumber);
     
     MessageSeed message;
