@@ -1437,16 +1437,25 @@ BOOL leftHandViewZone = NO;
         //cardView.center = self.view.center;
     }
     
-    NSMutableArray*hand = _gameModel.hands[PLAYER_SIDE];
-    _currentCardIndex = [hand indexOfObject:card];
-    
-    [self.gameModel summonCard:card side:side];
-    
-    int targetIndex = [self.gameModel getCurrentTargetIndex];
-    
-    //only send if no abilities, otherwise player is busy choosing ability
-    if (_gameMode == GameModeMultiplayer && _currentAbilities.count == 0)
-        [_networkingEngine sendSummonCard:_currentCardIndex withTarget:targetIndex];
+    if (side == PLAYER_SIDE && _gameMode == GameModeMultiplayer)
+    {
+        //player side during multiplayer requires sending info to opponent
+        NSMutableArray*hand = _gameModel.hands[PLAYER_SIDE];
+        _currentCardIndex = [hand indexOfObject:card];
+        
+        [self.gameModel summonCard:card side:side];
+        
+        int targetIndex = [self.gameModel getCurrentTargetIndex];
+        
+        //only send if no abilities, otherwise player is busy choosing ability
+        if (_currentAbilities.count == 0)
+            [_networkingEngine sendSummonCard:_currentCardIndex withTarget:targetIndex];
+    }
+    else
+    {
+        //opponent playing or single player
+        [self.gameModel summonCard:card side:side];
+    }
     
     if ([card isKindOfClass: [MonsterCardModel class]])
     {
