@@ -311,6 +311,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     if (_deckReceived)
     {
         NSLog(@"start!");
+        
         [self presentViewController:self.nextScreen animated:YES completion:nil];
     }
 }
