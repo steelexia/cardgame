@@ -127,8 +127,8 @@ typedef struct {
         _gameState = kGameStateWaitingForRandomNumber;
     }
     
-    if (_isPlayer1)
-        [self sendSeed];
+    //if (_isPlayer1)
+    //    [self sendSeed];
     
     [self sendRandomNumber];
     [self tryStartGame];
