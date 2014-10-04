@@ -26,6 +26,13 @@ const char PLAYER_SIDE = 0, OPPONENT_SIDE = 1;
 @synthesize gameOver = _gameOver;
 @synthesize aiPlayer = _aiPlayer;
 
+uint32_t xor128_x = 123456789;
+uint32_t xor128_y = 362436069;
+uint32_t xor128_z = 521288629;
+uint32_t xor128_w = 88675123;
+
+uint32_t oppo_xor128_x,oppo_xor128_y,oppo_xor128_z,oppo_xor128_w,player_xor128_x,player_xor128_y,player_xor128_z,player_xor128_w;
+
 const int INITIAL_CARD_DRAW = 4;
 
 //TEMPORARY
@@ -110,6 +117,25 @@ int cardIDCount = 0;
         else if (side == PLAYER_SIDE && _level != nil && !_level.playerShuffleDeck)
         {
             //NO SHUFFLE
+        }
+        else if (_gameMode == GameModeMultiplayer)
+        {
+            if (side == PLAYER_SIDE)
+            {
+                xor128_x = player_xor128_x;
+                xor128_y = player_xor128_y;
+                xor128_z = player_xor128_z;
+                xor128_w = player_xor128_w;
+            }
+            else if (side == OPPONENT_SIDE)
+            {
+                xor128_x = oppo_xor128_x;
+                xor128_y = oppo_xor128_y;
+                xor128_z = oppo_xor128_z;
+                xor128_w = oppo_xor128_w;
+            }
+            
+            [self multiplayerShuffleDeck:deck];
         }
         else
             [deck shuffleDeck];
@@ -1987,5 +2013,44 @@ int cardIDCount = 0;
     [self performSelector:@selector(performBlock:) withObject:block_ afterDelay:delay];
 }
 
+-(void)setOpponentSeed:(int)seed
+{
+    oppo_xor128_x = seed;
+    oppo_xor128_y = seed + 13;
+    oppo_xor128_z = seed + 19571;
+    oppo_xor128_w = seed + 576377;
+}
+
+-(void)setPlayerSeed:(int)seed
+{
+    player_xor128_x = seed;
+    player_xor128_y = seed + 13;
+    player_xor128_z = seed + 19571;
+    player_xor128_w = seed + 576377;
+}
+
+uint32_t xor128(void) {
+    uint32_t t = xor128_x ^ (xor128_x << 11);
+    xor128_x = xor128_y; xor128_y = xor128_z; xor128_z = xor128_w;
+    return xor128_w = xor128_w ^ (xor128_w >> 19) ^ (t ^ (t >> 8));
+}
+
+/** Uses xor128 to sort */
+-(void)multiplayerShuffleDeck:(DeckModel*)deck
+{
+    NSMutableArray *newCards = [NSMutableArray array];
+    
+    //take a random card from original array and place into new array
+    while ([deck.cards count] > 0)
+    {
+        int cardIndex = xor128()%([deck.cards count]-1);
+        
+        [newCards addObject:deck.cards[cardIndex]];
+        [deck.cards removeObjectAtIndex:cardIndex];
+    }
+    
+    for (CardModel*card in newCards)
+        [deck addCard:card];
+}
 
 @end

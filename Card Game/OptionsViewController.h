@@ -12,6 +12,6 @@
 
 @interface OptionsViewController : UIViewController
 
-@property (strong) CFButton *passwordButton;
+@property (strong) CFButton *passwordButton, *logoutButton;
 
 @end

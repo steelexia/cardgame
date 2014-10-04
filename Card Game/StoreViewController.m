@@ -187,6 +187,19 @@ NSArray *_products;
     [_editButton addTarget:self action:@selector(editButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_cardInfoView addSubview:_editButton];
     
+    _restockButton = [[CFButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT - 125, 80, 60)];
+    _restockButton.label.text = @"Restock";
+    [_restockButton setTextSize:18];
+    [_restockButton addTarget:self action:@selector(restockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    //[_cardInfoView addSubview:_buyButton];
+    
+    _bumpButton = [[CFButton alloc] initWithFrame:CGRectMake(120, SCREEN_HEIGHT - 125, 80, 60)];
+    _bumpButton.label.text = @"Bump";
+    [_bumpButton setTextSize:22];
+    [_bumpButton addTarget:self action:@selector(bumpButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    //[_cardInfoView addSubview:_sellButton];
+    
+    
     _editHintLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
     _editHintLabel.textColor = [UIColor whiteColor];
     _editHintLabel.font = [UIFont fontWithName:cardMainFont size:14];
@@ -1281,7 +1294,7 @@ NSArray *_products;
 
 -(void)backButtonPressed
 {
-    [self presentViewController:self.previousScreen animated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
@@ -1467,7 +1480,20 @@ NSArray *_products;
         _likeHintLabel.text = @"";
         _editHintLabel.text = @"";
         
+        [_cardInfoView addSubview: _restockButton];
+        [_cardInfoView addSubview: _bumpButton];
+        [_cardInfoView addSubview:_buyHintLabel];
+        [_cardInfoView addSubview:_editHintLabel];
+        
+        //lazy
+        _buyHintLabel.text = @"TODO gold";
+        _editHintLabel.text = @"TODO gold";
         //TODO additional stuff in future, such as bumping to featured
+    }
+    else
+    {
+        [_restockButton removeFromSuperview];
+        [_bumpButton removeFromSuperview];
     }
     
     NSString*tagString = @"Tags:\n";
@@ -1901,6 +1927,16 @@ NSArray *_products;
         //processing done in cevc
         [self updateCardInfoView:_cardView.cardModel];
     }];
+}
+
+-(void)restockButtonPressed
+{
+    //TODO
+}
+
+-(void)bumpButtonPressed
+{
+    //TODO
 }
 
 -(void)applyFiltersToQuery:(PFQuery*)salesQuery

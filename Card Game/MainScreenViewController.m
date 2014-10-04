@@ -214,7 +214,6 @@ UILabel *loadingLabel;
 -(void)storeButtonPressed
 {
     StoreViewController *viewController = [[StoreViewController alloc] init];
-    viewController.previousScreen = [[MainScreenViewController alloc]init];
     [self presentViewController:viewController animated:YES completion:nil];
 }
 

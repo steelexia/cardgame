@@ -18,7 +18,6 @@
 @property (strong) StoreCardsCollectionView *cardsView;
 
 @property (strong)CFButton*backButton;
-@property (strong)UIViewController*previousScreen;
 @property (strong)StrokedLabel *userGoldLabel, *userLikesLabel, *userCardLabel;
 /** Cards loaded from last query. No query is required if only filters are being changed. */
 @property (strong)NSMutableArray*currentLoadedCards;
@@ -33,7 +32,7 @@
 @property (strong)UIView*darkFilter;
 @property (strong)CardView*cardView;
 @property (strong)PFObject*cardPF;
-@property (strong)CFButton*buyButton,*sellButton,*editButton,*likeButton;
+@property (strong)CFButton*buyButton,*sellButton,*editButton,*likeButton, *restockButton, *bumpButton;
 @property (strong)StrokedLabel*creatorLabel, *idLabel, *rarityLabel, *rarityTextLabel, *likesLabel, *goldLabel;
 @property (strong)StrokedLabel*likeHintLabel, *editHintLabel, *buyHintLabel;
 @property (strong)UILabel*cardTagsLabel;

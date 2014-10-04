@@ -27,6 +27,9 @@
 
 @protocol MultiplayerGameProtocol <NSObject>
 
+-(void)setPlayerSeed:(int)seed;
+-(void)setOpponentSeed:(int)seed;
+
 @end
 
 @interface MultiplayerNetworking : NSObject<GameKitHelperDelegate>
@@ -35,7 +38,8 @@
 @property (nonatomic, assign) id<MultiplayerGameProtocol> gameDelegate;
 
 @property BOOL matchMakerPresented;
-@property BOOL seedReceived;
+@property BOOL receivedOpponentSeed;
+@property BOOL opponentReceivedSeed;
 
 - (void)sendMove;
 - (void)sendGameEnd:(BOOL)player1Won;

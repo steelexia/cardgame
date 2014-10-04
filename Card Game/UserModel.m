@@ -958,6 +958,15 @@
     return NO;
 }
 
++(void)logout
+{
+    userInfoLoaded = NO;
+    userInitError = NO;
+    userCurrentDeck = nil;
+    userPF = nil;
+    userTutorialOneCardName = nil;
+}
+
 + (void)performBlockInBackground:(void (^)())block {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         block();

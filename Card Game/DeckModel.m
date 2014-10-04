@@ -90,6 +90,8 @@ const int MAX_CARDS_IN_DECK = 20;
     _cards = newCards;
 }
 
+
+
 +(void) validateDeck:(DeckModel*)deck
 {
     [self validateDeck:deck checkTooFewCards:YES];

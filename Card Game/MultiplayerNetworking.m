@@ -130,16 +130,8 @@ typedef struct {
 
 -(void)playersFound
 {
-    if (_isPlayer1)
-    {
-        [self sendSeed];
-    }
-    else if (_seedReceived)
-    {
-        [_delegate playersFound];
-    }
-    
     _matchMakerPresented = YES;
+    [self sendSeed];
 }
 
 - (void)sendRandomNumber
@@ -154,14 +146,16 @@ typedef struct {
 
 -(void)sendSeed
 {
-    int randomNumber = time(0);
-    srand48(randomNumber);
+    int randomNumber = drand48();
+    //srand48(randomNumber);
     
     MessageSeed message;
     message.message.messageType = kMessageTypeSeed;
     message.seed = randomNumber;
     NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageSeed)];
     [self sendData:data];
+    
+    [_gameDelegate setPlayerSeed:randomNumber];
 }
 
 // Add right after sendRandomNumber
@@ -254,8 +248,8 @@ typedef struct {
     }
     else if (message->messageType == kMessageTypeSeed) {
         NSLog(@"received seed");
-        MessageRandomNumber *messageRandomNumber = (MessageRandomNumber*)[data bytes];
-        srand48(messageRandomNumber->randomNumber);
+        MessageSeed *messageRandomNumber = (MessageSeed*)[data bytes];
+        //srand48(messageRandomNumber->seed);
         
         //respond notifying seed received
         MessageSeedReceived message;
@@ -263,16 +257,24 @@ typedef struct {
         NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageSeedReceived)];
         [self sendData:data];
         
-        //received seed, start
-        if (_matchMakerPresented)
-            [_delegate playersFound];
+        _receivedOpponentSeed = YES;
         
-        _seedReceived = YES;
+        //both have seed, start
+        if (_matchMakerPresented && _opponentReceivedSeed)
+        {
+            [_gameDelegate setOpponentSeed:messageRandomNumber->seed];
+            [_delegate playersFound];
+        }
     }
     else if (message->messageType == kMessageTypeSeedReceived)
     {
-        //other player got the seed, start
-        [_delegate playersFound];
+        _opponentReceivedSeed = YES;
+        
+        //both have seed, start
+        if (_matchMakerPresented && _receivedOpponentSeed)
+        {
+            [_delegate playersFound];
+        }
     }
     else if (message->messageType == kMessageTypeGameBegin) {
         NSLog(@"Begin game message received");
@@ -290,7 +292,6 @@ typedef struct {
     } else if(message->messageType == kMessageTypeDeckID) {
         NSLog(@"Deck ID received");
         MessageDeckID * messageDeckID = (MessageDeckID*) [data bytes];
-        
         NSLog(@"received deck ID: %s", messageDeckID->deckID);
         NSString *deckID = [[NSString alloc] initWithBytes:messageDeckID->deckID  length:10 encoding:NSUTF8StringEncoding];
         //[self.delegate receivedOpponentDeck: [NSString stringWithUTF8String: messageDeckID->deckID]];

@@ -48,6 +48,8 @@
 
 +(DeckModel*)downloadDeckFromPF:(PFObject*)deckPF;
 
++(void)logout;
+
 @end
 
 /** Array of CardModel's that the player has. */

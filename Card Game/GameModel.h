@@ -165,6 +165,9 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 -(void)startGame;
 -(void)loadDecks;
 
+-(void)setOpponentSeed:(int)seed;
+-(void)setPlayerSeed:(int)seed;
+
 @end
 
 enum GameMode

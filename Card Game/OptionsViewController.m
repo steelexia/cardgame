@@ -1,3 +1,4 @@
+
 //
 //  OptionsViewController.m
 //  cardgame
@@ -75,6 +76,14 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     
     _passwordButton.center = CGPointMake(SCREEN_WIDTH/2, 100 + 20 + 25 );
     [self.view addSubview:_passwordButton];
+    
+    _logoutButton = [[CFButton alloc] initWithFrame:CGRectMake(0,0,140,50)];
+    [_logoutButton setTextSize:16];
+    _logoutButton.label.text = @"Logout";
+    [_logoutButton addTarget:self action:@selector(logoutButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    _logoutButton.center = CGPointMake(SCREEN_WIDTH/2, 100 + 20 + 25 + 75 * 1 );
+    [self.view addSubview:_logoutButton];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -95,6 +104,13 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 {
     PasswordViewController *pvc = [[PasswordViewController alloc] initWithIsSetup:YES];
     [self presentViewController:pvc animated:NO completion:nil];
+}
+
+-(void)logoutButtonPressed
+{
+    [PFUser logOut];
+    [UserModel logout];
+    [self.presentingViewController.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (void)didReceiveMemoryWarning

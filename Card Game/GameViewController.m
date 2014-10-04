@@ -1947,6 +1947,16 @@ BOOL leftHandViewZone = NO;
     });
 }
 
+#pragma mark MultiplayerGameProtocol
 
+-(void)setPlayerSeed:(int)seed
+{
+    [_gameModel setPlayerSeed:seed];
+}
+
+-(void)setOpponentSeed:(int)seed
+{
+    [_gameModel setOpponentSeed:seed];
+}
 
 @end
