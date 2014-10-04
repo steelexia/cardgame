@@ -555,7 +555,7 @@
         {
             if ([cardID intValue] < CARD_ID_START)
             {
-                [deck addCard:startDeck.cards[[cardID intValue]]];
+                [deck addCard:startDeck.cards[[cardID intValue]-1]]; //startDeck start at 1
             }
         }
         
