@@ -169,6 +169,7 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 
 -(void)setOpponentSeed:(uint32_t)seed;
 -(void)setPlayerSeed:(uint32_t)seed;
+-(void)setCurrentTarget:(int)targetPosition;
 
 -(int)getTargetIndex: (MonsterCardModel*)target;
 
