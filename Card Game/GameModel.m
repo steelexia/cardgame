@@ -2119,15 +2119,15 @@ uint32_t xor128(void) {
     return positionNoPosition;
 }
 
--(void)setCurrentTarget:(int)targetPosition
+-(MonsterCardModel*)getTarget:(int)targetPosition
 {
     if (targetPosition == positionHeroA)
     {
-        _opponentCurrentTarget = [_players[PLAYER_SIDE] playerMonster];
+        return [_players[PLAYER_SIDE] playerMonster];
     }
     else if (targetPosition == positionHeroB)
     {
-        _opponentCurrentTarget = [_players[OPPONENT_SIDE] playerMonster];
+        return [_players[OPPONENT_SIDE] playerMonster];
     }
     else if (targetPosition >= positionA1 && targetPosition <= positionA5)
     {
@@ -2135,7 +2135,7 @@ uint32_t xor128(void) {
         NSMutableArray*field = _battlefield[PLAYER_SIDE];
         
         if (index < field.count)
-            _opponentCurrentTarget = field[index];
+            return field[index];
         else
             NSLog(@"ERROR: Opponent tried to target an empty position on player's side");
     }
@@ -2145,10 +2145,17 @@ uint32_t xor128(void) {
         NSMutableArray*field = _battlefield[OPPONENT_SIDE];
         
         if (index < field.count)
-            _opponentCurrentTarget = field[index];
+            return field[index];
         else
             NSLog(@"ERROR: Opponent tried to target an empty position on their side");
     }
+    
+    return nil;
+}
+
+-(void)setCurrentTarget:(int)targetPosition
+{
+    _opponentCurrentTarget = [self getTarget:targetPosition];
 }
 
 +(enum CardPosition) getReversedPosition:(enum CardPosition)position

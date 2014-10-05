@@ -94,7 +94,6 @@ typedef struct {
 #import "GameModel.h"
 
 @implementation MultiplayerNetworking
-
 {
     uint32_t _ourRandomNumber;
     GameState _gameState;
@@ -141,9 +140,6 @@ typedef struct {
     } else {
         _gameState = kGameStateWaitingForRandomNumber;
     }
-    
-    //if (_isPlayer1)
-    //    [self sendSeed];
     
     [self sendRandomNumber];
     [self tryStartGame];
@@ -235,6 +231,19 @@ typedef struct {
     [self sendData:data];
 }
 
+-(void)sendAttackCard:(int)attackerPosition withTarget:(int)targetPosition
+{
+    int attacker = [GameModel getReversedPosition:attackerPosition];
+    int target = [GameModel getReversedPosition:targetPosition];
+    
+    MessageAttackCard message;
+    message.message.messageType = kMessageTypeAttackCard;
+    message.attackerPosition = attacker;
+    message.targetPosition = target;
+    NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageAttackCard)];
+    [self sendData:data];
+}
+
 // Fill the contents of tryStartGame as shown
 - (void)tryStartGame {
     if (_isPlayer1 && _gameState == kGameStateWaitingForStart) {
@@ -303,7 +312,7 @@ typedef struct {
         //[_gameDelegate setOpponentSeed:messageRandomNumber->seed];
         _opponentSeed = messageRandomNumber->seed;
         
-        NSLog(@"received seed %ud", _opponentSeed);
+        NSLog(@"received seed %u", _opponentSeed);
         
         //both have seed, start
         if (_matchMakerPresented && _opponentReceivedSeed)
@@ -357,6 +366,17 @@ typedef struct {
         NSLog(@"opponent summoned card %d %d", cardIndex, targetPosition);
         
         [_gameDelegate opponentSummonedCard:cardIndex withTarget:targetPosition];
+    }
+    else if (message->messageType == kMessageTypeAttackCard)
+    {
+        MessageAttackCard *messageAttack = (MessageAttackCard*)[data bytes];
+        
+        int attackerPosition = messageAttack->attackerPosition;
+        int targetPosition = messageAttack->targetPosition;
+        
+        NSLog(@"opponent attacked card %d %d", attackerPosition, targetPosition);
+        
+        [_gameDelegate opponentAttackCard:attackerPosition withTarget:targetPosition];
     }
 }
 

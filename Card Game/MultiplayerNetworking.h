@@ -31,6 +31,7 @@
 -(void)setOpponentSeed:(uint32_t)seed;
 -(void)opponentEndTurn;
 -(void)opponentSummonedCard:(int)cardIndex withTarget:(int)target;
+-(void)opponentAttackCard:(int)attackerPosition withTarget:(int)target;
 
 @end
 
@@ -51,6 +52,7 @@
 -(void)sendEndTurn;
 - (BOOL)isLocalPlayerPlayer1;
 -(void)sendSummonCard:(int)cardIndex withTarget:(int)targetPosition;
+-(void)sendAttackCard:(int)attackerPosition withTarget:(int)targetPosition;
 
 - (NSUInteger)indexForLocalPlayer;
 

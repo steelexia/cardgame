@@ -170,9 +170,8 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 -(void)setOpponentSeed:(uint32_t)seed;
 -(void)setPlayerSeed:(uint32_t)seed;
 -(void)setCurrentTarget:(int)targetPosition;
-
+-(MonsterCardModel*)getTarget:(int)targetPosition;
 -(int)getTargetIndex: (MonsterCardModel*)target;
-
 +(enum CardPosition) getReversedPosition:(enum CardPosition)position;
 
 @end

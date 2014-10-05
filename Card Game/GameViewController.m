@@ -161,7 +161,6 @@ BOOL leftHandViewZone = NO;
     [self updateResourceView: PLAYER_SIDE];
     [self updateResourceView: OPPONENT_SIDE];
     
-    
     self.currentNumberOfAnimations = 0; //init
     
     if (_isTutorial)
@@ -1228,6 +1227,13 @@ BOOL leftHandViewZone = NO;
         {
             if ([self.gameModel validAttack:currentCard target:(MonsterCardModel*)enemyHeroView.cardModel])
             {
+                if (_gameModel.gameMode == GameModeMultiplayer)
+                {
+                    int attackerPosition = [_gameModel getTargetIndex:(MonsterCardModel*)currentCard];
+                    
+                    [_networkingEngine sendAttackCard:attackerPosition withTarget:positionHeroB];
+                }
+                
                 [self attackHero:currentCard target:(MonsterCardModel*) enemyHeroView.cardModel fromSide:currentSide];
                 [self cardAttacksTutorial];
             }
@@ -1247,6 +1253,14 @@ BOOL leftHandViewZone = NO;
                 {
                     if ([self.gameModel validAttack:currentCard target:(MonsterCardModel*)card])
                     {
+                        if (_gameModel.gameMode == GameModeMultiplayer)
+                        {
+                            int attackerPosition = [_gameModel getTargetIndex:(MonsterCardModel*)currentCard];
+                            int targetPosition = [_gameModel getTargetIndex:(MonsterCardModel*)card];
+                            
+                            [_networkingEngine sendAttackCard:attackerPosition withTarget:targetPosition];
+                        }
+                        
                         [self attackCard:currentCard target:(MonsterCardModel*)card fromSide:currentSide];
                         [self cardAttacksTutorial];
                     }
@@ -2023,9 +2037,25 @@ BOOL leftHandViewZone = NO;
     else
     {
         //TODO there might be problems if a number of these all get called at once (<0.4 sec, since gamemodel take delay before casting)
-        [_gameModel setCurrentTarget:target];
+        [_gameModel getTarget:target];
         [self summonCard:hand[cardIndex] fromSide:OPPONENT_SIDE];
     }
+}
+
+-(void)opponentAttackCard:(int)attackerPosition withTarget:(int)target
+{
+    MonsterCardModel *attacker = [_gameModel getTarget:attackerPosition];
+    MonsterCardModel *victim = [_gameModel getTarget:target];
+    
+    if (target == positionHeroA || target == positionHeroB)
+    {
+        [self attackHero:attacker target:victim fromSide:OPPONENT_SIDE];
+    }
+    else
+    {
+        [self attackCard:attacker target:victim fromSide:OPPONENT_SIDE];
+    }
+    
 }
 
 @end
