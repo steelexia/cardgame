@@ -2094,14 +2094,17 @@ uint32_t xor128(int side) {
     }
     else
     {
-        for (int i = 0; i < [_battlefield[PLAYER_SIDE] count]; i++)
+        NSArray*playerField = _battlefield[PLAYER_SIDE];
+        for (int i = 0; i < [playerField count]; i++)
         {
             MonsterCardModel* monster = _battlefield[PLAYER_SIDE][i];
             
             if (target == monster)
                 return positionA1 + i;
         }
-        for (int i = 0; i < [_battlefield[OPPONENT_SIDE] count]; i++)
+        
+        NSArray*opponentField = _battlefield[OPPONENT_SIDE];
+        for (int i = 0; i < [opponentField count]; i++)
         {
             MonsterCardModel* monster = _battlefield[OPPONENT_SIDE][i];
             
