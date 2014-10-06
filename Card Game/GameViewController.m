@@ -2037,7 +2037,7 @@ BOOL leftHandViewZone = NO;
     else
     {
         //TODO there might be problems if a number of these all get called at once (<0.4 sec, since gamemodel take delay before casting)
-        [_gameModel getTarget:target];
+        _gameModel.opponentCurrentTarget = [_gameModel getTarget:target];
         [self summonCard:hand[cardIndex] fromSide:OPPONENT_SIDE];
     }
 }
