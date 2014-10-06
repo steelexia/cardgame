@@ -69,7 +69,7 @@ CFButton *monsterCardButton, *spellCardButton;
 
 CFButton *saveCardButton, *cancelCardButton, *customizeCardButton;
 
-CFButton *saveCardConfirmButton, *cancelCardConfirmButton, *confirmCancelButon;
+CFButton *saveCardConfirmButton, *cancelCardConfirmButton, *confirmCancelButton, *confirmErrorOkButton;
 
 UILabel *saveCardConfirmLabel, *cancelCardConfirmLabel;
 
@@ -535,12 +535,18 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     saveCardConfirmButton.center = CGPointMake(SCREEN_WIDTH/2 - 80, SCREEN_HEIGHT - 60);
     //[saveCardConfirmButton setImage:[UIImage imageNamed:@"yes_button"] forState:UIControlStateNormal];
     
-    confirmCancelButon = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
-    [confirmCancelButon setTextSize:16];
-    confirmCancelButon.label.text = @"No";
-    confirmCancelButon.center = CGPointMake(SCREEN_WIDTH/2 + 80, SCREEN_HEIGHT - 60);
+    confirmCancelButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    [confirmCancelButton setTextSize:16];
+    confirmCancelButton.label.text = @"No";
+    confirmCancelButton.center = CGPointMake(SCREEN_WIDTH/2 + 80, SCREEN_HEIGHT - 60);
     //[confirmCancelButon setImage:[UIImage imageNamed:@"no_button"] forState:UIControlStateNormal];
-    [confirmCancelButon addTarget:self action:@selector(confirmCancelButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    [confirmCancelButton addTarget:self action:@selector(confirmCancelButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    confirmErrorOkButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
+    [confirmErrorOkButton setTextSize:16];
+    confirmErrorOkButton.label.text = @"Ok";
+    confirmErrorOkButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 60);
+    [confirmErrorOkButton addTarget:self action:@selector(confirmCancelButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
     cancelCardConfirmLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/4, SCREEN_WIDTH*6/8, SCREEN_HEIGHT)];
     cancelCardConfirmLabel.textColor = [UIColor whiteColor];
@@ -1182,6 +1188,12 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     
     if (textSize.width > nameTextField.bounds.size.width)
     {
+        NSString* text = [nameTextField text];
+        while ([text hasPrefix:@" "])
+            [text substringFromIndex:1];
+        
+        [nameTextField setText:text];
+        
         do
         {
             int newSize = nameTextField.font.pointSize-1;
@@ -2611,26 +2623,49 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         }
     }
     
-    if (tutThreeWarning)
-        saveCardConfirmLabel.text = @"Warning: This card is not compatible with your last card and cannot be placed into the same deck after the tutorial. Are you sure you want to create it?";
-    else if (_editorMode == cardEditorModeVoting)
-        saveCardConfirmLabel.text = @"Are you sure you want to cast your vote? You will not be able to edit it again.";
-    else
-        saveCardConfirmLabel.text = @"Are you sure you want to create this card? You will not be able to edit it again.";
+    NSMutableArray *noDupTags = [self getTags];
     
     saveCardConfirmLabel.alpha = 0;
     saveCardConfirmButton.alpha = 0;
-    confirmCancelButon.alpha = 0;
+    confirmCancelButton.alpha = 0;
+    confirmErrorOkButton.alpha = 0;
+    
+    //check for errors
+    if ([nameTextField text].length == 0)
+    {
+        saveCardConfirmLabel.text = @"Please enter a name for your card.";
+        [self.view addSubview:confirmErrorOkButton];
+    }
+    else if (_currentCardView.cardImage.image == CARD_EDITOR_EMPTY_IMAGE)
+    {
+        saveCardConfirmLabel.text = @"Please choose an image for your card.";
+        [self.view addSubview:confirmErrorOkButton];
+    }
+    else if (noDupTags.count < 3)
+    {
+        saveCardConfirmLabel.text = @"Please enter 3 or more different tags, separated by spaces.";
+        [self.view addSubview:confirmErrorOkButton];
+    }
+    else
+    {
+        if (tutThreeWarning)
+            saveCardConfirmLabel.text = @"Warning: This card is not compatible with your last card and cannot be placed into the same deck after the tutorial. Are you sure you want to create it?";
+        else if (_editorMode == cardEditorModeVoting)
+            saveCardConfirmLabel.text = @"Are you sure you want to cast your vote? You will not be able to edit it again.";
+        else
+            saveCardConfirmLabel.text = @"Are you sure you want to create this card? You will not be able to edit it again.";
+        [self.view addSubview:saveCardConfirmButton];
+        [self.view addSubview:confirmCancelButton];
+    }
     
     [self.view addSubview:saveCardConfirmLabel];
-    [self.view addSubview:saveCardConfirmButton];
-    [self.view addSubview:confirmCancelButon];
     
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          saveCardConfirmLabel.alpha = 1;
                          saveCardConfirmButton.alpha = 1;
-                         confirmCancelButon.alpha = 1;
+                         confirmCancelButton.alpha = 1;
+                         confirmErrorOkButton.alpha = 1;
                      }
                      completion:^(BOOL completed){
                      }];
@@ -2642,17 +2677,17 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     
     cancelCardConfirmLabel.alpha = 0;
     cancelCardConfirmButton.alpha = 0;
-    confirmCancelButon.alpha = 0;
+    confirmCancelButton.alpha = 0;
     
     [self.view addSubview:cancelCardConfirmLabel];
     [self.view addSubview:cancelCardConfirmButton];
-    [self.view addSubview:confirmCancelButon];
+    [self.view addSubview:confirmCancelButton];
     
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          cancelCardConfirmLabel.alpha = 1;
                          cancelCardConfirmButton.alpha = 1;
-                         confirmCancelButon.alpha = 1;
+                         confirmCancelButton.alpha = 1;
                      }
                      completion:^(BOOL completed){
                      }];
@@ -2746,6 +2781,15 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         return;
     }
    
+    NSMutableArray *noDupTags = [self getTags];
+    
+    self.currentCardModel.tags = noDupTags;
+    [userAllCards addObject:self.currentCardModel]; 
+    [self publishCurrentCard];
+}
+
+-(NSMutableArray*) getTags
+{
     NSString *lowerTags = [tagsField.text lowercaseString];
     if (lowerTags.length > 100)
         [lowerTags substringToIndex:100];
@@ -2759,9 +2803,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
             [noDupTags addObject:string];
     }
     
-    self.currentCardModel.tags = noDupTags;
-    [userAllCards addObject:self.currentCardModel]; 
-    [self publishCurrentCard];
+    return noDupTags;
 }
 
 -(void)voteCardConfirmButtonPressed
@@ -2857,14 +2899,16 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
                          saveCardConfirmButton.alpha = 0;
                          cancelCardConfirmLabel.alpha = 0;
                          cancelCardConfirmButton.alpha = 0;
-                         confirmCancelButon.alpha = 0;
+                         confirmCancelButton.alpha = 0;
+                         confirmErrorOkButton.alpha = 0;
                      }
                      completion:^(BOOL completed){
                          [saveCardConfirmLabel removeFromSuperview];
                          [saveCardConfirmButton removeFromSuperview];
                          [cancelCardConfirmLabel removeFromSuperview];
                          [cancelCardConfirmButton removeFromSuperview];
-                         [confirmCancelButon removeFromSuperview];
+                         [confirmCancelButton removeFromSuperview];
+                         [confirmErrorOkButton removeFromSuperview];
                      }];
 }
 

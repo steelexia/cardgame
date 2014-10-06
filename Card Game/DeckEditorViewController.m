@@ -1148,7 +1148,7 @@ DeckModel * allCards;
     
     while (self.deckView.currentCells.count < MAX_CARDS_IN_DECK)
     {
-        int randomIndex = [[NSNumber numberWithUnsignedInteger:drand48()*(ownedCards.count - 1)] intValue];
+        int randomIndex = [[NSNumber numberWithUnsignedInteger:arc4random_uniform(ownedCards.count - 1)] intValue];
         
         CardModel*cardModel = ownedCards[randomIndex];
         

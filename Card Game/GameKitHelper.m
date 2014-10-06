@@ -137,12 +137,16 @@ NSString *const PresentAuthenticationViewController = @"present_authentication_v
 
 // The user has cancelled matchmaking
 - (void)matchmakerViewControllerWasCancelled:(GKMatchmakerViewController *)viewController {
-    [viewController dismissViewControllerAnimated:YES completion:nil];
+    [viewController dismissViewControllerAnimated:YES completion:^{
+        [_delegate matchCancelled];
+    }];
 }
 
 // Matchmaking has failed with an error
 - (void)matchmakerViewController:(GKMatchmakerViewController *)viewController didFailWithError:(NSError *)error {
-    [viewController dismissViewControllerAnimated:YES completion:nil];
+    [viewController dismissViewControllerAnimated:YES completion:^{
+        [_delegate matchFailed:error];
+    }];
     NSLog(@"Error finding match: %@", error.localizedDescription);
 }
 

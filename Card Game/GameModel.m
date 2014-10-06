@@ -26,10 +26,12 @@ const char PLAYER_SIDE = 0, OPPONENT_SIDE = 1;
 @synthesize gameOver = _gameOver;
 @synthesize aiPlayer = _aiPlayer;
 
+/*
 uint32_t xor128_x = 123456789;
 uint32_t xor128_y = 362436069;
 uint32_t xor128_z = 521288629;
 uint32_t xor128_w = 88675123;
+*/
 
 uint32_t oppo_xor128_x,oppo_xor128_y,oppo_xor128_z,oppo_xor128_w,player_xor128_x,player_xor128_y,player_xor128_z,player_xor128_w;
 
@@ -120,22 +122,7 @@ int cardIDCount = 0;
         }
         else if (_gameMode == GameModeMultiplayer)
         {
-            if (side == PLAYER_SIDE)
-            {
-                xor128_x = player_xor128_x;
-                xor128_y = player_xor128_y;
-                xor128_z = player_xor128_z;
-                xor128_w = player_xor128_w;
-            }
-            else if (side == OPPONENT_SIDE)
-            {
-                xor128_x = oppo_xor128_x;
-                xor128_y = oppo_xor128_y;
-                xor128_z = oppo_xor128_z;
-                xor128_w = oppo_xor128_w;
-            }
-            
-            [self multiplayerShuffleDeck:deck];
+            [self multiplayerShuffleDeck:deck side:side];
         }
         else
             [deck shuffleDeck];
@@ -1492,7 +1479,7 @@ int cardIDCount = 0;
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(drand48()*allTargets.count)]];
+        targets = @[allTargets[(int)(xor128(side)*allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomMinion)
     {
@@ -1504,7 +1491,7 @@ int cardIDCount = 0;
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(drand48()*allTargets.count)]];
+        targets = @[allTargets[(int)(xor128(side)*allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomFriendly)
     {
@@ -1515,7 +1502,7 @@ int cardIDCount = 0;
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(drand48()*allTargets.count)]];
+        targets = @[allTargets[(int)(xor128(side)*allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomFriendlyMinion)
     {
@@ -1525,7 +1512,7 @@ int cardIDCount = 0;
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(drand48()*allTargets.count)]];
+        targets = @[allTargets[(int)(xor128(side)*allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomEnemy)
     {
@@ -1535,7 +1522,7 @@ int cardIDCount = 0;
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(drand48()*allTargets.count)]];
+        targets = @[allTargets[(int)(xor128(side)*allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomEnemyMinion)
     {
@@ -1544,7 +1531,7 @@ int cardIDCount = 0;
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(drand48()*allTargets.count)]];
+        targets = @[allTargets[(int)(xor128(side)*allTargets.count)]];
     }
     else if (ability.targetType == targetHeroAny)
     {
@@ -2043,16 +2030,25 @@ int cardIDCount = 0;
     player_xor128_w = seed + 576377;
 }
 
-uint32_t xor128(void) {
-    uint32_t t = xor128_x ^ (xor128_x << 11);
-    xor128_x = xor128_y; xor128_y = xor128_z; xor128_z = xor128_w;
-    xor128_w = xor128_w ^ (xor128_w >> 19) ^ (t ^ (t >> 8));
-    //NSLog(@"random: %u", xor128_w);
-    return xor128_w;
+uint32_t xor128(int side) {
+    if (side == PLAYER_SIDE)
+    {
+        uint32_t t = player_xor128_x ^ (player_xor128_x << 11);
+        player_xor128_x = player_xor128_y; player_xor128_y = player_xor128_z; player_xor128_z = player_xor128_w;
+        player_xor128_w = player_xor128_w ^ (player_xor128_w >> 19) ^ (t ^ (t >> 8));
+        return player_xor128_w;
+    }
+    else
+    {
+        uint32_t t = oppo_xor128_x ^ (oppo_xor128_x << 11);
+        oppo_xor128_x = oppo_xor128_y; oppo_xor128_y = oppo_xor128_z; oppo_xor128_z = oppo_xor128_w;
+        oppo_xor128_w = oppo_xor128_w ^ (oppo_xor128_w >> 19) ^ (t ^ (t >> 8));
+        return oppo_xor128_w;
+    }
 }
 
 /** Uses xor128 to sort */
--(void)multiplayerShuffleDeck:(DeckModel*)deck
+-(void)multiplayerShuffleDeck:(DeckModel*)deck side:(int)side
 {
     [deck sortDeck];
     
@@ -2069,7 +2065,7 @@ uint32_t xor128(void) {
     //take a random card from original array and place into new array
     while ([deck.cards count] > 0)
     {
-        uint32_t random = xor128();
+        uint32_t random = xor128(side);
         int count = [deck.cards count]-1;
         int cardIndex;
         

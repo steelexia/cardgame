@@ -17,6 +17,8 @@ extern NSString *const LocalPlayerIsAuthenticated;
 - (void)matchEnded;
 - (void)match:(GKMatch *)match didReceiveData:(NSData *)data
    fromPlayer:(NSString *)playerID;
+-(void)matchCancelled;
+-(void)matchFailed:(NSError*)error;
 @end
 
 // Modify @interface line to support protocols as follows

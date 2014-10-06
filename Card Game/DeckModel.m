@@ -81,7 +81,7 @@ const int MAX_CARDS_IN_DECK = 20;
     //take a random card from original array and place into new array
     while ([self.cards count] > 0)
     {
-        int cardIndex = drand48()*([self.cards count]-1);
+        int cardIndex = arc4random_uniform([self.cards count]-1);
         
         [newCards addObject:self.cards[cardIndex]];
         [self.cards removeObjectAtIndex:cardIndex];

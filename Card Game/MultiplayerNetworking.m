@@ -481,5 +481,14 @@ typedef struct {
     }
 }
 
+-(void)matchCancelled
+{
+    [_delegate matchCancelled];
+}
+
+-(void)matchFailed:(NSError*)error
+{
+    [_delegate matchFailed:error];
+}
 
 @end

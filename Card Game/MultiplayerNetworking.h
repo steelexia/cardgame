@@ -17,6 +17,8 @@
 - (void)setPlayerAliases:(NSArray*)playerAliases;
 - (void)playersFound;
 - (void)receivedOpponentDeck: (NSString*) deckID;
+-(void)matchCancelled;
+-(void)matchFailed:(NSError*)error;
 @end
 
 @protocol MultiplayerDeckChooserProtocol <NSObject>

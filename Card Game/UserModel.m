@@ -111,8 +111,7 @@
              userInitError = YES;
          else
              userInfoLoaded = YES; //TODO move this if other things are loaded
-     }
-     ];
+     }];
 }
 
 +(void)updateUser:(void (^)())onFinishBlock
