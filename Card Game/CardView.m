@@ -28,15 +28,15 @@
 @synthesize mask = _mask;
 @synthesize frontFacing = _frontFacing;
 
-const int CARD_WIDTH_RATIO = 5;
-const int CARD_HEIGHT_RATIO = 8;
-const float CARD_IMAGE_RATIO = 450.f/530;
+ int CARD_WIDTH_RATIO = 5;
+ int CARD_HEIGHT_RATIO = 8;
+ float CARD_IMAGE_RATIO = 450.f/530;
 
-const double CARD_VIEWER_SCALE = 0.8;
-const double CARD_VIEWER_MAXED_SCALE = 1.25;
+ double CARD_VIEWER_SCALE = 0.8;
+ double CARD_VIEWER_MAXED_SCALE = 1.25;
 
-const float CARD_DEFAULT_SCALE = 0.4f;
-const float CARD_DRAGGING_SCALE = 1.0f;
+ float CARD_DEFAULT_SCALE = 0.4f;
+ float CARD_DRAGGING_SCALE = 1.0f;
 
 int CARD_IMAGE_WIDTH;
 int CARD_IMAGE_HEIGHT;
@@ -67,8 +67,19 @@ NSDictionary *singlePlayerCardImages;
 
 +(void) loadResources
 {
-    CARD_WIDTH = 57; //TODO ipad
-    CARD_HEIGHT = (CARD_WIDTH *  CARD_HEIGHT_RATIO / CARD_WIDTH_RATIO);
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+    {
+        CARD_WIDTH = 57;
+        CARD_HEIGHT = (CARD_WIDTH *  CARD_HEIGHT_RATIO / CARD_WIDTH_RATIO);
+    }
+    else if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        CARD_WIDTH = 114; //TODO ipad make this 2 times but also fix bunch of other stuff
+        CARD_HEIGHT = (CARD_WIDTH *  CARD_HEIGHT_RATIO / CARD_WIDTH_RATIO);
+        
+        CARD_DEFAULT_SCALE = 0.8f;
+        CARD_DRAGGING_SCALE = 2.0f;
+    }
     
     CARD_FULL_WIDTH = CARD_WIDTH/CARD_DEFAULT_SCALE;
     CARD_FULL_HEIGHT = CARD_HEIGHT/CARD_DEFAULT_SCALE;

@@ -2631,17 +2631,17 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     confirmErrorOkButton.alpha = 0;
     
     //check for errors
-    if ([nameTextField text].length == 0)
+    if ([nameTextField text].length == 0 && _editorMode != cardEditorModeVoting)
     {
         saveCardConfirmLabel.text = @"Please enter a name for your card.";
         [self.view addSubview:confirmErrorOkButton];
     }
-    else if (_currentCardView.cardImage.image == CARD_EDITOR_EMPTY_IMAGE)
+    else if (_currentCardView.cardImage.image == CARD_EDITOR_EMPTY_IMAGE && _editorMode != cardEditorModeVoting)
     {
         saveCardConfirmLabel.text = @"Please choose an image for your card.";
         [self.view addSubview:confirmErrorOkButton];
     }
-    else if (noDupTags.count < 3)
+    else if (noDupTags.count < 3 && _editorMode != cardEditorModeVoting)
     {
         saveCardConfirmLabel.text = @"Please enter 3 or more different tags, separated by spaces.";
         [self.view addSubview:confirmErrorOkButton];

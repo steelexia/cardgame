@@ -252,6 +252,8 @@
 		FA19FCAA19B4EBA200B38943 /* PasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA19FCA919B4EBA200B38943 /* PasswordViewController.m */; };
 		FA4025971956331300FCCBAB /* DeckEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4025961956331300FCCBAB /* DeckEditorViewController.m */; };
 		FA543CB119A9784000E70529 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA543CB019A9784000E70529 /* Parse.framework */; };
+		FA54990119E43A7000C8F492 /* ios_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = FA5498FF19E43A6A00C8F492 /* ios_development.cer */; };
+		FA54990219E43A7000C8F492 /* ios_distribution.cer in Resources */ = {isa = PBXBuildFile; fileRef = FA54990019E43A6A00C8F492 /* ios_distribution.cer */; };
 		FAB2D16919C3970900963ADC /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB2D16819C3970900963ADC /* LoginViewController.m */; };
 		FAB5831E19BA0AF6007BFA26 /* arrow_right_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB5831D19BA0AF6007BFA26 /* arrow_right_icon.png */; };
 		FAB5832019BA13CA007BFA26 /* arrow_down_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB5831F19BA13CA007BFA26 /* arrow_down_icon.png */; };
@@ -590,6 +592,8 @@
 		FA4025951956331300FCCBAB /* DeckEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeckEditorViewController.h; sourceTree = "<group>"; };
 		FA4025961956331300FCCBAB /* DeckEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeckEditorViewController.m; sourceTree = "<group>"; };
 		FA543CB019A9784000E70529 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "Card Game/Parse.framework"; sourceTree = "<group>"; };
+		FA5498FF19E43A6A00C8F492 /* ios_development.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = ios_development.cer; sourceTree = "<group>"; };
+		FA54990019E43A6A00C8F492 /* ios_distribution.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = ios_distribution.cer; sourceTree = "<group>"; };
 		FAB2D16719C3970900963ADC /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		FAB2D16819C3970900963ADC /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		FAB5831D19BA0AF6007BFA26 /* arrow_right_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = arrow_right_icon.png; path = "Card Game/arrow_right_icon.png"; sourceTree = "<group>"; };
@@ -1041,6 +1045,8 @@
 		90F3529D191595C200601130 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				FA5498FF19E43A6A00C8F492 /* ios_development.cer */,
+				FA54990019E43A6A00C8F492 /* ios_distribution.cer */,
 				90F63752199E7E94007B96A6 /* cardgame.mobileprovision */,
 				FA14AA6319CFC3C20080230B /* cardgamewithTien.mobileprovision */,
 				FA14AA6419CFC3C20080230B /* cardgamewithTiendistro.mobileprovision */,
@@ -1294,6 +1300,7 @@
 				90DA43C71969D21500E44AED /* remove_deck_button.png in Resources */,
 				9032E127199446BB002A6725 /* upload_from_camera_button_gray.png in Resources */,
 				907D9C2019509E850037C0CF /* battle_background_0.png in Resources */,
+				FA54990219E43A7000C8F492 /* ios_distribution.cer in Resources */,
 				90DA435B195E0BD900E44AED /* add_deck_button.png in Resources */,
 				90AB14FF196F2FF20008FCDD /* encode-sans.compressed-black.ttf in Resources */,
 				90C5289D199C369100750C54 /* filter_button_small_selected.png in Resources */,
@@ -1306,6 +1313,7 @@
 				FA033FD219BCFF6600EFEBD8 /* card_0013.png in Resources */,
 				907020731992AC8100FDE444 /* PLCameraSheetButtonPressed.png in Resources */,
 				90C52897199C2A1300750C54 /* search_button_small.png in Resources */,
+				FA54990119E43A7000C8F492 /* ios_development.cer in Resources */,
 				90AB150D197AE3CF0008FCDD /* card_ability_icon_cast_on_damaged.png in Resources */,
 				90AB14F5196CA7F90008FCDD /* card_background_front_monster_overlay.png in Resources */,
 				FA14AA5B19CCAFEB0080230B /* LinLibertine_aZL.ttf in Resources */,
@@ -1596,7 +1604,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "3CC30DCD-1F55-4E15-A2C3-D21D922750C7";
+				PROVISIONING_PROFILE = "4ba02893-a5dd-414e-a87c-bae27f90c533";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1631,7 +1639,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PROVISIONING_PROFILE = "3CC30DCD-1F55-4E15-A2C3-D21D922750C7";
+				PROVISIONING_PROFILE = "4ba02893-a5dd-414e-a87c-bae27f90c533";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -1643,8 +1651,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Brian Allen (U536PJZFA3)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Brian Allen (U536PJZFA3)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/",
@@ -1653,8 +1661,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Card Game/cardgame-Prefix.pch";
 				INFOPLIST_FILE = "Card Game/cardgame-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = cardgame;
-				PROVISIONING_PROFILE = "3a4eb5a8-06aa-428d-b828-046a1b0c76cf";
+				PROVISIONING_PROFILE = "2012f379-7f3f-4799-89a3-4bfd21295b7b";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1664,8 +1673,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Brian Allen (U536PJZFA3)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Brian Allen (U536PJZFA3)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/",
@@ -1674,8 +1683,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Card Game/cardgame-Prefix.pch";
 				INFOPLIST_FILE = "Card Game/cardgame-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = cardgame;
-				PROVISIONING_PROFILE = "3a4eb5a8-06aa-428d-b828-046a1b0c76cf";
+				PROVISIONING_PROFILE = "2012f379-7f3f-4799-89a3-4bfd21295b7b";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

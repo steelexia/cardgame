@@ -23,7 +23,7 @@
 //TODO needs to move this probably to UserModel
 
 
-const BOOL OFFLINE_DEBUGGING = YES;
+const BOOL OFFLINE_DEBUGGING = NO;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {

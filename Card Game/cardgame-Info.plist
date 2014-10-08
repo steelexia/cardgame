@@ -2,16 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIAppFonts</key>
-	<array>
-		<string>LinLibertine_RBI.ttf</string>
-		<string>LinLibertine_RI.ttf</string>
-		<string>LinLibertine_aZL.ttf</string>
-		<string>LinLibertine_aRL.ttf</string>
-		<string>LiberationSans-BoldItalic.ttf</string>
-		<string>encode-sans.compressed-bold.ttf</string>
-		<string>encode-sans.compressed-black.ttf</string>
-	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -34,6 +24,16 @@
 	<string>1.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>LinLibertine_RBI.ttf</string>
+		<string>LinLibertine_RI.ttf</string>
+		<string>LinLibertine_aZL.ttf</string>
+		<string>LinLibertine_aRL.ttf</string>
+		<string>LiberationSans-BoldItalic.ttf</string>
+		<string>encode-sans.compressed-bold.ttf</string>
+		<string>encode-sans.compressed-black.ttf</string>
+	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>Main_iPhone</string>
 	<key>UIMainStoryboardFile~ipad</key>
@@ -48,15 +48,12 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 </dict>
 </plist>

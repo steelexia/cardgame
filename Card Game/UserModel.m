@@ -588,9 +588,10 @@
         return nil;
     }
     
-    if (deck.count != [deckPF[@"cards"] count])
+    NSArray*cards = deckPF[@"cards"];
+    if (deck.count !=  [deck count])
     {
-        NSLog(@"cardPF doesn't match deck cards count %d %d", deck.count, [deckPF[@"cards"] count]);
+        NSLog(@"cardPF doesn't match deck cards count %d %d", deck.count, [cards count]);
         return nil;
     }
     

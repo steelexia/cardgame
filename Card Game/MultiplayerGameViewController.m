@@ -293,7 +293,8 @@ NSUInteger _currentPlayerIndex;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             
             DeckModel *deck = [UserModel downloadDeckFromPF:deckPF];
-            NSLog(@"count PF: %d local: %d", [deckPF[@"cards"] count], deck.count);
+            NSArray*cards = deckPF[@"cards"];
+            NSLog(@"count PF: %d local: %d", [cards count], deck.count);
             
             if (deck != nil)
             {
@@ -371,6 +372,14 @@ NSUInteger _currentPlayerIndex;
                      }];
 }
 
+-(void)matchCancelled
+{
+    //TODO
+}
 
+-(void)matchFailed:(NSError*)error
+{
+    //TODO
+}
 
 @end

@@ -260,7 +260,7 @@
             //if is charge (assuming value = 0)
             if (abilityType == abilitySetCooldown && targetType == targetSelf)
             {
-                abilityCost += monster.damage * 0.8; //having charge is equivalent in cost as having a deal damage ability
+                abilityCost += monster.damage * 0.6; //having charge is equivalent in cost as having a deal damage ability
                 //NOTE: affects cast on hit abilities' cost
             }
         }

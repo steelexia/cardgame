@@ -135,7 +135,7 @@ NSMutableArray*campaignLevels;
     level = [[Level alloc] initWithID:@"d_2_c_1_l_1"];
     level.opponentName = @"Level one hero";
     level.heroId = 1;
-    level.opponentHealth = 1;
+    //level.opponentHealth = 1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_2_c_1_l_2"];

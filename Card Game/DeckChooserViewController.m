@@ -36,7 +36,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     
     self.view.backgroundColor = COLOUR_INTERFACE_BLUE_DARK;
     
-    self.deckView = [[DeckTableView alloc] initWithFrame:CGRectMake(230,0,90,SCREEN_HEIGHT)];
+    self.deckView = [[DeckTableView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-90,0,90,SCREEN_HEIGHT)];
     
     [self.view addSubview:self.deckView];
     if (!_noPickDeck)

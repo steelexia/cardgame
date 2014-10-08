@@ -40,12 +40,15 @@ const int INITIAL_CARD_DRAW = 4;
 //TEMPORARY
 int cardIDCount = 0;
 
+enum GameMode __gameMode; //because C functions cant access
+
 -(instancetype)initWithViewController:(GameViewController *)gameViewController gameMode: (enum GameMode)gameMode withLevel:(Level*)level
 {
     self = [super init];
     
     if (self){
         self.gameMode = gameMode;
+        __gameMode = gameMode;
         self.gameViewController = gameViewController;
         _level = level;
         
@@ -2031,7 +2034,11 @@ int cardIDCount = 0;
 }
 
 uint32_t xor128(int side) {
-    if (side == PLAYER_SIDE)
+    if (__gameMode == GameModeSingleplayer)
+    {
+        return arc4random();
+    }
+    else if (side == PLAYER_SIDE)
     {
         uint32_t t = player_xor128_x ^ (player_xor128_x << 11);
         player_xor128_x = player_xor128_y; player_xor128_y = player_xor128_z; player_xor128_z = player_xor128_w;

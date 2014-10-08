@@ -342,6 +342,8 @@ BOOL leftHandViewZone = NO;
     CardView *playerHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[PLAYER_SIDE]).playerMonster viewMode:cardViewModeIngame];
     playerHeroView.frontFacing = YES;
     playerHeroView.center = CGPointMake((SCREEN_WIDTH - playerFieldEdge.bounds.size.width)/2 + PLAYER_HERO_WIDTH/2, playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*2 + PLAYER_HERO_HEIGHT/2);
+    playerHeroView.cardModel.name = userPF.username;
+    [playerHeroView updateView];
     [self.fieldView addSubview:playerHeroView];
     
     if (_level!=nil && !_level.isBossFight) //boss fight's is not the same

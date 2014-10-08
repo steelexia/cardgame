@@ -149,6 +149,7 @@ const NSString*PASSWORD_NAME = @"password";
     
     if (isNewDevice)
     {
+        NSLog(@"new device");
         [_passwordField removeFromSuperview];
         [passwordFieldBackground removeFromSuperview];
         [passwordFieldLabel removeFromSuperview];
@@ -159,6 +160,7 @@ const NSString*PASSWORD_NAME = @"password";
     }
     else
     {
+        NSLog(@"not new device");
         [self loginButtonPressed];
     }
 }
@@ -323,6 +325,7 @@ const NSString*PASSWORD_NAME = @"password";
 
 -(void)loginButtonPressed
 {
+    NSLog(@"logging in");
     NSString *username = _usernameField.text;
     NSString *password = _passwordField.text;
     

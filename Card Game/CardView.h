@@ -125,14 +125,14 @@ extern int CARD_FULL_WIDTH, CARD_FULL_HEIGHT;
 extern int PLAYER_HERO_WIDTH, PLAYER_HERO_HEIGHT;
 
 /** Scales of the card during different states */
-extern const float CARD_DEFAULT_SCALE, CARD_DRAGGING_SCALE;
+extern float CARD_DEFAULT_SCALE, CARD_DRAGGING_SCALE;
 
 /** Dimensions' ratio */
-extern const int  CARD_WIDTH_RATIO, CARD_HEIGHT_RATIO;
+extern int  CARD_WIDTH_RATIO, CARD_HEIGHT_RATIO;
 
-extern const float CARD_IMAGE_RATIO;
+extern float CARD_IMAGE_RATIO;
 
-extern const double CARD_VIEWER_SCALE, CARD_VIEWER_MAXED_SCALE;
+extern double CARD_VIEWER_SCALE, CARD_VIEWER_MAXED_SCALE;
 
 extern int CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT;
 
