@@ -408,6 +408,8 @@ NSUInteger _currentPlayerIndex;
 -(void)resetState
 {
     _playersFound = NO;
+    _opponentHasReceivedDeck = NO;
+    _deckReceived = NO;
 }
 
 -(void)opponentReceivedDeck
