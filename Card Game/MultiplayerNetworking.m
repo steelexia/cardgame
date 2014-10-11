@@ -514,5 +514,23 @@ typedef struct {
     [_delegate matchFailed:error];
 }
 
+-(void)gameOver:(int)winner
+{
+    if (winner == PLAYER_SIDE)
+    {
+        //TODO
+    }
+    else if (winner == PLAYER_SIDE)
+    {
+        //TODO
+    }
+    else
+    {
+        //TODO
+    }
+    
+    [_delegate matchEnded];
+}
+
 
 @end

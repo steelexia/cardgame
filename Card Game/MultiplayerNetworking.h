@@ -53,6 +53,7 @@
 -(void)sendAttackCard:(int)attackerPosition withTarget:(int)targetPosition;
 -(void)playerForfeit;
 -(void)sendOpponentForfeit;
+-(void)gameOver:(int)winner;
 
 - (NSUInteger)indexForLocalPlayer;
 

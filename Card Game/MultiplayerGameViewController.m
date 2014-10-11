@@ -261,12 +261,6 @@ NSUInteger _currentPlayerIndex;
 }
 
 
-- (void)matchEnded {
-    if (self.gameEndedBlock) {
-        self.gameEndedBlock();
-    }
-}
-
 - (void)movePlayerAtIndex:(NSUInteger)index {
     NSString *indexString = [NSString stringWithFormat:@"%i", index];
     
@@ -402,6 +396,11 @@ NSUInteger _currentPlayerIndex;
 -(void)matchFailed:(NSError*)error
 {
     //TODO
+    [self closeLoadingScreen];
+    [self resetState];
+}
+
+- (void)matchEnded {
     [self closeLoadingScreen];
     [self resetState];
 }

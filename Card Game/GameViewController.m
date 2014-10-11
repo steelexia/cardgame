@@ -1548,6 +1548,27 @@ BOOL leftHandViewZone = NO;
         [_networkingEngine sendOpponentForfeit];
     }
     
+    [self endGame];
+}
+
+-(void)endGame
+{
+    if (_gameMode == GameModeMultiplayer)
+    {
+        if (_gameModel.playerOneDefeated && _gameModel.playerTwoDefeated)
+        {
+            [_networkingEngine gameOver:-1];
+        }
+        else if (_gameModel.playerOneDefeated)
+        {
+            [_networkingEngine gameOver:OPPONENT_SIDE];
+        }
+        else if (_gameModel.playerTwoDefeated)
+        {
+            [_networkingEngine gameOver:PLAYER_SIDE];
+        }
+    }
+    
     if (_noPreviousView)
         [self.presentingViewController
          dismissViewControllerAnimated:YES completion:nil];
@@ -1678,7 +1699,9 @@ BOOL leftHandViewZone = NO;
             }
             //back to main menu
             else
+            {
                 [_gameOverOkButton addTarget:self action:@selector(quitConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+            }
         }
         /*}
         //has next level
@@ -1711,7 +1734,7 @@ BOOL leftHandViewZone = NO;
             _resultsLabel.text = @"Defeat!";
         }
         
-        [_gameOverOkButton addTarget:self action:@selector(quitConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+        [_gameOverOkButton addTarget:self action:@selector(endGame)    forControlEvents:UIControlEventTouchUpInside];
     }
     
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
@@ -1894,7 +1917,7 @@ BOOL leftHandViewZone = NO;
                 if (_nextLevel != nil)
                     [self beginNextLevel];
                 else
-                    [self quitConfirmButtonPressed];
+                    [self endGame];
             }
             else{
                 dispatch_sync(dispatch_get_main_queue(), ^(void) {
@@ -1914,7 +1937,7 @@ BOOL leftHandViewZone = NO;
     }
     else{
         //not supposed to happen, but here anyways
-        [self quitConfirmButtonPressed];
+        [self endGame];
     }
 }
 
