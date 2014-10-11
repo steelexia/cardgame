@@ -23,7 +23,7 @@
 @property (nonatomic, strong) MultiplayerNetworking *networkingEngine;
 
 @property (strong)GameViewController *gvc;
-@property (strong)DeckChooserViewController *dcvc;
+//@property (strong)DeckChooserViewController *dcvc;
 
 @property BOOL playersFound;
 
@@ -32,5 +32,7 @@
 @property(strong) UILabel *activityLabel;
 @property (strong)CFButton*activityFailedButton;
 @property (strong) NSString*playerOneAlias, *playerTwoAlias;
+
+@property bool opponentHasReceivedDeck, deckReceived;
 
 @end

@@ -19,13 +19,9 @@
 - (void)receivedOpponentDeck: (NSString*) deckID;
 -(void)matchCancelled;
 -(void)matchFailed:(NSError*)error;
-@end
-
-@protocol MultiplayerDeckChooserProtocol <NSObject>
-
 -(void)opponentReceivedDeck;
-
 @end
+
 
 @protocol MultiplayerGameProtocol <NSObject>
 
@@ -39,7 +35,6 @@
 
 @interface MultiplayerNetworking : NSObject<GameKitHelperDelegate>
 @property (nonatomic, assign) id<MultiplayerNetworkingProtocol> delegate;
-@property (nonatomic, assign) id<MultiplayerDeckChooserProtocol> deckChooserDelegate;
 @property (nonatomic, assign) id<MultiplayerGameProtocol> gameDelegate;
 
 @property BOOL matchMakerPresented;

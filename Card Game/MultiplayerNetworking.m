@@ -352,7 +352,7 @@ typedef struct {
         [self.delegate receivedOpponentDeck: deckID];
     } else if(message->messageType == kMessageTypeDeckIDReceived) {
         NSLog(@"Opponent received deck");
-        [self.deckChooserDelegate opponentReceivedDeck];
+        [self.delegate opponentReceivedDeck];
     } else if(message->messageType == kMessageTypeEndTurn) {
         NSLog(@"Opponent ended turn");
         [self.gameDelegate opponentEndTurn];

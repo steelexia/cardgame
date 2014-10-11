@@ -1205,7 +1205,7 @@ BOOL leftHandViewZone = NO;
             [self.handsView insertSubview:currentCard.cardView atIndex:currentCard.cardView.previousViewIndex];
             
             //update hand's view at the end
-            [self updateHandsView:currentSide];
+            [self updateHandsView:PLAYER_SIDE];
         }
         
         currentCard = nil;

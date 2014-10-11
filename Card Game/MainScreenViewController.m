@@ -191,18 +191,18 @@ UILabel *loadingLabel;
 
 -(void)singlePlayerButtonPressed
 {
-    /*
-    CampaignMenuViewController *viewController = [[CampaignMenuViewController alloc] init];
-    [self presentViewController:viewController animated:NO completion:nil];
-     */
     SinglePlayerMenuViewController *viewController = [[SinglePlayerMenuViewController alloc] init];
     [self presentViewController:viewController animated:NO completion:nil];
 }
 
 -(void)multiPlayerButtonPressed
 {
-    MultiplayerGameViewController *viewController = [[MultiplayerGameViewController alloc] init];
-    [self presentViewController:viewController animated:NO completion:nil];
+    MultiplayerGameViewController *mgvc = [[MultiplayerGameViewController alloc] init];
+    
+    DeckChooserViewController *dcv = [[DeckChooserViewController alloc] init];
+    dcv.nextScreen = mgvc;
+    dcv.isMultiplayer = YES;
+    [self presentViewController:dcv animated:YES completion:nil];
 }
 
 -(void)deckButtonPressed

@@ -67,6 +67,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
         StrokedLabel*opponentLabel = [[StrokedLabel alloc]initWithFrame:CGRectMake(0,0,200,30)];
         [opponentLabel setFont:[UIFont fontWithName:cardMainFont size:18]];
         [opponentLabel setText:@"Your Opponent:"];
+        if (_isMultiplayer)
+            [opponentLabel setText:@"Multiplayer Game"];
         [opponentLabel setTextAlignment:NSTextAlignmentCenter];
         [opponentLabel setCenter:CGPointMake(115, 40)];
         [opponentLabel setTextColor:[UIColor whiteColor]];
@@ -147,9 +149,13 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [self.deckBackground addSubview:self.chosenDeckTagsLabel];
     
     self.chooseDeckButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 90, 75)];
-    self.chooseDeckButton.buttonStyle = CFButtonStyleWarning;
+    if (!_isMultiplayer)
+        self.chooseDeckButton.buttonStyle = CFButtonStyleWarning;
+    
     self.chooseDeckButton.center = CGPointMake(115, SCREEN_HEIGHT-41);
     self.chooseDeckButton.label.text = @"Battle";
+    if (_isMultiplayer)
+        self.chooseDeckButton.label.text = @"Select";
     [self.chooseDeckButton setTextSize:22];
     
     //[self.chooseDeckButton setImage:[UIImage imageNamed:@"battle_button"] forState:UIControlStateNormal];
@@ -262,25 +268,13 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(void)receivedOpponentDeck
-{
-    NSLog(@"deckChooser receivedOpponentDeck");
-    _deckReceived = YES;
-    
-    //opponent also received deck, start
-    if(_opponentHasReceivedDeck)
-    {
-        NSLog(@"start!");
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self presentViewController:self.nextScreen animated:YES completion:nil];
-        });
-    }
-}
+
 
 -(void)battleButtonPressed
 {
     userCurrentDeck = self.currentDeck;
     
+    /*
     if (!_isMultiplayer)
         [self presentViewController:self.nextScreen animated:YES completion:nil];
     else
@@ -291,7 +285,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
         [_networkingEngine sendDeckID:self.currentDeck.objectID];
         NSLog(@"sending deck id");
         //TODO show message
-    }
+    }*/
+    [self presentViewController:self.nextScreen animated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -304,21 +299,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 #pragma mark MultiplayerDeckChooserProtocol
 
--(void)opponentReceivedDeck
-{
-    NSLog(@"deckChooser opponentReceivedDeck");
-    _opponentHasReceivedDeck = YES;
-    
-    //also received opponent's deck, both are ready
-    if (_deckReceived)
-    {
-        NSLog(@"start!");
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self presentViewController:self.nextScreen animated:YES completion:nil];
-        });
-    }
-}
+
 
 
 @end

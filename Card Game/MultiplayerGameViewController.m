@@ -91,7 +91,7 @@ NSUInteger _currentPlayerIndex;
     [_activityFailedButton addTarget:self action:@selector(activityFailedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
     //TODO prompt before this
-    [self startGameCenterButtonPressed];
+    //[self startGameCenterButtonPressed];
 }
 
 //brian sep 9
@@ -230,21 +230,24 @@ NSUInteger _currentPlayerIndex;
         [_gvc setCurrentSide:OPPONENT_SIDE];
     }
     
-    _dcvc = [[DeckChooserViewController alloc] init];
-    _dcvc.isMultiplayer = YES;
-    _dcvc.networkingEngine = _networkingEngine;
+    //_dcvc = [[DeckChooserViewController alloc] init];
+    //_dcvc.isMultiplayer = YES;
+    //_dcvc.networkingEngine = _networkingEngine;
     
-    _networkingEngine.deckChooserDelegate = _dcvc;
+    //_networkingEngine.deckChooserDelegate = _dcvc;
     _networkingEngine.gameDelegate = _gvc;
     
+    /*
     if ([_networkingEngine indexForLocalPlayer] == 0)
         _dcvc.opponentName = _playerTwoAlias;
     else
         _dcvc.opponentName = _playerOneAlias;
+    */
+    //_dcvc.nextScreen = _gvc;
     
-    _dcvc.nextScreen = _gvc;
+    //[self presentViewController:_dcvc animated:YES completion:nil];
     
-    [self presentViewController:_dcvc animated:YES completion:nil];
+    [_networkingEngine sendDeckID:userCurrentDeck.objectID];
 }
 
 
@@ -299,7 +302,7 @@ NSUInteger _currentPlayerIndex;
             if (deck != nil)
             {
                 [_gvc setOpponentDeck:deck];
-                [_dcvc receivedOpponentDeck];
+                //[_dcvc receivedOpponentDeck];
                 [_networkingEngine sendReceivedDeck]; //tells other player deck is received
                 
                 NSLog(@"finished receiving opponent deck");
@@ -380,6 +383,37 @@ NSUInteger _currentPlayerIndex;
 -(void)matchFailed:(NSError*)error
 {
     //TODO
+}
+
+-(void)opponentReceivedDeck
+{
+    NSLog(@"deckChooser opponentReceivedDeck");
+    _opponentHasReceivedDeck = YES;
+    
+    //also received opponent's deck, both are ready
+    if (_deckReceived)
+    {
+        NSLog(@"start!");
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self presentViewController:_gvc animated:YES completion:nil];
+        });
+    }
+}
+
+-(void)receivedOpponentDeck
+{
+    NSLog(@"deckChooser receivedOpponentDeck");
+    _deckReceived = YES;
+    
+    //opponent also received deck, start
+    if(_opponentHasReceivedDeck)
+    {
+        NSLog(@"start!");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self presentViewController:_gvc animated:YES completion:nil];
+        });
+    }
 }
 
 @end
