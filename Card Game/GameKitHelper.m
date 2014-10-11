@@ -61,6 +61,7 @@ NSString *const PresentAuthenticationViewController = @"present_authentication_v
         } else {
             //6
             _enableGameCenter = NO;
+            [_delegate playerNotAuthenticated];
         }
     };
 }

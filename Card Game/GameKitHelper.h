@@ -19,6 +19,7 @@ extern NSString *const LocalPlayerIsAuthenticated;
    fromPlayer:(NSString *)playerID;
 -(void)matchCancelled;
 -(void)matchFailed:(NSError*)error;
+-(void)playerNotAuthenticated;
 @end
 
 // Modify @interface line to support protocols as follows

@@ -20,6 +20,7 @@
 -(void)matchCancelled;
 -(void)matchFailed:(NSError*)error;
 -(void)opponentReceivedDeck;
+-(void)playerNotAuthenticated;
 @end
 
 

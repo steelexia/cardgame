@@ -107,6 +107,7 @@ NSUInteger _currentPlayerIndex;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerAuthenticated)
                                                  name:LocalPlayerIsAuthenticated object:nil];
+
     
     _activityIndicator.alpha = 0;
     _activityLabel.text = @"Loading Game Center...";
@@ -164,17 +165,23 @@ NSUInteger _currentPlayerIndex;
      gameKitHelper.authenticationViewController
                        animated:YES
                      completion:^{
-                         [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
-                                          animations:^{
-                                              _activityIndicator.alpha = 0;
-                                          }
-                                          completion:^(BOOL completed){
-                                              [_activityIndicator stopAnimating];
-                                              [_activityIndicator removeFromSuperview];
-                                          }];
+                         /*
+                         [self closeLoadingScreen];
+                          */
                      }];
 }
 
+-(void)closeLoadingScreen
+{
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _activityIndicator.alpha = 0;
+                     }
+                     completion:^(BOOL completed){
+                         [_activityIndicator stopAnimating];
+                         [_activityIndicator removeFromSuperview];
+                     }];
+}
 
 //brian sep 9 2014
 - (void)dealloc
@@ -221,6 +228,7 @@ NSUInteger _currentPlayerIndex;
     //[self addChildViewController:dcvc];
     NSLog(@"deck chooser");
     _gvc = [[GameViewController alloc] initWithGameMode:GameModeMultiplayer withLevel:nil];
+    _gvc.noPreviousView = YES;
     _gvc.networkingEngine = _networkingEngine;
     [_gvc setPlayerSeed:_networkingEngine.playerSeed];
     [_gvc setOpponentSeed:_networkingEngine.opponentSeed];
@@ -376,14 +384,21 @@ NSUInteger _currentPlayerIndex;
                      }];
 }
 
+-(void)playerNotAuthenticated
+{
+    [self closeLoadingScreen];
+}
+
 -(void)matchCancelled
 {
     //TODO
+    [self closeLoadingScreen];
 }
 
 -(void)matchFailed:(NSError*)error
 {
     //TODO
+    [self closeLoadingScreen];
 }
 
 -(void)opponentReceivedDeck

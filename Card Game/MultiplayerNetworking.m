@@ -481,6 +481,11 @@ typedef struct {
     }
 }
 
+-(void)playerNotAuthenticated
+{
+    [_delegate playerNotAuthenticated];
+}
+
 -(void)matchCancelled
 {
     [_delegate matchCancelled];
