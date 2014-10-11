@@ -31,7 +31,7 @@
 -(void)opponentEndTurn;
 -(void)opponentSummonedCard:(int)cardIndex withTarget:(int)target;
 -(void)opponentAttackCard:(int)attackerPosition withTarget:(int)target;
-
+-(void)opponentForfeit;
 @end
 
 @interface MultiplayerNetworking : NSObject<GameKitHelperDelegate>
@@ -51,6 +51,7 @@
 - (BOOL)isLocalPlayerPlayer1;
 -(void)sendSummonCard:(int)cardIndex withTarget:(int)targetPosition;
 -(void)sendAttackCard:(int)attackerPosition withTarget:(int)targetPosition;
+-(void)playerForfeit;
 
 - (NSUInteger)indexForLocalPlayer;
 

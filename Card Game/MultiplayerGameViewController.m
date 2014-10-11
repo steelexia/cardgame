@@ -256,6 +256,8 @@ NSUInteger _currentPlayerIndex;
     //[self presentViewController:_dcvc animated:YES completion:nil];
     
     [_networkingEngine sendDeckID:userCurrentDeck.objectID];
+    
+    _activityLabel.text = @"Starting game...";
 }
 
 
@@ -412,7 +414,9 @@ NSUInteger _currentPlayerIndex;
         NSLog(@"start!");
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self presentViewController:_gvc animated:YES completion:nil];
+            [self presentViewController:_gvc animated:YES completion:^{
+                [self closeLoadingScreen];
+            }];
         });
     }
 }
@@ -427,7 +431,10 @@ NSUInteger _currentPlayerIndex;
     {
         NSLog(@"start!");
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self presentViewController:_gvc animated:YES completion:nil];
+            [self closeLoadingScreen];
+            [self presentViewController:_gvc animated:YES completion:^{
+                [self closeLoadingScreen];
+            }];
         });
     }
 }

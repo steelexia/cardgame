@@ -1543,6 +1543,11 @@ BOOL leftHandViewZone = NO;
 
 -(void)quitConfirmButtonPressed
 {
+    if (_gameMode == GameModeMultiplayer)
+    {
+        [_networkingEngine playerForfeit];
+    }
+    
     if (_noPreviousView)
         [self.presentingViewController
          dismissViewControllerAnimated:YES completion:nil];
@@ -2062,6 +2067,14 @@ BOOL leftHandViewZone = NO;
         [self attackCard:attacker target:victim fromSide:OPPONENT_SIDE];
     }
     
+}
+
+-(void)opponentForfeit
+{
+    //TODO say opponent quit
+    _gameModel.playerTwoDefeated = YES;
+    _gameModel.gameOver = YES;
+    [_gameModel checkForGameOver];
 }
 
 @end

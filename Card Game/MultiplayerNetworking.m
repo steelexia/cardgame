@@ -31,6 +31,7 @@ typedef NS_ENUM(NSUInteger, MessageType) {
     kMessageTypeEndTurn,
     kMessageTypeSummonCard,
     kMessageTypeAttackCard,
+    kMessageTypeOpponentForfeit,
 };
 
 typedef struct {
@@ -88,6 +89,10 @@ typedef struct {
     int attackerPosition;
     int targetPosition;
 } MessageAttackCard;
+
+typedef struct {
+    Message message;
+} MessageOpponentForfeit;
 
 #import "MultiplayerNetworking.h"
 #import "MultiplayerGameViewController.h"
@@ -378,6 +383,10 @@ typedef struct {
         
         [_gameDelegate opponentAttackCard:attackerPosition withTarget:targetPosition];
     }
+    else if (message->messageType == kMessageTypeOpponentForfeit)
+    {
+        [_gameDelegate opponentForfeit];
+    }
 }
 
 -(void)processReceivedRandomNumber:(NSDictionary*)randomNumberDetails {
@@ -468,6 +477,14 @@ typedef struct {
     [self sendData:data];
 }
 
+-(void)sendOpponentForfeit
+{
+    MessageOpponentForfeit message;
+    message.message.messageType = kMessageTypeOpponentForfeit;
+    NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageOpponentForfeit)];
+    [self sendData:data];
+}
+
 - (void)processPlayerAliases {
     if ([self allRandomNumbersAreReceived]) {
         NSMutableArray *playerAliases = [NSMutableArray arrayWithCapacity:_orderOfPlayers.count];
@@ -494,6 +511,11 @@ typedef struct {
 -(void)matchFailed:(NSError*)error
 {
     [_delegate matchFailed:error];
+}
+
+-(void)playerForfeit
+{
+    [self sendOpponentForfeit];
 }
 
 @end
