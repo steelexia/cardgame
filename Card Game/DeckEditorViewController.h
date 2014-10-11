@@ -59,6 +59,9 @@
 /** Set itself automatically */
 @property BOOL isTutorial;
 
+/** Made changes to the current deck. */
+@property BOOL hasMadeChange;
+
 -(void)cardsViewFinishedScrollingAnimation;
 
 @end

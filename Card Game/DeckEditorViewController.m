@@ -351,8 +351,6 @@ DeckModel * allCards;
     _tagsPopularButton.label.text = @"Suggest";
     [_tagsPopularButton setTextSize:9];
     
-    
-
     [_propertiesView addSubview:_tagsPopularButton];
     
     UILabel*deckNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(9, 5, 45, 25)];
@@ -369,7 +367,6 @@ DeckModel * allCards;
     [_nameField setPlaceholder:@"Name your deck"];
     [_nameField setAutocorrectionType:UITextAutocorrectionTypeNo];
     [_nameField addTarget:self action:@selector(nameFieldBegan) forControlEvents:UIControlEventEditingChanged];
-    //[_nameField addTarget:self action:@selector(searchFieldFinished) forControlEvents:UIControlEventEditingDidEnd];
     [_nameField setDelegate:self];
     [_nameField.layer setBorderColor:[UIColor blackColor].CGColor];
     [_nameField.layer setBorderWidth:2];
@@ -390,8 +387,7 @@ DeckModel * allCards;
     [_tagsArea setBackgroundColor:COLOUR_INTERFACE_BLUE_LIGHT];
     _tagsArea.font = [UIFont fontWithName:cardMainFont size:16];
     [_tagsArea setAutocorrectionType:UITextAutocorrectionTypeNo];
-    //[_nameField addTarget:self action:@selector(searchFieldBegan) forControlEvents:UIControlEventEditingDidBegin];
-    //[_nameField addTarget:self action:@selector(searchFieldFinished) forControlEvents:UIControlEventEditingDidEnd];
+    //[_nameField addTarget:self action:@selector(searchFieldBegan) forControlEvents:UIControlEventEditingDidBegin];UIControlEventEditingDidEnd];
     [_tagsArea setDelegate:self];
     [_tagsArea.layer setBorderColor:[UIColor blackColor].CGColor];
     [_tagsArea.layer setBorderWidth:2];
@@ -558,6 +554,8 @@ DeckModel * allCards;
 {
     while (_nameField.text.length > 100)
         _nameField.text = [_nameField.text substringToIndex:[_nameField.text length]-1];
+    
+    _hasMadeChange = YES;
 }
 
 -(void)textViewDidChange:(UITextView *)textView
@@ -570,6 +568,8 @@ DeckModel * allCards;
     //not editable
     else if (textView == _invalidDeckReasonsLabel)
             [textView resignFirstResponder];
+    
+    _hasMadeChange = YES;
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -876,6 +876,7 @@ DeckModel * allCards;
 
 - (void) addCardToDeckPressed
 {
+    _hasMadeChange = YES;
     [currentCard removeFromSuperview];
     
     [self addCardToDeckView:currentCard.cardModel];
@@ -927,6 +928,7 @@ DeckModel * allCards;
 
 -(void) removeCardFromDeckPressed
 {
+    _hasMadeChange = YES;
     [currentCard removeFromSuperview];
     
     currentCard = nil;
@@ -1042,7 +1044,10 @@ DeckModel * allCards;
 {
     if ([self isCurrentDeckValid])
     {
-        [self saveDeck];
+        if (_hasMadeChange) //save only if made change
+            [self saveDeck];
+        else
+            [self resetAllViews];
     }
     else
     {
@@ -1296,6 +1301,8 @@ DeckModel * allCards;
 /** Setups the views for deck editing. If currentDeck is nil, assuming it's a new deck */
 -(void)setupDeckEditView
 {
+    _hasMadeChange = NO; //initialize
+    
     [backButton removeFromSuperview];
     
     [self.deckView removeAllCells];

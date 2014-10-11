@@ -664,13 +664,15 @@ enum GameMode __gameMode; //because C functions cant access
             SpellCardModel *spellCard = (SpellCardModel*) card;
             
             //check if has valid target. If one ability has no valid target then card is invalid (e.g. targets enemy hero & all enemy minions but no enemy minions on field then invalid)
+            
+            //EDIT: changed to as long as one is valid then it's valid
             for (Ability *ability in spellCard.abilities)
             {
-                if (![self abilityHasValidTargets:ability castedBy:nil side:side])
-                    return NO;
+                if ([self abilityHasValidTargets:ability castedBy:nil side:side])
+                    return YES;
             }
             
-            return YES;
+            return NO;
         }
     }
     

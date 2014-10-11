@@ -441,7 +441,7 @@ NSArray *_products;
     _ownedButton = [[CFButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
     [_ownedButton addTarget:self action:@selector(ownedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_ownedButton.dottedBorder removeFromSuperlayer];
-    _ownedButton.label.text = @"Hide bought";
+    _ownedButton.label.text = @"Hide owned";
     [_ownedButton setTextSize:11];
     _ownedButton.center = CGPointMake(60, 88);
     [_filterView addSubview:_ownedButton];
@@ -1253,8 +1253,8 @@ NSArray *_products;
     if (_likedFilter && [UserModel getLikedCardID:[cardPF[@"idNumber"] intValue]])
         return NO;
     
-    //hide cards already owned
-    if (_ownedFilter && [UserModel getOwnedCardID:[cardPF[@"idNumber"] intValue]])
+    //hide cards already owned (owns or creator is user
+    if (_ownedFilter && ([UserModel getOwnedCardID:[cardPF[@"idNumber"] intValue]] || [userPF.objectId isEqualToString:cardPF[@"creator"]]))
         return NO;
     
     if (_deckTagsFilter)
