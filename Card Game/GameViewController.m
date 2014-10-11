@@ -1546,6 +1546,7 @@ BOOL leftHandViewZone = NO;
     if (_gameMode == GameModeMultiplayer)
     {
         [_networkingEngine sendOpponentForfeit];
+        _gameModel.playerOneDefeated = YES;
     }
     
     [self endGame];
@@ -1567,6 +1568,8 @@ BOOL leftHandViewZone = NO;
         {
             [_networkingEngine gameOver:PLAYER_SIDE];
         }
+        else
+            [_networkingEngine gameOver:-1];
     }
     
     if (_noPreviousView)
