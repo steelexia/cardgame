@@ -1992,6 +1992,8 @@ enum GameMode __gameMode; //because C functions cant access
         self.gameOver = YES;
         _playerTwoDefeated = YES;
     }
+    else if (_playerTwoDefeated) //during mulitplayer
+        self.gameOver = YES;
     
     if (self.gameOver)
     {

@@ -1545,7 +1545,7 @@ BOOL leftHandViewZone = NO;
 {
     if (_gameMode == GameModeMultiplayer)
     {
-        [_networkingEngine playerForfeit];
+        [_networkingEngine sendOpponentForfeit];
     }
     
     if (_noPreviousView)
@@ -2073,7 +2073,6 @@ BOOL leftHandViewZone = NO;
 {
     //TODO say opponent quit
     _gameModel.playerTwoDefeated = YES;
-    _gameModel.gameOver = YES;
     [_gameModel checkForGameOver];
 }
 

@@ -385,6 +385,7 @@ typedef struct {
     }
     else if (message->messageType == kMessageTypeOpponentForfeit)
     {
+        NSLog(@"opponent forfeit!");
         [_gameDelegate opponentForfeit];
     }
 }
@@ -513,9 +514,5 @@ typedef struct {
     [_delegate matchFailed:error];
 }
 
--(void)playerForfeit
-{
-    [self sendOpponentForfeit];
-}
 
 @end

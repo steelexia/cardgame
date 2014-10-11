@@ -52,6 +52,7 @@
 -(void)sendSummonCard:(int)cardIndex withTarget:(int)targetPosition;
 -(void)sendAttackCard:(int)attackerPosition withTarget:(int)targetPosition;
 -(void)playerForfeit;
+-(void)sendOpponentForfeit;
 
 - (NSUInteger)indexForLocalPlayer;
 
