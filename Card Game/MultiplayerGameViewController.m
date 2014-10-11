@@ -389,18 +389,26 @@ NSUInteger _currentPlayerIndex;
 -(void)playerNotAuthenticated
 {
     [self closeLoadingScreen];
+    [self resetState];
 }
 
 -(void)matchCancelled
 {
     //TODO
     [self closeLoadingScreen];
+    [self resetState];
 }
 
 -(void)matchFailed:(NSError*)error
 {
     //TODO
     [self closeLoadingScreen];
+    [self resetState];
+}
+
+-(void)resetState
+{
+    _playersFound = NO;
 }
 
 -(void)opponentReceivedDeck
