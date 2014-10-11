@@ -884,7 +884,7 @@ BOOL leftHandViewZone = NO;
         return;
     
     //below card height, dragging cycles through cards
-    if (currentPoint.y > SCREEN_HEIGHT - CARD_HEIGHT && currentSide == PLAYER_SIDE)
+    if (currentPoint.y > SCREEN_HEIGHT - CARD_HEIGHT)
     {
         /*
          int closestDistanceFromTouch = 999999;
@@ -934,43 +934,47 @@ BOOL leftHandViewZone = NO;
         return;
     }
     
-    //touched a card on battlefield, drag a line for picking a target to attack
-    for (CardModel *card in self.gameModel.battlefield[PLAYER_SIDE]) //only player side allowed
+    //drag line of attack
+    if (currentSide == PLAYER_SIDE)
     {
-        CardView *cardView = card.cardView;
-        
-        if ([touch view] == cardView)
+        //touched a card on battlefield, drag a line for picking a target to attack
+        for (CardModel *card in self.gameModel.battlefield[PLAYER_SIDE]) //only player side allowed
         {
-            //check if card can attack
-            MonsterCardModel *monsterCard = (MonsterCardModel*) card;
-            if ([self.gameModel canAttack:monsterCard fromSide: currentSide])
+            CardView *cardView = card.cardView;
+            
+            if ([touch view] == cardView)
             {
-                //cardView.cardViewState = cardViewStateDragging; //don't change it for now
-                gameControlState = gameControlStateDraggingFieldCard;
-                currentCard = cardView.cardModel;
-                
-                attackLine.frame = CGRectMake(0,0,0,0);
-                attackLine.center = [touch locationInView:self.uiView];
-                [self.uiView addSubview:attackLine];
-                [self.uiView bringSubviewToFront:attackLine];
-                
-                //mark all valid enemy targets with highlight
-                if (currentSide == PLAYER_SIDE)
+                //check if card can attack
+                MonsterCardModel *monsterCard = (MonsterCardModel*) card;
+                if ([self.gameModel canAttack:monsterCard fromSide: currentSide])
                 {
-                    for (MonsterCardModel *enemy in self.gameModel.battlefield[OPPONENT_SIDE])
-                        if ([self.gameModel validAttack:monsterCard target:enemy])
-                            enemy.cardView.cardHighlightType = cardHighlightTarget;
+                    //cardView.cardViewState = cardViewStateDragging; //don't change it for now
+                    gameControlState = gameControlStateDraggingFieldCard;
+                    currentCard = cardView.cardModel;
                     
-                    if (!_level.isBossFight)
+                    attackLine.frame = CGRectMake(0,0,0,0);
+                    attackLine.center = [touch locationInView:self.uiView];
+                    [self.uiView addSubview:attackLine];
+                    [self.uiView bringSubviewToFront:attackLine];
+                    
+                    //mark all valid enemy targets with highlight
+                    if (currentSide == PLAYER_SIDE)
                     {
-                        PlayerModel*opponent = self.gameModel.players[OPPONENT_SIDE];
-                        if ([self.gameModel validAttack:monsterCard target:opponent.playerMonster])
-                            opponent.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
+                        for (MonsterCardModel *enemy in self.gameModel.battlefield[OPPONENT_SIDE])
+                            if ([self.gameModel validAttack:monsterCard target:enemy])
+                                enemy.cardView.cardHighlightType = cardHighlightTarget;
+                        
+                        if (!_level.isBossFight)
+                        {
+                            PlayerModel*opponent = self.gameModel.players[OPPONENT_SIDE];
+                            if ([self.gameModel validAttack:monsterCard target:opponent.playerMonster])
+                                opponent.playerMonster.cardView.cardHighlightType = cardHighlightTarget;
+                        }
                     }
                 }
+                
+                break; //break even if cannot attack
             }
-            
-            break; //break even if cannot attack
         }
     }
 }
@@ -1102,7 +1106,7 @@ BOOL leftHandViewZone = NO;
             [self scaleDraggingCard:currentCard.cardView atPoint:currentPoint];
             
             //highlight field only if can summon the card
-            if ([self.gameModel canSummonCard:currentCard side:currentSide])
+            if (currentSide == PLAYER_SIDE && [self.gameModel canSummonCard:currentCard side:currentSide])
             {
                 UIImageView *fieldHighlight = playerFieldHighlight;
                 
@@ -1136,7 +1140,7 @@ BOOL leftHandViewZone = NO;
 
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    if (_gameModel.gameOver || _viewsDisabled)
+    if (_gameModel.gameOver)
         return;
     //dragging card from hand, reverts action
     if (gameControlState == gameControlStateDraggingHandCard)
@@ -1162,7 +1166,7 @@ BOOL leftHandViewZone = NO;
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    if (_gameModel.gameOver || _viewsDisabled)
+    if (_gameModel.gameOver)
         return;
     UITouch *touch = [touches anyObject];
     CGPoint currentPoint = [touch locationInView: self.view];
@@ -1186,7 +1190,7 @@ BOOL leftHandViewZone = NO;
         
         //is possible to summon card as touchesStart checks the possibility
         //must be able to summon this card (e.g. enough space, enough resource)
-        if (CGRectContainsPoint(fieldRect.bounds, relativePoint) && [self.gameModel canSummonCard:currentCard side:currentSide])
+        if (CGRectContainsPoint(fieldRect.bounds, relativePoint) && [self.gameModel canSummonCard:currentCard side:currentSide] && currentSide == PLAYER_SIDE)
         {
             [self summonCard:currentCard fromSide:PLAYER_SIDE];
         }
