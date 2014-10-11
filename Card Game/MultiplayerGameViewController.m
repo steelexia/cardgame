@@ -303,6 +303,7 @@ NSUInteger _currentPlayerIndex;
             {
                 [_gvc setOpponentDeck:deck];
                 //[_dcvc receivedOpponentDeck];
+                [self receivedOpponentDeck];
                 [_networkingEngine sendReceivedDeck]; //tells other player deck is received
                 
                 NSLog(@"finished receiving opponent deck");
