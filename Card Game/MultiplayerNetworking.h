@@ -42,6 +42,7 @@
 @property BOOL receivedOpponentSeed;
 @property BOOL opponentReceivedSeed;
 @property uint32_t playerSeed, opponentSeed;
+@property GameKitHelper *gameKitHelper;
 
 - (void)sendMove;
 - (void)sendGameEnd:(BOOL)player1Won;

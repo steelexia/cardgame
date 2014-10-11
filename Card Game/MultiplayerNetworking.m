@@ -122,16 +122,15 @@ typedef struct {
 - (void)sendData:(NSData*)data
 {
     NSError *error;
-    GameKitHelper *gameKitHelper = [GameKitHelper sharedGameKitHelper];
-    
-    BOOL success = [gameKitHelper.match
+    _gameKitHelper = [GameKitHelper sharedGameKitHelper];
+    BOOL success = [_gameKitHelper.match
                     sendDataToAllPlayers:data
                     withDataMode:GKMatchSendDataReliable
                     error:&error];
     
     if (!success) {
         NSLog(@"Error sending data:%@", error.localizedDescription);
-        [self matchEnded];
+        [self gameOver:-1];
     }
 }
 
@@ -260,11 +259,6 @@ typedef struct {
         
         [self processPlayerAliases];
     }
-}
-
-- (void)matchEnded {
-    NSLog(@"Match has ended");
-    [_delegate matchEnded];
 }
 
 - (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
@@ -529,6 +523,7 @@ typedef struct {
         //TODO
     }
     
+    [_gameKitHelper.match disconnect];
     [_delegate matchEnded];
 }
 

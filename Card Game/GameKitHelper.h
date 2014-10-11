@@ -14,7 +14,7 @@ extern NSString *const LocalPlayerIsAuthenticated;
 @protocol GameKitHelperDelegate
 - (void)playersFound;
 - (void)matchStarted;
-- (void)matchEnded;
+- (void)gameOver:(int)winner;
 - (void)match:(GKMatch *)match didReceiveData:(NSData *)data
    fromPlayer:(NSString *)playerID;
 -(void)matchCancelled;

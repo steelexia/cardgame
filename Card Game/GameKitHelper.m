@@ -75,7 +75,7 @@ NSString *const PresentAuthenticationViewController = @"present_authentication_v
         if (error != nil) {
             NSLog(@"Error retrieving player info: %@", error.localizedDescription);
             _matchStarted = NO;
-            [_delegate matchEnded];
+            [_delegate gameOver:-1];
         } else {
             
             // Populate players dict
@@ -194,7 +194,7 @@ NSString *const PresentAuthenticationViewController = @"present_authentication_v
             // a player just disconnected.
             NSLog(@"Player disconnected!");
             _matchStarted = NO;
-            [_delegate matchEnded];
+            [_delegate gameOver:-1]; //TODO
             break;
     }
 }
@@ -206,7 +206,7 @@ NSString *const PresentAuthenticationViewController = @"present_authentication_v
     
     NSLog(@"Failed to connect to player with error: %@", error.localizedDescription);
     _matchStarted = NO;
-    [_delegate matchEnded];
+    [_delegate gameOver:-1]; //TODO
 }
 
 // The match was unable to be established with any players due to an error.
@@ -216,7 +216,7 @@ NSString *const PresentAuthenticationViewController = @"present_authentication_v
     
     NSLog(@"Match failed with error: %@", error.localizedDescription);
     _matchStarted = NO;
-    [_delegate matchEnded];
+    [_delegate gameOver:-1];
 }
 
 @end
