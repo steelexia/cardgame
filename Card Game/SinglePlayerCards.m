@@ -1319,7 +1319,21 @@
             [deck addCard:spell];
         }
         
-        //TODO missing 1 more strong creatures
+        for (int i = 0; i < 2; i++)
+        {
+            monster = [[MonsterCardModel alloc] initWithIdNumber:2009 type:cardTypeSinglePlayer];
+            monster.element = elementLight;
+            monster.rarity = cardRarityRare;
+            monster.name = @"Some Guard"; //TODO
+            monster.damage = 5300;
+            monster.life = monster.maximumLife = 6700;
+            monster.cost = 5;
+            monster.cooldown = monster.maximumCooldown = 1;
+            
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:2500]]];
+            
+            [deck addCard:monster];
+        }
     }
     else if ([levelID isEqualToString:@"d_2_c_2_l_2"])
     {
@@ -1495,7 +1509,7 @@
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2201 type:cardTypeSinglePlayer];
+            monster = [[MonsterCardModel alloc] initWithIdNumber:2202 type:cardTypeSinglePlayer];
             monster.element = elementNeutral;
             monster.rarity = cardRarityRare;
             monster.name = @"Skywhale";
@@ -1509,7 +1523,6 @@
             [deck addCard:monster];
         }
         
-        //TODO change one to the new card
         for (int i = 0; i < 2; i++)
         {
             monster = [[MonsterCardModel alloc] initWithIdNumber:2000 type:cardTypeSinglePlayer];
@@ -1538,13 +1551,16 @@
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2002 type:cardTypeSinglePlayer];
-            monster.name = @"Bird Charger";
-            monster.damage = 2700;
-            monster.life = monster.maximumLife = 1600;
-            monster.cost = 3;
+            monster = [[MonsterCardModel alloc] initWithIdNumber:2009 type:cardTypeSinglePlayer];
+            monster.element = elementLight;
+            monster.rarity = cardRarityRare;
+            monster.name = @"Some Guard"; //TODO
+            monster.damage = 5300;
+            monster.life = monster.maximumLife = 6700;
+            monster.cost = 5;
             monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+            
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:2500]]];
             
             [deck addCard:monster];
         }
@@ -1638,7 +1654,7 @@
         
         for (int i = 0; i < 8; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2300 type:cardTypeSinglePlayer];
+            spell = [[SpellCardModel alloc] initWithIdNumber:2302 type:cardTypeSinglePlayer];
             spell.rarity = cardRarityUncommon;
             spell.element = elementLight;
             spell.name = @"Goo Cannon";
@@ -1651,7 +1667,7 @@
         
         for (int i = 0; i < 8; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2300 type:cardTypeSinglePlayer];
+            spell = [[SpellCardModel alloc] initWithIdNumber:2303 type:cardTypeSinglePlayer];
             spell.rarity = cardRarityExceptional;
             spell.element = elementFire;
             spell.name = @"Broadside Volley";
@@ -1668,7 +1684,86 @@
     //----chapter 3----//
     else if ([levelID isEqualToString:@"d_2_c_3_l_1"])
     {
+        for (int i = 0; i < 2; i++)
+        {
+            monster = [[MonsterCardModel alloc] initWithIdNumber:3000 type:cardTypeSinglePlayer];
+            monster.element = elementLightning;
+            monster.rarity = cardRarityCommon;
+            monster.name = @"? Walker";
+            monster.damage = 1100;
+            monster.life = monster.maximumLife = 1100;
+            monster.cost = 1;
+            monster.cooldown = monster.maximumCooldown = 1;
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1600]]];
+            
+            [deck addCard:monster];
+        }
         
+        for (int i = 0; i < 2; i++)
+        {
+            monster = [[MonsterCardModel alloc] initWithIdNumber:3000 type:cardTypeSinglePlayer];
+            monster.element = elementIce;
+            monster.rarity = cardRarityCommon;
+            monster.name = @"? Sentry";
+            monster.damage = 800;
+            monster.life = monster.maximumLife = 3900;
+            monster.cost = 3;
+            monster.cooldown = monster.maximumCooldown = 1;
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:1200]]];
+            
+            [deck addCard:monster];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //TODO
+            monster = [[MonsterCardModel alloc] initWithIdNumber:3000 type:cardTypeSinglePlayer];
+            monster.element = elementFire;
+            monster.rarity = cardRarityCommon;
+            monster.name = @"? Walker";
+            monster.damage = 800;
+            monster.life = monster.maximumLife = 3900;
+            monster.cost = 3;
+            monster.cooldown = monster.maximumCooldown = 1;
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:1200]]];
+            
+            [deck addCard:monster];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            monster = [[MonsterCardModel alloc] initWithIdNumber:3000 type:cardTypeSinglePlayer];
+            monster.element = elementLight;
+            monster.rarity = cardRarityCommon;
+            monster.name = @"Gravity Defier Mk. II"; //support version
+            monster.damage = 0;
+            monster.life = monster.maximumLife = 5400;
+            monster.cost = 3;
+            monster.cooldown = monster.maximumCooldown = 1;
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnEndOfTurn targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+            
+            [deck addCard:monster];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //give assassin for the insane version
+            monster = [[MonsterCardModel alloc] initWithIdNumber:3000 type:cardTypeSinglePlayer];
+            monster.element = elementIce;
+            monster.rarity = cardRarityCommon;
+            monster.name = @"Gravity Defier Mk. III";
+            monster.damage = 3100;
+            monster.life = monster.maximumLife = 6500;
+            monster.cost = 3;
+            monster.cooldown = monster.maximumCooldown = 1;
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnDamaged targetType:targetHeroFriendly withDuration:durationForever withValue:[NSNumber numberWithInt:1600]]];
+            
+            [deck addCard:monster];
+        }
     }
     else if ([levelID isEqualToString:@"d_2_c_3_l_2"])
     {

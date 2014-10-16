@@ -151,23 +151,26 @@ NSMutableArray*campaignLevels;
     
     level = [[Level alloc] initWithID:@"d_2_c_1_l_4"];
     level.opponentName = @"Level four hero";
-    level.heroId = 4;
+    level.heroId = 3;
     level.isBossFight = YES;
     [campaignLevels addObject:level];
     
     //----chapter 2----//
     level = [[Level alloc] initWithID:@"d_2_c_2_l_1"];
-    //TODO keep adding id's
+    level.heroId = 4;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_2_c_2_l_2"];
+    level.heroId = 5;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_2_c_2_l_3"];
+    level.heroId = 6;
     level.breakBeforeNextLevel = NO;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_2_c_2_l_4"];
+    level.heroId = 6;
     level.isBossFight = YES;
     [campaignLevels addObject:level];
     

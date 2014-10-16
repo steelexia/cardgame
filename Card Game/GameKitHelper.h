@@ -20,6 +20,7 @@ extern NSString *const LocalPlayerIsAuthenticated;
 -(void)matchCancelled;
 -(void)matchFailed:(NSError*)error;
 -(void)playerNotAuthenticated;
+-(void)gameDisconnects:(int)winner;
 @end
 
 // Modify @interface line to support protocols as follows

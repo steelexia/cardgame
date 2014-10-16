@@ -20,7 +20,7 @@
 @property (strong)CFButton*backButton;
 @property (strong)StrokedLabel *userGoldLabel, *userLikesLabel, *userCardLabel;
 /** Cards loaded from last query. No query is required if only filters are being changed. */
-@property (strong)NSMutableArray*currentLoadedCards;
+@property (strong)NSMutableArray*currentLoadedSales;
 
 @property (strong)StrokedLabel*searchResult;
 @property(strong)UIButton* userGoldIcon, *userCardIcon;
@@ -93,6 +93,7 @@
 @property (strong) CFButton*tutOkButton;
 @property (strong) UIView*modalFilter;
 @property BOOL isModal;
+@property BOOL isSearching;
 
 /** Set itself automatically */
 @property BOOL isTutorial;

@@ -1121,6 +1121,7 @@ NSArray *_products;
 
 -(void)categoryButtonPressed:(id)sender
 {
+    _isSearching = NO;
     UIButton*senderButton = sender;
     
     int i = 0;
@@ -1993,7 +1994,7 @@ NSArray *_products;
     [salesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error){
             //load all sales without the cards
-            _currentLoadedCards = [NSMutableArray arrayWithArray: objects];
+            _currentLoadedSales = [NSMutableArray arrayWithArray: objects];
             
             [self updateFilter];
         }
@@ -2021,9 +2022,12 @@ NSArray *_products;
         NSLog(@"load more card start");
         PFQuery *salesQuery = [PFQuery queryWithClassName:@"Sale"];
         salesQuery.limit = STORE_ADDITIONAL_INCREMENT;
-        salesQuery.skip = _currentQueryLocation + _currentLoadedCards.count;
+        salesQuery.skip = _currentQueryLocation + _currentLoadedSales.count;
         NSLog(@"SKIPPING: %d",salesQuery.skip);
         [self applyFiltersToQuery:salesQuery];
+        
+        if (_isSearching)
+            [self applySearchFiltersToQuery:salesQuery];
         
         [salesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(!error){
@@ -2038,11 +2042,10 @@ NSArray *_products;
                 else
                 {
                     //load all sales without the cards
-                    [_currentLoadedCards addObjectsFromArray:objects];
-                    NSLog(@"CURRENT TOTAL: %d",_currentLoadedCards.count);
+                    [_currentLoadedSales addObjectsFromArray:objects];
+                    NSLog(@"CURRENT TOTAL: %d",_currentLoadedSales.count);
                     
                     [self updateFilterToExistingSearchToObjects:objects];
-                    
                 }
             }
             else
@@ -2050,6 +2053,7 @@ NSArray *_products;
                 _searchResult.text = @"Error while searching.";
                 NSLog(@"ERROR SEARCHING SALES");
             }
+            
             _loadingMoreCards = NO; //done
         }];
     }];
@@ -2065,7 +2069,7 @@ NSArray *_products;
     cardStoreQueryID++;
     _cardsView.currentSales = [NSMutableArray array];
     
-    for (PFObject *salePF in _currentLoadedCards)
+    for (PFObject *salePF in _currentLoadedSales)
     {
         PFObject *cardPF = salePF[@"card"];
         
@@ -2077,6 +2081,7 @@ NSArray *_products;
     
     _cardsView.currentCards = [NSMutableArray arrayWithCapacity:_cardsView.currentSales.count];
     _cardsView.currentCardsPF = [NSMutableArray arrayWithCapacity:_cardsView.currentSales.count];
+    
     for (int i = 0; i < _cardsView.currentSales.count; i++)
         [_cardsView.currentCards addObject:[NSNull null]];
     for (int i = 0; i < _cardsView.currentSales.count; i++)
@@ -2085,6 +2090,8 @@ NSArray *_products;
     [self.cardsView.loadingCells removeAllObjects];
     [self.cardsView reloadInputViews];
     [self.cardsView.collectionView reloadData];
+    
+    NSLog(@"currentCards %d", _cardsView.currentCards.count);
     
     /*
      if (_cardsView.currentCards.count == 0)
@@ -2181,6 +2188,26 @@ NSArray *_products;
     
     [self applyFiltersToQuery:salesQuery];
     
+    [self applySearchFiltersToQuery:salesQuery];
+    
+    [salesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(!error){
+            //load all sales without the cards
+            _currentLoadedSales = [NSMutableArray arrayWithArray: objects];
+            NSLog(@"%d", _currentLoadedSales.count);
+            
+            [self updateFilter];
+        }
+        else
+        {
+            _searchResult.text = @"Error while searching.";
+            NSLog(@"ERROR SEARCHING SALES");
+        }
+    }];
+}
+
+-(void)applySearchFiltersToQuery:(PFQuery *)query
+{
     //search filters
     NSString*nameSearch = _searchNameField.text;
     NSString*tagsSearch = _searchTagsField.text;
@@ -2191,9 +2218,13 @@ NSArray *_products;
         NSArray*names = [nameSearch componentsSeparatedByString:@" "];
         
         for (NSString*string in names)
-            [salesQuery whereKey:@"name" matchesRegex:string modifiers:@"i"];
+        {
+            if (string.length > 0){
+                [query whereKey:@"name" matchesRegex:string modifiers:@"i"];
+            }
+        }
     }
-
+    
     if (tagsSearch.length > 0)
     {
         NSArray*tags = [tagsSearch componentsSeparatedByString:@" "];
@@ -2201,7 +2232,7 @@ NSArray *_products;
         for (NSString*string in tags)
         {
             NSString *lowerString = [string lowercaseString];
-            [salesQuery whereKey:@"tags" equalTo:lowerString];
+            [query whereKey:@"tags" equalTo:lowerString];
         }
     }
     
@@ -2212,27 +2243,14 @@ NSArray *_products;
         
         if (idNumber != nil)
         {
-            salesQuery.limit = 1;
-            [salesQuery whereKey:@"cardID" equalTo:idNumber];
+            query.limit = 1;
+            [query whereKey:@"cardID" equalTo:idNumber];
         }
         //don't search if invalid
         else
-            salesQuery.limit = 0;
+            query.limit = 0;
     }
-    
-    [salesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if(!error){
-            //load all sales without the cards
-            _currentLoadedCards = [NSMutableArray arrayWithArray: objects];
-            
-            [self updateFilter];
-        }
-        else
-        {
-            _searchResult.text = @"Error while searching.";
-            NSLog(@"ERROR SEARCHING SALES");
-        }
-    }];
+
 }
 
 -(void)searchButtonPressed
@@ -2251,6 +2269,8 @@ NSArray *_products;
     
     //close search view
     [self setSearchViewState:NO];
+    
+    _isSearching = YES;
     
     [self searchCards];
 }

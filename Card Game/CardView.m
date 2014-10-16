@@ -201,12 +201,40 @@ NSDictionary *singlePlayerCardImages;
                                @"1006" : [UIImage imageNamed:@"card_1006"],
                                @"1100" : [UIImage imageNamed:@"card_1100"],
                                
+                               @"2000" : [UIImage imageNamed:@"card_2000"],
+                               @"2001" : [UIImage imageNamed:@"card_2001"],
+                               @"2002" : [UIImage imageNamed:@"card_2002"],
+                               @"2003" : [UIImage imageNamed:@"card_2003"],
+                               @"2004" : [UIImage imageNamed:@"card_2004"],
+                               @"2005" : [UIImage imageNamed:@"card_2005"],
+                               @"2006" : [UIImage imageNamed:@"card_2006"],
+                               @"2007" : [UIImage imageNamed:@"card_2007"],
+                               @"2008" : [UIImage imageNamed:@"card_2008"],
+                               @"2009" : [UIImage imageNamed:@"card_2009"],
+                               @"2100" : [UIImage imageNamed:@"card_2100"],
+                               @"2101" : [UIImage imageNamed:@"card_2101"],
+                               @"2102" : [UIImage imageNamed:@"card_2102"],
+                               @"2200" : [UIImage imageNamed:@"card_2200"],
+                               @"2201" : [UIImage imageNamed:@"card_2201"],
+                               @"2202" : [UIImage imageNamed:@"card_2202"],
+                               @"2300" : [UIImage imageNamed:@"card_2300"],
+                               @"2301" : [UIImage imageNamed:@"card_2301"],
+                               @"2302" : [UIImage imageNamed:@"card_2302"],
+                               @"2303" : [UIImage imageNamed:@"card_2303"],
+                               @"2400" : [UIImage imageNamed:@"card_2400"],
+                               
                                @"hero_1" : [UIImage imageNamed:@"hero_1"],
+                               @"hero_4" : [UIImage imageNamed:@"hero_4"],
+                               @"hero_5" : [UIImage imageNamed:@"hero_5"],
+                               @"hero_6" : [UIImage imageNamed:@"hero_6"],
                                };
     
     
     campaignHeroImages = @{
                            @"c_1_l_1" : [UIImage imageNamed:@"hero_c_1_l_1"],
+                           @"c_2_l_1" : [UIImage imageNamed:@"hero_c_2_l_1"],
+                           @"c_2_l_2" : [UIImage imageNamed:@"hero_c_2_l_2"],
+                           @"c_2_l_3" : [UIImage imageNamed:@"hero_c_2_l_3"],
                            };
     
     
@@ -847,8 +875,9 @@ NSDictionary *singlePlayerCardImages;
         
         //add a new line if has text
         if (abilityDescription.length > 0)
-            abilityDescription = [NSString stringWithFormat:@"%@\n", abilityDescription];
-        
+        {
+            abilityDescription = [NSString stringWithFormat:@"%@", abilityDescription];
+        }
         NSAttributedString *abilityDescriptionAS = [[NSAttributedString alloc] initWithString:abilityDescription
                                                                                    attributes:abilityTextAttributtes];
         
@@ -858,7 +887,7 @@ NSDictionary *singlePlayerCardImages;
         
         //new line if has ability
         if (abilityDescription.length > 0)
-            flavourText = [NSString stringWithFormat:@"\n%@", _cardModel.flavourText];
+            flavourText = [NSString stringWithFormat:@"\n\n%@", _cardModel.flavourText];
         else
             flavourText = [NSString stringWithFormat:@"%@", _cardModel.flavourText];
         

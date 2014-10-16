@@ -527,5 +527,9 @@ typedef struct {
     [_delegate matchEnded];
 }
 
+-(void)gameDisconnects:(int)winner
+{
+    [self gameOver:winner];
+}
 
 @end

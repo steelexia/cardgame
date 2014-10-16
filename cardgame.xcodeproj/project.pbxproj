@@ -217,7 +217,6 @@
 		FA033FC919BCFF6600EFEBD8 /* card_0004.png in Resources */ = {isa = PBXBuildFile; fileRef = FA033FB519BCFF6600EFEBD8 /* card_0004.png */; };
 		FA033FCA19BCFF6600EFEBD8 /* card_0005.png in Resources */ = {isa = PBXBuildFile; fileRef = FA033FB619BCFF6600EFEBD8 /* card_0005.png */; };
 		FA033FCB19BCFF6600EFEBD8 /* card_0006.png in Resources */ = {isa = PBXBuildFile; fileRef = FA033FB719BCFF6600EFEBD8 /* card_0006.png */; };
-		FA033FCC19BCFF6600EFEBD8 /* card_0007.png in Resources */ = {isa = PBXBuildFile; fileRef = FA033FB819BCFF6600EFEBD8 /* card_0007.png */; };
 		FA033FCD19BCFF6600EFEBD8 /* card_0008.png in Resources */ = {isa = PBXBuildFile; fileRef = FA033FB919BCFF6600EFEBD8 /* card_0008.png */; };
 		FA033FCE19BCFF6600EFEBD8 /* card_0009.png in Resources */ = {isa = PBXBuildFile; fileRef = FA033FBA19BCFF6600EFEBD8 /* card_0009.png */; };
 		FA033FCF19BCFF6600EFEBD8 /* card_0010.png in Resources */ = {isa = PBXBuildFile; fileRef = FA033FBB19BCFF6600EFEBD8 /* card_0010.png */; };
@@ -261,7 +260,36 @@
 		FAB5832519BB61FD007BFA26 /* card_1005.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB5832219BB61FD007BFA26 /* card_1005.png */; };
 		FAB5832619BB61FD007BFA26 /* card_1006.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB5832319BB61FD007BFA26 /* card_1006.png */; };
 		FAB5832819BB6205007BFA26 /* hero_c_1_l_1.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB5832719BB6205007BFA26 /* hero_c_1_l_1.png */; };
-		FAB5832A19BB670D007BFA26 /* hero_1.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB5832919BB670D007BFA26 /* hero_1.png */; };
+		FACF46A319EC850E00D334E0 /* card_0007.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46A219EC850E00D334E0 /* card_0007.png */; };
+		FACF46BC19EC852300D334E0 /* card_2000.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46A419EC852300D334E0 /* card_2000.png */; };
+		FACF46BD19EC852300D334E0 /* card_2001.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46A519EC852300D334E0 /* card_2001.png */; };
+		FACF46BE19EC852300D334E0 /* card_2002.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46A619EC852300D334E0 /* card_2002.png */; };
+		FACF46BF19EC852300D334E0 /* card_2003.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46A719EC852300D334E0 /* card_2003.png */; };
+		FACF46C019EC852300D334E0 /* card_2004.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46A819EC852300D334E0 /* card_2004.png */; };
+		FACF46C119EC852300D334E0 /* card_2005.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46A919EC852300D334E0 /* card_2005.png */; };
+		FACF46C219EC852300D334E0 /* card_2006.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46AA19EC852300D334E0 /* card_2006.png */; };
+		FACF46C319EC852300D334E0 /* card_2007.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46AB19EC852300D334E0 /* card_2007.png */; };
+		FACF46C419EC852300D334E0 /* card_2008.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46AC19EC852300D334E0 /* card_2008.png */; };
+		FACF46C519EC852300D334E0 /* card_2009.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46AD19EC852300D334E0 /* card_2009.png */; };
+		FACF46C619EC852300D334E0 /* card_2100.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46AE19EC852300D334E0 /* card_2100.png */; };
+		FACF46C719EC852300D334E0 /* card_2101.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46AF19EC852300D334E0 /* card_2101.png */; };
+		FACF46C819EC852300D334E0 /* card_2102.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46B019EC852300D334E0 /* card_2102.png */; };
+		FACF46C919EC852300D334E0 /* card_2200.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46B119EC852300D334E0 /* card_2200.png */; };
+		FACF46CA19EC852300D334E0 /* card_2201.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46B219EC852300D334E0 /* card_2201.png */; };
+		FACF46CB19EC852300D334E0 /* card_2202.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46B319EC852300D334E0 /* card_2202.png */; };
+		FACF46CC19EC852300D334E0 /* card_2300.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46B419EC852300D334E0 /* card_2300.png */; };
+		FACF46CD19EC852300D334E0 /* card_2301.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46B519EC852300D334E0 /* card_2301.png */; };
+		FACF46CE19EC852300D334E0 /* card_2302.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46B619EC852300D334E0 /* card_2302.png */; };
+		FACF46CF19EC852300D334E0 /* card_2303.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46B719EC852300D334E0 /* card_2303.png */; };
+		FACF46D019EC852300D334E0 /* card_2400.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46B819EC852300D334E0 /* card_2400.png */; };
+		FACF46D119EC852300D334E0 /* hero_c_2_l_1.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46B919EC852300D334E0 /* hero_c_2_l_1.png */; };
+		FACF46D219EC852300D334E0 /* hero_c_2_l_2.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46BA19EC852300D334E0 /* hero_c_2_l_2.png */; };
+		FACF46D319EC852300D334E0 /* hero_c_2_l_3.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46BB19EC852300D334E0 /* hero_c_2_l_3.png */; };
+		FACF46D519EC885A00D334E0 /* hero_1.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46D419EC885A00D334E0 /* hero_1.png */; };
+		FACF46D919EC8A0300D334E0 /* hero_4.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46D619EC8A0300D334E0 /* hero_4.png */; };
+		FACF46DA19EC8A0300D334E0 /* hero_5.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46D719EC8A0300D334E0 /* hero_5.png */; };
+		FACF46DB19EC8A0300D334E0 /* hero_6.png in Resources */ = {isa = PBXBuildFile; fileRef = FACF46D819EC8A0300D334E0 /* hero_6.png */; };
+		FACF46DE19ECCA7E00D334E0 /* MoveHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = FACF46DD19ECCA7E00D334E0 /* MoveHistory.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -549,7 +577,6 @@
 		FA033FB519BCFF6600EFEBD8 /* card_0004.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_0004.png; sourceTree = "<group>"; };
 		FA033FB619BCFF6600EFEBD8 /* card_0005.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_0005.png; sourceTree = "<group>"; };
 		FA033FB719BCFF6600EFEBD8 /* card_0006.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_0006.png; sourceTree = "<group>"; };
-		FA033FB819BCFF6600EFEBD8 /* card_0007.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_0007.png; sourceTree = "<group>"; };
 		FA033FB919BCFF6600EFEBD8 /* card_0008.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_0008.png; sourceTree = "<group>"; };
 		FA033FBA19BCFF6600EFEBD8 /* card_0009.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_0009.png; sourceTree = "<group>"; };
 		FA033FBB19BCFF6600EFEBD8 /* card_0010.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_0010.png; sourceTree = "<group>"; };
@@ -602,7 +629,37 @@
 		FAB5832219BB61FD007BFA26 /* card_1005.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_1005.png; sourceTree = "<group>"; };
 		FAB5832319BB61FD007BFA26 /* card_1006.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_1006.png; sourceTree = "<group>"; };
 		FAB5832719BB6205007BFA26 /* hero_c_1_l_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hero_c_1_l_1.png; sourceTree = "<group>"; };
-		FAB5832919BB670D007BFA26 /* hero_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hero_1.png; sourceTree = "<group>"; };
+		FACF46A219EC850E00D334E0 /* card_0007.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_0007.png; sourceTree = "<group>"; };
+		FACF46A419EC852300D334E0 /* card_2000.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2000.png; sourceTree = "<group>"; };
+		FACF46A519EC852300D334E0 /* card_2001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2001.png; sourceTree = "<group>"; };
+		FACF46A619EC852300D334E0 /* card_2002.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2002.png; sourceTree = "<group>"; };
+		FACF46A719EC852300D334E0 /* card_2003.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2003.png; sourceTree = "<group>"; };
+		FACF46A819EC852300D334E0 /* card_2004.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2004.png; sourceTree = "<group>"; };
+		FACF46A919EC852300D334E0 /* card_2005.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2005.png; sourceTree = "<group>"; };
+		FACF46AA19EC852300D334E0 /* card_2006.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2006.png; sourceTree = "<group>"; };
+		FACF46AB19EC852300D334E0 /* card_2007.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2007.png; sourceTree = "<group>"; };
+		FACF46AC19EC852300D334E0 /* card_2008.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2008.png; sourceTree = "<group>"; };
+		FACF46AD19EC852300D334E0 /* card_2009.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2009.png; sourceTree = "<group>"; };
+		FACF46AE19EC852300D334E0 /* card_2100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2100.png; sourceTree = "<group>"; };
+		FACF46AF19EC852300D334E0 /* card_2101.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2101.png; sourceTree = "<group>"; };
+		FACF46B019EC852300D334E0 /* card_2102.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2102.png; sourceTree = "<group>"; };
+		FACF46B119EC852300D334E0 /* card_2200.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2200.png; sourceTree = "<group>"; };
+		FACF46B219EC852300D334E0 /* card_2201.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2201.png; sourceTree = "<group>"; };
+		FACF46B319EC852300D334E0 /* card_2202.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2202.png; sourceTree = "<group>"; };
+		FACF46B419EC852300D334E0 /* card_2300.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2300.png; sourceTree = "<group>"; };
+		FACF46B519EC852300D334E0 /* card_2301.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2301.png; sourceTree = "<group>"; };
+		FACF46B619EC852300D334E0 /* card_2302.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2302.png; sourceTree = "<group>"; };
+		FACF46B719EC852300D334E0 /* card_2303.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2303.png; sourceTree = "<group>"; };
+		FACF46B819EC852300D334E0 /* card_2400.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_2400.png; sourceTree = "<group>"; };
+		FACF46B919EC852300D334E0 /* hero_c_2_l_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hero_c_2_l_1.png; sourceTree = "<group>"; };
+		FACF46BA19EC852300D334E0 /* hero_c_2_l_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hero_c_2_l_2.png; sourceTree = "<group>"; };
+		FACF46BB19EC852300D334E0 /* hero_c_2_l_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hero_c_2_l_3.png; sourceTree = "<group>"; };
+		FACF46D419EC885A00D334E0 /* hero_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hero_1.png; sourceTree = "<group>"; };
+		FACF46D619EC8A0300D334E0 /* hero_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hero_4.png; sourceTree = "<group>"; };
+		FACF46D719EC8A0300D334E0 /* hero_5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hero_5.png; sourceTree = "<group>"; };
+		FACF46D819EC8A0300D334E0 /* hero_6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hero_6.png; sourceTree = "<group>"; };
+		FACF46DC19ECCA7E00D334E0 /* MoveHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveHistory.h; sourceTree = "<group>"; };
+		FACF46DD19ECCA7E00D334E0 /* MoveHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoveHistory.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -927,6 +984,8 @@
 				90AB14F0196B5F740008FCDD /* GameInfoTableView.m */,
 				90F80F7F19A14916007571F4 /* BossBattleScreenViewController.h */,
 				90F80F8019A14916007571F4 /* BossBattleScreenViewController.m */,
+				FACF46DC19ECCA7E00D334E0 /* MoveHistory.h */,
+				FACF46DD19ECCA7E00D334E0 /* MoveHistory.m */,
 			);
 			name = "Game Battle Screen";
 			sourceTree = "<group>";
@@ -1122,8 +1181,35 @@
 				FAB5832219BB61FD007BFA26 /* card_1005.png */,
 				FAB5832319BB61FD007BFA26 /* card_1006.png */,
 				90F80F9519A29317007571F4 /* card_1100.png */,
+				FACF46A419EC852300D334E0 /* card_2000.png */,
+				FACF46A519EC852300D334E0 /* card_2001.png */,
+				FACF46A619EC852300D334E0 /* card_2002.png */,
+				FACF46A719EC852300D334E0 /* card_2003.png */,
+				FACF46A819EC852300D334E0 /* card_2004.png */,
+				FACF46A919EC852300D334E0 /* card_2005.png */,
+				FACF46AA19EC852300D334E0 /* card_2006.png */,
+				FACF46AB19EC852300D334E0 /* card_2007.png */,
+				FACF46AC19EC852300D334E0 /* card_2008.png */,
+				FACF46AD19EC852300D334E0 /* card_2009.png */,
+				FACF46AE19EC852300D334E0 /* card_2100.png */,
+				FACF46AF19EC852300D334E0 /* card_2101.png */,
+				FACF46B019EC852300D334E0 /* card_2102.png */,
+				FACF46B119EC852300D334E0 /* card_2200.png */,
+				FACF46B219EC852300D334E0 /* card_2201.png */,
+				FACF46B319EC852300D334E0 /* card_2202.png */,
+				FACF46B419EC852300D334E0 /* card_2300.png */,
+				FACF46B519EC852300D334E0 /* card_2301.png */,
+				FACF46B619EC852300D334E0 /* card_2302.png */,
+				FACF46B719EC852300D334E0 /* card_2303.png */,
+				FACF46B819EC852300D334E0 /* card_2400.png */,
 				FAB5832719BB6205007BFA26 /* hero_c_1_l_1.png */,
-				FAB5832919BB670D007BFA26 /* hero_1.png */,
+				FACF46B919EC852300D334E0 /* hero_c_2_l_1.png */,
+				FACF46BA19EC852300D334E0 /* hero_c_2_l_2.png */,
+				FACF46BB19EC852300D334E0 /* hero_c_2_l_3.png */,
+				FACF46D419EC885A00D334E0 /* hero_1.png */,
+				FACF46D619EC8A0300D334E0 /* hero_4.png */,
+				FACF46D719EC8A0300D334E0 /* hero_5.png */,
+				FACF46D819EC8A0300D334E0 /* hero_6.png */,
 			);
 			name = Singleplayer;
 			sourceTree = "<group>";
@@ -1158,7 +1244,7 @@
 				FA033FB519BCFF6600EFEBD8 /* card_0004.png */,
 				FA033FB619BCFF6600EFEBD8 /* card_0005.png */,
 				FA033FB719BCFF6600EFEBD8 /* card_0006.png */,
-				FA033FB819BCFF6600EFEBD8 /* card_0007.png */,
+				FACF46A219EC850E00D334E0 /* card_0007.png */,
 				FA033FB919BCFF6600EFEBD8 /* card_0008.png */,
 				FA033FBA19BCFF6600EFEBD8 /* card_0009.png */,
 				FA033FBB19BCFF6600EFEBD8 /* card_0010.png */,
@@ -1275,6 +1361,7 @@
 				90DA434C195B7C0300E44AED /* card_background_front_neutral_common_icon.png in Resources */,
 				90DA4371195F96DB00E44AED /* decrement_button.png in Resources */,
 				90F63753199E7E94007B96A6 /* cardgame.mobileprovision in Resources */,
+				FACF46C419EC852300D334E0 /* card_2008.png in Resources */,
 				90DA43C51969D21500E44AED /* add_deck_button_gray.png in Resources */,
 				90DA43BC1969D21500E44AED /* back_button.png in Resources */,
 				9032E13D199918F8002A6725 /* category_tab_enabled.png in Resources */,
@@ -1288,22 +1375,30 @@
 				90DA43BF1969D21500E44AED /* monster_button.png in Resources */,
 				90456EE7198F1B9100B807DC /* like_button_gray.png in Resources */,
 				90DA4358195E023600E44AED /* no_button.png in Resources */,
+				FACF46BE19EC852300D334E0 /* card_2002.png in Resources */,
 				FA033FC919BCFF6600EFEBD8 /* card_0004.png in Resources */,
 				90DA4350195DF3C500E44AED /* save_deck_button.png in Resources */,
 				FA14AA5719CC81A20080230B /* LinLibertine_RI.ttf in Resources */,
 				90456EE8198F1B9100B807DC /* like_button.png in Resources */,
+				FACF46D919EC8A0300D334E0 /* hero_4.png in Resources */,
 				FA14AA6619CFC3C20080230B /* cardgamewithTiendistro.mobileprovision in Resources */,
 				90F80F9119A27FA5007571F4 /* SSKeychain.strings in Resources */,
 				FA033FCD19BCFF6600EFEBD8 /* card_0008.png in Resources */,
+				FACF46D119EC852300D334E0 /* hero_c_2_l_1.png in Resources */,
+				FACF46D519EC885A00D334E0 /* hero_1.png in Resources */,
+				FACF46C719EC852300D334E0 /* card_2101.png in Resources */,
 				90AB1500196F2FF20008FCDD /* encode-sans.compressed-bold.ttf in Resources */,
 				90AB15041979FFA40008FCDD /* battle_background_0_overlay.png in Resources */,
 				90DA43C71969D21500E44AED /* remove_deck_button.png in Resources */,
 				9032E127199446BB002A6725 /* upload_from_camera_button_gray.png in Resources */,
 				907D9C2019509E850037C0CF /* battle_background_0.png in Resources */,
+				FACF46C019EC852300D334E0 /* card_2004.png in Resources */,
+				FACF46A319EC850E00D334E0 /* card_0007.png in Resources */,
 				FA54990219E43A7000C8F492 /* ios_distribution.cer in Resources */,
 				90DA435B195E0BD900E44AED /* add_deck_button.png in Resources */,
 				90AB14FF196F2FF20008FCDD /* encode-sans.compressed-black.ttf in Resources */,
 				90C5289D199C369100750C54 /* filter_button_small_selected.png in Resources */,
+				FACF46CF19EC852300D334E0 /* card_2303.png in Resources */,
 				FA19FC8E19B2580900B38943 /* card_1003.png in Resources */,
 				90AB14F3196CA7E60008FCDD /* card_background_front_overlay_common.png in Resources */,
 				FA033FD719BCFF6600EFEBD8 /* card_0018.png in Resources */,
@@ -1318,11 +1413,14 @@
 				90AB14F5196CA7F90008FCDD /* card_background_front_monster_overlay.png in Resources */,
 				FA14AA5B19CCAFEB0080230B /* LinLibertine_aZL.ttf in Resources */,
 				90F80F9719A29317007571F4 /* card_1100.png in Resources */,
+				FACF46CB19EC852300D334E0 /* card_2202.png in Resources */,
 				907020741992AC8100FDE444 /* PLCameraSheetButtonPressed@2x.png in Resources */,
 				90DA4372195F96DB00E44AED /* increment_button.png in Resources */,
 				90C5289E199C369100750C54 /* search_button_small_selected.png in Resources */,
 				9069AAE3195501AB006D1D98 /* card_background_front_fire_common.png in Resources */,
+				FACF46DB19EC8A0300D334E0 /* hero_6.png in Resources */,
 				FA14AA6519CFC3C20080230B /* cardgamewithTien.mobileprovision in Resources */,
+				FACF46C219EC852300D334E0 /* card_2006.png in Resources */,
 				FAB5831E19BA0AF6007BFA26 /* arrow_right_icon.png in Resources */,
 				9032E142199946F9002A6725 /* add_icon.png in Resources */,
 				90AB15021979FB5E0008FCDD /* resource_icon.png in Resources */,
@@ -1337,6 +1435,8 @@
 				9069AACF1951E737006D1D98 /* Main_iPad.storyboard in Resources */,
 				9069AAE5195501AB006D1D98 /* card_background_front_light_common.png in Resources */,
 				90C52894199C00D000750C54 /* card_icon_gray.png in Resources */,
+				FACF46C919EC852300D334E0 /* card_2200.png in Resources */,
+				FACF46CA19EC852300D334E0 /* card_2201.png in Resources */,
 				9069AACE1951E734006D1D98 /* Main_iPhone.storyboard in Resources */,
 				90AB150E197AE3CF0008FCDD /* card_ability_icon_pierce.png in Resources */,
 				FA033FCF19BCFF6600EFEBD8 /* card_0010.png in Resources */,
@@ -1349,6 +1449,7 @@
 				90C52890199BE53E00750C54 /* search_button.png in Resources */,
 				9070204D19915FD500FDE444 /* card_background_front_overlay_rare.png in Resources */,
 				90DA434E195C941400E44AED /* add_button_gray.png in Resources */,
+				FACF46DA19EC8A0300D334E0 /* hero_5.png in Resources */,
 				90DA43C21969D21500E44AED /* cancel_card_button.png in Resources */,
 				907020531992A1CB00FDE444 /* upload_from_camera_button.png in Resources */,
 				90DA4340195A4A6E00E44AED /* add_button.png in Resources */,
@@ -1365,32 +1466,40 @@
 				907020761992AC8100FDE444 /* PLCameraSheetDoneButton@2x.png in Resources */,
 				FA033FD319BCFF6600EFEBD8 /* card_0014.png in Resources */,
 				90DA43BE1969D21500E44AED /* monster_button_gray.png in Resources */,
+				FACF46BD19EC852300D334E0 /* card_2001.png in Resources */,
 				FAB5832619BB61FD007BFA26 /* card_1006.png in Resources */,
 				FA19FC8C19B2580900B38943 /* card_1001.png in Resources */,
 				90AB150A197AD6DA0008FCDD /* card_ability_icon_cast_on_move.png in Resources */,
 				90AB1516198355F00008FCDD /* points_icon.png in Resources */,
+				FACF46C319EC852300D334E0 /* card_2007.png in Resources */,
 				90DA43C01969D21500E44AED /* spell_button_gray.png in Resources */,
+				FACF46D219EC852300D334E0 /* hero_c_2_l_2.png in Resources */,
 				90DA43BA1969D21500E44AED /* battle_button_gray.png in Resources */,
 				907020781992AC8100FDE444 /* PLCameraSheetDoneButtonPressed@2x.png in Resources */,
 				907020501992937E00FDE444 /* points_icon_card_creator.png in Resources */,
+				FACF46C519EC852300D334E0 /* card_2009.png in Resources */,
 				FA14AA5919CC95670080230B /* LinLibertine_RBI.ttf in Resources */,
 				90F80FA119A3D3D9007571F4 /* arrow_left_icon.png in Resources */,
 				90DA437519608F4D00E44AED /* increment_button_gray.png in Resources */,
 				907D9BF7192E979C0037C0CF /* hero_glow_select.png in Resources */,
 				9069AAE2195501AB006D1D98 /* card_background_front_earth_common.png in Resources */,
+				FACF46D319EC852300D334E0 /* hero_c_2_l_3.png in Resources */,
 				90AB1514197AF4590008FCDD /* card_ability_icon_cast_on_death.png in Resources */,
 				90456EE6198F1B9100B807DC /* edit_button.png in Resources */,
 				907D9BF1192D3DFB0037C0CF /* card_image_placeholder.png in Resources */,
 				9069AAE6195501AB006D1D98 /* card_background_front_lightning_common.png in Resources */,
 				907D9BDC192270DE0037C0CF /* field_edge.png in Resources */,
 				FA19FC9019B258D200B38943 /* card_1002.png in Resources */,
+				FACF46C619EC852300D334E0 /* card_2100.png in Resources */,
 				90DA433D195A451000E44AED /* arrow_right_button.png in Resources */,
 				90C5289A199C304D00750C54 /* popular_tags_button_small.png in Resources */,
+				FACF46CD19EC852300D334E0 /* card_2301.png in Resources */,
 				FA033FD519BCFF6600EFEBD8 /* card_0016.png in Resources */,
 				90DA433C195A451000E44AED /* arrow_left_button.png in Resources */,
 				907020751992AC8100FDE444 /* PLCameraSheetDoneButton.png in Resources */,
 				90DA43BB1969D21500E44AED /* battle_button.png in Resources */,
 				FA033FD819BCFF6600EFEBD8 /* card_0019.png in Resources */,
+				FACF46BC19EC852300D334E0 /* card_2000.png in Resources */,
 				9032E13419984875002A6725 /* toggle_button_on.png in Resources */,
 				907D9BF5192E91290037C0CF /* card_glow_select.png in Resources */,
 				9069AAE4195501AB006D1D98 /* card_background_front_ice_common.png in Resources */,
@@ -1399,18 +1508,20 @@
 				90F7DAF91999AE5100D4FD97 /* invalid_deck_button.png in Resources */,
 				FAB5832019BA13CA007BFA26 /* arrow_down_icon.png in Resources */,
 				907D9BE11922AE0D0037C0CF /* field_highlight.png in Resources */,
+				FACF46C819EC852300D334E0 /* card_2102.png in Resources */,
 				90DA4341195A4A6E00E44AED /* remove_button.png in Resources */,
 				90AB14F7196CB7720008FCDD /* no_target_button.png in Resources */,
 				90DA43BD1969D21500E44AED /* randomize_card_button.png in Resources */,
 				9032E14419994DD9002A6725 /* sell_button.png in Resources */,
 				90DA43C61969D21500E44AED /* remove_deck_button_gray.png in Resources */,
-				FAB5832A19BB670D007BFA26 /* hero_1.png in Resources */,
 				9069AAD519520003006D1D98 /* card_background_front_overlay.png in Resources */,
 				90DA437619608F4D00E44AED /* decrement_button_gray.png in Resources */,
 				90C528A3199D613B00750C54 /* screen_background_center.png in Resources */,
+				FACF46C119EC852300D334E0 /* card_2005.png in Resources */,
 				9032E13E199918F8002A6725 /* category_tab_disabled.png in Resources */,
 				90C52892199BE87500750C54 /* search_toggle_button.png in Resources */,
 				D31E2CAF19BFE999002E1934 /* MultiplayerGameViewController.xib in Resources */,
+				FACF46CC19EC852300D334E0 /* card_2300.png in Resources */,
 				FA033FCB19BCFF6600EFEBD8 /* card_0006.png in Resources */,
 				90C528A2199D613B00750C54 /* screen_background_bottom.png in Resources */,
 				90F352A1191595C200601130 /* InfoPlist.strings in Resources */,
@@ -1424,14 +1535,16 @@
 				90F80F9819A29317007571F4 /* card_1000.png in Resources */,
 				9032E13819986121002A6725 /* filter_button.png in Resources */,
 				90F80FA319A63F4C007571F4 /* card_image_cardeditor_empty.png in Resources */,
+				FACF46D019EC852300D334E0 /* card_2400.png in Resources */,
 				907D9BFD192FD35F0037C0CF /* card_glow_target.png in Resources */,
 				90456EE3198F1B9100B807DC /* buy_button_gray.png in Resources */,
+				FACF46CE19EC852300D334E0 /* card_2302.png in Resources */,
 				907020711992AC8100FDE444 /* PLCameraSheetButton.png in Resources */,
-				FA033FCC19BCFF6600EFEBD8 /* card_0007.png in Resources */,
 				90F352CF191595F400601130 /* card_background_front.png in Resources */,
 				90AB1506197AC71E0008FCDD /* card_ability_icon_taunt.png in Resources */,
 				907D9BFF192FD3910037C0CF /* hero_glow_target.png in Resources */,
 				9070204B19915FD500FDE444 /* card_background_front_overlay_legendary.png in Resources */,
+				FACF46BF19EC852300D334E0 /* card_2003.png in Resources */,
 				90DA4359195E023600E44AED /* ok_button.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1491,6 +1604,7 @@
 				9032E13019959483002A6725 /* CardPointsUtility.m in Sources */,
 				90DA4344195B256100E44AED /* DeckTableView.m in Sources */,
 				D31E2CB419BFF502002E1934 /* MultiplayerNetworking.m in Sources */,
+				FACF46DE19ECCA7E00D334E0 /* MoveHistory.m in Sources */,
 				90C528A7199D6CC100750C54 /* CFButton.m in Sources */,
 				90AB14FA196EF4360008FCDD /* AIPlayer+Utility.m in Sources */,
 				90F352A3191595C200601130 /* main.m in Sources */,

@@ -7,11 +7,12 @@
 //
 
 #import "GameKitHelper.h"
+#import "GameModel.h"
 
 @implementation GameKitHelper
 {
  BOOL _enableGameCenter;
-BOOL _matchStarted;
+ BOOL _matchStarted;
 }
 NSString *const LocalPlayerIsAuthenticated = @"local_player_authenticated";
 NSString *const PresentAuthenticationViewController = @"present_authentication_view_controller";
@@ -194,7 +195,7 @@ NSString *const PresentAuthenticationViewController = @"present_authentication_v
             // a player just disconnected.
             NSLog(@"Player disconnected!");
             _matchStarted = NO;
-            [_delegate gameOver:-1]; //TODO
+            [_delegate gameDisconnects:PLAYER_SIDE]; //TODO
             break;
     }
 }
@@ -206,7 +207,7 @@ NSString *const PresentAuthenticationViewController = @"present_authentication_v
     
     NSLog(@"Failed to connect to player with error: %@", error.localizedDescription);
     _matchStarted = NO;
-    [_delegate gameOver:-1]; //TODO
+    [_delegate gameDisconnects:-1]; //TODO
 }
 
 // The match was unable to be established with any players due to an error.

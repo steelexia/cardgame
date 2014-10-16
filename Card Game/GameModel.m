@@ -905,17 +905,13 @@ enum GameMode __gameMode; //because C functions cant access
                 
                 if (willReceiveAttack)
                 {
-                    if (ability.castType == castOnDamaged)
-                    {
-                        [self castAbility:ability byMonsterCard:target toMonsterCard:attackerMonsterCard fromSide:oppositeSide];
-                    }
-                    
+                    [self castAbility:ability byMonsterCard:target toMonsterCard:attackerMonsterCard fromSide:oppositeSide];
                 }
                 //assassin will dodge the targeting (but still get hit if for example it was deal damage to all)
                 else
                 {
                     //to fix the animation
-                    [self castAbility:ability byMonsterCard:target toMonsterCard:attackerMonsterCard fromSide:oppositeSide];
+                    [self castAbility:ability byMonsterCard:target toMonsterCard:nil fromSide:oppositeSide];
                 }
             }
         }
