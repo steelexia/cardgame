@@ -13,7 +13,6 @@
 #import "PickIAPHelper.h"
 #import "LoginViewController.h"
 
-
 @implementation AppDelegate
 
 @synthesize managedObjectContext = _managedObjectContext;
@@ -36,6 +35,7 @@ const BOOL OFFLINE_DEBUGGING = NO;
     [AbilityWrapper loadAllAbilities];
     [CardView loadResources];
     [Campaign loadResources];
+    
     
     userCDContext = [self managedObjectContext];
     

@@ -16,6 +16,8 @@
 +(Level*)getNextLevelWithLevelID:(NSString*)levelID;
 +(NSString*)getChapterDescription:(int)chapter;
 
++(Level*)quickMatchLevel;
+
 @end
 
 extern const int NUMBER_OF_DIFFICULTIES, NUMBER_OF_CHAPTERS;

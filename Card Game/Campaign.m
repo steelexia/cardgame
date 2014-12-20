@@ -19,10 +19,27 @@ const NSString *TUTORIAL_ONE = @"d_1_c_1_l_1",*TUTORIAL_TWO = @"d_1_c_1_l_2",*TU
 /** 2D array storing all levels */
 NSMutableArray*campaignLevels;
 
+Level*quickMatchLevel;
+
++(Level*)quickMatchLevel
+{
+    return quickMatchLevel;
+}
+
 +(void)loadResources
 {
+    [SinglePlayerCards loadCampaignCards];
+    
+    //special levels for special modes
+    quickMatchLevel = [[Level alloc] initWithID:@"quick_match"];
+    quickMatchLevel.opponentName = @"Quick Match"; //TODO
+    quickMatchLevel.heroId = 0; //TODO
+    quickMatchLevel.goldReward = 20;
+    
     campaignLevels = [NSMutableArray arrayWithCapacity:3*3*4];
     Level *level;
+    
+    
     
     /**
      NOTES:
@@ -79,26 +96,26 @@ NSMutableArray*campaignLevels;
     //----chapter 2----//
     level = [[Level alloc] initWithID:@"d_1_c_2_l_1"];
     level.opponentName = @"Level four";
-    level.heroId = 5;
+    level.heroId = 4;
     level.difficultyOffset = -1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_2_l_2"];
     level.opponentName = @"Level five";
-    level.heroId = 6;
+    level.heroId = 5;
     level.difficultyOffset = -1;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_2_l_3"];
     level.opponentName = @"Level six";
-    level.heroId = 7;
+    level.heroId = 6;
     level.difficultyOffset = -1;
     level.breakBeforeNextLevel = NO;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_2_l_4"];
     level.opponentName = @"Chapter two boss";
-    level.heroId = 8;
+    level.heroId = 7;
     level.difficultyOffset = -1;
     level.isBossFight = YES;
     [campaignLevels addObject:level];
@@ -161,6 +178,7 @@ NSMutableArray*campaignLevels;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_2_c_2_l_2"];
+    level.opponentName = @"Senior General";
     level.heroId = 5;
     [campaignLevels addObject:level];
     

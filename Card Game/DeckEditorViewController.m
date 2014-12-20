@@ -644,11 +644,13 @@ DeckModel * allCards;
                     [self setFilterViewState:NO];
             }
         }
-        else if ([cardView.superview isKindOfClass:[UIScrollView class]])
+        else if ([cardView.superview isKindOfClass:[UIScrollView class]] || [cardView.superview isKindOfClass:[UITableViewCell class]]) //depends on SDK
         {
+            NSLog(@"side");
             //nearly identical code with cardview
             if (cardView != currentCard && currentCard == nil)
             {
+                NSLog(@"side opened");
                 CardView*newMaximizedView = [[CardView alloc] initWithModel:cardView.cardModel viewMode:cardViewModeEditor]; //constructor also modifies monster's cardView pointer
                 newMaximizedView.frontFacing = YES;
                 [newMaximizedView setCardViewState:cardView.cardViewState];

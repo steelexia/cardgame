@@ -24,5 +24,6 @@
 +(DeckModel*) getStartingDeck;
 
 +(void)uploadPlayerDeck;
++ (void) loadCampaignCards;
 
 @end

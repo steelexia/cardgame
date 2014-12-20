@@ -10,6 +10,7 @@
 #import "GameViewController.h"
 #import "DeckChooserViewController.h"
 #import "CampaignMenuViewController.h"
+#import "Campaign.h"
 
 @interface SinglePlayerMenuViewController ()
 
@@ -96,7 +97,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void)quickMatchButtonPressed
 {
-    GameViewController *gvc = [[GameViewController alloc] init];
+    GameViewController *gvc = [[GameViewController alloc] initWithGameMode:GameModeSingleplayer withLevel:[Campaign quickMatchLevel]];
+    
     DeckChooserViewController*dcvc = [[DeckChooserViewController alloc]init];
     dcvc.nextScreen = gvc;
     [self presentViewController:dcvc animated:YES completion:nil];

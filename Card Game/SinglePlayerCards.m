@@ -16,6 +16,9 @@
  
  */
 
+/* Stores NSString as key plus card */
+NSMutableDictionary * campaignCards;
+
 
 +(MonsterCardModel*) getCampaignBossWithID:(NSString*)levelID
 {
@@ -121,165 +124,82 @@
         //NOT SHUFFLED
         
         //turn 1
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1000 type:cardTypeSinglePlayer];
-        monster.name = @"Goblin Fighter";
-        monster.damage = 1200;
-        monster.life = monster.maximumLife = 900;
-        monster.cost = 1;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];
-        
+        //gob fighter
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1000"]]];
+
         //so the hand appears to be full but won't play any card
         /*
-        for (int i = 0; i < 2; i++)
-        {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:999999 type:cardTypeSinglePlayer];
-            monster.name = @"Dummy Card";
-            monster.damage = 100;
-            monster.life = monster.maximumLife = 100;
-            monster.cost = 99;
-            monster.cooldown = monster.maximumCooldown = 1;
-            
-            [deck addCard:monster];
-        }*/
+         for (int i = 0; i < 2; i++)
+         {
+         monster = [[MonsterCardModel alloc] initWithIdNumber:999999 type:cardTypeSinglePlayer];
+         monster.name = @"Dummy Card";
+         monster.damage = 100;
+         monster.life = monster.maximumLife = 100;
+         monster.cost = 99;
+         monster.cooldown = monster.maximumCooldown = 1;
+         
+         [deck addCard:monster];
+         }*/
         
         //turn 2
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1003 type:cardTypeSinglePlayer];
-        monster.name = @"Goblin Raider";
-        monster.damage = 1600;
-        monster.life = monster.maximumLife = 1400;
-        monster.cost = 2;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];
+        //gob raider
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1003"]]];
+
         
         //turn 3 shows taunt ability WARNING: do not change ID, do not add another spearman
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1002 type:cardTypeSinglePlayer];
-        monster.rarity = cardRarityUncommon;
-        monster.name = @"Goblin Spearman";
-        monster.damage = 900;
-        monster.life = monster.maximumLife = 3800;
-        monster.cost = 3;
-        monster.cooldown = monster.maximumCooldown = 1;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-        
-        [deck addCard:monster];
+        //gob spearman
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1002"]]];
 
-        //turn 4
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1004 type:cardTypeSinglePlayer];
-        monster.rarity = cardRarityUncommon;
-        monster.name = @"Goblin Petard";
-        monster.damage = 600;
-        monster.life = monster.maximumLife = 1000;
-        monster.cost = 4;
-        monster.cooldown = monster.maximumCooldown = 1;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:600]]];
-        
-        [deck addCard:monster];
         
         //turn 4
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1003 type:cardTypeSinglePlayer];
-        monster.name = @"Goblin Raider";
-        monster.damage = 1600;
-        monster.life = monster.maximumLife = 1400;
-        monster.cost = 2;
-        monster.cooldown = monster.maximumCooldown = 1;
+        //gob petard
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1004"]]];
+
         
-        [deck addCard:monster];
+        //turn 4
+        //gob raider
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1003"]]];
+
         
         //turn 5
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1001 type:cardTypeSinglePlayer];
-        monster.name = @"Goblin Skirmisher";
-        monster.damage = 600;
-        monster.life = monster.maximumLife = 1800;
-        monster.cost = 2;
-        monster.cooldown = monster.maximumCooldown = 1;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1200]]];
-        
-        [deck addCard:monster];
+        //gob skirm
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1001"]]];
+
         
         //turn 6
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1001 type:cardTypeSinglePlayer];
-        monster.name = @"Goblin Skirmisher";
-        monster.damage = 600;
-        monster.life = monster.maximumLife = 1800;
-        monster.cost = 2;
-        monster.cooldown = monster.maximumCooldown = 1;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1200]]];
-        
-        [deck addCard:monster];
+        //gob skirm
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1001"]]];
+
         
         //turn 6
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1005 type:cardTypeSinglePlayer];
-        monster.rarity = cardRarityRare;
-        monster.name = @"Goblin Commander";
-        monster.damage = 1800;
-        monster.life = monster.maximumLife = 3000;
-        monster.cost = 5;
-        monster.cooldown = monster.maximumCooldown = 2;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
-        
-        [deck addCard:monster];
+        //gob commander
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1005"]]];
+
         
         //turn 7
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1006 type:cardTypeSinglePlayer];
-        monster.rarity = cardRarityUncommon;
-        monster.element = elementLight;
-        monster.name = @"Goblin Shaman";
-        monster.damage = 1800;
-        monster.life = monster.maximumLife = 3200;
-        monster.cost = 5;
-        monster.cooldown = monster.maximumCooldown = 2;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnMove targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
-        
-        [deck addCard:monster];
+        //gob shaman
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1006"]]];
+
         
         //should have finished the AI off at this point, rest are just weak cards
         for (int i = 0; i < 3; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1000 type:cardTypeSinglePlayer];
-            monster.name = @"Goblin Fighter";
-            monster.damage = 1200;
-            monster.life = monster.maximumLife = 900;
-            monster.cost = 1;
-            monster.cooldown = monster.maximumCooldown = 1;
+            //gob fighter
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1000"]]];
+
+            //gob skirm
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1001"]]];
             
-            [deck addCard:monster];
-            
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1001 type:cardTypeSinglePlayer];
-            monster.name = @"Goblin Skirmisher";
-            monster.damage = 600;
-            monster.life = monster.maximumLife = 1800;
-            monster.cost = 2;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1200]]];
-            
-            [deck addCard:monster];
-            
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1003 type:cardTypeSinglePlayer];
-            monster.name = @"Goblin Raider";
-            monster.damage = 1600;
-            monster.life = monster.maximumLife = 1400;
-            monster.cost = 2;
-            monster.cooldown = monster.maximumCooldown = 1;
-            
-            [deck addCard:monster];
+            //gob raider
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1003"]]];
         }
     }
     else if ([levelID isEqualToString:@"d_1_c_1_l_2"])
     {
         //turn 1
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1000 type:cardTypeSinglePlayer];
-        monster.name = @"Goblin Fighter";
-        monster.damage = 1200;
-        monster.life = monster.maximumLife = 900;
-        monster.cost = 1;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];
+        //gob fighter
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1000"]]];
+
         
         //so the hand appears to be full but won't play any card
         for (int i = 0; i < 2; i++)
@@ -295,151 +215,54 @@
         }
         
         //turn 2, teaches spell cards
-        spell = [[SpellCardModel alloc] initWithIdNumber:1007 type:cardTypeSinglePlayer];
-        spell.element = elementNeutral;
-        spell.name = @"Harrassment";
-        spell.cost = 2;
-        
-        [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:800]]];
-        [spell addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-        
-        [deck addCard:spell];
+        //harrassment
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1007"]]];
         
         //turn 3
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1101 type:cardTypeSinglePlayer];
-        monster.element = elementDark;
-        monster.name = @"Generic Zombie"; //TODO name
-        monster.damage = 1600;
-        monster.life = monster.maximumLife = 1800;
-        monster.cost = 3;
-        monster.cooldown = monster.maximumCooldown = 1;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityFracture castType:castOnDeath targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
-        
-        [deck addCard:monster];
+        //zombie
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1101"]]];
         
         //turn 4
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1102 type:cardTypeSinglePlayer];
-        monster.rarity = cardRarityUncommon;
-        monster.element = elementDark;
-        monster.name = @"Obnoxinator"; //TODO name
-        monster.damage = 2200;
-        monster.life = monster.maximumLife = 4000;
-        monster.cost = 4;
-        monster.cooldown = monster.maximumCooldown = 1;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-        
-        [deck addCard:monster];
+        //oboxinator
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1102"]]];
         
         //turn 5
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1003 type:cardTypeSinglePlayer];
-        monster.name = @"Goblin Raider";
-        monster.damage = 1600;
-        monster.life = monster.maximumLife = 1400;
-        monster.cost = 2;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];
+        //gob raider
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1003"]]];
         
         //turn 5
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1001 type:cardTypeSinglePlayer];
-        monster.name = @"Goblin Skirmisher";
-        monster.damage = 600;
-        monster.life = monster.maximumLife = 1800;
-        monster.cost = 2;
-        monster.cooldown = monster.maximumCooldown = 1;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1200]]];
+        //gob skirm
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1101"]]];
         
         //turn 6
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1100 type:cardTypeSinglePlayer];
-        monster.rarity = cardRarityRare;
-        monster.element = elementDark;
-        monster.name = @"Headslayer Vanguard"; //TODO name
-        monster.damage = 4500;
-        monster.life = monster.maximumLife = 4300;
-        monster.cost = 6;
-        monster.cooldown = monster.maximumCooldown = 1;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityPierce castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-        
-        [deck addCard:monster];
+        //headslayer
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1100"]]];
         
         //turn 7
-        spell = [[SpellCardModel alloc] initWithIdNumber:1008 type:cardTypeSinglePlayer];
-        spell.rarity = cardRarityUncommon;
-        spell.element = elementDark;
-        spell.name = @"Supply Theft";
-        spell.cost = 4;
-        
-        [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:3200]]];
-        [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneRandomFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:800]]];
-        
-        [deck addCard:spell];
+        //supply theft
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1008"]]];
         
         //should be over around here, rest are just generic cards
         
-        spell = [[SpellCardModel alloc] initWithIdNumber:1103 type:cardTypeSinglePlayer];
-        spell.rarity = cardRarityRare;
-        spell.element = elementDark;
-        spell.name = @"Soul Sip";
-        spell.cost = 7;
+        //soul sip
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1103"]]];
         
-        [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:5000]]];
-        [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:500]]];
+        //oboxinator
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1102"]]];
         
-        [deck addCard:spell];
-        
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1102 type:cardTypeSinglePlayer];
-        monster.rarity = cardRarityUncommon;
-        monster.element = elementDark;
-        monster.name = @"Obnoxinator"; //TODO name
-        monster.damage = 2200;
-        monster.life = monster.maximumLife = 4000;
-        monster.cost = 4;
-        monster.cooldown = monster.maximumCooldown = 1;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-        
-        [deck addCard:monster];
-        
-        spell = [[SpellCardModel alloc] initWithIdNumber:1009 type:cardTypeSinglePlayer];
-        spell.rarity = cardRarityRare;
-        spell.element = elementNeutral;
-        spell.name = @"Frenzied Swarm";
-        spell.cost = 4;
-        
-        [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-        
-        [deck addCard:spell];
+        //swarm
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1009"]]];
         
         for (int i = 0; i < 3; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1101 type:cardTypeSinglePlayer];
-            monster.element = elementDark;
-            monster.name = @"Generic Zombie"; //TODO name
-            monster.damage = 1600;
-            monster.life = monster.maximumLife = 1800;
-            monster.cost = 3;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityFracture castType:castOnDeath targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
+            //zombie
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1101"]]];
             
-            [deck addCard:monster];
+            //gob skirmisher
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1101"]]];
             
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1001 type:cardTypeSinglePlayer];
-            monster.name = @"Goblin Skirmisher";
-            monster.damage = 600;
-            monster.life = monster.maximumLife = 1800;
-            monster.cost = 2;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1200]]];
-            
-            [deck addCard:monster];
-            
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1003 type:cardTypeSinglePlayer];
-            monster.name = @"Goblin Raider";
-            monster.damage = 1600;
-            monster.life = monster.maximumLife = 1400;
-            monster.cost = 2;
-            monster.cooldown = monster.maximumCooldown = 1;
-            
-            [deck addCard:monster];
+            //gob raider
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1003"]]];
         }
     }
     else if ([levelID isEqualToString:@"d_1_c_1_l_3"])
@@ -448,234 +271,279 @@
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1003 type:cardTypeSinglePlayer];
-            monster.name = @"Goblin Raider";
-            monster.damage = 1600;
-            monster.life = monster.maximumLife = 1400;
-            monster.cost = 2;
-            monster.cooldown = monster.maximumCooldown = 1;
-            
-            [deck addCard:monster];
+            //gob raider
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1103"]]];
         }
         
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1200 type:cardTypeSinglePlayer];
-        monster.element = elementFire;
-        monster.rarity = cardRarityRare;
-        monster.name = @"Dragon 1";
-        monster.damage = 3100;
-        monster.life = monster.maximumLife = 4200;
-        monster.cost = 5;
-        monster.cooldown = monster.maximumCooldown = 1;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnHit targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
+        //dragon 1
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1200"]]];
         
-        [deck addCard:monster];
+        //dragon 2
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1201"]]];
         
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1201 type:cardTypeSinglePlayer];
-        monster.element = elementFire;
-        monster.rarity = cardRarityRare;
-        monster.name = @"Dragon 2";
-        monster.damage = 1900;
-        monster.life = monster.maximumLife = 6200;
-        monster.cost = 7;
-        monster.cooldown = monster.maximumCooldown = 2;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnHit targetType:targetVictimMinion withDuration:durationForever withValue:[NSNumber numberWithInt:1200]]];
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnHit targetType:targetAllEnemy withDuration:durationForever withValue:[NSNumber numberWithInt:800]]];
+        //gob skirm
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1001"]]];
         
-        [deck addCard:monster];
+        //gob spearman
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1002"]]];
         
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1001 type:cardTypeSinglePlayer];
-        monster.name = @"Goblin Skirmisher";
-        monster.damage = 600;
-        monster.life = monster.maximumLife = 1800;
-        monster.cost = 2;
-        monster.cooldown = monster.maximumCooldown = 1;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1200]]];
+        //gob skirm
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1001"]]];
         
-        [deck addCard:monster];
+        //swarm
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1009"]]];
         
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1002 type:cardTypeSinglePlayer];
-        monster.rarity = cardRarityUncommon;
-        monster.name = @"Goblin Spearman";
-        monster.damage = 900;
-        monster.life = monster.maximumLife = 3800;
-        monster.cost = 3;
-        monster.cooldown = monster.maximumCooldown = 1;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+        //gob commander
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1005"]]];
         
-        [deck addCard:monster];
+        //harrass
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1007"]]];
         
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1001 type:cardTypeSinglePlayer];
-        monster.name = @"Goblin Skirmisher";
-        monster.damage = 600;
-        monster.life = monster.maximumLife = 1800;
-        monster.cost = 2;
-        monster.cooldown = monster.maximumCooldown = 1;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1200]]];
+        //gob spearman
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1002"]]];
         
-        [deck addCard:monster];
+        //gob commander
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1005"]]];
         
-        spell = [[SpellCardModel alloc] initWithIdNumber:1009 type:cardTypeSinglePlayer];
-        spell.rarity = cardRarityRare;
-        spell.element = elementNeutral;
-        spell.name = @"Frenzied Swarm";
-        spell.cost = 4;
-        
-        [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-        
-        [deck addCard:spell];
-        
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1005 type:cardTypeSinglePlayer];
-        monster.rarity = cardRarityRare;
-        monster.name = @"Goblin Commander";
-        monster.damage = 1800;
-        monster.life = monster.maximumLife = 3000;
-        monster.cost = 5;
-        monster.cooldown = monster.maximumCooldown = 2;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
-        
-        [deck addCard:monster];
-        
-        spell = [[SpellCardModel alloc] initWithIdNumber:1007 type:cardTypeSinglePlayer];
-        spell.element = elementNeutral;
-        spell.name = @"Harrassment";
-        spell.cost = 2;
-        
-        [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:800]]];
-        [spell addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-        
-        [deck addCard:spell];
-        
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1002 type:cardTypeSinglePlayer];
-        monster.rarity = cardRarityUncommon;
-        monster.name = @"Goblin Spearman";
-        monster.damage = 900;
-        monster.life = monster.maximumLife = 3800;
-        monster.cost = 3;
-        monster.cooldown = monster.maximumCooldown = 1;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-        
-        [deck addCard:monster];
-        
-        monster = [[MonsterCardModel alloc] initWithIdNumber:1005 type:cardTypeSinglePlayer];
-        monster.rarity = cardRarityRare;
-        monster.name = @"Goblin Commander";
-        monster.damage = 1800;
-        monster.life = monster.maximumLife = 3000;
-        monster.cost = 5;
-        monster.cooldown = monster.maximumCooldown = 2;
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
-        
-        [deck addCard:monster];
-        
-        spell = [[SpellCardModel alloc] initWithIdNumber:1007 type:cardTypeSinglePlayer];
-        spell.element = elementNeutral;
-        spell.name = @"Harrassment";
-        spell.cost = 2;
-        
-        [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:800]]];
-        [spell addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-        
-        [deck addCard:spell];
+        //harrass
+        [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1007"]]];
         
         for (int i = 0; i < 3; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1002 type:cardTypeSinglePlayer];
-            monster.rarity = cardRarityUncommon;
-            monster.name = @"Goblin Spearman";
-            monster.damage = 900;
-            monster.life = monster.maximumLife = 3800;
-            monster.cost = 3;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+            //gob spearman
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1002"]]];
             
-            [deck addCard:monster];
+            //gob skirm
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1001"]]];
             
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1001 type:cardTypeSinglePlayer];
-            monster.name = @"Goblin Skirmisher";
-            monster.damage = 600;
-            monster.life = monster.maximumLife = 1800;
-            monster.cost = 2;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1200]]];
-            
-            [deck addCard:monster];
-            
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1003 type:cardTypeSinglePlayer];
-            monster.name = @"Goblin Raider";
-            monster.damage = 1600;
-            monster.life = monster.maximumLife = 1400;
-            monster.cost = 2;
-            monster.cooldown = monster.maximumCooldown = 1;
-            
-            [deck addCard:monster];
+            //gob raider
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1103"]]];
         }
     }
     else if ([levelID isEqualToString:@"d_1_c_1_l_4"])
     {
         for (int i = 0; i < 12; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:1401 type:cardTypeSinglePlayer];
-            spell.element = elementNeutral;
-            spell.name = @"Bite";
-            spell.cost = 3;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:1900]]];
-            
-            [deck addCard:spell];
+            //bite
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1401"]]];
         }
         
         for (int i = 0; i < 6; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:1402 type:cardTypeSinglePlayer];
-            spell.element = elementNeutral;
-            spell.name = @"Roar";
-            spell.cost = 5;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:500]]];
-            
-            [deck addCard:spell];
+            //roar
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1402"]]];
         }
         
         for (int i = 0; i < 8; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:1403 type:cardTypeSinglePlayer];
-            spell.element = elementFire;
-            spell.name = @"Fire Breath";
-            spell.cost = 7;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:2200]]];
-            
-            [deck addCard:spell];
+            //fire breath
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1403"]]];
         }
         
         for (int i = 0; i < 3; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:1404 type:cardTypeSinglePlayer];
-            spell.element = elementFire;
-            spell.name = @"Dragon Blast";
-            spell.cost = 8;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:5100]]];
-            
-            [deck addCard:spell];
+            //fire blast
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1404"]]];
         }
     }
     //----chapter 2----//
     else if ([levelID isEqualToString:@"d_1_c_2_l_1"])
     {
+        //musketeer
+        for (int i = 0; i < 2; i++)
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2000"]]];
+        
+        //duelist
+        for (int i = 0; i < 2; i++)
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2001"]]];
+        
+        //bird charger
+        for (int i = 0; i < 2; i++)
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2002"]]];
+        
+        //NOTE: probably make this guy only in level 1
+        for (int i = 0; i < 2; i++)
+        {
+            //merchant
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2003"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //bazzar arms
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2004"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //point blank
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2005"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //arrest
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2006"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //meronite offensive
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2007"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //elite burial
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2008"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //guard
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2009"]]];
+        }
     }
     else if ([levelID isEqualToString:@"d_1_c_2_l_2"])
     {
+        for (int i = 0; i < 2; i++)
+        {
+            //smogland hounds
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2100"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //war mammoth
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2201"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //pikehead charge
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2201"]]];
+        }
+        
+        //musketeer
+        for (int i = 0; i < 2; i++)
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2000"]]];
+        
+        //duelist
+        for (int i = 0; i < 2; i++)
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2001"]]];
+        
+        //bird charger
+        for (int i = 0; i < 2; i++)
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2002"]]];
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //elite burial
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2008"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //bazzar arms
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2004"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //point blank
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2005"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //arrest
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2006"]]];
+        }
     }
     else if ([levelID isEqualToString:@"d_1_c_2_l_3"])
     {
+        for (int i = 0; i < 2; i++)
+        {
+            //cyborg biker
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2200"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //sandbot
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2201"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //skywhale
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2202"]]];
+        }
+        
+        //musketeer
+        for (int i = 0; i < 2; i++)
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2000"]]];
+        
+        //duelist
+        for (int i = 0; i < 2; i++)
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2001"]]];
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //guard
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2009"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //elite burial
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2008"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //bazzar arms
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2004"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //point blank
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2005"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //arrest
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2006"]]];
+        }
     }
     else if ([levelID isEqualToString:@"d_1_c_2_l_4"])
     {
+        for (int i = 0; i < 12; i++)
+        {
+            //culverine
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2300"]]];
+        }
+        
+        for (int i = 0; i < 12; i++)
+        {
+            //bomb
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2301"]]];
+        }
+        
+        
+        for (int i = 0; i < 8; i++)
+        {
+            //goo cannon
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2302"]]];
+        }
+        
+        for (int i = 0; i < 8; i++)
+        {
+            //broadside volley
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2303"]]];
+        }
     }
     //----chapter 3----//
     else if ([levelID isEqualToString:@"d_1_c_3_l_1"])
@@ -700,168 +568,76 @@
     {
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1000 type:cardTypeSinglePlayer];
-            monster.name = @"Goblin Fighter";
-            monster.damage = 2200;
-            monster.life = monster.maximumLife = 1800;
-            monster.cost = 1;
-            monster.cooldown = monster.maximumCooldown = 1;
-            
-            [deck addCard:monster];
+            //goblin fighter
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1000"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1001 type:cardTypeSinglePlayer];
-            monster.name = @"Goblin Skirmisher";
-            monster.damage = 900;
-            monster.life = monster.maximumLife = 2200;
-            monster.cost = 2;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1800]]];
-            
-            [deck addCard:monster];
+            //gob skirm
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1001"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1002 type:cardTypeSinglePlayer];
-            monster.rarity = cardRarityUncommon;
-            monster.name = @"Goblin Spearman";
-            monster.damage = 1400;
-            monster.life = monster.maximumLife = 4800;
-            monster.cost = 3;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:3500]]];
-            
-            [deck addCard:monster];
+            //gob spearman
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1002"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1003 type:cardTypeSinglePlayer];
-            monster.name = @"Goblin Raider";
-            monster.damage = 2800;
-            monster.life = monster.maximumLife = 3100;
-            monster.cost = 3;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddResource castType:castOnHit targetType:targetHeroFriendly withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
-            
-            [deck addCard:monster];
+            //gob raider
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1003"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1004 type:cardTypeSinglePlayer];
-            monster.rarity = cardRarityUncommon;
-            monster.name = @"Goblin Petard";
-            monster.damage = 800;
-            monster.life = monster.maximumLife = 1200;
-            monster.cost = 4;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:2000]]];
-            
-            [deck addCard:monster];
+            //gob petard
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1004"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1005 type:cardTypeSinglePlayer];
-            monster.rarity = cardRarityRare;
-            monster.name = @"Goblin Commander";
-            monster.damage = 2100;
-            monster.life = monster.maximumLife = 3700;
-            monster.cost = 5;
-            monster.cooldown = monster.maximumCooldown = 2;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1000]]];
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1000]]];
-            
-            [deck addCard:monster];
+            //gob commander
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1005"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1006 type:cardTypeSinglePlayer];
-            monster.element = elementLight;
-            monster.rarity = cardRarityUncommon;
-            monster.name = @"Goblin Shaman";
-            monster.damage = 2100;
-            monster.life = monster.maximumLife = 3700;
-            monster.cost = 5;
-            monster.cooldown = monster.maximumCooldown = 2;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnMove targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1000]]];
-            
-            [deck addCard:monster];
+            //gob shaman
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1006"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:1007 type:cardTypeSinglePlayer];
-            spell.element = elementNeutral;
-            spell.name = @"Harrassment";
-            spell.cost = 2;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1000]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-            
-            [deck addCard:spell];
+            //harrassment
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1007"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:1008 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityUncommon;
-            spell.element = elementDark;
-            spell.name = @"Supply Theft";
-            spell.cost = 3;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:4200]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1100]]];
-            
-            [deck addCard:spell];
+            //supply theft
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1008"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:1009 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityRare;
-            spell.element = elementNeutral;
-            spell.name = @"Frenzied Swarm";
-            spell.cost = 4;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllMinion withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:2000]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-            
-            
-            [deck addCard:spell];
+            //frenzied swarm
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1009"]]];
         }
     }
     else if ([levelID isEqualToString:@"d_2_c_1_l_2"])
     {
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1000 type:cardTypeSinglePlayer];
-            monster.name = @"Goblin Fighter";
-            monster.damage = 2200;
-            monster.life = monster.maximumLife = 1800;
-            monster.cost = 1;
-            monster.cooldown = monster.maximumCooldown = 1;
-            
-            [deck addCard:monster];
+            //goblin fighter
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1000"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1001 type:cardTypeSinglePlayer];
-            monster.name = @"Goblin Skirmisher";
-            monster.damage = 900;
-            monster.life = monster.maximumLife = 2200;
-            monster.cost = 2;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1800]]];
-            
-            [deck addCard:monster];
+            //gob skirm
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1001"]]];
         }
         
         /*
@@ -881,804 +657,341 @@
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1003 type:cardTypeSinglePlayer];
-            monster.name = @"Goblin Raider";
-            monster.damage = 2800;
-            monster.life = monster.maximumLife = 3100;
-            monster.cost = 3;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddResource castType:castOnHit targetType:targetHeroFriendly withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
-            
-            [deck addCard:monster];
+            //gob raider
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1003"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1004 type:cardTypeSinglePlayer];
-            monster.rarity = cardRarityUncommon;
-            monster.name = @"Goblin Petard";
-            monster.damage = 800;
-            monster.life = monster.maximumLife = 1200;
-            monster.cost = 4;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:2000]]];
-            
-            [deck addCard:monster];
+            //gob petard
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1004"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1006 type:cardTypeSinglePlayer];
-            monster.element = elementLight;
-            monster.rarity = cardRarityUncommon;
-            monster.name = @"Goblin Shaman";
-            monster.damage = 2100;
-            monster.life = monster.maximumLife = 3700;
-            monster.cost = 5;
-            monster.cooldown = monster.maximumCooldown = 2;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnMove targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1000]]];
-            
-            [deck addCard:monster];
+            //gob shaman
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1006"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:1007 type:cardTypeSinglePlayer];
-            spell.element = elementNeutral;
-            spell.name = @"Harrassment";
-            spell.cost = 2;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1000]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-            
-            [deck addCard:spell];
+            //harrassment
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1007"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1100 type:cardTypeSinglePlayer];
-            monster.rarity = cardRarityRare;
-            monster.element = elementDark;
-            monster.name = @"Headslayer Vanguard"; //TODO name
-            monster.damage = 6500;
-            monster.life = monster.maximumLife = 6300;
-            monster.cost = 6;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityPierce castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-            
-            [deck addCard:monster];
+            //headslayer
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1100"]]];
         }
         
         //maybe
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1101 type:cardTypeSinglePlayer];
-            monster.element = elementDark;
-            monster.name = @"Generic Zombie"; //TODO name
-            monster.damage = 2600;
-            monster.life = monster.maximumLife = 2800;
-            monster.cost = 4;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityFracture castType:castOnDeath targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
-            
-            [deck addCard:monster];
+            //zombie
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1101"]]];
         }
         
         //taunt for tutorial, really needed
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1102 type:cardTypeSinglePlayer];
-            monster.rarity = cardRarityUncommon;
-            monster.element = elementDark;
-            monster.name = @"Obnoxinator"; //TODO name
-            monster.damage = 2800;
-            monster.life = monster.maximumLife = 5800;
-            monster.cost = 4;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-            
-            [deck addCard:monster];
+            //oboxinator
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1102"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:1103 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityRare;
-            spell.element = elementDark;
-            spell.name = @"Soul Sip";
-            spell.cost = 6;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]]];
-            
-            [deck addCard:spell];
+            //soul sip
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1103"]]];
         }
     }
     else if ([levelID isEqualToString:@"d_2_c_1_l_3"])
     {
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1000 type:cardTypeSinglePlayer];
-            monster.name = @"Goblin Fighter";
-            monster.damage = 2200;
-            monster.life = monster.maximumLife = 1800;
-            monster.cost = 1;
-            monster.cooldown = monster.maximumCooldown = 1;
-            
-            [deck addCard:monster];
+            //goblin fighter
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1000"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1001 type:cardTypeSinglePlayer];
-            monster.name = @"Goblin Skirmisher";
-            monster.damage = 900;
-            monster.life = monster.maximumLife = 2200;
-            monster.cost = 2;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1800]]];
-            
-            [deck addCard:monster];
+            //gob skirm
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1001"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1003 type:cardTypeSinglePlayer];
-            monster.name = @"Goblin Raider";
-            monster.damage = 2800;
-            monster.life = monster.maximumLife = 3100;
-            monster.cost = 3;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddResource castType:castOnHit targetType:targetHeroFriendly withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
-            
-            [deck addCard:monster];
-        }
-        
-        for (int i = 0; i < 2; i++) 
-        {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1004 type:cardTypeSinglePlayer];
-            monster.rarity = cardRarityUncommon;
-            monster.name = @"Goblin Petard";
-            monster.damage = 800;
-            monster.life = monster.maximumLife = 1200;
-            monster.cost = 4;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:2000]]];
-            
-            [deck addCard:monster];
+            //gob raider
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1003"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1005 type:cardTypeSinglePlayer];
-            monster.rarity = cardRarityRare;
-            monster.name = @"Goblin Commander";
-            monster.damage = 2100;
-            monster.life = monster.maximumLife = 3700;
-            monster.cost = 5;
-            monster.cooldown = monster.maximumCooldown = 2;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1000]]];
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1000]]];
-            
-            [deck addCard:monster];
+            //gob petard
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1004"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1006 type:cardTypeSinglePlayer];
-            monster.element = elementLight;
-            monster.rarity = cardRarityUncommon;
-            monster.name = @"Goblin Shaman";
-            monster.damage = 2100;
-            monster.life = monster.maximumLife = 3700;
-            monster.cost = 5;
-            monster.cooldown = monster.maximumCooldown = 2;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnMove targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1000]]];
-            
-            [deck addCard:monster];
+            //gob commander
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1005"]]];
+        }
+
+        for (int i = 0; i < 2; i++)
+        {
+            //gob shaman
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1006"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:1007 type:cardTypeSinglePlayer];
-            spell.element = elementNeutral;
-            spell.name = @"Harrassment";
-            spell.cost = 2;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1000]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-            
-            [deck addCard:spell];
+            //harrassment
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1007"]]];
         }
         
         //TODO remove this or shaman..
         for (int i = 0; i < 2; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:1008 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityUncommon;
-            spell.element = elementDark;
-            spell.name = @"Supply Theft";
-            spell.cost = 3;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:4200]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1100]]];
-            
-            [deck addCard:spell];
+            //supply theft
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1008"]]];
         }
         
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1200 type:cardTypeSinglePlayer];
-            monster.element = elementEarth;
-            monster.rarity = cardRarityRare;
-            monster.name = @"Dragon 1";
-            monster.damage = 4100;
-            monster.life = monster.maximumLife = 4900;
-            monster.cost = 5;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnHit targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:1500]]];
-            
-            [deck addCard:monster];
+            //dragon 1
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1200"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:1201 type:cardTypeSinglePlayer];
-            monster.element = elementFire;
-            monster.rarity = cardRarityRare;
-            monster.name = @"Dragon 2";
-            monster.damage = 3900;
-            monster.life = monster.maximumLife = 7700;
-            monster.cost = 7;
-            monster.cooldown = monster.maximumCooldown = 2;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnHit targetType:targetVictimMinion withDuration:durationForever withValue:[NSNumber numberWithInt:2600]]];
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnHit targetType:targetAllEnemy withDuration:durationForever withValue:[NSNumber numberWithInt:2200]]];
-            
-            [deck addCard:monster];
+            //dragon 2
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1201"]]];
         }
     }
     else if ([levelID isEqualToString:@"d_2_c_1_l_4"])
     {
         for (int i = 0; i < 12; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:1401 type:cardTypeSinglePlayer];
-            spell.element = elementNeutral;
-            spell.name = @"Bite";
-            spell.cost = 3;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:4200]]];
-            
-            [deck addCard:spell];
+            //bite
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1401"]]];
         }
         
         for (int i = 0; i < 6; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:1402 type:cardTypeSinglePlayer];
-            spell.element = elementNeutral;
-            spell.name = @"Roar";
-            spell.cost = 5;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:5600]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1600]]];
-            
-            [deck addCard:spell];
+            //roar
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1402"]]];
         }
         
         for (int i = 0; i < 8; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:1403 type:cardTypeSinglePlayer];
-            spell.element = elementFire;
-            spell.name = @"Fire Breath";
-            spell.cost = 7;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
-            
-            [deck addCard:spell];
+            //fire breath
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1403"]]];
         }
         
         for (int i = 0; i < 3; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:1404 type:cardTypeSinglePlayer];
-            spell.element = elementFire;
-            spell.name = @"Dragon Blast";
-            spell.cost = 8;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
-            
-            [deck addCard:spell];
+            //fire blast
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_1404"]]];
         }
     }
     //----chapter 2----//
     else if ([levelID isEqualToString:@"d_2_c_2_l_1"])
     {
+        //musketeer
         for (int i = 0; i < 2; i++)
-        {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2000 type:cardTypeSinglePlayer];
-            monster.name = @"Musketeer";
-            monster.damage = 700;
-            monster.life = monster.maximumLife = 1600;
-            monster.cost = 1;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnMove targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:1900]]];
-            
-            [deck addCard:monster];
-        }
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2000"]]];
         
+        //duelist
         for (int i = 0; i < 2; i++)
-        {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2001 type:cardTypeSinglePlayer];
-            monster.rarity = cardRarityUncommon;
-            monster.name = @"Duelist";
-            monster.damage = 4200;
-            monster.life = monster.maximumLife = 2300;
-            monster.cost = 2;
-            monster.cooldown = monster.maximumCooldown = 1;
-            
-            [deck addCard:monster];
-        }
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2001"]]];
         
+        //bird charger
         for (int i = 0; i < 2; i++)
-        {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2002 type:cardTypeSinglePlayer];
-            monster.name = @"Bird Charger";
-            monster.damage = 2700;
-            monster.life = monster.maximumLife = 1600;
-            monster.cost = 3;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
-            
-            [deck addCard:monster];
-        }
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2002"]]];
         
         //NOTE: probably make this guy only in level 1
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2003 type:cardTypeSinglePlayer];
-            monster.rarity = cardRarityUncommon;
-            monster.name = @"Merchant";
-            monster.damage = 1700;
-            monster.life = monster.maximumLife = 2700;
-            monster.cost = 3;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-            
-            [deck addCard:monster];
+            //merchant
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2003"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2004 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityRare;
-            spell.element = elementNeutral;
-            spell.name = @"Bazaar Arms";
-            spell.cost = 2;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:2800]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityPierce castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-            
-            [deck addCard:spell];
+            //bazzar arms
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2004"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2005 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityRare;
-            spell.element = elementLight;
-            spell.name = @"Point Blank";
-            spell.cost = 4;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
-            
-            [deck addCard:spell];
+            //point blank
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2005"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2006 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityUncommon;
-            spell.element = elementNeutral;
-            spell.name = @"Arrest";
-            spell.cost = 2;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
-            
-            [deck addCard:spell];
+            //arrest
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2006"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2007 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityExceptional;
-            spell.element = elementLight;
-            spell.name = @"Meronite Offensive";
-            spell.cost = 5;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:4200]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1900]]];
-            
-            [deck addCard:spell];
+            //meronite offensive
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2007"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2008 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityUncommon;
-            spell.element = elementLight;
-            spell.name = @"Elite Burial";
-            spell.cost = 2;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:6200]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:3700]]];
-            
-            [deck addCard:spell];
+            //elite burial
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2008"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2009 type:cardTypeSinglePlayer];
-            monster.element = elementLight;
-            monster.rarity = cardRarityRare;
-            monster.name = @"Some Guard"; //TODO
-            monster.damage = 5300;
-            monster.life = monster.maximumLife = 6700;
-            monster.cost = 5;
-            monster.cooldown = monster.maximumCooldown = 1;
-            
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:2500]]];
-            
-            [deck addCard:monster];
+            //guard
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2009"]]];
         }
     }
     else if ([levelID isEqualToString:@"d_2_c_2_l_2"])
     {
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2100 type:cardTypeSinglePlayer];
-            monster.element = elementEarth;
-            monster.rarity = cardRarityRare;
-            monster.name = @"Smogland Hounds";
-            monster.damage = 2100;
-            monster.life = monster.maximumLife = 5200;
-            monster.cost = 4;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnEndOfTurn targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:1300]]];
-            
-            [deck addCard:monster];
+            //smogland hounds
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2100"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2101 type:cardTypeSinglePlayer];
-            monster.rarity = cardRarityExceptional;
-            monster.name = @"War Mammoth";
-            monster.damage = 3700;
-            monster.life = monster.maximumLife = 8300;
-            monster.cost = 6;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1000]]];
-            
-            [deck addCard:monster];
+            //war mammoth
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2201"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2102 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityExceptional;
-            spell.element = elementFire;
-            spell.name = @"Pikehead Charge";
-            spell.cost = 5;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1500]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:1800]]];
-            
-            [deck addCard:spell];
+            //pikehead charge
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2201"]]];
+        }
+        
+        //musketeer
+        for (int i = 0; i < 2; i++)
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2000"]]];
+        
+        //duelist
+        for (int i = 0; i < 2; i++)
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2001"]]];
+        
+        //bird charger
+        for (int i = 0; i < 2; i++)
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2002"]]];
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //elite burial
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2008"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2000 type:cardTypeSinglePlayer];
-            monster.name = @"Musketeer";
-            monster.damage = 700;
-            monster.life = monster.maximumLife = 1600;
-            monster.cost = 1;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnMove targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:1900]]];
-            
-            [deck addCard:monster];
+            //bazzar arms
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2004"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2001 type:cardTypeSinglePlayer];
-            monster.rarity = cardRarityUncommon;
-            monster.name = @"Duelist";
-            monster.damage = 4200;
-            monster.life = monster.maximumLife = 2300;
-            monster.cost = 2;
-            monster.cooldown = monster.maximumCooldown = 1;
-            
-            [deck addCard:monster];
+            //point blank
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2005"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2002 type:cardTypeSinglePlayer];
-            monster.name = @"Bird Charger";
-            monster.damage = 2700;
-            monster.life = monster.maximumLife = 1600;
-            monster.cost = 3;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
-            
-            [deck addCard:monster];
-        }
-        
-        for (int i = 0; i < 2; i++)
-        {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2008 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityUncommon;
-            spell.element = elementLight;
-            spell.name = @"Elite Burial";
-            spell.cost = 2;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:6200]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:3700]]];
-            
-            [deck addCard:spell];
-        }
-        
-        for (int i = 0; i < 2; i++)
-        {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2004 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityRare;
-            spell.element = elementNeutral;
-            spell.name = @"Bazaar Arms";
-            spell.cost = 2;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:2800]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityPierce castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-            
-            [deck addCard:spell];
-        }
-        
-        for (int i = 0; i < 2; i++)
-        {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2005 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityRare;
-            spell.element = elementLight;
-            spell.name = @"Point Blank";
-            spell.cost = 4;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
-            
-            [deck addCard:spell];
-        }
-        
-        for (int i = 0; i < 2; i++)
-        {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2006 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityUncommon;
-            spell.element = elementNeutral;
-            spell.name = @"Arrest";
-            spell.cost = 2;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
-            
-            [deck addCard:spell];
+            //arrest
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2006"]]];
         }
     }
     else if ([levelID isEqualToString:@"d_2_c_2_l_3"])
     {
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2200 type:cardTypeSinglePlayer];
-            monster.element = elementFire;
-            monster.rarity = cardRarityRare;
-            monster.name = @"Cyborg Biker";
-            monster.damage = 2300;
-            monster.life = monster.maximumLife = 1700;
-            monster.cost = 2;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-            
-            [deck addCard:monster];
+            //cyborg biker
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2200"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2201 type:cardTypeSinglePlayer];
-            monster.element = elementFire;
-            monster.rarity = cardRarityRare;
-            monster.name = @"Sandbot";
-            monster.damage = 3100;
-            monster.life = monster.maximumLife = 6600;
-            monster.cost = 5;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1200]]];
-            
-            [deck addCard:monster];
+            //sandbot
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2201"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2202 type:cardTypeSinglePlayer];
-            monster.element = elementNeutral;
-            monster.rarity = cardRarityRare;
-            monster.name = @"Skywhale";
-            monster.damage = 0;
-            monster.life = monster.maximumLife = 10200;
-            monster.cost = 7;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:4200]]];
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnMove targetType:targetAllFriendlyMinions withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:2200]]];
-            
-            [deck addCard:monster];
+            //skywhale
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2202"]]];
+        }
+        
+        //musketeer
+        for (int i = 0; i < 2; i++)
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2000"]]];
+        
+        //duelist
+        for (int i = 0; i < 2; i++)
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2001"]]];
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //guard
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2009"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2000 type:cardTypeSinglePlayer];
-            monster.name = @"Musketeer";
-            monster.damage = 700;
-            monster.life = monster.maximumLife = 1600;
-            monster.cost = 1;
-            monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnMove targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:1900]]];
-            
-            [deck addCard:monster];
+            //elite burial
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2008"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2001 type:cardTypeSinglePlayer];
-            monster.rarity = cardRarityUncommon;
-            monster.name = @"Duelist";
-            monster.damage = 4200;
-            monster.life = monster.maximumLife = 2300;
-            monster.cost = 2;
-            monster.cooldown = monster.maximumCooldown = 1;
-            
-            [deck addCard:monster];
+            //bazzar arms
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2004"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2009 type:cardTypeSinglePlayer];
-            monster.element = elementLight;
-            monster.rarity = cardRarityRare;
-            monster.name = @"Some Guard"; //TODO
-            monster.damage = 5300;
-            monster.life = monster.maximumLife = 6700;
-            monster.cost = 5;
-            monster.cooldown = monster.maximumCooldown = 1;
-            
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:2500]]];
-            
-            [deck addCard:monster];
+            //point blank
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2005"]]];
         }
         
         for (int i = 0; i < 2; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2008 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityUncommon;
-            spell.element = elementLight;
-            spell.name = @"Elite Burial";
-            spell.cost = 2;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:6200]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:3700]]];
-            
-            [deck addCard:spell];
-        }
-        
-        for (int i = 0; i < 2; i++)
-        {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2004 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityRare;
-            spell.element = elementNeutral;
-            spell.name = @"Bazaar Arms";
-            spell.cost = 2;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:2800]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityPierce castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-            
-            [deck addCard:spell];
-        }
-        
-        for (int i = 0; i < 2; i++)
-        {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2005 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityRare;
-            spell.element = elementLight;
-            spell.name = @"Point Blank";
-            spell.cost = 4;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
-            
-            [deck addCard:spell];
-        }
-        
-        for (int i = 0; i < 2; i++)
-        {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2006 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityUncommon;
-            spell.element = elementNeutral;
-            spell.name = @"Arrest";
-            spell.cost = 2;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
-            
-            [deck addCard:spell];
+            //arrest
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2006"]]];
         }
     }
     else if ([levelID isEqualToString:@"d_2_c_2_l_4"])
     {
         for (int i = 0; i < 12; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2300 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityCommon;
-            spell.element = elementFire;
-            spell.name = @"Culverin Shot";
-            spell.cost = 2;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:2600]]];
-            
-            [deck addCard:spell];
+            //culverine
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2300"]]];
         }
         
         for (int i = 0; i < 12; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:2301 type:cardTypeSinglePlayer];
-            monster.element = elementFire;
-            monster.rarity = cardRarityUncommon;
-            monster.name = @"? Bomb";
-            monster.damage = 0;
-            monster.life = monster.maximumLife = 2100;
-            monster.cost = 3;
-            monster.cooldown = monster.maximumCooldown = 2;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:2900]]];
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnMove targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-            
-            [deck addCard:monster];
+            //bomb
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2301"]]];
         }
         
         
         for (int i = 0; i < 8; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2302 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityUncommon;
-            spell.element = elementLight;
-            spell.name = @"Goo Cannon";
-            spell.cost = 5;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-            
-            [deck addCard:spell];
+            //goo cannon
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2302"]]];
         }
         
         for (int i = 0; i < 8; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:2303 type:cardTypeSinglePlayer];
-            spell.rarity = cardRarityExceptional;
-            spell.element = elementFire;
-            spell.name = @"Broadside Volley";
-            spell.cost = 6;
-            
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
-            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-            
-            [deck addCard:spell];
+            //broadside volley
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_2303"]]];
         }
     }
     //----chapter 3----//
@@ -1701,7 +1014,7 @@
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:3000 type:cardTypeSinglePlayer];
+            monster = [[MonsterCardModel alloc] initWithIdNumber:3001 type:cardTypeSinglePlayer];
             monster.element = elementIce;
             monster.rarity = cardRarityCommon;
             monster.name = @"? Sentry";
@@ -1718,7 +1031,7 @@
         for (int i = 0; i < 2; i++)
         {
             //TODO
-            monster = [[MonsterCardModel alloc] initWithIdNumber:3000 type:cardTypeSinglePlayer];
+            monster = [[MonsterCardModel alloc] initWithIdNumber:3002 type:cardTypeSinglePlayer];
             monster.element = elementFire;
             monster.rarity = cardRarityCommon;
             monster.name = @"? Walker";
@@ -1734,7 +1047,7 @@
         
         for (int i = 0; i < 2; i++)
         {
-            monster = [[MonsterCardModel alloc] initWithIdNumber:3000 type:cardTypeSinglePlayer];
+            monster = [[MonsterCardModel alloc] initWithIdNumber:3003 type:cardTypeSinglePlayer];
             monster.element = elementLight;
             monster.rarity = cardRarityCommon;
             monster.name = @"Gravity Defier Mk. II"; //support version
@@ -1751,7 +1064,7 @@
         for (int i = 0; i < 2; i++)
         {
             //give assassin for the insane version
-            monster = [[MonsterCardModel alloc] initWithIdNumber:3000 type:cardTypeSinglePlayer];
+            monster = [[MonsterCardModel alloc] initWithIdNumber:3004 type:cardTypeSinglePlayer];
             monster.element = elementIce;
             monster.rarity = cardRarityCommon;
             monster.name = @"Gravity Defier Mk. III";
@@ -1764,6 +1077,39 @@
             
             [deck addCard:monster];
         }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //give assassin for the insane version
+            monster = [[MonsterCardModel alloc] initWithIdNumber:3005 type:cardTypeSinglePlayer];
+            monster.element = elementIce;
+            monster.rarity = cardRarityCommon;
+            monster.name = @"? Explorer";
+            monster.damage = 4100;
+            monster.life = monster.maximumLife = 3500;
+            monster.cost = 4;
+            monster.cooldown = monster.maximumCooldown = 1;
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+            
+            [deck addCard:monster];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            spell = [[SpellCardModel alloc] initWithIdNumber:3006 type:cardTypeSinglePlayer];
+            spell.rarity = cardRarityRare;
+            spell.element = elementLight;
+            spell.name = @"? Beam";
+            spell.cost = 3;
+            
+            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:4600]]];
+            
+            
+            [deck addCard:spell];
+        }
+        
+        
+        
     }
     else if ([levelID isEqualToString:@"d_2_c_3_l_2"])
     {
@@ -1835,6 +1181,1052 @@
     }
     
     return deck;
+}
+
++ (void) loadCampaignCards
+{
+    campaignCards = [[NSMutableDictionary alloc] init];
+    
+    //temp variables
+    MonsterCardModel*monster;
+    SpellCardModel*spell;
+    
+    //-----------------------------------------DIFFICULTY 1--------------------------------------------//
+    //-----------------CHAPTER 1----------------//
+    //------LEVEL 1--------//
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1000 type:cardTypeSinglePlayer];
+    monster.name = @"Goblin Fighter";
+    monster.damage = 1200;
+    monster.life = monster.maximumLife = 900;
+    monster.cost = 1;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    //NSLog(@"%@", [NSString stringWithFormat:@"d1_%d", monster.idNumber]);
+    
+    //CardModel*card = campaignCards[@"d1_1000"];
+    
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1001 type:cardTypeSinglePlayer];
+    monster.name = @"Goblin Skirmisher";
+    monster.damage = 600;
+    monster.life = monster.maximumLife = 1800;
+    monster.cost = 2;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1200]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1002 type:cardTypeSinglePlayer];
+    monster.rarity = cardRarityUncommon;
+    monster.name = @"Goblin Spearman";
+    monster.damage = 900;
+    monster.life = monster.maximumLife = 3800;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1003 type:cardTypeSinglePlayer];
+    monster.name = @"Goblin Raider";
+    monster.damage = 1600;
+    monster.life = monster.maximumLife = 1400;
+    monster.cost = 2;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1004 type:cardTypeSinglePlayer];
+    monster.rarity = cardRarityUncommon;
+    monster.name = @"Goblin Petard";
+    monster.damage = 600;
+    monster.life = monster.maximumLife = 1000;
+    monster.cost = 4;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:600]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1005 type:cardTypeSinglePlayer];
+    monster.rarity = cardRarityRare;
+    monster.name = @"Goblin Commander";
+    monster.damage = 1800;
+    monster.life = monster.maximumLife = 3000;
+    monster.cost = 5;
+    monster.cooldown = monster.maximumCooldown = 2;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1006 type:cardTypeSinglePlayer];
+    monster.rarity = cardRarityUncommon;
+    monster.element = elementLight;
+    monster.name = @"Goblin Shaman";
+    monster.damage = 1800;
+    monster.life = monster.maximumLife = 3200;
+    monster.cost = 5;
+    monster.cooldown = monster.maximumCooldown = 2;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnMove targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:1007 type:cardTypeSinglePlayer];
+    spell.element = elementNeutral;
+    spell.name = @"Harrassment";
+    spell.cost = 2;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:800]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:1008 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityUncommon;
+    spell.element = elementDark;
+    spell.name = @"Supply Theft";
+    spell.cost = 4;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:3200]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneRandomFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:800]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:1009 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityRare;
+    spell.element = elementNeutral;
+    spell.name = @"Frenzied Swarm";
+    spell.cost = 4;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    
+    //------LEVEL 2--------//
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1100 type:cardTypeSinglePlayer];
+    monster.rarity = cardRarityRare;
+    monster.element = elementDark;
+    monster.name = @"Headslayer Vanguard"; //TODO name
+    monster.damage = 4500;
+    monster.life = monster.maximumLife = 4300;
+    monster.cost = 6;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityPierce castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1101 type:cardTypeSinglePlayer];
+    monster.element = elementDark;
+    monster.name = @"Generic Zombie"; //TODO name
+    monster.damage = 1600;
+    monster.life = monster.maximumLife = 1800;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityFracture castType:castOnDeath targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1102 type:cardTypeSinglePlayer];
+    monster.rarity = cardRarityUncommon;
+    monster.element = elementDark;
+    monster.name = @"Obnoxinator"; //TODO name
+    monster.damage = 2200;
+    monster.life = monster.maximumLife = 4000;
+    monster.cost = 4;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:1103 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityRare;
+    spell.element = elementDark;
+    spell.name = @"Soul Sip";
+    spell.cost = 7;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:5000]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:500]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    //------LEVEL 3--------//
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1200 type:cardTypeSinglePlayer];
+    monster.element = elementFire;
+    monster.rarity = cardRarityRare;
+    monster.name = @"Dragon 1";
+    monster.damage = 3100;
+    monster.life = monster.maximumLife = 4200;
+    monster.cost = 5;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnHit targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1201 type:cardTypeSinglePlayer];
+    monster.element = elementFire;
+    monster.rarity = cardRarityRare;
+    monster.name = @"Dragon 2";
+    monster.damage = 1900;
+    monster.life = monster.maximumLife = 6200;
+    monster.cost = 7;
+    monster.cooldown = monster.maximumCooldown = 2;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnHit targetType:targetVictimMinion withDuration:durationForever withValue:[NSNumber numberWithInt:1200]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnHit targetType:targetAllEnemy withDuration:durationForever withValue:[NSNumber numberWithInt:800]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    //------LEVEL 4--------//
+    spell = [[SpellCardModel alloc] initWithIdNumber:1401 type:cardTypeSinglePlayer];
+    spell.element = elementNeutral;
+    spell.name = @"Bite";
+    spell.cost = 3;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:1900]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:1402 type:cardTypeSinglePlayer];
+    spell.element = elementNeutral;
+    spell.name = @"Roar";
+    spell.cost = 5;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:500]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:1403 type:cardTypeSinglePlayer];
+    spell.element = elementFire;
+    spell.name = @"Fire Breath";
+    spell.cost = 7;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:2200]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:1404 type:cardTypeSinglePlayer];
+    spell.element = elementFire;
+    spell.name = @"Dragon Blast";
+    spell.cost = 8;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:5100]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    //-----------------CHAPTER 2----------------//
+    //------LEVEL 1--------//
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2000 type:cardTypeSinglePlayer];
+    monster.name = @"Musketeer";
+    monster.damage = 700;
+    monster.life = monster.maximumLife = 1600;
+    monster.cost = 1;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnMove targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:700]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2001 type:cardTypeSinglePlayer];
+    monster.rarity = cardRarityUncommon;
+    monster.name = @"Duelist";
+    monster.damage = 3700;
+    monster.life = monster.maximumLife = 1200;
+    monster.cost = 2;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2002 type:cardTypeSinglePlayer];
+    monster.name = @"Bird Charger";
+    monster.damage = 2400;
+    monster.life = monster.maximumLife = 1800;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2003 type:cardTypeSinglePlayer];
+    monster.rarity = cardRarityUncommon;
+    monster.name = @"Merchant";
+    monster.damage = 1700;
+    monster.life = monster.maximumLife = 2700;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:2004 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityRare;
+    spell.element = elementNeutral;
+    spell.name = @"Bazaar Arms";
+    spell.cost = 2;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:1400]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityPierce castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:2005 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityRare;
+    spell.element = elementLight;
+    spell.name = @"Point Blank";
+    spell.cost = 5;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:2006 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityUncommon;
+    spell.element = elementNeutral;
+    spell.name = @"Arrest";
+    spell.cost = 3;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:2007 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityExceptional;
+    spell.element = elementLight;
+    spell.name = @"Meronite Offensive";
+    spell.cost = 5;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:3000]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1200]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:2008 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityUncommon;
+    spell.element = elementLight;
+    spell.name = @"Elite Burial";
+    spell.cost = 2;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:4200]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:2700]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2009 type:cardTypeSinglePlayer];
+    monster.element = elementLight;
+    monster.rarity = cardRarityRare;
+    monster.name = @"Some Guard"; //TODO
+    monster.damage = 3300;
+    monster.life = monster.maximumLife = 5700;
+    monster.cost = 5;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:2500]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    //------LEVEL 2--------//
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2100 type:cardTypeSinglePlayer];
+    monster.element = elementEarth;
+    monster.rarity = cardRarityRare;
+    monster.name = @"Smogland Hounds";
+    monster.damage = 2100;
+    monster.life = monster.maximumLife = 4200;
+    monster.cost = 4;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnEndOfTurn targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:1000]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2101 type:cardTypeSinglePlayer];
+    monster.rarity = cardRarityExceptional;
+    monster.name = @"War Mammoth";
+    monster.damage = 3200;
+    monster.life = monster.maximumLife = 7200;
+    monster.cost = 6;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:500]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:2102 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityExceptional;
+    spell.element = elementFire;
+    spell.name = @"Pikehead Charge";
+    spell.cost = 5;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1000]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:1200]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    //------LEVEL 3--------//
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2200 type:cardTypeSinglePlayer]; //////////////////////////////////////TODO
+    monster.element = elementFire;
+    monster.rarity = cardRarityRare;
+    monster.name = @"Cyborg Biker";
+    monster.damage = 2300;
+    monster.life = monster.maximumLife = 1700;
+    monster.cost = 2;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2201 type:cardTypeSinglePlayer];
+    monster.element = elementFire;
+    monster.rarity = cardRarityRare;
+    monster.name = @"Sandbot";
+    monster.damage = 3100;
+    monster.life = monster.maximumLife = 6600;
+    monster.cost = 5;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1200]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2202 type:cardTypeSinglePlayer];
+    monster.element = elementNeutral;
+    monster.rarity = cardRarityRare;
+    monster.name = @"Skywhale";
+    monster.damage = 0;
+    monster.life = monster.maximumLife = 10200;
+    monster.cost = 7;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:4200]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnMove targetType:targetAllFriendlyMinions withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:2200]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    //------LEVEL 4--------//
+    spell = [[SpellCardModel alloc] initWithIdNumber:2300 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityCommon;
+    spell.element = elementFire;
+    spell.name = @"Culverin Shot";
+    spell.cost = 2;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:2600]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2301 type:cardTypeSinglePlayer];
+    monster.element = elementFire;
+    monster.rarity = cardRarityUncommon;
+    monster.name = @"? Bomb";
+    monster.damage = 0;
+    monster.life = monster.maximumLife = 2100;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 2;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:2900]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnMove targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:2302 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityUncommon;
+    spell.element = elementLight;
+    spell.name = @"Goo Cannon";
+    spell.cost = 5;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:2303 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityExceptional;
+    spell.element = elementFire;
+    spell.name = @"Broadside Volley";
+    spell.cost = 6;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    
+    //-----------------CHAPTER 3----------------//
+    //------LEVEL 1--------//
+    //------LEVEL 2--------//
+    //------LEVEL 3--------//
+    //------LEVEL 4--------//
+    
+    //-----------------------------------------DIFFICULTY 2--------------------------------------------//
+    //-----------------CHAPTER 1----------------//
+    //------LEVEL 1--------//
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1000 type:cardTypeSinglePlayer];
+    monster.name = @"Goblin Fighter";
+    monster.damage = 2200;
+    monster.life = monster.maximumLife = 1800;
+    monster.cost = 1;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1001 type:cardTypeSinglePlayer];
+    monster.name = @"Goblin Skirmisher";
+    monster.damage = 900;
+    monster.life = monster.maximumLife = 2200;
+    monster.cost = 2;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1800]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1002 type:cardTypeSinglePlayer];
+    monster.rarity = cardRarityUncommon;
+    monster.name = @"Goblin Spearman";
+    monster.damage = 1400;
+    monster.life = monster.maximumLife = 4800;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:3500]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1003 type:cardTypeSinglePlayer];
+    monster.name = @"Goblin Raider";
+    monster.damage = 2800;
+    monster.life = monster.maximumLife = 3100;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddResource castType:castOnHit targetType:targetHeroFriendly withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1004 type:cardTypeSinglePlayer];
+    monster.rarity = cardRarityUncommon;
+    monster.name = @"Goblin Petard";
+    monster.damage = 800;
+    monster.life = monster.maximumLife = 1200;
+    monster.cost = 4;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:2000]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1005 type:cardTypeSinglePlayer];
+    monster.rarity = cardRarityRare;
+    monster.name = @"Goblin Commander";
+    monster.damage = 2100;
+    monster.life = monster.maximumLife = 3700;
+    monster.cost = 5;
+    monster.cooldown = monster.maximumCooldown = 2;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1000]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1000]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1006 type:cardTypeSinglePlayer];
+    monster.element = elementLight;
+    monster.rarity = cardRarityUncommon;
+    monster.name = @"Goblin Shaman";
+    monster.damage = 2100;
+    monster.life = monster.maximumLife = 3700;
+    monster.cost = 5;
+    monster.cooldown = monster.maximumCooldown = 2;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnMove targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1000]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:1007 type:cardTypeSinglePlayer];
+    spell.element = elementNeutral;
+    spell.name = @"Harrassment";
+    spell.cost = 2;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1000]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:1008 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityUncommon;
+    spell.element = elementDark;
+    spell.name = @"Supply Theft";
+    spell.cost = 3;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:4200]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1100]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:1009 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityRare;
+    spell.element = elementNeutral;
+    spell.name = @"Frenzied Swarm";
+    spell.cost = 4;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllMinion withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:2000]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    //------LEVEL 2--------//
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1100 type:cardTypeSinglePlayer];
+    monster.rarity = cardRarityRare;
+    monster.element = elementDark;
+    monster.name = @"Headslayer Vanguard"; //TODO name
+    monster.damage = 6500;
+    monster.life = monster.maximumLife = 6300;
+    monster.cost = 6;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityPierce castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1101 type:cardTypeSinglePlayer];
+    monster.element = elementDark;
+    monster.name = @"Generic Zombie"; //TODO name
+    monster.damage = 2600;
+    monster.life = monster.maximumLife = 2800;
+    monster.cost = 4;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityFracture castType:castOnDeath targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1102 type:cardTypeSinglePlayer];
+    monster.rarity = cardRarityUncommon;
+    monster.element = elementDark;
+    monster.name = @"Obnoxinator"; //TODO name
+    monster.damage = 2800;
+    monster.life = monster.maximumLife = 5800;
+    monster.cost = 4;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:1103 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityRare;
+    spell.element = elementDark;
+    spell.name = @"Soul Sip";
+    spell.cost = 6;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    //------LEVEL 3--------//
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1200 type:cardTypeSinglePlayer];
+    monster.element = elementEarth;
+    monster.rarity = cardRarityRare;
+    monster.name = @"Dragon 1";
+    monster.damage = 4100;
+    monster.life = monster.maximumLife = 4900;
+    monster.cost = 5;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnHit targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:1500]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:1201 type:cardTypeSinglePlayer];
+    monster.element = elementFire;
+    monster.rarity = cardRarityRare;
+    monster.name = @"Dragon 2";
+    monster.damage = 3900;
+    monster.life = monster.maximumLife = 7700;
+    monster.cost = 7;
+    monster.cooldown = monster.maximumCooldown = 2;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnHit targetType:targetVictimMinion withDuration:durationForever withValue:[NSNumber numberWithInt:2600]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnHit targetType:targetAllEnemy withDuration:durationForever withValue:[NSNumber numberWithInt:2200]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    //------LEVEL 4--------//
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:1401 type:cardTypeSinglePlayer];
+    spell.element = elementNeutral;
+    spell.name = @"Bite";
+    spell.cost = 3;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:4200]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:1402 type:cardTypeSinglePlayer];
+    spell.element = elementNeutral;
+    spell.name = @"Roar";
+    spell.cost = 5;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:5600]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1600]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:1403 type:cardTypeSinglePlayer];
+    spell.element = elementFire;
+    spell.name = @"Fire Breath";
+    spell.cost = 7;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:1404 type:cardTypeSinglePlayer];
+    spell.element = elementFire;
+    spell.name = @"Dragon Blast";
+    spell.cost = 8;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    //-----------------CHAPTER 2----------------//
+    //------LEVEL 1--------//
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2000 type:cardTypeSinglePlayer];
+    monster.name = @"Musketeer";
+    monster.damage = 700;
+    monster.life = monster.maximumLife = 1600;
+    monster.cost = 1;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnMove targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:1900]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2001 type:cardTypeSinglePlayer];
+    monster.rarity = cardRarityUncommon;
+    monster.name = @"Duelist";
+    monster.damage = 4200;
+    monster.life = monster.maximumLife = 2300;
+    monster.cost = 2;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2002 type:cardTypeSinglePlayer];
+    monster.name = @"Bird Charger";
+    monster.damage = 2900;
+    monster.life = monster.maximumLife = 2400;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2003 type:cardTypeSinglePlayer];
+    monster.rarity = cardRarityUncommon;
+    monster.name = @"Merchant";
+    monster.damage = 1700;
+    monster.life = monster.maximumLife = 2700;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:2004 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityRare;
+    spell.element = elementNeutral;
+    spell.name = @"Bazaar Arms";
+    spell.cost = 2;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:2800]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityPierce castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:2005 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityRare;
+    spell.element = elementLight;
+    spell.name = @"Point Blank";
+    spell.cost = 4;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:2006 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityUncommon;
+    spell.element = elementNeutral;
+    spell.name = @"Arrest";
+    spell.cost = 2;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:2007 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityExceptional;
+    spell.element = elementLight;
+    spell.name = @"Meronite Offensive";
+    spell.cost = 5;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:4200]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1900]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:2008 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityUncommon;
+    spell.element = elementLight;
+    spell.name = @"Elite Burial";
+    spell.cost = 2;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:6200]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:3700]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2009 type:cardTypeSinglePlayer];
+    monster.element = elementLight;
+    monster.rarity = cardRarityRare;
+    monster.name = @"Some Guard"; //TODO
+    monster.damage = 5300;
+    monster.life = monster.maximumLife = 6700;
+    monster.cost = 5;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:2500]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    //------LEVEL 2--------//
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2100 type:cardTypeSinglePlayer];
+    monster.element = elementEarth;
+    monster.rarity = cardRarityRare;
+    monster.name = @"Smogland Hounds";
+    monster.damage = 2100;
+    monster.life = monster.maximumLife = 5200;
+    monster.cost = 4;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnEndOfTurn targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:1300]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2101 type:cardTypeSinglePlayer];
+    monster.rarity = cardRarityExceptional;
+    monster.name = @"War Mammoth";
+    monster.damage = 3700;
+    monster.life = monster.maximumLife = 8300;
+    monster.cost = 6;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1000]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:2102 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityExceptional;
+    spell.element = elementFire;
+    spell.name = @"Pikehead Charge";
+    spell.cost = 5;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1500]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:1800]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    //------LEVEL 3--------//
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2200 type:cardTypeSinglePlayer];
+    monster.element = elementFire;
+    monster.rarity = cardRarityRare;
+    monster.name = @"Cyborg Biker";
+    monster.damage = 2300;
+    monster.life = monster.maximumLife = 1700;
+    monster.cost = 2;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2201 type:cardTypeSinglePlayer];
+    monster.element = elementFire;
+    monster.rarity = cardRarityRare;
+    monster.name = @"Sandbot";
+    monster.damage = 3100;
+    monster.life = monster.maximumLife = 6600;
+    monster.cost = 5;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1200]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2202 type:cardTypeSinglePlayer];
+    monster.element = elementNeutral;
+    monster.rarity = cardRarityRare;
+    monster.name = @"Skywhale";
+    monster.damage = 0;
+    monster.life = monster.maximumLife = 10200;
+    monster.cost = 7;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:4200]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnMove targetType:targetAllFriendlyMinions withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:2200]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    //------LEVEL 4--------//
+    spell = [[SpellCardModel alloc] initWithIdNumber:2300 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityCommon;
+    spell.element = elementFire;
+    spell.name = @"Culverin Shot";
+    spell.cost = 2;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:2600]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:2301 type:cardTypeSinglePlayer];
+    monster.element = elementFire;
+    monster.rarity = cardRarityUncommon;
+    monster.name = @"? Bomb";
+    monster.damage = 0;
+    monster.life = monster.maximumLife = 2100;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 2;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:2900]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnMove targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:2302 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityUncommon;
+    spell.element = elementLight;
+    spell.name = @"Goo Cannon";
+    spell.cost = 5;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:2303 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityExceptional;
+    spell.element = elementFire;
+    spell.name = @"Broadside Volley";
+    spell.cost = 6;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    //-----------------CHAPTER 3----------------//
+    //------LEVEL 1--------//
+    monster = [[MonsterCardModel alloc] initWithIdNumber:3000 type:cardTypeSinglePlayer];
+    monster.element = elementLightning;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"? Walker";
+    monster.damage = 1100;
+    monster.life = monster.maximumLife = 1100;
+    monster.cost = 1;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1600]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:3001 type:cardTypeSinglePlayer];
+    monster.element = elementIce;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"? Sentry";
+    monster.damage = 800;
+    monster.life = monster.maximumLife = 3900;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:1200]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    //TODO
+    monster = [[MonsterCardModel alloc] initWithIdNumber:3002 type:cardTypeSinglePlayer];
+    monster.element = elementFire;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"? Walker";
+    monster.damage = 800;
+    monster.life = monster.maximumLife = 3900;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:1200]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:3003 type:cardTypeSinglePlayer];
+    monster.element = elementLight;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"Gravity Defier Mk. II"; //support version
+    monster.damage = 0;
+    monster.life = monster.maximumLife = 5400;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnEndOfTurn targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    //give assassin for the insane version
+    monster = [[MonsterCardModel alloc] initWithIdNumber:3004 type:cardTypeSinglePlayer];
+    monster.element = elementIce;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"Gravity Defier Mk. III";
+    monster.damage = 3100;
+    monster.life = monster.maximumLife = 6500;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnDamaged targetType:targetHeroFriendly withDuration:durationForever withValue:[NSNumber numberWithInt:1600]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    //give assassin for the insane version
+    monster = [[MonsterCardModel alloc] initWithIdNumber:3005 type:cardTypeSinglePlayer];
+    monster.element = elementIce;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"? Explorer";
+    monster.damage = 4100;
+    monster.life = monster.maximumLife = 3500;
+    monster.cost = 4;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:3006 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityRare;
+    spell.element = elementLight;
+    spell.name = @"? Beam";
+    spell.cost = 3;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:4600]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    
+    //------LEVEL 2--------//
+    //------LEVEL 3--------//
+    //------LEVEL 4--------//
+    
+    //-----------------------------------------DIFFICULTY 3--------------------------------------------//
+    //-----------------CHAPTER 1----------------//
+    //------LEVEL 1--------//
+    //------LEVEL 2--------//
+    //------LEVEL 3--------//
+    //------LEVEL 4--------//
+    
+    //-----------------CHAPTER 2----------------//
+    //------LEVEL 1--------//
+    //------LEVEL 2--------//
+    //------LEVEL 3--------//
+    //------LEVEL 4--------//
+    
+    //-----------------CHAPTER 3----------------//
+    //------LEVEL 1--------//
+    //------LEVEL 2--------//
+    //------LEVEL 3--------//
+    //------LEVEL 4--------//
 }
 
 +(DeckModel*) getPlayerCampaignDeckWithID:(NSString*)levelID
@@ -1978,7 +2370,7 @@
     [deck addCard:monster];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:7 type:cardTypeStandard];
-    spell.name = @"Meteor Strike";
+    spell.name = @"Slash";
     spell.cost = 2;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:2300]]];
@@ -2088,7 +2480,7 @@
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnHit targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
     
     [deck addCard:monster];
-
+    
     monster = [[MonsterCardModel alloc] initWithIdNumber:19 type:cardTypeStandard];
     monster.name = @"Deity of Magic";
     monster.damage = 4800;
@@ -2154,18 +2546,18 @@
      }
      */
     /*
-    for (int i = 0; i < 10; i++){
-        monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
-        monster.name = @"Monster";
-        monster.life = monster.maximumLife = 1500;
-        monster.damage = 1800;
-        monster.cost = 2;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnDeath targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-        
-        [deck addCard:monster];
-    }*/
+     for (int i = 0; i < 10; i++){
+     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+     monster.name = @"Monster";
+     monster.life = monster.maximumLife = 1500;
+     monster.damage = 1800;
+     monster.cost = 2;
+     monster.cooldown = monster.maximumCooldown = 1;
+     
+     [monster addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnDeath targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+     
+     [deck addCard:monster];
+     }*/
     
     //---minions---//
     //cost 1
@@ -2370,7 +2762,7 @@
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1000]]];
     
     [deck addCard:monster];
-
+    
     //cost 4
     
     monster = [[MonsterCardModel alloc] initWithIdNumber:10019 type:cardTypeSinglePlayer];
@@ -2623,7 +3015,7 @@
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3000]]];
     
     [deck addCard: spell];
-
+    
     spell = [[SpellCardModel alloc] initWithIdNumber:10042 type:cardTypeSinglePlayer];
     spell.name = @"Spell";
     spell.cost = 1;
@@ -2824,29 +3216,29 @@
     PFObject *ability;
     
     /*
-    for (int i = 0; i < 10; i++)
-    {
-        monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
-        monster.name = @"Monster";
-        monster.life = monster.maximumLife = 1500;
-        monster.damage = 1000;
-        monster.cost = 1;
-        monster.cooldown = monster.maximumCooldown = 1;
-        
-        [deck addCard:monster];
-        
-        spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
-        spell.name = @"Spell";
-        spell.cost = 1;
-        
-        //[spell.abilities addObject: [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetOneFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-        PFObject *ability = [PFObject objectWithClassName:@"Ability"];
-        ability[@"idNumber"] = @0;
-        ability[@"value"] = @1000;
-        [spell.abilities addObject:ability];
-        
-        [deck addCard:spell];
-    }*/
+     for (int i = 0; i < 10; i++)
+     {
+     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+     monster.name = @"Monster";
+     monster.life = monster.maximumLife = 1500;
+     monster.damage = 1000;
+     monster.cost = 1;
+     monster.cooldown = monster.maximumCooldown = 1;
+     
+     [deck addCard:monster];
+     
+     spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+     spell.name = @"Spell";
+     spell.cost = 1;
+     
+     //[spell.abilities addObject: [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetOneFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+     PFObject *ability = [PFObject objectWithClassName:@"Ability"];
+     ability[@"idNumber"] = @0;
+     ability[@"value"] = @1000;
+     [spell.abilities addObject:ability];
+     
+     [deck addCard:spell];
+     }*/
     
     //NOTE: since this is code only for testing, the abilities are not actually abilities, but instead PFObjects.
     

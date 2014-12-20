@@ -252,18 +252,27 @@ const int CARD_ID_START = 1000;
         card.creator = creator;
         //card.creatorName = @"Loading..."; //TODO
         
+        
         //grabs the user's name to cache it
         PFQuery *query = [PFUser query];
         
-        NSError*error;
-        PFUser *user = (PFUser*)[query getObjectWithId:card.creator error:&error];
-        if (!error)
-            card.creatorName = user.username;
-        else
-        {
-            card.creatorName = @"Unknown";
-        }
+        NSLog(@"got the user");
+        
+        [query getObjectInBackgroundWithId:card.creator block:^(PFObject *object, NSError *error) {
+            
+            if (!error)
+            {
+                PFUser *user = (PFUser*)object;
+                card.creatorName = user.username;
+            }
+            else
+            {
+                card.creatorName = @"Unknown";
+                
+            }
+        }];
     }
+    
     
     //NOTE: make sure abilities are always loaded after stats otherwise maxLife etc may be modified by ability
     for (PFObject *abilityPF in abilities)

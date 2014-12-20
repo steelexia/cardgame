@@ -80,7 +80,7 @@ enum GameMode __gameMode; //because C functions cant access
             
             opponentHeroModel.life = opponentHeroModel.maximumLife = level.opponentHealth;
             opponentHeroModel.name = level.opponentName;
-            
+
             if (_level.isBossFight)
             {
                 self.aiPlayer.isBossFight = YES;
@@ -452,9 +452,18 @@ enum GameMode __gameMode; //because C functions cant access
     {
         opponentDeck = [[DeckModel alloc]init];
         
-        //dup the cards
-        for (CardModel*card in _level.cards.cards)
-            [opponentDeck addCard:[[CardModel alloc] initWithCardModel:card]];
+        //quick match level, gotta pull random cards from store
+        if (_level == [Campaign quickMatchLevel])
+        {
+            [self loadQuickMatchDeck: opponentDeck];
+        }
+        else
+        {
+            //dup the cards from level
+            for (CardModel*card in _level.cards.cards)
+                [opponentDeck addCard:[[CardModel alloc] initWithCardModel:card]];
+        }
+        
         
         //get player's preconstructed campaign deck
         DeckModel*campaignPlayerDeck = [SinglePlayerCards getPlayerCampaignDeckWithID:_level.levelID];
@@ -630,6 +639,144 @@ enum GameMode __gameMode; //because C functions cant access
     
     
     //NSLog(@"loaded %d cards for player.", [playerDeck count]);
+}
+
+-(void)loadQuickMatchDeck:(DeckModel*)deck
+{
+    PFQuery *cardsQuery = [PFQuery queryWithClassName:@"Card"];
+    
+    /*
+     Types of deck's element structures:
+     0 = neutral heavy
+     1 = one element (not neutral) focus
+     2 = two element (not neutral) focus
+     3 = balanced
+     */
+    
+    int deckStructure = arc4random_uniform(4);
+    deckStructure = 3;
+    
+    //picks elements
+    NSArray*elements = @[
+                         @(arc4random_uniform(2)),
+                         @(arc4random_uniform(2)),
+                         @(arc4random_uniform(2))
+                         ];
+    
+    /*
+     focused elements (depending on deckStructure)
+     
+     element structure = 1:
+     0 = fire/ice
+     1 = thunder/earth
+     2 = light/dark
+     
+     element structure = 2:
+     reverse of element structure = 1 (i.e. 0 = thunder/earth and light/dark)
+     
+     element structure = 0 or 3:
+     N/A
+     */
+    
+    
+    
+    int elementFocus = arc4random_uniform(3);
+
+    __block int i = 0;
+    
+    while (i < 20)
+    {
+        //apply filters:
+        int elementToPick = 0;
+        
+        //neutral focused
+        if (deckStructure == 0)
+        {
+            //80% neutral cards
+            if (arc4random_uniform(10) < 8)
+                elementToPick = elementNeutral;
+            //20% other cards
+            else
+            {
+                int randomElement = arc4random_uniform(3);
+                
+                elementToPick = elementNeutral + 1 + 2 * randomElement + [elements[randomElement] intValue];
+            }
+        }
+        //single element focus
+        else if (deckStructure == 1)
+        {
+            //20% neutral cards
+            if (arc4random_uniform(10) < 2)
+                elementToPick = elementNeutral;
+            else
+            {
+                //start off random
+                int randomElement = arc4random_uniform(3);
+                
+                elementToPick = elementNeutral + 1 + 2 * randomElement + [elements[randomElement] intValue];
+                
+                //70% to pick element focus (i.e. 80% since randomElement can be this)
+                if (arc4random_uniform(10) < 7)
+                    elementToPick = elementNeutral + 1 + 2 * elementFocus + [elements[elementFocus] intValue];
+            }
+        }
+        //two element focus
+        else if (deckStructure == 2)
+        {
+            //20% neutral cards
+            if (arc4random_uniform(10) < 2)
+                elementToPick = elementNeutral;
+            else
+            {
+                //start off random
+                int randomElement = arc4random_uniform(3);
+                
+                elementToPick = elementNeutral + 1 + 2 * randomElement + [elements[randomElement] intValue];
+                
+                //if picked not focus, reroll (1/3 becomes 1/9)
+                if (elementToPick == (elementNeutral + 1 + 2 * elementFocus + [elements[elementFocus] intValue]))
+                {
+                    int randomElement2 = arc4random_uniform(3);
+                    
+                    elementToPick = elementNeutral + 1 + 2 * randomElement2 + [elements[randomElement2] intValue];
+                }
+            }
+        }
+        //balanced
+        else if (deckStructure == 3)
+        {
+            //20% neutral cards
+            if (arc4random_uniform(10) < 2)
+                elementToPick = elementNeutral;
+            //80% other cards
+            else
+            {
+                int randomElement = arc4random_uniform(3);
+                
+                elementToPick = elementNeutral + 1 + 2 * randomElement + [elements[randomElement] intValue];
+            }
+        }
+        
+        NSLog(@"element: %d", elementToPick);
+        
+        [cardsQuery whereKey:@"element" equalTo:@(elementToPick)];
+        
+        int count = [cardsQuery countObjects];
+        
+        cardsQuery.skip = arc4random_uniform(count);
+        
+        PFObject *cardPF = [cardsQuery getFirstObject];
+        
+        [CardModel createCardFromPFObject:cardPF onFinish:^(CardModel * card) {
+            [deck addCard:card];
+        }];
+        
+        i++;
+    }
+    
+    while (i < 20)
+        sleep(10);
 }
 
 -(void)addCardToBattlefield: (MonsterCardModel*)monsterCard side:(char)side
