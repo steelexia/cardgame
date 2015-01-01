@@ -133,10 +133,15 @@ UILabel *loadingLabel;
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     //_storeButton.label.text = @"Store";
+    
+    NSLog(@"did appear");
     
     if (!_loadedTutorial)
     {
+        NSLog(@"not loaded tut");
+        
         //if user is still in tutorial, automatically jump to tutorial
         NSArray*completedLevels = userPF[@"completedLevels"];
         Level*tutLevel;
@@ -157,6 +162,7 @@ UILabel *loadingLabel;
         
         if (tutLevel != nil)
         {
+            NSLog(@"tut not null");
             GameViewController *gvc = [[GameViewController alloc] initWithGameMode:GameModeSingleplayer withLevel:tutLevel];
             gvc.noPreviousView = YES;
             
@@ -170,6 +176,7 @@ UILabel *loadingLabel;
              [dcvc.backButton setEnabled:NO];*/
             
             [self presentViewController:gvc animated:NO completion:nil];
+            NSLog(@"tried appear");
         }
         _loadedTutorial = YES;
     }

@@ -89,7 +89,7 @@ BOOL leftHandViewZone = NO;
         _gameMode = gameMode;
         _level = level;
         
-        currentSide = PLAYER_SIDE;//TODO multiplayer
+        currentSide = PLAYER_SIDE;
         
         if (level!=nil)
         {
@@ -99,7 +99,9 @@ BOOL leftHandViewZone = NO;
                 currentSide = OPPONENT_SIDE;
             
             if (!level.breakBeforeNextLevel)
+            {
                 _nextLevel = [Campaign getNextLevelWithLevelID:level.levelID];
+            }
             
             _isTutorial = _level.isTutorial;
         }
@@ -1852,12 +1854,16 @@ BOOL leftHandViewZone = NO;
             nextLevelController.noPreviousView = YES;
         }
         else
+        {
             vc = self.presentingViewController.presentingViewController;
+        }
         
-        [vc dismissViewControllerAnimated:NO completion:^{
-            dispatch_sync(dispatch_get_main_queue(), ^{
+        
+        
+        [self dismissViewControllerAnimated:NO completion:^{
+            //dispatch_sync(dispatch_get_main_queue(), ^{
                 [vc presentViewController:nextLevelController animated:NO completion:nil];
-            });
+            //});
         }];
     }
     

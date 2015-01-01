@@ -2322,7 +2322,7 @@ NSMutableDictionary * campaignCards;
     
     monster = [[MonsterCardModel alloc] initWithIdNumber:2 type:cardTypeStandard];
     monster.name = @"Pigman Chief";
-    monster.damage = 2100;
+    monster.damage = 2100; //TODO
     monster.life = monster.maximumLife = 2900;
     monster.cost = 2;
     monster.cooldown = monster.maximumCooldown = 1;
