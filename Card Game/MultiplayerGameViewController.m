@@ -422,11 +422,11 @@ NSUInteger _currentPlayerIndex;
     {
         NSLog(@"start!");
         
-        dispatch_async(dispatch_get_main_queue(), ^{
+        //dispatch_async(dispatch_get_main_queue(), ^{
             [self presentViewController:_gvc animated:YES completion:^{
                 [self closeLoadingScreen];
             }];
-        });
+        //});
     }
 }
 
@@ -439,12 +439,12 @@ NSUInteger _currentPlayerIndex;
     if(_opponentHasReceivedDeck)
     {
         NSLog(@"start!");
-        dispatch_async(dispatch_get_main_queue(), ^{
+        //dispatch_async(dispatch_get_main_queue(), ^{
             [self closeLoadingScreen];
             [self presentViewController:_gvc animated:YES completion:^{
                 [self closeLoadingScreen];
             }];
-        });
+        //});
     }
 }
 
