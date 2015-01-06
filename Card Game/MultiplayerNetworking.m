@@ -264,6 +264,8 @@ typedef struct {
 - (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
     //1
     Message *message = (Message*)[data bytes];
+    MessageType *messageType = &message->messageType;
+    
     if (message->messageType == kMessageTypeRandomNumber) {
         MessageRandomNumber *messageRandomNumber = (MessageRandomNumber*)[data bytes];
         
