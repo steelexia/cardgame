@@ -297,7 +297,7 @@ NSUInteger _currentPlayerIndex;
     PFObject *deckPF = [deckQuery getObjectWithId:deckID error:&error];
     if (!error)
     {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             
             DeckModel *deck = [UserModel downloadDeckFromPF:deckPF];
             NSArray*cards = deckPF[@"cards"];
@@ -317,7 +317,7 @@ NSUInteger _currentPlayerIndex;
                 //TODO ERROR
                 NSLog(@"getDeckFromPF returned nil");
             }
-        });
+        //});
     }
     else{
             //TODO ERROR

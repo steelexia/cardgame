@@ -256,7 +256,7 @@ const int CARD_ID_START = 1000;
         //grabs the user's name to cache it
         PFQuery *query = [PFUser query];
         
-        NSLog(@"got the user");
+        //NSLog(@"got the user");
         
         [query getObjectInBackgroundWithId:card.creator block:^(PFObject *object, NSError *error) {
             
