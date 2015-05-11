@@ -15,7 +15,8 @@
 #import "MultiplayerGameViewController.h"
 #import "CampaignMenuViewController.h"
 #import "Campaign.h"
-
+#import "PNImports.h"
+#import "AppDelegate.h"
 
 
 @interface MainScreenViewController ()
@@ -129,7 +130,157 @@ UILabel *loadingLabel;
         [self.view addSubview:optionsButton];
         
         [optionsButton addTarget:self action:@selector(optionButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    //[self setPubNubConfigDetails2];
+    
 }
+
+-(void) setPubNubConfigDetails
+{
+    PNConfiguration *configuration = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"
+                                                                  publishKey:@"pub-c-d1465391-f40c-44e3-8fc9-9d92be0a63c5" subscribeKey:@"sub-c-cac0d926-d8ab-11e4-8301-0619f8945a4f" secretKey:@"sec-c-MzAzYzM3ZGMtZjFmNC00Mjk3LTkxOTEtMTRmNzUxNDBjYzdi"];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    configuration.presenceHeartbeatInterval = 10;
+    
+    [PubNub setConfiguration:configuration];
+    
+    
+    [PubNub connectWithSuccessBlock:^(NSString *origin) {
+        //NSLog(origin);
+        NSLog(@"connect success flagged here");
+        
+    } errorBlock:^(PNError *error) {
+        NSLog(error.localizedDescription);
+    }];
+    
+    [[PNObservationCenter defaultCenter] addClientConnectionStateObserver:appDelegate withCallbackBlock:^(NSString *origin, BOOL connected, PNError *connectionError){
+        if (connected)
+        {
+            NSLog(@"OBSERVER: Successful Connection!");
+        }
+        else if (!connected || connectionError)
+        {
+            NSLog(@"OBSERVER: Error %@, Connection Failed!", connectionError.localizedDescription);
+        }
+    }];
+    
+    [[PNObservationCenter defaultCenter] addChannelParticipantsListProcessingObserver:appDelegate withBlock:^(PNHereNow *presenceInformation, NSArray *channels, PNError *error) {
+        NSLog(@"OBSERVER: addChannelParticipantsListProcessingObserver: list: %@, on Channel: %@", presenceInformation, channels);
+    }];
+    
+    // #4 Add the +addClientPresenceEnablingObserver+ to catch when presence has been enabled.
+    [[PNObservationCenter defaultCenter] addClientPresenceEnablingObserver:appDelegate withCallbackBlock:^(NSArray *channel, PNError *error) {
+        NSLog(@"OBSERVER: Enabled on Channel: %@",channel.description);
+        switch(channel.count){
+                
+        }
+    }];
+    
+}
+
+-(void) setPubNubConfigDetails2
+{
+    PNConfiguration *configuration = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"
+                                                                  publishKey:@"pub-c-d1465391-f40c-44e3-8fc9-9d92be0a63c5" subscribeKey:@"sub-c-cac0d926-d8ab-11e4-8301-0619f8945a4f" secretKey:@"sec-c-MzAzYzM3ZGMtZjFmNC00Mjk3LTkxOTEtMTRmNzUxNDBjYzdi"];
+    
+    NSString *uuid = [NSString stringWithFormat:@"Mike_Stubbs"];
+    [PubNub setClientIdentifier:uuid];
+    configuration.presenceHeartbeatInterval = 10;
+    configuration.presenceHeartbeatTimeout = 30;
+    [PubNub setConfiguration:configuration];
+    [PubNub connect];
+    
+    // #1 Define our channel name with +PNChannel+.
+    PNChannel *my_channel = [PNChannel channelWithName:@"demo2"
+                                 shouldObservePresence:NO];
+    
+    [[PNObservationCenter defaultCenter] addClientConnectionStateObserver:self withCallbackBlock:^(NSString *origin, BOOL connected, PNError *connectionError){
+        
+        if (connected)
+        {
+            NSLog(@"OBSERVER: Successful Connection!");
+            
+            // #2 +subscribeOnChannel+ if the client connects successfully.
+           // [PubNub subscribeOnChannel:my_channel];
+            [PubNub subscribeOn:@[my_channel]];
+            
+        }
+        else if (!connected || connectionError)
+        {
+            NSLog(@"OBSERVER: Error %@, Connection Failed!", connectionError.localizedDescription);
+        }
+        
+    }];
+    [[PNObservationCenter defaultCenter] addClientChannelSubscriptionStateObserver:self withCallbackBlock:^(PNSubscriptionProcessState state, NSArray *channels, PNError *error){
+        
+        switch (state) {
+            case PNSubscriptionProcessSubscribedState:
+            {
+                // #3 enable presence if isPresenceObservationEnabledForChannel is false.
+                BOOL enabled = [PubNub isPresenceObservationEnabledForChannel:my_channel];
+                NSLog(@"OBSERVER: Subscribed to Channel: %@, Presence enabled:%hhd", channels[0], enabled);
+                if (!enabled) {
+                    [PubNub enablePresenceObservationForChannel:my_channel];
+                }
+                break;
+            }
+            case PNSubscriptionProcessNotSubscribedState:
+                NSLog(@"OBSERVER: Not subscribed to Channel: %@, Error: %@", channels[0], error);
+                break;
+            case PNSubscriptionProcessWillRestoreState:
+                NSLog(@"OBSERVER: Will re-subscribe to Channel: %@", channels[0]);
+                break;
+            case PNSubscriptionProcessRestoredState:
+                NSLog(@"OBSERVER: Re-subscribed to Channel: %@", channels[0]);
+                break;
+        }
+    }];
+    
+    // #4 Add the +addClientPresenceEnablingObserver+ to catch when presence has been enabled.
+    [[PNObservationCenter defaultCenter] addClientPresenceEnablingObserver:self withCallbackBlock:^(NSArray *channel, PNError *error) {
+        NSLog(@"OBSERVER: Enabled on Channel: %@",channel.description);
+        switch(channel.count){
+                
+        }
+    }];
+    
+    // #1 Add the +addPresenceEventObserver+ which will catch events received on the channel.
+    [[PNObservationCenter defaultCenter] addPresenceEventObserver:self withBlock:^(PNPresenceEvent *event) {
+        // NSLog(@"OBSERVER: Presence: %u", event.type);
+        
+        // #2 Add logic that sends messages to the channel based on the type of event received.
+        switch (event.type) {
+            case PNPresenceEventJoin:
+                [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: What's Happening?!",uuid ] toChannel:my_channel ];
+                break;
+            case PNPresenceEventLeave:
+                [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: Catch you on the flip side!",uuid ] toChannel:my_channel ];
+                break;
+            case PNPresenceEventTimeout:
+                [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: Too Bad!",uuid ] toChannel:my_channel ];
+                break;
+            default:
+                break;
+        }
+        
+        // #3. Add logic that sends messages to the channel based on channel occupancy.
+        switch (event.occupancy) {
+            case 1:
+                [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: It's a ghost town.",uuid ] toChannel:my_channel ];
+                break;
+            case 2:
+                [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: It takes two to make a thing go right.",uuid ] toChannel:my_channel ];
+                break;
+            case 3:
+                [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: Three people is a party!" ,uuid ] toChannel:my_channel ];
+                break;
+            default:
+                break;
+        }
+    }];
+
+}
+
 
 -(void)viewDidAppear:(BOOL)animated
 {

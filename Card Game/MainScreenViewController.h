@@ -13,8 +13,9 @@
 #import "CFButton.h"
 #import "MessagesViewController.h"
 #import "OptionsViewController.h"
+#import "PNImports.h"
 
-@interface MainScreenViewController : UIViewController
+@interface MainScreenViewController : UIViewController <PNDelegate>
 
 @property (strong) StrokedLabel *messageCountLabel;
 @property BOOL loadedTutorial;

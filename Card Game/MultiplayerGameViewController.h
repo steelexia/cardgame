@@ -12,10 +12,12 @@
 #import "CFLabel.h"
 #import "UserModel.h"
 #import <Parse/Parse.h>
+#import "multiplayerDataHandler.h"
+
 @class GameViewController;
 @class DeckChooserViewController;
 
-@interface MultiplayerGameViewController : UIViewController<MultiplayerNetworkingProtocol>
+@interface MultiplayerGameViewController : UIViewController<MultiplayerNetworkingProtocol,multiplayerDataHandlerDelegate>
 @property (nonatomic, copy) void (^gameOverBlock)(BOOL didWin);
 @property (nonatomic, copy) void (^gameEndedBlock)();
 
