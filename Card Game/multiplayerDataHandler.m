@@ -167,13 +167,13 @@ PNChannel *gameChannel;
         // #2 Add logic that sends messages to the channel based on the type of event received.
         switch (event.type) {
             case PNPresenceEventJoin:
-                [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: What's Happening?!",uuid ] toChannel:gameChannel ];
+                //[PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: What's Happening?!",uuid ] toChannel:gameChannel ];
                 break;
             case PNPresenceEventLeave:
-                [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: Catch you on the flip side!",uuid ] toChannel:gameChannel ];
+                //[PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: Catch you on the flip side!",uuid ] toChannel:gameChannel ];
                 break;
             case PNPresenceEventTimeout:
-                [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: Too Bad!",uuid ] toChannel:gameChannel ];
+                //[PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: Too Bad!",uuid ] toChannel:gameChannel ];
                 break;
             default:
                 break;
@@ -182,17 +182,23 @@ PNChannel *gameChannel;
         NSString *integerString = [NSString stringWithFormat:@"%d",r];
         NSString *fullGameBeginMessage = [@"Begin" stringByAppendingString:integerString];
 
+        
+        NSMutableDictionary *BeginMsgDict = [[NSMutableDictionary alloc] init];
+        [BeginMsgDict setObject:fullGameBeginMessage forKey:@"text"];
+        [BeginMsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
+        
+
         // #3. Add logic that sends messages to the channel based on channel occupancy.
         switch (event.occupancy) {
             case 1:
-                [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: It's a ghost town.",uuid ] toChannel:gameChannel ];
+               // [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: It's a ghost town.",uuid ] toChannel:gameChannel ];
                 break;
             case 2:
-                [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: It takes two to make a thing go right.",uuid ] toChannel:gameChannel ];
-                [PubNub sendMessage:fullGameBeginMessage toChannel:gameChannel];
+                //[PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: It takes two to make a thing go right.",uuid ] toChannel:gameChannel ];
+                [PubNub sendMessage:BeginMsgDict toChannel:gameChannel];
                 break;
             case 3:
-                [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: Three people is a party!" ,uuid ] toChannel:gameChannel ];
+                //[PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: Three people is a party!" ,uuid ] toChannel:gameChannel ];
                 break;
             default:
                 break;
@@ -224,7 +230,7 @@ PNChannel *gameChannel;
         NSString *prefix = nil;
         
         if ([msgStringVal length] >= 3)
-            prefix = [msgStringVal substringToIndex:3];
+            prefix = [msgStringVal substringToIndex:5];
         else
             prefix = msgStringVal;
         
@@ -314,9 +320,54 @@ PNChannel *gameChannel;
         if([prefix isEqualToString:@"LoadG"])
         {
             //start loading the game, both players have received the deck ID's
-            [self.delegate startLoadingMatch];
+            
+            if([self.opponentDeckLoaded isEqualToString:@"YES"])
+            {
+                [self.delegate startLoadingMatch];
+            }
+            else
+            {
+               //set property "opponent ready" so delegate knows to start the match immediately when finished downloading
+                self.opponentReady = @"YES";
+                
+            }
+        }
+        if([prefix isEqualToString:@"ENDTR"])
+        {
+            [self.gameDelegate opponentEndTurn];
             
         }
+        if([prefix isEqualToString:@"SUMMO"])
+        {
+            NSNumber *cardIndex = [msgIncomingDict objectForKey:@"cardIndex"];
+            NSNumber *targetPosition = [msgIncomingDict objectForKey:@"targetPosition"];
+            NSInteger cardIndexInt = [cardIndex integerValue];
+            NSInteger targetPositionInt = [targetPosition integerValue];
+            
+            NSLog(@"opponent summoned card %ld %ld", (long)cardIndexInt, (long)targetPositionInt);
+            [_gameDelegate opponentSummonedCard:cardIndexInt withTarget:targetPositionInt];
+        }
+        if([prefix isEqualToString:@"ATTAC"])
+        {
+            NSNumber *attackerPosition = [msgIncomingDict objectForKey:@"attackerPosition"];
+            NSNumber *targetPosition = [msgIncomingDict objectForKey:@"targetPosition"];
+            NSInteger attackerPositionInt = [attackerPosition integerValue];
+            NSInteger targetPositionInt = [targetPosition integerValue];
+            NSLog(@"opponent attacked card %ld %ld", (long)attackerPositionInt, (long)targetPositionInt);
+            
+            [_gameDelegate opponentAttackCard:attackerPositionInt withTarget:targetPositionInt];
+        }
+        if([prefix isEqualToString:@"FORFE"])
+        {
+            NSLog(@"opponent forfeit!");
+            [_gameDelegate opponentForfeit];
+        }
+        if([prefix isEqualToString:@"GAMEO"])
+            {
+                NSLog(@"Game over message received");
+                
+                //[self.delegate gameOver:messageGameOver->player1Won];
+            }
      }];
     
     
@@ -363,7 +414,60 @@ PNChannel *gameChannel;
     [MsgDict setObject:@"LoadG" forKey:@"text"];
     [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
     [PubNub sendMessage:MsgDict toChannel:gameChannel ];
+    self.opponentDeckLoaded = @"YES";
+
 }
 
+#pragma mark GameViewController Message Protocol Functions
+//SUMMO
+//NSNumber *cardIndex = [msgIncomingDict objectForKey:@"cardIndex"];
+//NSNumber *targetPosition = [msgIncomingDict objectForKey:@"targetPosition"];
+-(void)sendSummonCard:(int)cardIndex withTarget:(int)targetPosition
+{
+    NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
+    [MsgDict setObject:@"SUMMO" forKey:@"text"];
+    NSNumber *cardIndexNum = [NSNumber numberWithInt:cardIndex];
+    NSNumber *targetPositionNum = [NSNumber numberWithInt:targetPosition];
+    [MsgDict setObject:cardIndexNum forKey:@"cardIndex"];
+    [MsgDict setObject:targetPositionNum forKey:@"targetPosition"];
+    
+    [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
+    
+    [PubNub sendMessage:MsgDict toChannel:gameChannel ];
+}
+//ATTAC
+//NSNumber *attackerPosition = [msgIncomingDict objectForKey:@"attackerPosition"];
+//NSNumber *targetPosition = [msgIncomingDict objectForKey:@"targetPosition"];
+-(void)sendAttackCard:(int)attackerPosition withTarget:(int)targetPosition
+{
+    NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
+    [MsgDict setObject:@"ATTAC" forKey:@"text"];
+    NSNumber *attackerPositionNum = [NSNumber numberWithInt:attackerPosition];
+    NSNumber *targetPositionNum = [NSNumber numberWithInt:targetPosition];
+    [MsgDict setObject:attackerPositionNum forKey:@"attackerPosition"];
+    [MsgDict setObject:targetPositionNum forKey:@"targetPosition"];
+    [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
+    
+    [PubNub sendMessage:MsgDict toChannel:gameChannel ];
+}
+
+-(void)playerForfeit
+{
+    
+}
+//the player has quit the game, the other player will win
+-(void)sendOpponentForfeit
+{
+    
+}
+//ENDTR
+-(void)sendEndTurn
+{
+    NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
+    [MsgDict setObject:@"ENDTR" forKey:@"text"];
+    [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
+    [PubNub sendMessage:MsgDict toChannel:gameChannel ];
+    self.opponentDeckLoaded = @"YES";
+}
 
 @end

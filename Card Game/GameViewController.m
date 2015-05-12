@@ -520,7 +520,10 @@ BOOL leftHandViewZone = NO;
                 if (_gameMode == GameModeMultiplayer)
                 {
                     int targetIndex = [self.gameModel getTargetIndex:target];
-                    [_networkingEngine sendSummonCard:_currentCardIndex withTarget:targetIndex];
+                    //[_networkingEngine sendSummonCard:_currentCardIndex withTarget:targetIndex];
+                    [self.MPDataHandler sendSummonCard:_currentCardIndex withTarget:targetIndex];
+                    
+                    
                 }
                 
                 //cast all abilities at this card
@@ -1239,7 +1242,9 @@ BOOL leftHandViewZone = NO;
                 {
                     int attackerPosition = [_gameModel getTargetIndex:(MonsterCardModel*)currentCard];
                     
-                    [_networkingEngine sendAttackCard:attackerPosition withTarget:positionHeroB];
+                    //[_networkingEngine sendAttackCard:attackerPosition withTarget:positionHeroB];
+                    [self.MPDataHandler sendAttackCard:attackerPosition withTarget:positionHeroB];
+                    
                 }
                 
                 [self attackHero:currentCard target:(MonsterCardModel*) enemyHeroView.cardModel fromSide:currentSide];
@@ -1266,7 +1271,9 @@ BOOL leftHandViewZone = NO;
                             int attackerPosition = [_gameModel getTargetIndex:(MonsterCardModel*)currentCard];
                             int targetPosition = [_gameModel getTargetIndex:(MonsterCardModel*)card];
                             
-                            [_networkingEngine sendAttackCard:attackerPosition withTarget:targetPosition];
+                            //[_networkingEngine sendAttackCard:attackerPosition withTarget:targetPosition];
+                            [self.MPDataHandler sendAttackCard:attackerPosition withTarget:targetPosition];
+                            
                         }
                         
                         [self attackCard:currentCard target:(MonsterCardModel*)card fromSide:currentSide];
@@ -1547,7 +1554,8 @@ BOOL leftHandViewZone = NO;
 {
     if (_gameMode == GameModeMultiplayer)
     {
-        [_networkingEngine sendOpponentForfeit];
+        //[_networkingEngine sendOpponentForfeit];
+        [self.MPDataHandler sendOpponentForfeit];
         _gameModel.playerOneDefeated = YES;
     }
     
@@ -1623,7 +1631,9 @@ BOOL leftHandViewZone = NO;
     [self fadeOutAndRemove:giveupAbilityButton inDuration:0.2 withDelay:0];
     
     if (_gameMode == GameModeMultiplayer)
-        [_networkingEngine sendSummonCard:_currentCardIndex withTarget:positionNoPosition];
+        //[_networkingEngine sendSummonCard:_currentCardIndex withTarget:positionNoPosition];
+        [self.MPDataHandler sendSummonCard:_currentCardIndex withTarget:positionNoPosition];
+    
 }
 
 -(void)gameOver

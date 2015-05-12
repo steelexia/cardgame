@@ -16,6 +16,14 @@
 - (void)startLoadingMatch;
 @end;
 
+@protocol MPGameProtocol <NSObject>
+-(void)opponentEndTurn;
+-(void)opponentSummonedCard:(int)cardIndex withTarget:(int)target;
+-(void)opponentAttackCard:(int)attackerPosition withTarget:(int)target;
+-(void)opponentForfeit;
+@end
+
+
 @interface multiplayerDataHandler : NSObject <PNDelegate>
 + (multiplayerDataHandler*)sharedInstance;
 -(void)connectPlayer;
@@ -26,8 +34,15 @@
 -(void)setPubnubConfigDetails;
 -(NSString *)getOpponentDeckID;
 -(void)sendDeckDownloadedMessage:(NSString *)msg;
-@property (strong,nonatomic) NSString *deckLoaded;
-
+@property (strong,nonatomic) NSString *opponentDeckLoaded;
+@property (strong,nonatomic) NSString *opponentReady;
 @property (strong,nonatomic) NSString *deckChosen;
 @property (nonatomic, assign) id <multiplayerDataHandlerDelegate> delegate;
+@property (nonatomic, assign) id<MPGameProtocol> gameDelegate;
+
+-(void)sendSummonCard:(int)cardIndex withTarget:(int)targetPosition;
+-(void)sendAttackCard:(int)attackerPosition withTarget:(int)targetPosition;
+-(void)playerForfeit;
+-(void)sendOpponentForfeit;
+-(void)sendEndTurn;
 @end

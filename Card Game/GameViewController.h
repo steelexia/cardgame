@@ -21,7 +21,7 @@
  Main class of the game that handles the view and controls
  */
 
-@interface GameViewController : UIViewController <MultiplayerGameProtocol,multiplayerDataHandlerDelegate>
+@interface GameViewController : UIViewController <MultiplayerGameProtocol,multiplayerDataHandlerDelegate,MPGameProtocol>
 
 @property (strong) GameModel *gameModel;
 
@@ -87,6 +87,7 @@
 /** for multiplayer */
 @property (nonatomic, strong) MultiplayerNetworking *networkingEngine;
 @property (nonatomic,strong) multiplayerDataHandler *MPDataHandler;
+
 /** For multiplayer */
 @property (strong) DeckModel*opponentDeck;
 /** For when picking ability targets */

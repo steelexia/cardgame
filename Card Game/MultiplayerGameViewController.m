@@ -110,6 +110,9 @@ multiplayerDataHandler *MPDataHandler;
     
     NSLog(@"starting gameViewController");
     _gvc = [[GameViewController alloc] initWithGameMode:GameModeMultiplayer withLevel:nil];
+    _gvc.MPDataHandler = MPDataHandler;
+    _gvc.MPDataHandler.gameDelegate = _gvc;
+    
    // [mpConnecting connectPlayer];
     
     //[mpConnecting sendPlayerMessage:@"test"];
@@ -327,15 +330,26 @@ multiplayerDataHandler *MPDataHandler;
             
             if (deck != nil)
             {
+                NSLog(@"finished downloading opponent deck");
+
                 [_gvc setOpponentDeck:deck];
                 //[_dcvc receivedOpponentDeck];
                 //[self receivedOpponentDeck];
                // [_networkingEngine sendReceivedDeck]; //tells other player deck is received
                 
                // MPDataHandler
+                if([MPDataHandler.opponentReady isEqualToString:@"YES"])
+                {
+                    [self startLoadingMatch];
+                    
+                }
+                else
+                {
+                    [MPDataHandler sendDeckDownloadedMessage:@"deck downloaded"];
+                }
                 
-                NSLog(@"finished receiving opponent deck");
-            }
+                
+                           }
             else
             {
                 //TODO ERROR
@@ -486,7 +500,6 @@ multiplayerDataHandler *MPDataHandler;
     _deckReceived = YES;
     _opponentHasReceivedDeck = YES;
     
-    
     NSLog(@"start!");
     //dispatch_async(dispatch_get_main_queue(), ^{
     [self closeLoadingScreen];
@@ -495,6 +508,11 @@ multiplayerDataHandler *MPDataHandler;
     }];
 
    
+}
+
+-(void)sendEndTurn
+{
+    
 }
 
 @end
