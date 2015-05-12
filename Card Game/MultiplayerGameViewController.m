@@ -112,6 +112,7 @@ multiplayerDataHandler *MPDataHandler;
     _gvc = [[GameViewController alloc] initWithGameMode:GameModeMultiplayer withLevel:nil];
     _gvc.MPDataHandler = MPDataHandler;
     _gvc.MPDataHandler.gameDelegate = _gvc;
+    MPDataHandler.delegate = self;
     
    // [mpConnecting connectPlayer];
     
@@ -479,9 +480,9 @@ multiplayerDataHandler *MPDataHandler;
     {
         NSLog(@"start!");
         //dispatch_async(dispatch_get_main_queue(), ^{
-            [self closeLoadingScreen];
+            //[self closeLoadingScreen];
             [self presentViewController:_gvc animated:YES completion:^{
-                [self closeLoadingScreen];
+                //[self closeLoadingScreen];
             }];
         //});
     }
@@ -502,9 +503,9 @@ multiplayerDataHandler *MPDataHandler;
     
     NSLog(@"start!");
     //dispatch_async(dispatch_get_main_queue(), ^{
-    [self closeLoadingScreen];
+   // [self closeLoadingScreen];
     [self presentViewController:_gvc animated:YES completion:^{
-        [self closeLoadingScreen];
+        //[self closeLoadingScreen];
     }];
 
    

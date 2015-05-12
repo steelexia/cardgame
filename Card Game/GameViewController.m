@@ -695,7 +695,8 @@ BOOL leftHandViewZone = NO;
     }
     
     if (currentSide == PLAYER_SIDE)
-        [_networkingEngine sendEndTurn];
+        //[_networkingEngine sendEndTurn];
+        [self.MPDataHandler sendEndTurn];
     
     //tell the gameModel to end turn
     [self.gameModel endTurn: currentSide];
@@ -1473,6 +1474,8 @@ BOOL leftHandViewZone = NO;
         _currentCardIndex = [hand indexOfObject:card];
         
         [self.gameModel summonCard:card side:side];
+        
+        [self.MPDataHandler sendSummonCard:_currentCardIndex withTarget:positionNoPosition];
         
         /*
         //only send if no abilities, otherwise player is busy choosing ability

@@ -162,12 +162,24 @@ PNChannel *gameChannel;
     
     // #1 Add the +addPresenceEventObserver+ which will catch events received on the channel.
     [[PNObservationCenter defaultCenter] addPresenceEventObserver:self withBlock:^(PNPresenceEvent *event) {
+        
+        r = arc4random_uniform(3000);
+        NSString *integerString = [NSString stringWithFormat:@"%d",r];
+        NSString *fullGameBeginMessage = [@"Begin" stringByAppendingString:integerString];
+        
+        
+        NSMutableDictionary *BeginMsgDict = [[NSMutableDictionary alloc] init];
+        [BeginMsgDict setObject:fullGameBeginMessage forKey:@"text"];
+        [BeginMsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
+
+        
+        
         // NSLog(@"OBSERVER: Presence: %u", event.type);
         
         // #2 Add logic that sends messages to the channel based on the type of event received.
         switch (event.type) {
             case PNPresenceEventJoin:
-                //[PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: What's Happening?!",uuid ] toChannel:gameChannel ];
+                [PubNub sendMessage:BeginMsgDict toChannel:gameChannel];
                 break;
             case PNPresenceEventLeave:
                 //[PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: Catch you on the flip side!",uuid ] toChannel:gameChannel ];
@@ -178,27 +190,25 @@ PNChannel *gameChannel;
             default:
                 break;
         }
-        r = arc4random_uniform(3000);
-        NSString *integerString = [NSString stringWithFormat:@"%d",r];
-        NSString *fullGameBeginMessage = [@"Begin" stringByAppendingString:integerString];
-
         
-        NSMutableDictionary *BeginMsgDict = [[NSMutableDictionary alloc] init];
-        [BeginMsgDict setObject:fullGameBeginMessage forKey:@"text"];
-        [BeginMsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-        
-
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"alert" message:@"case2Found" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         // #3. Add logic that sends messages to the channel based on channel occupancy.
         switch (event.occupancy) {
             case 1:
                // [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: It's a ghost town.",uuid ] toChannel:gameChannel ];
+                NSLog(@"occupancy 1");
+                
                 break;
             case 2:
                 //[PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: It takes two to make a thing go right.",uuid ] toChannel:gameChannel ];
-                [PubNub sendMessage:BeginMsgDict toChannel:gameChannel];
+               // [PubNub sendMessage:BeginMsgDict toChannel:gameChannel];
+                [alert show];
+                
+                NSLog(@"occupancy 2");
                 break;
             case 3:
                 //[PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: Three people is a party!" ,uuid ] toChannel:gameChannel ];
+                  NSLog(@"occupancy 3");
                 break;
             default:
                 break;
