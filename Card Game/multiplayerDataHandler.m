@@ -99,7 +99,7 @@ PNChannel *gameChannel;
     PNConfiguration *configuration = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"
                                                                   publishKey:@"pub-c-d1465391-f40c-44e3-8fc9-9d92be0a63c5" subscribeKey:@"sub-c-cac0d926-d8ab-11e4-8301-0619f8945a4f" secretKey:@"sec-c-MzAzYzM3ZGMtZjFmNC00Mjk3LTkxOTEtMTRmNzUxNDBjYzdi"];
     
-    NSString *uuid = [NSString stringWithFormat:@"Mike_Stubbs"];
+    NSString *uuid = userPF.objectId;
     [PubNub setClientIdentifier:uuid];
     configuration.presenceHeartbeatInterval = 10;
     configuration.presenceHeartbeatTimeout = 30;
@@ -133,11 +133,17 @@ PNChannel *gameChannel;
             case PNSubscriptionProcessSubscribedState:
             {
                 // #3 enable presence if isPresenceObservationEnabledForChannel is false.
-                BOOL enabled = [PubNub isPresenceObservationEnabledForChannel:gameChannel];
+                BOOL enabled = [PubNub isPresenceObservationEnabledFor:gameChannel];
+                
                 NSLog(@"OBSERVER: Subscribed to Channel: %@, Presence enabled:%hhd", channels[0], enabled);
                 if (!enabled) {
-                    [PubNub enablePresenceObservationForChannel:gameChannel];
+                    NSMutableArray *channelsToObserve = [[NSMutableArray alloc] init];
+                    [channelsToObserve addObject:gameChannel];
+                    
+                    [PubNub enablePresenceObservationFor:channelsToObserve];
+                     BOOL nowenabled = [PubNub isPresenceObservationEnabledFor:gameChannel];
                 }
+                
                 break;
             }
             case PNSubscriptionProcessNotSubscribedState:

@@ -1475,6 +1475,7 @@ BOOL leftHandViewZone = NO;
         
         [self.gameModel summonCard:card side:side];
         
+        //if you summon a minion and it displays a button to give up the ability (cancel the ability), the minion should not be summoned until the user actually decides to cancel the ability
         [self.MPDataHandler sendSummonCard:_currentCardIndex withTarget:positionNoPosition];
         
         /*
@@ -1567,10 +1568,13 @@ BOOL leftHandViewZone = NO;
 
 -(void)endGame
 {
+    //needs to tell MPengine to disconnect and call to end the match
+    
     if (_gameMode == GameModeMultiplayer)
     {
         if (_gameModel.playerOneDefeated && _gameModel.playerTwoDefeated)
         {
+            //draw
             [_networkingEngine gameOver:-1];
         }
         else if (_gameModel.playerOneDefeated)

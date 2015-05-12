@@ -24,7 +24,7 @@
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 BOOL playerAuthenticated;
-
+BOOL alreadyLoadedMatch;
 MultiplayerNetworking *_networkingEngine;
 NSUInteger _currentPlayerIndex;
 multiplayerDataHandler *MPDataHandler;
@@ -502,12 +502,19 @@ multiplayerDataHandler *MPDataHandler;
     _opponentHasReceivedDeck = YES;
     
     NSLog(@"start!");
+    
+    if(!alreadyLoadedMatch)
+    {
+        
+        alreadyLoadedMatch = TRUE;
+        
     //dispatch_async(dispatch_get_main_queue(), ^{
    // [self closeLoadingScreen];
     [self presentViewController:_gvc animated:YES completion:^{
         //[self closeLoadingScreen];
+        
     }];
-
+}
    
 }
 
