@@ -15,9 +15,9 @@
 #import "UserModel.h"
 #import "CDCardModel.h"
 #import <CoreData/CoreData.h>
+#import "PNImports.h"
 
-
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate,PNDelegate>
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;

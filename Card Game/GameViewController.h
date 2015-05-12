@@ -14,14 +14,14 @@
 #import "CFLabel.h"
 #import "CardEditorViewController.h"
 #import "MultiplayerNetworking.h"
-
+#import "multiplayerDataHandler.h"
 @class GameModel;
 
 /**
  Main class of the game that handles the view and controls
  */
 
-@interface GameViewController : UIViewController <MultiplayerGameProtocol>
+@interface GameViewController : UIViewController <MultiplayerGameProtocol,multiplayerDataHandlerDelegate,MPGameProtocol>
 
 @property (strong) GameModel *gameModel;
 
@@ -86,6 +86,7 @@
 
 /** for multiplayer */
 @property (nonatomic, strong) MultiplayerNetworking *networkingEngine;
+@property (nonatomic,strong) multiplayerDataHandler *MPDataHandler;
 
 /** For multiplayer */
 @property (strong) DeckModel*opponentDeck;

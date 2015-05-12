@@ -27,6 +27,7 @@ BOOL playerAuthenticated;
 
 MultiplayerNetworking *_networkingEngine;
 NSUInteger _currentPlayerIndex;
+multiplayerDataHandler *MPDataHandler;
 
 - (void)viewDidLoad
 {
@@ -60,7 +61,9 @@ NSUInteger _currentPlayerIndex;
     CFButton* startButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
     startButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 100);
     [startButton.label setText:@"Start"];
-    [startButton addTarget:self action:@selector(startGameCenterButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    //[startButton addTarget:self action:@selector(startGameCenterButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    [startButton addTarget:self action:@selector(startConnectingPubNub)    forControlEvents:UIControlEventTouchUpInside];
+    
     [self.view addSubview:startButton];
     
     
@@ -100,6 +103,28 @@ NSUInteger _currentPlayerIndex;
     
     NSLog(@"appeared");
 }
+-(void)startConnectingPubNub
+{
+    MPDataHandler = [multiplayerDataHandler sharedInstance];
+    [MPDataHandler setPubnubConfigDetails];
+    
+    NSLog(@"starting gameViewController");
+    _gvc = [[GameViewController alloc] initWithGameMode:GameModeMultiplayer withLevel:nil];
+    _gvc.MPDataHandler = MPDataHandler;
+    _gvc.MPDataHandler.gameDelegate = _gvc;
+    
+   // [mpConnecting connectPlayer];
+    
+    //[mpConnecting sendPlayerMessage:@"test"];
+    
+    //[mpConnecting getPlayerState];
+    
+   // [mpConnecting getConnectedPlayers];
+    //check to see if there are two players in main lobby
+    
+}
+
+
 
 -(void)startGameCenterButtonPressed
 {
@@ -305,17 +330,31 @@ NSUInteger _currentPlayerIndex;
             
             if (deck != nil)
             {
+                NSLog(@"finished downloading opponent deck");
+
                 [_gvc setOpponentDeck:deck];
                 //[_dcvc receivedOpponentDeck];
-                [self receivedOpponentDeck];
-                [_networkingEngine sendReceivedDeck]; //tells other player deck is received
+                //[self receivedOpponentDeck];
+               // [_networkingEngine sendReceivedDeck]; //tells other player deck is received
                 
-                NSLog(@"finished receiving opponent deck");
-            }
+               // MPDataHandler
+                if([MPDataHandler.opponentReady isEqualToString:@"YES"])
+                {
+                    [self startLoadingMatch];
+                    
+                }
+                else
+                {
+                    [MPDataHandler sendDeckDownloadedMessage:@"deck downloaded"];
+                }
+                
+                
+                           }
             else
             {
                 //TODO ERROR
                 NSLog(@"getDeckFromPF returned nil");
+                
             }
         //});
     }
@@ -446,6 +485,34 @@ NSUInteger _currentPlayerIndex;
             }];
         //});
     }
+}
+
+- (void)startDownloadingOpponentDeck:(NSString *)deckID
+{
+    [self receivedOpponentDeck:deckID];
+    
+}
+
+- (void)startLoadingMatch
+{
+    //reference the opponent deckID from the property on multiplayer data handler
+    NSString *opponentDeckID = [MPDataHandler getOpponentDeckID];
+    _deckReceived = YES;
+    _opponentHasReceivedDeck = YES;
+    
+    NSLog(@"start!");
+    //dispatch_async(dispatch_get_main_queue(), ^{
+    [self closeLoadingScreen];
+    [self presentViewController:_gvc animated:YES completion:^{
+        [self closeLoadingScreen];
+    }];
+
+   
+}
+
+-(void)sendEndTurn
+{
+    
 }
 
 @end

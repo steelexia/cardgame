@@ -13,6 +13,7 @@
 #import "PickIAPHelper.h"
 #import "LoginViewController.h"
 
+
 @implementation AppDelegate
 
 @synthesize managedObjectContext = _managedObjectContext;
@@ -36,6 +37,9 @@ const BOOL OFFLINE_DEBUGGING = NO;
     [CardView loadResources];
     [Campaign loadResources];
     
+    
+    /* Instantiate PubNub */
+    [PubNub setDelegate:self];
     
     userCDContext = [self managedObjectContext];
     
@@ -301,6 +305,38 @@ const BOOL OFFLINE_DEBUGGING = NO;
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark pubnub delegate methods
+//(In AppDelegate.m, define didReceiveMessage delegate method:)
+- (void)pubnubClient:(PubNub *)client didReceiveMessage:(PNMessage *)message {
+    NSLog( @"%@", [NSString stringWithFormat:@"received: %@", message.message] );
+    NSLog(@"this fired from the app delegate zoinks");
+    
+    //[[NSNotificationCenter defaultCenter] postNotificationName:@"PNMessage" object:self userInfo:[pubMsgDict copy]];
+    
+}
+
+- (void)pubnubClient:(PubNub *)client didConnectToOrigin:(NSString *)origin {
+    NSLog(@"DELEGATE: Connected to  origin: %@", origin);
+    NSLog(@"brianconnected");
+    
+}
+
+- (void)pubnubClient:(PubNub *)client didReceiveParticipantsList:(NSArray *)participants forChannel:(PNChannel *)channel
+{
+    NSLog(@"DELEGATE: Here_Now %@: %@", participants, channel);
+}
+
+// #5 Add a delegate +didEnablePresenceObservationOnChannels+ to log a message when presence is enabled
+- (void)pubnubClient:(PubNub *)client didEnablePresenceObservationOnChannels:(NSArray *)channels {
+    
+    NSLog(@"DELEGATE: Presence observation enabled.");
+}
+
+// #4. Add the +didReceivePresenceEvent+ delegate to catch presence events
+- (void)pubnubClient:(PubNub *)client didReceivePresenceEvent:(PNPresenceEvent *)event {
+    NSLog(@"DELEGATE: Received Presence event: %@", event);
 }
 
 @end
