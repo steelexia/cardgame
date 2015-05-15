@@ -92,7 +92,7 @@
 @property (strong) DeckModel*opponentDeck;
 /** For when picking ability targets */
 @property int currentCardIndex;
-@property uint32_t playerSeed, opponentSeed;
+@property (nonatomic) uint32_t playerSeed, opponentSeed;
 
 /** updates the position of all hands with the gameModel, adding views to cards that don't have one yet */
 //-(void)updateHandsView;

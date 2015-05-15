@@ -23,6 +23,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *messageStateLabel;
 @property (nonatomic, strong) MultiplayerNetworking *networkingEngine;
+@property (strong,nonatomic) UILabel *currentLoadStateLabel;
 
 @property (strong)GameViewController *gvc;
 //@property (strong)DeckChooserViewController *dcvc;

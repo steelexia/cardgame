@@ -72,6 +72,12 @@ multiplayerDataHandler *MPDataHandler;
     [backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backButton];
     
+    self.currentLoadStateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20,200,300,50)];
+    self.currentLoadStateLabel.text = @"Default Text";
+    
+    [self.view addSubview:self.currentLoadStateLabel];
+    
+    
     
     //---------------activity indicator--------------------//
     
@@ -334,21 +340,17 @@ multiplayerDataHandler *MPDataHandler;
                 NSLog(@"finished downloading opponent deck");
 
                 [_gvc setOpponentDeck:deck];
+                
                 //[_dcvc receivedOpponentDeck];
                 //[self receivedOpponentDeck];
                // [_networkingEngine sendReceivedDeck]; //tells other player deck is received
                 
                // MPDataHandler
-                if([MPDataHandler.opponentReady isEqualToString:@"YES"])
+                if(!MPDataHandler.opponentReceivedSeed)
                 {
-                    [self startLoadingMatch];
+                    [MPDataHandler sendSeedMessage:nil];
                     
                 }
-                else
-                {
-                    [MPDataHandler sendDeckDownloadedMessage:@"deck downloaded"];
-                }
-                
                 
                            }
             else
@@ -520,6 +522,12 @@ multiplayerDataHandler *MPDataHandler;
 
 -(void)sendEndTurn
 {
+    
+}
+
+-(void)updateStatusLabelText:(NSString *) text
+{
+    self.currentLoadStateLabel.text = text;
     
 }
 
