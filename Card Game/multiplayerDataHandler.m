@@ -530,7 +530,9 @@ PNChannel *gameChannel;
     NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
     [MsgDict setObject:@"SUMMO" forKey:@"text"];
     NSNumber *cardIndexNum = [NSNumber numberWithInt:cardIndex];
-    NSNumber *targetPositionNum = [NSNumber numberWithInt:targetPosition];
+    
+    int target = [GameModel getReversedPosition:targetPosition];
+    NSNumber *targetPositionNum = [NSNumber numberWithInt:target];
     [MsgDict setObject:cardIndexNum forKey:@"cardIndex"];
     [MsgDict setObject:targetPositionNum forKey:@"targetPosition"];
     
