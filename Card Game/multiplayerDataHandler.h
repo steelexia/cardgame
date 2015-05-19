@@ -16,6 +16,8 @@
 - (void)startLoadingMatch;
 - (void)matchEnded;
 -(void)updateStatusLabelText:(NSString *) text;
+-(void)updateNumPlayersLabel:(NSString *) text;
+
 @end;
 
 @protocol MPGameProtocol <NSObject>
@@ -36,6 +38,7 @@
 @property PFUser *connectedParseUser;
 -(void)getPlayerState;
 -(void)setPubnubConfigDetails;
+-(void)sendStartMatch;
 -(NSString *)getOpponentDeckID;
 -(void)sendSeedMessage:(NSString *)msg;
 @property (strong,nonatomic) NSString *opponentDeckLoaded;

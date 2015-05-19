@@ -13,7 +13,7 @@
 @implementation multiplayerDataHandler
 @synthesize connectedParseUser;
 
-int r;
+int randomSeed;
 NSInteger playerNumber;
 NSString *opponentDeckID;
 BOOL sentDeck = FALSE;
@@ -90,6 +90,20 @@ PNChannel *gameChannel;
     PNChannel *mainLobby = [PNChannel channelWithName:@"main_lobby"];
     
     [PubNub updateClientState:connectedParseUser.objectId state:playerStateInfo forObject:mainLobby];
+    
+}
+
+-(void)sendStartMatch
+{
+    randomSeed = arc4random_uniform(3000);
+    NSString *integerString = [NSString stringWithFormat:@"%d",randomSeed];
+    NSString *fullGameBeginMessage = [@"Begin" stringByAppendingString:integerString];
+    
+    NSMutableDictionary *BeginMsgDict = [[NSMutableDictionary alloc] init];
+    [BeginMsgDict setObject:fullGameBeginMessage forKey:@"text"];
+    [BeginMsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
+    
+    [PubNub sendMessage:BeginMsgDict toChannel:gameChannel];
     
 }
 
@@ -170,23 +184,12 @@ PNChannel *gameChannel;
     // #1 Add the +addPresenceEventObserver+ which will catch events received on the channel.
     [[PNObservationCenter defaultCenter] addPresenceEventObserver:self withBlock:^(PNPresenceEvent *event) {
         
-        r = arc4random_uniform(3000);
-        NSString *integerString = [NSString stringWithFormat:@"%d",r];
-        NSString *fullGameBeginMessage = [@"Begin" stringByAppendingString:integerString];
-        
-        
-        NSMutableDictionary *BeginMsgDict = [[NSMutableDictionary alloc] init];
-        [BeginMsgDict setObject:fullGameBeginMessage forKey:@"text"];
-        [BeginMsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-
-        
-        
         // NSLog(@"OBSERVER: Presence: %u", event.type);
         
         // #2 Add logic that sends messages to the channel based on the type of event received.
         switch (event.type) {
             case PNPresenceEventJoin:
-                [PubNub sendMessage:BeginMsgDict toChannel:gameChannel];
+                
                 break;
             case PNPresenceEventLeave:
                 //[PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: Catch you on the flip side!",uuid ] toChannel:gameChannel ];
@@ -204,18 +207,21 @@ PNChannel *gameChannel;
             case 1:
                // [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: It's a ghost town.",uuid ] toChannel:gameChannel ];
                 NSLog(@"occupancy 1");
+                [self.delegate updateNumPlayersLabel:@"1 Player"];
                 
                 break;
             case 2:
                 //[PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: It takes two to make a thing go right.",uuid ] toChannel:gameChannel ];
                // [PubNub sendMessage:BeginMsgDict toChannel:gameChannel];
-                [alert show];
+                //[alert show];
                 
                 NSLog(@"occupancy 2");
+                [self.delegate updateNumPlayersLabel:@"2 Players, Start Match When Ready"];
                 break;
             case 3:
                 //[PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: Three people is a party!" ,uuid ] toChannel:gameChannel ];
                   NSLog(@"occupancy 3");
+                [self.delegate updateNumPlayersLabel:@"3 Players, Error"];
                 break;
             default:
                 break;
@@ -262,9 +268,22 @@ PNChannel *gameChannel;
                
                //convert to int value
                NSInteger seedint = [seed integerValue];
+               //worst code ever to just quick hack not getting a tie..
+               if(randomSeed ==0)
+               {
+                   randomSeed = arc4random_uniform(3000);
+               }
+               if(seedint==randomSeed)
+               {
+                   randomSeed = arc4random_uniform(3000);
+               }
+               if(seedint ==randomSeed)
+               {
+                   randomSeed = arc4random_uniform(3000);
+               }
                
                //check against own seed
-               if(seedint>=r)
+               if(seedint<=randomSeed)
                {
                    //I am player 1, send back they are player 2
                    
@@ -417,14 +436,9 @@ PNChannel *gameChannel;
             
             _receivedOpponentSeed = YES;
             //[_gameDelegate setOpponentSeed:messageRandomNumber->seed];
-            if(_opponentSeed <=0)
-            {
-                _opponentSeed = seedint;
-            }
-            else
-            {
-                //already got seed, no need to update this
-            }
+            
+            _opponentSeed = seedint;
+            
            
             
             //send seed received
@@ -566,31 +580,18 @@ PNChannel *gameChannel;
 
 -(void)sendSeed
 {
-    int seedNumber;
-    if(self.playerSeed <=0)
-    {
-        uint32_t randomNumber = arc4random();
-        //srand48(randomNumber);
-        randomNumber = randomNumber +1;
-        
-        NSLog(@"sent seed %ud", randomNumber);
-         seedNumber = randomNumber;
-    }
-    else
-    {
-        seedNumber = self.playerSeed;
-    }
+   
     
     //only send if opponent hasn't received it
     if(!self.opponentReceivedSeed)
     
     {
-    NSString *seedSend = [@"SeedR" stringByAppendingString:[NSString stringWithFormat:@"%d",seedNumber]];
+    NSString *seedSend = [@"SeedR" stringByAppendingString:[NSString stringWithFormat:@"%d",randomSeed]];
     NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
     [MsgDict setObject:seedSend forKey:@"text"];
     [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
     [PubNub sendMessage:MsgDict toChannel:gameChannel ];
-    _playerSeed = seedNumber;
+    _playerSeed = randomSeed;
     }
 }
 

@@ -211,6 +211,14 @@
 		D31E2CAB19BFBECF002E1934 /* MultiplayerGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D31E2CAA19BFBECF002E1934 /* MultiplayerGameViewController.m */; };
 		D31E2CAF19BFE999002E1934 /* MultiplayerGameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D31E2CAE19BFE999002E1934 /* MultiplayerGameViewController.xib */; };
 		D31E2CB419BFF502002E1934 /* MultiplayerNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = D31E2CB319BFF502002E1934 /* MultiplayerNetworking.m */; };
+		EC93C6D91B06588A00D3DE2A /* Icon-40.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6D11B06588A00D3DE2A /* Icon-40.png */; };
+		EC93C6DA1B06588A00D3DE2A /* Icon-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6D21B06588A00D3DE2A /* Icon-40@2x.png */; };
+		EC93C6DB1B06588A00D3DE2A /* Icon-60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6D31B06588A00D3DE2A /* Icon-60@2x.png */; };
+		EC93C6DC1B06588A00D3DE2A /* Icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6D41B06588A00D3DE2A /* Icon-76.png */; };
+		EC93C6DD1B06588A00D3DE2A /* Icon-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6D51B06588A00D3DE2A /* Icon-76@2x.png */; };
+		EC93C6DE1B06588A00D3DE2A /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6D61B06588A00D3DE2A /* Icon-Small.png */; };
+		EC93C6DF1B06588A00D3DE2A /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6D71B06588A00D3DE2A /* Icon-Small@2x.png */; };
+		EC93C6E01B06588A00D3DE2A /* Icon-Small@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6D81B06588A00D3DE2A /* Icon-Small@3x.png */; };
 		ECCD468C1ACC881400804B06 /* PNObservationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD45711ACC881400804B06 /* PNObservationCenter.m */; };
 		ECCD468D1ACC881400804B06 /* PubNub+APNS.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD45731ACC881400804B06 /* PubNub+APNS.m */; };
 		ECCD468E1ACC881400804B06 /* PubNub+ChannelRegistry.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD45751ACC881400804B06 /* PubNub+ChannelRegistry.m */; };
@@ -677,6 +685,14 @@
 		D31E2CAE19BFE999002E1934 /* MultiplayerGameViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MultiplayerGameViewController.xib; sourceTree = "<group>"; };
 		D31E2CB219BFF502002E1934 /* MultiplayerNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiplayerNetworking.h; sourceTree = "<group>"; };
 		D31E2CB319BFF502002E1934 /* MultiplayerNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiplayerNetworking.m; sourceTree = "<group>"; };
+		EC93C6D11B06588A00D3DE2A /* Icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40.png"; sourceTree = "<group>"; };
+		EC93C6D21B06588A00D3DE2A /* Icon-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40@2x.png"; sourceTree = "<group>"; };
+		EC93C6D31B06588A00D3DE2A /* Icon-60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-60@2x.png"; sourceTree = "<group>"; };
+		EC93C6D41B06588A00D3DE2A /* Icon-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76.png"; sourceTree = "<group>"; };
+		EC93C6D51B06588A00D3DE2A /* Icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76@2x.png"; sourceTree = "<group>"; };
+		EC93C6D61B06588A00D3DE2A /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small.png"; sourceTree = "<group>"; };
+		EC93C6D71B06588A00D3DE2A /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@2x.png"; sourceTree = "<group>"; };
+		EC93C6D81B06588A00D3DE2A /* Icon-Small@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@3x.png"; sourceTree = "<group>"; };
 		ECCD456F1ACC881400804B06 /* PNObservationCenter+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PNObservationCenter+Protected.h"; sourceTree = "<group>"; };
 		ECCD45701ACC881400804B06 /* PNObservationCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNObservationCenter.h; sourceTree = "<group>"; };
 		ECCD45711ACC881400804B06 /* PNObservationCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNObservationCenter.m; sourceTree = "<group>"; };
@@ -1153,6 +1169,15 @@
 		907D9BD719226B330037C0CF /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				EC93C6D11B06588A00D3DE2A /* Icon-40.png */,
+				EC93C6D21B06588A00D3DE2A /* Icon-40@2x.png */,
+				EC93C6D31B06588A00D3DE2A /* Icon-60@2x.png */,
+				EC93C6D41B06588A00D3DE2A /* Icon-76.png */,
+				EC93C6D51B06588A00D3DE2A /* Icon-76@2x.png */,
+				EC93C6D61B06588A00D3DE2A /* Icon-Small.png */,
+				EC93C6D71B06588A00D3DE2A /* Icon-Small@2x.png */,
+				EC93C6D81B06588A00D3DE2A /* Icon-Small@3x.png */,
+				EC93C6D01B06586000D3DE2A /* icons */,
 				9069AACB1951E6A2006D1D98 /* Fonts */,
 				907D9BD819226B3C0037C0CF /* Graphics */,
 			);
@@ -1619,6 +1644,13 @@
 				ECCD46F51ACC89B300804B06 /* multiplayerDataHandler.m */,
 			);
 			name = Multiplayer;
+			sourceTree = "<group>";
+		};
+		EC93C6D01B06586000D3DE2A /* icons */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = icons;
 			sourceTree = "<group>";
 		};
 		ECCD456D1ACC881400804B06 /* PubNub */ = {
@@ -2131,6 +2163,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EC93C6E01B06588A00D3DE2A /* Icon-Small@3x.png in Resources */,
 				FAB5832819BB6205007BFA26 /* hero_c_1_l_1.png in Resources */,
 				907020541992A1CB00FDE444 /* upload_from_file_button.png in Resources */,
 				FA033FCE19BCFF6600EFEBD8 /* card_0009.png in Resources */,
@@ -2138,8 +2171,10 @@
 				90DA434C195B7C0300E44AED /* card_background_front_neutral_common_icon.png in Resources */,
 				90DA4371195F96DB00E44AED /* decrement_button.png in Resources */,
 				90F63753199E7E94007B96A6 /* cardgame.mobileprovision in Resources */,
+				EC93C6DC1B06588A00D3DE2A /* Icon-76.png in Resources */,
 				FACF46C419EC852300D334E0 /* card_2008.png in Resources */,
 				90DA43C51969D21500E44AED /* add_deck_button_gray.png in Resources */,
+				EC93C6DA1B06588A00D3DE2A /* Icon-40@2x.png in Resources */,
 				90DA43BC1969D21500E44AED /* back_button.png in Resources */,
 				9032E13D199918F8002A6725 /* category_tab_enabled.png in Resources */,
 				90456EE4198F1B9100B807DC /* buy_button.png in Resources */,
@@ -2199,6 +2234,7 @@
 				FA14AA6519CFC3C20080230B /* cardgamewithTien.mobileprovision in Resources */,
 				FACF46C219EC852300D334E0 /* card_2006.png in Resources */,
 				FAB5831E19BA0AF6007BFA26 /* arrow_right_icon.png in Resources */,
+				EC93C6D91B06588A00D3DE2A /* Icon-40.png in Resources */,
 				9032E142199946F9002A6725 /* add_icon.png in Resources */,
 				90AB15021979FB5E0008FCDD /* resource_icon.png in Resources */,
 				9069AAE7195501AB006D1D98 /* card_background_front_neutral_common.png in Resources */,
@@ -2210,6 +2246,7 @@
 				9070204619914B1C00FDE444 /* like_icon.png in Resources */,
 				FA033FD019BCFF6600EFEBD8 /* card_0011.png in Resources */,
 				9069AACF1951E737006D1D98 /* Main_iPad.storyboard in Resources */,
+				EC93C6DD1B06588A00D3DE2A /* Icon-76@2x.png in Resources */,
 				9069AAE5195501AB006D1D98 /* card_background_front_light_common.png in Resources */,
 				90C52894199C00D000750C54 /* card_icon_gray.png in Resources */,
 				FACF46C919EC852300D334E0 /* card_2200.png in Resources */,
@@ -2244,6 +2281,7 @@
 				FA033FD319BCFF6600EFEBD8 /* card_0014.png in Resources */,
 				90DA43BE1969D21500E44AED /* monster_button_gray.png in Resources */,
 				FACF46BD19EC852300D334E0 /* card_2001.png in Resources */,
+				EC93C6DB1B06588A00D3DE2A /* Icon-60@2x.png in Resources */,
 				FAB5832619BB61FD007BFA26 /* card_1006.png in Resources */,
 				FA19FC8C19B2580900B38943 /* card_1001.png in Resources */,
 				90AB150A197AD6DA0008FCDD /* card_ability_icon_cast_on_move.png in Resources */,
@@ -2296,8 +2334,10 @@
 				90DA437619608F4D00E44AED /* decrement_button_gray.png in Resources */,
 				90C528A3199D613B00750C54 /* screen_background_center.png in Resources */,
 				FACF46C119EC852300D334E0 /* card_2005.png in Resources */,
+				EC93C6DE1B06588A00D3DE2A /* Icon-Small.png in Resources */,
 				9032E13E199918F8002A6725 /* category_tab_disabled.png in Resources */,
 				90C52892199BE87500750C54 /* search_toggle_button.png in Resources */,
+				EC93C6DF1B06588A00D3DE2A /* Icon-Small@2x.png in Resources */,
 				D31E2CAF19BFE999002E1934 /* MultiplayerGameViewController.xib in Resources */,
 				FACF46CC19EC852300D334E0 /* card_2300.png in Resources */,
 				FA033FCB19BCFF6600EFEBD8 /* card_0006.png in Resources */,
