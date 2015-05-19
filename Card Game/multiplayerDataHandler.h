@@ -14,9 +14,15 @@
 @protocol multiplayerDataHandlerDelegate
 - (void)startDownloadingOpponentDeck:(NSString *)deckID;
 - (void)startLoadingMatch;
+- (void)matchEnded;
+-(void)updateStatusLabelText:(NSString *) text;
+-(void)updateNumPlayersLabel:(NSString *) text;
+
 @end;
 
 @protocol MPGameProtocol <NSObject>
+-(void)setPlayerSeed:(uint32_t)seed;
+-(void)setOpponentSeed:(uint32_t)seed;
 -(void)opponentEndTurn;
 -(void)opponentSummonedCard:(int)cardIndex withTarget:(int)target;
 -(void)opponentAttackCard:(int)attackerPosition withTarget:(int)target;
@@ -32,17 +38,24 @@
 @property PFUser *connectedParseUser;
 -(void)getPlayerState;
 -(void)setPubnubConfigDetails;
+-(void)sendStartMatch;
 -(NSString *)getOpponentDeckID;
--(void)sendDeckDownloadedMessage:(NSString *)msg;
+-(void)sendSeedMessage:(NSString *)msg;
 @property (strong,nonatomic) NSString *opponentDeckLoaded;
+@property (strong,nonatomic) NSString *loadedOpponentsDeck;
 @property (strong,nonatomic) NSString *opponentReady;
 @property (strong,nonatomic) NSString *deckChosen;
 @property (nonatomic, assign) id <multiplayerDataHandlerDelegate> delegate;
 @property (nonatomic, assign) id<MPGameProtocol> gameDelegate;
+@property uint32_t playerSeed, opponentSeed;
+@property BOOL receivedOpponentSeed;
+@property BOOL opponentReceivedSeed;
+
 
 -(void)sendSummonCard:(int)cardIndex withTarget:(int)targetPosition;
 -(void)sendAttackCard:(int)attackerPosition withTarget:(int)targetPosition;
 -(void)playerForfeit;
 -(void)sendOpponentForfeit;
 -(void)sendEndTurn;
+-(void)gameOver:(int)winner;
 @end

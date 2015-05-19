@@ -1575,18 +1575,23 @@ BOOL leftHandViewZone = NO;
         if (_gameModel.playerOneDefeated && _gameModel.playerTwoDefeated)
         {
             //draw
-            [_networkingEngine gameOver:-1];
+            //[_networkingEngine gameOver:-1];
+            [self.MPDataHandler gameOver:-1];
+            
         }
         else if (_gameModel.playerOneDefeated)
         {
-            [_networkingEngine gameOver:OPPONENT_SIDE];
+            //[_networkingEngine gameOver:OPPONENT_SIDE];
+            [self.MPDataHandler gameOver:OPPONENT_SIDE];
         }
         else if (_gameModel.playerTwoDefeated)
         {
-            [_networkingEngine gameOver:PLAYER_SIDE];
+           // [_networkingEngine gameOver:PLAYER_SIDE];
+            [self.MPDataHandler gameOver:PLAYER_SIDE];
         }
         else
-            [_networkingEngine gameOver:-1];
+            //[_networkingEngine gameOver:-1];
+            [self.MPDataHandler gameOver:-1];
     }
     
     if (_noPreviousView)
@@ -2075,6 +2080,7 @@ BOOL leftHandViewZone = NO;
 }
 
 #pragma mark MultiplayerGameProtocol
+//BA MAY14 changed the underscore properties to (atomic), keep track to see if there are any issues.
 
 -(void)setPlayerSeed:(uint32_t)seed
 {

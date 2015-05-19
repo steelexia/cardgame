@@ -8,11 +8,12 @@
 
 #import "multiplayerDataHandler.h"
 #include <stdlib.h>
+#import "GameModel.h"
 
 @implementation multiplayerDataHandler
 @synthesize connectedParseUser;
 
-int r;
+int randomSeed;
 NSInteger playerNumber;
 NSString *opponentDeckID;
 BOOL sentDeck = FALSE;
@@ -89,6 +90,20 @@ PNChannel *gameChannel;
     PNChannel *mainLobby = [PNChannel channelWithName:@"main_lobby"];
     
     [PubNub updateClientState:connectedParseUser.objectId state:playerStateInfo forObject:mainLobby];
+    
+}
+
+-(void)sendStartMatch
+{
+    randomSeed = arc4random_uniform(3000);
+    NSString *integerString = [NSString stringWithFormat:@"%d",randomSeed];
+    NSString *fullGameBeginMessage = [@"Begin" stringByAppendingString:integerString];
+    
+    NSMutableDictionary *BeginMsgDict = [[NSMutableDictionary alloc] init];
+    [BeginMsgDict setObject:fullGameBeginMessage forKey:@"text"];
+    [BeginMsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
+    
+    [PubNub sendMessage:BeginMsgDict toChannel:gameChannel];
     
 }
 
@@ -169,23 +184,12 @@ PNChannel *gameChannel;
     // #1 Add the +addPresenceEventObserver+ which will catch events received on the channel.
     [[PNObservationCenter defaultCenter] addPresenceEventObserver:self withBlock:^(PNPresenceEvent *event) {
         
-        r = arc4random_uniform(3000);
-        NSString *integerString = [NSString stringWithFormat:@"%d",r];
-        NSString *fullGameBeginMessage = [@"Begin" stringByAppendingString:integerString];
-        
-        
-        NSMutableDictionary *BeginMsgDict = [[NSMutableDictionary alloc] init];
-        [BeginMsgDict setObject:fullGameBeginMessage forKey:@"text"];
-        [BeginMsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-
-        
-        
         // NSLog(@"OBSERVER: Presence: %u", event.type);
         
         // #2 Add logic that sends messages to the channel based on the type of event received.
         switch (event.type) {
             case PNPresenceEventJoin:
-                [PubNub sendMessage:BeginMsgDict toChannel:gameChannel];
+                
                 break;
             case PNPresenceEventLeave:
                 //[PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: Catch you on the flip side!",uuid ] toChannel:gameChannel ];
@@ -203,18 +207,21 @@ PNChannel *gameChannel;
             case 1:
                // [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: It's a ghost town.",uuid ] toChannel:gameChannel ];
                 NSLog(@"occupancy 1");
+                [self.delegate updateNumPlayersLabel:@"1 Player"];
                 
                 break;
             case 2:
                 //[PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: It takes two to make a thing go right.",uuid ] toChannel:gameChannel ];
                // [PubNub sendMessage:BeginMsgDict toChannel:gameChannel];
-                [alert show];
+                //[alert show];
                 
                 NSLog(@"occupancy 2");
+                [self.delegate updateNumPlayersLabel:@"2 Players, Start Match When Ready"];
                 break;
             case 3:
                 //[PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: Three people is a party!" ,uuid ] toChannel:gameChannel ];
                   NSLog(@"occupancy 3");
+                [self.delegate updateNumPlayersLabel:@"3 Players, Error"];
                 break;
             default:
                 break;
@@ -252,14 +259,31 @@ PNChannel *gameChannel;
         
         if([prefix isEqualToString:@"Begin"])
            {
+               NSLog(@"Received Begin");
+               [self.delegate updateStatusLabelText:@"Received Begin"];
+               
+               
                //get the rest of the characters to get the random seed
                NSString *seed = [msgStringVal substringFromIndex: [msgStringVal length] - 4];
                
                //convert to int value
                NSInteger seedint = [seed integerValue];
+               //worst code ever to just quick hack not getting a tie..
+               if(randomSeed ==0)
+               {
+                   randomSeed = arc4random_uniform(3000);
+               }
+               if(seedint==randomSeed)
+               {
+                   randomSeed = arc4random_uniform(3000);
+               }
+               if(seedint ==randomSeed)
+               {
+                   randomSeed = arc4random_uniform(3000);
+               }
                
                //check against own seed
-               if(seedint>=r)
+               if(seedint<=randomSeed)
                {
                    //I am player 1, send back they are player 2
                    
@@ -268,7 +292,7 @@ PNChannel *gameChannel;
                    [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
                    [PubNub sendMessage:MsgDict toChannel:gameChannel];
                    playerNumber = 1;
-                   
+                   NSLog(@"setting self player 1");
                }
                else
                {
@@ -278,41 +302,46 @@ PNChannel *gameChannel;
                    [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
                    [PubNub sendMessage:MsgDict toChannel:gameChannel];
                    playerNumber = 2;
+                   NSLog(@"setting self player 2");
                }
                
            }
         
         if([prefix isEqualToString:@"Start"])
         {
+            NSLog(@"Received Start");
+            
+            [self.delegate updateStatusLabelText:@"Received Start"];
             //check the player number
             //get the rest of the characters to get the random seed
             NSString *playerNum = [msgStringVal substringFromIndex: [msgStringVal length] - 1];
             playerNumber = [playerNum integerValue];
             
-            //send back deck information, they have already selected by this point
+            //TODO--update to send back deck information and random seed information at same time
             NSString *deckID = userCurrentDeck.objectID;
             NSString *totalDeckString = [@"PDeck" stringByAppendingString:deckID];
             NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
             [MsgDict setObject:totalDeckString forKey:@"text"];
             [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
             
-            
+            sentDeck=TRUE;
             [PubNub sendMessage:MsgDict toChannel:gameChannel ];
             
         }
         if([prefix isEqualToString:@"PDeck"])
         {
-           opponentDeckID = [msgStringVal substringFromIndex:5];
+                        
+            NSLog(@"ReceivedPDeck");
+            
+            [self.delegate updateStatusLabelText:@"Received PDECK"];
+            opponentDeckID = [msgStringVal substringFromIndex:5];
         
             //if I have sent deck already, start loading sequence and send a message to start the game after loading complete
             if(sentDeck==TRUE)
             {
-                //have delegate start loading sequence and tell other player to start loading sequence also
-                NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
-                [MsgDict setObject:@"LoadG" forKey:@"text"];
-                [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-                [PubNub sendMessage:MsgDict toChannel:gameChannel ];
-                
+                NSLog(@"Starting Deck Download");
+                      
+                [self.delegate updateStatusLabelText:@"Starting Deck Download"];
                  [self.delegate startDownloadingOpponentDeck:opponentDeckID];
             }
             
@@ -327,27 +356,37 @@ PNChannel *gameChannel;
                 [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
                 [PubNub sendMessage:MsgDict toChannel:gameChannel ];
                 sentDeck=YES;
-                
+                 NSLog(@"Sending Deck & Starting Deck Download");
+                [self.delegate updateStatusLabelText:@"Sending Deck"];
                 //start downloading their deck
                 [self.delegate startDownloadingOpponentDeck:opponentDeckID];
                 
             }
+           
+            
         }
+        
+        
         if([prefix isEqualToString:@"LoadG"])
         {
+            NSLog(@"Received LoadG");
+            [self.delegate updateStatusLabelText:@"Received LoadG"];
             //start loading the game, both players have received the deck ID's
-            
-            if([self.opponentDeckLoaded isEqualToString:@"YES"])
+            if(self.opponentReceivedSeed && self.receivedOpponentSeed)
             {
-                [self.delegate startLoadingMatch];
+                //continue
             }
             else
             {
-               //set property "opponent ready" so delegate knows to start the match immediately when finished downloading
-                self.opponentReady = @"YES";
+                [self.delegate updateStatusLabelText:@"Error With Seeds"];
+                NSLog(@"error with seeds");
+                return;
                 
             }
-        }
+            
+            [self.delegate startLoadingMatch];
+            
+            }
         if([prefix isEqualToString:@"ENDTR"])
         {
             [self.gameDelegate opponentEndTurn];
@@ -384,6 +423,53 @@ PNChannel *gameChannel;
                 
                 //[self.delegate gameOver:messageGameOver->player1Won];
             }
+        if([prefix isEqualToString:@"SeedR"])
+        {
+            NSLog(@"received seedR");
+            [self.delegate updateStatusLabelText:@"Received SeedR"];
+            //extract seed message
+            //get the rest of the characters to get the random seed
+            NSString *seed = [msgStringVal substringFromIndex:5];
+            
+            //convert to int value
+           int seedint = [seed intValue];
+            
+            _receivedOpponentSeed = YES;
+            //[_gameDelegate setOpponentSeed:messageRandomNumber->seed];
+            
+            _opponentSeed = seedint;
+            
+           
+            
+            //send seed received
+            [self sendSeedReceived];
+            
+        }
+        if([prefix isEqualToString:@"GotSd"])
+        {
+            NSLog(@"Received GotSD");
+            
+            [self.delegate updateStatusLabelText:@"Received GotSD"];
+            self.opponentReceivedSeed = YES;
+            
+            if(self.receivedOpponentSeed ==YES)
+            {
+                //start the match with LOADG Message
+                
+                 NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
+                 [MsgDict setObject:@"LoadG" forKey:@"text"];
+                 [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
+                 [PubNub sendMessage:MsgDict toChannel:gameChannel ];
+                
+                 [self.delegate startLoadingMatch];
+            }
+            else
+            {
+                //waiting for opponent to start the match and send LoadG
+            }
+            
+            
+        }
      }];
     
     
@@ -424,14 +510,15 @@ PNChannel *gameChannel;
     
 }
 
--(void)sendDeckDownloadedMessage:(NSString *)msg
+
+
+-(void)sendLoadGameMessage:(NSString *)msg
 {
     NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
     [MsgDict setObject:@"LoadG" forKey:@"text"];
     [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
     [PubNub sendMessage:MsgDict toChannel:gameChannel ];
     self.opponentDeckLoaded = @"YES";
-
 }
 
 #pragma mark GameViewController Message Protocol Functions
@@ -485,5 +572,62 @@ PNChannel *gameChannel;
     [PubNub sendMessage:MsgDict toChannel:gameChannel ];
     self.opponentDeckLoaded = @"YES";
 }
+-(void)sendSeedMessage:(NSString *)msg
+{
+    [self sendSeed];
+    
+}
 
+-(void)sendSeed
+{
+   
+    
+    //only send if opponent hasn't received it
+    if(!self.opponentReceivedSeed)
+    
+    {
+    NSString *seedSend = [@"SeedR" stringByAppendingString:[NSString stringWithFormat:@"%d",randomSeed]];
+    NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
+    [MsgDict setObject:seedSend forKey:@"text"];
+    [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
+    [PubNub sendMessage:MsgDict toChannel:gameChannel ];
+    _playerSeed = randomSeed;
+    }
+}
+
+-(void)sendSeedReceived
+{
+    NSString *gotSeed = @"GotSd";
+    NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
+    [MsgDict setObject:gotSeed forKey:@"text"];
+    [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
+    [PubNub sendMessage:MsgDict toChannel:gameChannel ];
+
+}
+
+-(void)gameOver:(int)winner
+{
+    
+    if (winner == PLAYER_SIDE)
+    {
+        //TODO
+        
+    }
+    else if (winner == PLAYER_SIDE)
+    {
+        //TODO
+        
+    }
+    else
+    {
+        //TODO
+    }
+    
+    //[_gameKitHelper.match disconnect];
+    //TODO--Disconnect Players on Pubnub
+    
+    [_delegate matchEnded];
+    
+    
+}
 @end

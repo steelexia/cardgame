@@ -62,15 +62,34 @@ multiplayerDataHandler *MPDataHandler;
     startButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 100);
     [startButton.label setText:@"Start"];
     //[startButton addTarget:self action:@selector(startGameCenterButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-    [startButton addTarget:self action:@selector(startConnectingPubNub)    forControlEvents:UIControlEventTouchUpInside];
+    [startButton addTarget:self action:@selector(startMatch)    forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:startButton];
+    
+    CFButton* connectButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
+    connectButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 200);
+    [connectButton.label setText:@"Connect"];
+    //[startButton addTarget:self action:@selector(startGameCenterButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    [connectButton addTarget:self action:@selector(startConnectingPubNub)    forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:connectButton];
+
     
     
     UIButton* backButton = [[CFButton alloc] initWithFrame:CGRectMake(35, SCREEN_HEIGHT - 32 - 20, 46, 32)];
     [backButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backButton];
+    
+    self.currentLoadStateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20,200,300,50)];
+    self.currentLoadStateLabel.text = @"Default Text";
+    
+    self.numberOfPlayersLabel = [[UILabel alloc] initWithFrame:CGRectMake(20,300,300,50)];
+    self.numberOfPlayersLabel.text = @"Num of Players Connected";
+    
+    [self.view addSubview:self.currentLoadStateLabel];
+    [self.view addSubview:self.numberOfPlayersLabel];
+    
     
     
     //---------------activity indicator--------------------//
@@ -125,6 +144,13 @@ multiplayerDataHandler *MPDataHandler;
     
 }
 
+-(void)startMatch
+{
+    [MPDataHandler sendStartMatch];
+    
+    //show a loading bar..
+    
+}
 
 
 -(void)startGameCenterButtonPressed
@@ -334,21 +360,17 @@ multiplayerDataHandler *MPDataHandler;
                 NSLog(@"finished downloading opponent deck");
 
                 [_gvc setOpponentDeck:deck];
+                
                 //[_dcvc receivedOpponentDeck];
                 //[self receivedOpponentDeck];
                // [_networkingEngine sendReceivedDeck]; //tells other player deck is received
                 
                // MPDataHandler
-                if([MPDataHandler.opponentReady isEqualToString:@"YES"])
+                if(!MPDataHandler.opponentReceivedSeed)
                 {
-                    [self startLoadingMatch];
+                    [MPDataHandler sendSeedMessage:nil];
                     
                 }
-                else
-                {
-                    [MPDataHandler sendDeckDownloadedMessage:@"deck downloaded"];
-                }
-                
                 
                            }
             else
@@ -501,6 +523,13 @@ multiplayerDataHandler *MPDataHandler;
     _deckReceived = YES;
     _opponentHasReceivedDeck = YES;
     
+    [_gvc setPlayerSeed:MPDataHandler.playerSeed];
+    [_gvc setOpponentSeed:MPDataHandler.opponentSeed];
+    if(MPDataHandler.playerSeed <= MPDataHandler.opponentSeed)
+    {
+        [_gvc setCurrentSide:OPPONENT_SIDE];
+    }
+    
     NSLog(@"start!");
     
     if(!alreadyLoadedMatch)
@@ -520,6 +549,18 @@ multiplayerDataHandler *MPDataHandler;
 
 -(void)sendEndTurn
 {
+    
+}
+
+-(void)updateStatusLabelText:(NSString *) text
+{
+    self.currentLoadStateLabel.text = text;
+    
+}
+
+-(void)updateNumPlayersLabel:(NSString *)text
+{
+    self.numberOfPlayersLabel.text = text;
     
 }
 
