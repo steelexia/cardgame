@@ -130,7 +130,7 @@ multiplayerDataHandler *MPDataHandler;
     NSLog(@"starting gameViewController");
     _gvc = [[GameViewController alloc] initWithGameMode:GameModeMultiplayer withLevel:nil];
     _gvc.MPDataHandler = MPDataHandler;
-    _gvc.MPDataHandler.gameDelegate = _gvc;
+    MPDataHandler.gameDelegate = _gvc;
     MPDataHandler.delegate = self;
     
    // [mpConnecting connectPlayer];
