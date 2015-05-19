@@ -109,7 +109,7 @@ PNChannel *gameChannel;
 
 -(void)setPubnubConfigDetails
 {
-    
+    [PNLogger loggerEnabled:FALSE];
     
     PNConfiguration *configuration = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"
                                                                   publishKey:@"pub-c-d1465391-f40c-44e3-8fc9-9d92be0a63c5" subscribeKey:@"sub-c-cac0d926-d8ab-11e4-8301-0619f8945a4f" secretKey:@"sec-c-MzAzYzM3ZGMtZjFmNC00Mjk3LTkxOTEtMTRmNzUxNDBjYzdi"];
@@ -545,8 +545,12 @@ PNChannel *gameChannel;
 {
     NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
     [MsgDict setObject:@"ATTAC" forKey:@"text"];
-    NSNumber *attackerPositionNum = [NSNumber numberWithInt:attackerPosition];
-    NSNumber *targetPositionNum = [NSNumber numberWithInt:targetPosition];
+    
+    int attacker = [GameModel getReversedPosition:attackerPosition];
+    int target = [GameModel getReversedPosition:targetPosition];
+    
+    NSNumber *attackerPositionNum = [NSNumber numberWithInt:attacker];
+    NSNumber *targetPositionNum = [NSNumber numberWithInt:target];
     [MsgDict setObject:attackerPositionNum forKey:@"attackerPosition"];
     [MsgDict setObject:targetPositionNum forKey:@"targetPosition"];
     [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
