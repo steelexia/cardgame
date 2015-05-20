@@ -1476,7 +1476,7 @@ BOOL leftHandViewZone = NO;
         [self.gameModel summonCard:card side:side];
         
         //if you summon a minion and it displays a button to give up the ability (cancel the ability), the minion should not be summoned until the user actually decides to cancel the ability
-        [self.MPDataHandler sendSummonCard:_currentCardIndex withTarget:positionNoPosition];
+       // [self.MPDataHandler sendSummonCard:_currentCardIndex withTarget:positionNoPosition];
         
         /*
         //only send if no abilities, otherwise player is busy choosing ability
