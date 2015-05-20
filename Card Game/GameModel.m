@@ -904,7 +904,7 @@ enum GameMode __gameMode; //because C functions cant access
             //send multiplayer data on summon if no targets
             if (_gameMode == GameModeMultiplayer && side == PLAYER_SIDE && _gameViewController.currentAbilities.count == 0)
             {
-                [_gameViewController.networkingEngine sendSummonCard:_gameViewController.currentCardIndex withTarget:positionNoPosition];
+                [_gameViewController.MPDataHandler sendSummonCard:_gameViewController.currentCardIndex withTarget:positionNoPosition];
             }
         } afterDelay:0.4];
     }
@@ -924,7 +924,7 @@ enum GameMode __gameMode; //because C functions cant access
         //send multiplayer data on summon
         if (_gameMode == GameModeMultiplayer && side == PLAYER_SIDE && _gameViewController.currentAbilities.count == 0)
         {
-            [_gameViewController.networkingEngine sendSummonCard:_gameViewController.currentCardIndex withTarget:positionNoPosition];
+            [_gameViewController.MPDataHandler sendSummonCard:_gameViewController.currentCardIndex withTarget:positionNoPosition];
         }
     }
     

@@ -1480,12 +1480,13 @@ BOOL leftHandViewZone = NO;
         
         
         //only send if no abilities, otherwise player is busy choosing ability
+        /*
         if (giveupAbilityButton.superview == nil) //TODO
         {
             //int targetIndex = [self.gameModel getCurrentTargetIndex];
             //[_networkingEngine sendSummonCard:_currentCardIndex withTarget:positionNoPosition];
             [self.MPDataHandler sendSummonCard:_currentCardIndex withTarget:positionNoPosition];
-        }
+        }*/
         
     }
     else
