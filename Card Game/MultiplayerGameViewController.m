@@ -13,6 +13,7 @@
 #import "CardView.h"
 #import "GameViewController.h"
 #import "DeckChooserViewController.h"
+#import "LeaderboardsViewController.h"
 @interface MultiplayerGameViewController () <MultiplayerNetworkingProtocol>
 
 
@@ -74,7 +75,13 @@ multiplayerDataHandler *MPDataHandler;
     
     [self.view addSubview:connectButton];
 
+    CFButton* leaderboardButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
+    leaderboardButton.center = CGPointMake(SCREEN_WIDTH/3, SCREEN_HEIGHT - 400);
+    [leaderboardButton.label setText:@"Leaderboards"];
     
+    [leaderboardButton addTarget:self action:@selector(viewLeaderboards)    forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:leaderboardButton];
     
     UIButton* backButton = [[CFButton alloc] initWithFrame:CGRectMake(35, SCREEN_HEIGHT - 32 - 20, 46, 32)];
     [backButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
@@ -124,6 +131,7 @@ multiplayerDataHandler *MPDataHandler;
 }
 -(void)startConnectingPubNub
 {
+    /*
     MPDataHandler = [multiplayerDataHandler sharedInstance];
     [MPDataHandler setPubnubConfigDetails];
     
@@ -132,15 +140,17 @@ multiplayerDataHandler *MPDataHandler;
     _gvc.MPDataHandler = MPDataHandler;
     MPDataHandler.gameDelegate = _gvc;
     MPDataHandler.delegate = self;
+    */
+    [self testMPFunction];
     
-   // [mpConnecting connectPlayer];
+   
     
-    //[mpConnecting sendPlayerMessage:@"test"];
+}
+-(void)viewLeaderboards
+{
+    LeaderboardsViewController *lvc = [[LeaderboardsViewController alloc] init];
     
-    //[mpConnecting getPlayerState];
-    
-   // [mpConnecting getConnectedPlayers];
-    //check to see if there are two players in main lobby
+    [self presentViewController:lvc animated:YES completion:nil];
     
 }
 
@@ -562,6 +572,14 @@ multiplayerDataHandler *MPDataHandler;
 {
     self.numberOfPlayersLabel.text = text;
     
+}
+
+-(void)testMPFunction
+{
+     NSError* error;
+    [PFCloud callFunction:@"mpMatchComplete" withParameters:@{
+                                                              @"User1" : [PFUser currentUser].objectId, @"User2" :@"IRh33iYFK9", @"User1Rating" :@800,@"User2Rating": @400
+                                                            } error:&error];
 }
 
 @end
