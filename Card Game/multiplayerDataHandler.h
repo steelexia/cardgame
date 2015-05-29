@@ -17,6 +17,9 @@
 - (void)matchEnded;
 -(void)updateStatusLabelText:(NSString *) text;
 -(void)updateNumPlayersLabel:(NSString *) text;
+-(void)updatePlayerLobby:(NSArray *)connectedPlayers;
+-(void)chatUpdate:(NSDictionary *)chatDictionary;
+
 
 @end;
 
@@ -38,6 +41,7 @@
 @property PFUser *connectedParseUser;
 -(void)getPlayerState;
 -(void)setPubnubConfigDetails;
+-(void)getPubNubConnectedPlayers;
 -(void)sendStartMatch;
 -(NSString *)getOpponentDeckID;
 -(void)sendSeedMessage:(NSString *)msg;
@@ -58,4 +62,5 @@
 -(void)sendOpponentForfeit;
 -(void)sendEndTurn;
 -(void)gameOver:(int)winner;
+-(void)sendChatWithDict:(NSDictionary *)Dict;
 @end

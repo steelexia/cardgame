@@ -209,9 +209,9 @@
 		D31E2CA419BF5A41002E1934 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31E2CA319BF5A41002E1934 /* GameKit.framework */; };
 		D31E2CA819BF5BE8002E1934 /* GameKitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D31E2CA719BF5BE8002E1934 /* GameKitHelper.m */; };
 		D31E2CAB19BFBECF002E1934 /* MultiplayerGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D31E2CAA19BFBECF002E1934 /* MultiplayerGameViewController.m */; };
-		D31E2CAF19BFE999002E1934 /* MultiplayerGameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D31E2CAE19BFE999002E1934 /* MultiplayerGameViewController.xib */; };
 		D31E2CB419BFF502002E1934 /* MultiplayerNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = D31E2CB319BFF502002E1934 /* MultiplayerNetworking.m */; };
 		EC8B3C351B12390F00DE04A9 /* LeaderboardsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC8B3C341B12390F00DE04A9 /* LeaderboardsViewController.m */; };
+		EC8B3C3C1B18CF8B00DE04A9 /* AutoSizeChatCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EC8B3C3B1B18CF8B00DE04A9 /* AutoSizeChatCellTableViewCell.m */; };
 		EC93C6D91B06588A00D3DE2A /* Icon-40.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6D11B06588A00D3DE2A /* Icon-40.png */; };
 		EC93C6DA1B06588A00D3DE2A /* Icon-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6D21B06588A00D3DE2A /* Icon-40@2x.png */; };
 		EC93C6DB1B06588A00D3DE2A /* Icon-60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6D31B06588A00D3DE2A /* Icon-60@2x.png */; };
@@ -683,11 +683,12 @@
 		D31E2CA719BF5BE8002E1934 /* GameKitHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameKitHelper.m; sourceTree = "<group>"; };
 		D31E2CA919BFBECF002E1934 /* MultiplayerGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiplayerGameViewController.h; sourceTree = "<group>"; };
 		D31E2CAA19BFBECF002E1934 /* MultiplayerGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiplayerGameViewController.m; sourceTree = "<group>"; };
-		D31E2CAE19BFE999002E1934 /* MultiplayerGameViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MultiplayerGameViewController.xib; sourceTree = "<group>"; };
 		D31E2CB219BFF502002E1934 /* MultiplayerNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiplayerNetworking.h; sourceTree = "<group>"; };
 		D31E2CB319BFF502002E1934 /* MultiplayerNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiplayerNetworking.m; sourceTree = "<group>"; };
 		EC8B3C331B12390F00DE04A9 /* LeaderboardsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeaderboardsViewController.h; sourceTree = "<group>"; };
 		EC8B3C341B12390F00DE04A9 /* LeaderboardsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeaderboardsViewController.m; sourceTree = "<group>"; };
+		EC8B3C3A1B18CF8B00DE04A9 /* AutoSizeChatCellTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoSizeChatCellTableViewCell.h; sourceTree = "<group>"; };
+		EC8B3C3B1B18CF8B00DE04A9 /* AutoSizeChatCellTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoSizeChatCellTableViewCell.m; sourceTree = "<group>"; };
 		EC93C6D11B06588A00D3DE2A /* Icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40.png"; sourceTree = "<group>"; };
 		EC93C6D21B06588A00D3DE2A /* Icon-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40@2x.png"; sourceTree = "<group>"; };
 		EC93C6D31B06588A00D3DE2A /* Icon-60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-60@2x.png"; sourceTree = "<group>"; };
@@ -1644,9 +1645,10 @@
 				EC8B3C341B12390F00DE04A9 /* LeaderboardsViewController.m */,
 				D31E2CA919BFBECF002E1934 /* MultiplayerGameViewController.h */,
 				D31E2CAA19BFBECF002E1934 /* MultiplayerGameViewController.m */,
-				D31E2CAE19BFE999002E1934 /* MultiplayerGameViewController.xib */,
 				ECCD46F41ACC89B300804B06 /* multiplayerDataHandler.h */,
 				ECCD46F51ACC89B300804B06 /* multiplayerDataHandler.m */,
+				EC8B3C3A1B18CF8B00DE04A9 /* AutoSizeChatCellTableViewCell.h */,
+				EC8B3C3B1B18CF8B00DE04A9 /* AutoSizeChatCellTableViewCell.m */,
 			);
 			name = Multiplayer;
 			sourceTree = "<group>";
@@ -2343,7 +2345,6 @@
 				9032E13E199918F8002A6725 /* category_tab_disabled.png in Resources */,
 				90C52892199BE87500750C54 /* search_toggle_button.png in Resources */,
 				EC93C6DF1B06588A00D3DE2A /* Icon-Small@2x.png in Resources */,
-				D31E2CAF19BFE999002E1934 /* MultiplayerGameViewController.xib in Resources */,
 				FACF46CC19EC852300D334E0 /* card_2300.png in Resources */,
 				FA033FCB19BCFF6600EFEBD8 /* card_0006.png in Resources */,
 				90C528A2199D613B00750C54 /* screen_background_bottom.png in Resources */,
@@ -2432,6 +2433,7 @@
 				ECCD46C01ACC881400804B06 /* PNJSONSerialization.m in Sources */,
 				ECCD46AA1ACC881400804B06 /* PNGroupChannelsListChangeParser.m in Sources */,
 				ECCD46CA1ACC881400804B06 /* NSDate+PNAdditions.m in Sources */,
+				EC8B3C3C1B18CF8B00DE04A9 /* AutoSizeChatCellTableViewCell.m in Sources */,
 				ECCD46E91ACC881400804B06 /* PNPushNotificationsStateChangeRequest.m in Sources */,
 				9032E12D19953EAE002A6725 /* CardVote.m in Sources */,
 				ECCD46EC1ACC881400804B06 /* PNWhereNowRequest.m in Sources */,

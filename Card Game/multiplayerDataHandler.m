@@ -18,6 +18,8 @@ NSInteger playerNumber;
 NSString *opponentDeckID;
 BOOL sentDeck = FALSE;
 PNChannel *gameChannel;
+PNChannel *chatChannel;
+
 
 + (multiplayerDataHandler*)sharedInstance
 {
@@ -120,10 +122,16 @@ PNChannel *gameChannel;
     configuration.presenceHeartbeatTimeout = 30;
     [PubNub setConfiguration:configuration];
     [PubNub connect];
+   
+    
     
     // #1 Define our channel name with +PNChannel+.
     gameChannel = [PNChannel channelWithName:@"demo2"
-                                 shouldObservePresence:NO];
+                                 shouldObservePresence:YES];
+    
+    chatChannel = [PNChannel channelWithName:@"chat" shouldObservePresence:YES];
+    
+    
     
     [[PNObservationCenter defaultCenter] addClientConnectionStateObserver:self withCallbackBlock:^(NSString *origin, BOOL connected, PNError *connectionError){
         
@@ -133,7 +141,54 @@ PNChannel *gameChannel;
             
             // #2 +subscribeOnChannel+ if the client connects successfully.
             // [PubNub subscribeOnChannel:my_channel];
-            [PubNub subscribeOn:@[gameChannel]];
+            //[PubNub subscribeOn:@[gameChannel]];
+            PFUser *userObj = [PFUser currentUser];
+            NSNumber *eloVal = [userObj objectForKey:@"eloRating"];
+            NSString *userName = userObj.username;
+            
+            /*
+            [PubNub subscribeOn:@[gameChannel] withClientState:@{@"eloRating": eloVal,
+                                                                 @"username": userName,
+                                                                 @"gameState": @"In Lobby"
+                                                                 }];
+             */
+            NSMutableDictionary *clientStateMutable = [[NSMutableDictionary alloc] init];
+            [clientStateMutable setObject:eloVal forKey:@"eloRating"];
+            [clientStateMutable setObject:userName forKey:@"usernameCustom"];
+            [clientStateMutable setObject:@"Lobby" forKey:@"gameState"];
+            NSDictionary *myDict = [clientStateMutable copy];
+            
+            [PubNub subscribeOn:@[gameChannel,chatChannel] withClientState:myDict
+             andCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channels, PNError *error) {
+                //
+                if(error)
+                {
+                    NSLog(error.localizedDescription);
+                    
+                }
+                 else
+                 {
+                     //inspect state variable
+                     NSLog(@"subscribe success");
+                     [PubNub updateClientState:userPF.objectId state:myDict forObject:gameChannel withCompletionHandlingBlock:^(PNClient *client, PNError *error) {
+                         if(error)
+                         {
+                             NSLog(error.localizedDescription);
+                             
+                         }
+                         else
+                         {
+                             NSLog(@"success updating state");
+                             
+                         }
+                     }];
+                 }
+               
+                
+            }];
+            
+            
+            
             
         }
         else if (!connected || connectionError)
@@ -178,6 +233,17 @@ PNChannel *gameChannel;
         NSLog(@"OBSERVER: Enabled on Channel: %@",channel.description);
         switch(channel.count){
                 
+        }
+    }];
+    
+    
+    [[PNObservationCenter defaultCenter] addChannelParticipantsListProcessingObserver:self withBlock:^(PNHereNow *presenceInformation, NSArray *channels, PNError *error) {
+        
+        NSArray *participantsOnGameLobby = [presenceInformation participantsForChannel:gameChannel];
+        for(PNClient *heldClient in participantsOnGameLobby)
+        {
+            NSDictionary *channelState = [heldClient stateForChannel:gameChannel];
+            
         }
     }];
     
@@ -234,8 +300,20 @@ PNChannel *gameChannel;
          NSLog(@"this fired from the mp controller zoinks");
         
         NSDictionary *msgIncomingDict = message.message;
+          NSString *thisChannel = [msgIncomingDict objectForKey:@"channel"];
+        
+        if([thisChannel isEqualToString:@"chat"])
+        {
+            NSString *chatMessage = [msgIncomingDict objectForKey:@"messageText"];
+            NSString *userName = [msgIncomingDict objectForKey:@"userName"];
+            NSDate *chatTime = [msgIncomingDict objectForKey:@"chatMsgDate"];
+            //send this to the delegate to add to its array of messages
+            [self.delegate chatUpdate:msgIncomingDict];
+            
+            return;
+        }
         NSString *msgStringVal = [msgIncomingDict objectForKey:@"text"];
-        NSString *thisChannel = [msgIncomingDict objectForKey:@"channel"];
+      
         NSString *msgSenderParseID = [msgIncomingDict objectForKey:@"msgSenderParseID"];
         
         //ignore the message if I am the sender
@@ -475,6 +553,35 @@ PNChannel *gameChannel;
     
 }
 
+-(void)getPubNubConnectedPlayers
+{
+    
+    
+    [PubNub requestParticipantsListFor:@[gameChannel] clientIdentifiersRequired:YES clientState:YES withCompletionBlock:^(PNHereNow *presenceInformation, NSArray *channels, PNError *error) {
+        NSArray *participants = [presenceInformation participantsForChannel:gameChannel];
+        
+        
+        NSMutableArray *playerArray = [[NSMutableArray alloc] init];
+        
+        for(PNClient *heldClient in participants)
+        {
+          NSDictionary *stateInChannel = [heldClient stateForChannel:gameChannel];
+            if(stateInChannel !=nil)
+            {
+                 [playerArray addObject:stateInChannel];
+            }
+           
+            
+        }
+        [self.delegate updatePlayerLobby:[playerArray copy]];
+        NSLog(@"got here");
+        
+
+    }];
+    
+    
+}
+
            /*
 -(void)sendDeckID:(NSString*)deckID{
     MessageDeckID message;
@@ -634,6 +741,10 @@ PNChannel *gameChannel;
     
     [_delegate matchEnded];
     
-    
+}
+
+-(void)sendChatWithDict:(NSDictionary *)Dict
+{
+ [PubNub sendMessage:Dict toChannel:chatChannel];
 }
 @end
