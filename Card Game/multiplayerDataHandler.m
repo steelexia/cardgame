@@ -155,6 +155,7 @@ PNChannel *chatChannel;
             NSMutableDictionary *clientStateMutable = [[NSMutableDictionary alloc] init];
             [clientStateMutable setObject:eloVal forKey:@"eloRating"];
             [clientStateMutable setObject:userName forKey:@"usernameCustom"];
+            [clientStateMutable setObject:userObj.objectId forKey:@"userID"];
             [clientStateMutable setObject:@"Lobby" forKey:@"gameState"];
             NSDictionary *myDict = [clientStateMutable copy];
             
@@ -311,6 +312,29 @@ PNChannel *chatChannel;
             [self.delegate chatUpdate:msgIncomingDict];
             
             return;
+        }
+        
+        if([thisChannel isEqualToString:@"challenge"])
+        {
+           /*
+            //object structure
+            [challengeMsgDict setObject:userID forKey:@"userID"];
+            [challengeMsgDict setObject:@"chgStart" forKey:@"chgText"];
+            [challengeMsgDict setObject:username forKey:@"chgUserName"];
+            [challengeMsgDict setObject:user.objectId forKey:@"chgUserID"];
+            [challengeMsgDict setObject:@"challenge" forKey:@"channel"];
+            */
+            NSString *userIDBeingChallenged = [msgIncomingDict objectForKey:@"userID"];
+            NSString *ownUserID = [PFUser currentUser].objectId;
+            
+            if([userIDBeingChallenged isEqualToString:ownUserID])
+            {
+                //someone challenged you, display a popup announcing it.
+                [self.delegate notifyPlayerOfChallenge:msgIncomingDict];
+
+            }
+            
+            
         }
         NSString *msgStringVal = [msgIncomingDict objectForKey:@"text"];
       
@@ -556,7 +580,6 @@ PNChannel *chatChannel;
 -(void)getPubNubConnectedPlayers
 {
     
-    
     [PubNub requestParticipantsListFor:@[gameChannel] clientIdentifiersRequired:YES clientState:YES withCompletionBlock:^(PNHereNow *presenceInformation, NSArray *channels, PNError *error) {
         NSArray *participants = [presenceInformation participantsForChannel:gameChannel];
         
@@ -575,7 +598,6 @@ PNChannel *chatChannel;
         }
         [self.delegate updatePlayerLobby:[playerArray copy]];
         NSLog(@"got here");
-        
 
     }];
     
@@ -694,7 +716,6 @@ PNChannel *chatChannel;
 -(void)sendSeed
 {
    
-    
     //only send if opponent hasn't received it
     if(!self.opponentReceivedSeed)
     
@@ -746,5 +767,32 @@ PNChannel *chatChannel;
 -(void)sendChatWithDict:(NSDictionary *)Dict
 {
  [PubNub sendMessage:Dict toChannel:chatChannel];
+}
+
+-(void)sendChallengeToPlayerObj:(NSDictionary *)Dict
+{
+    NSMutableDictionary *challengeMsgDict = [[NSMutableDictionary alloc] init];
+    
+    //Dict is a player object with username, userID, elo rating, and gamestate set at time of connection
+    
+    /*
+    [clientStateMutable setObject:eloVal forKey:@"eloRating"];
+    [clientStateMutable setObject:userName forKey:@"usernameCustom"];
+    [clientStateMutable setObject:userObj.objectId forKey:@"userID"];
+    [clientStateMutable setObject:@"Lobby" forKey:@"gameState"];
+     */
+    NSString *userID = [Dict objectForKey:@"userID"];
+    
+    PFUser *user = [PFUser currentUser];
+    NSString *username = user.username;
+    
+    [challengeMsgDict setObject:userID forKey:@"userID"];
+    [challengeMsgDict setObject:@"chgStart" forKey:@"chgText"];
+    [challengeMsgDict setObject:username forKey:@"chgUserName"];
+    [challengeMsgDict setObject:user.objectId forKey:@"chgUserID"];
+    [challengeMsgDict setObject:@"challenge" forKey:@"channel"];
+    
+    [PubNub sendMessage:Dict toChannel:gameChannel];
+    
 }
 @end

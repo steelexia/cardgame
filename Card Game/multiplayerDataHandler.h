@@ -19,7 +19,7 @@
 -(void)updateNumPlayersLabel:(NSString *) text;
 -(void)updatePlayerLobby:(NSArray *)connectedPlayers;
 -(void)chatUpdate:(NSDictionary *)chatDictionary;
-
+-(void)notifyPlayerOfChallenge:(NSDictionary *)challengeDictionary;
 
 @end;
 
@@ -63,4 +63,5 @@
 -(void)sendEndTurn;
 -(void)gameOver:(int)winner;
 -(void)sendChatWithDict:(NSDictionary *)Dict;
+-(void)sendChallengeToPlayerObj:(NSDictionary *)Dict;
 @end

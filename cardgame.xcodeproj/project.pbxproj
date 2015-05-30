@@ -212,6 +212,7 @@
 		D31E2CB419BFF502002E1934 /* MultiplayerNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = D31E2CB319BFF502002E1934 /* MultiplayerNetworking.m */; };
 		EC8B3C351B12390F00DE04A9 /* LeaderboardsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EC8B3C341B12390F00DE04A9 /* LeaderboardsViewController.m */; };
 		EC8B3C3C1B18CF8B00DE04A9 /* AutoSizeChatCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EC8B3C3B1B18CF8B00DE04A9 /* AutoSizeChatCellTableViewCell.m */; };
+		EC8B3C3E1B19417600DE04A9 /* angryorc.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = EC8B3C3D1B19417600DE04A9 /* angryorc.jpeg */; };
 		EC93C6D91B06588A00D3DE2A /* Icon-40.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6D11B06588A00D3DE2A /* Icon-40.png */; };
 		EC93C6DA1B06588A00D3DE2A /* Icon-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6D21B06588A00D3DE2A /* Icon-40@2x.png */; };
 		EC93C6DB1B06588A00D3DE2A /* Icon-60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC93C6D31B06588A00D3DE2A /* Icon-60@2x.png */; };
@@ -689,6 +690,7 @@
 		EC8B3C341B12390F00DE04A9 /* LeaderboardsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeaderboardsViewController.m; sourceTree = "<group>"; };
 		EC8B3C3A1B18CF8B00DE04A9 /* AutoSizeChatCellTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoSizeChatCellTableViewCell.h; sourceTree = "<group>"; };
 		EC8B3C3B1B18CF8B00DE04A9 /* AutoSizeChatCellTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoSizeChatCellTableViewCell.m; sourceTree = "<group>"; };
+		EC8B3C3D1B19417600DE04A9 /* angryorc.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = angryorc.jpeg; sourceTree = "<group>"; };
 		EC93C6D11B06588A00D3DE2A /* Icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40.png"; sourceTree = "<group>"; };
 		EC93C6D21B06588A00D3DE2A /* Icon-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40@2x.png"; sourceTree = "<group>"; };
 		EC93C6D31B06588A00D3DE2A /* Icon-60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-60@2x.png"; sourceTree = "<group>"; };
@@ -1201,6 +1203,7 @@
 		907D9BD919226B4C0037C0CF /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				EC8B3C3D1B19417600DE04A9 /* angryorc.jpeg */,
 				FA19FC9119B3D00400B38943 /* gear_icon.png */,
 				FA19FC9219B3D00400B38943 /* message_icon.png */,
 				90F80FA019A3D3D9007571F4 /* arrow_left_icon.png */,
@@ -2260,6 +2263,7 @@
 				FACF46CA19EC852300D334E0 /* card_2201.png in Resources */,
 				9069AACE1951E734006D1D98 /* Main_iPhone.storyboard in Resources */,
 				90AB150E197AE3CF0008FCDD /* card_ability_icon_pierce.png in Resources */,
+				EC8B3C3E1B19417600DE04A9 /* angryorc.jpeg in Resources */,
 				FA033FCF19BCFF6600EFEBD8 /* card_0010.png in Resources */,
 				90DA43C11969D21500E44AED /* spell_button.png in Resources */,
 				9032E13619986006002A6725 /* dummy_button.png in Resources */,

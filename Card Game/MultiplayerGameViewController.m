@@ -31,6 +31,7 @@ BOOL alreadyLoadedMatch;
 MultiplayerNetworking *_networkingEngine;
 NSUInteger _currentPlayerIndex;
 multiplayerDataHandler *MPDataHandler;
+UIView *bgDarkenView;
 
 - (void)viewDidLoad
 {
@@ -41,7 +42,6 @@ multiplayerDataHandler *MPDataHandler;
     SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
     
     //iPhone 4S Values
-    
     
     //background view
     UIImageView*backgroundImageTop = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_top"]];
@@ -111,7 +111,7 @@ multiplayerDataHandler *MPDataHandler;
     self.chatTableView.delegate = self;
     [self.view addSubview:self.chatTableView];
     
-    self.chatField = [[UITextField alloc] initWithFrame:CGRectMake(20,360,SCREEN_WIDTH-40,30)];
+    self.chatField = [[UITextField alloc] initWithFrame:CGRectMake(20,370,SCREEN_WIDTH-40,30)];
     self.chatField.delegate = self;
     self.chatField.alpha = 1;
     self.chatField.backgroundColor = [UIColor whiteColor];
@@ -121,7 +121,7 @@ multiplayerDataHandler *MPDataHandler;
     
     [self.view addSubview:self.chatField];
     
-    self.chatSendButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-70,360,50,35)];
+    self.chatSendButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-70,370,50,35)];
     self.chatSendButton.backgroundColor = [UIColor blueColor];
     [self.chatSendButton setTitle:@"Send" forState:UIControlStateNormal];
     CALayer *chatBtnLayer = self.chatSendButton.layer;
@@ -129,7 +129,6 @@ multiplayerDataHandler *MPDataHandler;
     chatBtnLayer.masksToBounds = YES;
     
     [self.chatSendButton addTarget:self action:@selector(chatSend:) forControlEvents:UIControlEventTouchUpInside];
-    
     
     self.chatSendButton.titleLabel.textColor = [UIColor whiteColor];
     
@@ -208,13 +207,21 @@ multiplayerDataHandler *MPDataHandler;
     
     [chatQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
       //chat objects
-        [self.chatMessages addObjectsFromArray:objects];
+      
+        NSArray* reversedArray = [[objects reverseObjectEnumerator] allObjects];
+        [self.chatMessages addObjectsFromArray:reversedArray];
         [self.chatTableView reloadData];
         
         
+            NSInteger rowNumbers = [self.chatTableView numberOfRowsInSection:0];
+            [self.chatTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:rowNumbers-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+       
+       
     }];
     
 }
+
+
 -(void)startConnectingPubNub
 {
     
@@ -784,7 +791,7 @@ multiplayerDataHandler *MPDataHandler;
        // Add an extra point to the height to account for the cell separator, which is added between the bottom
        // of the cell's contentView and the bottom of the table view cell.
        height += 1;
-       NSLog(@"height @%f",height);
+      // NSLog(@"height @%f",height);
        
        
        return height;
@@ -994,7 +1001,18 @@ if(tableView.tag ==88)
 
 -(void)challengePlayer:(UIButton *)sender;
 {
+    //send to the delegate the relevant information for the challenge
+    UIButton *sendingButton = sender;
+    NSInteger playerTag = sendingButton.tag-1000;
     
+    //get player at index
+    NSDictionary *playerObjAtIndex = [self.connectedPlayers objectAtIndex:playerTag];
+    
+    //send to MPDataHandler function, function should send a request to this user to show a challenge window.  If they click yes on the challenge window, then it goes forward with a 1 on 1 match.
+    
+    [MPDataHandler sendChallengeToPlayerObj:playerObjAtIndex];
+    
+   
 }
 
 - (void)didTapChat:(UITapGestureRecognizer *)tapGesture
@@ -1089,7 +1107,72 @@ if(tableView.tag ==88)
 {
     [self.chatMessages addObject:chatDictionary];
     [self.chatTableView reloadData];
-    
+    NSInteger rowNumbers = [self.chatTableView numberOfRowsInSection:0];
+    [self.chatTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:rowNumbers-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
 }
+
+-(void)notifyPlayerOfChallenge:(NSDictionary *)challengeDictionary
+{
+    NSString *challengingPlayerUserName = [challengeDictionary objectForKey:@"userName"];
+    
+    
+    //show a popup announcing the challenge.
+    UIView *sureMatchView = [[UIView alloc] initWithFrame:CGRectMake(20,70,self.view.frame.size.width-40,450)];
+    sureMatchView.backgroundColor = [UIColor whiteColor];
+    CALayer *sureMatchLayer = sureMatchView.layer;
+    sureMatchLayer.cornerRadius = 8.0f;
+    
+    
+    UILabel *sureMatchTitle = [[UILabel alloc] initWithFrame:CGRectMake(20,20,sureMatchView.frame.size.width-40,40)];
+    sureMatchTitle.text = @"You Have A Challenge!";
+    sureMatchTitle.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:30];
+    sureMatchTitle.textAlignment = NSTextAlignmentCenter;
+    
+    [sureMatchView addSubview:sureMatchTitle];
+    
+    
+    UILabel *sureMatchCaseNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,70,300,50)];
+    
+    sureMatchCaseNameLabel.font =[UIFont fontWithName:@"Futura-CondensedMedium" size:25];
+    
+    UIImageView *sureMatchImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10,120,150,150)];
+    
+    //check to see if there is a caseProfile for this caseID
+    NSString *defaultMatchImgFileName = [[NSBundle mainBundle] pathForResource:@"angryorc" ofType:@"jpeg"];
+    sureMatchImageView.image = [UIImage imageWithContentsOfFile:defaultMatchImgFileName];
+
+    [sureMatchView addSubview:sureMatchCaseNameLabel];
+    [sureMatchView addSubview:sureMatchImageView];
+    
+    //add two buttons for "Not Who I Wanted" and "Start a Conversation"
+    UIButton *notWhoIWantedButton = [[UIButton alloc] initWithFrame:CGRectMake(10,300,sureMatchView.frame.size.width-20,50)];
+    notWhoIWantedButton.backgroundColor = [UIColor redColor];
+    notWhoIWantedButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
+    notWhoIWantedButton.titleLabel.textColor = [UIColor whiteColor];
+    notWhoIWantedButton.titleLabel.text = @"Not Who I Wanted";
+    [notWhoIWantedButton setTitle:@"Not Who I Wanted" forState:UIControlStateNormal];
+    
+    [notWhoIWantedButton addTarget:self action:@selector(notWhoIWantedButton:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIButton *startConversationButton = [[UIButton alloc] initWithFrame:CGRectMake(10,360,sureMatchView.frame.size.width-20,50)];
+    
+    startConversationButton.backgroundColor = [UIColor blueColor];
+    startConversationButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
+    startConversationButton.titleLabel.textColor = [UIColor whiteColor];
+    startConversationButton.titleLabel.text = @"Start Conversation";
+    [startConversationButton setTitle:@"Start Conversation" forState:UIControlStateNormal];
+    
+    [startConversationButton addTarget:self action:@selector(startConversationButton:) forControlEvents:UIControlEventTouchUpInside];
+    [sureMatchView addSubview:notWhoIWantedButton];
+    [sureMatchView addSubview:startConversationButton];
+    
+    bgDarkenView = [[UIView alloc] initWithFrame:self.view.bounds];
+    bgDarkenView.backgroundColor = [UIColor blackColor];
+    bgDarkenView.alpha = 0.7;
+    [self.view addSubview:bgDarkenView];
+    [self.view addSubview:sureMatchView];
+
+}
+
 
 @end
