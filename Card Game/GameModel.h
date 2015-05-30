@@ -172,6 +172,7 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 -(void)setCurrentTarget:(int)targetPosition;
 -(MonsterCardModel*)getTarget:(int)targetPosition;
 -(int)getTargetIndex: (MonsterCardModel*)target;
++(void)loadQuickMatchDeck:(DeckModel*)deck;
 +(enum CardPosition) getReversedPosition:(enum CardPosition)position;
 
 @end

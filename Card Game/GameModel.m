@@ -105,8 +105,6 @@ enum GameMode __gameMode; //because C functions cant access
 
 -(void)startGame
 {
-    //TODO load decks from database for multiplayer (not here though)
-    
     int cardDraw = INITIAL_CARD_DRAW;
     
     //draw three cards per side
@@ -189,7 +187,7 @@ enum GameMode __gameMode; //because C functions cant access
     spell.name = @"Insta Win";
     spell.cost = 0;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:400000]]];
-    //[playerHand addObject:spell];
+    [playerHand addObject:spell];
     
     /*
     MonsterCardModel*monster;
@@ -452,10 +450,11 @@ enum GameMode __gameMode; //because C functions cant access
     {
         opponentDeck = [[DeckModel alloc]init];
         
-        //quick match level, gotta pull random cards from store
+        //quick match level, do nothing as this will be loaded and set by GameViewController
         if (_level == [Campaign quickMatchLevel])
         {
-            [self loadQuickMatchDeck: opponentDeck];
+            //[self loadQuickMatchDeck: opponentDeck];
+            
         }
         else
         {
@@ -473,7 +472,7 @@ enum GameMode __gameMode; //because C functions cant access
             for (CardModel*card in campaignPlayerDeck.cards)
                 [playerDeck addCard:[[CardModel alloc] initWithCardModel:card]];
             
-            NSLog(@"player cards count %d",playerDeck.cards.count);
+            NSLog(@"player cards count %lu",playerDeck.cards.count);
         }
         
         //this is for old stuff, cards are shuffled in start game now
@@ -641,9 +640,11 @@ enum GameMode __gameMode; //because C functions cant access
     //NSLog(@"loaded %d cards for player.", [playerDeck count]);
 }
 
--(void)loadQuickMatchDeck:(DeckModel*)deck
++(void)loadQuickMatchDeck:(DeckModel*)deck
 {
     PFQuery *cardsQuery = [PFQuery queryWithClassName:@"Card"];
+    
+    //TODO needs mana curve
     
     /*
      Types of deck's element structures:
@@ -758,19 +759,23 @@ enum GameMode __gameMode; //because C functions cant access
             }
         }
         
-        NSLog(@"element: %d", elementToPick);
+        //NSLog(@"element: %d", elementToPick);
         
         [cardsQuery whereKey:@"element" equalTo:@(elementToPick)];
         
-        int count = [cardsQuery countObjects];
+        int count = (int)[cardsQuery countObjects];
         
         cardsQuery.skip = arc4random_uniform(count);
         
         PFObject *cardPF = [cardsQuery getFirstObject];
         
+        NSLog(@"get card start");
         [CardModel createCardFromPFObject:cardPF onFinish:^(CardModel * card) {
             [deck addCard:card];
+            NSLog(@"got card: %d", card.idNumber);
         }];
+        
+        
         
         i++;
     }

@@ -32,6 +32,8 @@
 @synthesize currentNumberOfAnimations = _currentNumberOfAnimations;
 @synthesize tutLabel = _tutLabel;
 @synthesize tutOkButton = _tutOkButton;
+@synthesize quickMatchDeck = _quickMatchDeck;
+@synthesize quickMatchDeckLoaded = _quickMatchDeckLoaded;
 
 /** Screen dimension for convinience */
 int SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -108,6 +110,30 @@ BOOL leftHandViewZone = NO;
         
         //inits array
         self.currentAbilities = [NSMutableArray array];
+        
+        _quickMatchDeckLoaded = FALSE;
+        
+        [self performBlockInBackground:^{
+            _quickMatchDeck = [[DeckModel alloc] init];
+            [GameModel loadQuickMatchDeck:_quickMatchDeck];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                _quickMatchDeckLoaded = TRUE;
+                
+                if (self.gameModel != nil)
+                {
+                    [self undarkenScreen];
+                    [self loadDeckFinished];
+                    
+                    NSArray*decks = @[self.gameModel.decks[PLAYER_SIDE], _quickMatchDeck];
+                    
+                    self.gameModel.decks = decks;
+                    [self.gameModel startGame];
+                }
+            });
+        }];
+        
+        
     }
     
     return self;
@@ -127,7 +153,6 @@ BOOL leftHandViewZone = NO;
     //inits the game model storing the game's data
     self.gameModel = [[GameModel alloc] initWithViewController:(self) gameMode:_gameMode withLevel:_level];
     self.gameModel.opponentDeck = _opponentDeck;
-    [self.gameModel loadDecks];
     
     //TODO this is really stupid, currentSide should be gameModel's property..
     PlayerModel *player = self.gameModel.players[currentSide];
@@ -155,7 +180,13 @@ BOOL leftHandViewZone = NO;
             [_gameModel setOpponentSeed:_opponentSeed];
         }
         
-        [self.gameModel startGame];
+        if (_level == [Campaign quickMatchLevel] && !_quickMatchDeckLoaded)
+        {
+            [self loadDeckStart];
+        }
+        else
+            [self.gameModel startGame];
+        
     }
     //add all cards onto screen
     [self updateHandsView: PLAYER_SIDE];
@@ -1721,6 +1752,8 @@ BOOL leftHandViewZone = NO;
         //already completed, simply quits TODO: also gets gold from regular battles
         else
         {
+            _gameOverSaveLabel.text = @"";
+            
             //begin next level immediately if exists
             if (_nextLevel != nil)
             {
@@ -1891,6 +1924,30 @@ BOOL leftHandViewZone = NO;
         }];
     }
     
+}
+
+-(void)loadDeckStart
+{
+    //for (UIView*view in _gameOverScreen.subviews)
+    //    [view removeFromSuperview];
+    
+    [_gameOverScreen addSubview:_gameOverProgressIndicator];
+    [_gameOverProgressIndicator startAnimating];
+    
+    _gameOverSaveLabel.frame = CGRectMake(40, SCREEN_HEIGHT/2, SCREEN_WIDTH-80, SCREEN_HEIGHT/3);
+    _gameOverSaveLabel.text = @"Loading Game...";
+    //[_gameOverSaveLabel sizeToFit];
+    [_gameOverScreen addSubview:_gameOverSaveLabel];
+    
+    [self darkenScreen];
+    [self.view addSubview:_gameOverScreen];
+}
+
+-(void)loadDeckFinished
+{
+    [_gameOverScreen removeFromSuperview];
+    [_gameOverProgressIndicator stopAnimating];
+    [_gameOverSaveLabel removeFromSuperview];
 }
 
 -(void)saveLevelProgress

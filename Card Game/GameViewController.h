@@ -84,6 +84,10 @@
 /** Keeps the CEVC to access the card that has been created for tutorial one */
 @property (strong)CardEditorViewController *cevc;
 
+/** Quick match deck stored here before GameModel is created */
+@property (strong)DeckModel*quickMatchDeck;
+@property BOOL quickMatchDeckLoaded;
+
 /** for multiplayer */
 @property (nonatomic, strong) MultiplayerNetworking *networkingEngine;
 @property (nonatomic,strong) multiplayerDataHandler *MPDataHandler;
