@@ -187,7 +187,7 @@ enum GameMode __gameMode; //because C functions cant access
     spell.name = @"Insta Win";
     spell.cost = 0;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:400000]]];
-    [playerHand addObject:spell];
+    //[playerHand addObject:spell];
     
     /*
     MonsterCardModel*monster;

@@ -113,6 +113,8 @@ BOOL leftHandViewZone = NO;
         
         _quickMatchDeckLoaded = FALSE;
         
+        if (level == [Campaign quickMatchLevel])
+        {
         [self performBlockInBackground:^{
             _quickMatchDeck = [[DeckModel alloc] init];
             [GameModel loadQuickMatchDeck:_quickMatchDeck];
@@ -132,6 +134,7 @@ BOOL leftHandViewZone = NO;
                 }
             });
         }];
+        }
         
         
     }
@@ -183,9 +186,13 @@ BOOL leftHandViewZone = NO;
         if (_level == [Campaign quickMatchLevel] && !_quickMatchDeckLoaded)
         {
             [self loadDeckStart];
+            NSLog(@"loading quick match");
         }
         else
+        {
+            NSLog(@"not loading quick match");
             [self.gameModel startGame];
+        }
         
     }
     //add all cards onto screen
