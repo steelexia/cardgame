@@ -17,7 +17,7 @@
 @class GameViewController;
 @class DeckChooserViewController;
 
-@interface MultiplayerGameViewController : UIViewController<MultiplayerNetworkingProtocol,multiplayerDataHandlerDelegate>
+@interface MultiplayerGameViewController : UIViewController<MultiplayerNetworkingProtocol,multiplayerDataHandlerDelegate,UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
 @property (nonatomic, copy) void (^gameOverBlock)(BOOL didWin);
 @property (nonatomic, copy) void (^gameEndedBlock)();
 
@@ -26,6 +26,17 @@
 @property (nonatomic, strong) MultiplayerNetworking *networkingEngine;
 @property (strong,nonatomic) UILabel *currentLoadStateLabel;
 @property (strong,nonatomic) UILabel *numberOfPlayersLabel;
+
+@property (strong,nonatomic) UITableView *mpLobbyTableView;
+@property (strong,nonatomic) UITableView *chatTableView;
+@property (strong,nonatomic) UITextField *chatField;
+@property (strong,nonatomic) UIButton *chatSendButton;
+
+
+@property (strong,nonatomic) NSArray *connectedPlayers;
+@property (strong,nonatomic) NSMutableArray *chatMessages;
+
+@property (strong,nonatomic) PNChannel *chatChannel;
 
 
 @property (strong)GameViewController *gvc;

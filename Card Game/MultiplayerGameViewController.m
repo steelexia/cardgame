@@ -13,6 +13,9 @@
 #import "CardView.h"
 #import "GameViewController.h"
 #import "DeckChooserViewController.h"
+#import "LeaderboardsViewController.h"
+#import "AutoSizeChatCellTableViewCell.h"
+
 @interface MultiplayerGameViewController () <MultiplayerNetworkingProtocol>
 
 
@@ -28,14 +31,17 @@ BOOL alreadyLoadedMatch;
 MultiplayerNetworking *_networkingEngine;
 NSUInteger _currentPlayerIndex;
 multiplayerDataHandler *MPDataHandler;
+UIView *bgDarkenView;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    SCREEN_WIDTH = self.view.bounds.size.width;
-    SCREEN_HEIGHT = self.view.bounds.size.height;
+    SCREEN_WIDTH = [[UIScreen mainScreen] bounds].size.width;
+    SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
+    
+    //iPhone 4S Values
     
     //background view
     UIImageView*backgroundImageTop = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_top"]];
@@ -44,6 +50,7 @@ multiplayerDataHandler *MPDataHandler;
     
     UIImageView*backgroundImageMiddle = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_center"]];
     backgroundImageMiddle.frame = CGRectMake(0, 40, SCREEN_WIDTH, SCREEN_HEIGHT - 40 - 40);
+    
     [self.view addSubview:backgroundImageMiddle];
     
     UIImageView*backgroundImageBottom = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_bottom"]];
@@ -51,16 +58,17 @@ multiplayerDataHandler *MPDataHandler;
     [self.view addSubview:backgroundImageBottom];
     
     
-    CFLabel*menuLogoBackground = [[CFLabel alloc] initWithFrame:CGRectMake(0,0,250,100)];
-    menuLogoBackground.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/4);
+    CFLabel*menuLogoBackground = [[CFLabel alloc] initWithFrame:CGRectMake(0,0,250,50)];
+    menuLogoBackground.center = CGPointMake(SCREEN_WIDTH/2, 40);
     menuLogoBackground.label.textAlignment = NSTextAlignmentCenter;
     [menuLogoBackground setTextSize:30];
     menuLogoBackground.label.text = @"Multiplayer";
     [self.view addSubview:menuLogoBackground];
     
+    
     CFButton* startButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
-    startButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 100);
-    [startButton.label setText:@"Start"];
+    startButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 50);
+    [startButton.label setText:@"Quick Match"];
     //[startButton addTarget:self action:@selector(startGameCenterButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [startButton addTarget:self action:@selector(startMatch)    forControlEvents:UIControlEventTouchUpInside];
     
@@ -74,6 +82,61 @@ multiplayerDataHandler *MPDataHandler;
     
     [self.view addSubview:connectButton];
 
+    CFButton* leaderboardButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
+    leaderboardButton.center = CGPointMake(SCREEN_WIDTH-70, SCREEN_HEIGHT - 220);
+    [leaderboardButton.label setText:@"Leaderboards"];
+    
+    [leaderboardButton addTarget:self action:@selector(viewLeaderboards)    forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:leaderboardButton];
+    
+    self.mpLobbyTableView = [[UITableView alloc] initWithFrame:CGRectMake(30,80,SCREEN_WIDTH-60,150)];
+   self.mpLobbyTableView.delegate = self;
+    self.mpLobbyTableView.dataSource = self;
+    self.mpLobbyTableView.alpha = 0;
+    self.mpLobbyTableView.tag = 88;
+    CALayer *mpLobbyLayer = self.mpLobbyTableView.layer;
+    mpLobbyLayer.cornerRadius = 8.0f;
+    mpLobbyLayer.masksToBounds = YES;
+    
+    
+    [self.view addSubview:self.mpLobbyTableView];
+    
+    self.chatTableView = [[UITableView alloc] initWithFrame:CGRectMake(20,240,SCREEN_WIDTH-40,125)];
+    self.chatTableView.backgroundColor = [UIColor blackColor];
+    self.chatTableView.tag = 99;
+    self.chatTableView.userInteractionEnabled = YES;
+    self.chatTableView.dataSource = self;
+    
+    self.chatTableView.delegate = self;
+    [self.view addSubview:self.chatTableView];
+    
+    self.chatField = [[UITextField alloc] initWithFrame:CGRectMake(20,370,SCREEN_WIDTH-40,30)];
+    self.chatField.delegate = self;
+    self.chatField.alpha = 1;
+    self.chatField.backgroundColor = [UIColor whiteColor];
+    CALayer *chatFieldLayer = self.chatField.layer;
+    chatFieldLayer.cornerRadius = 8.0f;
+    chatFieldLayer.masksToBounds = YES;
+    
+    [self.view addSubview:self.chatField];
+    
+    self.chatSendButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-70,370,50,35)];
+    self.chatSendButton.backgroundColor = [UIColor blueColor];
+    [self.chatSendButton setTitle:@"Send" forState:UIControlStateNormal];
+    CALayer *chatBtnLayer = self.chatSendButton.layer;
+    chatBtnLayer.cornerRadius = 8.0f;
+    chatBtnLayer.masksToBounds = YES;
+    
+    [self.chatSendButton addTarget:self action:@selector(chatSend:) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.chatSendButton.titleLabel.textColor = [UIColor whiteColor];
+    
+    [self.view addSubview:self.chatSendButton];
+    
+    //UITapGestureRecognizer *chatTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapChat:)];
+    
+    //[chatTextField addGestureRecognizer:chatTapRecognizer];
     
     
     UIButton* backButton = [[CFButton alloc] initWithFrame:CGRectMake(35, SCREEN_HEIGHT - 32 - 20, 46, 32)];
@@ -87,9 +150,13 @@ multiplayerDataHandler *MPDataHandler;
     self.numberOfPlayersLabel = [[UILabel alloc] initWithFrame:CGRectMake(20,300,300,50)];
     self.numberOfPlayersLabel.text = @"Num of Players Connected";
     
-    [self.view addSubview:self.currentLoadStateLabel];
-    [self.view addSubview:self.numberOfPlayersLabel];
+   // [self.view addSubview:self.currentLoadStateLabel];
+    //[self.view addSubview:self.numberOfPlayersLabel];
     
+    self.chatMessages = [[NSMutableArray alloc] init];
+    NSString *chat1 = @"Hi there this is chat";
+    
+    [self.chatTableView reloadData];
     
     
     //---------------activity indicator--------------------//
@@ -114,6 +181,15 @@ multiplayerDataHandler *MPDataHandler;
     
     //TODO prompt before this
     //[self startGameCenterButtonPressed];
+    
+    [self.view addSubview:_activityIndicator];
+    
+    [self loadParseChatMessages];
+    
+    
+    [self startConnectingPubNub];
+    
+    
 }
 
 //brian sep 9
@@ -122,8 +198,33 @@ multiplayerDataHandler *MPDataHandler;
     
     NSLog(@"appeared");
 }
+
+-(void)loadParseChatMessages
+{
+    PFQuery *chatQuery = [PFQuery queryWithClassName:@"chatMessage"];
+    [chatQuery orderByDescending:@"createdAt"];
+    chatQuery.limit = 50;
+    
+    [chatQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+      //chat objects
+      
+        NSArray* reversedArray = [[objects reverseObjectEnumerator] allObjects];
+        [self.chatMessages addObjectsFromArray:reversedArray];
+        [self.chatTableView reloadData];
+        
+        
+            NSInteger rowNumbers = [self.chatTableView numberOfRowsInSection:0];
+            [self.chatTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:rowNumbers-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+       
+       
+    }];
+    
+}
+
+
 -(void)startConnectingPubNub
 {
+    
     MPDataHandler = [multiplayerDataHandler sharedInstance];
     [MPDataHandler setPubnubConfigDetails];
     
@@ -133,14 +234,19 @@ multiplayerDataHandler *MPDataHandler;
     MPDataHandler.gameDelegate = _gvc;
     MPDataHandler.delegate = self;
     
-   // [mpConnecting connectPlayer];
+    [MPDataHandler getPubNubConnectedPlayers];
+    //[self testMPFunction];
     
-    //[mpConnecting sendPlayerMessage:@"test"];
+   
+   
     
-    //[mpConnecting getPlayerState];
+}
+-(void)viewLeaderboards
+{
+    //LeaderboardsViewController *lvc = [[LeaderboardsViewController alloc] init];
     
-   // [mpConnecting getConnectedPlayers];
-    //check to see if there are two players in main lobby
+   // [self presentViewController:lvc animated:YES completion:nil];
+    
     
 }
 
@@ -563,5 +669,510 @@ multiplayerDataHandler *MPDataHandler;
     self.numberOfPlayersLabel.text = text;
     
 }
+
+-(void)testMPFunction
+{
+     NSError* error;
+    [PFCloud callFunction:@"mpMatchComplete" withParameters:@{
+                                                              @"User1" : [PFUser currentUser].objectId, @"User2" :@"IRh33iYFK9", @"User1Rating" :@800,@"User2Rating": @400
+                                                            } error:&error];
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;    //count of section
+}
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    
+    if(tableView.tag ==88)
+    {
+      return 40.0;
+    }
+    else
+    {
+        return 0;
+        
+    }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    if(tableView.tag==88)
+    {
+        
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,320,40)];
+    titleLabel.backgroundColor = [UIColor darkGrayColor];
+    
+    titleLabel.text = @"Username    Rating        Battle";
+    
+    return titleLabel;
+    }
+    else
+    {
+        return nil;
+        
+    }
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    if(tableView.tag==88)
+    {
+        return self.connectedPlayers.count;
+        
+    }
+    else
+    {
+        return self.chatMessages.count;
+        
+    }
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+   if(tableView.tag ==99)
+   {
+       /*
+       //check the length of the message
+       NSDictionary *msgIncomingDict = [self.chatMessages objectAtIndex:indexPath.row];
+       
+       NSString *chatMessage = [msgIncomingDict objectForKey:@"messageText"];
+       NSString *userName = [msgIncomingDict objectForKey:@"userName"];
+       NSDate *chatTime = [msgIncomingDict objectForKey:@"chatMsgDate"];
+       
+       NSString *fullChatString = [[[@"[" stringByAppendingString:userName] stringByAppendingString:@"]: "] stringByAppendingString:chatMessage];
+       
+       if([fullChatString length] <40)
+       {
+           return 15;
+       }
+       else if([fullChatString length] <80)
+       {
+            return 45;
+       }
+       else if([fullChatString length] <120)
+       {
+           return 65;
+           
+       }
+       else
+       {
+           return 75;
+           
+       }
+       */
+       
+       AutoSizeChatCellTableViewCell *cell = [[AutoSizeChatCellTableViewCell alloc] init];
+       
+       NSDictionary *msgIncomingDict = [self.chatMessages objectAtIndex:indexPath.row];
+       
+       NSString *chatMessage = [msgIncomingDict objectForKey:@"messageText"];
+       NSString *userName = [msgIncomingDict objectForKey:@"userName"];
+       NSDate *chatTime = [msgIncomingDict objectForKey:@"chatMsgDate"];
+       
+       NSString *fullChatString = [[[@"[" stringByAppendingString:userName] stringByAppendingString:@"]: "] stringByAppendingString:chatMessage];
+       
+       cell.textLabel.text = fullChatString;
+       cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
+       
+       // Do the layout pass on the cell, which will calculate the frames for all the views based on the constraints
+       // (Note that the preferredMaxLayoutWidth is set on multi-line UILabels inside the -[layoutSubviews] method
+       // in the UITableViewCell subclass
+       [cell setNeedsLayout];
+       [cell layoutIfNeeded];
+       
+       // Get the actual height required for the cell
+       CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+       
+       // Add an extra point to the height to account for the cell separator, which is added between the bottom
+       // of the cell's contentView and the bottom of the table view cell.
+       height += 1;
+      // NSLog(@"height @%f",height);
+       
+       
+       return height;
+      
+   }
+    else
+        
+    {
+      return 25;
+    }
+    
+}
+
+-(NSInteger)getNumberOfLinesInLabelOrTextView:(id)obj withText:(NSString *) text
+{
+    NSInteger lineCount = 0;
+    if([obj isKindOfClass:[UILabel class]])
+    {
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+        label.numberOfLines = 0;
+         label.lineBreakMode = NSLineBreakByWordWrapping;
+        label.text = text;
+        label.font = [UIFont systemFontOfSize:11];
+        
+        CGRect frame = label.frame;
+        frame.size.width = self.chatTableView.frame.size.width;
+        
+         frame.size = [label sizeThatFits:frame.size];
+        CGSize requiredSize = frame.size;
+        
+        int charSize = label.font.leading;
+        int rHeight = requiredSize.height;
+        
+        lineCount = rHeight/charSize;
+    }
+    else if ([obj isKindOfClass:[UITextView class]])
+    {
+        UITextView *textView = (UITextView *)obj;
+        lineCount = textView.contentSize.height / textView.font.leading;
+    }
+    
+    return lineCount;
+}
+
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+   
+if(tableView.tag ==88)
+{
+    
+    static NSString *MyIdentifier = @"leaderboardCell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MyIdentifier];
+    UILabel *userNameLabel;
+    UILabel *userStateLabel;
+    UILabel *userEloLabel;
+    UIButton *challengeButton;
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                      reuseIdentifier:MyIdentifier];
+        userNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,120,25)];
+        userStateLabel = [[UILabel alloc] initWithFrame:CGRectMake(191,0,70,25)];
+        userEloLabel = [[UILabel alloc] initWithFrame:CGRectMake(105,0,40,25)];
+        challengeButton = [[UIButton alloc] initWithFrame:CGRectMake(165,2,90,21)];
+        [challengeButton setBackgroundColor:[UIColor blueColor]];
+        [challengeButton setTitle:@"Challenge" forState:UIControlStateNormal];
+        challengeButton.titleLabel.font = [UIFont boldSystemFontOfSize:12];
+        
+        [challengeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        CALayer *btnLayer = challengeButton.layer;
+        btnLayer.cornerRadius = 8.0f;
+        btnLayer.masksToBounds = YES;
+        
+        
+        [challengeButton addTarget:self action:@selector(challengePlayer:) forControlEvents:UIControlEventTouchUpInside];
+        
+        userNameLabel.tag = 1;
+        [cell addSubview:userNameLabel];
+        userStateLabel.tag = 2;
+        [cell addSubview:userStateLabel];
+        userEloLabel.tag = 3;
+        [cell addSubview:userEloLabel];
+        challengeButton.tag = 1000+indexPath.row;
+        [cell addSubview:challengeButton];
+        
+        
+    }
+    
+    // Here we use the provided setImageWithURL: method to load the web image
+    // Ensure you use a placeholder image otherwise cells will be initialized with no image
+    NSDictionary *userObjectAtIndex = [self.connectedPlayers objectAtIndex:indexPath.row];
+    
+    
+    NSNumber *playerElo = [userObjectAtIndex objectForKey:@"eloRating"];
+    NSString *playerName = [userObjectAtIndex objectForKey:@"usernameCustom"];
+    NSString *playerState = [userObjectAtIndex objectForKey:@"gameState"];
+    
+    userNameLabel = (UILabel *)[cell viewWithTag:1];
+    userStateLabel = (UILabel *)[cell viewWithTag:2];
+    userEloLabel = (UILabel *)[cell viewWithTag:3];
+    challengeButton = (UIButton *)[cell viewWithTag:1000+indexPath.row];
+    
+   
+    userStateLabel.text = playerState;
+    userNameLabel.text = playerName;
+    userEloLabel.text = [playerElo stringValue];
+    
+    if([userStateLabel.text isEqualToString:@"Lobby"])
+    {
+        userStateLabel.textColor = [UIColor greenColor];
+    }
+    else
+    {
+        userStateLabel.textColor = [UIColor blackColor];
+        
+    }
+    
+    //cell.textLabel.text =[playerElo stringValue];
+    
+    
+    return cell;
+}
+    else
+    {
+        //return chat cell
+        static NSString *MyIdentifier = @"chatCell";
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MyIdentifier];
+        UILabel *messageLabel;
+        
+        if (cell == nil)
+        {
+        cell = [[AutoSizeChatCellTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                          reuseIdentifier:MyIdentifier];
+        messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,250,70)];
+            //[cell addSubview:messageLabel];
+            
+           cell.textLabel.textColor = [UIColor whiteColor];
+            
+            cell.backgroundColor = [UIColor blackColor];
+            
+            cell.textLabel.font = [UIFont systemFontOfSize:11];
+            
+            //messageLabel.numberOfLines = 3;
+            //messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
+            
+        }
+        //[messageLabel setFrame:CGRectMake(cell.frame.origin.x , cell.frame.origin.y, cell.frame.size.width, cell.frame.size.height)];
+        
+        NSDictionary *msgIncomingDict = [self.chatMessages objectAtIndex:indexPath.row];
+        
+        NSString *chatMessage = [msgIncomingDict objectForKey:@"messageText"];
+        NSString *userName = [msgIncomingDict objectForKey:@"userName"];
+        NSDate *chatTime = [msgIncomingDict objectForKey:@"chatMsgDate"];
+        
+        NSString *fullChatString = [[[@"[" stringByAppendingString:userName] stringByAppendingString:@"]: "] stringByAppendingString:chatMessage];
+        
+        cell.textLabel.text = fullChatString;
+      
+        
+        return cell;
+        
+    }
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if(tableView.tag==99)
+    {
+        //dimensions iPhone 4s
+        //self.chatTableView = [[UITableView alloc] initWithFrame:CGRectMake(20,240,SCREEN_WIDTH-40,125)];
+        
+        if(self.chatField.alpha ==0)
+        {
+            //expand chat tableview and show the chat option
+            [self.chatTableView setFrame:CGRectMake(20,120,SCREEN_WIDTH-40,250)];
+            self.chatField.alpha = 1;
+            
+        }
+        else
+        {
+            //reduce chat tableview and set alpha to 0 on chatField
+            self.chatField.alpha = 0;
+            [self.chatTableView setFrame:CGRectMake(20,260, SCREEN_WIDTH-40,105)];
+            
+            
+        }
+    }
+}
+
+-(void)updatePlayerLobby:(NSArray *)connectedPlayers
+{
+    self.connectedPlayers = connectedPlayers;
+    
+    [self.mpLobbyTableView reloadData];
+    
+    self.mpLobbyTableView.alpha = 1;
+    
+    [self.activityIndicator removeFromSuperview];
+    
+}
+
+-(void)challengePlayer:(UIButton *)sender;
+{
+    //send to the delegate the relevant information for the challenge
+    UIButton *sendingButton = sender;
+    NSInteger playerTag = sendingButton.tag-1000;
+    
+    //get player at index
+    NSDictionary *playerObjAtIndex = [self.connectedPlayers objectAtIndex:playerTag];
+    
+    //send to MPDataHandler function, function should send a request to this user to show a challenge window.  If they click yes on the challenge window, then it goes forward with a 1 on 1 match.
+    
+    [MPDataHandler sendChallengeToPlayerObj:playerObjAtIndex];
+    
+   
+}
+
+- (void)didTapChat:(UITapGestureRecognizer *)tapGesture
+{
+    //dimensions iPhone 4s
+    //self.chatTableView = [[UITableView alloc] initWithFrame:CGRectMake(20,240,SCREEN_WIDTH-40,125)];
+    
+    if(self.chatField.alpha ==0)
+    {
+        //expand chat tableview and show the chat option
+        [self.chatTableView setFrame:CGRectMake(20,120,SCREEN_WIDTH-40,250)];
+        if(self.chatField ==nil)
+        {
+        self.chatField = [[UITextField alloc] initWithFrame:CGRectMake(25,275,SCREEN_WIDTH-50,50)];
+        [self.view addSubview:self.chatField];
+        }
+        self.chatField.alpha = 1;
+        
+    }
+    else
+    {
+        //reduce chat tableview and set alpha to 0 on chatField
+        self.chatField.alpha = 0;
+        [self.chatField setFrame:CGRectMake(20,260, SCREEN_WIDTH-40,105)];
+        
+        
+    }
+}
+
+-(void)chatSend:(id)sender
+{
+    
+    NSString *chatString = self.chatField.text;
+    
+    if([chatString length] ==0)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Chat Entered" message:@"Must Enter Chat Before Sending" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
+    
+    if([chatString length] >200)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Chat Too Long" message:@"200 Character Limit On Chat" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+        
+    }
+    
+    //send the chat object to parse and to PubNub
+    
+    PFObject *messageObject = [PFObject objectWithClassName:@"chatMessage"];
+    
+    NSString *messageText = chatString;
+    
+    PFUser *myUser = [PFUser currentUser];
+    NSString *userName = myUser.username;
+    
+    
+    [messageObject setObject:messageText forKey:@"messageText"];
+    [messageObject setObject:userName forKey:@"userName"];
+    [messageObject setObject:myUser forKey:@"messageSender"];
+    [messageObject setObject:myUser.objectId forKey:@"messageSenderID"];
+    
+    [messageObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if(error)
+        {
+            NSLog(@"There was a parse upload error: @%@",error.localizedDescription);
+            UIAlertView *msgUploadError = [[UIAlertView alloc] initWithTitle:@"Message Error" message:@"The Message Failed to Upload To The Server, Your Recipient May Not Receive It" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [msgUploadError show];
+            
+        }
+    }
+     ];
+    
+    //send the message to pubnub
+    
+    NSMutableDictionary *sendingMsgDict = [[NSMutableDictionary alloc] init];
+    [sendingMsgDict setObject:messageText forKey:@"messageText"];
+    
+    [sendingMsgDict setObject:myUser.objectId forKey:@"msgSenderUserID"];
+    
+    [sendingMsgDict setObject:userName forKey:@"userName"];
+    
+    [sendingMsgDict setObject:@"chat" forKey:@"channel"];
+    
+    [MPDataHandler sendChatWithDict:sendingMsgDict];
+    
+}
+
+-(void)chatUpdate:(NSDictionary *)chatDictionary
+{
+    [self.chatMessages addObject:chatDictionary];
+    [self.chatTableView reloadData];
+    NSInteger rowNumbers = [self.chatTableView numberOfRowsInSection:0];
+    [self.chatTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:rowNumbers-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+}
+
+-(void)notifyPlayerOfChallenge:(NSDictionary *)challengeDictionary
+{
+    NSString *challengingPlayerUserName = [challengeDictionary objectForKey:@"userName"];
+    
+    
+    //show a popup announcing the challenge.
+    UIView *sureMatchView = [[UIView alloc] initWithFrame:CGRectMake(20,70,self.view.frame.size.width-40,450)];
+    sureMatchView.backgroundColor = [UIColor whiteColor];
+    CALayer *sureMatchLayer = sureMatchView.layer;
+    sureMatchLayer.cornerRadius = 8.0f;
+    
+    
+    UILabel *sureMatchTitle = [[UILabel alloc] initWithFrame:CGRectMake(20,20,sureMatchView.frame.size.width-40,40)];
+    sureMatchTitle.text = @"You Have A Challenge!";
+    sureMatchTitle.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:30];
+    sureMatchTitle.textAlignment = NSTextAlignmentCenter;
+    
+    [sureMatchView addSubview:sureMatchTitle];
+    
+    
+    UILabel *sureMatchCaseNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,70,300,50)];
+    
+    sureMatchCaseNameLabel.font =[UIFont fontWithName:@"Futura-CondensedMedium" size:25];
+    
+    UIImageView *sureMatchImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10,120,150,150)];
+    
+    //check to see if there is a caseProfile for this caseID
+    NSString *defaultMatchImgFileName = [[NSBundle mainBundle] pathForResource:@"angryorc" ofType:@"jpeg"];
+    sureMatchImageView.image = [UIImage imageWithContentsOfFile:defaultMatchImgFileName];
+
+    [sureMatchView addSubview:sureMatchCaseNameLabel];
+    [sureMatchView addSubview:sureMatchImageView];
+    
+    //add two buttons for "Not Who I Wanted" and "Start a Conversation"
+    UIButton *notWhoIWantedButton = [[UIButton alloc] initWithFrame:CGRectMake(10,300,sureMatchView.frame.size.width-20,50)];
+    notWhoIWantedButton.backgroundColor = [UIColor redColor];
+    notWhoIWantedButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
+    notWhoIWantedButton.titleLabel.textColor = [UIColor whiteColor];
+    notWhoIWantedButton.titleLabel.text = @"Not Who I Wanted";
+    [notWhoIWantedButton setTitle:@"Not Who I Wanted" forState:UIControlStateNormal];
+    
+    [notWhoIWantedButton addTarget:self action:@selector(notWhoIWantedButton:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIButton *startConversationButton = [[UIButton alloc] initWithFrame:CGRectMake(10,360,sureMatchView.frame.size.width-20,50)];
+    
+    startConversationButton.backgroundColor = [UIColor blueColor];
+    startConversationButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
+    startConversationButton.titleLabel.textColor = [UIColor whiteColor];
+    startConversationButton.titleLabel.text = @"Start Conversation";
+    [startConversationButton setTitle:@"Start Conversation" forState:UIControlStateNormal];
+    
+    [startConversationButton addTarget:self action:@selector(startConversationButton:) forControlEvents:UIControlEventTouchUpInside];
+    [sureMatchView addSubview:notWhoIWantedButton];
+    [sureMatchView addSubview:startConversationButton];
+    
+    bgDarkenView = [[UIView alloc] initWithFrame:self.view.bounds];
+    bgDarkenView.backgroundColor = [UIColor blackColor];
+    bgDarkenView.alpha = 0.7;
+    [self.view addSubview:bgDarkenView];
+    [self.view addSubview:sureMatchView];
+
+}
+
 
 @end
