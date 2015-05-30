@@ -403,6 +403,13 @@ NSMutableDictionary * campaignCards;
             //guard
             [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2009"]]];
         }
+        /*
+        NSLog(@"ai deck size %d", deck.count);
+        for (int i = 0; i < deck.count; i++)
+        {
+            CardModel*card = [deck getCardAtIndex:i];
+            NSLog(@"%@, %d", card.name, i);
+        }*/
     }
     else if ([levelID isEqualToString:@"d_1_c_2_l_2"])
     {
@@ -1177,7 +1184,7 @@ NSMutableDictionary * campaignCards;
     }
     else
     {
-        NSLog(@"WARNING: Invalid Campaign Deck ID.");
+        NSLog(@"WARNING: Invalid Campaign Deck ID: %@", levelID);
     }
     
     return deck;
@@ -1282,7 +1289,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:800]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:1008 type:cardTypeSinglePlayer];
     spell.rarity = cardRarityUncommon;
@@ -1293,7 +1300,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:3200]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneRandomFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:800]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:1009 type:cardTypeSinglePlayer];
     spell.rarity = cardRarityRare;
@@ -1303,7 +1310,7 @@ NSMutableDictionary * campaignCards;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
     
     //------LEVEL 2--------//
@@ -1352,7 +1359,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:5000]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:500]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
     //------LEVEL 3--------//
     monster = [[MonsterCardModel alloc] initWithIdNumber:1200 type:cardTypeSinglePlayer];
@@ -1389,7 +1396,7 @@ NSMutableDictionary * campaignCards;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:1900]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:1402 type:cardTypeSinglePlayer];
     spell.element = elementNeutral;
@@ -1399,7 +1406,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:500]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:1403 type:cardTypeSinglePlayer];
     spell.element = elementFire;
@@ -1408,7 +1415,7 @@ NSMutableDictionary * campaignCards;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:2200]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:1404 type:cardTypeSinglePlayer];
     spell.element = elementFire;
@@ -1417,7 +1424,7 @@ NSMutableDictionary * campaignCards;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:5100]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
     //-----------------CHAPTER 2----------------//
     //------LEVEL 1--------//
@@ -1471,7 +1478,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:1400]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityPierce castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:2005 type:cardTypeSinglePlayer];
     spell.rarity = cardRarityRare;
@@ -1481,7 +1488,7 @@ NSMutableDictionary * campaignCards;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:2006 type:cardTypeSinglePlayer];
     spell.rarity = cardRarityUncommon;
@@ -1492,7 +1499,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:2007 type:cardTypeSinglePlayer];
     spell.rarity = cardRarityExceptional;
@@ -1503,7 +1510,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:3000]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1200]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:2008 type:cardTypeSinglePlayer];
     spell.rarity = cardRarityUncommon;
@@ -1514,7 +1521,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:4200]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:2700]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
     monster = [[MonsterCardModel alloc] initWithIdNumber:2009 type:cardTypeSinglePlayer];
     monster.element = elementLight;
@@ -1563,7 +1570,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1000]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:1200]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
     //------LEVEL 3--------//
     monster = [[MonsterCardModel alloc] initWithIdNumber:2200 type:cardTypeSinglePlayer]; //////////////////////////////////////TODO
@@ -1612,7 +1619,7 @@ NSMutableDictionary * campaignCards;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:2600]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
     monster = [[MonsterCardModel alloc] initWithIdNumber:2301 type:cardTypeSinglePlayer];
     monster.element = elementFire;
@@ -1635,7 +1642,7 @@ NSMutableDictionary * campaignCards;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:2303 type:cardTypeSinglePlayer];
     spell.rarity = cardRarityExceptional;
@@ -1648,7 +1655,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
     //-----------------CHAPTER 3----------------//
     //------LEVEL 1--------//
@@ -1743,7 +1750,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1000]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:1008 type:cardTypeSinglePlayer];
     spell.rarity = cardRarityUncommon;
@@ -1754,7 +1761,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:4200]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1100]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:1009 type:cardTypeSinglePlayer];
     spell.rarity = cardRarityRare;
@@ -1765,7 +1772,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllMinion withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:2000]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     //------LEVEL 2--------//
     monster = [[MonsterCardModel alloc] initWithIdNumber:1100 type:cardTypeSinglePlayer];
@@ -1812,7 +1819,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     //------LEVEL 3--------//
     monster = [[MonsterCardModel alloc] initWithIdNumber:1200 type:cardTypeSinglePlayer];
@@ -1850,7 +1857,7 @@ NSMutableDictionary * campaignCards;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:4200]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     
     spell = [[SpellCardModel alloc] initWithIdNumber:1402 type:cardTypeSinglePlayer];
@@ -1861,7 +1868,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:5600]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1600]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:1403 type:cardTypeSinglePlayer];
     spell.element = elementFire;
@@ -1870,7 +1877,7 @@ NSMutableDictionary * campaignCards;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:1404 type:cardTypeSinglePlayer];
     spell.element = elementFire;
@@ -1879,7 +1886,7 @@ NSMutableDictionary * campaignCards;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     //-----------------CHAPTER 2----------------//
     //------LEVEL 1--------//
@@ -1934,7 +1941,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:2800]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityPierce castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:2005 type:cardTypeSinglePlayer];
     spell.rarity = cardRarityRare;
@@ -1944,7 +1951,7 @@ NSMutableDictionary * campaignCards;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:2006 type:cardTypeSinglePlayer];
     spell.rarity = cardRarityUncommon;
@@ -1955,7 +1962,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:2007 type:cardTypeSinglePlayer];
     spell.rarity = cardRarityExceptional;
@@ -1966,7 +1973,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:4200]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1900]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:2008 type:cardTypeSinglePlayer];
     spell.rarity = cardRarityUncommon;
@@ -1977,7 +1984,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:6200]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:3700]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     monster = [[MonsterCardModel alloc] initWithIdNumber:2009 type:cardTypeSinglePlayer];
     monster.element = elementLight;
@@ -2026,7 +2033,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1500]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:1800]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     //------LEVEL 3--------//
     monster = [[MonsterCardModel alloc] initWithIdNumber:2200 type:cardTypeSinglePlayer];
@@ -2075,7 +2082,7 @@ NSMutableDictionary * campaignCards;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:2600]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     monster = [[MonsterCardModel alloc] initWithIdNumber:2301 type:cardTypeSinglePlayer];
     monster.element = elementFire;
@@ -2098,7 +2105,7 @@ NSMutableDictionary * campaignCards;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:2303 type:cardTypeSinglePlayer];
     spell.rarity = cardRarityExceptional;
@@ -2111,7 +2118,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     //-----------------CHAPTER 3----------------//
     //------LEVEL 1--------//
@@ -2202,7 +2209,7 @@ NSMutableDictionary * campaignCards;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:4600]]];
     
-    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
     
     //------LEVEL 2--------//

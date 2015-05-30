@@ -183,10 +183,13 @@ BOOL leftHandViewZone = NO;
             [_gameModel setOpponentSeed:_opponentSeed];
         }
         
-        if (_level == [Campaign quickMatchLevel] && !_quickMatchDeckLoaded)
+        if (_level == [Campaign quickMatchLevel])
         {
-            [self loadDeckStart];
-            NSLog(@"loading quick match");
+            if (!_quickMatchDeckLoaded)
+            {
+                [self loadDeckStart];
+                NSLog(@"loading quick match");
+            }
         }
         else
         {

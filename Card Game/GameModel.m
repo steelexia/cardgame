@@ -58,9 +58,6 @@ enum GameMode __gameMode; //because C functions cant access
         self.hands = @[[NSMutableArray array],[NSMutableArray array]];
         self.decks = @[[[DeckModel alloc] init], [[DeckModel alloc] init ]];
         
-        if (gameMode != GameModeMultiplayer)
-            [self loadDecks];
-        
         //temporary players are hardcoded
         MonsterCardModel *playerHeroModel = [[MonsterCardModel alloc] initWithIdNumber:0];
         [playerHeroModel setupAsPlayerHero:@"Player 1" onSide:PLAYER_SIDE];
@@ -98,6 +95,10 @@ enum GameMode __gameMode; //because C functions cant access
                 self.aiPlayer.isTutorial = YES;
             //levelDifficultyOffset
         }
+        
+        if (gameMode != GameModeMultiplayer)
+            [self loadDecks];
+        
     }
     
     return self;
@@ -150,7 +151,15 @@ enum GameMode __gameMode; //because C functions cant access
     
     NSMutableArray* playerHand = self.hands[PLAYER_SIDE];
     NSMutableArray* aiHand = self.hands[OPPONENT_SIDE];
+    /*
+    DeckModel*aiDeck = self.decks[OPPONENT_SIDE];
     
+    NSLog(@"ai deck size %d", aiDeck.count);
+    for (int i = 0; i < aiDeck.count; i++)
+    {
+        CardModel*card = [aiDeck getCardAtIndex:i];
+        NSLog(@"%@, %d", card.name, i);
+    }*/
     //TODO testing
     /*
     MonsterCardModel*monster;
@@ -440,6 +449,7 @@ enum GameMode __gameMode; //because C functions cant access
 /** TODO this is a temporary function used to fill decks up with random cards for testing */
 -(void)loadDecks
 {
+    NSLog(@"load deck called");
     //self.decks = @[ [SinglePlayerCards getDeckOne], [SinglePlayerCards getDeckOne]];
     //[SinglePlayerCards uploadPlayerDeck];
     
