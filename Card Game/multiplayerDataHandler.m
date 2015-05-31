@@ -881,6 +881,8 @@ PNChannel *chatChannel;
     [challengeAcceptMsgDict setObject:@"main_lobby" forKey:@"channel"];
     [challengeAcceptMsgDict setObject:@"challengeAccept" forKey:@"msgType"];
     
+    [PubNub sendMessage:challengeAcceptMsgDict toChannel:gameChannel];
+    
       NSString *ownUserID = [PFUser currentUser].objectId;
     
     NSString *fullChannelName = [challengerID stringByAppendingString:ownUserID];
