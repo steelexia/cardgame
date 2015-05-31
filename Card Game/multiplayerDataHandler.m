@@ -882,7 +882,7 @@ PNChannel *chatChannel;
     [challengeAcceptMsgDict setObject:@"main_lobby" forKey:@"channel"];
     [challengeAcceptMsgDict setObject:@"challengeAccept" forKey:@"msgType"];
     
-    [PubNub sendMessage:challengeAcceptMsgDict toChannel:gameChannel];
+   
     
       NSString *ownUserID = [PFUser currentUser].objectId;
     
@@ -894,6 +894,7 @@ PNChannel *chatChannel;
     [PubNub subscribeOn:@[self.currentMPGameChannel] withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channels, PNError *error) {
         
         //do nothing, start event will be fired by occupancy 2 only by challenger
+         [PubNub sendMessage:challengeAcceptMsgDict toChannel:gameChannel];
         
     }];
 
