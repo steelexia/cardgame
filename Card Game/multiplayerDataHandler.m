@@ -265,8 +265,14 @@ PNChannel *chatChannel;
                     //send start message
                     if([self.opponentIDChallenged length]>0)
                     {
-                        //I am challenger, send game start
-                        [self sendStartMatch];
+                       if(!self.sentStartMatch)
+                       {
+                           //I am challenger, send game start
+                           [self sendStartMatch];
+                           self.sentStartMatch = TRUE;
+                           
+                       }
+                      
                         
                     }
                     break;

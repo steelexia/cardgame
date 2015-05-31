@@ -43,6 +43,8 @@
 -(void)setPubnubConfigDetails;
 -(void)getPubNubConnectedPlayers;
 -(void)sendStartMatch;
+@property BOOL sentStartMatch;
+
 -(NSString *)getOpponentDeckID;
 -(void)sendSeedMessage:(NSString *)msg;
 @property (strong,nonatomic) NSString *opponentDeckLoaded;
