@@ -105,7 +105,7 @@ PNChannel *chatChannel;
     [BeginMsgDict setObject:fullGameBeginMessage forKey:@"text"];
     [BeginMsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
     
-    [PubNub sendMessage:BeginMsgDict toChannel:gameChannel];
+    [PubNub sendMessage:BeginMsgDict toChannel:self.currentMPGameChannel];
     
 }
 
@@ -126,7 +126,7 @@ PNChannel *chatChannel;
     
     
     // #1 Define our channel name with +PNChannel+.
-    gameChannel = [PNChannel channelWithName:@"demo2"
+    gameChannel = [PNChannel channelWithName:@"main_lobby"
                                  shouldObservePresence:YES];
     
     chatChannel = [PNChannel channelWithName:@"chat" shouldObservePresence:YES];
@@ -252,7 +252,34 @@ PNChannel *chatChannel;
     [[PNObservationCenter defaultCenter] addPresenceEventObserver:self withBlock:^(PNPresenceEvent *event) {
         
         // NSLog(@"OBSERVER: Presence: %u", event.type);
+        if(event.channel == self.currentMPGameChannel)
+        {
+            switch (event.occupancy) {
+                case 1:
+                    // [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: It's a ghost town.",uuid ] toChannel:gameChannel ];
+                    NSLog(@"occupancy 1");
+                    
+                    break;
+                case 2:
+                    NSLog(@"occupancy 2");
+                    //send start message
+                    if([self.opponentIDChallenged length]>0)
+                    {
+                        //I am challenger, send game start
+                        [self sendStartMatch];
+                        
+                    }
+                    break;
+                case 3:
+                    NSLog(@"occupancy 3");
+                    
+                    break;
+                default:
+                    break;
+            }
         
+
+        }
         // #2 Add logic that sends messages to the channel based on the type of event received.
         switch (event.type) {
             case PNPresenceEventJoin:
@@ -314,7 +341,7 @@ PNChannel *chatChannel;
             return;
         }
         
-        if([thisChannel isEqualToString:@"challenge"])
+        if([thisChannel isEqualToString:@"main_lobby"])
         {
            /*
             //object structure
@@ -323,19 +350,65 @@ PNChannel *chatChannel;
             [challengeMsgDict setObject:username forKey:@"chgUserName"];
             [challengeMsgDict setObject:user.objectId forKey:@"chgUserID"];
             [challengeMsgDict setObject:@"challenge" forKey:@"channel"];
+              [challengeMsgDict setObject:eloRatingString forKey:@"eloRatingChallenger"];
             */
-            NSString *userIDBeingChallenged = [msgIncomingDict objectForKey:@"userID"];
-            NSString *ownUserID = [PFUser currentUser].objectId;
             
-            if([userIDBeingChallenged isEqualToString:ownUserID])
+            NSString *msgType = [msgIncomingDict objectForKey:@"msgType"];
+            
+            //handle challenge message types
+            if([msgType isEqualToString:@"challenge"])
             {
-                //someone challenged you, display a popup announcing it.
-                [self.delegate notifyPlayerOfChallenge:msgIncomingDict];
+                NSString *userIDBeingChallenged = [msgIncomingDict objectForKey:@"userID"];
+                NSString *ownUserID = [PFUser currentUser].objectId;
+                
+                if([userIDBeingChallenged isEqualToString:ownUserID])
+                {
+                    //someone challenged you, display a popup announcing it.
+                    [self.delegate notifyPlayerOfChallenge:msgIncomingDict];
+                    return;
+                    
+                }
+                else
+                {
+                    return;
+                    
+                }
 
+            }
+            else if([msgType isEqualToString:@"challengeAccept"])
+            {
+                NSString *userIDOfChallengeAccept = [msgIncomingDict objectForKey:@"challengeAcceptID"];
+                NSString *ownUserID = [PFUser currentUser].objectId;
+                if([userIDOfChallengeAccept isEqualToString:ownUserID])
+                {
+                    
+                    //join a channel with the ids of the two users and start loading the match
+                    //startID Challenger secondID challengee
+                    NSString *fullChannelName = [ownUserID stringByAppendingString:self.opponentIDChallenged];
+                    self.currentMPGameChannel = [PNChannel channelWithName:fullChannelName
+                                       shouldObservePresence:YES];
+                    
+                    
+                    [PubNub subscribeOn:@[self.currentMPGameChannel] withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channels, PNError *error) {
+                      
+                        //do nothing, start event will be fired by occupancy 2 only by challenger
+                        return;
+                        
+                    }];
+                    
+                    
+                }
+                else
+                {
+                    return;
+                    
+                }
             }
             
             
         }
+        
+    
         NSString *msgStringVal = [msgIncomingDict objectForKey:@"text"];
       
         NSString *msgSenderParseID = [msgIncomingDict objectForKey:@"msgSenderParseID"];
@@ -392,7 +465,7 @@ PNChannel *chatChannel;
                    NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
                    [MsgDict setObject:[NSString stringWithFormat:@"Start2"] forKey:@"text"];
                    [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-                   [PubNub sendMessage:MsgDict toChannel:gameChannel];
+                   [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel];
                    playerNumber = 1;
                    NSLog(@"setting self player 1");
                }
@@ -402,7 +475,7 @@ PNChannel *chatChannel;
                    NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
                    [MsgDict setObject:[NSString stringWithFormat:@"Start1"] forKey:@"text"];
                    [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-                   [PubNub sendMessage:MsgDict toChannel:gameChannel];
+                   [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel];
                    playerNumber = 2;
                    NSLog(@"setting self player 2");
                }
@@ -427,7 +500,7 @@ PNChannel *chatChannel;
             [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
             
             sentDeck=TRUE;
-            [PubNub sendMessage:MsgDict toChannel:gameChannel ];
+            [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
             
         }
         if([prefix isEqualToString:@"PDeck"])
@@ -456,7 +529,7 @@ PNChannel *chatChannel;
                 NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
                 [MsgDict setObject:totalDeckString forKey:@"text"];
                 [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-                [PubNub sendMessage:MsgDict toChannel:gameChannel ];
+                [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
                 sentDeck=YES;
                  NSLog(@"Sending Deck & Starting Deck Download");
                 [self.delegate updateStatusLabelText:@"Sending Deck"];
@@ -561,7 +634,7 @@ PNChannel *chatChannel;
                  NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
                  [MsgDict setObject:@"LoadG" forKey:@"text"];
                  [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-                 [PubNub sendMessage:MsgDict toChannel:gameChannel ];
+                 [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
                 
                  [self.delegate startLoadingMatch];
             }
@@ -646,7 +719,7 @@ PNChannel *chatChannel;
     NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
     [MsgDict setObject:@"LoadG" forKey:@"text"];
     [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-    [PubNub sendMessage:MsgDict toChannel:gameChannel ];
+    [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
     self.opponentDeckLoaded = @"YES";
 }
 
@@ -667,7 +740,7 @@ PNChannel *chatChannel;
     
     [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
     
-    [PubNub sendMessage:MsgDict toChannel:gameChannel ];
+    [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
 }
 //ATTAC
 //NSNumber *attackerPosition = [msgIncomingDict objectForKey:@"attackerPosition"];
@@ -686,7 +759,7 @@ PNChannel *chatChannel;
     [MsgDict setObject:targetPositionNum forKey:@"targetPosition"];
     [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
     
-    [PubNub sendMessage:MsgDict toChannel:gameChannel ];
+    [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
 }
 
 -(void)playerForfeit
@@ -704,7 +777,7 @@ PNChannel *chatChannel;
     NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
     [MsgDict setObject:@"ENDTR" forKey:@"text"];
     [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-    [PubNub sendMessage:MsgDict toChannel:gameChannel ];
+    [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
     self.opponentDeckLoaded = @"YES";
 }
 -(void)sendSeedMessage:(NSString *)msg
@@ -724,7 +797,7 @@ PNChannel *chatChannel;
     NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
     [MsgDict setObject:seedSend forKey:@"text"];
     [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-    [PubNub sendMessage:MsgDict toChannel:gameChannel ];
+    [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
     _playerSeed = randomSeed;
     }
 }
@@ -735,7 +808,7 @@ PNChannel *chatChannel;
     NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
     [MsgDict setObject:gotSeed forKey:@"text"];
     [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-    [PubNub sendMessage:MsgDict toChannel:gameChannel ];
+    [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
 
 }
 
@@ -785,14 +858,42 @@ PNChannel *chatChannel;
     
     PFUser *user = [PFUser currentUser];
     NSString *username = user.username;
+    NSNumber *eloRating = [user objectForKey:@"eloRating"];
+    NSString *eloRatingString = [eloRating stringValue];
     
     [challengeMsgDict setObject:userID forKey:@"userID"];
     [challengeMsgDict setObject:@"chgStart" forKey:@"chgText"];
     [challengeMsgDict setObject:username forKey:@"chgUserName"];
     [challengeMsgDict setObject:user.objectId forKey:@"chgUserID"];
-    [challengeMsgDict setObject:@"challenge" forKey:@"channel"];
+    [challengeMsgDict setObject:@"main_lobby" forKey:@"channel"];
+     [challengeMsgDict setObject:@"challenge" forKey:@"msgType"];
+    [challengeMsgDict setObject:eloRatingString forKey:@"eloRatingChallenger"];
     
     [PubNub sendMessage:Dict toChannel:gameChannel];
+    
+}
+
+-(void)acceptChallenge:(NSString *)challengerID
+{
+    NSMutableDictionary *challengeAcceptMsgDict = [[NSMutableDictionary alloc] init];
+    
+    [challengeAcceptMsgDict setObject:challengerID forKey:@"challengeAcceptID"];
+    [challengeAcceptMsgDict setObject:@"main_lobby" forKey:@"channel"];
+    [challengeAcceptMsgDict setObject:@"challengeAccept" forKey:@"msgType"];
+    
+      NSString *ownUserID = [PFUser currentUser].objectId;
+    
+    NSString *fullChannelName = [challengerID stringByAppendingString:ownUserID];
+    self.currentMPGameChannel = [PNChannel channelWithName:fullChannelName
+                                     shouldObservePresence:YES];
+    
+    
+    [PubNub subscribeOn:@[self.currentMPGameChannel] withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channels, PNError *error) {
+        
+        //do nothing, start event will be fired by occupancy 2 only by challenger
+        
+    }];
+
     
 }
 @end

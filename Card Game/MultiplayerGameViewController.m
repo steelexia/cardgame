@@ -1114,7 +1114,10 @@ if(tableView.tag ==88)
 -(void)notifyPlayerOfChallenge:(NSDictionary *)challengeDictionary
 {
     NSString *challengingPlayerUserName = [challengeDictionary objectForKey:@"userName"];
+    self.challengerUserID = [challengeDictionary objectForKey:@"chgUserID"];
     
+    
+    NSString *eloRating = [challengeDictionary objectForKey:@"eloRatingChallenger"];
     
     //show a popup announcing the challenge.
     UIView *sureMatchView = [[UIView alloc] initWithFrame:CGRectMake(20,70,self.view.frame.size.width-40,450)];
@@ -1135,6 +1138,10 @@ if(tableView.tag ==88)
     
     sureMatchCaseNameLabel.font =[UIFont fontWithName:@"Futura-CondensedMedium" size:25];
     
+    
+    sureMatchCaseNameLabel.text = [[[challengingPlayerUserName stringByAppendingString:@" ("] stringByAppendingString:eloRating] stringByAppendingString:@")"];
+    
+    
     UIImageView *sureMatchImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10,120,150,150)];
     
     //check to see if there is a caseProfile for this caseID
@@ -1150,9 +1157,9 @@ if(tableView.tag ==88)
     notWhoIWantedButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
     notWhoIWantedButton.titleLabel.textColor = [UIColor whiteColor];
     notWhoIWantedButton.titleLabel.text = @"Not Who I Wanted";
-    [notWhoIWantedButton setTitle:@"Not Who I Wanted" forState:UIControlStateNormal];
+    [notWhoIWantedButton setTitle:@"Reject Match" forState:UIControlStateNormal];
     
-    [notWhoIWantedButton addTarget:self action:@selector(notWhoIWantedButton:) forControlEvents:UIControlEventTouchUpInside];
+    [notWhoIWantedButton addTarget:self action:@selector(rejectMatch:) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *startConversationButton = [[UIButton alloc] initWithFrame:CGRectMake(10,360,sureMatchView.frame.size.width-20,50)];
     
@@ -1160,9 +1167,9 @@ if(tableView.tag ==88)
     startConversationButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
     startConversationButton.titleLabel.textColor = [UIColor whiteColor];
     startConversationButton.titleLabel.text = @"Start Conversation";
-    [startConversationButton setTitle:@"Start Conversation" forState:UIControlStateNormal];
+    [startConversationButton setTitle:@"Start Match" forState:UIControlStateNormal];
     
-    [startConversationButton addTarget:self action:@selector(startConversationButton:) forControlEvents:UIControlEventTouchUpInside];
+    [startConversationButton addTarget:self action:@selector(startMatch:) forControlEvents:UIControlEventTouchUpInside];
     [sureMatchView addSubview:notWhoIWantedButton];
     [sureMatchView addSubview:startConversationButton];
     
@@ -1172,6 +1179,19 @@ if(tableView.tag ==88)
     [self.view addSubview:bgDarkenView];
     [self.view addSubview:sureMatchView];
 
+}
+
+-(void)startMatch:(id)sender
+{
+    //send an acceptance back through the MPDataHandler 
+    [MPDataHandler acceptChallenge:self.challengerUserID];
+    
+}
+
+-(void)rejectMatch:(id)sender
+{
+    
+    
 }
 
 

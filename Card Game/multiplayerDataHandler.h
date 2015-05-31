@@ -54,6 +54,8 @@
 @property uint32_t playerSeed, opponentSeed;
 @property BOOL receivedOpponentSeed;
 @property BOOL opponentReceivedSeed;
+@property (strong,nonatomic) NSString *opponentIDChallenged;
+@property (strong,nonatomic) PNChannel *currentMPGameChannel;
 
 
 -(void)sendSummonCard:(int)cardIndex withTarget:(int)targetPosition;
@@ -64,4 +66,5 @@
 -(void)gameOver:(int)winner;
 -(void)sendChatWithDict:(NSDictionary *)Dict;
 -(void)sendChallengeToPlayerObj:(NSDictionary *)Dict;
+-(void)acceptChallenge:(NSString *)challengerID;
 @end

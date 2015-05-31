@@ -35,8 +35,8 @@
 
 @property (strong,nonatomic) NSArray *connectedPlayers;
 @property (strong,nonatomic) NSMutableArray *chatMessages;
-
 @property (strong,nonatomic) PNChannel *chatChannel;
+@property (strong,nonatomic) NSString *challengerUserID;
 
 
 @property (strong)GameViewController *gvc;
