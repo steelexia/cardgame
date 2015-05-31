@@ -1177,7 +1177,7 @@ if(tableView.tag ==88)
     bgDarkenView.backgroundColor = [UIColor blackColor];
     bgDarkenView.alpha = 0.7;
     [self.view addSubview:bgDarkenView];
-    [self.view addSubview:sureMatchView];
+    [bgDarkenView addSubview:sureMatchView];
 
 }
 
@@ -1185,6 +1185,8 @@ if(tableView.tag ==88)
 {
     //send an acceptance back through the MPDataHandler 
     [MPDataHandler acceptChallenge:self.challengerUserID];
+   
+    [bgDarkenView removeFromSuperview];
     
 }
 
