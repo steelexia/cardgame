@@ -869,7 +869,7 @@ PNChannel *chatChannel;
      [challengeMsgDict setObject:@"challenge" forKey:@"msgType"];
     [challengeMsgDict setObject:eloRatingString forKey:@"eloRatingChallenger"];
     
-    [PubNub sendMessage:Dict toChannel:gameChannel];
+    [PubNub sendMessage:challengeMsgDict toChannel:gameChannel];
     
 }
 
