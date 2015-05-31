@@ -82,7 +82,7 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 /** Note that turn number increases every time end turn is pressed */
 @property int turnNumber;
 
-@property (weak) MonsterCardModel* opponentCurrentTarget;
+
 
 /** Initialies the GameModel with an attached controller for drawing */
 -(instancetype)initWithViewController:(GameViewController *)gameViewController gameMode: (enum GameMode)gameMode withLevel:(Level*)level;
@@ -169,11 +169,16 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 
 -(void)setOpponentSeed:(uint32_t)seed;
 -(void)setPlayerSeed:(uint32_t)seed;
--(void)setCurrentTarget:(int)targetPosition;
+//-(void)setCurrentTarget:(int)targetPosition;
 -(MonsterCardModel*)getTarget:(int)targetPosition;
 -(int)getTargetIndex: (MonsterCardModel*)target;
+-(MonsterCardModel*)getOpponentTarget;
+-(void)setOpponentTarget:(MonsterCardModel*)target;
+
 +(void)loadQuickMatchDeck:(DeckModel*)deck;
 +(enum CardPosition) getReversedPosition:(enum CardPosition)position;
+
+
 
 @end
 

@@ -2172,7 +2172,10 @@ BOOL leftHandViewZone = NO;
     else
     {
         //TODO there might be problems if a number of these all get called at once (<0.4 sec, since gamemodel take delay before casting)
-        _gameModel.opponentCurrentTarget = [_gameModel getTarget:target];
+        
+        [_gameModel setOpponentTarget: [_gameModel getTarget:target]];
+        NSLog(@"opponent current target set as %@ in game view controller", [_gameModel getOpponentTarget]);
+        
         [self summonCard:hand[cardIndex] fromSide:OPPONENT_SIDE];
     }
 }

@@ -403,13 +403,6 @@ NSMutableDictionary * campaignCards;
             //guard
             [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_2009"]]];
         }
-        /*
-        NSLog(@"ai deck size %d", deck.count);
-        for (int i = 0; i < deck.count; i++)
-        {
-            CardModel*card = [deck getCardAtIndex:i];
-            NSLog(@"%@, %d", card.name, i);
-        }*/
     }
     else if ([levelID isEqualToString:@"d_1_c_2_l_2"])
     {

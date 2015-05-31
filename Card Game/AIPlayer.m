@@ -124,8 +124,9 @@ int enemyTotalStrength, friendlyTotalStrength;
                 {
                     bestCard = card;
                     bestPoints = points;
-                    bestTarget = _gameModel.opponentCurrentTarget; //assume it's placed here
+                    bestTarget = [self.gameModel getOpponentTarget]; //assume it's placed here
                 }
+                
                 
                 NSLog(@"points for summoning %d %d minion: %d", monster.damage, monster.life, points);
             }
@@ -154,6 +155,8 @@ int enemyTotalStrength, friendlyTotalStrength;
                 
                 points = [self getCastOnSummonValue:card fromSide:OPPONENT_SIDE];
                 
+                NSLog(@"A opponent current target: %@", [_gameModel getOpponentTarget]);
+                
                 //should expect good card to deal good damage, so doesn't waste them on bad moves
                 int cardBaseCost = [self getCardBaseCost:card];
                 
@@ -165,13 +168,16 @@ int enemyTotalStrength, friendlyTotalStrength;
                         points = cardBaseCost;
                 }
 
-                NSLog(@"AI: total points from spell card with cost %d: %d points", card.cost, points);
+                NSLog(@"AI: total points from spell card with cost %d: %d points, best points so far %d", card.cost, points, bestPoints);
+                
+                
+                NSLog(@"opponent current target: %@", [_gameModel getOpponentTarget]);
                 
                 if (points > bestPoints)
                 {
                     bestPoints = points;
                     bestCard = card;
-                    bestTarget = _gameModel.opponentCurrentTarget; //assume it's placed here
+                    bestTarget = [_gameModel getOpponentTarget]; //assume it's placed here
                     if (bestTarget == nil)
                         NSLog(@"AI: Spell %@: Best target is nil", card.name);
                     else
@@ -213,25 +219,29 @@ int enemyTotalStrength, friendlyTotalStrength;
         
         NSLog(@"AI: move threshold: %d", moveThreshold);
         
+        
+        NSLog(@"opponent current target: %@", [_gameModel getOpponentTarget]);
+        
         if (bestPoints > moveThreshold)
         {
             //sets the current target to the correct object since algorithm will pick a copy of the original card
-            _gameModel.opponentCurrentTarget = bestTarget;
+            NSLog(@"setting opponent current target to %@", bestTarget);
+            [_gameModel setOpponentTarget: bestTarget];
             
-            if(_gameModel.opponentCurrentTarget!=nil)
+            if([_gameModel getOpponentTarget]!=nil)
             {
-                NSLog(@"AI: current target is not nil, pointing back to original card.");
-                while(_gameModel.opponentCurrentTarget.originalCard!=nil)
-                    _gameModel.opponentCurrentTarget = _gameModel.opponentCurrentTarget.originalCard;
+                NSLog(@"AI: opponent current target is not nil, pointing back to original card.");
+                while([_gameModel getOpponentTarget].originalCard!=nil)
+                    [_gameModel setOpponentTarget: [_gameModel getOpponentTarget].originalCard];
             }
             
-            if (_gameModel.opponentCurrentTarget == nil)
+            if ([_gameModel getOpponentTarget] == nil)
             {
                 NSLog(@"AI: current target is nil. May be using ability without target.");
             }
             else
             {
-                NSLog(@"AI: targetting minion %d %d", _gameModel.opponentCurrentTarget.damage, _gameModel.opponentCurrentTarget.life);
+                NSLog(@"AI: targetting minion %d %d", [_gameModel getOpponentTarget].damage, [_gameModel getOpponentTarget].life);
             }
             
             [self.gameViewController summonCard:bestCard fromSide:OPPONENT_SIDE];
@@ -696,7 +706,8 @@ int enemyTotalStrength, friendlyTotalStrength;
             if (targetPoint > points)
             {
                 points = targetPoint;
-                _gameModel.opponentCurrentTarget = target; //TODO for these all end up getting casted to the monster for AI state, should only be casted on the chosen one
+                NSLog(@"better target, choosing %@ as opponent current target", target);
+                [_gameModel setOpponentTarget: target]; //TODO for these all end up getting casted to the monster for AI state, should only be casted on the chosen one
             }
         }
         //all being casted, add them together
@@ -1632,7 +1643,8 @@ int enemyTotalStrength, friendlyTotalStrength;
 
 -(int)getCastOnSummonValue:(CardModel*)card fromSide:(int)side
 {
-    _gameModel.opponentCurrentTarget = nil; //reset current target
+    NSLog(@"resetting opponent current target to null");
+    [_gameModel setOpponentTarget: nil]; //reset current target
     
     int points = USELESS_MOVE;
     int selectableTargetPoints = 0;
@@ -1649,14 +1661,18 @@ int enemyTotalStrength, friendlyTotalStrength;
         }
     }
     
+    //MonsterCardModel*temp = nil;
+    
     //go through all abilities and add up the points
     for (Ability *ability in cardAbilitiesCopy)
     {
+        NSLog(@"LOOP");
+        
         NSArray *targets;
         
         //if this is a selectable target type and target has already been chosen, cannot choose a different target. (e.g. +1000 life and +1000 damage to any minion can't be casted on two different minions)
-        if ([Ability abilityIsSelectableTargetType:ability] && _gameModel.opponentCurrentTarget!=nil)
-            targets = @[_gameModel.opponentCurrentTarget];
+        if ([Ability abilityIsSelectableTargetType:ability] && [_gameModel getOpponentTarget]!=nil)
+            targets = @[[_gameModel getOpponentTarget]];
         else
         {
             if ([card isKindOfClass:[MonsterCardModel class]])
@@ -1668,8 +1684,8 @@ int enemyTotalStrength, friendlyTotalStrength;
         NSArray *targetsCopy = [self copyMonsterArray:targets];
         //TODO each array of ability should be sharing the target list
         
-        NSLog(@"AI: number of targets: %d", targets.count);
-        NSLog(@"AI: number of targetsCopy: %d", targetsCopy.count);
+        //NSLog(@"AI: number of targets: %d", targets.count);
+        //NSLog(@"AI: number of targetsCopy: %d", targetsCopy.count);
         int abilityPoints = [self evaluateAbilitiesPoints:ability caster:nil targets:targetsCopy fromSide:side withCost:card.cost];
         
         if (abilityPoints == IMPOSSIBLE_MOVE)
@@ -1691,6 +1707,9 @@ int enemyTotalStrength, friendlyTotalStrength;
         {
             NSLog(@"AI: total points from ability %@, %d points", [[Ability getDescription:ability fromCard:card] string], abilityPoints);
             
+            
+            NSLog(@"opponent current target: %@", [_gameModel getOpponentTarget]);
+            
             //if so far all useless moves, this move is no longer useless
             if (points == USELESS_MOVE)
                 points = abilityPoints;
@@ -1702,7 +1721,13 @@ int enemyTotalStrength, friendlyTotalStrength;
             if (selectableTargetPoints != VICTORY_MOVE && selectableTargetPoints != IMPOSSIBLE_MOVE)
                 selectableTargetPoints += abilityPoints;
         }
+        
+        //temp = [_gameModel getOpponentTarget];
+        NSLog(@"B2 opponent current target: %@", [_gameModel getOpponentTarget]);
     }
+    
+    //[_gameModel setOpponentTarget: temp];
+    NSLog(@"B opponent current target: %@", [_gameModel getOpponentTarget]);
     
     //if points is negative and is a pickable target, just ignore this ability since it doesn't have to be casted
     if (selectableTargetPoints < 0)
@@ -1712,9 +1737,12 @@ int enemyTotalStrength, friendlyTotalStrength;
             if (selectableTargetPoints != IMPOSSIBLE_MOVE)
                 points -= selectableTargetPoints; //discard the selectable target's points
             
-            _gameModel.opponentCurrentTarget = nil; //discard the target
+            NSLog(@"discarding opponent current target since points is negative");
+            [_gameModel setOpponentTarget: nil]; //discard the target
         }
     }
+    
+    NSLog(@"C opponent current target: %@", [_gameModel getOpponentTarget]);
     
     return points;
 }

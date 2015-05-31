@@ -12,6 +12,9 @@
 #import "Campaign.h"
 
 @implementation GameModel
+{
+    MonsterCardModel* opponentCurrentTarget;
+}
 
 const int MAX_BATTLEFIELD_SIZE = 5;
 const int MAX_HAND_SIZE = 7;
@@ -1357,7 +1360,7 @@ enum GameMode __gameMode; //because C functions cant access
             else
             {
                 //AI must have already picked a target
-                MonsterCardModel* opponentTarget = _opponentCurrentTarget;
+                MonsterCardModel* opponentTarget = opponentCurrentTarget;
                 if (opponentTarget != nil && [self validAttack:nil target:opponentTarget])
                     targets = @[opponentTarget];
                 else
@@ -1402,7 +1405,7 @@ enum GameMode __gameMode; //because C functions cant access
             else
             {
                 //AI must have already picked a target
-                MonsterCardModel* opponentTarget = _opponentCurrentTarget;
+                MonsterCardModel* opponentTarget = opponentCurrentTarget;
                 if (opponentTarget != nil && [self validAttack:nil target:opponentTarget])
                     targets = @[opponentTarget];
                 else
@@ -1445,7 +1448,7 @@ enum GameMode __gameMode; //because C functions cant access
             else
             {
                 //AI must have already picked a target
-                MonsterCardModel* opponentTarget = _opponentCurrentTarget;
+                MonsterCardModel* opponentTarget = opponentCurrentTarget;
                 if (opponentTarget != nil && [self validAttack:nil target:opponentTarget])
                     targets = @[opponentTarget];
                 else
@@ -1489,7 +1492,7 @@ enum GameMode __gameMode; //because C functions cant access
             else
             {
                 //AI must have already picked a target
-                MonsterCardModel* opponentTarget = _opponentCurrentTarget;
+                MonsterCardModel* opponentTarget = opponentCurrentTarget;
                 if (opponentTarget != nil && [self validAttack:nil target:opponentTarget])
                     targets = @[opponentTarget];
                 else
@@ -1531,7 +1534,7 @@ enum GameMode __gameMode; //because C functions cant access
             else
             {
                 //AI must have already picked a target
-                MonsterCardModel* opponentTarget = _opponentCurrentTarget;
+                MonsterCardModel* opponentTarget = opponentCurrentTarget;
                 if (opponentTarget != nil && [self validAttack:nil target:opponentTarget])
                     targets = @[opponentTarget];
                 else
@@ -1573,7 +1576,7 @@ enum GameMode __gameMode; //because C functions cant access
             else
             {
                 //AI must have already picked a target
-                MonsterCardModel* opponentTarget = _opponentCurrentTarget;
+                MonsterCardModel* opponentTarget = opponentCurrentTarget;
                 if (opponentTarget != nil && [self validAttack:nil target:opponentTarget])
                     targets = @[opponentTarget];
                 else
@@ -1726,7 +1729,7 @@ enum GameMode __gameMode; //because C functions cant access
             else
             {
                 //AI must have already picked a target
-                MonsterCardModel* opponentTarget = _opponentCurrentTarget;
+                MonsterCardModel* opponentTarget = opponentCurrentTarget;
                 if (opponentTarget != nil && [self validAttack:nil target:opponentTarget])
                     targets = @[opponentTarget];
                 else
@@ -2321,10 +2324,23 @@ uint32_t xor128(int side) {
     return nil;
 }
 
+/*
 -(void)setCurrentTarget:(int)targetPosition
 {
-    _opponentCurrentTarget = [self getTarget:targetPosition];
+    opponentCurrentTarget = [self getTarget:targetPosition];
+    NSLog(@"set opponent current target to position %d, object is %@", targetPosition, opponentCurrentTarget);
+}*/
+
+-(MonsterCardModel*)getOpponentTarget
+{
+    return opponentCurrentTarget;
 }
+
+-(void)setOpponentTarget:(MonsterCardModel*)target
+{
+    opponentCurrentTarget = target;
+}
+
 
 +(enum CardPosition) getReversedPosition:(enum CardPosition)position
 {
