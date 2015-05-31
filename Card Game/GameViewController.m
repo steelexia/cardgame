@@ -181,6 +181,7 @@ BOOL leftHandViewZone = NO;
         {
             [_gameModel setPlayerSeed:_playerSeed];
             [_gameModel setOpponentSeed:_opponentSeed];
+            [_gameModel loadDecks];
         }
         
         if (_level == [Campaign quickMatchLevel])
