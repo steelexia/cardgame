@@ -860,6 +860,7 @@ PNChannel *chatChannel;
     NSString *username = user.username;
     NSNumber *eloRating = [user objectForKey:@"eloRating"];
     NSString *eloRatingString = [eloRating stringValue];
+    self.opponentIDChallenged = userID;
     
     [challengeMsgDict setObject:userID forKey:@"userID"];
     [challengeMsgDict setObject:@"chgStart" forKey:@"chgText"];
