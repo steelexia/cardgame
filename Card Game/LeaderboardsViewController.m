@@ -154,7 +154,6 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     userNameLabel.text = playerName;
     userEloLabel.text = [playerElo stringValue];
     
-
     //cell.textLabel.text =[playerElo stringValue];
     
     

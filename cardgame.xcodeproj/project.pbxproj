@@ -2712,7 +2712,7 @@
 				INFOPLIST_FILE = "Card Game/cardgame-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = cardgame;
-				PROVISIONING_PROFILE = "3d2ad561-da70-4474-a7b7-989b8cfbd025";
+				PROVISIONING_PROFILE = "08ba8c78-ec28-45e6-aa0b-77e3bffa5199";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2736,7 +2736,7 @@
 				INFOPLIST_FILE = "Card Game/cardgame-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = cardgame;
-				PROVISIONING_PROFILE = "3d2ad561-da70-4474-a7b7-989b8cfbd025";
+				PROVISIONING_PROFILE = "08ba8c78-ec28-45e6-aa0b-77e3bffa5199";
 				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};

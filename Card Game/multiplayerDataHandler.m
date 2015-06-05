@@ -123,8 +123,6 @@ PNChannel *chatChannel;
     [PubNub setConfiguration:configuration];
     [PubNub connect];
    
-    
-    
     // #1 Define our channel name with +PNChannel+.
     gameChannel = [PNChannel channelWithName:@"main_lobby"
                                  shouldObservePresence:YES];
@@ -974,7 +972,6 @@ PNChannel *chatChannel;
 
 -(void)cancelChallenge
 {
-   
     NSMutableDictionary *challengeCancelMsgDict = [[NSMutableDictionary alloc] init];
     
     [challengeCancelMsgDict setObject:self.opponentIDChallenged forKey:@"challengeCancelID"];

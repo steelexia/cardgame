@@ -704,6 +704,8 @@ UIView *sureMatchView;
 {
     if(tableView.tag==88)
     {
+      
+        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,40)];
         
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,320,40)];
@@ -711,7 +713,19 @@ UIView *sureMatchView;
     
     titleLabel.text = @"Username    Rating        Battle";
     
-    return titleLabel;
+        UIButton *reloadButton = [[UIButton alloc] initWithFrame:CGRectMake(165,3,90,34)];
+        reloadButton.backgroundColor = [UIColor greenColor];
+        [reloadButton setTitle:@"Refresh" forState:UIControlStateNormal];
+        [reloadButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        reloadButton.layer.cornerRadius = 12.0f;
+        reloadButton.layer.masksToBounds = YES;
+        [reloadButton addTarget:self action:@selector(refreshLobby:) forControlEvents:UIControlEventTouchUpInside];
+        
+        
+        [headerView addSubview:titleLabel];
+        [headerView addSubview:reloadButton];
+        
+    return headerView;
     }
     else
     {
@@ -1321,6 +1335,74 @@ if(tableView.tag ==88)
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Player Rejected Challenge" message:rejectionString delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
     [alert show];
     
+}
+
+-(void)searchForQuickMatchUI
+{
+    //show a popup announcing the challenge.
+    sureMatchView = [[UIView alloc] initWithFrame:CGRectMake(20,70,self.view.frame.size.width-40,450)];
+    sureMatchView.backgroundColor = [UIColor whiteColor];
+    CALayer *sureMatchLayer = sureMatchView.layer;
+    sureMatchLayer.cornerRadius = 8.0f;
+    
+    UILabel *sureMatchTitle = [[UILabel alloc] initWithFrame:CGRectMake(20,20,sureMatchView.frame.size.width-40,40)];
+    sureMatchTitle.text = @"Quick Match!";
+    sureMatchTitle.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:30];
+    sureMatchTitle.textAlignment = NSTextAlignmentCenter;
+    
+    [sureMatchView addSubview:sureMatchTitle];
+    
+    
+    UILabel *sureMatchCaseNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,70,300,50)];
+    
+    sureMatchCaseNameLabel.font =[UIFont fontWithName:@"Futura-CondensedMedium" size:25];
+    
+    sureMatchCaseNameLabel.text = @"Looking For Match...";
+    
+    UIImageView *sureMatchImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10,120,150,150)];
+    
+    //check to see if there is a caseProfile for this caseID
+    NSString *defaultMatchImgFileName = [[NSBundle mainBundle] pathForResource:@"angryorc" ofType:@"jpeg"];
+    sureMatchImageView.image = [UIImage imageWithContentsOfFile:defaultMatchImgFileName];
+    
+    [sureMatchView addSubview:sureMatchCaseNameLabel];
+    [sureMatchView addSubview:sureMatchImageView];
+    
+    //add two buttons for "Not Who I Wanted" and "Start a Conversation"
+    UIButton *notWhoIWantedButton = [[UIButton alloc] initWithFrame:CGRectMake(10,300,sureMatchView.frame.size.width-20,50)];
+    notWhoIWantedButton.backgroundColor = [UIColor redColor];
+    notWhoIWantedButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
+    notWhoIWantedButton.titleLabel.textColor = [UIColor whiteColor];
+    notWhoIWantedButton.titleLabel.text = @"Cancel Quick Match";
+    [notWhoIWantedButton setTitle:@"Cancel Quick Match" forState:UIControlStateNormal];
+    
+    [notWhoIWantedButton addTarget:self action:@selector(cancelChallenge:) forControlEvents:UIControlEventTouchUpInside];
+    /*
+     UIButton *startConversationButton = [[UIButton alloc] initWithFrame:CGRectMake(10,360,sureMatchView.frame.size.width-20,50)];
+     
+     startConversationButton.backgroundColor = [UIColor blueColor];
+     startConversationButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
+     startConversationButton.titleLabel.textColor = [UIColor whiteColor];
+     startConversationButton.titleLabel.text = @"Start Conversation";
+     [startConversationButton setTitle:@"Start Match" forState:UIControlStateNormal];
+     
+     [startConversationButton addTarget:self action:@selector(startMatch:) forControlEvents:UIControlEventTouchUpInside];
+     */
+    [sureMatchView addSubview:notWhoIWantedButton];
+    //[sureMatchView addSubview:startConversationButton];
+    
+    bgDarkenView = [[UIView alloc] initWithFrame:self.view.bounds];
+    bgDarkenView.backgroundColor = [UIColor blackColor];
+    bgDarkenView.alpha = 0.7;
+    
+    [self.view addSubview:bgDarkenView];
+    [self.view addSubview:sureMatchView];
+}
+
+-(void)refreshLobby:(id)sender
+{
+    //get participants
+    [MPDataHandler getPubNubConnectedPlayers];
     
 }
 

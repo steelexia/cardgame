@@ -196,9 +196,59 @@ const BOOL OFFLINE_DEBUGGING = NO;
      }
      */
     
+    UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
+                                                    UIUserNotificationTypeBadge |
+                                                    UIUserNotificationTypeSound);
+    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes
+                                                                             categories:nil];
+    [application registerUserNotificationSettings:settings];
+    [application registerForRemoteNotifications];
+    
     [PickIAPHelper sharedInstance];
     
     return YES;
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    // Store the deviceToken in the current installation and save it to Parse.
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:deviceToken];
+    currentInstallation.channels = @[ @"global" ];
+    [currentInstallation saveInBackground];
+}
+
+//Brian June 5
+//update push here
+//need to open a screen to edit the card that was liked
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+
+    if ( application.applicationState == UIApplicationStateActive )
+    {
+        // app was already in the foreground
+        NSString *messageType = [userInfo objectForKey:@"messageType"];
+        
+        if([messageType isEqualToString:@"newMatch"])
+        {
+            //show new match popup
+        }
+        if([messageType isEqualToString:@"message"])
+        {
+            //do nothing, pubnub already handling
+        }
+        application.applicationIconBadgeNumber = 0;
+    }
+    
+    else
+    {
+        // app was just brought from background to foreground
+        [PFPush handlePush:userInfo];
+        application.applicationIconBadgeNumber = 0;
+        
+    }
+
+    
+    
 }
 
 - (NSManagedObjectContext *)managedObjectContext
