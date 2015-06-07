@@ -108,6 +108,8 @@ const int CARD_ID_START = 1000;
         self.tags = card.tags;
         self.cardPF = card.cardPF;
         self.flavourText = card.flavourText;
+        self.version = card.version;
+        
         
         for (Ability*ability in card.abilities)
             [self.abilities addObject: [[Ability alloc] initWithAbility:ability]];
@@ -245,7 +247,7 @@ const int CARD_ID_START = 1000;
     NSNumber *likes = cardPF[@"likes"];
     NSArray *tags = cardPF[@"tags"];
     NSString *flavourText = cardPF[@"flavourText"];
-    
+    NSNumber *version = cardPF[@"version"];
     //TODO in future this should [probably] never be nil
     if (creator != nil && ![creator isEqualToString:@"Unknown"])
     {
@@ -313,6 +315,7 @@ const int CARD_ID_START = 1000;
     card.likes = [likes intValue];
     card.tags = [NSMutableArray arrayWithArray:tags];
     card.cardPF = cardPF;
+    card.version = [version intValue];
     
     if (flavourText != nil) //just for old cards that have no text
         card.flavourText = flavourText;
