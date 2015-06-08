@@ -367,6 +367,7 @@
 		FA4025971956331300FCCBAB /* DeckEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4025961956331300FCCBAB /* DeckEditorViewController.m */; };
 		FA54990119E43A7000C8F492 /* ios_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = FA5498FF19E43A6A00C8F492 /* ios_development.cer */; };
 		FA54990219E43A7000C8F492 /* ios_distribution.cer in Resources */ = {isa = PBXBuildFile; fileRef = FA54990019E43A6A00C8F492 /* ios_distribution.cer */; };
+		FA8410151B25254C0023FA36 /* game_board_background.png in Resources */ = {isa = PBXBuildFile; fileRef = FA8410141B25254C0023FA36 /* game_board_background.png */; };
 		FAB2D16919C3970900963ADC /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB2D16819C3970900963ADC /* LoginViewController.m */; };
 		FAB5831E19BA0AF6007BFA26 /* arrow_right_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB5831D19BA0AF6007BFA26 /* arrow_right_icon.png */; };
 		FAB5832019BA13CA007BFA26 /* arrow_down_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB5831F19BA13CA007BFA26 /* arrow_down_icon.png */; };
@@ -1022,6 +1023,7 @@
 		FA4025961956331300FCCBAB /* DeckEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeckEditorViewController.m; sourceTree = "<group>"; };
 		FA5498FF19E43A6A00C8F492 /* ios_development.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = ios_development.cer; sourceTree = "<group>"; };
 		FA54990019E43A6A00C8F492 /* ios_distribution.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = ios_distribution.cer; sourceTree = "<group>"; };
+		FA8410141B25254C0023FA36 /* game_board_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = game_board_background.png; path = "Card Game/game_board_background.png"; sourceTree = "<group>"; };
 		FAB2D16719C3970900963ADC /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		FAB2D16819C3970900963ADC /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		FAB5831D19BA0AF6007BFA26 /* arrow_right_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = arrow_right_icon.png; path = "Card Game/arrow_right_icon.png"; sourceTree = "<group>"; };
@@ -1203,6 +1205,7 @@
 		907D9BD919226B4C0037C0CF /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				FA8410141B25254C0023FA36 /* game_board_background.png */,
 				EC8B3C3D1B19417600DE04A9 /* angryorc.jpeg */,
 				FA19FC9119B3D00400B38943 /* gear_icon.png */,
 				FA19FC9219B3D00400B38943 /* message_icon.png */,
@@ -2277,6 +2280,7 @@
 				FACF46DA19EC8A0300D334E0 /* hero_5.png in Resources */,
 				90DA43C21969D21500E44AED /* cancel_card_button.png in Resources */,
 				907020531992A1CB00FDE444 /* upload_from_camera_button.png in Resources */,
+				FA8410151B25254C0023FA36 /* game_board_background.png in Resources */,
 				90DA4340195A4A6E00E44AED /* add_button.png in Resources */,
 				FA14AA5D19CCB9E50080230B /* LinLibertine_aRL.ttf in Resources */,
 				FA033FCA19BCFF6600EFEBD8 /* card_0005.png in Resources */,
