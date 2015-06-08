@@ -20,7 +20,9 @@
 -(void)updatePlayerLobby:(NSArray *)connectedPlayers;
 -(void)chatUpdate:(NSDictionary *)chatDictionary;
 -(void)notifyPlayerOfChallenge:(NSDictionary *)challengeDictionary;
+-(void)dismissChallengeUI:(NSString *) reason;
 
+-(void)notifyPlayerOfCancelChallenge;
 @end;
 
 @protocol MPGameProtocol <NSObject>
@@ -58,6 +60,7 @@
 @property BOOL opponentReceivedSeed;
 @property (strong,nonatomic) NSString *opponentIDChallenged;
 @property (strong,nonatomic) PNChannel *currentMPGameChannel;
+@property BOOL inChallengeProcess;
 
 
 -(void)sendSummonCard:(int)cardIndex withTarget:(int)targetPosition;
@@ -69,4 +72,6 @@
 -(void)sendChatWithDict:(NSDictionary *)Dict;
 -(void)sendChallengeToPlayerObj:(NSDictionary *)Dict;
 -(void)acceptChallenge:(NSString *)challengerID;
+-(void)rejectChallenge:(NSString *)challengerID withReason:(NSString *)reason;
+-(void)cancelChallenge;
 @end

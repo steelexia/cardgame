@@ -96,7 +96,8 @@
              userPF[@"deckTutorialDone"] = @(NO);
          if (userPF[@"storeTutorialDone"] == nil)
              userPF[@"storeTutorialDone"] = @(NO);
-         
+         if (userPF[@"eloRating"] == nil)
+             userPF[@"eloRating"] = @(400);
          //this variable useless and should be removed later
          userGold = [userPF[@"gold"] intValue];
          
@@ -210,7 +211,7 @@
         NSArray*objects = [cardQuery findObjects:&error];
         if (!error)
         {
-            loadingCards = objects.count;
+            loadingCards = (int)objects.count;
             __block int counter = 0;
             NSLog(@"%d", loadingCards);
             //NSLog(@"number of cards to load: %d", loadingCards);
@@ -367,6 +368,52 @@
     {
         NSLog(@"Done saving card.");
     }
+}
+
++(NSArray *)getCDCardVersions:(NSArray *)cardsBeingViewed
+{
+    NSManagedObjectContext *moc = userCDContext;
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"UserCardVersion" inManagedObjectContext:moc];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+   NSPredicate * predicate = [NSPredicate predicateWithFormat:@"identifier IN %@", cardsBeingViewed];
+    [request setPredicate:predicate];
+    
+    
+    NSError *error;
+    NSArray *array = [moc executeFetchRequest:request error:&error];
+    if (array == nil)
+    {
+        // Deal with error...
+    }
+    return array;
+    
+}
+
++(void)setCDCardVersion:(CardModel *)cardToSet
+{
+    
+    NSManagedObjectContext *context = userCDContext;
+    NSManagedObject *CardVersionInfo = [NSEntityDescription
+                                           insertNewObjectForEntityForName:@"UserCardVersion"
+                                           inManagedObjectContext:context];
+    
+    int cardIDNumber = cardToSet.idNumber;
+    int cardVersionInt = cardToSet.version;
+    
+    NSNumber *cardIDNum = [NSNumber numberWithInt:cardIDNumber];
+    NSNumber *versionNum = [NSNumber numberWithInt:cardVersionInt];
+    
+    [CardVersionInfo setValue:cardIDNum forKey:@"idNumber"];
+     [CardVersionInfo setValue:versionNum forKey:@"viewedVersion"];
+    
+        NSError *error;
+        if (![context save:&error]) {
+            NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+        }
+    
 }
 
 +(void)updateCDCard:(CDCardModel*)cdCard withCardModel:(CardModel*)card

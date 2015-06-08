@@ -41,6 +41,9 @@
 +(BOOL)getLikedCardID:(int)idNumber;
 +(BOOL)getOwnedCardID:(int)idNumber;
 
+//sets version of card in core data.  This is used when the card is maximized and the player has seen the new update
++(void)setCDCardVersion:(CardModel *)cardToSet;
+
 /** Note that this only removes from userAllCards and userAllDecks, rather than Parse objects */
 +(void)removeOwnedCard:(int)idNumber;
 

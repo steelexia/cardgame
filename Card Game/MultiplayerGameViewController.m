@@ -32,6 +32,7 @@ MultiplayerNetworking *_networkingEngine;
 NSUInteger _currentPlayerIndex;
 multiplayerDataHandler *MPDataHandler;
 UIView *bgDarkenView;
+UIView *sureMatchView;
 
 - (void)viewDidLoad
 {
@@ -196,6 +197,7 @@ UIView *bgDarkenView;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    [MPDataHandler getPubNubConnectedPlayers];
     NSLog(@"appeared");
 }
 
@@ -234,7 +236,7 @@ UIView *bgDarkenView;
     MPDataHandler.gameDelegate = _gvc;
     MPDataHandler.delegate = self;
     
-    [MPDataHandler getPubNubConnectedPlayers];
+    //[MPDataHandler getPubNubConnectedPlayers];
     //[self testMPFunction];
     
    
@@ -702,6 +704,8 @@ UIView *bgDarkenView;
 {
     if(tableView.tag==88)
     {
+      
+        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,40)];
         
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,320,40)];
@@ -709,7 +713,19 @@ UIView *bgDarkenView;
     
     titleLabel.text = @"Username    Rating        Battle";
     
-    return titleLabel;
+        UIButton *reloadButton = [[UIButton alloc] initWithFrame:CGRectMake(165,3,90,34)];
+        reloadButton.backgroundColor = [UIColor greenColor];
+        [reloadButton setTitle:@"Refresh" forState:UIControlStateNormal];
+        [reloadButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        reloadButton.layer.cornerRadius = 12.0f;
+        reloadButton.layer.masksToBounds = YES;
+        [reloadButton addTarget:self action:@selector(refreshLobby:) forControlEvents:UIControlEventTouchUpInside];
+        
+        
+        [headerView addSubview:titleLabel];
+        [headerView addSubview:reloadButton];
+        
+    return headerView;
     }
     else
     {
@@ -1012,6 +1028,8 @@ if(tableView.tag ==88)
     
     [MPDataHandler sendChallengeToPlayerObj:playerObjAtIndex];
     
+    [self displayChallengeUI:playerObjAtIndex];
+    
    
 }
 
@@ -1113,14 +1131,13 @@ if(tableView.tag ==88)
 
 -(void)notifyPlayerOfChallenge:(NSDictionary *)challengeDictionary
 {
-    NSString *challengingPlayerUserName = [challengeDictionary objectForKey:@"userName"];
+    NSString *challengingPlayerUserName = [challengeDictionary objectForKey:@"chgUserName"];
     self.challengerUserID = [challengeDictionary objectForKey:@"chgUserID"];
-    
     
     NSString *eloRating = [challengeDictionary objectForKey:@"eloRatingChallenger"];
     
     //show a popup announcing the challenge.
-    UIView *sureMatchView = [[UIView alloc] initWithFrame:CGRectMake(20,70,self.view.frame.size.width-40,450)];
+    sureMatchView = [[UIView alloc] initWithFrame:CGRectMake(20,70,self.view.frame.size.width-40,450)];
     sureMatchView.backgroundColor = [UIColor whiteColor];
     CALayer *sureMatchLayer = sureMatchView.layer;
     sureMatchLayer.cornerRadius = 8.0f;
@@ -1177,7 +1194,7 @@ if(tableView.tag ==88)
     bgDarkenView.backgroundColor = [UIColor blackColor];
     bgDarkenView.alpha = 0.7;
     [self.view addSubview:bgDarkenView];
-    [bgDarkenView addSubview:sureMatchView];
+    [self.view addSubview:sureMatchView];
 
 }
 
@@ -1187,12 +1204,205 @@ if(tableView.tag ==88)
     [MPDataHandler acceptChallenge:self.challengerUserID];
    
     [bgDarkenView removeFromSuperview];
+    [sureMatchView removeFromSuperview];
     
 }
 
 -(void)rejectMatch:(id)sender
 {
     
+    [bgDarkenView removeFromSuperview];
+    [sureMatchView removeFromSuperview];
+    
+    //send rejectMessage
+    [MPDataHandler rejectChallenge:self.challengerUserID withReason:@"Rejected Challenge"];
+    
+    
+}
+
+//playerobj follows clientStateMutable on multiplayerDataHandler
+/*
+[clientStateMutable setObject:eloVal forKey:@"eloRating"];
+[clientStateMutable setObject:userName forKey:@"usernameCustom"];
+[clientStateMutable setObject:userObj.objectId forKey:@"userID"];
+[clientStateMutable setObject:@"Lobby" forKey:@"gameState"];
+ */
+-(void)displayChallengeUI:(NSDictionary *)playerObj
+{
+    NSString *playerUserName = [playerObj objectForKey:@"usernameCustom"];
+    NSString *eloRating = [[playerObj objectForKey:@"eloRating"] stringValue];
+    
+    //show a popup announcing the challenge.
+    sureMatchView = [[UIView alloc] initWithFrame:CGRectMake(20,70,self.view.frame.size.width-40,450)];
+    sureMatchView.backgroundColor = [UIColor whiteColor];
+    CALayer *sureMatchLayer = sureMatchView.layer;
+    sureMatchLayer.cornerRadius = 8.0f;
+    
+    
+    UILabel *sureMatchTitle = [[UILabel alloc] initWithFrame:CGRectMake(20,20,sureMatchView.frame.size.width-40,40)];
+    sureMatchTitle.text = @"You Have Challenged A Player!";
+    sureMatchTitle.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:30];
+    sureMatchTitle.textAlignment = NSTextAlignmentCenter;
+    
+    [sureMatchView addSubview:sureMatchTitle];
+    
+    
+    UILabel *sureMatchCaseNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,70,300,50)];
+    
+    sureMatchCaseNameLabel.font =[UIFont fontWithName:@"Futura-CondensedMedium" size:25];
+    
+    
+    sureMatchCaseNameLabel.text = [[[playerUserName stringByAppendingString:@" ("] stringByAppendingString:eloRating] stringByAppendingString:@")"];
+    
+    
+    UIImageView *sureMatchImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10,120,150,150)];
+    
+    //check to see if there is a caseProfile for this caseID
+    NSString *defaultMatchImgFileName = [[NSBundle mainBundle] pathForResource:@"angryorc" ofType:@"jpeg"];
+    sureMatchImageView.image = [UIImage imageWithContentsOfFile:defaultMatchImgFileName];
+    
+    [sureMatchView addSubview:sureMatchCaseNameLabel];
+    [sureMatchView addSubview:sureMatchImageView];
+    
+    //add two buttons for "Not Who I Wanted" and "Start a Conversation"
+    UIButton *notWhoIWantedButton = [[UIButton alloc] initWithFrame:CGRectMake(10,300,sureMatchView.frame.size.width-20,50)];
+    notWhoIWantedButton.backgroundColor = [UIColor redColor];
+    notWhoIWantedButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
+    notWhoIWantedButton.titleLabel.textColor = [UIColor whiteColor];
+    notWhoIWantedButton.titleLabel.text = @"Cancel Challenge";
+    [notWhoIWantedButton setTitle:@"Cancel Challenge" forState:UIControlStateNormal];
+    
+    [notWhoIWantedButton addTarget:self action:@selector(cancelChallenge:) forControlEvents:UIControlEventTouchUpInside];
+    /*
+    UIButton *startConversationButton = [[UIButton alloc] initWithFrame:CGRectMake(10,360,sureMatchView.frame.size.width-20,50)];
+    
+    startConversationButton.backgroundColor = [UIColor blueColor];
+    startConversationButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
+    startConversationButton.titleLabel.textColor = [UIColor whiteColor];
+    startConversationButton.titleLabel.text = @"Start Conversation";
+    [startConversationButton setTitle:@"Start Match" forState:UIControlStateNormal];
+    
+    [startConversationButton addTarget:self action:@selector(startMatch:) forControlEvents:UIControlEventTouchUpInside];
+     */
+    [sureMatchView addSubview:notWhoIWantedButton];
+    //[sureMatchView addSubview:startConversationButton];
+    
+    bgDarkenView = [[UIView alloc] initWithFrame:self.view.bounds];
+    bgDarkenView.backgroundColor = [UIColor blackColor];
+    bgDarkenView.alpha = 0.7;
+    
+    [self.view addSubview:bgDarkenView];
+    [self.view addSubview:sureMatchView];
+    
+}
+
+-(void)cancelChallenge:(id)sender
+{
+    
+    //send data through MPDataHandler to notify the other player the challenge is cancelled
+    [MPDataHandler cancelChallenge];
+    
+    [bgDarkenView removeFromSuperview];
+    [sureMatchView removeFromSuperview];
+    
+}
+
+-(void)notifyPlayerOfCancelChallenge
+{
+    if(bgDarkenView !=nil)
+    {
+        
+        [bgDarkenView removeFromSuperview];
+        [sureMatchView removeFromSuperview];
+    }
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Challenger Cancelled" message:@"The Challenging Player Cancelled or Left" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    [alert show];
+}
+
+//called by MPDataHandler, dismiss screen shown that the player is challenging another
+-(void)dismissChallengeUI:(NSString *)reason
+{
+    if(bgDarkenView !=nil)
+    {
+        
+        [bgDarkenView removeFromSuperview];
+        [sureMatchView removeFromSuperview];
+    }
+    NSString *rejectionString = [@"Reason: " stringByAppendingString:reason];
+    
+
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Player Rejected Challenge" message:rejectionString delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    [alert show];
+    
+}
+
+-(void)searchForQuickMatchUI
+{
+    //show a popup announcing the challenge.
+    sureMatchView = [[UIView alloc] initWithFrame:CGRectMake(20,70,self.view.frame.size.width-40,450)];
+    sureMatchView.backgroundColor = [UIColor whiteColor];
+    CALayer *sureMatchLayer = sureMatchView.layer;
+    sureMatchLayer.cornerRadius = 8.0f;
+    
+    UILabel *sureMatchTitle = [[UILabel alloc] initWithFrame:CGRectMake(20,20,sureMatchView.frame.size.width-40,40)];
+    sureMatchTitle.text = @"Quick Match!";
+    sureMatchTitle.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:30];
+    sureMatchTitle.textAlignment = NSTextAlignmentCenter;
+    
+    [sureMatchView addSubview:sureMatchTitle];
+    
+    
+    UILabel *sureMatchCaseNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,70,300,50)];
+    
+    sureMatchCaseNameLabel.font =[UIFont fontWithName:@"Futura-CondensedMedium" size:25];
+    
+    sureMatchCaseNameLabel.text = @"Looking For Match...";
+    
+    UIImageView *sureMatchImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10,120,150,150)];
+    
+    //check to see if there is a caseProfile for this caseID
+    NSString *defaultMatchImgFileName = [[NSBundle mainBundle] pathForResource:@"angryorc" ofType:@"jpeg"];
+    sureMatchImageView.image = [UIImage imageWithContentsOfFile:defaultMatchImgFileName];
+    
+    [sureMatchView addSubview:sureMatchCaseNameLabel];
+    [sureMatchView addSubview:sureMatchImageView];
+    
+    //add two buttons for "Not Who I Wanted" and "Start a Conversation"
+    UIButton *notWhoIWantedButton = [[UIButton alloc] initWithFrame:CGRectMake(10,300,sureMatchView.frame.size.width-20,50)];
+    notWhoIWantedButton.backgroundColor = [UIColor redColor];
+    notWhoIWantedButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
+    notWhoIWantedButton.titleLabel.textColor = [UIColor whiteColor];
+    notWhoIWantedButton.titleLabel.text = @"Cancel Quick Match";
+    [notWhoIWantedButton setTitle:@"Cancel Quick Match" forState:UIControlStateNormal];
+    
+    [notWhoIWantedButton addTarget:self action:@selector(cancelChallenge:) forControlEvents:UIControlEventTouchUpInside];
+    /*
+     UIButton *startConversationButton = [[UIButton alloc] initWithFrame:CGRectMake(10,360,sureMatchView.frame.size.width-20,50)];
+     
+     startConversationButton.backgroundColor = [UIColor blueColor];
+     startConversationButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
+     startConversationButton.titleLabel.textColor = [UIColor whiteColor];
+     startConversationButton.titleLabel.text = @"Start Conversation";
+     [startConversationButton setTitle:@"Start Match" forState:UIControlStateNormal];
+     
+     [startConversationButton addTarget:self action:@selector(startMatch:) forControlEvents:UIControlEventTouchUpInside];
+     */
+    [sureMatchView addSubview:notWhoIWantedButton];
+    //[sureMatchView addSubview:startConversationButton];
+    
+    bgDarkenView = [[UIView alloc] initWithFrame:self.view.bounds];
+    bgDarkenView.backgroundColor = [UIColor blackColor];
+    bgDarkenView.alpha = 0.7;
+    
+    [self.view addSubview:bgDarkenView];
+    [self.view addSubview:sureMatchView];
+}
+
+-(void)refreshLobby:(id)sender
+{
+    //get participants
+    [MPDataHandler getPubNubConnectedPlayers];
     
 }
 

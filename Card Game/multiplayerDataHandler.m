@@ -123,8 +123,6 @@ PNChannel *chatChannel;
     [PubNub setConfiguration:configuration];
     [PubNub connect];
    
-    
-    
     // #1 Define our channel name with +PNChannel+.
     gameChannel = [PNChannel channelWithName:@"main_lobby"
                                  shouldObservePresence:YES];
@@ -180,6 +178,8 @@ PNChannel *chatChannel;
                          else
                          {
                              NSLog(@"success updating state");
+                             //update channel info
+                             //[self getPubNubConnectedPlayers];
                              
                          }
                      }];
@@ -370,7 +370,20 @@ PNChannel *chatChannel;
                 if([userIDBeingChallenged isEqualToString:ownUserID])
                 {
                     //someone challenged you, display a popup announcing it.
-                    [self.delegate notifyPlayerOfChallenge:msgIncomingDict];
+                    
+                    if(self.inChallengeProcess)
+                    {
+                        NSString *chgUserID = [msgIncomingDict objectForKey:@"chgUserID"];
+                        
+                        //notify challenger you are busy!
+                        [self rejectChallenge:chgUserID withReason:@"Already Challenging/In Challenge"];
+                        
+                    }
+                    else
+                    {
+                        self.inChallengeProcess = YES;
+                        [self.delegate notifyPlayerOfChallenge:msgIncomingDict];
+                    }
                     return;
                     
                 }
@@ -404,17 +417,54 @@ PNChannel *chatChannel;
                     
                     
                 }
+    
                 else
                 {
                     return;
                     
                 }
+                
             }
-            
-            
+            else if([msgType isEqualToString:@"challengeReject"])
+            {
+                NSString *userIDOfChallengeReject = [msgIncomingDict objectForKey:@"challengeRejectID"];
+                NSString *reason = [msgIncomingDict objectForKey:@"reason"];
+                
+                NSString *ownUserID = [PFUser currentUser].objectId;
+                if([userIDOfChallengeReject isEqualToString:ownUserID])
+                {
+                    //dismiss challenge UI and reset variables
+                    self.opponentIDChallenged = @"";
+                    [self.delegate dismissChallengeUI:reason];
+                    self.inChallengeProcess = NO;
+                    
+                }
+                else
+                {
+                    return;
+                    
+                }
+
+            }
+            else if([msgType isEqualToString:@"challengeCancel"])
+            {
+                NSString *userIDOfChallengeReject = [msgIncomingDict objectForKey:@"challengeCancelID"];
+                NSString *ownUserID = [PFUser currentUser].objectId;
+                if([userIDOfChallengeReject isEqualToString:ownUserID])
+                {
+                    //notify player being challenged the challenge was cancelled
+                    [self.delegate notifyPlayerOfCancelChallenge];
+                     self.inChallengeProcess = NO;
+                }
+                else
+                {
+                    return;
+                    
+                }
+
+            }
         }
-        
-    
+
         NSString *msgStringVal = [msgIncomingDict objectForKey:@"text"];
       
         NSString *msgSenderParseID = [msgIncomingDict objectForKey:@"msgSenderParseID"];
@@ -662,7 +712,8 @@ PNChannel *chatChannel;
     [PubNub requestParticipantsListFor:@[gameChannel] clientIdentifiersRequired:YES clientState:YES withCompletionBlock:^(PNHereNow *presenceInformation, NSArray *channels, PNError *error) {
         NSArray *participants = [presenceInformation participantsForChannel:gameChannel];
         
-        
+        NSLog(@"got participants");
+        NSLog(@"%ld",participants.count);
         NSMutableArray *playerArray = [[NSMutableArray alloc] init];
         
         for(PNClient *heldClient in participants)
@@ -876,6 +927,8 @@ PNChannel *chatChannel;
      [challengeMsgDict setObject:@"challenge" forKey:@"msgType"];
     [challengeMsgDict setObject:eloRatingString forKey:@"eloRatingChallenger"];
     
+     self.inChallengeProcess = YES;
+    
     [PubNub sendMessage:challengeMsgDict toChannel:gameChannel];
     
 }
@@ -888,14 +941,11 @@ PNChannel *chatChannel;
     [challengeAcceptMsgDict setObject:@"main_lobby" forKey:@"channel"];
     [challengeAcceptMsgDict setObject:@"challengeAccept" forKey:@"msgType"];
     
-   
-    
       NSString *ownUserID = [PFUser currentUser].objectId;
     
     NSString *fullChannelName = [challengerID stringByAppendingString:ownUserID];
     self.currentMPGameChannel = [PNChannel channelWithName:fullChannelName
                                      shouldObservePresence:YES];
-    
     
     [PubNub subscribeOn:@[self.currentMPGameChannel] withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channels, PNError *error) {
         
@@ -905,5 +955,30 @@ PNChannel *chatChannel;
     }];
 
     
+}
+
+-(void)rejectChallenge:(NSString *)challengerID withReason:(NSString *)reason
+{
+    NSMutableDictionary *challengeRejectMsgDict = [[NSMutableDictionary alloc] init];
+    
+    [challengeRejectMsgDict setObject:challengerID forKey:@"challengeRejectID"];
+    [challengeRejectMsgDict setObject:@"main_lobby" forKey:@"channel"];
+    [challengeRejectMsgDict setObject:@"challengeReject" forKey:@"msgType"];
+    [challengeRejectMsgDict setObject:reason forKey:@"reason"];
+    
+     [PubNub sendMessage:challengeRejectMsgDict toChannel:gameChannel];
+     self.inChallengeProcess = NO;
+}
+
+-(void)cancelChallenge
+{
+    NSMutableDictionary *challengeCancelMsgDict = [[NSMutableDictionary alloc] init];
+    
+    [challengeCancelMsgDict setObject:self.opponentIDChallenged forKey:@"challengeCancelID"];
+    [challengeCancelMsgDict setObject:@"main_lobby" forKey:@"channel"];
+    [challengeCancelMsgDict setObject:@"challengeCancel" forKey:@"msgType"];
+    
+    [PubNub sendMessage:challengeCancelMsgDict toChannel:gameChannel];
+     self.inChallengeProcess = NO;
 }
 @end

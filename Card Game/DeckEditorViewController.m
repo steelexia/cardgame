@@ -792,6 +792,8 @@ DeckModel * allCards;
     lastVCardCollectionViewMode = mode;
     darkFilter.alpha = 0;
     
+    [UserModel setCDCardVersion:currentCard.cardModel];
+    
     [self.view addSubview:darkFilter];
     
     if (mode == cardCollectionAddCard)

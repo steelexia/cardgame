@@ -38,6 +38,7 @@
 @property enum CardType type;
 
 
+
 /** For cards with the type standard, this links to the PF ID of the creator. */
 @property NSString *creator;
 
@@ -59,6 +60,9 @@
 
 /** Amount of resources it costs to deploy the card. 0 or higher */
 @property int cost;
+
+//tracks the latest version of the card.  If this differs from coreData, a new flag will be displayed.
+@property int version;
 
 /** Stores all of the Ability's the card is currently holding. For MonsterCards, it is equivalent to all "enchantments" applied to it, which (IMPORTANT!) also includes debuffs. For SpellCards, it is simply the effects it will give when summoned.  */
 @property (strong) NSMutableArray* abilities;
