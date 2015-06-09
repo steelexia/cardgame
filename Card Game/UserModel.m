@@ -11,7 +11,7 @@
 #import "CDCardModel.h"
 #import "CDDeckModel.h"
 #import "AbilityWrapper.h"
-
+#import "UserCardVersion.h"
 @implementation UserModel
 
 +(void)setupUser
@@ -404,25 +404,46 @@
 
 +(void)setCDCardVersion:(CardModel *)cardToSet
 {
+    //check to see if it exists, if not insert it.  If so, update it.
+    NSNumber *cardIDNumber = [[NSNumber alloc] initWithInt:cardToSet.idNumber];
+    NSNumber *cardVersionNumber =[[NSNumber alloc] initWithInt:cardToSet.version];
+    NSFetchRequest *fetchRequest=[NSFetchRequest fetchRequestWithEntityName:@"UserCardVersion"];
+    NSPredicate *predicate=[NSPredicate predicateWithFormat:@"idNumber==%@",cardIDNumber];
     
-    NSManagedObjectContext *context = userCDContext;
-    NSManagedObject *CardVersionInfo = [NSEntityDescription
-                                           insertNewObjectForEntityForName:@"UserCardVersion"
-                                           inManagedObjectContext:context];
+    fetchRequest.predicate=predicate;
+    UserCardVersion *ucv =[[userCDContext executeFetchRequest:fetchRequest error:nil] lastObject];
+    if(ucv !=nil)
+    {
+        [ucv setValue:cardVersionNumber forKey:@"viewedVersion"];
+        [userCDContext save:nil];
+        return;
+        
+    }
     
-    int cardIDNumber = cardToSet.idNumber;
-    int cardVersionInt = cardToSet.version;
-    
-    NSNumber *cardIDNum = [NSNumber numberWithInt:cardIDNumber];
-    NSNumber *versionNum = [NSNumber numberWithInt:cardVersionInt];
-    
-    [CardVersionInfo setValue:cardIDNum forKey:@"idNumber"];
-     [CardVersionInfo setValue:versionNum forKey:@"viewedVersion"];
-    
+    else
+    {
+        //create a new object
+        
+        NSManagedObjectContext *context = userCDContext;
+        NSManagedObject *CardVersionInfo = [NSEntityDescription
+                                            insertNewObjectForEntityForName:@"UserCardVersion"
+                                            inManagedObjectContext:context];
+        
+        int cardIDInt = cardToSet.idNumber;
+        int cardVersionInt = cardToSet.version;
+        
+        NSNumber *cardIDNum = [NSNumber numberWithInt:cardIDInt];
+        NSNumber *versionNum = [NSNumber numberWithInt:cardVersionInt];
+        
+        [CardVersionInfo setValue:cardIDNum forKey:@"idNumber"];
+        [CardVersionInfo setValue:versionNum forKey:@"viewedVersion"];
+        
         NSError *error;
         if (![context save:&error]) {
             NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
         }
+
+    }
     
 }
 

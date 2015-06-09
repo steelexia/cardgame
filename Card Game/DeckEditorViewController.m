@@ -148,8 +148,6 @@ DeckModel * allCards;
         else
         {
             
-        
-        
         NSNumber *allCardsID = [NSNumber numberWithInt:card.idNumber];
         int cardVersionNum = card.version;
         
