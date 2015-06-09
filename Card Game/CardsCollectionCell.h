@@ -12,5 +12,6 @@
 @interface CardsCollectionCell : UICollectionViewCell
 
 @property CardView*cardView;
+@property int cardIndex;
 
 @end

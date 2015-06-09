@@ -378,7 +378,17 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDescription];
     
-   NSPredicate * predicate = [NSPredicate predicateWithFormat:@"identifier IN %@", cardsBeingViewed];
+    NSMutableArray *cardIDS = [[NSMutableArray alloc] init];
+    for(CardModel *card in cardsBeingViewed)
+    {
+        NSNumber *cardIDNumber = [[NSNumber alloc] initWithInt:card.idNumber];
+        
+        [cardIDS addObject:cardIDNumber];
+        
+    }
+    
+   
+   NSPredicate * predicate = [NSPredicate predicateWithFormat:@"idNumber IN %@", cardIDS];
     [request setPredicate:predicate];
     
     

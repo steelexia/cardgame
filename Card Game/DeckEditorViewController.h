@@ -56,6 +56,10 @@
 @property (strong) UIView*modalFilter;
 @property BOOL isModal;
 
+
+@property (strong)NSMutableArray *indexOfNewCards;
+@property (strong)NSMutableArray *indexOfStarterCards;
+
 /** Set itself automatically */
 @property BOOL isTutorial;
 
