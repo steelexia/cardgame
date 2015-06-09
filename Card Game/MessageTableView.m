@@ -58,8 +58,9 @@
      const CGSize textSize = [text sizeWithAttributes: userAttributes];
      */
     
-    MessageModel *message = self.currentMessages[indexPath.row];
-    NSString*text = message.title;
+    PFObject *message = self.currentMessages[indexPath.row];
+    NSString*text = [message objectForKey:@"title"];
+    
     
     [cell.abilityText setFont: [UIFont fontWithName:cell.abilityText.font.familyName size:16]];
     CGSize textSize = [text sizeWithFont:[cell.abilityText font]];
@@ -82,7 +83,7 @@
     if ([_parent isKindOfClass:[MessagesViewController class]])
     {
         MessagesViewController *mvc = (MessagesViewController*)_parent;
-        MessageModel *message = self.currentMessages[indexPath.row];
+        PFObject *message = self.currentMessages[indexPath.row];
         [mvc selectedMessage:message];
     }
 }

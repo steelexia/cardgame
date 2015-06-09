@@ -133,6 +133,9 @@ UILabel *loadingLabel;
     
     //[self setPubNubConfigDetails2];
     
+    PFInstallation *installation = [PFInstallation currentInstallation];
+    installation[@"user"] = [PFUser currentUser];
+    [installation saveInBackground];
 }
 
 -(void) setPubNubConfigDetails
@@ -281,6 +284,24 @@ UILabel *loadingLabel;
 
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    //query for the messages
+    PFQuery *messagesQuery = [PFQuery queryWithClassName:@"Message"];
+    PFUser *user = [PFUser currentUser];
+    
+    [messagesQuery whereKey:@"userPointer" equalTo:user.objectId];
+    
+    [messagesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        self.messageCountLabel.text = [NSString stringWithFormat:@"%ld",objects.count];
+        self.messagesRetrieved = objects;
+        
+    }];
+    
+    
+    
+}
+
 
 -(void)viewDidAppear:(BOOL)animated
 {
@@ -338,6 +359,8 @@ UILabel *loadingLabel;
 -(void)messageButtonPressed
 {
     MessagesViewController *vc = [[MessagesViewController alloc] init];
+    vc.messagesRetrieved = self.messagesRetrieved;
+    
     [self presentViewController:vc animated:NO completion:nil];
 }
 

@@ -386,7 +386,6 @@
         [cardIDS addObject:cardIDNumber];
         
     }
-    
    
    NSPredicate * predicate = [NSPredicate predicateWithFormat:@"idNumber IN %@", cardIDS];
     [request setPredicate:predicate];

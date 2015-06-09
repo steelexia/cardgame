@@ -15,7 +15,7 @@
 @interface MessagesViewController : UIViewController <UITextViewDelegate>
 @property (strong) MessageTableView *messageTableView;
 @property (strong) UITextView*messageBodyView;
-
--(void)selectedMessage:(MessageModel*)message;
+@property (strong) NSArray *messagesRetrieved;
+-(void)selectedMessage:(PFObject *)message;
 
 @end

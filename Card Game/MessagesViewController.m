@@ -66,7 +66,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     dummy.body = @"body asdfas dfa sdfa sdfsfg\n adfas dfasd fasd asdf asdf asdf asdf asf ";
     [_messageTableView.currentMessages addObject:dummy];
      */
-     
+    _messageTableView.currentMessages = [self.messagesRetrieved mutableCopy];
+    
     [_messageTableView.tableView reloadData];
     [_messageTableView.tableView reloadInputViews];
     _messageTableView.parent = self;
@@ -89,9 +90,12 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [self.view addSubview:backButton];
 }
 
--(void)selectedMessage:(MessageModel*)message
+-(void)selectedMessage:(PFObject*)message
 {
-    [_messageBodyView setText:message.body];
+    NSString *bodyText = [message objectForKey:@"body"];
+    
+    [_messageBodyView setText:bodyText];
+    
 }
 
 -(void)backButtonPressed
