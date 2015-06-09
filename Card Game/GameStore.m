@@ -10,7 +10,7 @@
 
 @implementation GameStore
 
-const int LIKE_CARD_GOLD_GAIN = 15;
+const int LIKE_CARD_GOLD_GAIN = 5;
 
 const int FLAVOUR_TEXT_COST = 400;
 
