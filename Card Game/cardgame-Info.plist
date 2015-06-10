@@ -44,6 +44,9 @@
 		<string>LiberationSans-BoldItalic.ttf</string>
 		<string>encode-sans.compressed-bold.ttf</string>
 		<string>encode-sans.compressed-black.ttf</string>
+		<string>BOOKMAN_.TTF</string>
+		<string>BookmanOld.TTF</string>
+		<string>BOOKOSB.TTF</string>
 	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>Main_iPhone</string>

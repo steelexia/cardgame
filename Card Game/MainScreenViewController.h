@@ -19,7 +19,7 @@
 
 @property (strong) StrokedLabel *messageCountLabel;
 @property BOOL loadedTutorial;
-@property (strong) CFButton *singlePlayerButton, *multiPlayerButton, *deckButton, *storeButton;
+@property (strong) UIButton *singlePlayerButton, *multiPlayerButton, *deckButton, *storeButton;
 @property (strong)NSArray *messagesRetrieved;
 
 
