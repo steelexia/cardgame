@@ -1616,6 +1616,8 @@ BOOL leftHandViewZone = NO;
     
     if (_gameMode == GameModeMultiplayer)
     {
+        [self.MPDataHandler resetAllMPVariables];
+        
         if (_gameModel.playerOneDefeated && _gameModel.playerTwoDefeated)
         {
             //draw
@@ -1765,6 +1767,11 @@ BOOL leftHandViewZone = NO;
         {
             _gameOverSaveLabel.text = @"";
             
+            if (_gameMode == GameModeMultiplayer)
+            {
+                [self.MPDataHandler handlePlayerVictory];
+                
+            }
             //begin next level immediately if exists
             if (_nextLevel != nil)
             {

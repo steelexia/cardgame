@@ -67,9 +67,10 @@ UIView *sureMatchView;
     [self.view addSubview:menuLogoBackground];
     
     
-    CFButton* startButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
-    startButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 50);
+    CFButton* startButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 200, 100)];
+    startButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 110);
     [startButton.label setText:@"Quick Match"];
+    
     //[startButton addTarget:self action:@selector(startGameCenterButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [startButton addTarget:self action:@selector(startMatch)    forControlEvents:UIControlEventTouchUpInside];
     
@@ -81,10 +82,10 @@ UIView *sureMatchView;
     //[startButton addTarget:self action:@selector(startGameCenterButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [connectButton addTarget:self action:@selector(startConnectingPubNub)    forControlEvents:UIControlEventTouchUpInside];
     
-    [self.view addSubview:connectButton];
+    //[self.view addSubview:connectButton];
 
     CFButton* leaderboardButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
-    leaderboardButton.center = CGPointMake(SCREEN_WIDTH-70, SCREEN_HEIGHT - 220);
+    leaderboardButton.center = CGPointMake(SCREEN_WIDTH-70, SCREEN_HEIGHT - 35);
     [leaderboardButton.label setText:@"Leaderboards"];
     
     [leaderboardButton addTarget:self action:@selector(viewLeaderboards)    forControlEvents:UIControlEventTouchUpInside];
@@ -245,9 +246,9 @@ UIView *sureMatchView;
 }
 -(void)viewLeaderboards
 {
-    //LeaderboardsViewController *lvc = [[LeaderboardsViewController alloc] init];
+    LeaderboardsViewController *lvc = [[LeaderboardsViewController alloc] init];
     
-   // [self presentViewController:lvc animated:YES completion:nil];
+    [self presentViewController:lvc animated:YES completion:nil];
     
     
 }
@@ -806,7 +807,7 @@ UIView *sureMatchView;
        
        // Add an extra point to the height to account for the cell separator, which is added between the bottom
        // of the cell's contentView and the bottom of the table view cell.
-       height += 1;
+       height += 0;
       // NSLog(@"height @%f",height);
        
        
@@ -830,7 +831,7 @@ UIView *sureMatchView;
         label.numberOfLines = 0;
          label.lineBreakMode = NSLineBreakByWordWrapping;
         label.text = text;
-        label.font = [UIFont systemFontOfSize:11];
+        label.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:11];
         
         CGRect frame = label.frame;
         frame.size.width = self.chatTableView.frame.size.width;
@@ -878,7 +879,7 @@ if(tableView.tag ==88)
         challengeButton = [[UIButton alloc] initWithFrame:CGRectMake(165,2,90,21)];
         [challengeButton setBackgroundColor:[UIColor blueColor]];
         [challengeButton setTitle:@"Challenge" forState:UIControlStateNormal];
-        challengeButton.titleLabel.font = [UIFont boldSystemFontOfSize:12];
+        challengeButton.titleLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:12];
         
         [challengeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         CALayer *btnLayer = challengeButton.layer;
@@ -887,7 +888,8 @@ if(tableView.tag ==88)
         
         
         [challengeButton addTarget:self action:@selector(challengePlayer:) forControlEvents:UIControlEventTouchUpInside];
-        
+        userNameLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:10];
+        userEloLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:10];
         userNameLabel.tag = 1;
         [cell addSubview:userNameLabel];
         userStateLabel.tag = 2;
@@ -953,7 +955,7 @@ if(tableView.tag ==88)
             
             cell.backgroundColor = [UIColor blackColor];
             
-            cell.textLabel.font = [UIFont systemFontOfSize:11];
+            cell.textLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:11];
             
             //messageLabel.numberOfLines = 3;
             //messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -1032,6 +1034,69 @@ if(tableView.tag ==88)
     
    
 }
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    // textField.text = @"";
+    
+    [self animateTextField:textField up:YES];
+}
+
+
+
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [self animateTextField:textField up:NO];
+    
+}
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self.view endEditing:YES];// this will do the trick
+}
+
+- (void) animateTextField: (UITextField*) textField up: (BOOL) up
+{
+    int animatedDistance;
+    int moveUpValue = textField.frame.origin.y+ textField.frame.size.height;
+    UIInterfaceOrientation orientation =
+    [[UIApplication sharedApplication] statusBarOrientation];
+    if (orientation == UIInterfaceOrientationPortrait ||
+        orientation == UIInterfaceOrientationPortraitUpsideDown)
+    {
+        
+        animatedDistance = 216-(460-moveUpValue-5);
+    }
+    else
+    {
+        animatedDistance = 162-(320-moveUpValue-5);
+    }
+    
+    if(animatedDistance>0)
+    {
+        const int movementDistance = animatedDistance;
+        const float movementDuration = 0.3f;
+        int movement = (up ? -movementDistance : movementDistance);
+        [UIView beginAnimations: nil context: nil];
+        [UIView setAnimationBeginsFromCurrentState: YES];
+        [UIView setAnimationDuration: movementDuration];
+        self.view.frame = CGRectOffset(self.view.frame, 0, movement);
+        [UIView commitAnimations];
+    }
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField {
+    
+    //put the string of the text field onto a label now in the same cell
+    //put -100 so it doesn't interfere with the uilabel tag of 3 in every cell
+    
+    [textField resignFirstResponder];
+    
+    
+    return YES;
+}
+
+
 
 - (void)didTapChat:(UITapGestureRecognizer *)tapGesture
 {
@@ -1404,6 +1469,18 @@ if(tableView.tag ==88)
     //get participants
     [MPDataHandler getPubNubConnectedPlayers];
     
+}
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self resetAllVariables];
+    
+    
+}
+-(void)resetAllVariables
+{
+    [self refreshLobby:self];
+    //[MPDataHandler resetAllMPVariables];
 }
 
 

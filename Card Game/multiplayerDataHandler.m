@@ -270,7 +270,7 @@ PNChannel *chatChannel;
                            //I am challenger, send game start
                            [self sendStartMatch];
                            self.sentStartMatch = TRUE;
-                           
+                           self.gameStarted = YES;
                        }
                       
                         
@@ -293,9 +293,26 @@ PNChannel *chatChannel;
                 break;
             case PNPresenceEventLeave:
                 //[PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: Catch you on the flip side!",uuid ] toChannel:gameChannel ];
+                if(event.channel == self.currentMPGameChannel && self.gameStarted ==YES)
+                {
+                    //declare self winner on game controller delegate function.
+                    NSLog(@"Other Player Timed Out");
+                    [self.gameDelegate opponentForfeit];
+                    
+                }
+
                 break;
             case PNPresenceEventTimeout:
                 //[PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: Too Bad!",uuid ] toChannel:gameChannel ];
+               
+                //if the game has started already, interpret this as a forfeit and give the player the win.
+                if(event.channel == self.currentMPGameChannel && self.gameStarted ==YES)
+                {
+                    //declare self winner on game controller delegate function.
+                    NSLog(@"Other Player Timed Out");
+                    [self.gameDelegate opponentForfeit];
+                    
+                }
                 break;
             default:
                 break;
@@ -382,6 +399,11 @@ PNChannel *chatChannel;
                     else
                     {
                         self.inChallengeProcess = YES;
+                        NSNumber *challengerEloRating = [msgIncomingDict objectForKey:@"eloRatingNum"];
+                        
+                        self.opponentEloRating = [challengerEloRating intValue];
+                        self.opponentID = [msgIncomingDict objectForKey:@"chgUserID"];
+                        
                         [self.delegate notifyPlayerOfChallenge:msgIncomingDict];
                     }
                     return;
@@ -492,6 +514,7 @@ PNChannel *chatChannel;
            {
                NSLog(@"Received Begin");
                [self.delegate updateStatusLabelText:@"Received Begin"];
+               self.gameStarted = YES;
                
                
                //get the rest of the characters to get the random seed
@@ -911,6 +934,10 @@ PNChannel *chatChannel;
     [clientStateMutable setObject:userObj.objectId forKey:@"userID"];
     [clientStateMutable setObject:@"Lobby" forKey:@"gameState"];
      */
+    self.opponentEloRating = [[Dict objectForKey:@"eloRating"] intValue];
+    self.opponentID = [Dict objectForKey:@"userID"];
+    
+    
     NSString *userID = [Dict objectForKey:@"userID"];
     
     PFUser *user = [PFUser currentUser];
@@ -926,6 +953,7 @@ PNChannel *chatChannel;
     [challengeMsgDict setObject:@"main_lobby" forKey:@"channel"];
      [challengeMsgDict setObject:@"challenge" forKey:@"msgType"];
     [challengeMsgDict setObject:eloRatingString forKey:@"eloRatingChallenger"];
+    [challengeMsgDict setObject:eloRating forKey:@"eloRatingNum"];
     
      self.inChallengeProcess = YES;
     
@@ -948,6 +976,8 @@ PNChannel *chatChannel;
                                      shouldObservePresence:YES];
     
     [PubNub subscribeOn:@[self.currentMPGameChannel] withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channels, PNError *error) {
+        
+        //set opponent elo rating
         
         //do nothing, start event will be fired by occupancy 2 only by challenger
          [PubNub sendMessage:challengeAcceptMsgDict toChannel:gameChannel];
@@ -980,5 +1010,39 @@ PNChannel *chatChannel;
     
     [PubNub sendMessage:challengeCancelMsgDict toChannel:gameChannel];
      self.inChallengeProcess = NO;
+}
+
+-(void)handlePlayerVictory
+{
+    //save eloRating of self and opponent as variables at time of match start..
+    NSNumber *selfEloRating = [[PFUser currentUser] objectForKey:@"eloRating"];
+    NSNumber *opponentEloRating = [NSNumber numberWithInt:self.opponentEloRating];
+     NSError* error;
+    [PFCloud callFunction:@"mpMatchComplete" withParameters:@{
+                                                              @"User1" : [PFUser currentUser].objectId, @"User2" :self.opponentID, @"User1Rating" :selfEloRating,@"User2Rating": opponentEloRating
+                                                              } error:&error];
+    
+}
+
+-(void)resetAllMPVariables
+{
+    self.opponentEloRating = 0;
+    self.opponentID = 0;
+    self.opponentIDChallenged = 0;
+    
+    if(self.currentMPGameChannel !=nil)
+    {
+        
+    NSMutableArray *channelsToLeave = [[NSMutableArray alloc] init];
+    [channelsToLeave addObject:self.currentMPGameChannel];
+   
+    
+    //leave game channel
+    [PubNub unsubscribeFrom:channelsToLeave withCompletionHandlingBlock:^(NSArray *channels, PNError *error) {
+        NSLog(@"unsubscribe success");
+         self.currentMPGameChannel = nil;
+    }];
+    }
+   
 }
 @end

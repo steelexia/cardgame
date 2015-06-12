@@ -61,6 +61,10 @@
 @property (strong,nonatomic) NSString *opponentIDChallenged;
 @property (strong,nonatomic) PNChannel *currentMPGameChannel;
 @property BOOL inChallengeProcess;
+@property BOOL gameStarted;
+@property int opponentEloRating;
+@property NSString *opponentID;
+
 
 
 -(void)sendSummonCard:(int)cardIndex withTarget:(int)targetPosition;
@@ -74,4 +78,8 @@
 -(void)acceptChallenge:(NSString *)challengerID;
 -(void)rejectChallenge:(NSString *)challengerID withReason:(NSString *)reason;
 -(void)cancelChallenge;
+-(void)handlePlayerVictory;
+-(void)resetAllMPVariables;
+
+
 @end
