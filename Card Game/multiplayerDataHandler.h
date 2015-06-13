@@ -65,7 +65,9 @@
 @property int opponentEloRating;
 @property NSString *opponentID;
 
-
+@property (strong,nonatomic) PNChannel *quickMatchChannel;
+@property BOOL quickMatchLock;
+@property BOOL firstQuickMatchEnabled;
 
 -(void)sendSummonCard:(int)cardIndex withTarget:(int)targetPosition;
 -(void)sendAttackCard:(int)attackerPosition withTarget:(int)targetPosition;
@@ -80,6 +82,6 @@
 -(void)cancelChallenge;
 -(void)handlePlayerVictory;
 -(void)resetAllMPVariables;
-
+-(void)joinQuickMatchChannel;
 
 @end

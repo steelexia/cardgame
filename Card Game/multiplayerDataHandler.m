@@ -19,7 +19,8 @@ NSString *opponentDeckID;
 BOOL sentDeck = FALSE;
 PNChannel *gameChannel;
 PNChannel *chatChannel;
-
+NSTimer *challengeLockTimer;
+NSTimer *firstChallengeTimer;
 
 + (multiplayerDataHandler*)sharedInstance
 {
@@ -351,7 +352,61 @@ PNChannel *chatChannel;
          NSLog(@"this fired from the mp controller zoinks");
         
         NSDictionary *msgIncomingDict = message.message;
-          NSString *thisChannel = [msgIncomingDict objectForKey:@"channel"];
+        NSString *thisChannel = [msgIncomingDict objectForKey:@"channel"];
+        
+        /*
+         quick match challenge object details
+        [quickMatchMsgDict setObject:userIDJustJoined forKey:@"qmOpponentID"];
+        [quickMatchMsgDict setObject:userID forKey:@"challengingUserID"];
+        [quickMatchMsgDict setObject:@"quickMatch" forKey:@"channel"];
+        [quickMatchMsgDict setObject:@"qmCHG" forKey:@"msgType"];
+        [quickMatchMsgDict setObject:eloRating forKey:@"eloRating"];
+        */
+        
+        if([thisChannel isEqualToString:@"quickMatch"])
+        {
+            //check for receiving a challenge
+            NSString *msgType = [msgIncomingDict objectForKey:@"msgType"];
+            NSString *myUserID = [PFUser currentUser].objectId;
+            
+            if([msgType isEqualToString:@"qmCHG"] )
+            {
+                NSString *challengedUserID = [msgIncomingDict objectForKey:@"qmOpponentID"];
+                NSString *challengerID = [msgIncomingDict objectForKey:@"challengingUserID"];
+                
+                if([challengedUserID isEqualToString:myUserID])
+                    {
+                    //received a challenge!
+                    //make sure player isn't already in a challenge
+                        if([self.opponentID length] ==0)
+                        {
+                            self.opponentID = challengerID;
+                            
+                            //join a channel with the two users
+                            [self acceptChallenge:challengerID];
+                        
+                            //send a message when joined to start the game
+                            
+                            
+                        }
+                        
+                    }
+            }
+            /*
+            [quickMatchMsgDict setObject:userID forKey:@"userID"];
+            [quickMatchMsgDict setObject:@"quickMatch" forKey:@"channel"];
+            [quickMatchMsgDict setObject:@"qmJOIN" forKey:@"msgType"];
+            [quickMatchMsgDict setObject:eloRating forKey:@"eloRating"];
+             */
+            if([msgType isEqualToString:@"qmJOIN"])
+            {
+                //always try to send the challenge, it will prevent the user if the lock is not enabled or they already have an opponentID
+                NSString *joinedUser= [msgIncomingDict objectForKey:@"userID"];
+                
+                [self sendQuickMatchChallenge:joinedUser];
+                
+            }
+        }
         
         if([thisChannel isEqualToString:@"chat"])
         {
@@ -419,8 +474,11 @@ PNChannel *chatChannel;
             else if([msgType isEqualToString:@"challengeAccept"])
             {
                 NSString *userIDOfChallengeAccept = [msgIncomingDict objectForKey:@"challengeAcceptID"];
+                NSString *opponentAccepting = [msgIncomingDict objectForKey:@"accepterID"];
+                self.opponentID = opponentAccepting;
+                
                 NSString *ownUserID = [PFUser currentUser].objectId;
-                if([userIDOfChallengeAccept isEqualToString:ownUserID])
+                if([userIDOfChallengeAccept isEqualToString:ownUserID] && [opponentAccepting isEqualToString:self.opponentIDChallenged])
                 {
                     
                     //join a channel with the ids of the two users and start loading the match
@@ -937,7 +995,6 @@ PNChannel *chatChannel;
     self.opponentEloRating = [[Dict objectForKey:@"eloRating"] intValue];
     self.opponentID = [Dict objectForKey:@"userID"];
     
-    
     NSString *userID = [Dict objectForKey:@"userID"];
     
     PFUser *user = [PFUser currentUser];
@@ -964,10 +1021,12 @@ PNChannel *chatChannel;
 -(void)acceptChallenge:(NSString *)challengerID
 {
     NSMutableDictionary *challengeAcceptMsgDict = [[NSMutableDictionary alloc] init];
-    
+    PFUser *currentUser = [PFUser currentUser];
+    NSString *myID = currentUser.objectId;
     [challengeAcceptMsgDict setObject:challengerID forKey:@"challengeAcceptID"];
     [challengeAcceptMsgDict setObject:@"main_lobby" forKey:@"channel"];
     [challengeAcceptMsgDict setObject:@"challengeAccept" forKey:@"msgType"];
+    [challengeAcceptMsgDict setObject:myID forKey:@"accepterID"];
     
       NSString *ownUserID = [PFUser currentUser].objectId;
     
@@ -1035,14 +1094,120 @@ PNChannel *chatChannel;
         
     NSMutableArray *channelsToLeave = [[NSMutableArray alloc] init];
     [channelsToLeave addObject:self.currentMPGameChannel];
-   
+        if(self.quickMatchChannel !=nil)
+        {
+            [channelsToLeave addObject:self.quickMatchChannel];
+            
+        }
     
     //leave game channel
     [PubNub unsubscribeFrom:channelsToLeave withCompletionHandlingBlock:^(NSArray *channels, PNError *error) {
         NSLog(@"unsubscribe success");
          self.currentMPGameChannel = nil;
+        self.quickMatchChannel = nil;
+        
     }];
     }
+    
+    
    
 }
+
+-(void)joinQuickMatchChannel
+{
+    if(self.quickMatchChannel !=nil)
+    {
+        return;
+        
+    }
+    self.inChallengeProcess = TRUE;
+    self.opponentID = @"";
+    
+    self.quickMatchChannel = [PNChannel channelWithName:@"quickMatch"
+                                     shouldObservePresence:YES];
+    NSString *userID = [PFUser currentUser].objectId;
+    NSNumber *eloRating = [[PFUser currentUser] objectForKey:@"eloRating"];
+    
+    NSMutableDictionary *quickMatchMsgDict = [[NSMutableDictionary alloc] init];
+    
+    [quickMatchMsgDict setObject:userID forKey:@"userID"];
+    [quickMatchMsgDict setObject:@"quickMatch" forKey:@"channel"];
+    [quickMatchMsgDict setObject:@"qmJOIN" forKey:@"msgType"];
+    [quickMatchMsgDict setObject:eloRating forKey:@"eloRating"];
+    
+    
+[PubNub subscribeOn:@[self.quickMatchChannel] withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channels, PNError *error) {
+    
+    //start a timer, after this timer expires the user can fire their first quickMatchChallenge if they didn't get challenged first
+    [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];
+    challengeLockTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(firstChallengeTimer) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:challengeLockTimer forMode:NSRunLoopCommonModes];
+    
+    [PubNub sendMessage:quickMatchMsgDict toChannel:self.quickMatchChannel];
+    
+}];
+}
+
+-(void)sendQuickMatchChallenge:(NSString *)userIDJustJoined
+{
+    //lock out the player for 4 seconds until they see if they get a response or not from the user they challenge.  If no response, then their lock is reset and they can send a quick match challenge to another user who joins.
+    //If they get a response, their lock remains
+    
+    //if already challenged, don't allow to send out challenges
+    if([self.opponentID length] >0)
+    {
+        return;
+        
+    }
+    
+    if(self.firstQuickMatchEnabled ==FALSE)
+    {
+        return;
+        
+    }
+    
+     NSString *userID = [PFUser currentUser].objectId;
+     NSNumber *eloRating = [[PFUser currentUser] objectForKey:@"eloRating"];
+    if(self.quickMatchLock ==FALSE)
+    {
+        //send the challenge
+        //lock quick match
+        self.quickMatchLock =TRUE;
+        self.opponentIDChallenged = userIDJustJoined;
+        
+        NSMutableDictionary *quickMatchMsgDict = [[NSMutableDictionary alloc] init];
+        
+        [quickMatchMsgDict setObject:userIDJustJoined forKey:@"qmOpponentID"];
+        [quickMatchMsgDict setObject:userID forKey:@"challengingUserID"];
+        [quickMatchMsgDict setObject:@"quickMatch" forKey:@"channel"];
+        [quickMatchMsgDict setObject:@"qmCHG" forKey:@"msgType"];
+        [quickMatchMsgDict setObject:eloRating forKey:@"eloRating"];
+        
+        [PubNub sendMessage:quickMatchMsgDict toChannel:self.quickMatchChannel];
+    }
+    
+    [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];
+    challengeLockTimer = [NSTimer scheduledTimerWithTimeInterval:4 target:self selector:@selector(UpdateChallengeLock) userInfo:nil repeats:NO];
+    [[NSRunLoop currentRunLoop] addTimer:challengeLockTimer forMode:NSRunLoopCommonModes];
+    
+}
+
+-(void)UpdateChallengeLock
+{
+    NSLog(@"update challenge lock enabled to false");
+    
+    //player can challenge the next user joining
+    self.quickMatchLock = FALSE;
+    self.opponentIDChallenged = @"";
+    
+}
+
+-(void)firstChallengeTimer
+{
+    NSLog(@"user allowed to send first quick match challenge");
+    
+    self.firstQuickMatchEnabled = TRUE;
+    
+}
+
 @end

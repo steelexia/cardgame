@@ -72,7 +72,7 @@ UIView *sureMatchView;
     [startButton.label setText:@"Quick Match"];
     
     //[startButton addTarget:self action:@selector(startGameCenterButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-    [startButton addTarget:self action:@selector(startMatch)    forControlEvents:UIControlEventTouchUpInside];
+    [startButton addTarget:self action:@selector(quickMatch)    forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:startButton];
     
@@ -253,11 +253,25 @@ UIView *sureMatchView;
     
 }
 
--(void)startMatch
+-(void)quickMatch
 {
-    [MPDataHandler sendStartMatch];
+   // [MPDataHandler sendStartMatch];
     
     //show a loading bar..
+    
+    _activityIndicator.alpha = 0;
+    _activityLabel.text = @"Finding Opponent...";
+    [_activityIndicator setColor:[UIColor whiteColor]];
+    [self.view addSubview:_activityIndicator];
+    [_activityIndicator startAnimating];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _activityIndicator.alpha = 1;
+                     }
+                     completion:^(BOOL completed){
+                     }];
+
+    [MPDataHandler joinQuickMatchChannel];
     
 }
 

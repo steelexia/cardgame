@@ -1605,7 +1605,11 @@ BOOL leftHandViewZone = NO;
         //[_networkingEngine sendOpponentForfeit];
         [self.MPDataHandler sendOpponentForfeit];
         _gameModel.playerOneDefeated = YES;
+        
+        [self.MPDataHandler resetAllMPVariables];
     }
+    
+    
     
     [self endGame];
 }
