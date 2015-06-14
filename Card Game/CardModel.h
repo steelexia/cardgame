@@ -110,6 +110,9 @@
 /** Adds a card to the Parse database. Really only used when user creates a new card. WARNING: do not call this on main thread because it blocks while saving */
 +(NSError*) addCardToParse:(CardModel*) card withImage:(UIImage*)image;
 
++(NSError*) updateCardOnParse:(CardModel *) card;
+
+
 +(NSString*)getRarityText:(enum CardRarity)rarity;
 
 @end

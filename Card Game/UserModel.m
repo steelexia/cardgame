@@ -896,6 +896,92 @@
     return YES;
 }
 
++(BOOL)updateCard:(CardModel *)card
+{
+    PFObject *cardPF = card.cardPF;
+    
+    cardPF[@"idNumber"] = [NSNumber numberWithLong:card.idNumber];
+    cardPF[@"name"] = card.name;
+    cardPF[@"cost"] = [NSNumber numberWithInt:card.cost];
+    cardPF[@"rarity"] = [NSNumber numberWithInt:card.rarity];
+    cardPF[@"creator"] = userPF.objectId;
+    cardPF[@"likes"] = @(card.likes);
+    cardPF[@"tags"] = card.tags;
+    cardPF[@"flavourText"] = card.flavourText;
+    
+    cardPF[@"element"] = [NSNumber numberWithInt:card.element];
+    
+    if ([card isKindOfClass:[MonsterCardModel class]])
+    {
+        MonsterCardModel *monsterCard = (MonsterCardModel*)card;
+        
+        cardPF[@"cardType"] = [NSNumber numberWithInt:MONSTER_CARD];
+        cardPF[@"damage"] = [NSNumber numberWithInt:monsterCard.baseDamage];
+        cardPF[@"life"] = [NSNumber numberWithInt:monsterCard.baseMaxLife];
+        cardPF[@"cooldown"] = [NSNumber numberWithInt:monsterCard.baseMaxCooldown];
+    }
+    else if ([card isKindOfClass:[SpellCardModel class]])
+    {
+        SpellCardModel *spellCard = (SpellCardModel*)card;
+        cardPF[@"cardType"] = [NSNumber numberWithInt:SPELL_CARD];
+    }
+    
+    //loaded after stats
+    NSMutableArray *pfAbilities = [[NSMutableArray alloc] init];
+    for (int i = 0 ; i < [card.abilities count]; i++){
+        if ([card.abilities[i] isKindOfClass:[PFObject class]]){
+            [pfAbilities addObject:card.abilities[i]];
+        }
+        //convert the ability to PFObject
+        else if ([card.abilities[i] isKindOfClass:[Ability class]])
+        {
+            Ability*ability = card.abilities[i];
+            int abilityID = [AbilityWrapper getIdWithAbility:ability];
+            
+            if (abilityID != -1)
+            {
+                PFObject*pfAbility = [PFObject objectWithClassName:@"Ability"];
+                pfAbility[@"idNumber"] = [[NSNumber alloc] initWithInt:abilityID];
+                if (ability.value == nil)
+                    pfAbility[@"value"] = @0;
+                else
+                    pfAbility[@"value"] = ability.value;
+                pfAbility[@"otherValues"] = ability.otherValues;
+                
+                [pfAbilities addObject:pfAbility];
+            }
+            else{
+                
+                NSLog(@"WARNING: Could not find the id of an ability of card. Ability: %@", [Ability getDescription:ability fromCard:card]);
+            }
+        }
+    }
+    
+    cardPF[@"abilities"] = pfAbilities;
+    cardPF[@"version"] = [NSNumber numberWithInt:card.version+1];
+    
+    BOOL successSave = [cardPF save];
+    
+    
+    
+    if(successSave)
+    {
+        NSLog(@"card updated successfully");
+        
+        return YES;
+    }
+    else
+        
+    {
+        NSLog(@"card update failed");
+        
+        
+        return NO;
+        
+    }
+    
+}
+
 +(BOOL)setLikedCard:(CardModel*)card
 {
     return [self setCardInteraction:card.idNumber atBit:0 state:YES];

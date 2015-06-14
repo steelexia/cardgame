@@ -364,6 +364,8 @@ const int CARD_ID_START = 1000;
     return nil;
 }
 
+
+
 +(PFObject*)cardToCardPF:(CardModel*)card withImage:(PFObject*)imagePF
 {
     //common to all cards
@@ -431,6 +433,9 @@ const int CARD_ID_START = 1000;
     
     return cardPF;
 }
+
+
+
 
 +(NSString*)getRarityText:(enum CardRarity)rarity
 {

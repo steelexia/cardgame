@@ -154,6 +154,13 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     if (_editorMode == cardEditorModeVoting)
         [nameTextField setText:_currentCardModel.name];
     
+    
+    if(_editorMode ==cardEditorModeRarityUpdate)
+    {
+        [nameTextField setText:_currentCardModel.name];
+        
+    }
+    
     [nameTextField setDelegate:self];
     [self.view addSubview:nameTextField];
     
@@ -1988,6 +1995,56 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
                      }];
 }
 
+-(void)updateCardForRarity
+{
+    //get rid of the confirm screen
+    [self confirmCancelButtonPressed];
+    
+    _cardUploadIndicator.alpha = 0;
+    _cardUploadLabel.text = [NSString stringWithFormat:@"Updating Card..."];
+    [_cardUploadIndicator setColor:[UIColor whiteColor]];
+    [self.view addSubview:_cardUploadIndicator];
+    [_cardUploadIndicator startAnimating];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _cardUploadIndicator.alpha = 1;
+                     }
+                     completion:^(BOOL completed){
+                         [self performBlock:^{
+                             //BOOL succ = [UserModel publishCard:self.currentCardModel withImage:self.currentCardView.cardImage.image];
+                             //TODOBrianJune13, usermodel needs function to update card
+                             BOOL succ = [UserModel updateCard:self.currentCardModel];
+                             if (succ)
+                             {
+                                 [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                                                  animations:^{
+                                                      _cardUploadIndicator.alpha = 0;
+                                                  }
+                                                  completion:^(BOOL completed){
+                                                      [_cardUploadIndicator stopAnimating];
+                                                      [_cardUploadIndicator removeFromSuperview];
+                                                      
+                                                      [self dismissViewControllerAnimated:YES completion:nil];
+                                                  }];
+                             }
+                             else
+                             {
+                                 [_cardUploadIndicator setColor:[UIColor clearColor]];
+                                 _cardUploadLabel.text = [NSString stringWithFormat:@"Error uploading card."];
+                                 _cardUploadFailedButton.alpha = 0;
+                                 [_cardUploadIndicator addSubview:_cardUploadFailedButton];
+                                 [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                                                  animations:^{
+                                                      _cardUploadFailedButton.alpha = 1;
+                                                  }
+                                                  completion:^(BOOL completed){
+                                                      [_cardUploadFailedButton setUserInteractionEnabled:YES];
+                                                  }];
+                             }
+                         }];
+                     }];
+}
+
 -(void)cardUploadFailedButtonPressed
 {
     [_cardUploadFailedButton setUserInteractionEnabled:NO];
@@ -2784,7 +2841,17 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     NSMutableArray *noDupTags = [self getTags];
     
     self.currentCardModel.tags = noDupTags;
-    [userAllCards addObject:self.currentCardModel]; 
+    [userAllCards addObject:self.currentCardModel];
+    
+    if(_editorMode == cardEditorModeRarityUpdate)
+    {
+        //do update of card instead of publish
+        
+        [self updateCardForRarity];
+        
+        return;
+        
+    }
     [self publishCurrentCard];
 }
 

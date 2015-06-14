@@ -59,4 +59,5 @@ enum CardEditorMode{
     cardEditorModeTutorialTwo,
     /** Everything allowed, but helps to describe the abilities a bit */
     cardEditorModeTutorialThree,
+    cardEditorModeRarityUpdate
 };

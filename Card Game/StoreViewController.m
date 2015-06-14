@@ -1922,7 +1922,7 @@ NSArray *_products;
 {
     CardModel*cardCopy = [[CardModel alloc] initWithCardModel:_cardView.cardModel];
     
-    CardEditorViewController *cevc = [[CardEditorViewController alloc] initWithMode:cardEditorModeVoting WithCard:cardCopy];
+    CardEditorViewController *cevc = [[CardEditorViewController alloc] initWithMode:cardEditorModeRarityUpdate WithCard:cardCopy];
     
     [self presentViewController:cevc animated:YES completion:^{
         //processing done in cevc
@@ -1938,6 +1938,8 @@ NSArray *_products;
 -(void)bumpButtonPressed
 {
     //TODO
+    [self editButtonPressed];
+    
 }
 
 -(void)applyFiltersToQuery:(PFQuery*)salesQuery
