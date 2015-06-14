@@ -96,6 +96,14 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     
     [_messageBodyView setText:bodyText];
     
+    //mark this message as read on parse
+    
+    [message setObject:@"YES" forKey:@"messageRead"];
+    [message saveInBackground];
+    
+    //mark this message as gray from now on for the list
+    
+   
 }
 
 -(void)backButtonPressed

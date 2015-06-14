@@ -17,6 +17,7 @@
 
 @property (strong) NSMutableArray *currentMessages;
 @property (strong) UIViewController*parent;
+@property (strong) NSMutableArray *readMessages;
 
 -(void)removeCellAt:(int)index;
 

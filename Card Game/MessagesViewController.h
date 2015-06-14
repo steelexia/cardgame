@@ -17,5 +17,6 @@
 @property (strong) UITextView*messageBodyView;
 @property (strong) NSArray *messagesRetrieved;
 -(void)selectedMessage:(PFObject *)message;
+@property (strong) NSMutableArray *readMessages;
 
 @end

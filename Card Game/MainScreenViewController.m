@@ -387,6 +387,7 @@ UILabel *loadingLabel;
     PFUser *user = [PFUser currentUser];
     
     [messagesQuery whereKey:@"userPointer" equalTo:user.objectId];
+    [messagesQuery whereKey:@"messageRead" notEqualTo:@"YES"];
     
     [messagesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         self.messageCountLabel.text = [NSString stringWithFormat:@"%ld",objects.count];

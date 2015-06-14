@@ -75,6 +75,13 @@
     [selectedView setBackgroundColor:COLOUR_INTERFACE_BLUE_TRANSPARENT];
     [cell setSelectedBackgroundView:selectedView];
     
+    
+    NSNumber *checkNumber = [NSNumber numberWithInteger:indexPath.row];
+    if([self.readMessages containsObject:checkNumber])
+    {
+        [cell.abilityText setTextColor:[UIColor grayColor]];
+        
+    }
     return cell;
 }
 
@@ -85,6 +92,14 @@
         MessagesViewController *mvc = (MessagesViewController*)_parent;
         PFObject *message = self.currentMessages[indexPath.row];
         [mvc selectedMessage:message];
+        
+        NSNumber *msgReadIndex = [NSNumber numberWithInteger:indexPath.row];
+        
+        [self.readMessages addObject:msgReadIndex];
+        
+          GameInfoTableViewCell *cell = (GameInfoTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+        cell.abilityText.textColor = [UIColor grayColor];
+        
     }
 }
 
