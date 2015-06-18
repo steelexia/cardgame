@@ -158,6 +158,8 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     if(_editorMode ==cardEditorModeRarityUpdate)
     {
         [nameTextField setText:_currentCardModel.name];
+         NSString *tagsList = [[_currentCardModel.tags copy] componentsJoinedByString:@" "];
+        [tagsField setText:tagsList];
         
     }
     

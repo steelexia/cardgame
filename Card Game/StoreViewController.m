@@ -185,7 +185,7 @@ NSArray *_products;
     _editButton.label.text = @"Edit";
     [_editButton setTextSize:22];
     [_editButton addTarget:self action:@selector(editButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    [_cardInfoView addSubview:_editButton];
+    //[_cardInfoView addSubview:_editButton];
     
     _restockButton = [[CFButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT - 125, 80, 60)];
     _restockButton.label.text = @"Restock";
@@ -1418,7 +1418,7 @@ NSArray *_products;
     [_buyButton removeFromSuperview];
     [_sellButton removeFromSuperview];
     [_cardInfoView addSubview:_likeButton];
-    [_cardInfoView addSubview:_editButton];
+    //[_cardInfoView addSubview:_editButton];
     
     PFObject *salePF = _cardsView.currentSales[currentCardIndex];
     
@@ -1465,7 +1465,7 @@ NSArray *_products;
     }
     else
     {
-        _editHintLabel.text = @"Like it first";
+        //_editHintLabel.text = @"Like it first";
         [_editButton setEnabled:NO];
     }
     
