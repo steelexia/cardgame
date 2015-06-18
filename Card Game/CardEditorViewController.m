@@ -2024,7 +2024,18 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
                                                       [_cardUploadIndicator stopAnimating];
                                                       [_cardUploadIndicator removeFromSuperview];
                                                       
+                                                       //if the cardEditor was sprung by the cardCollectionView, notify the delegate to replace the card with the latest stats
+                                                      if(self.delegate !=nil)
+                                                      {
+                                                          [self.delegate cardUpdated:self.currentCardModel];
+                                                          
+                                                      }
+                                                      
                                                       [self dismissViewControllerAnimated:YES completion:nil];
+                                                      
+                                                   
+                                                     
+                                                      
                                                   }];
                              }
                              else
@@ -2709,6 +2720,10 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
             saveCardConfirmLabel.text = @"Warning: This card is not compatible with your last card and cannot be placed into the same deck after the tutorial. Are you sure you want to create it?";
         else if (_editorMode == cardEditorModeVoting)
             saveCardConfirmLabel.text = @"Are you sure you want to cast your vote? You will not be able to edit it again.";
+        else if(_editorMode ==cardEditorModeRarityUpdate)
+        {
+            saveCardConfirmLabel.text = @"Are you sure you want to update your card with these stats/abilities?  You will not be able to edit it again.";
+        }
         else
             saveCardConfirmLabel.text = @"Are you sure you want to create this card? You will not be able to edit it again.";
         [self.view addSubview:saveCardConfirmButton];

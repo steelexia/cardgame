@@ -67,6 +67,9 @@
 /** Stores all of the Ability's the card is currently holding. For MonsterCards, it is equivalent to all "enchantments" applied to it, which (IMPORTANT!) also includes debuffs. For SpellCards, it is simply the effects it will give when summoned.  */
 @property (strong) NSMutableArray* abilities;
 
+//String variable (YES/NO) for storing whether a card has a rarity update available.
+@property (strong) NSString *rarityUpdateAvailable;
+
 /** For card editor */
 @property enum CardViewState cardViewState;
 

@@ -13,7 +13,7 @@
 #import "CardEditorViewController.h"
 #import "CFButton.h"
 
-@interface StoreViewController : UIViewController <UITextFieldDelegate>
+@interface StoreViewController : UIViewController <UITextFieldDelegate,MyCardEditDelegate>
 
 @property (strong) StoreCardsCollectionView *cardsView;
 

@@ -248,6 +248,7 @@ const int CARD_ID_START = 1000;
     NSArray *tags = cardPF[@"tags"];
     NSString *flavourText = cardPF[@"flavourText"];
     NSNumber *version = cardPF[@"version"];
+    NSString *rarityUpgradeAvailable = cardPF[@"rarityUpdateAvailable"];
     //TODO in future this should [probably] never be nil
     if (creator != nil && ![creator isEqualToString:@"Unknown"])
     {
@@ -316,6 +317,7 @@ const int CARD_ID_START = 1000;
     card.tags = [NSMutableArray arrayWithArray:tags];
     card.cardPF = cardPF;
     card.version = [version intValue];
+    card.rarityUpdateAvailable = rarityUpgradeAvailable;
     
     if (flavourText != nil) //just for old cards that have no text
         card.flavourText = flavourText;

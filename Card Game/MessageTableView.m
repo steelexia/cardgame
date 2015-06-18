@@ -87,17 +87,28 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
     if ([_parent isKindOfClass:[MessagesViewController class]])
     {
+        GameInfoTableViewCell *cell = (GameInfoTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+        
         MessagesViewController *mvc = (MessagesViewController*)_parent;
         PFObject *message = self.currentMessages[indexPath.row];
+        UIColor *cellTextColor = [UIColor grayColor];
+        
+        
+        if(cell.abilityText.textColor ==cellTextColor)
+        {
+            //do nothing
+            return;
+        }
+       
         [mvc selectedMessage:message];
         
         NSNumber *msgReadIndex = [NSNumber numberWithInteger:indexPath.row];
         
         [self.readMessages addObject:msgReadIndex];
         
-          GameInfoTableViewCell *cell = (GameInfoTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
         cell.abilityText.textColor = [UIColor grayColor];
         
     }

@@ -959,6 +959,7 @@
     
     cardPF[@"abilities"] = pfAbilities;
     cardPF[@"version"] = [NSNumber numberWithInt:card.version+1];
+    cardPF[@"rarityUpdateAvailable"] = @"NO";
     
     BOOL successSave = [cardPF save];
     

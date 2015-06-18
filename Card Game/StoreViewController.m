@@ -193,8 +193,8 @@ NSArray *_products;
     [_restockButton addTarget:self action:@selector(restockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     //[_cardInfoView addSubview:_buyButton];
     
-    _bumpButton = [[CFButton alloc] initWithFrame:CGRectMake(120, SCREEN_HEIGHT - 125, 80, 60)];
-    _bumpButton.label.text = @"Bump";
+    _bumpButton = [[CFButton alloc] initWithFrame:CGRectMake(120, SCREEN_HEIGHT - 125, 100, 60)];
+    _bumpButton.label.text = @"Upgrade";
     [_bumpButton setTextSize:22];
     [_bumpButton addTarget:self action:@selector(bumpButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     //[_cardInfoView addSubview:_sellButton];
@@ -1482,7 +1482,13 @@ NSArray *_products;
         _editHintLabel.text = @"";
         
         [_cardInfoView addSubview: _restockButton];
-        [_cardInfoView addSubview: _bumpButton];
+        NSString *rarityUpdate = _cardView.cardModel.rarityUpdateAvailable;
+        
+        if([rarityUpdate isEqualToString:@"YES"])
+        {
+            [_cardInfoView addSubview: _bumpButton];
+        }
+        
         [_cardInfoView addSubview:_buyHintLabel];
         [_cardInfoView addSubview:_editHintLabel];
         
@@ -1923,6 +1929,8 @@ NSArray *_products;
     CardModel*cardCopy = [[CardModel alloc] initWithCardModel:_cardView.cardModel];
     
     CardEditorViewController *cevc = [[CardEditorViewController alloc] initWithMode:cardEditorModeRarityUpdate WithCard:cardCopy];
+    cevc.delegate = self;
+    
     
     [self presentViewController:cevc animated:YES completion:^{
         //processing done in cevc
@@ -2450,6 +2458,33 @@ NSArray *_products;
         }
         
     }];
+}
+
+- (void)cardUpdated:(CardModel *)card;
+{
+    int indexCounter = 0;
+    for(CardModel* eachcard in _cardsView.currentCards)
+    {
+    
+        if(eachcard.idNumber == card.idNumber)
+        {
+            break;
+        }
+        else
+        {
+            indexCounter = indexCounter+1;
+        }
+        
+        
+    }
+    [_cardsView.currentCards replaceObjectAtIndex:indexCounter withObject:card];
+    
+   [self updateCardInfoView:card];
+    [self.cardsView.loadingCells removeAllObjects];
+    [self.cardsView reloadInputViews];
+    [self.cardsView.collectionView reloadData];
+    
+    
 }
 
 @end

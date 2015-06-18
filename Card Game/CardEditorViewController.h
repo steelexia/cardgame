@@ -17,7 +17,15 @@
 #import "CFButton.h"
 #import "CFLabel.h"
 
+@protocol MyCardEditDelegate
+
+- (void)cardUpdated:(CardModel *)card;
+
+@end
+
 @interface CardEditorViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate, GKImagePickerDelegate>
+
+@property (nonatomic, weak) id<MyCardEditDelegate> delegate;
 
 @property CardModel*currentCardModel;
 /** Used for voting. Will not edit it */

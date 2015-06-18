@@ -15,8 +15,10 @@
 @interface MessagesViewController : UIViewController <UITextViewDelegate>
 @property (strong) MessageTableView *messageTableView;
 @property (strong) UITextView*messageBodyView;
+@property (strong) UIButton *editCardButton;
+
 @property (strong) NSArray *messagesRetrieved;
 -(void)selectedMessage:(PFObject *)message;
 @property (strong) NSMutableArray *readMessages;
-
+@property (strong) NSNumber *selectedCardID;
 @end
