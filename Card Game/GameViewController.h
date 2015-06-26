@@ -45,7 +45,7 @@
 /** Holds an array of abilities that are currently waiting to be casted on a selected target. Assumes all targetType is identical to the first ability. If this array is not empty, then it is assumed that the game is waiting for the player to pick a target. */
 @property (strong) NSMutableArray *currentAbilities;
 
-@property (strong) CFButton* endTurnButton;
+@property (strong) UIButton* endTurnButton;
 
 /** The card that has currently been maximized for viewing. While this is open, all other actions are disabled. This not only shows the card in large but also all the applied abilities that don't fit on the card. */
 @property (strong) CardView* viewingCardView;

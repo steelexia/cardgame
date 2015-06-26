@@ -315,17 +315,19 @@ BOOL leftHandViewZone = NO;
     [self.backgroundView addSubview:opponentFieldHighlight];
     [self.backgroundView addSubview:opponentFieldEdge];
     
-    UIView*backgroundOverlay = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"battle_background_0_overlay"]];
+    /*UIView*backgroundOverlay = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"battle_background_0_overlay"]];
     backgroundOverlay.frame = self.view.bounds;
-    [self.backgroundView addSubview:backgroundOverlay];
+    [self.backgroundView addSubview:backgroundOverlay];*/
     
     //----end turn button----//
     //UIImage* endTurnImage = [UIImage imageNamed:@"end_turn_button_up.png"]; //TODO all these images to load function
     //UIImage* endTurnDisabledImage = [UIImage imageNamed:@"end_turn_button_disabled.png"];
-    self.endTurnButton = [[CFButton alloc]initWithFrame:CGRectMake(0, 0, 60, 45)];
-    self.endTurnButton.buttonStyle = CFButtonStyleWarning;
-    self.endTurnButton.label.text = @"END\nTURN";
-    [self.endTurnButton setTextSize:13];
+    self.endTurnButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 60, 35)];
+    [self.endTurnButton setImage:[UIImage imageNamed:@"end_turn_button_up"] forState:UIControlStateNormal];
+    [self.endTurnButton setImage:[UIImage imageNamed:@"end_turn_button_disabled"] forState:UIControlStateDisabled];
+    //self.endTurnButton.buttonStyle = CFButtonStyleWarning;
+    //self.endTurnButton.label.text = @"END\nTURN";
+    //[self.endTurnButton setTextSize:13];
     //[button setTitle:@"test" forState:UIControlStateNormal];
     [self.endTurnButton setTitleColor: [UIColor blackColor] forState:UIControlStateNormal];
     

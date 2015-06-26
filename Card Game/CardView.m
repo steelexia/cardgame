@@ -625,8 +625,8 @@ NSDictionary *singlePlayerCardImages;
 {
     _frontFacing = frontFacing;
     
-    if (YES) //TODO debugging, shows all cards
-    //if (frontFacing)
+    //if (YES) //TODO debugging, shows all cards
+    if (frontFacing)
     {
         if (_cardModel.element < backgroundImages.count)
         {
@@ -676,8 +676,8 @@ NSDictionary *singlePlayerCardImages;
 
 -(void)updateView{
     //DEBUG 2
-    if (YES)
-    //if (_frontFacing)
+    //if (YES)
+    if (_frontFacing)
     {
         self.nameLabel.text = self.cardModel.name;
         self.costLabel.text = [NSString stringWithFormat:@"%d", self.cardModel.cost];

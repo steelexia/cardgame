@@ -35,7 +35,6 @@
 		90456EE8198F1B9100B807DC /* like_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 90456EE2198F1B9100B807DC /* like_button.png */; };
 		90605408191AA9D3000B3B93 /* PlayerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 90605407191AA9D3000B3B93 /* PlayerModel.m */; };
 		9060540B191AAE1B000B3B93 /* DeckModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9060540A191AAE1B000B3B93 /* DeckModel.m */; };
-		9060540D191C032B000B3B93 /* end_turn_button_up.png in Resources */ = {isa = PBXBuildFile; fileRef = 9060540C191C032B000B3B93 /* end_turn_button_up.png */; };
 		9069AACE1951E734006D1D98 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90F352A8191595C200601130 /* Main_iPhone.storyboard */; };
 		9069AACF1951E737006D1D98 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90F352AB191595C200601130 /* Main_iPad.storyboard */; };
 		9069AAD519520003006D1D98 /* card_background_front_overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 9069AAD419520003006D1D98 /* card_background_front_overlay.png */; };
@@ -93,7 +92,7 @@
 		907D9C19193E439B0037C0CF /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907D9C18193E439B0037C0CF /* StoreKit.framework */; };
 		907D9C1B193E43A80037C0CF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907D9C1A193E43A80037C0CF /* SystemConfiguration.framework */; };
 		907D9C1E193F87BE0037C0CF /* AbilityWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 907D9C1D193F87BE0037C0CF /* AbilityWrapper.m */; };
-		907D9C2019509E850037C0CF /* battle_background_0.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9C1F19509E850037C0CF /* battle_background_0.png */; };
+		907D9C2019509E850037C0CF /* battle_background_old.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9C1F19509E850037C0CF /* battle_background_old.png */; };
 		90AB14EE196B5ECC0008FCDD /* GameInfoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 90AB14ED196B5ECC0008FCDD /* GameInfoTableViewCell.m */; };
 		90AB14F1196B5F740008FCDD /* GameInfoTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90AB14F0196B5F740008FCDD /* GameInfoTableView.m */; };
 		90AB14F3196CA7E60008FCDD /* card_background_front_overlay_common.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB14F2196CA7E60008FCDD /* card_background_front_overlay_common.png */; };
@@ -103,7 +102,7 @@
 		90AB14FF196F2FF20008FCDD /* encode-sans.compressed-black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 90AB14FD196F2FF20008FCDD /* encode-sans.compressed-black.ttf */; };
 		90AB1500196F2FF20008FCDD /* encode-sans.compressed-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 90AB14FE196F2FF20008FCDD /* encode-sans.compressed-bold.ttf */; };
 		90AB15021979FB5E0008FCDD /* resource_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB15011979FB5E0008FCDD /* resource_icon.png */; };
-		90AB15041979FFA40008FCDD /* battle_background_0_overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB15031979FFA40008FCDD /* battle_background_0_overlay.png */; };
+		90AB15041979FFA40008FCDD /* battle_background_old_overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB15031979FFA40008FCDD /* battle_background_old_overlay.png */; };
 		90AB1506197AC71E0008FCDD /* card_ability_icon_taunt.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB1505197AC71E0008FCDD /* card_ability_icon_taunt.png */; };
 		90AB1509197AD6DA0008FCDD /* card_ability_icon_cast_on_hit.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB1507197AD6DA0008FCDD /* card_ability_icon_cast_on_hit.png */; };
 		90AB150A197AD6DA0008FCDD /* card_ability_icon_cast_on_move.png in Resources */ = {isa = PBXBuildFile; fileRef = 90AB1508197AD6DA0008FCDD /* card_ability_icon_cast_on_move.png */; };
@@ -369,7 +368,8 @@
 		FA4025971956331300FCCBAB /* DeckEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4025961956331300FCCBAB /* DeckEditorViewController.m */; };
 		FA54990119E43A7000C8F492 /* ios_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = FA5498FF19E43A6A00C8F492 /* ios_development.cer */; };
 		FA54990219E43A7000C8F492 /* ios_distribution.cer in Resources */ = {isa = PBXBuildFile; fileRef = FA54990019E43A6A00C8F492 /* ios_distribution.cer */; };
-		FA8410151B25254C0023FA36 /* game_board_background.png in Resources */ = {isa = PBXBuildFile; fileRef = FA8410141B25254C0023FA36 /* game_board_background.png */; };
+		FA8410151B25254C0023FA36 /* battle_background_0.png in Resources */ = {isa = PBXBuildFile; fileRef = FA8410141B25254C0023FA36 /* battle_background_0.png */; };
+		FA8410171B37537D0023FA36 /* end_turn_button_up.png in Resources */ = {isa = PBXBuildFile; fileRef = FA8410161B37537D0023FA36 /* end_turn_button_up.png */; };
 		FAB2D16919C3970900963ADC /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB2D16819C3970900963ADC /* LoginViewController.m */; };
 		FAB5831E19BA0AF6007BFA26 /* arrow_right_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB5831D19BA0AF6007BFA26 /* arrow_right_icon.png */; };
 		FAB5832019BA13CA007BFA26 /* arrow_down_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FAB5831F19BA13CA007BFA26 /* arrow_down_icon.png */; };
@@ -451,7 +451,6 @@
 		90605407191AA9D3000B3B93 /* PlayerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerModel.m; sourceTree = "<group>"; };
 		90605409191AAE1B000B3B93 /* DeckModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeckModel.h; sourceTree = "<group>"; };
 		9060540A191AAE1B000B3B93 /* DeckModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeckModel.m; sourceTree = "<group>"; };
-		9060540C191C032B000B3B93 /* end_turn_button_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = end_turn_button_up.png; path = "Card Game/end_turn_button_up.png"; sourceTree = "<group>"; };
 		9069AAD419520003006D1D98 /* card_background_front_overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_background_front_overlay.png; path = "Card Game/card_background_front_overlay.png"; sourceTree = "<group>"; };
 		9069AAD619528A7B006D1D98 /* StrokedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrokedLabel.h; sourceTree = "<group>"; };
 		9069AAD719528A7B006D1D98 /* StrokedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StrokedLabel.m; sourceTree = "<group>"; };
@@ -522,7 +521,7 @@
 		907D9C1A193E43A80037C0CF /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		907D9C1C193F87BE0037C0CF /* AbilityWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbilityWrapper.h; sourceTree = "<group>"; };
 		907D9C1D193F87BE0037C0CF /* AbilityWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbilityWrapper.m; sourceTree = "<group>"; };
-		907D9C1F19509E850037C0CF /* battle_background_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = battle_background_0.png; path = "Card Game/battle_background_0.png"; sourceTree = "<group>"; };
+		907D9C1F19509E850037C0CF /* battle_background_old.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = battle_background_old.png; path = "Card Game/battle_background_old.png"; sourceTree = "<group>"; };
 		90AB14EC196B5ECC0008FCDD /* GameInfoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameInfoTableViewCell.h; sourceTree = "<group>"; };
 		90AB14ED196B5ECC0008FCDD /* GameInfoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameInfoTableViewCell.m; sourceTree = "<group>"; };
 		90AB14EF196B5F740008FCDD /* GameInfoTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameInfoTableView.h; sourceTree = "<group>"; };
@@ -535,7 +534,7 @@
 		90AB14FD196F2FF20008FCDD /* encode-sans.compressed-black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "encode-sans.compressed-black.ttf"; sourceTree = "<group>"; };
 		90AB14FE196F2FF20008FCDD /* encode-sans.compressed-bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "encode-sans.compressed-bold.ttf"; sourceTree = "<group>"; };
 		90AB15011979FB5E0008FCDD /* resource_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = resource_icon.png; path = "Card Game/resource_icon.png"; sourceTree = "<group>"; };
-		90AB15031979FFA40008FCDD /* battle_background_0_overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = battle_background_0_overlay.png; path = "Card Game/battle_background_0_overlay.png"; sourceTree = "<group>"; };
+		90AB15031979FFA40008FCDD /* battle_background_old_overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = battle_background_old_overlay.png; path = "Card Game/battle_background_old_overlay.png"; sourceTree = "<group>"; };
 		90AB1505197AC71E0008FCDD /* card_ability_icon_taunt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_ability_icon_taunt.png; path = "Card Game/card_ability_icon_taunt.png"; sourceTree = "<group>"; };
 		90AB1507197AD6DA0008FCDD /* card_ability_icon_cast_on_hit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_ability_icon_cast_on_hit.png; path = "Card Game/card_ability_icon_cast_on_hit.png"; sourceTree = "<group>"; };
 		90AB1508197AD6DA0008FCDD /* card_ability_icon_cast_on_move.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_ability_icon_cast_on_move.png; path = "Card Game/card_ability_icon_cast_on_move.png"; sourceTree = "<group>"; };
@@ -1028,7 +1027,8 @@
 		FA4025961956331300FCCBAB /* DeckEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeckEditorViewController.m; sourceTree = "<group>"; };
 		FA5498FF19E43A6A00C8F492 /* ios_development.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = ios_development.cer; sourceTree = "<group>"; };
 		FA54990019E43A6A00C8F492 /* ios_distribution.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = ios_distribution.cer; sourceTree = "<group>"; };
-		FA8410141B25254C0023FA36 /* game_board_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = game_board_background.png; path = "Card Game/game_board_background.png"; sourceTree = "<group>"; };
+		FA8410141B25254C0023FA36 /* battle_background_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = battle_background_0.png; path = "Card Game/battle_background_0.png"; sourceTree = "<group>"; };
+		FA8410161B37537D0023FA36 /* end_turn_button_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = end_turn_button_up.png; path = "Card Game/end_turn_button_up.png"; sourceTree = "<group>"; };
 		FAB2D16719C3970900963ADC /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		FAB2D16819C3970900963ADC /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		FAB5831D19BA0AF6007BFA26 /* arrow_right_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = arrow_right_icon.png; path = "Card Game/arrow_right_icon.png"; sourceTree = "<group>"; };
@@ -1211,7 +1211,8 @@
 		907D9BD919226B4C0037C0CF /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				FA8410141B25254C0023FA36 /* game_board_background.png */,
+				FA8410161B37537D0023FA36 /* end_turn_button_up.png */,
+				FA8410141B25254C0023FA36 /* battle_background_0.png */,
 				EC8B3C3D1B19417600DE04A9 /* angryorc.jpeg */,
 				FA19FC9119B3D00400B38943 /* gear_icon.png */,
 				FA19FC9219B3D00400B38943 /* message_icon.png */,
@@ -1284,12 +1285,11 @@
 				90DA433F195A4A6E00E44AED /* remove_button.png */,
 				90DA433A195A451000E44AED /* arrow_left_button.png */,
 				90DA433B195A451000E44AED /* arrow_right_button.png */,
-				90AB15031979FFA40008FCDD /* battle_background_0_overlay.png */,
-				907D9C1F19509E850037C0CF /* battle_background_0.png */,
+				90AB15031979FFA40008FCDD /* battle_background_old_overlay.png */,
+				907D9C1F19509E850037C0CF /* battle_background_old.png */,
 				907D9C061932538E0037C0CF /* end_turn_button_disabled.png */,
 				907D9BE01922AE0D0037C0CF /* field_highlight.png */,
 				907D9BDB192270DE0037C0CF /* field_edge.png */,
-				9060540C191C032B000B3B93 /* end_turn_button_up.png */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -2222,10 +2222,10 @@
 				FACF46D519EC885A00D334E0 /* hero_1.png in Resources */,
 				FACF46C719EC852300D334E0 /* card_2101.png in Resources */,
 				90AB1500196F2FF20008FCDD /* encode-sans.compressed-bold.ttf in Resources */,
-				90AB15041979FFA40008FCDD /* battle_background_0_overlay.png in Resources */,
+				90AB15041979FFA40008FCDD /* battle_background_old_overlay.png in Resources */,
 				90DA43C71969D21500E44AED /* remove_deck_button.png in Resources */,
 				9032E127199446BB002A6725 /* upload_from_camera_button_gray.png in Resources */,
-				907D9C2019509E850037C0CF /* battle_background_0.png in Resources */,
+				907D9C2019509E850037C0CF /* battle_background_old.png in Resources */,
 				FACF46C019EC852300D334E0 /* card_2004.png in Resources */,
 				FACF46A319EC850E00D334E0 /* card_0007.png in Resources */,
 				FA54990219E43A7000C8F492 /* ios_distribution.cer in Resources */,
@@ -2260,7 +2260,6 @@
 				9032E142199946F9002A6725 /* add_icon.png in Resources */,
 				90AB15021979FB5E0008FCDD /* resource_icon.png in Resources */,
 				9069AAE7195501AB006D1D98 /* card_background_front_neutral_common.png in Resources */,
-				9060540D191C032B000B3B93 /* end_turn_button_up.png in Resources */,
 				9069AAE1195501AB006D1D98 /* card_background_front_dark_common.png in Resources */,
 				FA033FD919BCFF6600EFEBD8 /* card_0020.png in Resources */,
 				90F352B2191595C200601130 /* Images.xcassets in Resources */,
@@ -2289,7 +2288,7 @@
 				FACF46DA19EC8A0300D334E0 /* hero_5.png in Resources */,
 				90DA43C21969D21500E44AED /* cancel_card_button.png in Resources */,
 				907020531992A1CB00FDE444 /* upload_from_camera_button.png in Resources */,
-				FA8410151B25254C0023FA36 /* game_board_background.png in Resources */,
+				FA8410151B25254C0023FA36 /* battle_background_0.png in Resources */,
 				90DA4340195A4A6E00E44AED /* add_button.png in Resources */,
 				FA14AA5D19CCB9E50080230B /* LinLibertine_aRL.ttf in Resources */,
 				FA033FCA19BCFF6600EFEBD8 /* card_0005.png in Resources */,
@@ -2325,6 +2324,7 @@
 				FACF46D319EC852300D334E0 /* hero_c_2_l_3.png in Resources */,
 				90AB1514197AF4590008FCDD /* card_ability_icon_cast_on_death.png in Resources */,
 				90456EE6198F1B9100B807DC /* edit_button.png in Resources */,
+				FA8410171B37537D0023FA36 /* end_turn_button_up.png in Resources */,
 				907D9BF1192D3DFB0037C0CF /* card_image_placeholder.png in Resources */,
 				9069AAE6195501AB006D1D98 /* card_background_front_lightning_common.png in Resources */,
 				907D9BDC192270DE0037C0CF /* field_edge.png in Resources */,
