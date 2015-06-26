@@ -1607,7 +1607,11 @@ BOOL leftHandViewZone = NO;
         //[_networkingEngine sendOpponentForfeit];
         [self.MPDataHandler sendOpponentForfeit];
         _gameModel.playerOneDefeated = YES;
+        
+        [self.MPDataHandler resetAllMPVariables];
     }
+    
+    
     
     [self endGame];
 }
@@ -1618,6 +1622,8 @@ BOOL leftHandViewZone = NO;
     
     if (_gameMode == GameModeMultiplayer)
     {
+        [self.MPDataHandler resetAllMPVariables];
+        
         if (_gameModel.playerOneDefeated && _gameModel.playerTwoDefeated)
         {
             //draw
@@ -1767,6 +1773,11 @@ BOOL leftHandViewZone = NO;
         {
             _gameOverSaveLabel.text = @"";
             
+            if (_gameMode == GameModeMultiplayer)
+            {
+                [self.MPDataHandler handlePlayerVictory];
+                
+            }
             //begin next level immediately if exists
             if (_nextLevel != nil)
             {

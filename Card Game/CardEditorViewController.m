@@ -154,6 +154,15 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     if (_editorMode == cardEditorModeVoting)
         [nameTextField setText:_currentCardModel.name];
     
+    
+    if(_editorMode ==cardEditorModeRarityUpdate)
+    {
+        [nameTextField setText:_currentCardModel.name];
+         NSString *tagsList = [[_currentCardModel.tags copy] componentsJoinedByString:@" "];
+        [tagsField setText:tagsList];
+        
+    }
+    
     [nameTextField setDelegate:self];
     [self.view addSubview:nameTextField];
     
@@ -1988,6 +1997,67 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
                      }];
 }
 
+-(void)updateCardForRarity
+{
+    //get rid of the confirm screen
+    [self confirmCancelButtonPressed];
+    
+    _cardUploadIndicator.alpha = 0;
+    _cardUploadLabel.text = [NSString stringWithFormat:@"Updating Card..."];
+    [_cardUploadIndicator setColor:[UIColor whiteColor]];
+    [self.view addSubview:_cardUploadIndicator];
+    [_cardUploadIndicator startAnimating];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _cardUploadIndicator.alpha = 1;
+                     }
+                     completion:^(BOOL completed){
+                         [self performBlock:^{
+                             //BOOL succ = [UserModel publishCard:self.currentCardModel withImage:self.currentCardView.cardImage.image];
+                             //TODOBrianJune13, usermodel needs function to update card
+                             BOOL succ = [UserModel updateCard:self.currentCardModel];
+                             if (succ)
+                             {
+                                 [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                                                  animations:^{
+                                                      _cardUploadIndicator.alpha = 0;
+                                                  }
+                                                  completion:^(BOOL completed){
+                                                      [_cardUploadIndicator stopAnimating];
+                                                      [_cardUploadIndicator removeFromSuperview];
+                                                      
+                                                       //if the cardEditor was sprung by the cardCollectionView, notify the delegate to replace the card with the latest stats
+                                                      if(self.delegate !=nil)
+                                                      {
+                                                          [self.delegate cardUpdated:self.currentCardModel];
+                                                          
+                                                      }
+                                                      
+                                                      [self dismissViewControllerAnimated:YES completion:nil];
+                                                      
+                                                   
+                                                     
+                                                      
+                                                  }];
+                             }
+                             else
+                             {
+                                 [_cardUploadIndicator setColor:[UIColor clearColor]];
+                                 _cardUploadLabel.text = [NSString stringWithFormat:@"Error uploading card."];
+                                 _cardUploadFailedButton.alpha = 0;
+                                 [_cardUploadIndicator addSubview:_cardUploadFailedButton];
+                                 [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                                                  animations:^{
+                                                      _cardUploadFailedButton.alpha = 1;
+                                                  }
+                                                  completion:^(BOOL completed){
+                                                      [_cardUploadFailedButton setUserInteractionEnabled:YES];
+                                                  }];
+                             }
+                         }];
+                     }];
+}
+
 -(void)cardUploadFailedButtonPressed
 {
     [_cardUploadFailedButton setUserInteractionEnabled:NO];
@@ -2652,6 +2722,10 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
             saveCardConfirmLabel.text = @"Warning: This card is not compatible with your last card and cannot be placed into the same deck after the tutorial. Are you sure you want to create it?";
         else if (_editorMode == cardEditorModeVoting)
             saveCardConfirmLabel.text = @"Are you sure you want to cast your vote? You will not be able to edit it again.";
+        else if(_editorMode ==cardEditorModeRarityUpdate)
+        {
+            saveCardConfirmLabel.text = @"Are you sure you want to update your card with these stats/abilities?  You will not be able to edit it again.";
+        }
         else
             saveCardConfirmLabel.text = @"Are you sure you want to create this card? You will not be able to edit it again.";
         [self.view addSubview:saveCardConfirmButton];
@@ -2784,7 +2858,17 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     NSMutableArray *noDupTags = [self getTags];
     
     self.currentCardModel.tags = noDupTags;
-    [userAllCards addObject:self.currentCardModel]; 
+    [userAllCards addObject:self.currentCardModel];
+    
+    if(_editorMode == cardEditorModeRarityUpdate)
+    {
+        //do update of card instead of publish
+        
+        [self updateCardForRarity];
+        
+        return;
+        
+    }
     [self publishCurrentCard];
 }
 

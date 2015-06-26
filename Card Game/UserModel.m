@@ -11,7 +11,7 @@
 #import "CDCardModel.h"
 #import "CDDeckModel.h"
 #import "AbilityWrapper.h"
-
+#import "UserCardVersion.h"
 @implementation UserModel
 
 +(void)setupUser
@@ -378,7 +378,16 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDescription];
     
-   NSPredicate * predicate = [NSPredicate predicateWithFormat:@"identifier IN %@", cardsBeingViewed];
+    NSMutableArray *cardIDS = [[NSMutableArray alloc] init];
+    for(CardModel *card in cardsBeingViewed)
+    {
+        NSNumber *cardIDNumber = [[NSNumber alloc] initWithInt:card.idNumber];
+        
+        [cardIDS addObject:cardIDNumber];
+        
+    }
+   
+   NSPredicate * predicate = [NSPredicate predicateWithFormat:@"idNumber IN %@", cardIDS];
     [request setPredicate:predicate];
     
     
@@ -394,25 +403,46 @@
 
 +(void)setCDCardVersion:(CardModel *)cardToSet
 {
+    //check to see if it exists, if not insert it.  If so, update it.
+    NSNumber *cardIDNumber = [[NSNumber alloc] initWithInt:cardToSet.idNumber];
+    NSNumber *cardVersionNumber =[[NSNumber alloc] initWithInt:cardToSet.version];
+    NSFetchRequest *fetchRequest=[NSFetchRequest fetchRequestWithEntityName:@"UserCardVersion"];
+    NSPredicate *predicate=[NSPredicate predicateWithFormat:@"idNumber==%@",cardIDNumber];
     
-    NSManagedObjectContext *context = userCDContext;
-    NSManagedObject *CardVersionInfo = [NSEntityDescription
-                                           insertNewObjectForEntityForName:@"UserCardVersion"
-                                           inManagedObjectContext:context];
+    fetchRequest.predicate=predicate;
+    UserCardVersion *ucv =[[userCDContext executeFetchRequest:fetchRequest error:nil] lastObject];
+    if(ucv !=nil)
+    {
+        [ucv setValue:cardVersionNumber forKey:@"viewedVersion"];
+        [userCDContext save:nil];
+        return;
+        
+    }
     
-    int cardIDNumber = cardToSet.idNumber;
-    int cardVersionInt = cardToSet.version;
-    
-    NSNumber *cardIDNum = [NSNumber numberWithInt:cardIDNumber];
-    NSNumber *versionNum = [NSNumber numberWithInt:cardVersionInt];
-    
-    [CardVersionInfo setValue:cardIDNum forKey:@"idNumber"];
-     [CardVersionInfo setValue:versionNum forKey:@"viewedVersion"];
-    
+    else
+    {
+        //create a new object
+        
+        NSManagedObjectContext *context = userCDContext;
+        NSManagedObject *CardVersionInfo = [NSEntityDescription
+                                            insertNewObjectForEntityForName:@"UserCardVersion"
+                                            inManagedObjectContext:context];
+        
+        int cardIDInt = cardToSet.idNumber;
+        int cardVersionInt = cardToSet.version;
+        
+        NSNumber *cardIDNum = [NSNumber numberWithInt:cardIDInt];
+        NSNumber *versionNum = [NSNumber numberWithInt:cardVersionInt];
+        
+        [CardVersionInfo setValue:cardIDNum forKey:@"idNumber"];
+        [CardVersionInfo setValue:versionNum forKey:@"viewedVersion"];
+        
         NSError *error;
         if (![context save:&error]) {
             NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
         }
+
+    }
     
 }
 
@@ -864,6 +894,93 @@
     NSLog(@"card successfully uploaded!");
     
     return YES;
+}
+
++(BOOL)updateCard:(CardModel *)card
+{
+    PFObject *cardPF = card.cardPF;
+    
+    cardPF[@"idNumber"] = [NSNumber numberWithLong:card.idNumber];
+    cardPF[@"name"] = card.name;
+    cardPF[@"cost"] = [NSNumber numberWithInt:card.cost];
+    cardPF[@"rarity"] = [NSNumber numberWithInt:card.rarity];
+    cardPF[@"creator"] = userPF.objectId;
+    cardPF[@"likes"] = @(card.likes);
+    cardPF[@"tags"] = card.tags;
+    cardPF[@"flavourText"] = card.flavourText;
+    
+    cardPF[@"element"] = [NSNumber numberWithInt:card.element];
+    
+    if ([card isKindOfClass:[MonsterCardModel class]])
+    {
+        MonsterCardModel *monsterCard = (MonsterCardModel*)card;
+        
+        cardPF[@"cardType"] = [NSNumber numberWithInt:MONSTER_CARD];
+        cardPF[@"damage"] = [NSNumber numberWithInt:monsterCard.baseDamage];
+        cardPF[@"life"] = [NSNumber numberWithInt:monsterCard.baseMaxLife];
+        cardPF[@"cooldown"] = [NSNumber numberWithInt:monsterCard.baseMaxCooldown];
+    }
+    else if ([card isKindOfClass:[SpellCardModel class]])
+    {
+        SpellCardModel *spellCard = (SpellCardModel*)card;
+        cardPF[@"cardType"] = [NSNumber numberWithInt:SPELL_CARD];
+    }
+    
+    //loaded after stats
+    NSMutableArray *pfAbilities = [[NSMutableArray alloc] init];
+    for (int i = 0 ; i < [card.abilities count]; i++){
+        if ([card.abilities[i] isKindOfClass:[PFObject class]]){
+            [pfAbilities addObject:card.abilities[i]];
+        }
+        //convert the ability to PFObject
+        else if ([card.abilities[i] isKindOfClass:[Ability class]])
+        {
+            Ability*ability = card.abilities[i];
+            int abilityID = [AbilityWrapper getIdWithAbility:ability];
+            
+            if (abilityID != -1)
+            {
+                PFObject*pfAbility = [PFObject objectWithClassName:@"Ability"];
+                pfAbility[@"idNumber"] = [[NSNumber alloc] initWithInt:abilityID];
+                if (ability.value == nil)
+                    pfAbility[@"value"] = @0;
+                else
+                    pfAbility[@"value"] = ability.value;
+                pfAbility[@"otherValues"] = ability.otherValues;
+                
+                [pfAbilities addObject:pfAbility];
+            }
+            else{
+                
+                NSLog(@"WARNING: Could not find the id of an ability of card. Ability: %@", [Ability getDescription:ability fromCard:card]);
+            }
+        }
+    }
+    
+    cardPF[@"abilities"] = pfAbilities;
+    cardPF[@"version"] = [NSNumber numberWithInt:card.version+1];
+    cardPF[@"rarityUpdateAvailable"] = @"NO";
+    
+    BOOL successSave = [cardPF save];
+    
+    
+    
+    if(successSave)
+    {
+        NSLog(@"card updated successfully");
+        
+        return YES;
+    }
+    else
+        
+    {
+        NSLog(@"card update failed");
+        
+        
+        return NO;
+        
+    }
+    
 }
 
 +(BOOL)setLikedCard:(CardModel*)card

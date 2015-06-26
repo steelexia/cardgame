@@ -14,6 +14,7 @@
 #import "UserModel.h"
 #import "MainScreenViewController.h"
 #import "StrokedLabel.h"
+#import "UserCardVersion.h"
 
 @interface DeckEditorViewController ()
 
@@ -110,10 +111,86 @@ DeckModel * allCards;
          return [a compare:b];
      }];
     
+    //Brian June 7--CardFlagging Logic
+    
+    //get the array of card versions from all cards that are stored in coreData
+    NSArray *cdCardVersions = [UserModel getCDCardVersions:allCards.cards];
+    
+    //create array of cardID's
+    NSMutableArray *savedCardVersionIDs = [[NSMutableArray alloc] init];
+    NSMutableArray *versionOnCoreData = [[NSMutableArray alloc] init];
+    
+    for (UserCardVersion *ucv in cdCardVersions)
+    {
+        [savedCardVersionIDs addObject:ucv.idNumber];
+       
+        NSNumber *savedVersionNum = ucv.viewedVersion;
+        [versionOnCoreData addObject:savedVersionNum];
+        
+    }
+    
+    //loop through this array.  if coreData doesn't have a version, the card should be added to an index of cards that need a new flag.  If coreData has an older version, it will also be added to this index.
+    
+    self.indexOfNewCards = [[NSMutableArray alloc] init];
+    self.indexOfStarterCards = [[NSMutableArray alloc] init];
+    
+    int counter = 0;
+    for (CardModel *card in allCards.cards)
+    {
+        
+        if([card.creator length] <=1)
+        {
+            NSNumber *starterCardIndexNum = [NSNumber numberWithInt:counter];
+            [self.indexOfStarterCards addObject:starterCardIndexNum];
+            
+           
+        }
+        else
+        {
+            
+        NSNumber *allCardsID = [NSNumber numberWithInt:card.idNumber];
+        int cardVersionNum = card.version;
+        
+        if([savedCardVersionIDs containsObject:allCardsID])
+        {
+           NSInteger savedCardVersIndex= [savedCardVersionIDs indexOfObject:allCardsID];
+            
+            //check the two version numbers
+            NSNumber *coreDataSavedVersion = [versionOnCoreData objectAtIndex:savedCardVersIndex];
+            
+            
+            int coreDataVersion = [coreDataSavedVersion intValue];
+            
+            if(coreDataVersion <cardVersionNum)
+            {
+                //flag this as new
+                NSNumber *newCardIndexNum = [NSNumber numberWithInt:counter];
+                [self.indexOfNewCards addObject:newCardIndexNum];
+                
+            }
+            
+        }
+        else
+        {
+          //flag as new
+            NSNumber *newCardIndexNum = [NSNumber numberWithInt:counter];
+            [self.indexOfNewCards addObject:newCardIndexNum];
+        }
+        
+       
+        }
+         counter = counter+1;
+    }
+    
+    //if the card is a starter deck card, it should have a flag set that it's a starter card
+    
     //set up cards view
     UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc] init];
     [layout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
     self.cardsView = [[CardsCollectionView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-366-42, SCREEN_WIDTH-88, 366) collectionViewLayout:layout];
+    self.cardsView.indexOfNewCards = self.indexOfNewCards;
+    self.cardsView.indexOfStarterCards = self.indexOfStarterCards;
+    
     self.cardsView.parentViewController = self; //for callbacks
     self.cardsView.backgroundColor = COLOUR_INTERFACE_BLUE_TRANSPARENT;
     
@@ -600,6 +677,7 @@ DeckModel * allCards;
         //cardsView
         if ([cardView.superview isKindOfClass:[UICollectionViewCell class]])
         {
+            
             if (cardView != currentCard && currentCard == nil && cardView.cardViewState != cardViewStateCardViewerTransparent)
             {
                 NSLog(@"maxed");
@@ -615,8 +693,18 @@ DeckModel * allCards;
                     {
                         NSLog(@"found current index");
                         currentIndex = i;
+                        
                         break;
                     }
+                
+                //check to see if the card at this current index is in the new cards index, remove it if so.
+                
+                NSNumber *currentIndexNum = [NSNumber numberWithInt:currentIndex];
+                if([self.cardsView.indexOfNewCards containsObject:currentIndexNum])
+                {
+                   [self.cardsView removeNewIndexNum:currentIndexNum];
+                }
+                
                 
                 //store this card as currentCard
                 currentCard = newMaximizedView;

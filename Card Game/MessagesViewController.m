@@ -8,6 +8,8 @@
 
 #import "MessagesViewController.h"
 #import "CardView.h"
+#import "CardEditorViewController.h"
+#import "UserModel.h"
 
 @interface MessagesViewController ()
 
@@ -66,7 +68,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     dummy.body = @"body asdfas dfa sdfa sdfsfg\n adfas dfasd fasd asdf asdf asdf asdf asf ";
     [_messageTableView.currentMessages addObject:dummy];
      */
-     
+    _messageTableView.currentMessages = [self.messagesRetrieved mutableCopy];
+    
     [_messageTableView.tableView reloadData];
     [_messageTableView.tableView reloadInputViews];
     _messageTableView.parent = self;
@@ -81,7 +84,23 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [_messageBodyView setTextColor:[UIColor whiteColor]];
     _messageBodyView.backgroundColor = [UIColor clearColor];
     [_messageBodyView setDelegate:self];
+    
+    self.editCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,150,50)];
+    [self.editCardButton setTitle:@"Upgrade Card" forState:UIControlStateNormal];
+    
+    [self.editCardButton setBackgroundColor:[UIColor blueColor]];
+    self.editCardButton.layer.cornerRadius = 5.0f;
+    self.editCardButton.layer.masksToBounds = YES;
+    
+    [self.editCardButton setCenter:CGPointMake(_messageBodyView.center.x-self.editCardButton.frame.size.width/2,_messageBodyView.bounds.size.height-50)];
+    [self.editCardButton addTarget:self action:@selector(editCardButton:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [_messageBodyView addSubview:self.editCardButton];
+    
+    self.editCardButton.alpha = 0;
+    
     [self.view addSubview:_messageBodyView];
+    
     
     UIButton* backButton = [[CFButton alloc] initWithFrame:CGRectMake(35, SCREEN_HEIGHT - 32 - 20, 46, 32)];
     [backButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
@@ -89,9 +108,58 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [self.view addSubview:backButton];
 }
 
--(void)selectedMessage:(MessageModel*)message
+-(void)selectedMessage:(PFObject*)message
 {
-    [_messageBodyView setText:message.body];
+    NSString *bodyText = [message objectForKey:@"body"];
+    
+    [_messageBodyView setText:bodyText];
+    
+    //mark this message as read on parse
+    
+    [message setObject:@"YES" forKey:@"messageRead"];
+    [message saveInBackground];
+    
+    //mark this message as gray from now on for the list
+    NSString *msgType = [message objectForKey:@"msgType"];
+    if([msgType isEqualToString:@"rareNotification"])
+    {
+        //show the button to open the cardEditorViewController
+        self.editCardButton.alpha = 1;
+        self.selectedCardID = [message objectForKey:@"rareCardID"];
+    }
+    else
+    {
+        self.editCardButton.alpha = 0;
+        
+    }
+   
+    
+}
+
+-(void)editCardButton:(id)sender
+{
+    //from all cards, set the selected card as the card with the retrieved IdNumber.
+    NSArray *userCards = userAllCards;
+    CardModel *cardToEdit;
+    for(CardModel *card in userCards)
+    {
+        int cardIDNumber = card.idNumber;
+        int compareCardIDNumber = [self.selectedCardID intValue];
+        if(cardIDNumber == compareCardIDNumber)
+        {
+           cardToEdit = card;
+        }
+        
+    }
+
+    CardEditorViewController *cevc = [[CardEditorViewController alloc] initWithMode:cardEditorModeRarityUpdate WithCard:cardToEdit];
+    
+    [self presentViewController:cevc animated:YES completion:^{
+        //processing done in cevc
+        self.editCardButton.alpha = 0;
+        self.messageBodyView.text = @"";
+        
+    }];
 }
 
 -(void)backButtonPressed

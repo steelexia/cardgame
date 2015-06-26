@@ -81,6 +81,11 @@
     
     CardModel*card = self.currentCardModels[indexPath.row];
     
+    UILabel *newLabel = (UILabel *)[cell viewWithTag:1];
+    UILabel *starterLabel = (UILabel *)[cell viewWithTag:2];
+    
+    cell.cardIndex = (int)indexPath.row;
+    
     cell.cardView = [[CardView alloc] initWithModel:card viewMode:card.cardViewState viewState:card.cardViewState];
     cell.cardView.frontFacing = YES;
     cell.cardView.cardHighlightType = cardHighlightNone;
@@ -88,12 +93,80 @@
     cell.cardView.center = cell.center;
     cell.cardView.frame = CGRectMake(0,0,CARD_FULL_WIDTH,CARD_FULL_HEIGHT);
     
+   if(newLabel==nil)
+   {
+       newLabel= [[UILabel alloc] initWithFrame:CGRectMake(CARD_FULL_WIDTH-60,0,60,30)];
+       newLabel.tag = 1;
+       [cell.cardView addSubview:newLabel];
+       
+   }
+    if(starterLabel==nil)
+    {
+        starterLabel = [[UILabel alloc] initWithFrame:CGRectMake(CARD_FULL_WIDTH-60,0,60,30)];
+        starterLabel.tag = 2;
+        [cell.cardView addSubview:starterLabel];
+        
+    }
+    [cell.cardView addSubview:newLabel];
+    
     [cell addSubview:cell.cardView];
     
+    NSNumber *indexNum = [NSNumber numberWithInt:(int)indexPath.row];
+    
+    newLabel.text = @"";
+    starterLabel.text = @"";
+    if([self.indexOfNewCards containsObject:indexNum])
+    {
+       //add a label showing it's new
+      
+        newLabel.text = @"NEW!";
+        newLabel.textColor = [UIColor blueColor];
+        
+    }
+    if([self.indexOfStarterCards containsObject:indexNum])
+    {
+       
+        starterLabel.text = @"Start";
+        starterLabel.textColor = [UIColor redColor];
+        
+        [cell.cardView addSubview:starterLabel];
+    }
     NSLog(@"%d", cell.cardView.cardViewState);
     
     return cell;
 }
+
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSNumber *indexNum = [NSNumber numberWithInt:(int)indexPath.row];
+    
+    if([self.indexOfNewCards containsObject:indexNum])
+    {
+        [self.indexOfNewCards removeObject:indexNum];
+        
+    }
+    UICollectionViewCell *thisCell = [collectionView cellForItemAtIndexPath:indexPath];
+    UILabel *newLabel = (UILabel *)[thisCell viewWithTag:1];
+    newLabel.text = @"";
+    
+}
+
+-(void)collectionView:(UICollectionView *)collectionView didDeSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSNumber *indexNum = [NSNumber numberWithInt:(int)indexPath.row];
+    
+    if([self.indexOfNewCards containsObject:indexNum])
+    {
+        [self.indexOfNewCards removeObject:indexNum];
+        
+    }
+    UICollectionViewCell *thisCell = [collectionView cellForItemAtIndexPath:indexPath];
+    UILabel *newLabel = (UILabel *)[thisCell viewWithTag:1];
+    newLabel.text = @"";
+    
+}
+
+
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -125,6 +198,18 @@
             block();
         }];
     }
+}
+
+-(void)removeNewIndexNum:(NSNumber *)indexNum
+{
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[indexNum integerValue] inSection:0];
+    CardsCollectionCell *cell = (CardsCollectionCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+    UILabel *newLabel = [cell viewWithTag:1];
+    newLabel.text = @"";
+    
+    //remove from array
+    [self.indexOfNewCards removeObject:indexNum];
+    
 }
 
 -(void)removeAllCells

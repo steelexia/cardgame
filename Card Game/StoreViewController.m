@@ -185,7 +185,7 @@ NSArray *_products;
     _editButton.label.text = @"Edit";
     [_editButton setTextSize:22];
     [_editButton addTarget:self action:@selector(editButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    [_cardInfoView addSubview:_editButton];
+    //[_cardInfoView addSubview:_editButton];
     
     _restockButton = [[CFButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT - 125, 80, 60)];
     _restockButton.label.text = @"Restock";
@@ -193,8 +193,8 @@ NSArray *_products;
     [_restockButton addTarget:self action:@selector(restockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     //[_cardInfoView addSubview:_buyButton];
     
-    _bumpButton = [[CFButton alloc] initWithFrame:CGRectMake(120, SCREEN_HEIGHT - 125, 80, 60)];
-    _bumpButton.label.text = @"Bump";
+    _bumpButton = [[CFButton alloc] initWithFrame:CGRectMake(120, SCREEN_HEIGHT - 125, 100, 60)];
+    _bumpButton.label.text = @"Upgrade";
     [_bumpButton setTextSize:22];
     [_bumpButton addTarget:self action:@selector(bumpButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     //[_cardInfoView addSubview:_sellButton];
@@ -1418,7 +1418,7 @@ NSArray *_products;
     [_buyButton removeFromSuperview];
     [_sellButton removeFromSuperview];
     [_cardInfoView addSubview:_likeButton];
-    [_cardInfoView addSubview:_editButton];
+    //[_cardInfoView addSubview:_editButton];
     
     PFObject *salePF = _cardsView.currentSales[currentCardIndex];
     
@@ -1465,7 +1465,7 @@ NSArray *_products;
     }
     else
     {
-        _editHintLabel.text = @"Like it first";
+        //_editHintLabel.text = @"Like it first";
         [_editButton setEnabled:NO];
     }
     
@@ -1482,7 +1482,13 @@ NSArray *_products;
         _editHintLabel.text = @"";
         
         [_cardInfoView addSubview: _restockButton];
-        [_cardInfoView addSubview: _bumpButton];
+        NSString *rarityUpdate = _cardView.cardModel.rarityUpdateAvailable;
+        
+        if([rarityUpdate isEqualToString:@"YES"])
+        {
+            [_cardInfoView addSubview: _bumpButton];
+        }
+        
         [_cardInfoView addSubview:_buyHintLabel];
         [_cardInfoView addSubview:_editHintLabel];
         
@@ -1922,7 +1928,9 @@ NSArray *_products;
 {
     CardModel*cardCopy = [[CardModel alloc] initWithCardModel:_cardView.cardModel];
     
-    CardEditorViewController *cevc = [[CardEditorViewController alloc] initWithMode:cardEditorModeVoting WithCard:cardCopy];
+    CardEditorViewController *cevc = [[CardEditorViewController alloc] initWithMode:cardEditorModeRarityUpdate WithCard:cardCopy];
+    cevc.delegate = self;
+    
     
     [self presentViewController:cevc animated:YES completion:^{
         //processing done in cevc
@@ -1938,6 +1946,8 @@ NSArray *_products;
 -(void)bumpButtonPressed
 {
     //TODO
+    [self editButtonPressed];
+    
 }
 
 -(void)applyFiltersToQuery:(PFQuery*)salesQuery
@@ -2448,6 +2458,33 @@ NSArray *_products;
         }
         
     }];
+}
+
+- (void)cardUpdated:(CardModel *)card;
+{
+    int indexCounter = 0;
+    for(CardModel* eachcard in _cardsView.currentCards)
+    {
+    
+        if(eachcard.idNumber == card.idNumber)
+        {
+            break;
+        }
+        else
+        {
+            indexCounter = indexCounter+1;
+        }
+        
+        
+    }
+    [_cardsView.currentCards replaceObjectAtIndex:indexCounter withObject:card];
+    
+   [self updateCardInfoView:card];
+    [self.cardsView.loadingCells removeAllObjects];
+    [self.cardsView reloadInputViews];
+    [self.cardsView.collectionView reloadData];
+    
+    
 }
 
 @end

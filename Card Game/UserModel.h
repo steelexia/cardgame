@@ -18,6 +18,8 @@
 +(BOOL)deleteDeck:(DeckModel*)deck;
 /** Returns success */
 +(BOOL)publishCard:(CardModel*)card withImage:(UIImage*)image;
++(BOOL)updateCard:(CardModel *)card;
+
 //+(void)saveCard:(CardModel*)card;
 /** Refreshes the parse user by querying from database */
 +(void)updateUser:(void (^)())onFinishBlock;
@@ -43,7 +45,8 @@
 
 //sets version of card in core data.  This is used when the card is maximized and the player has seen the new update
 +(void)setCDCardVersion:(CardModel *)cardToSet;
-
+//retrieves array of coreDataVersionObjects from array of cards being viewed
++(NSArray *)getCDCardVersions:(NSArray *)cardsBeingViewed;
 /** Note that this only removes from userAllCards and userAllDecks, rather than Parse objects */
 +(void)removeOwnedCard:(int)idNumber;
 

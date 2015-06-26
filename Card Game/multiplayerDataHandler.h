@@ -61,7 +61,13 @@
 @property (strong,nonatomic) NSString *opponentIDChallenged;
 @property (strong,nonatomic) PNChannel *currentMPGameChannel;
 @property BOOL inChallengeProcess;
+@property BOOL gameStarted;
+@property int opponentEloRating;
+@property NSString *opponentID;
 
+@property (strong,nonatomic) PNChannel *quickMatchChannel;
+@property BOOL quickMatchLock;
+@property BOOL firstQuickMatchEnabled;
 
 -(void)sendSummonCard:(int)cardIndex withTarget:(int)targetPosition;
 -(void)sendAttackCard:(int)attackerPosition withTarget:(int)targetPosition;
@@ -74,4 +80,8 @@
 -(void)acceptChallenge:(NSString *)challengerID;
 -(void)rejectChallenge:(NSString *)challengerID withReason:(NSString *)reason;
 -(void)cancelChallenge;
+-(void)handlePlayerVictory;
+-(void)resetAllMPVariables;
+-(void)joinQuickMatchChannel;
+
 @end

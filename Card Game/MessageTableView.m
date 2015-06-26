@@ -58,8 +58,9 @@
      const CGSize textSize = [text sizeWithAttributes: userAttributes];
      */
     
-    MessageModel *message = self.currentMessages[indexPath.row];
-    NSString*text = message.title;
+    PFObject *message = self.currentMessages[indexPath.row];
+    NSString*text = [message objectForKey:@"title"];
+    
     
     [cell.abilityText setFont: [UIFont fontWithName:cell.abilityText.font.familyName size:16]];
     CGSize textSize = [text sizeWithFont:[cell.abilityText font]];
@@ -74,16 +75,42 @@
     [selectedView setBackgroundColor:COLOUR_INTERFACE_BLUE_TRANSPARENT];
     [cell setSelectedBackgroundView:selectedView];
     
+    
+    NSNumber *checkNumber = [NSNumber numberWithInteger:indexPath.row];
+    if([self.readMessages containsObject:checkNumber])
+    {
+        [cell.abilityText setTextColor:[UIColor grayColor]];
+        
+    }
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
     if ([_parent isKindOfClass:[MessagesViewController class]])
     {
+        GameInfoTableViewCell *cell = (GameInfoTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+        
         MessagesViewController *mvc = (MessagesViewController*)_parent;
-        MessageModel *message = self.currentMessages[indexPath.row];
+        PFObject *message = self.currentMessages[indexPath.row];
+        UIColor *cellTextColor = [UIColor grayColor];
+        
+        
+        if(cell.abilityText.textColor ==cellTextColor)
+        {
+            //do nothing
+            return;
+        }
+       
         [mvc selectedMessage:message];
+        
+        NSNumber *msgReadIndex = [NSNumber numberWithInteger:indexPath.row];
+        
+        [self.readMessages addObject:msgReadIndex];
+        
+        cell.abilityText.textColor = [UIColor grayColor];
+        
     }
 }
 

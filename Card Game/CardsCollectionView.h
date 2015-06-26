@@ -13,14 +13,14 @@
 
 @interface CardsCollectionView:UIView <UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, UICollectionViewDelegate>
 
-
 @property (strong) NSMutableArray*currentCardModels;
-
-
 
 @property (strong) CustomCollectionView *collectionView;
 
 @property (weak) UIViewController *parentViewController;
+
+@property (strong)NSMutableArray *indexOfNewCards;
+@property (strong)NSMutableArray *indexOfStarterCards;
 
 @property BOOL isScrolling;
 
@@ -32,6 +32,8 @@
 -(void)removeAllCells;
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
+-(void)removeNewIndexNum:(NSNumber *)indexNum;
+
 
 @end
 

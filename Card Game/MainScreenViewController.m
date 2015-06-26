@@ -31,13 +31,23 @@ UILabel *loadingLabel;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    for (NSString* family in [UIFont familyNames])
+    {
+        NSLog(@"%@", family);
+        
+        for (NSString* name in [UIFont fontNamesForFamilyName: family])
+        {
+            NSLog(@"  %@", name);
+        }
+    }
+    
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
-    SCREEN_WIDTH = self.view.bounds.size.width;
-    SCREEN_HEIGHT = self.view.bounds.size.height;
+    SCREEN_WIDTH = [[UIScreen mainScreen] bounds].size.width;
+    SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
 
     //background view
+    /*
     UIImageView*backgroundImageTop = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_top"]];
     backgroundImageTop.frame = CGRectMake(0, 0, SCREEN_WIDTH, 40);
     [self.view addSubview:backgroundImageTop];
@@ -49,6 +59,12 @@ UILabel *loadingLabel;
     UIImageView*backgroundImageBottom = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_bottom"]];
     backgroundImageBottom.frame = CGRectMake(0, SCREEN_HEIGHT-40, SCREEN_WIDTH, 40);
     [self.view addSubview:backgroundImageBottom];
+    */
+    
+    UIImageView *mainBackground = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"WoodBackground"]];
+    mainBackground.frame = CGRectMake(0,-100,SCREEN_WIDTH,SCREEN_HEIGHT+300);
+    [self.view addSubview:mainBackground];
+    
     
     //some temporary stuff
     /*
@@ -61,62 +77,135 @@ UILabel *loadingLabel;
      [self.view addSubview:tempTitle];
      */
     
+    /*
     UIImageView*menuLogo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"menu_logo"]];
     menuLogo.frame = CGRectMake(0,0,250,200);
     menuLogo.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/4);
+    */
     
-    
+    /*
         CFLabel*menuLogoBackground = [[CFLabel alloc] initWithFrame:CGRectInset(menuLogo.frame, 0, 15)];
         menuLogoBackground.center = menuLogo.center;
         [self.view addSubview:menuLogoBackground];
         [self.view addSubview:menuLogo];
-        
-        _singlePlayerButton = [[CFButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
-        [_singlePlayerButton setTextSize:12];
-        _singlePlayerButton.frame = CGRectMake(0, 0, 100, 100);
-        _singlePlayerButton.center = CGPointMake(self.view.bounds.size.width/3 - 5, self.view.bounds.size.height*2/3 - 58);
-        _singlePlayerButton.label.text = @"Singleplayer";
+        */
+    
+    
+    UIImageView *flagBG = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"TopFlag"]];
+    flagBG.frame = CGRectMake(0,98,SCREEN_WIDTH,195);
+    [self.view addSubview:flagBG];
+    
+    UIImageView *topMetalFrame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"MetalFrame"]];
+    topMetalFrame.frame = CGRectMake(-40,20,SCREEN_WIDTH+100,63);
+    
+    UILabel *singlePlayerLabel = [[UILabel alloc] initWithFrame:CGRectMake(35,100,120,40)];
+    singlePlayerLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:15];
+    singlePlayerLabel.textColor = [UIColor whiteColor];
+    singlePlayerLabel.text = @"Singleplayer";
+    singlePlayerLabel.shadowColor = [UIColor blackColor];
+    singlePlayerLabel.shadowOffset = CGSizeMake(2,2);
+    
+
+    [self.view addSubview:singlePlayerLabel];
+    
+    [self.view addSubview:topMetalFrame];
+    
+        _singlePlayerButton = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
+    
+        _singlePlayerButton.frame = CGRectMake(0, 0, 70, 145);
+        _singlePlayerButton.center = CGPointMake(84,204);
+    
+    [_singlePlayerButton setBackgroundColor:[UIColor clearColor]];
+    
+    UIImage *singlePlayerBtnImage = [UIImage imageNamed:@"SinglePlayerHammer"];
+    
+    [_singlePlayerButton setImage:singlePlayerBtnImage forState:UIControlStateNormal];
+    
         [_singlePlayerButton addTarget:self action:@selector(singlePlayerButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
         
         [self.view addSubview:_singlePlayerButton];
-        
-        _multiPlayerButton = [[CFButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
-        [_multiPlayerButton setTextSize:12];
-        _multiPlayerButton.frame = CGRectMake(0, 0, 100, 100);
-        _multiPlayerButton.center = CGPointMake(self.view.bounds.size.width*2/3 + 5, self.view.bounds.size.height*2/3 - 58);
-        _multiPlayerButton.label.text = @"Multiplayer";
+    
+    
+    UILabel *multiPlayerLabel = [[UILabel alloc] initWithFrame:CGRectMake(185,100,120,40)];
+    multiPlayerLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:15];
+    multiPlayerLabel.textColor = [UIColor whiteColor];
+    multiPlayerLabel.text = @"Multiplayer";
+    multiPlayerLabel.shadowColor = [UIColor blackColor];
+    multiPlayerLabel.shadowOffset = CGSizeMake(2,2);
+    [self.view addSubview:multiPlayerLabel];
+    
+    UIImage *multiplayerBtnImage = [UIImage imageNamed:@"MultiplayerHammers"];
+    
+        _multiPlayerButton = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
+    
+        _multiPlayerButton.frame = CGRectMake(0, 0, 130, 137);
+        _multiPlayerButton.center = CGPointMake(234,202);
+    [_multiPlayerButton setImage:multiplayerBtnImage forState:UIControlStateNormal];
+    
+    
         [_multiPlayerButton addTarget:self action:@selector(multiPlayerButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
         
         [self.view addSubview:_multiPlayerButton];
+    
+    
+    UIImageView *bottomFlag = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"BottomFlag"]];
+    bottomFlag.frame = CGRectMake(0,300,SCREEN_WIDTH,130);
+    [self.view addSubview:bottomFlag];
+    
+    
+    UILabel *deckLabel = [[UILabel alloc] initWithFrame:CGRectMake(40,303,120,40)];
+    deckLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:15];
+    deckLabel.textColor = [UIColor whiteColor];
+    deckLabel.text = @"Build Decks";
+    deckLabel.shadowColor = [UIColor blackColor];
+    deckLabel.shadowOffset = CGSizeMake(2,2);
+    [self.view addSubview:deckLabel];
         
-        _deckButton = [[CFButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
-        [_deckButton setTextSize:12];
-        _deckButton.center = CGPointMake(self.view.bounds.size.width/3 - 5, self.view.bounds.size.height*2/3 + 58);
-        _deckButton.label.text = @"Deck Builder";
+        _deckButton = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 60, 80)];
+    
+        _deckButton.center = CGPointMake(85,372);
+    UIImage *deckButtonImage = [UIImage imageNamed:@"Cards"];
+    [_deckButton setImage:deckButtonImage forState:UIControlStateNormal];
+    
         [_deckButton addTarget:self action:@selector(deckButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
         
         [self.view addSubview:_deckButton];
-        
-        _storeButton = [[CFButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
-        [_storeButton setTextSize:12];
-        _storeButton.frame = CGRectMake(0, 0, 100, 100);
-        _storeButton.center = CGPointMake(self.view.bounds.size.width*2/3 + 5, self.view.bounds.size.height*2/3 + 58);
-        _storeButton.label.text = @"Store";
+    
+    UILabel *storeLabel = [[UILabel alloc] initWithFrame:CGRectMake(215,303,120,40)];
+    storeLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:15];
+    storeLabel.textColor = [UIColor whiteColor];
+    storeLabel.text = @"Store";
+    storeLabel.shadowColor = [UIColor blackColor];
+    storeLabel.shadowOffset = CGSizeMake(2,2);
+    [self.view addSubview:storeLabel];
+    
+        _storeButton = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 101, 83)];
+    
+        _storeButton.frame = CGRectMake(180, 332, 101, 83);
+    
+    UIImage *storeImage = [UIImage imageNamed:@"TreasureChest"];
+    [_storeButton setImage:storeImage forState:UIControlStateNormal];
+    
         [_storeButton addTarget:self action:@selector(storeButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
         
         [self.view addSubview:_storeButton];
         
-        UIButton *messageButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,30,30)];
-        [messageButton setImage:MESSAGE_ICON_IMAGE forState:UIControlStateNormal];
-        messageButton.center = CGPointMake(SCREEN_WIDTH - 95, SCREEN_HEIGHT - 32);
+        UIButton *messageButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,78,59)];
+        //[messageButton setImage:MESSAGE_ICON_IMAGE forState:UIControlStateNormal];
+        UIImage *messageImage = [UIImage imageNamed:@"envelope"];
+        [messageButton setImage:messageImage forState:UIControlStateNormal];
+        
+    messageButton.frame = CGRectMake(70,430,78,59);
+    
         [self.view addSubview:messageButton];
-        _messageCountLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(-10, 6, 50, 30)];
+        _messageCountLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(messageButton.frame.size.width-30, 2, 20, 20)];
         _messageCountLabel.textAlignment = NSTextAlignmentCenter;
         _messageCountLabel.textColor = [UIColor whiteColor];
         _messageCountLabel.font = [UIFont fontWithName:cardMainFont size:16];
         _messageCountLabel.strokeOn = YES;
         _messageCountLabel.strokeColour = [UIColor blackColor];
         _messageCountLabel.strokeThickness = 3;
+    
         [messageButton addTarget:self action:@selector(messageButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
         
         //TODO
@@ -124,15 +213,25 @@ UILabel *loadingLabel;
         
         [messageButton addSubview:_messageCountLabel];
         
-        UIButton *optionsButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,30,30)];
-        [optionsButton setImage:OPTION_ICON_IMAGE forState:UIControlStateNormal];
-        optionsButton.center = CGPointMake(SCREEN_WIDTH - 60, SCREEN_HEIGHT - 32);
+        UIButton *optionsButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,56,56)];
+        //[optionsButton setImage:OPTION_ICON_IMAGE forState:UIControlStateNormal];
+    [optionsButton setImage:[UIImage imageNamed:@"cog"] forState:UIControlStateNormal];
+    
+    optionsButton.frame = CGRectMake(190,430,57,57);
+    
         [self.view addSubview:optionsButton];
         
         [optionsButton addTarget:self action:@selector(optionButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
+    UIImageView *bottomMetalFrame = [[UIImageView alloc] initWithFrame:CGRectMake(-40,492,SCREEN_WIDTH+100,63)];
+    [bottomMetalFrame setImage:[UIImage imageNamed:@"MetalFrame"]];
+    [self.view addSubview:bottomMetalFrame];
+    
     //[self setPubNubConfigDetails2];
     
+    PFInstallation *installation = [PFInstallation currentInstallation];
+    installation[@"user"] = [PFUser currentUser];
+    [installation saveInBackground];
 }
 
 -(void) setPubNubConfigDetails
@@ -281,6 +380,25 @@ UILabel *loadingLabel;
 
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    //query for the messages
+    PFQuery *messagesQuery = [PFQuery queryWithClassName:@"Message"];
+    PFUser *user = [PFUser currentUser];
+    
+    [messagesQuery whereKey:@"userPointer" equalTo:user.objectId];
+    [messagesQuery whereKey:@"messageRead" notEqualTo:@"YES"];
+    
+    [messagesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        self.messageCountLabel.text = [NSString stringWithFormat:@"%ld",objects.count];
+        self.messagesRetrieved = objects;
+        
+    }];
+    
+    
+    
+}
+
 
 -(void)viewDidAppear:(BOOL)animated
 {
@@ -338,6 +456,8 @@ UILabel *loadingLabel;
 -(void)messageButtonPressed
 {
     MessagesViewController *vc = [[MessagesViewController alloc] init];
+    vc.messagesRetrieved = self.messagesRetrieved;
+    
     [self presentViewController:vc animated:NO completion:nil];
 }
 
