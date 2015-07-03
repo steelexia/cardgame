@@ -199,7 +199,6 @@ NSArray *_products;
     [_bumpButton addTarget:self action:@selector(bumpButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     //[_cardInfoView addSubview:_sellButton];
     
-    
     _editHintLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
     _editHintLabel.textColor = [UIColor whiteColor];
     _editHintLabel.font = [UIFont fontWithName:cardMainFont size:14];
@@ -304,6 +303,23 @@ NSArray *_products;
     [_cardTagsLabel setUserInteractionEnabled:YES];
     _cardTagsLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [_cardInfoView addSubview:_cardTagsLabel];
+    
+    
+    _reportButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 0.5 - 40, SCREEN_HEIGHT - 125, 80, 60)];
+    _reportButton.label.text = @"Report";
+    [_reportButton setTextSize:16];
+    [_reportButton addTarget:self action:@selector(reportButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [_cardInfoView addSubview:_reportButton];
+    
+    _reportHintLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
+    _reportHintLabel.textColor = [UIColor whiteColor];
+    _reportHintLabel.font = [UIFont fontWithName:cardMainFont size:14];
+    _reportHintLabel.textAlignment = NSTextAlignmentCenter;
+    _reportHintLabel.strokeOn = YES;
+    _reportHintLabel.strokeThickness = 2;
+    _reportHintLabel.strokeColour = [UIColor blackColor];
+    _reportHintLabel.center = CGPointMake(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT-55);
+    [_cardInfoView addSubview:_reportHintLabel];
     
     //---------------search view-------------------//
     _searchToggleButton = [[CFButton alloc] initWithFrame:CGRectMake(4 + 100, 8, 46, 32)];
@@ -1258,6 +1274,9 @@ NSArray *_products;
     if (_ownedFilter && ([UserModel getOwnedCardID:[cardPF[@"idNumber"] intValue]] || [userPF.objectId isEqualToString:cardPF[@"creator"]]))
         return NO;
     
+    //if ([UserModel getReportedCardID:[cardPF[@"idNumber"] intValue]])
+        //return NO;
+    
     if (_deckTagsFilter)
     {
         NSMutableArray*deckTags = [NSMutableArray array];
@@ -1328,6 +1347,8 @@ NSArray *_products;
 
 -(void)openCardInfoView:(CardModel*)cardModel
 {
+    if ([UserModel getReportedCardID:cardModel.idNumber])
+        cardModel.userReported = YES;
     _cardInfoView.alpha = 0;
     [self updateCardInfoView:(CardModel*)cardModel];
     
@@ -1404,6 +1425,7 @@ NSArray *_products;
     
     _buyHintLabel.text = @"";
     _likeHintLabel.text = @"";
+    _reportHintLabel.text = @"";
     _editHintLabel.text = @"";
     
     int currentCardIndex = (int)[_cardsView.currentCards indexOfObject:_cardView.cardModel];
@@ -1418,6 +1440,7 @@ NSArray *_products;
     [_buyButton removeFromSuperview];
     [_sellButton removeFromSuperview];
     [_cardInfoView addSubview:_likeButton];
+    [_cardInfoView addSubview:_reportButton];
     //[_cardInfoView addSubview:_editButton];
     
     PFObject *salePF = _cardsView.currentSales[currentCardIndex];
@@ -1459,6 +1482,14 @@ NSArray *_products;
     else
         [_likeButton setEnabled:YES];
     
+    if ([UserModel getReportedCard:cardModel])
+    {
+        _reportHintLabel.text = @"Already reported";
+        [_reportButton setEnabled:NO];
+    }
+    else
+        [_reportButton setEnabled:YES];
+    
     if ([UserModel getLikedCard:cardModel] && ![UserModel getEditedCard:cardModel])
     {
         [_editButton setEnabled:YES];
@@ -1476,9 +1507,11 @@ NSArray *_products;
         [_editButton removeFromSuperview];
         [_sellButton removeFromSuperview];
         [_likeButton removeFromSuperview];
+        [_reportButton removeFromSuperview];
         
         _buyHintLabel.text = @"";
         _likeHintLabel.text = @"";
+        _reportHintLabel.text = @"";
         _editHintLabel.text = @"";
         
         [_cardInfoView addSubview: _restockButton];
@@ -1854,6 +1887,49 @@ NSArray *_products;
     } loadingText:@"Processing..." failedText:@"Error liking card."];
 }
 
+
+
+-(void)reportButtonPressed
+{
+    [self showActivityIndicatorWithBlock:^BOOL{
+        
+        int currentCardIndex = [_cardsView.currentCards indexOfObject:_cardView.cardModel];
+        PFObject *salePF = _cardsView.currentSales[currentCardIndex];
+
+        
+        NSLog(@"%@",  userPF.objectId);
+        
+        NSError*error;
+        [PFCloud callFunction:@"reportCard" withParameters:@{
+                                                             @"cardID" : _cardView.cardModel.cardPF.objectId,
+                                                             @"saleID" : salePF.objectId} error:&error];
+        
+        if (!error)
+        {
+            [_reportButton removeFromSuperview];
+            
+            int currentCardIndex = [_cardsView.currentCards indexOfObject:_cardView.cardModel];
+            PFObject *salePF = _cardsView.currentSales[currentCardIndex];
+            
+            //these fetches failing is not critical, only client will get wrong data
+            [salePF fetch];
+            [_cardPF fetch];
+            [userPF fetch];
+            
+            int index = [_cardsView.currentCardsPF indexOfObject:_cardPF];
+            [_cardsView.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
+            _cardView.cardModel.userReported = true;
+            [self updateCardInfoView:_cardView.cardModel];
+        }
+        else
+            NSLog(@"%@", [error localizedDescription]);
+        [self updateFilter];
+        return error == nil;
+        
+    } loadingText:@"Processing..." failedText:@"Error reporting card."];
+
+}
+
 -(void)animateGoldChange:(int)change
 {
     CGPoint iconStartPoint = _userGoldIcon.center;
@@ -2006,6 +2082,8 @@ NSArray *_products;
             //load all sales without the cards
             _currentLoadedSales = [NSMutableArray arrayWithArray: objects];
             
+            
+            
             [self updateFilter];
         }
         else
@@ -2084,6 +2162,8 @@ NSArray *_products;
         PFObject *cardPF = salePF[@"card"];
         
         BOOL shouldFilter = [self shouldFilterCardPF:cardPF withSalePF:salePF];
+        
+        NSLog(@"shouldFilter: %d %d", shouldFilter, [_cardsView.currentSales containsObject:salePF]);
         
         if (shouldFilter && ![_cardsView.currentSales containsObject:salePF])
             [_cardsView.currentSales addObject:salePF];
@@ -2479,7 +2559,7 @@ NSArray *_products;
     }
     [_cardsView.currentCards replaceObjectAtIndex:indexCounter withObject:card];
     
-   [self updateCardInfoView:card];
+    [self updateCardInfoView:card];  
     [self.cardsView.loadingCells removeAllObjects];
     [self.cardsView reloadInputViews];
     [self.cardsView.collectionView reloadData];

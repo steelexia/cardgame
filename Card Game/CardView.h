@@ -39,7 +39,7 @@
 @property enum CardHighlightType cardHighlightType;
 
 /** Labels displayed on the cards (somewhat temporary for now) */
-@property (strong) StrokedLabel *nameLabel, *costLabel, *attackLabel, *lifeLabel, *cooldownLabel, *elementLabel;
+@property (strong) StrokedLabel *nameLabel, *costLabel, *attackLabel, *lifeLabel, *cooldownLabel, *elementLabel, *reportedLabel;
 
 @property (strong) UITextView *baseAbilityLabel;
 
@@ -83,13 +83,13 @@
 @property BOOL frontFacing;
 
 /** Initializes with attached CardModel, which should be one of its child classes */
--(instancetype)initWithModel: (CardModel*)cardModel viewMode:(enum CardViewMode)cardViewMode;
+-(instancetype)initWithModel: (CardModel*)cardModel viewMode:(enum CardViewMode)cardViewMode userReported:(BOOL) cardUserReported;
 
--(instancetype)initWithModel: (CardModel*)cardModel withImage:(UIImage*)cardImage viewMode:(enum CardViewMode)cardViewMode;
+-(instancetype)initWithModel: (CardModel*)cardModel withImage:(UIImage*)cardImage viewMode:(enum CardViewMode)cardViewMode userReported:(BOOL) cardUserReported;
 
--(instancetype)initWithModel:(CardModel *)cardModel viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState;
+-(instancetype)initWithModel:(CardModel *)cardModel viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState userReported:(BOOL) cardUserReported;
 
--(instancetype)initWithModel:(CardModel *)cardModel withImage:(UIImage*)cardImage viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState;
+-(instancetype)initWithModel:(CardModel *)cardModel withImage:(UIImage*)cardImage viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState userReported:(BOOL) cardUserReported;
 
 /** Updates its view after values are updated (i.e. lost life) */
 -(void)updateView;

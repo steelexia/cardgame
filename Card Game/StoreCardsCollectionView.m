@@ -179,13 +179,14 @@ const int CARD_CELL_INSET = 8;
                 self.currentCards[i] = cardModel;
                 StoreCardCell *cell = (StoreCardCell *)[_collectionView cellForItemAtIndexPath:indexPath];
                 cell.cardView = [[CardView alloc] initWithModel:cardModel viewMode:cardViewModeEditor viewState:cardModel.cardViewState];
+                cell.cardView.cardModel.userReported = YES;
+                cell.likesLabel.text = [NSString stringWithFormat:@"%d", [cardPF[@"likes"] intValue]];
                 cell.cardView.frontFacing = YES;
                 cell.cardView.cardHighlightType = cardHighlightNone;
                 cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
                 cell.cardView.center = cell.center;
                 cell.cardView.frame = CGRectMake(CARD_CELL_INSET,CARD_CELL_INSET,STORE_CARD_WIDTH, STORE_CARD_HEIGHT);
                 cell.costLabel.text = [NSString stringWithFormat:@"%d", [GameStore getCardCost:cardModel]];
-                cell.likesLabel.text = [NSString stringWithFormat:@"%d", [cardPF[@"likes"] intValue]];
                 
                 [cell.activityView stopAnimating];
                 [cell.activityView removeFromSuperview];

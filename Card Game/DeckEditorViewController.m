@@ -681,7 +681,7 @@ DeckModel * allCards;
             if (cardView != currentCard && currentCard == nil && cardView.cardViewState != cardViewStateCardViewerTransparent)
             {
                 NSLog(@"maxed");
-                CardView*newMaximizedView = [[CardView alloc] initWithModel:cardView.cardModel viewMode:cardViewModeEditor]; //constructor also modifies monster's cardView pointer
+                CardView*newMaximizedView = [[CardView alloc] initWithModel:cardView.cardModel viewMode:cardViewModeEditor userReported:NO]; //constructor also modifies monster's cardView pointer
                 newMaximizedView.frontFacing = YES;
                 [newMaximizedView setCardViewState:cardView.cardViewState];
                 
@@ -739,7 +739,7 @@ DeckModel * allCards;
             if (cardView != currentCard && currentCard == nil)
             {
                 NSLog(@"side opened");
-                CardView*newMaximizedView = [[CardView alloc] initWithModel:cardView.cardModel viewMode:cardViewModeEditor]; //constructor also modifies monster's cardView pointer
+                CardView*newMaximizedView = [[CardView alloc] initWithModel:cardView.cardModel viewMode:cardViewModeEditor userReported:NO]; //constructor also modifies monster's cardView pointer
                 newMaximizedView.frontFacing = YES;
                 [newMaximizedView setCardViewState:cardView.cardViewState];
                 

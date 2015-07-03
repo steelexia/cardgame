@@ -33,15 +33,20 @@
 /** Uses third bit */
 +(BOOL)setOwnedCard:(CardModel*)card;
 +(BOOL)setNotOwnedCard:(CardModel*)card;
+/** Uses fourth bit */
++(BOOL)setReportedCard:(CardModel*)card;
 
 +(BOOL)getLikedCard:(CardModel*)card;
 /** Uses second bit */
 +(BOOL)getEditedCard:(CardModel*)card;
 /** Uses third bit */
 +(BOOL)getOwnedCard:(CardModel*)card;
+/** Uses fourth bit */
++(BOOL)getReportedCard:(CardModel*)card;
 
 +(BOOL)getLikedCardID:(int)idNumber;
 +(BOOL)getOwnedCardID:(int)idNumber;
++(BOOL)getReportedCardID:(int)idNumber;
 
 //sets version of card in core data.  This is used when the card is maximized and the player has seen the new update
 +(void)setCDCardVersion:(CardModel *)cardToSet;

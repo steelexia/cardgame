@@ -17,7 +17,7 @@
 @synthesize center = _center;
 @synthesize cardViewState = _cardViewState;
 @synthesize originalPosition = _originalPosition;
-@synthesize nameLabel, costLabel, attackLabel, lifeLabel, cooldownLabel, baseAbilityLabel, elementLabel;
+@synthesize nameLabel, costLabel, attackLabel, lifeLabel, cooldownLabel, baseAbilityLabel, elementLabel, reportedLabel;
 @synthesize previousViewIndex;
 @synthesize cardImage = _cardImage;
 @synthesize cardHighlightType = _cardHighlightType;
@@ -260,14 +260,14 @@ NSDictionary *singlePlayerCardImages;
     standardCardImages = [[NSMutableDictionary alloc] init];
 }
 
--(instancetype)initWithModel:(CardModel *)cardModel viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState
+-(instancetype)initWithModel:(CardModel *)cardModel viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState userReported:(BOOL) cardUserReported
 {
-    return [self initWithModel:cardModel withImage:nil viewMode:cardViewMode viewState:cardViewState];
+    return [self initWithModel:cardModel withImage:nil viewMode:cardViewMode viewState:cardViewState userReported:cardUserReported];
 }
 
--(instancetype)initWithModel:(CardModel *)cardModel withImage:(UIImage*)cardImage viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState
+-(instancetype)initWithModel:(CardModel *)cardModel withImage:(UIImage*)cardImage viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState userReported:(BOOL) cardUserReported
 {
-    self = [self initWithModel:cardModel withImage:cardImage viewMode:cardViewMode];
+    self = [self initWithModel:cardModel withImage:cardImage viewMode:cardViewMode userReported:cardUserReported];
     
     if (self)
     {
@@ -290,12 +290,12 @@ NSDictionary *singlePlayerCardImages;
     return self;
 }
 
--(instancetype)initWithModel:(CardModel *)cardModel viewMode:(enum CardViewMode)cardViewMode
+-(instancetype)initWithModel:(CardModel *)cardModel viewMode:(enum CardViewMode)cardViewMode userReported:(BOOL) cardUserReported
 {
-    return [self initWithModel:cardModel withImage:nil viewMode:cardViewMode];
+    return [self initWithModel:cardModel withImage:nil viewMode:cardViewMode userReported:cardUserReported];
 }
 
--(instancetype)initWithModel:(CardModel *)cardModel withImage:(UIImage*)cardImage viewMode:(enum CardViewMode)cardViewMode
+-(instancetype)initWithModel:(CardModel *)cardModel withImage:(UIImage*)cardImage viewMode:(enum CardViewMode)cardViewMode userReported:(BOOL) cardUserReported
 {
     self = [super init]; //does not actually make an image because highlight has to be behind it..
     
@@ -328,7 +328,7 @@ NSDictionary *singlePlayerCardImages;
         imageBackgroundView.center = CGPointMake(CARD_FULL_WIDTH/2, 80);
         //[backgroundImageView addSubview:imageBackgroundView]; //for providing a view if card image has transparent areas, not using cardImage's background since it has problems when loading in store
         
-        if (cardImage == nil)
+        if (cardImage == nil && self.cardModel.reports < 5 && !cardUserReported)
         {
             if (cardModel.type == cardTypeSinglePlayer)
             {
@@ -456,6 +456,17 @@ NSDictionary *singlePlayerCardImages;
         self.costLabel.strokeThickness = 3;
         
         [_frontViews addSubview: costLabel];
+        
+        self.reportedLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,96,60)];
+        self.reportedLabel.center = CGPointMake(CARD_FULL_WIDTH/2, 75);
+        self.reportedLabel.textAlignment = NSTextAlignmentCenter;
+        self.reportedLabel.textColor = [UIColor redColor];
+        self.reportedLabel.backgroundColor = [UIColor clearColor];
+        self.reportedLabel.font = [UIFont fontWithName:cardMainFont size:22];
+        [self.reportedLabel setMinimumScaleFactor:6.f/15];
+        self.reportedLabel.adjustsFontSizeToFitWidth = YES;
+        
+        [_frontViews addSubview: reportedLabel];
         
         self.elementLabel = [[StrokedLabel alloc] initWithFrame:self.bounds];
         self.elementLabel.center = CGPointMake(CARD_FULL_WIDTH/2, 150);
@@ -681,6 +692,10 @@ NSDictionary *singlePlayerCardImages;
     {
         self.nameLabel.text = self.cardModel.name;
         self.costLabel.text = [NSString stringWithFormat:@"%d", self.cardModel.cost];
+        
+        if (self.cardModel.reports > 4 || self.cardModel.userReported) {
+            self.reportedLabel.text = @"REPORTED";
+        }
         
         if ([self.cardModel isKindOfClass:[MonsterCardModel class]])
         {

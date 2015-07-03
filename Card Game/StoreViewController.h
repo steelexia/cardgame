@@ -32,9 +32,9 @@
 @property (strong)UIView*darkFilter;
 @property (strong)CardView*cardView;
 @property (strong)PFObject*cardPF;
-@property (strong)CFButton*buyButton,*sellButton,*editButton,*likeButton, *restockButton, *bumpButton;
+@property (strong)CFButton*buyButton,*sellButton,*editButton,*likeButton, *restockButton, *bumpButton, *reportButton;
 @property (strong)StrokedLabel*creatorLabel, *idLabel, *rarityLabel, *rarityTextLabel, *likesLabel, *goldLabel;
-@property (strong)StrokedLabel*likeHintLabel, *editHintLabel, *buyHintLabel;
+@property (strong)StrokedLabel*likeHintLabel, *editHintLabel, *buyHintLabel, *reportHintLabel;
 @property (strong)UILabel*cardTagsLabel;
 
 @property (strong)UIActivityIndicatorView*activityIndicator;

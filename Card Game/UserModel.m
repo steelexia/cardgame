@@ -456,6 +456,7 @@
     cdCard.creator = card.creator;
     cdCard.creatorName = card.creatorName;
     cdCard.likes = @(card.likes);
+    cdCard.reports = @(card.reports);
     
     cdCard.abilities = @"";
     
@@ -514,6 +515,7 @@
     card.creator = cdCard.creator;
     card.creatorName = cdCard.creatorName;
     card.likes = [cdCard.likes intValue];
+    card.reports = [cdCard.reports intValue];
     
     if (cdCard.abilities!=nil)
     {
@@ -906,6 +908,7 @@
     cardPF[@"rarity"] = [NSNumber numberWithInt:card.rarity];
     cardPF[@"creator"] = userPF.objectId;
     cardPF[@"likes"] = @(card.likes);
+    cardPF[@"reports"] = @(card.reports);
     cardPF[@"tags"] = card.tags;
     cardPF[@"flavourText"] = card.flavourText;
     
@@ -1003,6 +1006,11 @@
     return [self setCardInteraction:card.idNumber atBit:2 state:NO];
 }
 
++(BOOL)setReportedCard:(CardModel*)card
+{
+    return [self setCardInteraction:card.idNumber atBit:4 state:YES];
+}
+
 +(BOOL)setCardInteraction:(int)idNumber atBit:(int)bit state:(BOOL)state
 {
     NSDictionary*dic = userPF[@"interactedCards"];
@@ -1055,6 +1063,11 @@
     return [self getCardInteraction:card.idNumber atBit:2];
 }
 
++(BOOL)getReportedCard:(CardModel *)card
+{
+    return [self getCardInteraction:card.idNumber atBit:3];
+}
+
 +(BOOL)getLikedCardID:(int)idNumber
 {
     return [self getCardInteraction:idNumber atBit:0];
@@ -1063,6 +1076,11 @@
 +(BOOL)getOwnedCardID:(int)idNumber
 {
     return [self getCardInteraction:idNumber atBit:2];
+}
+
++(BOOL)getReportedCardID:(int)idNumber
+{
+    return [self getCardInteraction:idNumber atBit:3];
 }
 
 +(void)removeOwnedCard:(int)idNumber

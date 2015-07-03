@@ -448,7 +448,7 @@
 		90456ECD198D588D00B807DC /* DeckCardCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeckCardCell.h; sourceTree = "<group>"; };
 		90456ECE198D588D00B807DC /* DeckCardCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeckCardCell.m; sourceTree = "<group>"; };
 		90456ED1198D717200B807DC /* StoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoreViewController.h; sourceTree = "<group>"; };
-		90456ED2198D717200B807DC /* StoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StoreViewController.m; sourceTree = "<group>"; };
+		90456ED2198D717200B807DC /* StoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StoreViewController.m; sourceTree = "<group>"; usesTabs = 0; };
 		90456ED4198D72AA00B807DC /* StoreCardsCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoreCardsCollectionView.h; sourceTree = "<group>"; };
 		90456ED5198D72AA00B807DC /* StoreCardsCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StoreCardsCollectionView.m; sourceTree = "<group>"; };
 		90456ED7198DAAE700B807DC /* StoreCardCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoreCardCell.h; sourceTree = "<group>"; };
@@ -1688,23 +1688,6 @@
 				EC8B3C3B1B18CF8B00DE04A9 /* AutoSizeChatCellTableViewCell.m */,
 			);
 			name = Multiplayer;
-			sourceTree = "<group>";
-		};
-		EC7A74C51B28D73C00D3A53F /* MainMenu */ = {
-			isa = PBXGroup;
-			children = (
-				EC7A74E01B28F86F00D3A53F /* cog.png */,
-				EC7A74DE1B28F70600D3A53F /* envelope.png */,
-				EC7A74DC1B28F38000D3A53F /* TreasureChest.png */,
-				EC7A74DA1B28F16500D3A53F /* Cards.png */,
-				EC7A74CC1B28D97C00D3A53F /* MetalFrame.png */,
-				EC7A74CA1B28D86A00D3A53F /* TopFlag.png */,
-				EC7A74D81B28E79300D3A53F /* BottomFlag.png */,
-				EC7A74C81B28D86400D3A53F /* SinglePlayerHammer.png */,
-				EC7A74D61B28E5AB00D3A53F /* MultiplayerHammers.png */,
-				EC7A74C61B28D75700D3A53F /* WoodBackground.png */,
-			);
-			name = MainMenu;
 			sourceTree = "<group>";
 		};
 		EC93C6D01B06586000D3DE2A /* icons */ = {

@@ -23,5 +23,6 @@
 @dynamic abilities;
 @dynamic element;
 @dynamic likes;
+@dynamic reports;
 
 @end

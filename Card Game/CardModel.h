@@ -51,6 +51,12 @@
 /** Number of likes a card has received. Only relevant for standard cards */
 @property int likes;
 
+/** Number of reports */
+@property int reports;
+
+/** Did the user report this card? */
+@property BOOL userReported;
+
 /** Text appearing beneath ability for flavour */
 @property NSString* flavourText;
 
