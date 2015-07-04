@@ -74,7 +74,7 @@ const double DECK_EDITOR_CARD_SCALE = 0.6;
         
         CardModel*card = self.currentCells[indexPath.row];
         CardView*originalView = card.cardView;
-        CardView*cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeEditor userReported:NO];
+        CardView*cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeEditor];
         cardView.frontFacing = YES;
         card.cardView = originalView; //recover pointer
         cardView.cardHighlightType = cardHighlightNone;

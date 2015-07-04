@@ -260,14 +260,14 @@ NSDictionary *singlePlayerCardImages;
     standardCardImages = [[NSMutableDictionary alloc] init];
 }
 
--(instancetype)initWithModel:(CardModel *)cardModel viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState userReported:(BOOL) cardUserReported
+-(instancetype)initWithModel:(CardModel *)cardModel viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState
 {
-    return [self initWithModel:cardModel withImage:nil viewMode:cardViewMode viewState:cardViewState userReported:cardUserReported];
+    return [self initWithModel:cardModel withImage:nil viewMode:cardViewMode viewState:cardViewState];
 }
 
--(instancetype)initWithModel:(CardModel *)cardModel withImage:(UIImage*)cardImage viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState userReported:(BOOL) cardUserReported
+-(instancetype)initWithModel:(CardModel *)cardModel withImage:(UIImage*)cardImage viewMode:(enum CardViewMode)cardViewMode viewState:(enum CardViewState)cardViewState
 {
-    self = [self initWithModel:cardModel withImage:cardImage viewMode:cardViewMode userReported:cardUserReported];
+    self = [self initWithModel:cardModel withImage:cardImage viewMode:cardViewMode];
     
     if (self)
     {
@@ -290,12 +290,12 @@ NSDictionary *singlePlayerCardImages;
     return self;
 }
 
--(instancetype)initWithModel:(CardModel *)cardModel viewMode:(enum CardViewMode)cardViewMode userReported:(BOOL) cardUserReported
+-(instancetype)initWithModel:(CardModel *)cardModel viewMode:(enum CardViewMode)cardViewMode
 {
-    return [self initWithModel:cardModel withImage:nil viewMode:cardViewMode userReported:cardUserReported];
+    return [self initWithModel:cardModel withImage:nil viewMode:cardViewMode];
 }
 
--(instancetype)initWithModel:(CardModel *)cardModel withImage:(UIImage*)cardImage viewMode:(enum CardViewMode)cardViewMode userReported:(BOOL) cardUserReported
+-(instancetype)initWithModel:(CardModel *)cardModel withImage:(UIImage*)cardImage viewMode:(enum CardViewMode)cardViewMode
 {
     self = [super init]; //does not actually make an image because highlight has to be behind it..
     
@@ -328,7 +328,7 @@ NSDictionary *singlePlayerCardImages;
         imageBackgroundView.center = CGPointMake(CARD_FULL_WIDTH/2, 80);
         //[backgroundImageView addSubview:imageBackgroundView]; //for providing a view if card image has transparent areas, not using cardImage's background since it has problems when loading in store
         
-        if (cardImage == nil && self.cardModel.reports < 5 && !cardUserReported)
+        if (cardImage == nil && self.cardModel.reports < 5 && !self.cardModel.userReported)
         {
             if (cardModel.type == cardTypeSinglePlayer)
             {
