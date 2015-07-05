@@ -17,6 +17,7 @@
 #import "Campaign.h"
 #import "PNImports.h"
 #import "AppDelegate.h"
+@import AudioToolbox;
 
 
 @interface MainScreenViewController ()
@@ -471,6 +472,13 @@ UILabel *loadingLabel;
 {
     SinglePlayerMenuViewController *viewController = [[SinglePlayerMenuViewController alloc] init];
     [self presentViewController:viewController animated:NO completion:nil];
+    
+    CFBundleRef mainBundle = CFBundleGetMainBundle();
+    CFURLRef soundFileURLRef = CFBundleCopyResourceURL(mainBundle, CFSTR("titleGongSound"), CFSTR("wav"), NULL);
+    SystemSoundID soundId;
+    AudioServicesCreateSystemSoundID(soundFileURLRef, &soundId);
+    AudioServicesPlaySystemSound(soundId);
+    CFRelease(soundFileURLRef);
 }
 
 -(void)multiPlayerButtonPressed
@@ -481,18 +489,42 @@ UILabel *loadingLabel;
     dcv.nextScreen = mgvc;
     dcv.isMultiplayer = YES;
     [self presentViewController:dcv animated:YES completion:nil];
+    
+    CFBundleRef mainBundle = CFBundleGetMainBundle();
+    CFURLRef soundFileURLRef = CFBundleCopyResourceURL(mainBundle, CFSTR("titleGongSound"), CFSTR("wav"), NULL);
+    SystemSoundID soundId;
+    AudioServicesCreateSystemSoundID(soundFileURLRef, &soundId);
+    AudioServicesPlaySystemSound(soundId);
+    CFRelease(soundFileURLRef);
 }
 
 -(void)deckButtonPressed
 {
     DeckEditorViewController *viewController = [[DeckEditorViewController alloc] init];
     [self presentViewController:viewController animated:YES completion:nil];
+    
+    CFBundleRef mainBundle = CFBundleGetMainBundle();
+    CFURLRef soundFileURLRef = CFBundleCopyResourceURL(mainBundle, CFSTR("selectSound1"), CFSTR("wav"), NULL);
+    SystemSoundID soundId;
+    AudioServicesCreateSystemSoundID(soundFileURLRef, &soundId);
+    AudioServicesPlaySystemSound(soundId);
+    CFRelease(soundFileURLRef);
 }
 
 -(void)storeButtonPressed
 {
     StoreViewController *viewController = [[StoreViewController alloc] init];
     [self presentViewController:viewController animated:YES completion:nil];
+    
+    CFBundleRef mainBundle = CFBundleGetMainBundle();
+    CFURLRef soundFileURLRef = CFBundleCopyResourceURL(mainBundle, CFSTR("select2"), CFSTR("wav"), NULL);
+    SystemSoundID soundId;
+    AudioServicesCreateSystemSoundID(soundFileURLRef, &soundId);
+    AudioServicesPlaySystemSound(soundId);
+    CFRelease(soundFileURLRef);
+    
+
+    
 }
 
 - (void)didReceiveMemoryWarning

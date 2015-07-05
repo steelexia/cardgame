@@ -236,6 +236,9 @@
 		EC8B3C3E1B19417600DE04A9 /* angryorc.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = EC8B3C3D1B19417600DE04A9 /* angryorc.jpeg */; };
 		ECBEE57F1B23C2D200D131E7 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECBEE57E1B23C2D200D131E7 /* CoreData.framework */; };
 		ECBEE5821B23CF8100D131E7 /* UserCardVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = ECBEE5811B23CF8100D131E7 /* UserCardVersion.m */; };
+		ECCBF4861B48D2F6007C7594 /* titleGongSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = ECCBF4851B48D2F6007C7594 /* titleGongSound.wav */; };
+		ECCBF4881B48D313007C7594 /* select2.wav in Resources */ = {isa = PBXBuildFile; fileRef = ECCBF4871B48D313007C7594 /* select2.wav */; };
+		ECCBF48A1B48D36C007C7594 /* selectSound1.wav in Resources */ = {isa = PBXBuildFile; fileRef = ECCBF4891B48D36C007C7594 /* selectSound1.wav */; };
 		ECCD468C1ACC881400804B06 /* PNObservationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD45711ACC881400804B06 /* PNObservationCenter.m */; };
 		ECCD468D1ACC881400804B06 /* PubNub+APNS.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD45731ACC881400804B06 /* PubNub+APNS.m */; };
 		ECCD468E1ACC881400804B06 /* PubNub+ChannelRegistry.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD45751ACC881400804B06 /* PubNub+ChannelRegistry.m */; };
@@ -732,6 +735,9 @@
 		ECBEE57E1B23C2D200D131E7 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		ECBEE5801B23CF8100D131E7 /* UserCardVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCardVersion.h; sourceTree = "<group>"; };
 		ECBEE5811B23CF8100D131E7 /* UserCardVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCardVersion.m; sourceTree = "<group>"; };
+		ECCBF4851B48D2F6007C7594 /* titleGongSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = titleGongSound.wav; sourceTree = "<group>"; };
+		ECCBF4871B48D313007C7594 /* select2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = select2.wav; sourceTree = "<group>"; };
+		ECCBF4891B48D36C007C7594 /* selectSound1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = selectSound1.wav; sourceTree = "<group>"; };
 		ECCD456F1ACC881400804B06 /* PNObservationCenter+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PNObservationCenter+Protected.h"; sourceTree = "<group>"; };
 		ECCD45701ACC881400804B06 /* PNObservationCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNObservationCenter.h; sourceTree = "<group>"; };
 		ECCD45711ACC881400804B06 /* PNObservationCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNObservationCenter.m; sourceTree = "<group>"; };
@@ -1105,6 +1111,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				907D9C0B193E43640037C0CF /* AudioToolbox.framework in Frameworks */,
 				ECBEE57F1B23C2D200D131E7 /* CoreData.framework in Frameworks */,
 				FAFCC26F1A0185D600705584 /* Bolts.framework in Frameworks */,
 				907D9C1B193E43A80037C0CF /* SystemConfiguration.framework in Frameworks */,
@@ -1117,7 +1124,6 @@
 				907D9C0F193E43740037C0CF /* CoreLocation.framework in Frameworks */,
 				907D9C0D193E436B0037C0CF /* CFNetwork.framework in Frameworks */,
 				D31E2CA419BF5A41002E1934 /* GameKit.framework in Frameworks */,
-				907D9C0B193E43640037C0CF /* AudioToolbox.framework in Frameworks */,
 				90F35299191595C200601130 /* CoreGraphics.framework in Frameworks */,
 				90F3529B191595C200601130 /* UIKit.framework in Frameworks */,
 				90F35297191595C200601130 /* Foundation.framework in Frameworks */,
@@ -1501,6 +1507,7 @@
 		90F3529C191595C200601130 /* Card Game */ = {
 			isa = PBXGroup;
 			children = (
+				ECCBF4841B48CE2E007C7594 /* Sounds */,
 				D31E2CA519BF5BBE002E1934 /* GameKit */,
 				90F80F8A19A27FA5007571F4 /* SSKeychain */,
 				90456ED0198D715700B807DC /* Store Screen */,
@@ -1705,6 +1712,16 @@
 				EC10BDA51B338CCF00F7ABDE /* Icon-Small@3x.png */,
 			);
 			name = icons;
+			sourceTree = "<group>";
+		};
+		ECCBF4841B48CE2E007C7594 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				ECCBF4851B48D2F6007C7594 /* titleGongSound.wav */,
+				ECCBF4871B48D313007C7594 /* select2.wav */,
+				ECCBF4891B48D36C007C7594 /* selectSound1.wav */,
+			);
+			name = Sounds;
 			sourceTree = "<group>";
 		};
 		ECCD456D1ACC881400804B06 /* PubNub */ = {
@@ -2310,6 +2327,8 @@
 				FACF46C919EC852300D334E0 /* card_2200.png in Resources */,
 				FACF46CA19EC852300D334E0 /* card_2201.png in Resources */,
 				9069AACE1951E734006D1D98 /* Main_iPhone.storyboard in Resources */,
+				ECCBF4881B48D313007C7594 /* select2.wav in Resources */,
+				ECCBF48A1B48D36C007C7594 /* selectSound1.wav in Resources */,
 				90AB150E197AE3CF0008FCDD /* card_ability_icon_pierce.png in Resources */,
 				EC8B3C3E1B19417600DE04A9 /* angryorc.jpeg in Resources */,
 				FA033FCF19BCFF6600EFEBD8 /* card_0010.png in Resources */,
@@ -2322,6 +2341,7 @@
 				90C52890199BE53E00750C54 /* search_button.png in Resources */,
 				9070204D19915FD500FDE444 /* card_background_front_overlay_rare.png in Resources */,
 				90DA434E195C941400E44AED /* add_button_gray.png in Resources */,
+				ECCBF4861B48D2F6007C7594 /* titleGongSound.wav in Resources */,
 				FACF46DA19EC8A0300D334E0 /* hero_5.png in Resources */,
 				90DA43C21969D21500E44AED /* cancel_card_button.png in Resources */,
 				907020531992A1CB00FDE444 /* upload_from_camera_button.png in Resources */,
