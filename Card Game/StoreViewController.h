@@ -17,7 +17,7 @@
 
 @property (strong) StoreCardsCollectionView *cardsView;
 
-@property (strong)CFButton*backButton;
+@property (strong)UIButton*backButton;
 @property (strong)StrokedLabel *userGoldLabel, *userLikesLabel, *userCardLabel;
 /** Cards loaded from last query. No query is required if only filters are being changed. */
 @property (strong)NSMutableArray*currentLoadedSales;
@@ -43,12 +43,12 @@
 
 //search views
 @property (strong)UIView*searchView;
-@property (strong)CFButton*searchToggleButton;
+@property (strong)UIButton*searchToggleButton;
 @property (strong)UITextField*searchNameField, *searchTagsField, *searchIDField;
 
 //filter views
 @property (strong)UIView*filterView;
-@property (strong)CFButton*filterToggleButton;
+@property (strong)UIButton*filterToggleButton;
 @property (strong)CFButton*likedButton, *ownedButton, *stockedButton, *deckTagsButton;
 @property (strong)NSMutableArray*costFilterButtons,*rarityFilterButtons,*elementFilterButtons;
 

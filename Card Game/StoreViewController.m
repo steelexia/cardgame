@@ -12,6 +12,7 @@
 #import "SinglePlayerCards.h"
 #import "GameStore.h"
 #import "PickIAPHelper.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface StoreViewController ()
 
@@ -23,7 +24,7 @@
 @synthesize cardsView = _cardsView;
 
 /** Screen dimension for convinience */
-int SCREEN_WIDTH, SCREEN_HEIGHT;
+float SCREEN_WIDTH, SCREEN_HEIGHT;
 
 int STORE_INITIAL_LOAD_AMOUNT = 96;
 int STORE_ADDITIONAL_INCREMENT = 16;
@@ -64,18 +65,18 @@ NSArray *_products;
     if ([userPF[@"storeTutorialDone"] boolValue] == NO)
         _isTutorial = YES;
     
-    SCREEN_WIDTH = self.view.bounds.size.width;
-    SCREEN_HEIGHT = self.view.bounds.size.height;
+    SCREEN_WIDTH = [[UIScreen mainScreen] bounds].size.width;
+    SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
     
     _headerView = [[UIView alloc]initWithFrame:CGRectMake(0,0,SCREEN_WIDTH, 60)];
     //_headerView.backgroundColor = [UIColor redColor];
+    float mockupHeight = 1136.0f;
+    float mockupWidth = 640.0f;
     
-    _footerView = [[UIView alloc]initWithFrame:CGRectMake(0,SCREEN_HEIGHT-44,SCREEN_WIDTH, 44)];
+    float bottomBarStartYFooter = 1024/mockupHeight;
+    float bottomBarHeightFooter = 120/mockupHeight;
+    _footerView = [[UIView alloc]initWithFrame:CGRectMake(0,bottomBarStartYFooter*SCREEN_HEIGHT,SCREEN_WIDTH, bottomBarHeightFooter*SCREEN_HEIGHT)];
     //_footerView.backgroundColor = [UIColor whiteColor];
-    
-    CFLabel*footerBackground = [[CFLabel alloc] initWithFrame:CGRectMake(-8, 0, _footerView.frame.size.width+16, _footerView.frame.size.height+8)];
-    [footerBackground setBackgroundColor:COLOUR_INTERFACE_BLUE_DARK];
-    [_footerView addSubview:footerBackground];
     
     _cardsView = [[StoreCardsCollectionView alloc] initWithFrame:CGRectMake(0, _headerView.frame.size.height, self.view.bounds.size.width, self.view.bounds.size.height-_headerView.frame.size.height-_footerView.frame.size.height)];
     _cardsView.parentViewController = self;
@@ -86,26 +87,45 @@ NSArray *_products;
     [self.view addSubview:_cardsView];
     
     [self.view addSubview:_headerView];
-    [self.view addSubview:_footerView];
+    
     
     //------------------footer views------------------//
     
-    self.backButton = [[CFButton alloc] initWithFrame:CGRectMake(4, 8, 46, 32)];
-    [self.backButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
-    [self.backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+   
     
-    [_footerView addSubview:self.backButton];
+   // [_footerView addSubview:self.backButton];
+    
+    //brian July 23 add right edge and background for store
+    //x445, width 200
+    UIImageView *storeRightEdge = [[UIImageView alloc] init];
+   
+    
+    
+    float storeRightEdgeXRatio = 445/mockupWidth;
+    float storeRightEdgeWidthRatio = 200/mockupWidth;
+    
+    storeRightEdge.frame = CGRectMake(storeRightEdgeXRatio*SCREEN_WIDTH,0,storeRightEdgeWidthRatio*SCREEN_WIDTH,SCREEN_HEIGHT);
+    
+    [storeRightEdge setImage:[UIImage imageNamed:@"CardStoreRightRow.png"]];
+    
+    [self.view addSubview:storeRightEdge];
     
     _userCardIcon = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 38)];
     [_userCardIcon setImage:CARD_ICON_IMAGE forState:UIControlStateNormal];
     _userCardIcon.center = CGPointMake(SCREEN_WIDTH-25 ,24);
     [_footerView addSubview:_userCardIcon];
-    UIImageView* userCardAddIcon = [[UIImageView alloc] initWithImage:ADD_ICON_IMAGE];
+    UIImage *plusIconImage = [UIImage imageNamed:@"CardStorePlusButton.png"];
+    
+    UIImageView* userCardAddIcon = [[UIImageView alloc] initWithImage:plusIconImage];
+    
+    //float plusButton1–62W,58H,484X,592Y
+    
     userCardAddIcon.frame = CGRectMake(0, 0, 20, 20);
-    userCardAddIcon.center = CGPointMake(_userCardIcon.bounds.size.width,5);
+    
     [_userCardIcon addTarget:self action:@selector(openBlankCardView)    forControlEvents:UIControlEventTouchUpInside];
     [_userCardIcon addSubview:userCardAddIcon];
     
+    /*
     _userCardLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 155, 40)];
     _userCardLabel.textAlignment = NSTextAlignmentCenter;
     _userCardLabel.textColor = [UIColor whiteColor];
@@ -115,41 +135,86 @@ NSArray *_products;
     _userCardLabel.strokeColour = [UIColor blackColor];
     _userCardLabel.center = CGPointMake(SCREEN_WIDTH-25, 28);
     [_footerView addSubview:_userCardLabel];
+    */
     
-    _userGoldIcon = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 38, 38)];
-    [_userGoldIcon setImage:GOLD_ICON_IMAGE forState:UIControlStateNormal];
-    _userGoldIcon.center = CGPointMake(SCREEN_WIDTH-80 ,24);
+    //brian july 23
+    //modify user gold icon to show as new style
+    //-goldbagButton-502X,846Y,135,155
+    float goldButtonXRatio = 498/mockupWidth;
+    float goldButtonYRatio = 846/mockupHeight;
+    float goldButtonWRatio = 135/mockupWidth;
+    float goldButtonHRatio = 155/mockupHeight;
+    
+    _userGoldIcon = [[UIButton alloc] initWithFrame:CGRectMake(goldButtonXRatio*SCREEN_WIDTH, goldButtonYRatio*SCREEN_HEIGHT, goldButtonWRatio*SCREEN_WIDTH, goldButtonHRatio*SCREEN_HEIGHT)];
+    UIImage *coinBagImg = [UIImage imageNamed:@"CardStoreCoins.png"];
+    
+    [_userGoldIcon setImage:coinBagImg forState:UIControlStateNormal];
     [_userGoldIcon addTarget:self action:@selector(openBuyGoldView)    forControlEvents:UIControlEventTouchUpInside];
-    [_footerView addSubview:_userGoldIcon];
+    [self.view addSubview:_userGoldIcon];
+    
     UIImageView* userGoldAddIcon = [[UIImageView alloc] initWithImage:ADD_ICON_IMAGE];
     userGoldAddIcon.frame = CGRectMake(0, 0, 20, 20);
     userGoldAddIcon.center = CGPointMake(_userGoldIcon.bounds.size.width,5);
-    [_userGoldIcon addSubview:userGoldAddIcon];
+    //[_userGoldIcon addSubview:userGoldAddIcon];
     
-    _userGoldLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 155, 40)];
+    //plusButton3-62W,58H,484X,926Y
+    UIImageView *plusButton3 = [[UIImageView alloc] initWithImage:plusIconImage];
+    float plusButton3XRatio = 484/mockupWidth;
+    float plusButton3YRatio = 926/mockupHeight;
+    float plusButton3WRatio = 62/mockupWidth;
+    float plusButton3HRatio = 58/mockupHeight;
+    
+    plusButton3.frame = CGRectMake(plusButton3XRatio*SCREEN_WIDTH,plusButton3YRatio*SCREEN_HEIGHT,plusButton3WRatio*SCREEN_WIDTH,plusButton3HRatio*SCREEN_HEIGHT);
+    [self.view addSubview:plusButton3];
+    
+    //label3–986Y
+    _userGoldLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(_userGoldIcon.frame.origin.x, 986/mockupHeight*SCREEN_HEIGHT, _userGoldIcon.frame.size.width, 40)];
     _userGoldLabel.textAlignment = NSTextAlignmentCenter;
     _userGoldLabel.textColor = [UIColor whiteColor];
     _userGoldLabel.font = [UIFont fontWithName:cardMainFont size:20];
     _userGoldLabel.strokeOn = YES;
     _userGoldLabel.strokeThickness = 3;
     _userGoldLabel.strokeColour = [UIColor blackColor];
-    _userGoldLabel.center = CGPointMake(SCREEN_WIDTH-80, 28);
-    [_footerView addSubview:_userGoldLabel];
+    [self.view addSubview:_userGoldLabel];
     
-    _userLikesIcon = [[UIImageView alloc] initWithImage:LIKE_ICON_IMAGE];
-    _userLikesIcon.frame = CGRectMake(0, 0, 38, 38);
-    _userLikesIcon.center = CGPointMake(SCREEN_WIDTH-135 ,24);
-    [_footerView addSubview:_userLikesIcon];
+    //brian Jul23
+    //edit user likes icon to go on right side with new UI style
+    //-likeButton 480X,686Y,145W,138H
+    UIImage *likeButtonImage = [UIImage imageNamed:@"CardStoreLikeButton.png"];
     
-    _userLikesLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0, 155, 40)];
+    float likeButtonXRatio = 480/mockupWidth;
+    float likeButtonYRatio = 686/mockupHeight;
+    float likeButtonWRatio = 145/mockupWidth;
+    float likeButtonHRatio = 138/mockupHeight;
+    
+    _userLikesIcon = [[UIImageView alloc] initWithImage:likeButtonImage];
+    _userLikesIcon.frame = CGRectMake(likeButtonXRatio*SCREEN_WIDTH, likeButtonYRatio*SCREEN_HEIGHT, likeButtonWRatio*SCREEN_WIDTH, likeButtonHRatio*SCREEN_HEIGHT);
+   
+    [self.view addSubview:_userLikesIcon];
+    
+    //plusButton2-62W,58H,484X,758Y
+    float plusButton2XRatio = 484/mockupWidth;
+    float plusButton2YRatio = 758/mockupHeight;
+    float plusButton2WRatio = 62/mockupWidth;
+    float plusButton2HRatio = 58/mockupHeight;
+    
+    UIImageView *plusButton2 = [[UIImageView alloc] initWithImage:plusIconImage];
+    plusButton2.frame = CGRectMake(plusButton2XRatio*SCREEN_WIDTH,plusButton2YRatio*SCREEN_HEIGHT,plusButton2WRatio*SCREEN_WIDTH,plusButton2HRatio*SCREEN_HEIGHT);
+    
+    [self.view addSubview:plusButton2];
+    
+    //brian jul23
+    //label2–820Y,
+    float likeLabelYRatio = 820/mockupHeight;
+    
+    _userLikesLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(_userLikesIcon.frame.origin.x,likeLabelYRatio*SCREEN_HEIGHT,_userLikesIcon.frame.size.width, 40)];
     _userLikesLabel.textAlignment = NSTextAlignmentCenter;
     _userLikesLabel.textColor = [UIColor whiteColor];
     _userLikesLabel.font = [UIFont fontWithName:cardMainFont size:20];
     _userLikesLabel.strokeOn = YES;
     _userLikesLabel.strokeThickness = 3;
     _userLikesLabel.strokeColour = [UIColor blackColor];
-    _userLikesLabel.center = CGPointMake(SCREEN_WIDTH-135, 28);
-    [_footerView addSubview:_userLikesLabel];
+    [self.view addSubview:_userLikesLabel];
     
     //-----------------Card info views----------------//
     _cardInfoView = [[UIView alloc] initWithFrame:self.view.bounds];
@@ -321,17 +386,7 @@ NSArray *_products;
     _reportHintLabel.center = CGPointMake(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT-55);
     [_cardInfoView addSubview:_reportHintLabel];
     
-    //---------------search view-------------------//
-    _searchToggleButton = [[CFButton alloc] initWithFrame:CGRectMake(4 + 100, 8, 46, 32)];
-    _searchToggleButton.buttonStyle = CFButtonStyleToggle;
-    [_searchToggleButton setTextSize:9];
-    _searchToggleButton.label.text = @"Search";
-    _searchToggleButton.selected = YES;
-    //[_searchToggleButton setImage:[UIImage imageNamed:@"search_button_small"] forState:UIControlStateNormal];
-    //[_searchToggleButton setImage:[UIImage imageNamed:@"search_button_small_selected"] forState:UIControlStateSelected];
-    [_searchToggleButton addTarget:self action:@selector(searchToggleButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    
-    [_footerView addSubview:_searchToggleButton];
+   
     
     _searchView = [[CFLabel alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-40, self.view.bounds.size.width, 260)];
     [self.view insertSubview:_searchView aboveSubview:_cardsView];
@@ -435,16 +490,7 @@ NSArray *_products;
     [_filterView setUserInteractionEnabled:YES];
     [_filterView setBackgroundColor:COLOUR_INTERFACE_BLUE_DARK];
     
-    _filterToggleButton = [[CFButton alloc] initWithFrame:CGRectMake(4 + 50, 8, 46, 32)];
-    _filterToggleButton.buttonStyle = CFButtonStyleToggle;
-    _filterToggleButton.label.text = @"Filter";
-    [_filterToggleButton setTextSize:9];
-    _filterToggleButton.selected = YES;
-    //[_filterToggleButton setImage:[UIImage imageNamed:@"filter_button_small"] forState:UIControlStateNormal];
-    //[_filterToggleButton setImage:[UIImage imageNamed:@"filter_button_small_selected"] forState:UIControlStateSelected];
-    [_filterToggleButton addTarget:self action:@selector(filterToggleButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    [_footerView addSubview:_filterToggleButton];
-    
+  
     _likedButton = [[CFButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
     [_likedButton addTarget:self action:@selector(likedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_likedButton.dottedBorder removeFromSuperlayer];
@@ -560,30 +606,88 @@ NSArray *_products;
     
     //--------------category tabs---------------//
     
+    //brianJuly23
+    //changing category tabs to vertical orientation
+    //category button dimensions 174, h 96, y 8, x470
+    //overall screen dimensions: mockup dimensions 640x1136
+   mockupHeight = 1136.0f;
+    mockupWidth = 640.0f;
+    
+    
+    float catButtonHeightRatio = 96/mockupHeight;
+    float catButtonWidthRatio = 174/mockupWidth;
+    float catButtonXRatio = 468/mockupWidth;
+    float firstCatButtonHeight = 8/mockupHeight;
+    
     _categoryTabs = [NSMutableArray arrayWithCapacity:7];
-    for (int i = 0; i < 5; i++)
+     float firstYUsed;
+    for (float i = 0; i < 5; i++)
     {
-        CFButton*categoryButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/5*i,0,SCREEN_WIDTH/5 + (i == 4 ? 0 : 2),_headerView.frame.size.height + 2)];
-        NSLog(@"%f %f", categoryButton.frame.size.width, categoryButton.frame.size.height);
-        [categoryButton setupAsTab];
-        [categoryButton setTextSize:11];
+        float YToUse;
+       
+        if(i==0)
+        {
+            YToUse = firstCatButtonHeight*SCREEN_HEIGHT;
+            firstYUsed = YToUse;
+        }
+        else
+        {
+           
+            
+            YToUse = (catButtonHeightRatio*SCREEN_HEIGHT*i);
+            
+        }
+        if(i>=2)
+        {
+            
+            YToUse= YToUse-(catButtonHeightRatio*(1.0f/20.0f)*SCREEN_HEIGHT*i);
+            
+        }
+        UIButton*categoryButton = [[UIButton alloc] initWithFrame:CGRectMake(catButtonXRatio*SCREEN_WIDTH,YToUse,catButtonWidthRatio*SCREEN_WIDTH,catButtonHeightRatio*SCREEN_HEIGHT)];
+        
+        NSLog(@"%f %f %f %f", categoryButton.frame.size.width, categoryButton.frame.size.height,categoryButton.frame.origin.x,categoryButton.frame.origin.y);
+        //[categoryButton setupAsTab];
+        
+        //BrianJuly23 editing categoryButtons to show new UI
+        UIImage *categoryButtonBG = [UIImage imageNamed:@"CardStoreBlueButton.png"];
+        
+        [categoryButton setBackgroundImage:categoryButtonBG forState:UIControlStateNormal];
+        
+        int sfontSize;
+        if(SCREEN_HEIGHT<500)
+        {
+            sfontSize = 12;
+        }
+        else
+        {
+            sfontSize = 14;
+            
+        }
+        
+        categoryButton.titleLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:sfontSize];
+       // categoryButton.titleLabel.shadowColor = [UIColor blackColor];
+       //categoryButton.titleLabel.shadowOffset = CGSizeMake(2,2);
+        [categoryButton setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
+        
         //[categoryButton setImage:[UIImage imageNamed:@"category_tab_enabled"] forState:UIControlStateNormal];
         //[categoryButton setImage:[UIImage imageNamed:@"category_tab_disabled"] forState:UIControlStateDisabled];
         //[categoryButton setBackgroundColor:COLOUR_INTERFACE_BLUE];
         [categoryButton addTarget:self action:@selector(categoryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+      
         
-        [_headerView addSubview:categoryButton];
+        [self.view addSubview:categoryButton];
         
         if (i == storeCategoryFeatured)
-            categoryButton.label.text = @"Featured";
+            [categoryButton setTitle:@"Featured"forState:UIControlStateNormal];
         else if (i == storeCategoryNewest)
-            categoryButton.label.text  = @"Newest";
+            [categoryButton setTitle:@"Newest"forState:UIControlStateNormal];
         else if (i == storeCategoryPopular)
-            categoryButton.label.text = @"Popular";
+            [categoryButton setTitle:@"Popular"forState:UIControlStateNormal];
         else if (i == storeCategoryOwned)
-            categoryButton.label.text = @"Owned";
+            [categoryButton setTitle:@"Owned"forState:UIControlStateNormal];
         else if (i == storeCategoryDesigned)
-            categoryButton.label.text = @"Designed";
+            [categoryButton setTitle:@"Designed"forState:UIControlStateNormal];
+        
         
         /*
         StrokedLabel*categoryLabel = [[StrokedLabel alloc]initWithFrame:categoryButton.bounds];
@@ -647,17 +751,35 @@ NSArray *_products;
     createCardLabel.text = @"Forge a New Card";
     [_blankCardView addSubview:createCardLabel];
     
-    _createCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 160)];
-    [_createCardButton setImage:CARD_ICON_IMAGE forState:UIControlStateNormal];
-    [_createCardButton setImage:CARD_ICON_GRAY_IMAGE forState:UIControlStateDisabled];
-    _createCardButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 40 - 310);
-    [_createCardButton addTarget:self action:@selector(createCardButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    [_blankCardView addSubview:_createCardButton];
+    //brian jul23
+    //cardButton—480y,490X,128,180
     
-    UIImageView* cardAddIcon = [[UIImageView alloc] initWithImage:ADD_ICON_IMAGE];
-    cardAddIcon.frame = CGRectMake(0, 0, 40, 40);
-    cardAddIcon.center = CGPointMake(_createCardButton.bounds.size.width-10,25);
-    [_createCardButton addSubview:cardAddIcon];
+    float CreateCardXRatio = 490/mockupWidth;
+    float CreateCardYRatio = 480/mockupHeight;
+    float CreateCardWidthRatio = 128/mockupWidth;
+    float createCardHeightRatio = 180/mockupHeight;
+    
+    _createCardButton = [[UIButton alloc] initWithFrame:CGRectMake(CreateCardXRatio*SCREEN_WIDTH, CreateCardYRatio*SCREEN_HEIGHT, CreateCardWidthRatio*SCREEN_WIDTH, createCardHeightRatio*SCREEN_HEIGHT)];
+    UIImage *createCardBtnImage = [UIImage imageNamed:@"CardStoreCardIcon.png"];
+    
+    [_createCardButton setImage:createCardBtnImage forState:UIControlStateNormal];
+    [_createCardButton setImage:CARD_ICON_GRAY_IMAGE forState:UIControlStateDisabled];
+    
+    [_createCardButton addTarget:self action:@selector(createCardButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_createCardButton];
+    
+    //[_blankCardView addSubview:_createCardButton];
+    
+    UIImage *plusIcon = [UIImage imageNamed:@"CardStorePlusButton.png"];
+    //plusButton1–62W,58H,484X,592Y
+    float plusIcon1XRatio = 484/mockupWidth;
+    float plusIcon1YRatio = 592/mockupHeight;
+    float plusIcon1WRatio = 62/mockupWidth;
+    float plusIcon1HRatio = 58/mockupHeight;
+    
+    UIImageView* cardAddIcon = [[UIImageView alloc] initWithImage:plusIcon];
+    cardAddIcon.frame = CGRectMake(plusIcon1XRatio*SCREEN_WIDTH, plusIcon1YRatio*SCREEN_HEIGHT, plusIcon1WRatio*SCREEN_WIDTH, plusIcon1HRatio*SCREEN_HEIGHT);
+    [self.view addSubview:cardAddIcon];
     
     _remainingCardLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 40)];
     _remainingCardLabel.textAlignment = NSTextAlignmentCenter;
@@ -865,7 +987,7 @@ NSArray *_products;
     _searchResult.strokeColour = [UIColor blackColor];
     _searchResult.strokeThickness = 4;
     _searchResult.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/2);
-    [_cardsView addSubview:_searchResult];
+    
     
     keyboardSize = CGSizeMake(0, 216);
     
@@ -898,6 +1020,71 @@ NSArray *_products;
         [self.view addSubview:_tutLabel];
         [self.view addSubview:_tutOkButton];
     }
+    
+    //brianJul26
+    //yStart = 1024Y,106H--whole screen width
+    //add bottom bar to store
+    
+    UIImageView *bottomBarStore = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CardStoreBottomRow.png"]];
+    float bottomBarStartY = 1024/mockupHeight;
+    float bottomBarHeight = 120/mockupHeight;
+    bottomBarStore.frame =  _footerView.bounds;
+    
+    [_footerView addSubview:bottomBarStore];
+    
+    
+    //brianJul26 add back button with style
+    //backButton-0X,100W,94H
+    float backButtonXRatio = 2/mockupWidth;
+    float backButtonWRatio = 100/mockupWidth;
+    float backButtonHRatio = 94/mockupHeight;
+    float backButtonYRatio = 15/mockupHeight;
+    self.backButton = [[UIButton alloc] initWithFrame:CGRectMake(backButtonXRatio*SCREEN_WIDTH, backButtonYRatio*SCREEN_HEIGHT, backButtonWRatio*SCREEN_WIDTH, backButtonHRatio*SCREEN_HEIGHT)];
+    
+    [self.backButton setImage:[UIImage imageNamed:@"CardStoreBackButton.png"] forState:UIControlStateNormal];
+    [self.backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    [_footerView addSubview:self.backButton];
+    
+    //filterButtonStart—110X,269W,95H,15Y
+  
+    
+    float filterButtonXRatio = 110/mockupWidth;
+    float filterButtonYRatio = 15/mockupHeight;
+    float filterButtonWRatio = 269/mockupWidth;
+    float filterButtonHRatio = 95/mockupHeight;
+    
+    _filterToggleButton = [[UIButton alloc] initWithFrame:CGRectMake(filterButtonXRatio*SCREEN_WIDTH, filterButtonYRatio*SCREEN_HEIGHT,filterButtonWRatio*SCREEN_WIDTH, filterButtonHRatio*SCREEN_HEIGHT)];
+    [_filterToggleButton setTitle: @"Filter" forState:UIControlStateNormal];
+    [_filterToggleButton setBackgroundImage:[UIImage imageNamed:@"CardStoreBottomButtonNoWords.png"] forState:UIControlStateNormal];
+     
+    _filterToggleButton.selected = YES;
+    //[_filterToggleButton setImage:[UIImage imageNamed:@"filter_button_small"] forState:UIControlStateNormal];
+    //[_filterToggleButton setImage:[UIImage imageNamed:@"filter_button_small_selected"] forState:UIControlStateSelected];
+    [_filterToggleButton addTarget:self action:@selector(filterToggleButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [_footerView addSubview:_filterToggleButton];
+    
+      //searchButton-378X,269W,95H,15Y
+    //---------------search view-------------------//
+    float searchButtonXRatio = 378/mockupWidth;
+    float searchButtonYRatio = 15/mockupHeight;
+    float searchButtonWRatio = 269/mockupWidth;
+    float searchButtonHRatio = 95/mockupHeight;
+    
+    _searchToggleButton = [[UIButton alloc] initWithFrame:CGRectMake(searchButtonXRatio*SCREEN_WIDTH, searchButtonYRatio*SCREEN_HEIGHT, searchButtonWRatio*SCREEN_WIDTH, searchButtonHRatio*SCREEN_HEIGHT)];
+    [_searchToggleButton setBackgroundImage:[UIImage imageNamed:@"CardStoreSearchButtonNoWords.png"] forState:UIControlStateNormal];
+    
+    [_searchToggleButton setTitle:@"Search" forState:UIControlStateNormal];
+    _searchToggleButton.selected = YES;
+    //[_searchToggleButton setImage:[UIImage imageNamed:@"search_button_small"] forState:UIControlStateNormal];
+    //[_searchToggleButton setImage:[UIImage imageNamed:@"search_button_small_selected"] forState:UIControlStateSelected];
+    [_searchToggleButton addTarget:self action:@selector(searchToggleButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    [_footerView addSubview:_searchToggleButton];
+    
+     [self.view addSubview:_footerView];
+    
+    [self.view addSubview:_searchResult];
 }
 
 -(void)tutorialCreateCard
@@ -978,9 +1165,13 @@ NSArray *_products;
     if (state)
     {
         _searchResult.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/5);
+          [self.view bringSubviewToFront:_searchResult];
+        [self.view bringSubviewToFront:_filterView];
+        _filterView.alpha = 1;
+        
         [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             [_filterView setFrame:CGRectMake(filterViewFrame.origin.x, filterViewFrame.origin.y - filterViewFrame.size.height, filterViewFrame.size.width, filterViewFrame.size.height+8)];
+                             [_filterView setFrame:CGRectMake(filterViewFrame.origin.x, filterViewFrame.origin.y - filterViewFrame.size.height-20, filterViewFrame.size.width, filterViewFrame.size.height)];
                          }
                          completion:^(BOOL completed){
                              
@@ -989,12 +1180,14 @@ NSArray *_products;
     else
     {
         _searchResult.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/2);
+        [self.view bringSubviewToFront:_searchResult];
+         [self.view bringSubviewToFront:_filterView];
         [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             [_filterView setFrame:CGRectMake(filterViewFrame.origin.x, filterViewFrame.origin.y + filterViewFrame.size.height, filterViewFrame.size.width, filterViewFrame.size.height)];
+                             [_filterView setFrame:CGRectMake(filterViewFrame.origin.x, filterViewFrame.origin.y + filterViewFrame.size.height+20, filterViewFrame.size.width, filterViewFrame.size.height)];
                          }
                          completion:^(BOOL completed){
-                             
+                              _filterView.alpha = 0;
                          }];
     }
 }
@@ -1020,9 +1213,12 @@ NSArray *_products;
     if (state)
     {
         _searchResult.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/5);
+        [self.view bringSubviewToFront:self.searchView];
+        self.searchView.alpha = 1;
+        
         [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             [_searchView setFrame:CGRectMake(searchViewFrame.origin.x, searchViewFrame.origin.y - searchViewFrame.size.height, searchViewFrame.size.width, searchViewFrame.size.height+8)];
+                             [_searchView setFrame:CGRectMake(searchViewFrame.origin.x, searchViewFrame.origin.y - searchViewFrame.size.height-20, searchViewFrame.size.width, searchViewFrame.size.height)];
                          }
                          completion:^(BOOL completed){
                              
@@ -1031,11 +1227,14 @@ NSArray *_products;
     else
     {
         _searchResult.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/2);
+        [self.view bringSubviewToFront:self.searchView];
+        
         [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             [_searchView setFrame:CGRectMake(searchViewFrame.origin.x, searchViewFrame.origin.y + searchViewFrame.size.height, searchViewFrame.size.width, searchViewFrame.size.height)];
+                             [_searchView setFrame:CGRectMake(searchViewFrame.origin.x, searchViewFrame.origin.y + searchViewFrame.size.height+20, searchViewFrame.size.width, searchViewFrame.size.height)];
                          }
                          completion:^(BOOL completed){
+                             self.searchView.alpha = 0;
                              
                          }];
     }

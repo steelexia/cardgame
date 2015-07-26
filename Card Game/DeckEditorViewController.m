@@ -363,7 +363,7 @@ DeckModel * allCards;
     _searchResult.strokeColour = [UIColor blackColor];
     _searchResult.strokeThickness = 3;
     _searchResult.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/2);
-    [_cardsView addSubview:_searchResult];
+   [self.view addSubview:_searchResult];
     
     invalidDeckButton = [[CFButton alloc] initWithFrame:CGRectMake(104,8,58, 32)];
     invalidDeckButton.buttonStyle = CFButtonStyleWarning;
@@ -589,6 +589,8 @@ DeckModel * allCards;
     [self.view addGestureRecognizer:tapGesture];
     
     [self resetAllViews];
+    
+    
 }
 
 /** Update all cards to ensure cards that cannot be added are grayed out */

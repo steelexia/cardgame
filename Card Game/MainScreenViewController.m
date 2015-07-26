@@ -46,7 +46,10 @@ UILabel *loadingLabel;
     
     SCREEN_WIDTH = [[UIScreen mainScreen] bounds].size.width;
     SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
-
+    
+    float mockupHeight = 1136.0f;
+    float mockupWidth = 640.0f;
+    
     //background view
     /*
     UIImageView*backgroundImageTop = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_top"]];
@@ -62,8 +65,8 @@ UILabel *loadingLabel;
     [self.view addSubview:backgroundImageBottom];
     */
     
-    UIImageView *mainBackground = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"WoodBackground"]];
-    mainBackground.frame = CGRectMake(0,-100,SCREEN_WIDTH,SCREEN_HEIGHT+300);
+    UIImageView *mainBackground = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"WoodBackgroundWithFrames"]];
+    mainBackground.frame = CGRectMake(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
     [self.view addSubview:mainBackground];
     
     
@@ -92,29 +95,67 @@ UILabel *loadingLabel;
         */
     
     
-    UIImageView *flagBG = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"TopFlag"]];
-    flagBG.frame = CGRectMake(0,98,SCREEN_WIDTH,195);
+    UIImageView *flagBG = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"TopFlag2"]];
+    
+    //calculate height ratio for different pieces
+    //iphone4S--480 height
+    //iPhone5--568 height
+    //iPhone6--667 height
+    
+    //flag iPhone 6 resolutions
+    //366 height, 206y
+    float topFlagHeightRatio = 366/mockupHeight;
+    float topFlagYPositionRatio = 206/mockupHeight;
+    
+    flagBG.frame = CGRectMake(0,SCREEN_HEIGHT*topFlagYPositionRatio,SCREEN_WIDTH,SCREEN_HEIGHT*topFlagHeightRatio);
     [self.view addSubview:flagBG];
     
-    UIImageView *topMetalFrame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"MetalFrame"]];
-    topMetalFrame.frame = CGRectMake(-40,20,SCREEN_WIDTH+100,63);
+    //UIImageView *topMetalFrame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"MetalFrame"]];
+    //topMetalFrame.frame = CGRectMake(-40,20,SCREEN_WIDTH+100,63);
     
-    UILabel *singlePlayerLabel = [[UILabel alloc] initWithFrame:CGRectMake(35,100,120,40)];
-    singlePlayerLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:15];
+    //label1 yPositionRatio—238Y,60x,28H,206W
+    //label2 xpositionRatio—370X,30H, 192W,240Y
+    float singlePlayerLabelHeightRatio = 30/mockupHeight;
+    float singlePlayerLabelWidthRatio = 206/mockupWidth;
+    float singlePlayerLabelXRatio = 60/mockupWidth;
+    float singlePlayerLabelYRatio = 240/mockupHeight;
+    
+    UILabel *singlePlayerLabel = [[UILabel alloc] initWithFrame:CGRectMake(singlePlayerLabelXRatio*SCREEN_WIDTH,singlePlayerLabelYRatio*SCREEN_HEIGHT,singlePlayerLabelWidthRatio*SCREEN_WIDTH,singlePlayerLabelHeightRatio*SCREEN_HEIGHT)];
+    
+    int sfontSize;
+    if(SCREEN_HEIGHT<500)
+    {
+        sfontSize = 12;
+    }
+    else
+    {
+        sfontSize = 14;
+        
+    }
+    
+    singlePlayerLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:sfontSize];
+    singlePlayerLabel.adjustsFontSizeToFitWidth = YES;
     singlePlayerLabel.textColor = [UIColor whiteColor];
     singlePlayerLabel.text = @"Singleplayer";
     singlePlayerLabel.shadowColor = [UIColor blackColor];
     singlePlayerLabel.shadowOffset = CGSizeMake(2,2);
+    singlePlayerLabel.textAlignment = NSTextAlignmentCenter;
     
 
     [self.view addSubview:singlePlayerLabel];
     
-    [self.view addSubview:topMetalFrame];
+    //[self.view addSubview:topMetalFrame];
     
-        _singlePlayerButton = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
+      //hammer yPositionRatio—274Y, 256H,108W,110 X
+    float singlePlayerButtonYPositionRatio = 274/mockupHeight;
+    float singlePlayerButtonXPositionRatio = 110/mockupWidth;
+    float singlePlayerButtonHeightRatio = 256/mockupHeight;
+    float singlePlayerButtonWidthRatio = 108/mockupWidth;
     
-        _singlePlayerButton.frame = CGRectMake(0, 0, 70, 145);
-        _singlePlayerButton.center = CGPointMake(84,204);
+        _singlePlayerButton = [[UIButton alloc] initWithFrame:CGRectMake(singlePlayerButtonXPositionRatio*SCREEN_WIDTH,singlePlayerButtonYPositionRatio*SCREEN_HEIGHT,singlePlayerButtonWidthRatio*SCREEN_WIDTH,singlePlayerButtonHeightRatio*SCREEN_HEIGHT)];
+    
+    
+  
     
     [_singlePlayerButton setBackgroundColor:[UIColor clearColor]];
     
@@ -126,21 +167,41 @@ UILabel *loadingLabel;
         
         [self.view addSubview:_singlePlayerButton];
     
+    //label2 xpositionRatio—360X,30H, 190W,240Y
+    float multiplayerLabelXRatio = 360/mockupWidth;
+    float multiplayerLabelYRatio = 240/mockupHeight;
+    float multiplayerLabelHeightRatio = 30/mockupHeight;
+    float multiplayerLabelWidthRatio = 190/mockupWidth;
     
-    UILabel *multiPlayerLabel = [[UILabel alloc] initWithFrame:CGRectMake(185,100,120,40)];
-    multiPlayerLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:15];
+    UILabel *multiPlayerLabel = [[UILabel alloc] initWithFrame:CGRectMake(multiplayerLabelXRatio*SCREEN_WIDTH,multiplayerLabelYRatio*SCREEN_HEIGHT,multiplayerLabelWidthRatio*SCREEN_WIDTH,multiplayerLabelHeightRatio*SCREEN_HEIGHT)];
+    int fontSize;
+    if(SCREEN_HEIGHT<500)
+    {
+        fontSize = 12;
+    }
+    else
+    {
+        fontSize = 14;
+        
+    }
+    multiPlayerLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:fontSize];
     multiPlayerLabel.textColor = [UIColor whiteColor];
     multiPlayerLabel.text = @"Multiplayer";
     multiPlayerLabel.shadowColor = [UIColor blackColor];
     multiPlayerLabel.shadowOffset = CGSizeMake(2,2);
+    multiPlayerLabel.textAlignment = NSTextAlignmentCenter;
+    
     [self.view addSubview:multiPlayerLabel];
     
     UIImage *multiplayerBtnImage = [UIImage imageNamed:@"MultiplayerHammers"];
     
-        _multiPlayerButton = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
+    //mphammer ypositionRatio—280Y,240H, 264 W,322X
+    float multiplayerButtonYRatio = 280/mockupHeight;
+    float multiplayerButtonXRatio = 322/mockupWidth;
+    float multiplayerButtonHeightRatio = 240/mockupHeight;
+    float multiplayerButtonWidthRatio = 264/mockupWidth;
+        _multiPlayerButton = [[UIButton alloc] initWithFrame: CGRectMake(multiplayerButtonXRatio*SCREEN_WIDTH, multiplayerButtonYRatio*SCREEN_HEIGHT, multiplayerButtonWidthRatio*SCREEN_WIDTH, multiplayerButtonHeightRatio*SCREEN_HEIGHT)];
     
-        _multiPlayerButton.frame = CGRectMake(0, 0, 130, 137);
-        _multiPlayerButton.center = CGPointMake(234,202);
     [_multiPlayerButton setImage:multiplayerBtnImage forState:UIControlStateNormal];
     
     
@@ -148,23 +209,36 @@ UILabel *loadingLabel;
         
         [self.view addSubview:_multiPlayerButton];
     
+    //bottom flag y—602,height,242,
+    float bottomFlagYRatio = 602/mockupHeight;
+    float bottomFlagHeightRatio = 242/mockupHeight;
     
-    UIImageView *bottomFlag = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"BottomFlag"]];
-    bottomFlag.frame = CGRectMake(0,300,SCREEN_WIDTH,130);
+    UIImageView *bottomFlag = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"BottomFlag2"]];
+    bottomFlag.frame = CGRectMake(0,bottomFlagYRatio*SCREEN_HEIGHT,SCREEN_WIDTH,bottomFlagHeightRatio*SCREEN_HEIGHT);
     [self.view addSubview:bottomFlag];
     
+     //label2 xpositionRatio—360X,30H, 190W,236Y
+   //DeckBuild—x= 74,626y,178W
+    float deckLabelXRatio = 74/mockupWidth;
+    float deckLabelYRatio = 626/mockupHeight;
+    float deckLabelWidthRatio = 178/mockupWidth;
+    float deckLabelHeightRatio = 30/mockupHeight;
     
-    UILabel *deckLabel = [[UILabel alloc] initWithFrame:CGRectMake(40,303,120,40)];
-    deckLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:15];
+    UILabel *deckLabel = [[UILabel alloc] initWithFrame:CGRectMake(deckLabelXRatio*SCREEN_WIDTH,deckLabelYRatio*SCREEN_HEIGHT,deckLabelWidthRatio*SCREEN_WIDTH,deckLabelHeightRatio*SCREEN_HEIGHT)];
+    deckLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:fontSize];
     deckLabel.textColor = [UIColor whiteColor];
     deckLabel.text = @"Build Decks";
     deckLabel.shadowColor = [UIColor blackColor];
     deckLabel.shadowOffset = CGSizeMake(2,2);
     [self.view addSubview:deckLabel];
-        
-        _deckButton = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 60, 80)];
     
-        _deckButton.center = CGPointMake(85,372);
+    //cardX—110,height 144,y672,width 98
+    float deckButtonXRatio = 110/mockupWidth;
+    float deckButtonYRatio = 672/mockupHeight;
+    float deckButtonWidthRatio = 98/mockupWidth;
+    float deckButtonHeightRatio = 144/mockupHeight;
+        _deckButton = [[UIButton alloc] initWithFrame: CGRectMake(deckButtonXRatio*SCREEN_WIDTH, deckButtonYRatio*SCREEN_HEIGHT, deckButtonWidthRatio*SCREEN_WIDTH, deckButtonHeightRatio*SCREEN_HEIGHT)];
+    
     UIImage *deckButtonImage = [UIImage imageNamed:@"Cards"];
     [_deckButton setImage:deckButtonImage forState:UIControlStateNormal];
     
@@ -172,17 +246,29 @@ UILabel *loadingLabel;
         
         [self.view addSubview:_deckButton];
     
-    UILabel *storeLabel = [[UILabel alloc] initWithFrame:CGRectMake(215,303,120,40)];
-    storeLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:15];
+    //Store—X422, 626y,90W
+    float storeLabelXRatio = 422/mockupWidth;
+    float storeLabelYRatio = 626/mockupHeight;
+    float storeLabelWidthRatio = 90/mockupWidth;
+    float storeLabelHeightRatio = 30/mockupHeight;
+    
+    UILabel *storeLabel = [[UILabel alloc] initWithFrame:CGRectMake(storeLabelXRatio*SCREEN_WIDTH,storeLabelYRatio*SCREEN_HEIGHT,storeLabelWidthRatio*SCREEN_WIDTH,storeLabelHeightRatio*SCREEN_HEIGHT)];
+    
+    storeLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:fontSize];
     storeLabel.textColor = [UIColor whiteColor];
     storeLabel.text = @"Store";
     storeLabel.shadowColor = [UIColor blackColor];
     storeLabel.shadowOffset = CGSizeMake(2,2);
     [self.view addSubview:storeLabel];
+    //store—width 194,height 158,y666,x354
+    float storeButtonXRatio = 354/mockupWidth;
+    float storeButtonYRatio = 666/mockupHeight;
+    float storeButtonWidthRatio = 194/mockupWidth;
+    float storeButtonHeightRatio = 158/mockupHeight;
     
-        _storeButton = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 101, 83)];
+        _storeButton = [[UIButton alloc] initWithFrame: CGRectMake(storeButtonXRatio*SCREEN_WIDTH, storeButtonYRatio *SCREEN_HEIGHT, storeButtonWidthRatio*SCREEN_WIDTH, storeButtonHeightRatio*SCREEN_HEIGHT)];
     
-        _storeButton.frame = CGRectMake(180, 332, 101, 83);
+    
     
     UIImage *storeImage = [UIImage imageNamed:@"TreasureChest"];
     [_storeButton setImage:storeImage forState:UIControlStateNormal];
@@ -195,8 +281,15 @@ UILabel *loadingLabel;
         //[messageButton setImage:MESSAGE_ICON_IMAGE forState:UIControlStateNormal];
         UIImage *messageImage = [UIImage imageNamed:@"envelope"];
         [messageButton setImage:messageImage forState:UIControlStateNormal];
-        
-    messageButton.frame = CGRectMake(70,430,78,59);
+    
+    //messageButton—868Y,148X,90Height,134X
+    //gear—100Height,,104Width,378X,865Y
+    float messageButtonXRatio = 148/mockupWidth;
+    float messageButtonYRatio = 868/mockupHeight;
+    float messageButtonWidthRatio = 134/mockupWidth;
+    float messageButtonHeightRatio = 90/mockupHeight;
+    
+    messageButton.frame = CGRectMake(messageButtonXRatio*SCREEN_WIDTH,messageButtonYRatio*SCREEN_HEIGHT,messageButtonWidthRatio*SCREEN_WIDTH,messageButtonHeightRatio*SCREEN_HEIGHT);
     
         [self.view addSubview:messageButton];
         _messageCountLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(messageButton.frame.size.width-30, 2, 20, 20)];
@@ -217,16 +310,21 @@ UILabel *loadingLabel;
         UIButton *optionsButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,56,56)];
         //[optionsButton setImage:OPTION_ICON_IMAGE forState:UIControlStateNormal];
     [optionsButton setImage:[UIImage imageNamed:@"cog"] forState:UIControlStateNormal];
+     //gear—100Height,,104Width,378X,865Y
+    float optionsButtonXRatio = 378/mockupWidth;
+    float optionsButtonYRatio = 865/mockupHeight;
+    float optionsButtonWidthRatio = 104/mockupWidth;
+    float optionsButtonHeightRatio = 100/mockupHeight;
     
-    optionsButton.frame = CGRectMake(190,430,57,57);
+    optionsButton.frame = CGRectMake(optionsButtonXRatio*SCREEN_WIDTH,optionsButtonYRatio*SCREEN_HEIGHT,optionsButtonWidthRatio*SCREEN_WIDTH,optionsButtonHeightRatio*SCREEN_HEIGHT);
     
         [self.view addSubview:optionsButton];
         
         [optionsButton addTarget:self action:@selector(optionButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    UIImageView *bottomMetalFrame = [[UIImageView alloc] initWithFrame:CGRectMake(-40,492,SCREEN_WIDTH+100,63)];
-    [bottomMetalFrame setImage:[UIImage imageNamed:@"MetalFrame"]];
-    [self.view addSubview:bottomMetalFrame];
+    //UIImageView *bottomMetalFrame = [[UIImageView alloc] initWithFrame:CGRectMake(-40,492,SCREEN_WIDTH+100,63)];
+    //[bottomMetalFrame setImage:[UIImage imageNamed:@"MetalFrame"]];
+    //[self.view addSubview:bottomMetalFrame];
     
     //[self setPubNubConfigDetails2];
     
@@ -522,8 +620,10 @@ UILabel *loadingLabel;
     AudioServicesCreateSystemSoundID(soundFileURLRef, &soundId);
     AudioServicesPlaySystemSound(soundId);
     CFRelease(soundFileURLRef);
+    NSError *error;
     
-
+    [PFCloud callFunction:@"buyBoosterPack" withParameters:@{
+                                                      } error:&error];
     
 }
 

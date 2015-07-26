@@ -642,6 +642,7 @@ NSDictionary *singlePlayerCardImages;
         if (_cardModel.element < backgroundImages.count)
         {
             NSArray*elementArray = backgroundImages[_cardModel.element];
+            //brianedit Jul9
             _backgroundImageView.image = elementArray[0]; //TODO change if has rarity difference per element
         }
         else
