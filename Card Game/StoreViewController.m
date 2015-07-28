@@ -68,6 +68,11 @@ NSArray *_products;
     SCREEN_WIDTH = [[UIScreen mainScreen] bounds].size.width;
     SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
     
+    UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,SCREEN_WIDTH,SCREEN_HEIGHT)];
+    backgroundImageView.image = [UIImage imageNamed:@"WoodBG.jpg"];
+    [self.view addSubview:backgroundImageView];
+    
+    
     _headerView = [[UIView alloc]initWithFrame:CGRectMake(0,0,SCREEN_WIDTH, 60)];
     //_headerView.backgroundColor = [UIColor redColor];
     float mockupHeight = 1136.0f;
@@ -78,15 +83,34 @@ NSArray *_products;
     _footerView = [[UIView alloc]initWithFrame:CGRectMake(0,bottomBarStartYFooter*SCREEN_HEIGHT,SCREEN_WIDTH, bottomBarHeightFooter*SCREEN_HEIGHT)];
     //_footerView.backgroundColor = [UIColor whiteColor];
     
-    _cardsView = [[StoreCardsCollectionView alloc] initWithFrame:CGRectMake(0, _headerView.frame.size.height, self.view.bounds.size.width, self.view.bounds.size.height-_headerView.frame.size.height-_footerView.frame.size.height)];
+    //change the frame of the cards view
+    //July28
+    //
+    //_cardsView = [[StoreCardsCollectionView alloc] initWithFrame:CGRectMake(0, _headerView.frame.size.height, self.view.bounds.size.width, self.view.bounds.size.height-_headerView.frame.size.height-_footerView.frame.size.height)];
+    
+    //float storeRightEdgeXRatio = 445/mockupWidth;
+    float cardsViewWidthRatio = 454/mockupWidth;
+    _cardsView = [[StoreCardsCollectionView alloc] initWithFrame:CGRectMake(0, _headerView.frame.size.height+_headerView.frame.size.height*0.4, cardsViewWidthRatio*SCREEN_WIDTH, self.view.bounds.size.height-_footerView.frame.size.height)];
     _cardsView.parentViewController = self;
-    _cardsView.backgroundColor = COLOUR_INTERFACE_BLUE;
+    _cardsView.backgroundColor = [UIColor clearColor];
     
     self.view.backgroundColor = [UIColor whiteColor];
     
     [self.view addSubview:_cardsView];
     
     [self.view addSubview:_headerView];
+    
+    //add the storeIcon
+    UIImage *storeIconImage = [UIImage imageNamed:@"CardStoreBanner.png"];
+    //image -store banner width 470, 168 h, 0x, 28Y
+    float storeYStart = 15/mockupHeight*SCREEN_HEIGHT;
+    float storeXStart = 0;
+    float storeWidth = 470/mockupWidth*SCREEN_WIDTH;
+    float storeHeight = 168/mockupHeight*SCREEN_HEIGHT;
+    
+    UIImageView *storeIconBanner = [[UIImageView alloc] initWithFrame:CGRectMake(storeXStart,storeYStart,storeWidth,storeHeight)];
+    storeIconBanner.image = storeIconImage;
+    [self.view addSubview:storeIconBanner];
     
     
     //------------------footer views------------------//
@@ -99,8 +123,6 @@ NSArray *_products;
     //x445, width 200
     UIImageView *storeRightEdge = [[UIImageView alloc] init];
    
-    
-    
     float storeRightEdgeXRatio = 445/mockupWidth;
     float storeRightEdgeWidthRatio = 200/mockupWidth;
     

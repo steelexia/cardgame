@@ -32,9 +32,12 @@
  int CARD_HEIGHT_RATIO = 8;
  float CARD_IMAGE_RATIO = 450.f/530;
 
- double CARD_VIEWER_SCALE = 0.8;
+
+ double CARD_VIEWER_SCALE = 0.8f;
  double CARD_VIEWER_MAXED_SCALE = 1.25;
 
+//brian jul28
+//original value 0.4f
  float CARD_DEFAULT_SCALE = 0.4f;
  float CARD_DRAGGING_SCALE = 1.0f;
 
@@ -102,49 +105,49 @@ NSDictionary *singlePlayerCardImages;
     }
     */
     backgroundImages = @[
-                         @[[UIImage imageNamed:@"card_background_front_neutral_common"],
+                         @[[UIImage imageNamed:@"CardBase.png"],
                            //TODO replace with additional rarity here
                            //NOTE: actually different elements probably won't get different images for each rarity. however that's not to say it can't be added in the future
-                           [UIImage imageNamed:@"card_background_front_neutral_common"],
-                           [UIImage imageNamed:@"card_background_front_neutral_common"],
-                           [UIImage imageNamed:@"card_background_front_neutral_common"],
-                           [UIImage imageNamed:@"card_background_front_neutral_common"],
+                           [UIImage imageNamed:@"CardBase.png"],
+                           [UIImage imageNamed:@"CardBase.png"],
+                           [UIImage imageNamed:@"CardBase.png"],
+                           [UIImage imageNamed:@"CardBase.png"],
                            ],
-                         @[[UIImage imageNamed:@"card_background_front_fire_common"],
-                           [UIImage imageNamed:@"card_background_front_fire_common"],
-                           [UIImage imageNamed:@"card_background_front_fire_common"],
-                           [UIImage imageNamed:@"card_background_front_fire_common"],
-                           [UIImage imageNamed:@"card_background_front_fire_common"],
+                         @[[UIImage imageNamed:@"CardBackgroundFire.png"],
+                           [UIImage imageNamed:@"CardBackgroundFire.png"],
+                           [UIImage imageNamed:@"CardBackgroundFire.png"],
+                           [UIImage imageNamed:@"CardBackgroundFire.png"],
+                           [UIImage imageNamed:@"CardBackgroundFire.png"],
                            ],
-                         @[[UIImage imageNamed:@"card_background_front_ice_common"],
-                           [UIImage imageNamed:@"card_background_front_ice_common"],
-                           [UIImage imageNamed:@"card_background_front_ice_common"],
-                           [UIImage imageNamed:@"card_background_front_ice_common"],
-                           [UIImage imageNamed:@"card_background_front_ice_common"],
+                         @[[UIImage imageNamed:@"CardBackgroundIce.png"],
+                           [UIImage imageNamed:@"CardBackgroundIce.png"],
+                           [UIImage imageNamed:@"CardBackgroundIce.png"],
+                           [UIImage imageNamed:@"CardBackgroundIce.png"],
+                           [UIImage imageNamed:@"CardBackgroundIce.png"],
                            ],
-                         @[[UIImage imageNamed:@"card_background_front_lightning_common"],
-                           [UIImage imageNamed:@"card_background_front_lightning_common"],
-                           [UIImage imageNamed:@"card_background_front_lightning_common"],
-                           [UIImage imageNamed:@"card_background_front_lightning_common"],
-                           [UIImage imageNamed:@"card_background_front_lightning_common"],
+                         @[[UIImage imageNamed:@"CardBackgroundLightning.png"],
+                           [UIImage imageNamed:@"CardBackgroundLightning.png"],
+                           [UIImage imageNamed:@"CardBackgroundLightning.png"],
+                           [UIImage imageNamed:@"CardBackgroundLightning.png"],
+                           [UIImage imageNamed:@"CardBackgroundLightning.png"],
                            ],
-                         @[[UIImage imageNamed:@"card_background_front_earth_common"],
-                           [UIImage imageNamed:@"card_background_front_earth_common"],
-                           [UIImage imageNamed:@"card_background_front_earth_common"],
-                           [UIImage imageNamed:@"card_background_front_earth_common"],
-                           [UIImage imageNamed:@"card_background_front_earth_common"],
+                         @[[UIImage imageNamed:@"CardBackgroundEarth.png"],
+                           [UIImage imageNamed:@"CardBackgroundEarth.png"],
+                           [UIImage imageNamed:@"CardBackgroundEarth.png"],
+                           [UIImage imageNamed:@"CardBackgroundEarth.png"],
+                           [UIImage imageNamed:@"CardBackgroundEarth.png"],
                            ],
-                         @[[UIImage imageNamed:@"card_background_front_light_common"],
-                           [UIImage imageNamed:@"card_background_front_light_common"],
-                           [UIImage imageNamed:@"card_background_front_light_common"],
-                           [UIImage imageNamed:@"card_background_front_light_common"],
-                           [UIImage imageNamed:@"card_background_front_light_common"],
+                         @[[UIImage imageNamed:@"CardBackgroundLight.png"],
+                           [UIImage imageNamed:@"CardBackgroundLight.png"],
+                           [UIImage imageNamed:@"CardBackgroundLight.png"],
+                           [UIImage imageNamed:@"CardBackgroundLight.png"],
+                           [UIImage imageNamed:@"CardBackgroundLight.png"],
                            ],
-                         @[[UIImage imageNamed:@"card_background_front_dark_common"],
-                           [UIImage imageNamed:@"card_background_front_dark_common"],
-                           [UIImage imageNamed:@"card_background_front_dark_common"],
-                           [UIImage imageNamed:@"card_background_front_dark_common"],
-                           [UIImage imageNamed:@"card_background_front_dark_common"],
+                         @[[UIImage imageNamed:@"CardBackgroundDark.png"],
+                           [UIImage imageNamed:@"CardBackgroundDark.png"],
+                           [UIImage imageNamed:@"CardBackgroundDark.png"],
+                           [UIImage imageNamed:@"CardBackgroundDark.png"],
+                           [UIImage imageNamed:@"CardBackgroundDark.png"],
                            ],
                          ];
     
@@ -160,6 +163,8 @@ NSDictionary *singlePlayerCardImages;
                           [UIImage imageNamed:@"card_ability_icon_remove_ability"],
                           ];
     
+    //brianjuly26
+    //nolonger use these
     backgroundOverlayImages = @[
                                 [UIImage imageNamed:@"card_background_front_overlay_common"],
                                 //TODO other rarities
@@ -168,6 +173,7 @@ NSDictionary *singlePlayerCardImages;
                                 [UIImage imageNamed:@"card_background_front_overlay_exceptional"],
                                 [UIImage imageNamed:@"card_background_front_overlay_legendary"],
                                 ];
+    
     
     singlePlayerCardImages = @{
                                //starting deck
@@ -238,7 +244,7 @@ NSDictionary *singlePlayerCardImages;
                            };
     
     
-    backgroundMonsterOverlayImage = [UIImage imageNamed:@"card_background_front_monster_overlay"];
+    backgroundMonsterOverlayImage = [UIImage imageNamed:@"HammerHeartHourglass.png"];
     
     selectHighlightImage = [UIImage imageNamed:@"card_glow_select"];
     heroSelectHighlightImage = [UIImage imageNamed:@"hero_glow_select"];
@@ -328,6 +334,9 @@ NSDictionary *singlePlayerCardImages;
         imageBackgroundView.center = CGPointMake(CARD_FULL_WIDTH/2, 80);
         //[backgroundImageView addSubview:imageBackgroundView]; //for providing a view if card image has transparent areas, not using cardImage's background since it has problems when loading in store
         
+        
+        
+        
         if (cardImage == nil && self.cardModel.reports < 5 && !self.cardModel.userReported)
         {
             if (cardModel.type == cardTypeSinglePlayer)
@@ -358,6 +367,8 @@ NSDictionary *singlePlayerCardImages;
                     NSString *imageKey = [NSString stringWithFormat:@"hero_%d", cardModel.idNumber];
                     
                     UIImage *heroImage = singlePlayerCardImages[imageKey];
+                    
+                    
                     if (heroImage == nil)
                     {
                         self.cardImage = [[UIImageView alloc] initWithImage:heroPlaceHolderImage];
@@ -416,10 +427,63 @@ NSDictionary *singlePlayerCardImages;
             [_frontViews addSubview:self.cardImage];
         }
         
+        //brian Jul26
+        //add subview for the frame of the image
+        UIImageView *frameImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"PictureBorder2.png"]];
+        //356W, 353H
+        //approximately 10H, 5H
+         //self.cardImage.frame = CGRectMake(0, 0, CARD_FULL_WIDTH - 16, (CARD_FULL_WIDTH-16) * CARD_IMAGE_RATIO);
+        
+        if (cardModel.type == cardTypePlayer)
+        {
+            frameImageView.alpha = 0;
+            
+        }
+        float frameImageWidth = 376.0f/400.0f * CARD_FULL_WIDTH;
+        
+        float frameImageHeight = 353.0f/590.0f *CARD_FULL_HEIGHT;
+        float frameImageX = 24.0f/400.0f/2 * CARD_FULL_WIDTH;
+        float frameImageY = 0;
+        frameImageView.frame = CGRectMake(frameImageX,0,frameImageWidth,frameImageHeight);
+        
+        [_frontViews addSubview:frameImageView];
+        
         UIImageView *cardOverlay = [[UIImageView alloc] initWithImage:backgroundOverlayImages[cardModel.rarity]];
         cardOverlay.bounds = CGRectMake(0, 0, CARD_FULL_WIDTH, CARD_FULL_HEIGHT);
         cardOverlay.center = CGPointMake(CARD_FULL_WIDTH/2, CARD_FULL_HEIGHT/2);
-        [_frontViews addSubview:cardOverlay];
+        //brian july 26 remove cardOverlay
+        
+        //[_frontViews addSubview:cardOverlay];
+        UIImageView *descriptionBGView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CardTitleBacking.png"]];
+        //modify width and height relative to cardview ratio
+        float descriptionWidthRatio = 200/400.0f;
+        float descriptionHeightRatio = 99.0f/590.0f;
+        
+        if (cardModel.type == cardTypePlayer)
+        {
+            descriptionBGView.alpha = 0;
+            
+        }
+        descriptionBGView.frame = CGRectMake(0,0,CARD_FULL_WIDTH,descriptionHeightRatio*CARD_FULL_HEIGHT);
+        [_frontViews addSubview:descriptionBGView];
+        
+        //brianJuly27
+        //add abilitydescriptionBGFrame
+        //355 × 221 pixels
+        float descriptionBGWidth = 365.0f/400.0f*CARD_FULL_WIDTH;
+        float descriptionBGHeight = 216.0f/590.0f*CARD_FULL_HEIGHT;
+        float descriptionBGX = 29.0f/2/400.0f*CARD_FULL_WIDTH;
+        float descriptionBGY = 368.0f/590.0f*CARD_FULL_HEIGHT;
+        
+        UIImageView *descriptionBGFrame = [[UIImageView alloc] initWithFrame:CGRectMake(descriptionBGX,descriptionBGY,descriptionBGWidth,descriptionBGHeight)];
+        if (cardModel.type == cardTypePlayer)
+        {
+            descriptionBGFrame.alpha = 0;
+        }
+        descriptionBGFrame.image = [UIImage imageNamed:@"CardDescription.png"];
+        [_frontViews addSubview:descriptionBGFrame];
+        
+        
         
         self.userInteractionEnabled = true; //allows interaction
         
@@ -437,16 +501,19 @@ NSDictionary *singlePlayerCardImages;
         self.nameLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,96,30)];
         self.nameLabel.center = CGPointMake(CARD_FULL_WIDTH/2 + CARD_FULL_WIDTH/10 + 2, 16);
         self.nameLabel.textAlignment = NSTextAlignmentCenter;
-        self.nameLabel.textColor = [UIColor blackColor];
+        self.nameLabel.textColor = [UIColor whiteColor];
         self.nameLabel.backgroundColor = [UIColor clearColor];
         self.nameLabel.font = [UIFont fontWithName:cardMainFont size:15];
         [self.nameLabel setMinimumScaleFactor:6.f/15];
+        self.nameLabel.strokeOn = YES;
+        self.nameLabel.strokeThickness = 2;
+        
         self.nameLabel.adjustsFontSizeToFitWidth = YES;
         
         [_frontViews addSubview: nameLabel];
         
         self.costLabel = [[StrokedLabel alloc] initWithFrame:self.bounds];
-        self.costLabel.center = CGPointMake(21, 19);
+        self.costLabel.center = CGPointMake(17, 19);
         self.costLabel.textAlignment = NSTextAlignmentCenter;
         self.costLabel.textColor = [UIColor whiteColor];
         self.costLabel.backgroundColor = [UIColor clearColor];
@@ -480,15 +547,18 @@ NSDictionary *singlePlayerCardImages;
         self.elementLabel.text = [CardModel elementToString:cardModel.element];
         //NOTE added above other stuff
         
-        self.baseAbilityLabel = [[UITextView alloc] initWithFrame:CGRectMake(5, 157, CARD_FULL_WIDTH - 10, 60)]; //NOTE changing this is useless, do it down below
+        //original value -10 for width
+        self.baseAbilityLabel = [[UITextView alloc] initWithFrame:CGRectMake(5, 157, CARD_FULL_WIDTH - 15, 60)]; //NOTE changing this is useless, do it down below
         [self.baseAbilityLabel  setTextContainerInset:UIEdgeInsetsMake(0, 0, 0, 0)];
-        self.baseAbilityLabel.textColor = [UIColor blackColor];
+        self.baseAbilityLabel.textColor = [UIColor whiteColor];
         self.baseAbilityLabel.backgroundColor = [UIColor clearColor];
         self.baseAbilityLabel.editable = NO;
         self.baseAbilityLabel.selectable = NO;
         
         //self.baseAbilityLabel.numberOfLines = 0;
-        self.baseAbilityLabel.textAlignment = NSTextAlignmentLeft;
+        //self.baseAbilityLabel.textAlignment = NSTextAlignmentCenter;
+        [self.baseAbilityLabel setTextAlignment:NSTextAlignmentCenter];
+        
         //self.baseAbilityLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         //self.baseAbilityLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         
@@ -541,14 +611,28 @@ NSDictionary *singlePlayerCardImages;
             //other cards
             else
             {
+                
+                //brian july 26
+                //442 width
+                //274 height
+                //approximately -20 x, 100y
                 //monster overlay
+                //total card dimensions (400 w, 590 height)
+                float monsterOverlayWidth = 442.0f/400.0f * CARD_FULL_WIDTH;
+                float monsterOverlayHeight = 274.0f/590.0f * CARD_FULL_HEIGHT;
+                float monsterOverlayX = -28.0f/400.0f * CARD_FULL_WIDTH;
+                float monsterOverlayY = 115.0f/590.0f * CARD_FULL_HEIGHT;
                 UIImageView *monsterOverlay = [[UIImageView alloc] initWithImage:backgroundMonsterOverlayImage];
-                monsterOverlay.bounds = CGRectMake(0, 0, CARD_FULL_WIDTH, CARD_FULL_HEIGHT);
-                monsterOverlay.center = CGPointMake(CARD_FULL_WIDTH/2, CARD_FULL_HEIGHT/2);
+                monsterOverlay.frame = CGRectMake(monsterOverlayX,monsterOverlayY,monsterOverlayWidth,monsterOverlayHeight);
+                
                 [_frontViews addSubview:monsterOverlay];
                 
+                float attackLabelX = 47.0f/400.0f*CARD_FULL_WIDTH;
+                float attackLabelY = 330.0f/590.0f*CARD_FULL_HEIGHT;
+                
+                //original size 18
                 self.attackLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,CARD_FULL_WIDTH/2,20)];
-                self.attackLabel.center = CGPointMake(35, 138);
+                self.attackLabel.center = CGPointMake(attackLabelX, attackLabelY);
                 self.attackLabel.textAlignment = NSTextAlignmentCenter;
                 self.attackLabel.textColor = [UIColor whiteColor];
                 self.attackLabel.backgroundColor = [UIColor clearColor];
@@ -560,8 +644,10 @@ NSDictionary *singlePlayerCardImages;
                 
                 [_frontViews addSubview: attackLabel];
                 
+                float lifeLabelX = 345.0f/400.0f*CARD_FULL_WIDTH;
+                float lifeLabelY = 330.0f/590.0f*CARD_FULL_HEIGHT;
                 self.lifeLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,CARD_FULL_WIDTH/2,20)];
-                self.lifeLabel.center = CGPointMake(CARD_FULL_WIDTH - 33, 138);
+                self.lifeLabel.center = CGPointMake(lifeLabelX, lifeLabelY);
                 self.lifeLabel.textAlignment = NSTextAlignmentCenter;
                 self.lifeLabel.textColor = [UIColor whiteColor];
                 self.lifeLabel.backgroundColor = [UIColor clearColor];
@@ -573,15 +659,17 @@ NSDictionary *singlePlayerCardImages;
                 
                 [_frontViews addSubview: lifeLabel];
                 
+                float cooldownLabelX = 204.0f/400.0f*CARD_FULL_WIDTH;
+                float cooldownLabelY = 327.0f/590.0f*CARD_FULL_HEIGHT;
                 self.cooldownLabel = [[StrokedLabel alloc] initWithFrame:self.bounds];
-                self.cooldownLabel.center = CGPointMake(CARD_FULL_WIDTH/2, 129);
+                self.cooldownLabel.center = CGPointMake(cooldownLabelX, cooldownLabelY);
                 self.cooldownLabel.textAlignment = NSTextAlignmentCenter;
                 self.cooldownLabel.textColor = [UIColor whiteColor];
                 self.cooldownLabel.backgroundColor = [UIColor clearColor];
                 self.cooldownLabel.strokeOn = YES;
                 self.cooldownLabel.strokeColour = [UIColor blackColor];
                 self.cooldownLabel.strokeThickness = 2.5;
-                self.cooldownLabel.font = [UIFont fontWithName:cardMainFont size:18];
+                self.cooldownLabel.font = [UIFont fontWithName:cardMainFont size:22];
                 self.cooldownLabel.text = [NSString stringWithFormat:@"%d", monsterCard.cooldown];
                 
                 [_frontViews addSubview: cooldownLabel];
@@ -623,6 +711,8 @@ NSDictionary *singlePlayerCardImages;
         self.cardHighlightType = cardHighlightNone;
         self.cardViewState = cardViewStateNone;
     }
+    
+    
     
     return self;
 }
@@ -914,8 +1004,11 @@ NSDictionary *singlePlayerCardImages;
         
         NSMutableAttributedString *finalString = [[NSMutableAttributedString alloc] initWithAttributedString:abilityDescriptionAS] ;
         [finalString appendAttributedString:flavourStringAS];
+       
         
         self.baseAbilityLabel.attributedText = finalString;
+         self.baseAbilityLabel.textColor = [UIColor whiteColor];
+        self.baseAbilityLabel.textAlignment = NSTextAlignmentCenter;
     }
     //back facing
     else

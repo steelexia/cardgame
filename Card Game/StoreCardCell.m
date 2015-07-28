@@ -22,8 +22,8 @@
     if (self) {
         _cardView = nil;
         
-        _background = [[CFLabel alloc] initWithFrame:self.bounds];
-        [self setBackgroundView:_background];
+        //_background = [[CFLabel alloc] initWithFrame:self.bounds];
+        //[self setBackgroundView:_background];
         
         _activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
         _activityView.frame = CGRectMake(0,0,50,50);

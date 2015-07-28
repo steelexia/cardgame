@@ -218,6 +218,7 @@
 		EC10BDAC1B338CCF00F7ABDE /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = EC10BDA31B338CCF00F7ABDE /* Icon-Small.png */; };
 		EC10BDAD1B338CCF00F7ABDE /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC10BDA41B338CCF00F7ABDE /* Icon-Small@2x.png */; };
 		EC10BDAE1B338CCF00F7ABDE /* Icon-Small@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = EC10BDA51B338CCF00F7ABDE /* Icon-Small@3x.png */; };
+		EC3A5D6D1B67F6360064055F /* WoodBG.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EC3A5D6C1B67F6360064055F /* WoodBG.jpg */; };
 		EC42E84A1B5725FB005EDFD5 /* CardStoreBackButton.png in Resources */ = {isa = PBXBuildFile; fileRef = EC42E8491B5725FB005EDFD5 /* CardStoreBackButton.png */; };
 		EC42E84C1B57260F005EDFD5 /* CardStoreBanner.png in Resources */ = {isa = PBXBuildFile; fileRef = EC42E84B1B57260F005EDFD5 /* CardStoreBanner.png */; };
 		EC42E84E1B57261F005EDFD5 /* CardStoreBlueButton.png in Resources */ = {isa = PBXBuildFile; fileRef = EC42E84D1B57261F005EDFD5 /* CardStoreBlueButton.png */; };
@@ -266,11 +267,6 @@
 		ECAB71C91B4F45B7004D4E5C /* WoodBackgroundWithFrames.png in Resources */ = {isa = PBXBuildFile; fileRef = ECAB71C81B4F45B7004D4E5C /* WoodBackgroundWithFrames.png */; };
 		ECAB71CB1B4F45BE004D4E5C /* TopFlag2.png in Resources */ = {isa = PBXBuildFile; fileRef = ECAB71CA1B4F45BE004D4E5C /* TopFlag2.png */; };
 		ECAB71CD1B4F45C2004D4E5C /* BottomFlag2.png in Resources */ = {isa = PBXBuildFile; fileRef = ECAB71CC1B4F45C2004D4E5C /* BottomFlag2.png */; };
-		ECAB71D11B4F6C8B004D4E5C /* CardFrontBase2.png in Resources */ = {isa = PBXBuildFile; fileRef = ECAB71CF1B4F6C8B004D4E5C /* CardFrontBase2.png */; };
-		ECAB71D21B4F6C8B004D4E5C /* CardFrontBase.png in Resources */ = {isa = PBXBuildFile; fileRef = ECAB71D01B4F6C8B004D4E5C /* CardFrontBase.png */; };
-		ECAB71D61B4F6C91004D4E5C /* PictureBorder.png in Resources */ = {isa = PBXBuildFile; fileRef = ECAB71D31B4F6C91004D4E5C /* PictureBorder.png */; };
-		ECAB71D71B4F6C91004D4E5C /* CardFrontBaseFire2.png in Resources */ = {isa = PBXBuildFile; fileRef = ECAB71D41B4F6C91004D4E5C /* CardFrontBaseFire2.png */; };
-		ECAB71D81B4F6C91004D4E5C /* CardFrontBaseFire.png in Resources */ = {isa = PBXBuildFile; fileRef = ECAB71D51B4F6C91004D4E5C /* CardFrontBaseFire.png */; };
 		ECBEE57F1B23C2D200D131E7 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECBEE57E1B23C2D200D131E7 /* CoreData.framework */; };
 		ECBEE5821B23CF8100D131E7 /* UserCardVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = ECBEE5811B23CF8100D131E7 /* UserCardVersion.m */; };
 		ECCBF4861B48D2F6007C7594 /* titleGongSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = ECCBF4851B48D2F6007C7594 /* titleGongSound.wav */; };
@@ -381,6 +377,24 @@
 		ECCD46F21ACC881400804B06 /* PNConnectionChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD46891ACC881400804B06 /* PNConnectionChannel.m */; };
 		ECCD46F31ACC881400804B06 /* PNLoggerSymbols.plist in Resources */ = {isa = PBXBuildFile; fileRef = ECCD468B1ACC881400804B06 /* PNLoggerSymbols.plist */; };
 		ECCD46F61ACC89B300804B06 /* multiplayerDataHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = ECCD46F51ACC89B300804B06 /* multiplayerDataHandler.m */; };
+		ECFA3E721B657F8900C83EE1 /* CardBackgroundDark.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E711B657F8900C83EE1 /* CardBackgroundDark.png */; };
+		ECFA3E7B1B657F9D00C83EE1 /* CardBackgroundEarth.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E731B657F9D00C83EE1 /* CardBackgroundEarth.png */; };
+		ECFA3E7C1B657F9D00C83EE1 /* CardBackgroundFire.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E741B657F9D00C83EE1 /* CardBackgroundFire.png */; };
+		ECFA3E7D1B657F9D00C83EE1 /* CardBackgroundIce.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E751B657F9D00C83EE1 /* CardBackgroundIce.png */; };
+		ECFA3E7E1B657F9D00C83EE1 /* CardBackgroundLight.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E761B657F9D00C83EE1 /* CardBackgroundLight.png */; };
+		ECFA3E7F1B657F9D00C83EE1 /* CardBackgroundLightning.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E771B657F9D00C83EE1 /* CardBackgroundLightning.png */; };
+		ECFA3E801B657F9D00C83EE1 /* CardDescription.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E781B657F9D00C83EE1 /* CardDescription.png */; };
+		ECFA3E811B657F9D00C83EE1 /* CardTitleBacking.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E791B657F9D00C83EE1 /* CardTitleBacking.png */; };
+		ECFA3E821B657F9D00C83EE1 /* HammerHeartHourglass.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E7A1B657F9D00C83EE1 /* HammerHeartHourglass.png */; };
+		ECFA3E8B1B657FA800C83EE1 /* Heart.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E831B657FA800C83EE1 /* Heart.png */; };
+		ECFA3E8C1B657FA800C83EE1 /* Hourglass.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E841B657FA800C83EE1 /* Hourglass.png */; };
+		ECFA3E8D1B657FA800C83EE1 /* IconDark.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E851B657FA800C83EE1 /* IconDark.png */; };
+		ECFA3E8E1B657FA800C83EE1 /* IconFire.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E861B657FA800C83EE1 /* IconFire.png */; };
+		ECFA3E8F1B657FA800C83EE1 /* IconIce.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E871B657FA800C83EE1 /* IconIce.png */; };
+		ECFA3E901B657FA800C83EE1 /* IconLeaf.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E881B657FA800C83EE1 /* IconLeaf.png */; };
+		ECFA3E911B657FA800C83EE1 /* IconLightning.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E891B657FA800C83EE1 /* IconLightning.png */; };
+		ECFA3E921B657FA800C83EE1 /* PictureBorder2.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E8A1B657FA800C83EE1 /* PictureBorder2.png */; };
+		ECFA3E941B6580D400C83EE1 /* CardBase.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E931B6580D400C83EE1 /* CardBase.png */; };
 		FA033FC619BCFF6600EFEBD8 /* card_0001.png in Resources */ = {isa = PBXBuildFile; fileRef = FA033FB219BCFF6600EFEBD8 /* card_0001.png */; };
 		FA033FC719BCFF6600EFEBD8 /* card_0002.png in Resources */ = {isa = PBXBuildFile; fileRef = FA033FB319BCFF6600EFEBD8 /* card_0002.png */; };
 		FA033FC819BCFF6600EFEBD8 /* card_0003.png in Resources */ = {isa = PBXBuildFile; fileRef = FA033FB419BCFF6600EFEBD8 /* card_0003.png */; };
@@ -751,6 +765,7 @@
 		EC10BDA31B338CCF00F7ABDE /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small.png"; sourceTree = "<group>"; };
 		EC10BDA41B338CCF00F7ABDE /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@2x.png"; sourceTree = "<group>"; };
 		EC10BDA51B338CCF00F7ABDE /* Icon-Small@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@3x.png"; sourceTree = "<group>"; };
+		EC3A5D6C1B67F6360064055F /* WoodBG.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = WoodBG.jpg; sourceTree = "<group>"; };
 		EC42E8491B5725FB005EDFD5 /* CardStoreBackButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardStoreBackButton.png; sourceTree = "<group>"; };
 		EC42E84B1B57260F005EDFD5 /* CardStoreBanner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardStoreBanner.png; sourceTree = "<group>"; };
 		EC42E84D1B57261F005EDFD5 /* CardStoreBlueButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardStoreBlueButton.png; sourceTree = "<group>"; };
@@ -801,11 +816,6 @@
 		ECAB71C81B4F45B7004D4E5C /* WoodBackgroundWithFrames.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WoodBackgroundWithFrames.png; sourceTree = "<group>"; };
 		ECAB71CA1B4F45BE004D4E5C /* TopFlag2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TopFlag2.png; sourceTree = "<group>"; };
 		ECAB71CC1B4F45C2004D4E5C /* BottomFlag2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BottomFlag2.png; sourceTree = "<group>"; };
-		ECAB71CF1B4F6C8B004D4E5C /* CardFrontBase2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardFrontBase2.png; sourceTree = "<group>"; };
-		ECAB71D01B4F6C8B004D4E5C /* CardFrontBase.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardFrontBase.png; sourceTree = "<group>"; };
-		ECAB71D31B4F6C91004D4E5C /* PictureBorder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PictureBorder.png; sourceTree = "<group>"; };
-		ECAB71D41B4F6C91004D4E5C /* CardFrontBaseFire2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardFrontBaseFire2.png; sourceTree = "<group>"; };
-		ECAB71D51B4F6C91004D4E5C /* CardFrontBaseFire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardFrontBaseFire.png; sourceTree = "<group>"; };
 		ECBEE57E1B23C2D200D131E7 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		ECBEE5801B23CF8100D131E7 /* UserCardVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCardVersion.h; sourceTree = "<group>"; };
 		ECBEE5811B23CF8100D131E7 /* UserCardVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCardVersion.m; sourceTree = "<group>"; };
@@ -1086,6 +1096,24 @@
 		ECCD468B1ACC881400804B06 /* PNLoggerSymbols.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = PNLoggerSymbols.plist; sourceTree = "<group>"; };
 		ECCD46F41ACC89B300804B06 /* multiplayerDataHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = multiplayerDataHandler.h; sourceTree = "<group>"; };
 		ECCD46F51ACC89B300804B06 /* multiplayerDataHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = multiplayerDataHandler.m; sourceTree = "<group>"; };
+		ECFA3E711B657F8900C83EE1 /* CardBackgroundDark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardBackgroundDark.png; sourceTree = "<group>"; };
+		ECFA3E731B657F9D00C83EE1 /* CardBackgroundEarth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardBackgroundEarth.png; sourceTree = "<group>"; };
+		ECFA3E741B657F9D00C83EE1 /* CardBackgroundFire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardBackgroundFire.png; sourceTree = "<group>"; };
+		ECFA3E751B657F9D00C83EE1 /* CardBackgroundIce.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardBackgroundIce.png; sourceTree = "<group>"; };
+		ECFA3E761B657F9D00C83EE1 /* CardBackgroundLight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardBackgroundLight.png; sourceTree = "<group>"; };
+		ECFA3E771B657F9D00C83EE1 /* CardBackgroundLightning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardBackgroundLightning.png; sourceTree = "<group>"; };
+		ECFA3E781B657F9D00C83EE1 /* CardDescription.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardDescription.png; sourceTree = "<group>"; };
+		ECFA3E791B657F9D00C83EE1 /* CardTitleBacking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardTitleBacking.png; sourceTree = "<group>"; };
+		ECFA3E7A1B657F9D00C83EE1 /* HammerHeartHourglass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = HammerHeartHourglass.png; sourceTree = "<group>"; };
+		ECFA3E831B657FA800C83EE1 /* Heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Heart.png; sourceTree = "<group>"; };
+		ECFA3E841B657FA800C83EE1 /* Hourglass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Hourglass.png; sourceTree = "<group>"; };
+		ECFA3E851B657FA800C83EE1 /* IconDark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IconDark.png; sourceTree = "<group>"; };
+		ECFA3E861B657FA800C83EE1 /* IconFire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IconFire.png; sourceTree = "<group>"; };
+		ECFA3E871B657FA800C83EE1 /* IconIce.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IconIce.png; sourceTree = "<group>"; };
+		ECFA3E881B657FA800C83EE1 /* IconLeaf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IconLeaf.png; sourceTree = "<group>"; };
+		ECFA3E891B657FA800C83EE1 /* IconLightning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IconLightning.png; sourceTree = "<group>"; };
+		ECFA3E8A1B657FA800C83EE1 /* PictureBorder2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PictureBorder2.png; sourceTree = "<group>"; };
+		ECFA3E931B6580D400C83EE1 /* CardBase.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardBase.png; sourceTree = "<group>"; };
 		FA033FB219BCFF6600EFEBD8 /* card_0001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_0001.png; sourceTree = "<group>"; };
 		FA033FB319BCFF6600EFEBD8 /* card_0002.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_0002.png; sourceTree = "<group>"; };
 		FA033FB419BCFF6600EFEBD8 /* card_0003.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_0003.png; sourceTree = "<group>"; };
@@ -1787,6 +1815,7 @@
 				EC42E8581B572647005EDFD5 /* CardStorePlusButton.png */,
 				EC42E8591B572647005EDFD5 /* CardStoreRightRow.png */,
 				EC42E85A1B572647005EDFD5 /* CardStoreSearchButtonNoWords.png */,
+				EC3A5D6C1B67F6360064055F /* WoodBG.jpg */,
 			);
 			name = StoreUI;
 			sourceTree = "<group>";
@@ -1856,11 +1885,24 @@
 		ECAB71CE1B4F6C7D004D4E5C /* CardUI */ = {
 			isa = PBXGroup;
 			children = (
-				ECAB71D31B4F6C91004D4E5C /* PictureBorder.png */,
-				ECAB71D41B4F6C91004D4E5C /* CardFrontBaseFire2.png */,
-				ECAB71D51B4F6C91004D4E5C /* CardFrontBaseFire.png */,
-				ECAB71CF1B4F6C8B004D4E5C /* CardFrontBase2.png */,
-				ECAB71D01B4F6C8B004D4E5C /* CardFrontBase.png */,
+				ECFA3E831B657FA800C83EE1 /* Heart.png */,
+				ECFA3E841B657FA800C83EE1 /* Hourglass.png */,
+				ECFA3E851B657FA800C83EE1 /* IconDark.png */,
+				ECFA3E861B657FA800C83EE1 /* IconFire.png */,
+				ECFA3E871B657FA800C83EE1 /* IconIce.png */,
+				ECFA3E881B657FA800C83EE1 /* IconLeaf.png */,
+				ECFA3E891B657FA800C83EE1 /* IconLightning.png */,
+				ECFA3E8A1B657FA800C83EE1 /* PictureBorder2.png */,
+				ECFA3E931B6580D400C83EE1 /* CardBase.png */,
+				ECFA3E731B657F9D00C83EE1 /* CardBackgroundEarth.png */,
+				ECFA3E741B657F9D00C83EE1 /* CardBackgroundFire.png */,
+				ECFA3E751B657F9D00C83EE1 /* CardBackgroundIce.png */,
+				ECFA3E761B657F9D00C83EE1 /* CardBackgroundLight.png */,
+				ECFA3E771B657F9D00C83EE1 /* CardBackgroundLightning.png */,
+				ECFA3E781B657F9D00C83EE1 /* CardDescription.png */,
+				ECFA3E791B657F9D00C83EE1 /* CardTitleBacking.png */,
+				ECFA3E7A1B657F9D00C83EE1 /* HammerHeartHourglass.png */,
+				ECFA3E711B657F8900C83EE1 /* CardBackgroundDark.png */,
 			);
 			name = CardUI;
 			sourceTree = "<group>";
@@ -2393,10 +2435,10 @@
 				90DA434C195B7C0300E44AED /* card_background_front_neutral_common_icon.png in Resources */,
 				EC42E8611B5726A8005EDFD5 /* CoinPile001.png in Resources */,
 				90DA4371195F96DB00E44AED /* decrement_button.png in Resources */,
+				ECFA3E7F1B657F9D00C83EE1 /* CardBackgroundLightning.png in Resources */,
 				90F63753199E7E94007B96A6 /* cardgame.mobileprovision in Resources */,
 				FACF46C419EC852300D334E0 /* card_2008.png in Resources */,
 				EC7A74DB1B28F16500D3A53F /* Cards.png in Resources */,
-				ECAB71D71B4F6C91004D4E5C /* CardFrontBaseFire2.png in Resources */,
 				90DA43C51969D21500E44AED /* add_deck_button_gray.png in Resources */,
 				90DA43BC1969D21500E44AED /* back_button.png in Resources */,
 				9032E13D199918F8002A6725 /* category_tab_enabled.png in Resources */,
@@ -2414,6 +2456,7 @@
 				90DA43BF1969D21500E44AED /* monster_button.png in Resources */,
 				90456EE7198F1B9100B807DC /* like_button_gray.png in Resources */,
 				EC10BDAA1B338CCF00F7ABDE /* Icon-76.png in Resources */,
+				ECFA3E821B657F9D00C83EE1 /* HammerHeartHourglass.png in Resources */,
 				EC42E87D1B5726E7005EDFD5 /* FeaturedStoreCardPack003.png in Resources */,
 				90DA4358195E023600E44AED /* no_button.png in Resources */,
 				FACF46BE19EC852300D334E0 /* card_2002.png in Resources */,
@@ -2423,6 +2466,7 @@
 				ECAB71CD1B4F45C2004D4E5C /* BottomFlag2.png in Resources */,
 				FA14AA5719CC81A20080230B /* LinLibertine_RI.ttf in Resources */,
 				90456EE8198F1B9100B807DC /* like_button.png in Resources */,
+				ECFA3E721B657F8900C83EE1 /* CardBackgroundDark.png in Resources */,
 				FACF46D919EC8A0300D334E0 /* hero_4.png in Resources */,
 				FA14AA6619CFC3C20080230B /* cardgamewithTiendistro.mobileprovision in Resources */,
 				90F80F9119A27FA5007571F4 /* SSKeychain.strings in Resources */,
@@ -2447,12 +2491,13 @@
 				EC7A74E11B28F86F00D3A53F /* cog.png in Resources */,
 				FACF46CF19EC852300D334E0 /* card_2303.png in Resources */,
 				FA19FC8E19B2580900B38943 /* card_1003.png in Resources */,
+				ECFA3E7B1B657F9D00C83EE1 /* CardBackgroundEarth.png in Resources */,
 				90AB14F3196CA7E60008FCDD /* card_background_front_overlay_common.png in Resources */,
 				EC42E86E1B5726B2005EDFD5 /* StoreBanner.png in Resources */,
 				EC42E86B1B5726B2005EDFD5 /* CoinPile004.png in Resources */,
 				FA033FD719BCFF6600EFEBD8 /* card_0018.png in Resources */,
 				FA033FD419BCFF6600EFEBD8 /* card_0015.png in Resources */,
-				ECAB71D61B4F6C91004D4E5C /* PictureBorder.png in Resources */,
+				ECFA3E8E1B657FA800C83EE1 /* IconFire.png in Resources */,
 				FA033FC819BCFF6600EFEBD8 /* card_0003.png in Resources */,
 				EC7A74D91B28E79300D3A53F /* BottomFlag.png in Resources */,
 				90456EE5198F1B9100B807DC /* edit_button_gray.png in Resources */,
@@ -2465,6 +2510,7 @@
 				90AB150D197AE3CF0008FCDD /* card_ability_icon_cast_on_damaged.png in Resources */,
 				EC42E86C1B5726B2005EDFD5 /* CoinPile005.png in Resources */,
 				ECAB71CB1B4F45BE004D4E5C /* TopFlag2.png in Resources */,
+				ECFA3E941B6580D400C83EE1 /* CardBase.png in Resources */,
 				90AB14F5196CA7F90008FCDD /* card_background_front_monster_overlay.png in Resources */,
 				FA14AA5B19CCAFEB0080230B /* LinLibertine_aZL.ttf in Resources */,
 				90F80F9719A29317007571F4 /* card_1100.png in Resources */,
@@ -2485,7 +2531,6 @@
 				ECAB71C61B4F4532004D4E5C /* Images.xcassets in Resources */,
 				EC42E87F1B5726E7005EDFD5 /* FeaturedStoreCardPack005.png in Resources */,
 				9069AAE1195501AB006D1D98 /* card_background_front_dark_common.png in Resources */,
-				ECAB71D11B4F6C8B004D4E5C /* CardFrontBase2.png in Resources */,
 				FA033FD919BCFF6600EFEBD8 /* card_0020.png in Resources */,
 				EC42E87C1B5726E7005EDFD5 /* FeaturedStoreCardPack002.png in Resources */,
 				EC7A74CD1B28D97C00D3A53F /* MetalFrame.png in Resources */,
@@ -2494,6 +2539,7 @@
 				FA033FD019BCFF6600EFEBD8 /* card_0011.png in Resources */,
 				9069AACF1951E737006D1D98 /* Main_iPad.storyboard in Resources */,
 				9069AAE5195501AB006D1D98 /* card_background_front_light_common.png in Resources */,
+				ECFA3E911B657FA800C83EE1 /* IconLightning.png in Resources */,
 				90C52894199C00D000750C54 /* card_icon_gray.png in Resources */,
 				FACF46C919EC852300D334E0 /* card_2200.png in Resources */,
 				FACF46CA19EC852300D334E0 /* card_2201.png in Resources */,
@@ -2505,6 +2551,7 @@
 				EC8B3C3E1B19417600DE04A9 /* angryorc.jpeg in Resources */,
 				EC42E8551B57262D005EDFD5 /* CardStoreCardIcon.png in Resources */,
 				EC42E8801B5726E7005EDFD5 /* FeaturedStoreCloseButton.png in Resources */,
+				ECFA3E901B657FA800C83EE1 /* IconLeaf.png in Resources */,
 				FA033FCF19BCFF6600EFEBD8 /* card_0010.png in Resources */,
 				90DA43C11969D21500E44AED /* spell_button.png in Resources */,
 				9032E13619986006002A6725 /* dummy_button.png in Resources */,
@@ -2512,6 +2559,7 @@
 				9032E13A19991146002A6725 /* filter_toggle_button.png in Resources */,
 				EC42E8561B57262D005EDFD5 /* CardStoreCoins.png in Resources */,
 				9032E140199936B2002A6725 /* card_icon.png in Resources */,
+				ECFA3E8F1B657FA800C83EE1 /* IconIce.png in Resources */,
 				FAB5832519BB61FD007BFA26 /* card_1005.png in Resources */,
 				90C52890199BE53E00750C54 /* search_button.png in Resources */,
 				9070204D19915FD500FDE444 /* card_background_front_overlay_rare.png in Resources */,
@@ -2522,6 +2570,7 @@
 				EC42E8821B5726E7005EDFD5 /* FeaturedStorePurchaseButton.png in Resources */,
 				90DA43C21969D21500E44AED /* cancel_card_button.png in Resources */,
 				907020531992A1CB00FDE444 /* upload_from_camera_button.png in Resources */,
+				ECFA3E8D1B657FA800C83EE1 /* IconDark.png in Resources */,
 				FA8410151B25254C0023FA36 /* battle_background_0.png in Resources */,
 				90DA4340195A4A6E00E44AED /* add_button.png in Resources */,
 				FA14AA5D19CCB9E50080230B /* LinLibertine_aRL.ttf in Resources */,
@@ -2530,6 +2579,7 @@
 				907020721992AC8100FDE444 /* PLCameraSheetButton@2x.png in Resources */,
 				90DA4355195E022B00E44AED /* yes_button.png in Resources */,
 				9070204C19915FD500FDE444 /* card_background_front_overlay_exceptional.png in Resources */,
+				ECFA3E7D1B657F9D00C83EE1 /* CardBackgroundIce.png in Resources */,
 				EC42E87B1B5726E7005EDFD5 /* FeaturedStoreCardPack001.png in Resources */,
 				90F80F8319A259A3007571F4 /* menu_logo.png in Resources */,
 				90C52898199C2A1300750C54 /* filter_button_small.png in Resources */,
@@ -2540,6 +2590,7 @@
 				FA033FD319BCFF6600EFEBD8 /* card_0014.png in Resources */,
 				90DA43BE1969D21500E44AED /* monster_button_gray.png in Resources */,
 				FACF46BD19EC852300D334E0 /* card_2001.png in Resources */,
+				EC3A5D6D1B67F6360064055F /* WoodBG.jpg in Resources */,
 				FAB5832619BB61FD007BFA26 /* card_1006.png in Resources */,
 				FA19FC8C19B2580900B38943 /* card_1001.png in Resources */,
 				90AB150A197AD6DA0008FCDD /* card_ability_icon_cast_on_move.png in Resources */,
@@ -2550,7 +2601,6 @@
 				90DA43BA1969D21500E44AED /* battle_button_gray.png in Resources */,
 				907020781992AC8100FDE444 /* PLCameraSheetDoneButtonPressed@2x.png in Resources */,
 				EC42E8541B57262D005EDFD5 /* CardStoreBottomRow.png in Resources */,
-				ECAB71D21B4F6C8B004D4E5C /* CardFrontBase.png in Resources */,
 				907020501992937E00FDE444 /* points_icon_card_creator.png in Resources */,
 				FACF46C519EC852300D334E0 /* card_2009.png in Resources */,
 				FA14AA5919CC95670080230B /* LinLibertine_RBI.ttf in Resources */,
@@ -2559,7 +2609,6 @@
 				907D9BF7192E979C0037C0CF /* hero_glow_select.png in Resources */,
 				EC10BDAC1B338CCF00F7ABDE /* Icon-Small.png in Resources */,
 				EC7A74DD1B28F38000D3A53F /* TreasureChest.png in Resources */,
-				ECAB71D81B4F6C91004D4E5C /* CardFrontBaseFire.png in Resources */,
 				9069AAE2195501AB006D1D98 /* card_background_front_earth_common.png in Resources */,
 				FACF46D319EC852300D334E0 /* hero_c_2_l_3.png in Resources */,
 				90AB1514197AF4590008FCDD /* card_ability_icon_cast_on_death.png in Resources */,
@@ -2585,6 +2634,7 @@
 				907020751992AC8100FDE444 /* PLCameraSheetDoneButton.png in Resources */,
 				EC7A74D21B28E0A800D3A53F /* BOOKMAN_.TTF in Resources */,
 				90DA43BB1969D21500E44AED /* battle_button.png in Resources */,
+				ECFA3E921B657FA800C83EE1 /* PictureBorder2.png in Resources */,
 				FA033FD819BCFF6600EFEBD8 /* card_0019.png in Resources */,
 				FACF46BC19EC852300D334E0 /* card_2000.png in Resources */,
 				9032E13419984875002A6725 /* toggle_button_on.png in Resources */,
@@ -2602,6 +2652,7 @@
 				90AB14F7196CB7720008FCDD /* no_target_button.png in Resources */,
 				90DA43BD1969D21500E44AED /* randomize_card_button.png in Resources */,
 				9032E14419994DD9002A6725 /* sell_button.png in Resources */,
+				ECFA3E811B657F9D00C83EE1 /* CardTitleBacking.png in Resources */,
 				90DA43C61969D21500E44AED /* remove_deck_button_gray.png in Resources */,
 				9069AAD519520003006D1D98 /* card_background_front_overlay.png in Resources */,
 				90DA437619608F4D00E44AED /* decrement_button_gray.png in Resources */,
@@ -2612,9 +2663,11 @@
 				90C52892199BE87500750C54 /* search_toggle_button.png in Resources */,
 				FACF46CC19EC852300D334E0 /* card_2300.png in Resources */,
 				FA033FCB19BCFF6600EFEBD8 /* card_0006.png in Resources */,
+				ECFA3E8C1B657FA800C83EE1 /* Hourglass.png in Resources */,
 				90C528A2199D613B00750C54 /* screen_background_bottom.png in Resources */,
 				90F352A1191595C200601130 /* InfoPlist.strings in Resources */,
 				FA19FC9419B3D00400B38943 /* message_icon.png in Resources */,
+				ECFA3E8B1B657FA800C83EE1 /* Heart.png in Resources */,
 				EC10BDA91B338CCF00F7ABDE /* Icon-60@3x.png in Resources */,
 				90F7DAFB199AC1ED00D4FD97 /* card_image_empty.png in Resources */,
 				907D9C071932538E0037C0CF /* end_turn_button_disabled.png in Resources */,
@@ -2634,11 +2687,14 @@
 				EC7A74DF1B28F70600D3A53F /* envelope.png in Resources */,
 				FACF46CE19EC852300D334E0 /* card_2302.png in Resources */,
 				907020711992AC8100FDE444 /* PLCameraSheetButton.png in Resources */,
+				ECFA3E801B657F9D00C83EE1 /* CardDescription.png in Resources */,
 				90F352CF191595F400601130 /* card_background_front.png in Resources */,
 				90AB1506197AC71E0008FCDD /* card_ability_icon_taunt.png in Resources */,
 				907D9BFF192FD3910037C0CF /* hero_glow_target.png in Resources */,
 				9070204B19915FD500FDE444 /* card_background_front_overlay_legendary.png in Resources */,
 				FACF46BF19EC852300D334E0 /* card_2003.png in Resources */,
+				ECFA3E7E1B657F9D00C83EE1 /* CardBackgroundLight.png in Resources */,
+				ECFA3E7C1B657F9D00C83EE1 /* CardBackgroundFire.png in Resources */,
 				EC10BDAE1B338CCF00F7ABDE /* Icon-Small@3x.png in Resources */,
 				90DA4359195E023600E44AED /* ok_button.png in Resources */,
 			);

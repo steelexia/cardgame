@@ -30,7 +30,10 @@ const int CARD_CELL_INSET = 8;
     if (self) {
         numberOfColumns = 2; //TODO different for ipad
         STORE_CELL_WIDTH = self.bounds.size.width/numberOfColumns - 2; //a little border
-        STORE_CELL_HEIGHT = STORE_CELL_WIDTH * CARD_HEIGHT_RATIO/CARD_WIDTH_RATIO + 50; //TODO the 50 should also scale
+        //brian July28
+        
+        //STORE_CELL_HEIGHT = STORE_CELL_WIDTH * CARD_HEIGHT_RATIO/CARD_WIDTH_RATIO + 50; //TODO the 50 should also scale
+        STORE_CELL_HEIGHT = STORE_CELL_WIDTH * CARD_HEIGHT_RATIO/CARD_WIDTH_RATIO + 50;
         
         STORE_CARD_WIDTH = STORE_CELL_WIDTH-CARD_CELL_INSET;
         STORE_CARD_HEIGHT = STORE_CARD_WIDTH * CARD_HEIGHT_RATIO / CARD_WIDTH_RATIO;
@@ -93,7 +96,8 @@ const int CARD_CELL_INSET = 8;
             cell.cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeEditor viewState:card.cardViewState];
             cell.cardView.frontFacing = YES;
             cell.cardView.cardHighlightType = cardHighlightNone;
-            cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+            //cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+            cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.7, 0.7);
             cell.cardView.center = cell.center;
             
             cell.cardView.frame = CGRectMake(CARD_CELL_INSET,CARD_CELL_INSET,STORE_CARD_WIDTH,STORE_CARD_HEIGHT);
@@ -182,7 +186,8 @@ const int CARD_CELL_INSET = 8;
                 cell.likesLabel.text = [NSString stringWithFormat:@"%d", [cardPF[@"likes"] intValue]];
                 cell.cardView.frontFacing = YES;
                 cell.cardView.cardHighlightType = cardHighlightNone;
-                cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+                //cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+                cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.7, 0.7);
                 cell.cardView.center = cell.center;
                 cell.cardView.frame = CGRectMake(CARD_CELL_INSET,CARD_CELL_INSET,STORE_CARD_WIDTH, STORE_CARD_HEIGHT);
                 cell.costLabel.text = [NSString stringWithFormat:@"%d", [GameStore getCardCost:cardModel]];
