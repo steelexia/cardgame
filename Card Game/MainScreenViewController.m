@@ -493,9 +493,7 @@ UILabel *loadingLabel;
         self.messagesRetrieved = objects;
         
     }];
-    
-    
-    
+        
 }
 
 

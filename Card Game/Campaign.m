@@ -39,8 +39,6 @@ Level*quickMatchLevel;
     campaignLevels = [NSMutableArray arrayWithCapacity:3*3*4];
     Level *level;
     
-    
-    
     /**
      NOTES:
      - 3rd level should not have any rewards, because beating it goes straight to the boss fight
@@ -265,6 +263,11 @@ Level*quickMatchLevel;
     level.difficultyOffset = 1;
     level.isBossFight = YES;
     [campaignLevels addObject:level];
+    
+    //----Challenges----//
+    level = [[Level alloc] initWithID:@"d_1_c_4_l_1"];
+    [campaignLevels addObject:level];
+    
 }
 
 +(Level*)getLevelWithDifficulty:(int)difficulty withChapter:(int)chapter withLevel:(int)level

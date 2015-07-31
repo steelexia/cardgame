@@ -11,6 +11,7 @@
 #import "DeckChooserViewController.h"
 #import "CampaignMenuViewController.h"
 #import "Campaign.h"
+#import "ChallengesViewController.h"
 
 @interface SinglePlayerMenuViewController ()
 
@@ -75,6 +76,16 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     
     [self.view addSubview:campaignButton];
     
+    CFButton *challengesButton = [[CFButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
+    [challengesButton setTextSize:12];
+    challengesButton.frame = CGRectMake(0, 0, 100, 100);
+    challengesButton.center = CGPointMake(self.view.bounds.size.width/3 - 5, self.view.bounds.size.height*2/3 + 58);
+    [challengesButton setTitle:@"Challenges" forState:UIControlStateNormal];
+    [challengesButton addTarget:self action:@selector(challengesButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:challengesButton];
+    
+    
     /*
     CFButton *deckButton = [[CFButton alloc] initWithFrame: CGRectMake(0, 0, 100, 100)];
     [deckButton setTextSize:12];
@@ -110,9 +121,11 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     [self presentViewController:viewController animated:NO completion:nil];
 }
 
--(void)challengeButtonPressed
+-(void)challengesButtonPressed
 {
-    
+    ChallengesViewController *viewController = [[ChallengesViewController alloc] init];
+    [self presentViewController:viewController animated:NO completion:nil];
+
 }
 
 -(void)backButtonPressed

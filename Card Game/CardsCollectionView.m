@@ -95,14 +95,14 @@
     
    if(newLabel==nil)
    {
-       newLabel= [[UILabel alloc] initWithFrame:CGRectMake(CARD_FULL_WIDTH-60,0,60,30)];
+       newLabel= [[UILabel alloc] initWithFrame:CGRectMake(CARD_FULL_WIDTH-60,CARD_FULL_HEIGHT-40,60,30)];
        newLabel.tag = 1;
        [cell.cardView addSubview:newLabel];
        
    }
     if(starterLabel==nil)
     {
-        starterLabel = [[UILabel alloc] initWithFrame:CGRectMake(CARD_FULL_WIDTH-60,0,60,30)];
+        starterLabel = [[UILabel alloc] initWithFrame:CGRectMake(CARD_FULL_WIDTH-60,CARD_FULL_HEIGHT-40,60,30)];
         starterLabel.tag = 2;
         [cell.cardView addSubview:starterLabel];
         
@@ -126,7 +126,7 @@
     if([self.indexOfStarterCards containsObject:indexNum])
     {
        
-        starterLabel.text = @"Start";
+        starterLabel.text = @"Starter";
         starterLabel.textColor = [UIColor redColor];
         
         [cell.cardView addSubview:starterLabel];

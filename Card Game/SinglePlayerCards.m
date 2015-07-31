@@ -1175,6 +1175,92 @@ NSMutableDictionary * campaignCards;
     {
         
     }
+    
+    else if([levelID isEqualToString:@"d_1_c_4_l_1"])
+    {
+        //Cow Level
+        //Chapter 4
+        //Cow-4001--3
+        //Big BIg Cow--4002-3
+        //Charging Bull--4003-2
+        //Milk Bag--4004-1
+        //Cheese--4005-2
+        //Vache--4006-1
+        //Udder--4007-1
+        //Raging Bull-4008-1
+        //Cowbell--4009-1;
+        //spells
+        //Bullshit--4012-2;
+        //Mooo, 4013-1
+        //Angry Hamburger 4014-2
+        
+        //cow
+        for (int i = 0; i < 3; i++)
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_4001"]]];
+        
+        //Big Big Cow
+        for (int i = 0; i < 3; i++)
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_4002"]]];
+        
+        //Charging Bull
+        for (int i = 0; i < 2; i++)
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_4003"]]];
+        
+       // Milk Bag
+        for (int i = 0; i < 1; i++)
+        {
+            
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_4004"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //Cheese
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_4005"]]];
+        }
+        
+        for (int i = 0; i < 1; i++)
+        {
+            //Vache
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_4006"]]];
+        }
+        
+        for (int i = 0; i < 1; i++)
+        {
+            //Udder
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_4007"]]];
+        }
+        
+        for (int i = 0; i < 1; i++)
+        {
+            //Raging Bull
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_4008"]]];
+        }
+        
+        for (int i = 0; i < 1; i++)
+        {
+            //Cowbell
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_4009"]]];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            //Bullshit
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_4012"]]];
+        }
+        
+        for (int i = 0; i < 1; i++)
+        {
+            //Moo
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_4013"]]];
+        }
+        for (int i = 0; i < 2; i++)
+        {
+            //Angry Hamburger
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_4014"]]];
+        }
+
+    }
     else
     {
         NSLog(@"WARNING: Invalid Campaign Deck ID: %@", levelID);
@@ -2227,6 +2313,304 @@ NSMutableDictionary * campaignCards;
     //------LEVEL 2--------//
     //------LEVEL 3--------//
     //------LEVEL 4--------//
+    
+    //Brian July 29
+    //Cow Level
+    //Chapter 4
+    //Cow-4001--3
+    //Big BIg Cow--4002-3
+    //Charging Bull--4003-2
+    //Milk Bag--4004-2
+    //Cheese--4005-1
+    //Vache--4006-1
+    //Udder--4007-1
+    //Raging Bull-4008-1
+    //Cowbell--4009-1;
+    //spells
+    //Bullshit--4012-2;
+    //Mooo, 4013-1
+    //Angry Hamburger 4014-2
+    //-----------------CHAPTER 3----------------//
+    //------LEVEL 1--------//
+    monster = [[MonsterCardModel alloc] initWithIdNumber:4001 type:cardTypeSinglePlayer];
+    monster.element = elementEarth;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"Cow";
+    monster.damage = 1100;
+    monster.life = monster.maximumLife = 3000;
+    monster.cost = 1;
+    monster.cooldown = monster.maximumCooldown = 1;
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:1600]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:4002 type:cardTypeSinglePlayer];
+    monster.element = elementEarth;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"Big Big Cow";
+    monster.damage = 4000;
+    monster.life = monster.maximumLife = 1000;
+    monster.cost = 2;
+    monster.cooldown = monster.maximumCooldown = 1;
+    monster.flavourText = @"He's so big!";
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:4003 type:cardTypeSinglePlayer];
+    monster.element = elementEarth;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"Charging Bull";
+    monster.damage = 5000;
+    monster.life = monster.maximumLife = 3000;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 0;
+    monster.flavourText = @"His cousin is Raging Bull";
+     [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxCooldown castType:castOnHit targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:4004 type:cardTypeSinglePlayer];
+    monster.element = elementEarth;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"MilkBag";
+    monster.damage = 200;
+    monster.life = monster.maximumLife = 7000;
+    monster.cost = 4;
+    monster.cooldown = monster.maximumCooldown = 0;
+    monster.flavourText = @"It does a body good";
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnStartOfTurn targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]]];
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:4005 type:cardTypeSinglePlayer];
+    monster.element = elementEarth;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"Cheese";
+    monster.damage = 6000;
+    monster.life = monster.maximumLife = 100;
+    monster.cost = 1;
+    monster.cooldown = monster.maximumCooldown = 0;
+    monster.flavourText = @"Not even fair.  The 4-pool of creatures.";
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:4006 type:cardTypeSinglePlayer];
+    monster.element = elementEarth;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"Vache";
+    monster.damage = 5000;
+    monster.life = monster.maximumLife = 7500;
+    monster.cost = 5;
+    monster.cooldown = monster.maximumCooldown = 2;
+    monster.flavourText = @"Le Cow Francais.  He doesn't move until he's ready.";
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:4007 type:cardTypeSinglePlayer];
+    monster.element = elementEarth;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"Udder";
+    monster.damage = 2000;
+    monster.life = monster.maximumLife = 6500;
+    monster.cost = 6;
+    monster.cooldown = monster.maximumCooldown = 1;
+    monster.flavourText = @"Don't talk bad about my Mudder's Udder--Raging Bull";
+     [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnStartOfTurn targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:500]]];
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:4008 type:cardTypeSinglePlayer];
+    monster.element = elementEarth;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"Raging Bull";
+    monster.damage = 1000;
+    monster.life = monster.maximumLife = 12500;
+    monster.cost = 7;
+    monster.cooldown = monster.maximumCooldown = 1;
+    monster.flavourText = @"You won't like him when he's angry";
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnMove targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:2500]]];
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:4009 type:cardTypeSinglePlayer];
+    monster.element = elementEarth;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"Cowbell";
+    monster.damage = 1000;
+    monster.life = monster.maximumLife = 1200;
+    monster.cost = 2;
+    monster.cooldown = monster.maximumCooldown = 1;
+    monster.flavourText = @"For some reason, you feel you need more of this..";
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnMove targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:4012 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityRare;
+    spell.element = elementEarth;
+    spell.name = @"Bullshit!";
+    spell.cost = 3;
+    spell.flavourText = @"It's really slippery...eww.";
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:3]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:4013 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityRare;
+    spell.element = elementEarth;
+    spell.name = @"MooooOOoooo";
+    spell.cost = 5;
+    spell.flavourText = @"Moo.";
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:4000]]];
+
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
+
+    spell = [[SpellCardModel alloc] initWithIdNumber:4014 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityRare;
+    spell.element = elementFire;
+    spell.name = @"Angry Hamburger";
+    spell.cost = 3;
+    spell.flavourText = @"It's really spicy!";
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:9000]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
+    
+    //Dog Level Brian July 29
+    //Dog-2
+    //Double Doggen--2
+    //Angry Puppy--1
+    //Guilty Dog--1
+    //Fort Dog--2
+    //LEGENDARY DOGE
+    
+    //Spell-Woof-2
+    //Spell-SQUIRREL!--3
+    //Spell--Boop--1
+    //Spell--Who Let The Dogs Out?--1
+    //Spell--To The Moon-2
+    //Spell--Much Cards, Such Win
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:4020 type:cardTypeSinglePlayer];
+    monster.element = elementEarth;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"Dog";
+    monster.damage = 2500;
+    monster.life = monster.maximumLife = 2200;
+    monster.cost = 2;
+    monster.cooldown = monster.maximumCooldown = 1;
+    monster.flavourText = @"Snaaaaarrrrfff.  Wooof.  Snarrrf.";
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:4021 type:cardTypeSinglePlayer];
+    monster.element = elementEarth;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"Double Doggen";
+    monster.damage = 2500;
+    monster.life = monster.maximumLife = 2200;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 1;
+    monster.flavourText = @"Still less Dogs than a DMX song.";
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityFracture castType:castOnDeath targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:4022 type:cardTypeSinglePlayer];
+    monster.element = elementDark;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"Angry Puppy";
+    monster.damage = 6000;
+    monster.life = monster.maximumLife = 200;
+    monster.cost = 4;
+    monster.cooldown = monster.maximumCooldown = 0;
+    monster.flavourText = @"You done fucked up.";
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3000]]];
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:4023 type:cardTypeSinglePlayer];
+    monster.element = elementEarth;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"Guilty Dog";
+    monster.damage = 2000;
+    monster.life = monster.maximumLife = 8000;
+    monster.cost = 5;
+    monster.cooldown = monster.maximumCooldown = 0;
+    monster.flavourText = @"He's guilty because he wiped himself all over your board =/";
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:5000]]];
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:4024 type:cardTypeSinglePlayer];
+    monster.element = elementEarth;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"Dog Fort";
+    monster.damage = 2000;
+    monster.life = monster.maximumLife = 12000;
+    monster.cost = 6;
+    monster.cooldown = monster.maximumCooldown = 0;
+    monster.flavourText = @"This is Dog Fort, 10-4, Over.";
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:4025 type:cardTypeSinglePlayer];
+    monster.element = elementEarth;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"LEGENDARY DOGE";
+    monster.damage = 8000;
+    monster.life = monster.maximumLife = 8000;
+    monster.cost = 8;
+    monster.cooldown = monster.maximumCooldown = 0;
+    monster.flavourText = @"Such Card. Much Woof";
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityPierce castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+   [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnStartOfTurn targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:800]]];
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:4031 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityRare;
+    spell.element = elementEarth;
+    spell.name = @"WOOF!";
+    spell.cost = 2;
+    spell.flavourText = @"The bark is worse than the bite.";
+   
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:3000]]];
+     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:500]]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:4032 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityRare;
+    spell.element = elementEarth;
+    spell.name = @"SQUIRREL!";
+    spell.cost = 2;
+    spell.flavourText = @"Inspiration for dogs everywhere.";
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:2000]]];
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:2500]]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:4033 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityRare;
+    spell.element = elementEarth;
+    spell.name = @"Boop";
+    spell.cost = 2;
+    spell.flavourText = @"Awwwwwww.";
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:4000]]];
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:4]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetOneRandomFriendlyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:4]]];
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
+
+    spell = [[SpellCardModel alloc] initWithIdNumber:4033 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityRare;
+    spell.element = elementEarth;
+    spell.name = @"Who Let The Dogs Out?";
+    spell.cost = 4;
+    spell.flavourText = @"Woof, Wuff Wuffff Woooooof.";
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:3000]]];
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:4]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
+    
 }
 
 +(DeckModel*) getPlayerCampaignDeckWithID:(NSString*)levelID

@@ -284,8 +284,8 @@ BOOL leftHandViewZone = NO;
     playerFieldHighlight = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"field_highlight"]];
     opponentFieldHighlight = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"field_highlight"]];
     
-    playerFieldEdge = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"field_edge"]];
-    opponentFieldEdge = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"field_edge"]];
+    playerFieldEdge = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"GameBoardPlayedCardsBorder2.png"]];
+    opponentFieldEdge = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"GameBoardPlayedCardsBorder2.png"]];
     
     //half of the distance between the two fields
     int fieldsDistanceHalf = 5;
