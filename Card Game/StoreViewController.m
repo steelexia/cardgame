@@ -98,6 +98,38 @@ NSArray *_products;
     
     [self.view addSubview:_cardsView];
     
+    //brianJul31 Featured Store Section
+    _featuredStore = [[UIScrollView alloc] initWithFrame:_cardsView.bounds];
+    _featuredStore.backgroundColor = [UIColor redColor];
+    
+    //booster pack dimensions
+    //319x575
+    float boosterPackWRatio = 319/mockupWidth*SCREEN_WIDTH*0.6;
+    float boosterPackHRatio = 575/mockupHeight*SCREEN_HEIGHT*0.6;
+    UIButton *boosterPack1 = [[UIButton alloc] initWithFrame:CGRectMake(120,90,boosterPackWRatio,boosterPackHRatio)];
+    [boosterPack1 setImage:[UIImage imageNamed:@"FeaturedStoreCardPack003.png" ] forState:UIControlStateNormal];
+    boosterPack1.tag = 101;
+    UIButton *boosterPack2 = [[UIButton alloc] initWithFrame:CGRectMake(10,280,boosterPackWRatio,boosterPackHRatio)];
+    [boosterPack2 setImage:[UIImage imageNamed:@"FeaturedStoreCardPack004.png" ] forState:UIControlStateNormal];
+    boosterPack2.tag = 102;
+    
+    UIButton *boosterPack3 = [[UIButton alloc] initWithFrame:CGRectMake(120,280,boosterPackWRatio,boosterPackHRatio)];
+    [boosterPack3 setImage:[UIImage imageNamed:@"FeaturedStoreCardPack005.png" ] forState:UIControlStateNormal];
+    boosterPack3.tag = 103;
+    
+    //add functionality
+    [boosterPack1 addTarget:self action:@selector(boosterPackPress:) forControlEvents:UIControlEventTouchUpInside];
+    [boosterPack2 addTarget:self action:@selector(boosterPackPress:) forControlEvents:UIControlEventTouchUpInside];
+    [boosterPack3 addTarget:self action:@selector(boosterPackPress:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    [_featuredStore addSubview:boosterPack1];
+    [_featuredStore addSubview:boosterPack2];
+    [_featuredStore addSubview:boosterPack3];
+    [self.view addSubview:_featuredStore];
+    
+    
+    
     [self.view addSubview:_headerView];
     
     //add the storeIcon
@@ -1119,6 +1151,123 @@ NSArray *_products;
     [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
 }
 
+-(void)boosterPackPress:(id)sender
+{
+    UIButton *sendButton = (UIButton *)sender;
+    NSInteger boosterPack = sendButton.tag;
+    
+    if(boosterPack==101)
+    {
+        //show this on popup view
+    }
+}
+
+-(void)displayBoosterPackOption:(NSInteger)option
+{
+    //add a dark layer above the view
+    self.storeDarkBG = [[UIView alloc] initWithFrame:self.view.bounds];
+    self.storeDarkBG.backgroundColor = [UIColor blackColor];
+    self.storeDarkBG.alpha = 0.7;
+    [self.view addSubview:self.storeDarkBG];
+    
+    float mockupHeight = 1136.0f;
+    float mockupWidth = 640.0f;
+    
+    //booster pack image 315x568, x158, y36
+    float boostPackX = 158/mockupWidth*SCREEN_WIDTH;
+    float boostPackY = 36/mockupHeight*SCREEN_HEIGHT;
+    float boostPackW = 315/mockupWidth*SCREEN_WIDTH;
+    float boostPackH = 568/mockupHeight*SCREEN_HEIGHT;
+    UIImageView *boosterPackImageView = [[UIImageView alloc] initWithFrame:CGRectMake(boostPackX,boostPackY,boostPackW,boostPackH)];
+
+    //check type of booster pack and alternate the images
+    if(option==1)
+    {
+        boosterPackImageView.image = [UIImage imageNamed:@"FeaturedStoreCardPack001.png"];
+        
+    }
+    if(option==2)
+    {
+        boosterPackImageView.image = [UIImage imageNamed:@"FeaturedStoreCardPack002.png"];
+    }
+    if(option==3)
+    {
+        boosterPackImageView.image = [UIImage imageNamed:@"FeaturedStoreCardPack003.png"];
+    }
+    [self.storeDarkBG addSubview:boosterPackImageView];
+    
+    
+    //-39x, 630 y, 545 W,422H
+    float featuredStoreDialogX = 39/mockupWidth *SCREEN_WIDTH;
+    float featuredStoreDialogY = 630/mockupHeight*SCREEN_HEIGHT;
+    float featuredStoreDialogW = 545/mockupWidth*SCREEN_WIDTH;
+    float featuredStoreDialogH = 422/mockupHeight*SCREEN_HEIGHT;
+    
+    UIImageView *featuredStoreDialog = [[UIImageView alloc] initWithFrame:CGRectMake(featuredStoreDialogX,featuredStoreDialogY,featuredStoreDialogW,featuredStoreDialogH)];
+    featuredStoreDialog.image = [UIImage imageNamed:@"FeaturedStoreDialog.png"];
+    
+    //add labels to featuredStoreDialog
+    //-label1 72X, 66Y,410W
+    float label1X = 72/mockupWidth*SCREEN_WIDTH;
+    float label1Y = 66/mockupHeight*SCREEN_HEIGHT;
+    float label1W = 410/mockupWidth*SCREEN_WIDTH;
+    float label1H = 50/mockupHeight*SCREEN_HEIGHT;
+    UILabel *featuredStoreLabel1 = [[UILabel alloc] initWithFrame:CGRectMake(label1X,label1Y,label1W,label1H)];
+    featuredStoreLabel1.text = @"5 Card Booster Pack";
+    
+    //118X, 132H, 50H,326W
+    float label2X = 118/mockupWidth*SCREEN_WIDTH;
+    float label2Y = 132/mockupHeight*SCREEN_HEIGHT;
+    float label2W = 326/mockupWidth*SCREEN_WIDTH;
+    float label2H = 50/mockupHeight*SCREEN_HEIGHT;
+    
+    UILabel *featuredStoreLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(label2X,label2Y,label2W,label2H)];
+    featuredStoreLabel2.textAlignment = NSTextAlignmentCenter;
+    featuredStoreLabel2.text = @"3 Common Cards";
+    
+    //78x78
+    
+    float closeButtonW = 78/mockupWidth*SCREEN_WIDTH;
+    float closeButtonH = 78/mockupHeight*SCREEN_HEIGHT;
+    
+    UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(featuredStoreDialog.frame.size.width-closeButtonW/2,-closeButtonH/2,closeButtonW,closeButtonH)];
+    [closeButton addTarget:self action:@selector(closeBoosterBuy:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [featuredStoreDialog addSubview:closeButton];
+    
+    //add button to featuredStoreDialogue
+    //-greenButton, 142x, 269H, 282 W,96H
+    float purchaseButtonX = 142/mockupWidth*SCREEN_WIDTH;
+    float purchaseButtonY = 269/mockupHeight*SCREEN_WIDTH;
+    float purchaseButtonW = 282/mockupWidth*SCREEN_WIDTH;
+    float purchaseButtonH = 96/mockupWidth *SCREEN_HEIGHT;
+    UIButton *purchaseButton = [[UIButton alloc] initWithFrame:CGRectMake(purchaseButtonX,purchaseButtonY,purchaseButtonW,purchaseButtonH)];
+    [purchaseButton setBackgroundImage:[UIImage imageNamed:@"FeaturedStorePurchaseButton.png" ] forState:UIControlStateNormal];
+    [purchaseButton addTarget:self action:@selector(purchaseBooster) forControlEvents:UIControlEventTouchUpInside ];
+    
+    [featuredStoreDialog addSubview:featuredStoreLabel1];
+    [featuredStoreDialog addSubview:featuredStoreLabel2];
+    [featuredStoreDialog addSubview:purchaseButton];
+    
+    
+    [self.storeDarkBG addSubview:featuredStoreDialog];
+    
+    [_searchToggleButton setBackgroundImage:[UIImage imageNamed:@"CardStoreSearchButtonNoWords.png"] forState:UIControlStateNormal];
+    
+    
+    
+}
+-(void)closeBoosterBuy:(id)sender
+{
+    [self.storeDarkBG removeFromSuperview];
+    
+}
+
+-(void)purchaseBooster:(id)sender
+{
+    
+}
+
 -(void)tutorialLikeCard
 {
     [self modalScreen];
@@ -1367,6 +1516,20 @@ NSArray *_products;
         if (senderButton == button)
         {
             _storeCategoryTab = i;
+            
+            if(i==0)
+            {
+                //show featured Store
+                _featuredStore.alpha = 1;
+                _cardsView.alpha = 0;
+                
+            }
+            else
+            {
+                _featuredStore.alpha = 0;
+                _cardsView.alpha = 1;
+                
+            }
             [self loadCards];
             
             [button setSelected:YES];

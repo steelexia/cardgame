@@ -46,6 +46,13 @@
 @property (strong)UIButton*searchToggleButton;
 @property (strong)UITextField*searchNameField, *searchTagsField, *searchIDField;
 
+//brian July31
+//new UIScrollView for the featuredStore
+@property (strong) UIScrollView *featuredStore;
+
+//Brian Aug 23
+@property (strong) UIView *storeDarkBG;
+
 //filter views
 @property (strong)UIView*filterView;
 @property (strong)UIButton*filterToggleButton;
