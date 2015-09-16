@@ -209,6 +209,11 @@ BOOL leftHandViewZone = NO;
     
     if (_isTutorial)
     {
+        CFButton*skipButton = [[CFButton alloc] initWithFrame:CGRectMake(0,0,80,40)];
+        [skipButton setTextSize:12];
+        skipButton.label.text = @"Skip";
+        skipButton.center = CGPointMake(42, 30);
+        [self.view addSubview:skipButton];
         [self tutorialMessageGameStart];
     }
 }
