@@ -213,9 +213,21 @@ BOOL leftHandViewZone = NO;
         [skipButton setTextSize:12];
         skipButton.label.text = @"Skip";
         skipButton.center = CGPointMake(42, 30);
+        [skipButton addTarget:self action:@selector(skipButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:skipButton];
         [self tutorialMessageGameStart];
     }
+}
+
+-(void)skipButtonPressed{
+    
+    userPF[@"completedLevels"] = @[@"d_1_c_1_l_1",@"d_1_c_1_l_2",@"d_1_c_1_l_4"];
+    NSError *error;
+    [userPF save:&error];
+    
+    MainScreenViewController *mainController = [[MainScreenViewController alloc] init];
+    mainController.loadedTutorial = YES;
+    [self presentViewController:mainController animated:YES completion:nil];
 }
 
 /** Purely for organization, called once when the view is first set up */

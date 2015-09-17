@@ -22,5 +22,4 @@
 @property (strong) UIButton *singlePlayerButton, *multiPlayerButton, *deckButton, *storeButton;
 @property (strong)NSArray *messagesRetrieved;
 
-
 @end
