@@ -1322,7 +1322,7 @@ if(tableView.tag ==88)
     sureMatchTitle.text = @"You Have Challenged A Player!";
     sureMatchTitle.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:30];
     sureMatchTitle.textAlignment = NSTextAlignmentCenter;
-    
+
     [sureMatchView addSubview:sureMatchTitle];
     
     
@@ -1352,6 +1352,21 @@ if(tableView.tag ==88)
     [notWhoIWantedButton setTitle:@"Cancel Challenge" forState:UIControlStateNormal];
     
     [notWhoIWantedButton addTarget:self action:@selector(cancelChallenge:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    UIActivityIndicatorView *actIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    
+    [actIndicator setFrame:CGRectMake(10,360,sureMatchView.frame.size.width-20,50)];
+    
+    _battleActivityLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 410, SCREEN_WIDTH, 40)];
+    [_battleActivityLabel setFont:[UIFont fontWithName:cardMainFont size:18]];
+    [_battleActivityLabel setTextAlignment:NSTextAlignmentCenter];
+    [_battleActivityLabel setText:@"Starting Challenge..."];
+    [sureMatchView addSubview:actIndicator];
+     [sureMatchView addSubview:_battleActivityLabel];
+    [actIndicator startAnimating];
+
+    
     /*
     UIButton *startConversationButton = [[UIButton alloc] initWithFrame:CGRectMake(10,360,sureMatchView.frame.size.width-20,50)];
     

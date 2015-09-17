@@ -100,7 +100,7 @@ NSArray *_products;
     
     //brianJul31 Featured Store Section
     _featuredStore = [[UIScrollView alloc] initWithFrame:_cardsView.bounds];
-    _featuredStore.backgroundColor = [UIColor redColor];
+   // _featuredStore.backgroundColor = [UIColor redColor];
     
     //booster pack dimensions
     //319x575
@@ -126,7 +126,9 @@ NSArray *_products;
     [_featuredStore addSubview:boosterPack1];
     [_featuredStore addSubview:boosterPack2];
     [_featuredStore addSubview:boosterPack3];
+    [_featuredStore setAlpha:0];
     [self.view addSubview:_featuredStore];
+    
     
     
     
@@ -642,7 +644,7 @@ NSArray *_products;
     //element buttons
     CGPoint elementFilterStartPoint = CGPointMake(260, 60);
     _elementFilterButtons = [NSMutableArray arrayWithCapacity:7];
-    for (int i = 0; i < 7; i++)
+   for (int i = 0; i < 7; i++)
     {
         CFButton*elementFilterButton = [[CFButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
         [elementFilterButton setTextSize:14];
@@ -936,7 +938,7 @@ NSArray *_products;
     [_buyGoldView addSubview:buyGoldBackButton];
     
     _buyGoldButtons = [NSMutableArray arrayWithCapacity:6];
-    for (int i = 0; i < 2; i++)
+   /* for (int i = 0; i < 2; i++)
     {
         for (int j = 0; j < 3; j++)
         {
@@ -1008,7 +1010,7 @@ NSArray *_products;
             
             [_buyGoldView addSubview:goldDollarLabel];
         }
-    }
+    }*/
     
     //---------------activity indicator--------------------//
     
@@ -1165,7 +1167,7 @@ NSArray *_products;
 -(void)displayBoosterPackOption:(NSInteger)option
 {
     //add a dark layer above the view
-    self.storeDarkBG = [[UIView alloc] initWithFrame:self.view.bounds];
+    /*self.storeDarkBG = [[UIView alloc] initWithFrame:self.view.bounds];
     self.storeDarkBG.backgroundColor = [UIColor blackColor];
     self.storeDarkBG.alpha = 0.7;
     [self.view addSubview:self.storeDarkBG];
@@ -1254,7 +1256,7 @@ NSArray *_products;
     
     [_searchToggleButton setBackgroundImage:[UIImage imageNamed:@"CardStoreSearchButtonNoWords.png"] forState:UIControlStateNormal];
     
-    
+    */
     
 }
 -(void)closeBoosterBuy:(id)sender

@@ -47,6 +47,7 @@
 //loading view
 @property (strong)UIActivityIndicatorView*activityIndicator;
 @property(strong) UILabel *activityLabel;
+@property(strong) UILabel *battleActivityLabel;
 @property (strong)CFButton*activityFailedButton;
 @property (strong) NSString*playerOneAlias, *playerTwoAlias;
 
