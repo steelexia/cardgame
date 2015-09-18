@@ -1358,11 +1358,15 @@ if(tableView.tag ==88)
     
     [actIndicator setFrame:CGRectMake(10,360,sureMatchView.frame.size.width-20,50)];
     
-    _battleActivityLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 410, SCREEN_WIDTH, 40)];
-    [_battleActivityLabel setFont:[UIFont fontWithName:cardMainFont size:18]];
-    [_battleActivityLabel setTextAlignment:NSTextAlignmentCenter];
-    [_battleActivityLabel setText:@"Starting Challenge..."];
+    self.currentLoadStateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 410, SCREEN_WIDTH, 40)];
+    [self.currentLoadStateLabel setCenter:CGPointMake(sureMatchView.frame.size.width/2, 430)];
+    [self.currentLoadStateLabel setFont:[UIFont fontWithName:cardMainFont size:16]];
+    [self.currentLoadStateLabel setTextAlignment:NSTextAlignmentCenter];
+    
+    [self.currentLoadStateLabel setText:@"Waiting for response..."];
     [sureMatchView addSubview:actIndicator];
+    [sureMatchView addSubview:self.currentLoadStateLabel];
+     
      [sureMatchView addSubview:_battleActivityLabel];
     [actIndicator startAnimating];
 
