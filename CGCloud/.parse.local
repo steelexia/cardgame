@@ -1,0 +1,10 @@
+{
+  "applications": {
+    "Content Games Card Game": {
+      "applicationId": "yekARh373R6T7z42RzFD8R1ywZVYELpOS1gCVD5C"
+    },
+    "_default": {
+      "link": "Content Games Card Game"
+    }
+  }
+}
