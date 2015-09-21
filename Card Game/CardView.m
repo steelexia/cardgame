@@ -1340,6 +1340,7 @@ NSDictionary *singlePlayerCardImages;
                 PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
                 cardQuery.limit = 1;
                 [cardQuery whereKey:@"idNumber" equalTo:@(card.idNumber)];
+                [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(YES)];
                 NSError*error;
                 NSArray*cardArray = [cardQuery findObjects:&error];
                 if (cardArray.count == 0 || error)

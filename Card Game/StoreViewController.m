@@ -2463,6 +2463,10 @@ NSArray *_products;
     
     [self applyFiltersToQuery:salesQuery];
     
+    PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
+    [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(YES)];
+    [salesQuery     whereKey:@"card" matchesQuery:cardQuery];
+    
     [salesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error){
             //load all sales without the cards
@@ -2499,6 +2503,10 @@ NSArray *_products;
         salesQuery.skip = _currentQueryLocation + _currentLoadedSales.count;
         NSLog(@"SKIPPING: %d",salesQuery.skip);
         [self applyFiltersToQuery:salesQuery];
+        
+        PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
+        [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(YES)];
+        [salesQuery     whereKey:@"card" matchesQuery:cardQuery];
         
         if (_isSearching)
             [self applySearchFiltersToQuery:salesQuery];
@@ -2665,6 +2673,10 @@ NSArray *_products;
     [self applyFiltersToQuery:salesQuery];
     
     [self applySearchFiltersToQuery:salesQuery];
+    
+    PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
+    [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(YES)];
+    [salesQuery     whereKey:@"card" matchesQuery:cardQuery];
     
     [salesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if(!error){
