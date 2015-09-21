@@ -750,6 +750,10 @@ BOOL leftHandViewZone = NO;
 
 
 -(void) endTurn{
+    
+    self.shouldBlink = NO;
+    [self endFlash:self.endTurnButton];
+    
     if (giveupAbilityButton.superview != nil)
     {
         [self noTargetButtonPressed];
@@ -817,6 +821,7 @@ BOOL leftHandViewZone = NO;
     else if (side == OPPONENT_SIDE)
         height = CARD_HEIGHT/2;
     
+    self.handMovementsLeft = NO;
     //iterate through all player's hand's cards and set their views correctly
     for (int i = 0; i < hand.count; i++)
     {
@@ -854,8 +859,10 @@ BOOL leftHandViewZone = NO;
         card.cardView.transform = CGAffineTransformConcat(card.cardView.transform, CGAffineTransformMakeRotation(M_PI_4/12 * distanceFromCenter));
         
         //show suggestion glow if it's player's turn and the card can be used, but no suggestion during targetting a spell
-        if (currentSide == PLAYER_SIDE &&  side == PLAYER_SIDE && [self.gameModel canSummonCard:card side:currentSide] && [self.currentAbilities count] == 0)
+        if (currentSide == PLAYER_SIDE &&  side == PLAYER_SIDE && [self.gameModel canSummonCard:card side:currentSide] && [self.currentAbilities count] == 0){
             card.cardView.cardHighlightType = cardHighlightSelect;
+            self.handMovementsLeft = YES;
+        }
         else
             card.cardView.cardHighlightType = cardHighlightNone;
         
@@ -878,6 +885,8 @@ BOOL leftHandViewZone = NO;
     else if (side == OPPONENT_SIDE)
         height = opponentFieldHighlight.center.y;
     
+    
+    self.battleMovementsLeft = NO;
     //iterate through all field cards and set their views correctly
     for (int i = 0; i < field.count; i++)
     {
@@ -911,10 +920,11 @@ BOOL leftHandViewZone = NO;
         }
         
         //show suggestion glow if it's player's turn and the card can be used, but no suggestion if targetting a spell
-        if (currentSide == PLAYER_SIDE && side == PLAYER_SIDE && [self.gameModel canAttack:card fromSide:side] && [self.currentAbilities count] == 0)
+        if (currentSide == PLAYER_SIDE && side == PLAYER_SIDE && [self.gameModel canAttack:card fromSide:side] && [self.currentAbilities count] == 0){
             card.cardView.cardHighlightType = cardHighlightSelect;
+            self.battleMovementsLeft = YES;
         //if not currently trying to summon an ability, reset highlight to none
-        else if ([self.currentAbilities count] == 0 || card.cardView.cardHighlightType != cardHighlightTarget)
+        }else if ([self.currentAbilities count] == 0 || card.cardView.cardHighlightType != cardHighlightTarget)
             card.cardView.cardHighlightType = cardHighlightNone;
     }
     
@@ -922,6 +932,36 @@ BOOL leftHandViewZone = NO;
     CardView*player = self.playerHeroViews[side];
     if ([self.currentAbilities count] == 0)
         player.cardHighlightType = cardHighlightNone;
+}
+
+/** check if has movements left */
+
+-(BOOL) checkMovementsLeft{
+    BOOL toReturn = NO;
+    NSArray *hand = self.gameModel.hands[PLAYER_SIDE];
+    NSArray *fields = self.gameModel.battlefield[PLAYER_SIDE];
+    
+    
+    for (int i = 0; i < fields.count; i++)
+    {
+        MonsterCardModel *card = fields[i];
+        
+        if (card.dead) //dead cards are in the process of being removed, don't update it
+            continue;
+        
+        if (currentSide == PLAYER_SIDE && [self.gameModel canAttack:card fromSide:PLAYER_SIDE] && [self.currentAbilities count] == 0)
+            toReturn = YES;
+    }
+    
+    for (int i = 0; i < hand.count; i++)
+    {
+        CardModel *card = hand[i];
+        
+        if (currentSide == PLAYER_SIDE && [self.gameModel canSummonCard:card side:PLAYER_SIDE] && [self.currentAbilities count] == 0)
+            toReturn = YES;
+    }
+    
+    return toReturn;
 }
 
 /** update the corresponding resource label with the number of resource the player has */
@@ -1349,6 +1389,17 @@ BOOL leftHandViewZone = NO;
         //remove the attack line from view and revert states
         [attackLine removeFromSuperview];
     }
+    if (![self checkMovementsLeft]) {
+        //NSLog(@"No movements Available");
+        if (!self.shouldBlink) {
+            self.shouldBlink = YES;
+            [self flashOn:self.endTurnButton];
+        }
+    }else{
+        self.shouldBlink = NO;
+        [self endFlash:self.endTurnButton];
+    }
+
 }
 
 -(void) attackCard: (CardModel*) card target:(MonsterCardModel*)targetCard fromSide: (int) side

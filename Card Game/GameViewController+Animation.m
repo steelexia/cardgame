@@ -299,4 +299,34 @@
     [self fadeOutAndRemove:newTurn inDuration:0.5 withDelay:1.5];
 }
 
+- (void)flashOff:(UIView *)v
+{
+    if (self.shouldBlink) {
+        [UIView animateWithDuration:.25 delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^ {
+            v.alpha = .01;  //don't animate alpha to 0, otherwise you won't be able to interact with it
+        } completion:^(BOOL finished) {
+            [self flashOn:v];
+        }];
+    }else{
+        v.alpha = 1;
+    }
+}
+
+- (void)flashOn:(UIView *)v
+{
+    if (self.shouldBlink) {
+        [UIView animateWithDuration:.25 delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^ {
+            v.alpha = 1;
+        } completion:^(BOOL finished) {
+            [self flashOff:v];
+        }];
+    }else{
+        v.alpha = 1;
+    }
+}
+
+- (void)endFlash:(UIView *)v{
+    v.alpha = 1;
+}
+
 @end

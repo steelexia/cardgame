@@ -74,6 +74,9 @@
 @property (strong)CFButton*gameOverOkButton, *gameOverRetryButton, *gameOverNoRetryButton;
 @property (strong)UIActivityIndicatorView *gameOverProgressIndicator;
 @property (strong)StrokedLabel*gameOverSaveLabel;
+@property (assign) bool shouldBlink;
+@property (assign) bool handMovementsLeft;
+@property (assign) bool battleMovementsLeft;
 
 @property (strong)CFButton*quitButton;
 

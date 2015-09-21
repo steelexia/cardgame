@@ -56,4 +56,12 @@
 
 -(void) animatePlayerTurn;
 
+/** Blinking butttons **/
+
+- (void)flashOff:(UIView *)v;
+
+- (void)flashOn:(UIView *)v;
+
+- (void)endFlash:(UIView *)v;
+
 @end
