@@ -299,34 +299,39 @@
     [self fadeOutAndRemove:newTurn inDuration:0.5 withDelay:1.5];
 }
 
-- (void)flashOff:(UIView *)v
-{
-    if (self.shouldBlink) {
-        [UIView animateWithDuration:.25 delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^ {
-            v.alpha = .01;  //don't animate alpha to 0, otherwise you won't be able to interact with it
-        } completion:^(BOOL finished) {
-            [self flashOn:v];
-        }];
-    }else{
-        v.alpha = 1;
-    }
+- (void)hideViewBorder:(UIView *)view {
+    [UIView animateWithDuration:0.0 delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^ {
+       // view.layer.borderWidth = 0.0f;
+        [view.layer setShadowOpacity:0];
+    } completion:^(BOOL finished) {
+        if (self.shouldBlink) {
+             [self performSelector:@selector(showViewBorder:) withObject:view afterDelay:0.5];
+        }
+    }];
 }
 
-- (void)flashOn:(UIView *)v
-{
-    if (self.shouldBlink) {
-        [UIView animateWithDuration:.25 delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^ {
-            v.alpha = 1;
-        } completion:^(BOOL finished) {
-            [self flashOff:v];
-        }];
-    }else{
-        v.alpha = 1;
-    }
+- (void)showViewBorder:(UIView *)view {
+
+    [UIView animateWithDuration:0.0 delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^ {
+       // view.layer.borderColor = [[UIColor colorWithRed:217/255.0f green:17/255.0f blue:42/255.0f alpha:1] CGColor];
+       // view.layer.borderWidth = 3.0f;
+        if (self.shouldBlink) {
+            [view.layer setShadowOffset:CGSizeMake(0, 0)];
+            [view.layer setShadowColor:[[UIColor colorWithRed:217/255.0f green:17/255.0f blue:42/255.0f alpha:1] CGColor]];
+            [view.layer setShadowOpacity:1.0];
+        }
+    } completion:^(BOOL finished) {
+        [self performSelector:@selector(hideViewBorder:) withObject:view afterDelay:0.5];
+    }];
 }
 
-- (void)endFlash:(UIView *)v{
-    v.alpha = 1;
+- (void)flashOn:(UIView *)v {
+    [self showViewBorder:v];
+}
+
+- (void)endFlash:(UIView *)v {
+    self.shouldBlink = false;
+//    v.alpha = 1;
 }
 
 @end
