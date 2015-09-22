@@ -252,6 +252,8 @@ NSTimer *firstChallengeTimer;
     // #1 Add the +addPresenceEventObserver+ which will catch events received on the channel.
     [[PNObservationCenter defaultCenter] addPresenceEventObserver:self withBlock:^(PNPresenceEvent *event) {
         
+        
+        [self getPubNubConnectedPlayers];
         // NSLog(@"OBSERVER: Presence: %u", event.type);
         if(event.channel == self.currentMPGameChannel)
         {
@@ -259,7 +261,6 @@ NSTimer *firstChallengeTimer;
                 case 1:
                     // [PubNub sendMessage:[NSString stringWithFormat:@"%@ Says: It's a ghost town.",uuid ] toChannel:gameChannel ];
                     NSLog(@"occupancy 1");
-                    
                     break;
                 case 2:
                     NSLog(@"occupancy 2");
@@ -800,7 +801,7 @@ NSTimer *firstChallengeTimer;
         for(PNClient *heldClient in participants)
         {
           NSDictionary *stateInChannel = [heldClient stateForChannel:gameChannel];
-            if(stateInChannel !=nil)
+            if(stateInChannel !=nil && ![[stateInChannel objectForKey:@"usernameCustom"] isEqual:userPF.username])
             {
                  [playerArray addObject:stateInChannel];
             }
