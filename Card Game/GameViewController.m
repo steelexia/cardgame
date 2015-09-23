@@ -223,6 +223,7 @@ BOOL leftHandViewZone = NO;
         [self.view addSubview:skipButton];
         [self tutorialMessageGameStart];
     }
+    
 }
 
 -(void)skipButtonPressed{
@@ -565,8 +566,16 @@ BOOL leftHandViewZone = NO;
 
 -(void)newGame
 {
-    if (currentSide == PLAYER_SIDE)
+    if (currentSide == PLAYER_SIDE){
         [self animatePlayerTurn];
+        if (![self checkMovementsLeft]) {
+            //NSLog(@"No movements Available");
+            if (!self.shouldBlink) {
+                self.shouldBlink = YES;
+                [self flashOn:self.endTurnButton];
+            }
+        }
+    }
 }
 
 -(void)setCurrentSide:(int)newSide
@@ -577,6 +586,13 @@ BOOL leftHandViewZone = NO;
 -(void)opponentEndTurn
 {
     [self endTurn];
+    if (![self checkMovementsLeft]) {
+        //NSLog(@"No movements Available");
+        if (!self.shouldBlink) {
+            self.shouldBlink = YES;
+            [self flashOn:self.endTurnButton];
+        }
+    }
 }
 
 -(void)tapRegistered: (UITapGestureRecognizer *)recognizer
@@ -815,6 +831,13 @@ BOOL leftHandViewZone = NO;
     {
         [self animatePlayerTurn];
         [self.endTurnButton setEnabled:YES];
+        if (![self checkMovementsLeft]) {
+            //NSLog(@"No movements Available");
+            if (!self.shouldBlink) {
+                self.shouldBlink = YES;
+                [self flashOn:self.endTurnButton];
+            }
+        }
     }
     else
         [self.endTurnButton setEnabled:NO];
