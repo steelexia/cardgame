@@ -1081,7 +1081,19 @@ NSTimer *firstChallengeTimer;
     [PFCloud callFunction:@"mpMatchComplete" withParameters:@{
                                                               @"User1" : [PFUser currentUser].objectId, @"User2" :self.opponentID, @"User1Rating" :selfEloRating,@"User2Rating": opponentEloRating
                                                               } error:&error];
-    
+    if (!error){
+        [userPF fetch];
+        
+        NSNumber *newSelfEloRating =  [userPF objectForKey:@"eloRating"];
+        NSLog(@"New eloRating: %@", newSelfEloRating);
+    }
+    /*[PFCloud callFunctionInBackground:@"mpMatchComplete" withParameters:@{
+                                                                         @"User1" : [PFUser currentUser].objectId, @"User2" :self.opponentID, @"User1Rating" :selfEloRating,@"User2Rating": opponentEloRating
+                                                                         }
+                                                        block:^(id object, NSError *error) {
+                                                                             //code
+                                                            NSLog(@"Error: %@",error.description);
+                                                        }];*/
 }
 
 -(void)resetAllMPVariables

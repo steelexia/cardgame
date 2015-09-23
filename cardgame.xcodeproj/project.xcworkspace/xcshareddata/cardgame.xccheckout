@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>2544D8A7-7FA2-48C6-B3AA-799F3076D18B</string>
 	<key>IDESourceControlProjectName</key>
-	<string>cardgame</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>1E788D60840C05C500D56E953E62C5D3A2E06AF8</key>
 		<string>github.com:steelexia/cardgame.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>cardgame.xcodeproj</string>
+	<string>cardgame.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>1E788D60840C05C500D56E953E62C5D3A2E06AF8</key>

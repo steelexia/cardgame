@@ -41,6 +41,11 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 /** current side's turn, i.e. current player */
 int currentSide;
 
+/** eloRating old and new */
+
+int oldEloRating;
+int newEloRating;
+
 const float FIELD_CENTER_Y_RATIO = 3/8.f;
 
 /** UILabel used to darken the screen during card selections */
@@ -138,6 +143,7 @@ BOOL leftHandViewZone = NO;
         
         
     }
+    oldEloRating = [[userPF objectForKey:@"eloRating"] intValue];
     
     return self;
 }
@@ -470,6 +476,17 @@ BOOL leftHandViewZone = NO;
     _resultsLabel.strokeOn = YES;
     
     [_gameOverScreen addSubview:_resultsLabel];
+    
+    _eloRating = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
+    _eloRating.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/4 + 70);
+    _eloRating.textAlignment = NSTextAlignmentCenter;
+    _eloRating.textColor = [UIColor whiteColor];
+    _eloRating.font = [UIFont fontWithName:cardMainFontBlack size:40];
+    _eloRating.strokeColour = [UIColor blackColor];
+    _eloRating.strokeThickness = 8;
+    _eloRating.strokeOn = YES;
+    
+    [_gameOverScreen addSubview:_eloRating];
     
     _rewardsLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
     _rewardsLabel.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
@@ -1843,7 +1860,11 @@ BOOL leftHandViewZone = NO;
             
             if (_gameMode == GameModeMultiplayer)
             {
+                
                 [self.MPDataHandler handlePlayerVictory];
+                newEloRating = [[userPF objectForKey:@"eloRating"] intValue];
+                
+                NSLog(@"Old: %d , New: %d", oldEloRating, newEloRating);
                 
             }
             //begin next level immediately if exists
@@ -1894,12 +1915,15 @@ BOOL leftHandViewZone = NO;
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          _gameOverScreen.alpha = 1;
+                         _eloRating.text = [NSString stringWithFormat:@"%d",oldEloRating];
                      }
                      completion:^(BOOL completed){
                          //results animation
                          
                          _gameOverOkButton.alpha = 0;
                          [_gameOverScreen addSubview:_gameOverOkButton];
+                         
+                         
                          
                          [UIView animateWithDuration:0.2
                                                delay:2
@@ -1920,6 +1944,12 @@ BOOL leftHandViewZone = NO;
                                               _resultsLabel.center = resultsLabelOriginalPoint;
                                           }
                                           completion:^(BOOL completed){
+                                              float delay = 1.0;
+                                              for (int i = oldEloRating; i <= newEloRating; i++) {
+                                                  [self performSelector:@selector(updateEloRating:) withObject:[NSNumber numberWithInt:i] afterDelay:0.3 * delay];
+                                                  delay++;
+                                                  //_eloRating.text = [NSString stringWithFormat:@"%d",i];
+                                              }
                                           }];
                          
                          if ((goldReward > 0 || cardReward > 0) && _gameModel.playerTwoDefeated && !_gameModel.playerOneDefeated)
@@ -1964,6 +1994,10 @@ BOOL leftHandViewZone = NO;
                          }
                          
                      }];
+}
+
+-(void)updateEloRating:(NSNumber*)rating{
+    _eloRating.text = [NSString stringWithFormat:@"%d",rating.intValue];
 }
 
 -(void)beginNextLevel
