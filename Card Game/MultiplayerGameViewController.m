@@ -60,21 +60,22 @@ UIView *sureMatchView;
     
     
     CFLabel*menuLogoBackground = [[CFLabel alloc] initWithFrame:CGRectMake(0,0,250,50)];
-    menuLogoBackground.center = CGPointMake(SCREEN_WIDTH/2, 40);
+    menuLogoBackground.center = CGPointMake(SCREEN_WIDTH/2, 50);
     menuLogoBackground.label.textAlignment = NSTextAlignmentCenter;
     [menuLogoBackground setTextSize:30];
     menuLogoBackground.label.text = @"Multiplayer";
     [self.view addSubview:menuLogoBackground];
     
     
-    CFButton* startButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 200, 100)];
-    startButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 110);
-    [startButton.label setText:@"Quick Match"];
+    self.quickMatchButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 200, 130)];
+    self.quickMatchButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 150);
+    [self.quickMatchButton.label setText:@"Quick Match"];
+
     
     //[startButton addTarget:self action:@selector(startGameCenterButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-    [startButton addTarget:self action:@selector(quickMatch)    forControlEvents:UIControlEventTouchUpInside];
+    [self.quickMatchButton addTarget:self action:@selector(quickMatch)    forControlEvents:UIControlEventTouchUpInside];
     
-    [self.view addSubview:startButton];
+    [self.view addSubview:self.quickMatchButton];
     
     CFButton* connectButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
     connectButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 200);
@@ -85,18 +86,20 @@ UIView *sureMatchView;
     //[self.view addSubview:connectButton];
 
     CFButton* leaderboardButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
-    leaderboardButton.center = CGPointMake(SCREEN_WIDTH-70, SCREEN_HEIGHT - 35);
+    leaderboardButton.center = CGPointMake(SCREEN_WIDTH-70, SCREEN_HEIGHT - 45);
     [leaderboardButton.label setText:@"Leaderboards"];
     
     [leaderboardButton addTarget:self action:@selector(viewLeaderboards)    forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:leaderboardButton];
     
-    self.mpLobbyTableView = [[UITableView alloc] initWithFrame:CGRectMake(30,80,SCREEN_WIDTH-60,150)];
+    self.mpLobbyTableView = [[UITableView alloc] initWithFrame:CGRectMake(20,80,SCREEN_WIDTH-40,150)];
    self.mpLobbyTableView.delegate = self;
     self.mpLobbyTableView.dataSource = self;
     self.mpLobbyTableView.alpha = 0;
     self.mpLobbyTableView.tag = 88;
+    self.mpLobbyTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.mpLobbyTableView.alwaysBounceVertical = NO;
     CALayer *mpLobbyLayer = self.mpLobbyTableView.layer;
     mpLobbyLayer.cornerRadius = 8.0f;
     mpLobbyLayer.masksToBounds = YES;
@@ -104,18 +107,26 @@ UIView *sureMatchView;
     
     [self.view addSubview:self.mpLobbyTableView];
     
-    self.chatTableView = [[UITableView alloc] initWithFrame:CGRectMake(20,240,SCREEN_WIDTH-40,125)];
+    self.chatTableView = [[UITableView alloc] initWithFrame:CGRectMake(20,240,SCREEN_WIDTH-40,100)];
     self.chatTableView.backgroundColor = [UIColor blackColor];
     self.chatTableView.tag = 99;
     self.chatTableView.userInteractionEnabled = YES;
     self.chatTableView.dataSource = self;
+    self.chatTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    CALayer *chatTableLayer = self.chatTableView.layer;
+    chatTableLayer.cornerRadius = 8.0f;
+    chatTableLayer.masksToBounds = YES;
+    
+    
+    [self.view addSubview:self.mpLobbyTableView];
     
     self.chatTableView.delegate = self;
     [self.view addSubview:self.chatTableView];
     
-    self.chatField = [[UITextField alloc] initWithFrame:CGRectMake(20,370,SCREEN_WIDTH-40,30)];
+    self.chatField = [[UITextField alloc] initWithFrame:CGRectMake(20,345,SCREEN_WIDTH-95 ,30)];
     self.chatField.delegate = self;
-    self.chatField.alpha = 1;
+    self.chatField.alpha = 0;
+    self.chatField.borderStyle = UITextBorderStyleNone;
     self.chatField.backgroundColor = [UIColor whiteColor];
     CALayer *chatFieldLayer = self.chatField.layer;
     chatFieldLayer.cornerRadius = 8.0f;
@@ -123,12 +134,13 @@ UIView *sureMatchView;
     
     [self.view addSubview:self.chatField];
     
-    self.chatSendButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-70,370,50,35)];
-    self.chatSendButton.backgroundColor = [UIColor blueColor];
+    self.chatSendButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-70,345,50,30)];
+    //self.chatSendButton.backgroundColor = [UIColor blueColor];
     [self.chatSendButton setTitle:@"Send" forState:UIControlStateNormal];
+    self.chatSendButton.alpha = 0;
     CALayer *chatBtnLayer = self.chatSendButton.layer;
-    chatBtnLayer.cornerRadius = 8.0f;
-    chatBtnLayer.masksToBounds = YES;
+    //chatBtnLayer.cornerRadius = 8.0f;
+    //chatBtnLayer.masksToBounds = YES;
     
     [self.chatSendButton addTarget:self action:@selector(chatSend:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -141,7 +153,7 @@ UIView *sureMatchView;
     //[chatTextField addGestureRecognizer:chatTapRecognizer];
     
     
-    UIButton* backButton = [[CFButton alloc] initWithFrame:CGRectMake(35, SCREEN_HEIGHT - 32 - 20, 46, 32)];
+    UIButton* backButton = [[CFButton alloc] initWithFrame:CGRectMake(35, SCREEN_HEIGHT - 32 - 30, 46, 32)];
     [backButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backButton];
@@ -723,15 +735,18 @@ UIView *sureMatchView;
         UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,40)];
         
     
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,320,40)];
-    titleLabel.backgroundColor = [UIColor darkGrayColor];
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,320,40)];
+        titleLabel.backgroundColor = [UIColor darkGrayColor];
     
-    titleLabel.text = @"Username    Rating        Battle";
+        titleLabel.text = @"  USERNAME   RATING";
+        titleLabel.textColor = [UIColor whiteColor];
+        titleLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:13];
     
-        UIButton *reloadButton = [[UIButton alloc] initWithFrame:CGRectMake(165,3,90,34)];
+        UIButton *reloadButton = [[UIButton alloc] initWithFrame:CGRectMake(175,8,90,27)];
         reloadButton.backgroundColor = [UIColor greenColor];
         [reloadButton setTitle:@"Refresh" forState:UIControlStateNormal];
         [reloadButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        reloadButton.titleLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:15];
         reloadButton.layer.cornerRadius = 12.0f;
         reloadButton.layer.masksToBounds = YES;
         [reloadButton addTarget:self action:@selector(refreshLobby:) forControlEvents:UIControlEventTouchUpInside];
@@ -887,10 +902,10 @@ if(tableView.tag ==88)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                       reuseIdentifier:MyIdentifier];
-        userNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,120,25)];
+        userNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,100,25)];
         userStateLabel = [[UILabel alloc] initWithFrame:CGRectMake(191,0,70,25)];
         userEloLabel = [[UILabel alloc] initWithFrame:CGRectMake(105,0,40,25)];
-        challengeButton = [[UIButton alloc] initWithFrame:CGRectMake(165,2,90,21)];
+        challengeButton = [[UIButton alloc] initWithFrame:CGRectMake(175,2,90,21)];
         [challengeButton setBackgroundColor:[UIColor blueColor]];
         [challengeButton setTitle:@"Challenge" forState:UIControlStateNormal];
         challengeButton.titleLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:12];
@@ -905,6 +920,8 @@ if(tableView.tag ==88)
         userNameLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:10];
         userEloLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:10];
         userNameLabel.tag = 1;
+        [userNameLabel setTextAlignment:NSTextAlignmentCenter];
+        [userEloLabel setTextAlignment:NSTextAlignmentCenter];
         [cell addSubview:userNameLabel];
         userStateLabel.tag = 2;
         [cell addSubview:userStateLabel];
@@ -1004,18 +1021,39 @@ if(tableView.tag ==88)
         if(self.chatField.alpha ==0)
         {
             //expand chat tableview and show the chat option
-            [self.chatTableView setFrame:CGRectMake(20,120,SCREEN_WIDTH-40,250)];
-            self.chatField.alpha = 1;
+            [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionTransitionCurlUp animations:^{
+                //Animation
+                [self.chatTableView setFrame:CGRectMake(20,80,SCREEN_WIDTH-40,260)];
+                if(self.chatField ==nil)
+                {
+                    self.chatField = [[UITextField alloc] initWithFrame:CGRectMake(25,275,SCREEN_WIDTH-50,50)];
+                    [self.view addSubview:self.chatField];
+                }
+                self.chatField.alpha = 1;
+                [self.chatField becomeFirstResponder];
+                self.chatSendButton.alpha = 1;
+                self.quickMatchButton.alpha = 0;
+            } completion:^(BOOL finished) {
+            }];
             
+        }else{
+        
+            [self.chatField resignFirstResponder];
         }
-        else
+       /* else
         {
-            //reduce chat tableview and set alpha to 0 on chatField
-            self.chatField.alpha = 0;
-            [self.chatTableView setFrame:CGRectMake(20,260, SCREEN_WIDTH-40,105)];
             
+            [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionTransitionCurlUp animations:^{
+                //Animation
+                [self.chatTableView setFrame:CGRectMake(20,240,SCREEN_WIDTH-40,100)];
+                self.chatField.alpha = 0;
+                self.chatSendButton.alpha = 0;
+                [self.chatField resignFirstResponder];
+                self.quickMatchButton.alpha = 1;
+            } completion:^(BOOL finished) {
+            }];
             
-        }
+        }*/
     }
 }
 
@@ -1062,6 +1100,7 @@ if(tableView.tag ==88)
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     [self animateTextField:textField up:NO];
+    [self didTapChat:nil];
     
 }
 
@@ -1079,7 +1118,7 @@ if(tableView.tag ==88)
         orientation == UIInterfaceOrientationPortraitUpsideDown)
     {
         
-        animatedDistance = 216-(460-moveUpValue-5);
+        animatedDistance = 216-(self.view.frame.size.height-moveUpValue-20);
     }
     else
     {
@@ -1120,21 +1159,34 @@ if(tableView.tag ==88)
     if(self.chatField.alpha ==0)
     {
         //expand chat tableview and show the chat option
-        [self.chatTableView setFrame:CGRectMake(20,120,SCREEN_WIDTH-40,250)];
-        if(self.chatField ==nil)
-        {
-        self.chatField = [[UITextField alloc] initWithFrame:CGRectMake(25,275,SCREEN_WIDTH-50,50)];
-        [self.view addSubview:self.chatField];
-        }
-        self.chatField.alpha = 1;
+        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionTransitionCurlUp animations:^{
+            //Animation
+            [self.chatTableView setFrame:CGRectMake(20,80,SCREEN_WIDTH-40,260)];
+            if(self.chatField ==nil)
+            {
+                self.chatField = [[UITextField alloc] initWithFrame:CGRectMake(25,275,SCREEN_WIDTH-50,50)];
+                [self.view addSubview:self.chatField];
+            }
+            self.chatField.alpha = 1;
+            [self.chatField becomeFirstResponder];
+            self.chatSendButton.alpha = 1;
+            self.quickMatchButton.alpha = 0;
+        } completion:^(BOOL finished) {
+        }];
         
     }
     else
     {
-        //reduce chat tableview and set alpha to 0 on chatField
-        self.chatField.alpha = 0;
-        [self.chatField setFrame:CGRectMake(20,260, SCREEN_WIDTH-40,105)];
         
+        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionTransitionCurlUp animations:^{
+            //Animation
+            [self.chatTableView setFrame:CGRectMake(20,240,SCREEN_WIDTH-40,100)];
+            self.chatField.alpha = 0;
+            self.chatSendButton.alpha = 0;
+            [self.chatField resignFirstResponder];
+            self.quickMatchButton.alpha = 1;
+        } completion:^(BOOL finished) {
+        }];
         
     }
 }
@@ -1143,7 +1195,7 @@ if(tableView.tag ==88)
 {
     
     NSString *chatString = self.chatField.text;
-    
+    self.chatField.text = @"";
     if([chatString length] ==0)
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Chat Entered" message:@"Must Enter Chat Before Sending" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
