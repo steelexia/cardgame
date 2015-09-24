@@ -1254,6 +1254,7 @@ if(tableView.tag ==88)
     notWhoIWantedButton.titleLabel.textColor = [UIColor whiteColor];
     notWhoIWantedButton.titleLabel.text = @"Not Who I Wanted";
     [notWhoIWantedButton setTitle:@"Reject Match" forState:UIControlStateNormal];
+    notWhoIWantedButton.tag = 102;
     
     [notWhoIWantedButton addTarget:self action:@selector(rejectMatch:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -1264,6 +1265,7 @@ if(tableView.tag ==88)
     startConversationButton.titleLabel.textColor = [UIColor whiteColor];
     startConversationButton.titleLabel.text = @"Start Conversation";
     [startConversationButton setTitle:@"Start Match" forState:UIControlStateNormal];
+    startConversationButton.tag = 101;
     
     [startConversationButton addTarget:self action:@selector(startMatch:) forControlEvents:UIControlEventTouchUpInside];
     [sureMatchView addSubview:notWhoIWantedButton];
@@ -1282,8 +1284,25 @@ if(tableView.tag ==88)
     //send an acceptance back through the MPDataHandler 
     [MPDataHandler acceptChallenge:self.challengerUserID];
    
-    [bgDarkenView removeFromSuperview];
-    [sureMatchView removeFromSuperview];
+    //[bgDarkenView removeFromSuperview];
+   // [sureMatchView removeFromSuperview];
+    [[sureMatchView viewWithTag:101] removeFromSuperview];
+    [[sureMatchView viewWithTag:102] removeFromSuperview];
+    
+    UIActivityIndicatorView *actIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    
+    [actIndicator setFrame:CGRectMake(10,360,sureMatchView.frame.size.width-20,50)];
+    
+    self.currentLoadStateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 410, SCREEN_WIDTH, 40)];
+    [self.currentLoadStateLabel setCenter:CGPointMake(sureMatchView.frame.size.width/2, 430)];
+    [self.currentLoadStateLabel setFont:[UIFont fontWithName:cardMainFont size:16]];
+    [self.currentLoadStateLabel setTextAlignment:NSTextAlignmentCenter];
+    
+    [self.currentLoadStateLabel setText:@"Loading..."];
+    [sureMatchView addSubview:actIndicator];
+    [sureMatchView addSubview:self.currentLoadStateLabel];
+    
+    [actIndicator startAnimating];
     
 }
 
