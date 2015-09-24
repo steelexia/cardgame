@@ -2164,6 +2164,7 @@ enum GameMode __gameMode; //because C functions cant access
         [self.gameViewController.fieldView setUserInteractionEnabled:NO];
         [self.gameViewController.uiView setUserInteractionEnabled:NO];
         
+        
         if (!alreadyOver)
             [self.gameViewController gameOver];
     }

@@ -81,6 +81,7 @@
 -(void)rejectChallenge:(NSString *)challengerID withReason:(NSString *)reason;
 -(void)cancelChallenge;
 -(void)handlePlayerVictory;
+-(void)handlePlayerDefeat;
 -(void)resetAllMPVariables;
 -(void)joinQuickMatchChannel;
 

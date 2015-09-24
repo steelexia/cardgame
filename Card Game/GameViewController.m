@@ -489,6 +489,17 @@ BOOL leftHandViewZone = NO;
     
     [_gameOverScreen addSubview:_eloRating];
     
+    _eloRatingDiff = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
+    _eloRatingDiff.center = CGPointMake(SCREEN_WIDTH/4 *3, SCREEN_HEIGHT/4 + 70);
+    _eloRatingDiff.textAlignment = NSTextAlignmentCenter;
+    _eloRatingDiff.textColor = [UIColor greenColor];
+    _eloRatingDiff.font = [UIFont fontWithName:cardMainFontBlack size:30];
+    _eloRatingDiff.strokeColour = [UIColor blackColor];
+    _eloRatingDiff.strokeThickness = 8;
+    _eloRatingDiff.strokeOn = YES;
+    
+    [_gameOverScreen addSubview:_eloRatingDiff];
+    
     _rewardsLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
     _rewardsLabel.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
     _rewardsLabel.textAlignment = NSTextAlignmentCenter;
@@ -1811,6 +1822,8 @@ BOOL leftHandViewZone = NO;
 -(void)gameOver
 {
     [self.view addSubview:_gameOverBlockingView];
+    [userPF fetch];
+    newEloRating = [[userPF objectForKey:@"eloRating"] intValue];
     
     [self performBlock:^{
         [self openGameOverScreen];
@@ -1885,9 +1898,7 @@ BOOL leftHandViewZone = NO;
             {
                 
                 [self.MPDataHandler handlePlayerVictory];
-                newEloRating = [[userPF objectForKey:@"eloRating"] intValue];
-                
-                NSLog(@"Old: %d , New: %d", oldEloRating, newEloRating);
+                 newEloRating = [[userPF objectForKey:@"eloRating"] intValue];
                 
             }
             //begin next level immediately if exists
@@ -1930,6 +1941,8 @@ BOOL leftHandViewZone = NO;
         else if (!_gameModel.playerTwoDefeated && _gameModel.playerOneDefeated)
         {
             _resultsLabel.text = @"Defeat!";
+            [self.MPDataHandler handlePlayerDefeat];
+             newEloRating = [[userPF objectForKey:@"eloRating"] intValue];
         }
         
         [_gameOverOkButton addTarget:self action:@selector(endGame)    forControlEvents:UIControlEventTouchUpInside];
@@ -1968,11 +1981,26 @@ BOOL leftHandViewZone = NO;
                                           }
                                           completion:^(BOOL completed){
                                               float delay = 1.0;
+                                             // NSLog(@"Old: %d , New: %d", oldEloRating, newEloRating);
                                               for (int i = oldEloRating; i <= newEloRating; i++) {
-                                                  [self performSelector:@selector(updateEloRating:) withObject:[NSNumber numberWithInt:i] afterDelay:0.3 * delay];
+                                                  [self performSelector:@selector(updateEloRating:) withObject:[NSNumber numberWithInt:i] afterDelay:0.2 * delay];
                                                   delay++;
                                                   //_eloRating.text = [NSString stringWithFormat:@"%d",i];
                                               }
+                                              
+                                              for (int i = oldEloRating; i >= newEloRating; i--) {
+                                                  [self performSelector:@selector(updateEloRating:) withObject:[NSNumber numberWithInt:i] afterDelay:0.2 * delay];
+                                                  delay++;
+                                              }
+                                              
+                                              if (newEloRating > oldEloRating) {
+                                                  int diff = newEloRating - oldEloRating;
+                                                  [self performSelector:@selector(showEloRatingDiff:) withObject:[NSNumber numberWithInt:diff] afterDelay:0.2 * delay];
+                                              }else if(oldEloRating > newEloRating){
+                                                  int diff = oldEloRating - newEloRating;
+                                                  [self performSelector:@selector(showEloRatingDiff:) withObject:[NSNumber numberWithInt:-diff] afterDelay:0.2 * delay];
+                                              }
+                                              
                                           }];
                          
                          if ((goldReward > 0 || cardReward > 0) && _gameModel.playerTwoDefeated && !_gameModel.playerOneDefeated)
@@ -2021,6 +2049,16 @@ BOOL leftHandViewZone = NO;
 
 -(void)updateEloRating:(NSNumber*)rating{
     _eloRating.text = [NSString stringWithFormat:@"%d",rating.intValue];
+}
+
+-(void)showEloRatingDiff:(NSNumber*)diff{
+    if (oldEloRating > newEloRating) {
+        _eloRatingDiff.textColor = [UIColor redColor];
+        _eloRatingDiff.text = [NSString stringWithFormat:@"%d",diff.intValue];
+    }else{
+        _eloRatingDiff.textColor = [UIColor greenColor];
+        _eloRatingDiff.text = [NSString stringWithFormat:@"+%d",diff.intValue];
+    }
 }
 
 -(void)beginNextLevel

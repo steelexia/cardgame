@@ -305,7 +305,7 @@
         [view.layer setShadowOpacity:0];
     } completion:^(BOOL finished) {
         if (self.shouldBlink) {
-             [self performSelector:@selector(showViewBorder:) withObject:view afterDelay:0.5];
+             [self performSelector:@selector(showViewBorder:) withObject:view afterDelay:0.8];
         }
     }];
 }
@@ -321,7 +321,7 @@
             [view.layer setShadowOpacity:1.0];
         }
     } completion:^(BOOL finished) {
-        [self performSelector:@selector(hideViewBorder:) withObject:view afterDelay:0.5];
+        [self performSelector:@selector(hideViewBorder:) withObject:view afterDelay:0.8];
     }];
 }
 

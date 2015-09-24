@@ -69,7 +69,7 @@
 
 //victory screen stuff
 @property (strong)UIView*gameOverScreen;
-@property (strong)StrokedLabel*resultsLabel, *rewardsLabel, *rewardGoldLabel, *rewardCardLabel, *eloRating;
+@property (strong)StrokedLabel*resultsLabel, *rewardsLabel, *rewardGoldLabel, *rewardCardLabel, *eloRating, *eloRatingDiff;
 @property (strong)UIImageView*rewardGoldImage, *rewardCardImage;
 @property (strong)CFButton*gameOverOkButton, *gameOverRetryButton, *gameOverNoRetryButton;
 @property (strong)UIActivityIndicatorView *gameOverProgressIndicator;
