@@ -205,7 +205,7 @@
         
         PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
         [cardQuery whereKey:@"idNumber" containedIn:cardsIDArray];
-        [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(YES)];
+        //[cardQuery whereKey:@"adminPhotoCheck" equalTo:@(YES)];
         cardQuery.limit = 1000; //TODO this is bad but no one would have this many cards..
         [cardQuery includeKey:@"abilities"];
         NSError *error;

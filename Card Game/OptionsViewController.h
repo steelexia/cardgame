@@ -10,6 +10,8 @@
 #import "CFButton.h"
 #import "CFLabel.h"
 
+#import "SSKeychain.h"
+
 @interface OptionsViewController : UIViewController
 
 @property (strong) CFButton *passwordButton, *logoutButton;

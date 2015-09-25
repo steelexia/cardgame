@@ -19,6 +19,7 @@
 
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
+
 - (id)init
 {
     self = [super init];
@@ -108,8 +109,9 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void)logoutButtonPressed
 {
-    [PFUser logOut];
+   // [PFUser logOut];
     [UserModel logout];
+    [SSKeychain deletePasswordForService:@"com.contentgames.cardgame" account:@"username"];
     [self.presentingViewController.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 

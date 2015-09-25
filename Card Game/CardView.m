@@ -1317,7 +1317,7 @@ NSDictionary *singlePlayerCardImages;
 
 +(UIImage*)getImageForCard:(CardModel*)card errorLoading:(BOOL*)errorLoading
 {
-    if (card.type == cardTypeStandard)
+    if (card.type == cardTypeStandard && card.adminPhotoCheck)
     {
         if (card.idNumber == NO_ID)
             return placeHolderImage;
@@ -1392,7 +1392,7 @@ NSDictionary *singlePlayerCardImages;
             
         }
     }
-    else if (card.type == cardTypePlayer)
+    else if (card.type == cardTypePlayer || !card.adminPhotoCheck)
     {
         return heroPlaceHolderImage;
     }

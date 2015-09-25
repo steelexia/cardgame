@@ -81,6 +81,8 @@
 
 @property (strong) PFObject *cardPF;
 
+@property (assign) BOOL adminPhotoCheck;
+
 //----------------Functions----------------//
 
 
