@@ -425,9 +425,15 @@ NSDictionary *singlePlayerCardImages;
                 _activityView = [[UIActivityIndicatorView alloc] initWithFrame:self.cardImage.bounds];
                 [self.cardImage addSubview:_activityView];
                 [_activityView startAnimating];
-                [self performBlockInBackground:^(void){
-                    [self loadImage];
-                }];
+                if (cardViewMode != cardViewModeZoomedIngame ) {
+                    [self performBlockInBackground:^(void){
+                        [self loadImage];
+                    }];
+                }else{
+                    [self.cardImage setImage:placeHolderImage];
+                    [self.activityView stopAnimating];
+                }
+                
             }
         }
         else
@@ -1317,7 +1323,7 @@ NSDictionary *singlePlayerCardImages;
 
 +(UIImage*)getImageForCard:(CardModel*)card errorLoading:(BOOL*)errorLoading
 {
-    if (card.type == cardTypeStandard && card.adminPhotoCheck)
+    if (card.type == cardTypeStandard /*&& card.adminPhotoCheck*/)
     {
         if (card.idNumber == NO_ID)
             return placeHolderImage;
@@ -1340,7 +1346,7 @@ NSDictionary *singlePlayerCardImages;
                 PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
                 cardQuery.limit = 1;
                 [cardQuery whereKey:@"idNumber" equalTo:@(card.idNumber)];
-                [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(YES)];
+                //[cardQuery whereKey:@"adminPhotoCheck" equalTo:@(YES)];
                 NSError*error;
                 NSArray*cardArray = [cardQuery findObjects:&error];
                 if (cardArray.count == 0 || error)
@@ -1392,7 +1398,7 @@ NSDictionary *singlePlayerCardImages;
             
         }
     }
-    else if (card.type == cardTypePlayer || !card.adminPhotoCheck)
+    else if (card.type == cardTypePlayer)
     {
         return heroPlaceHolderImage;
     }

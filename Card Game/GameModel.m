@@ -775,7 +775,7 @@ enum GameMode __gameMode; //because C functions cant access
         //NSLog(@"element: %d", elementToPick);
         
         [cardsQuery whereKey:@"element" equalTo:@(elementToPick)];
-        [cardsQuery whereKey:@"adminPhotoCheck" equalTo:@(YES)];
+        //[cardsQuery whereKey:@"adminPhotoCheck" equalTo:@(YES)];
         
         int count = (int)[cardsQuery countObjects];
         

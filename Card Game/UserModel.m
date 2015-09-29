@@ -624,7 +624,7 @@
         PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
         cardQuery.limit = 100;
         [cardQuery whereKey:@"idNumber" containedIn:deckPF[@"cards"]];
-        [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(YES)];
+        //[cardQuery whereKey:@"adminPhotoCheck" equalTo:@(YES)];
         NSError *error;
         NSArray*cardPFs = [cardQuery findObjects:&error];
         

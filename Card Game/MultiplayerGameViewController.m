@@ -111,6 +111,7 @@ UIView *sureMatchView;
     self.chatTableView.backgroundColor = [UIColor blackColor];
     self.chatTableView.tag = 99;
     self.chatTableView.userInteractionEnabled = YES;
+    self.chatTableView.allowsSelection = NO;
     self.chatTableView.dataSource = self;
     self.chatTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     CALayer *chatTableLayer = self.chatTableView.layer;
@@ -148,9 +149,9 @@ UIView *sureMatchView;
     
     [self.view addSubview:self.chatSendButton];
     
-    //UITapGestureRecognizer *chatTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapChat:)];
+    UITapGestureRecognizer *chatTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapChat:)];
     
-    //[chatTextField addGestureRecognizer:chatTapRecognizer];
+    [self.chatTableView addGestureRecognizer:chatTapRecognizer];
     
     
     UIButton* backButton = [[CFButton alloc] initWithFrame:CGRectMake(35, SCREEN_HEIGHT - 32 - 30, 46, 32)];
@@ -1100,7 +1101,10 @@ if(tableView.tag ==88)
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     [self animateTextField:textField up:NO];
-    [self didTapChat:nil];
+    if (self.chatField.alpha ==1) {
+        [self didTapChat:nil];
+    }
+    
     
 }
 
@@ -1171,6 +1175,7 @@ if(tableView.tag ==88)
             [self.chatField becomeFirstResponder];
             self.chatSendButton.alpha = 1;
             self.quickMatchButton.alpha = 0;
+            [self.chatTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.chatMessages.count -1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
         } completion:^(BOOL finished) {
         }];
         
@@ -1185,6 +1190,7 @@ if(tableView.tag ==88)
             self.chatSendButton.alpha = 0;
             [self.chatField resignFirstResponder];
             self.quickMatchButton.alpha = 1;
+            [self.chatTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[[NSNumber numberWithFloat:self.chatMessages.count /2] intValue] inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
         } completion:^(BOOL finished) {
         }];
         

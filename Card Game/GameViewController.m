@@ -1604,7 +1604,12 @@ BOOL leftHandViewZone = NO;
     //opponent summoning has extra animation: maximizes to the left to show the card
     if (side == OPPONENT_SIDE)
     {
+        
+        
         CardView*originalView = card.cardView;
+        if (!card.adminPhotoCheck) {
+            card.cardView.cardImage.image = placeHolderImage;
+        }
         if (!originalView.frontFacing) //TODO depends on skill
             [originalView flipCard];
         
@@ -1614,7 +1619,10 @@ BOOL leftHandViewZone = NO;
         card.cardView = originalView;
         
         cardView.center = card.cardView.center; //TODO
-        
+        if (!card.adminPhotoCheck) {
+            card.cardView.cardImage.image = placeHolderImage;
+          //  cardView.image = placeHolderImage;
+        }
         [self.uiView addSubview:cardView];
         
         [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
