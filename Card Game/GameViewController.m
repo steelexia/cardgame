@@ -1931,7 +1931,7 @@ BOOL leftHandViewZone = NO;
         {
             _rewardGoldLabel.text = [NSString stringWithFormat:@"%d", goldReward];
             [rewards addObject:_rewardGoldImage];
-        }else{
+        }else if(_gameMode == GameModeMultiplayer){
             goldReward = 10;
             
             _rewardGoldLabel.text = [NSString stringWithFormat:@"%d", goldReward];
@@ -1968,7 +1968,6 @@ BOOL leftHandViewZone = NO;
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          _gameOverScreen.alpha = 1;
-                         _eloRating.text = [NSString stringWithFormat:@"%d",oldEloRating];
                      }
                      completion:^(BOOL completed){
                          //results animation
@@ -2065,7 +2064,9 @@ BOOL leftHandViewZone = NO;
 }
 
 -(void)updateEloRating:(NSNumber*)rating{
-    _eloRating.text = [NSString stringWithFormat:@"%d",rating.intValue];
+    if (_gameMode == GameModeMultiplayer) {
+        _eloRating.text = [NSString stringWithFormat:@"%d",rating.intValue];
+    }
 }
 
 -(void)showEloRatingDiff:(NSNumber*)diff{
