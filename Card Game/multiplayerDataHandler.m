@@ -141,9 +141,9 @@ NSTimer *firstChallengeTimer;
             // #2 +subscribeOnChannel+ if the client connects successfully.
             // [PubNub subscribeOnChannel:my_channel];
             //[PubNub subscribeOn:@[gameChannel]];
-            PFUser *userObj = [PFUser currentUser];
-            NSNumber *eloVal = [userObj objectForKey:@"eloRating"];
-            NSString *userName = userObj.username;
+            NSNumber *eloVal = [userPF objectForKey:@"eloRating"];
+            NSString *userName = userPF.username;
+            
             
             /*
             [PubNub subscribeOn:@[gameChannel] withClientState:@{@"eloRating": eloVal,
@@ -154,7 +154,7 @@ NSTimer *firstChallengeTimer;
             NSMutableDictionary *clientStateMutable = [[NSMutableDictionary alloc] init];
             [clientStateMutable setObject:eloVal forKey:@"eloRating"];
             [clientStateMutable setObject:userName forKey:@"usernameCustom"];
-            [clientStateMutable setObject:userObj.objectId forKey:@"userID"];
+            [clientStateMutable setObject:userPF.objectId forKey:@"userID"];
             [clientStateMutable setObject:@"Lobby" forKey:@"gameState"];
             NSDictionary *myDict = [clientStateMutable copy];
             
