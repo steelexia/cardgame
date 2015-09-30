@@ -1931,7 +1931,16 @@ BOOL leftHandViewZone = NO;
         {
             _rewardGoldLabel.text = [NSString stringWithFormat:@"%d", goldReward];
             [rewards addObject:_rewardGoldImage];
+        }else{
+            goldReward = 10;
+            
+            _rewardGoldLabel.text = [NSString stringWithFormat:@"%d", goldReward];
+            [rewards addObject:_rewardGoldImage];
+            
+            userPF[@"gold"] = @([userPF[@"gold"] intValue] + goldReward);
+            [userPF save];
         }
+        
         if (cardReward > 0)
         {
             _rewardCardLabel.text = [NSString stringWithFormat:@"%d", cardReward];
