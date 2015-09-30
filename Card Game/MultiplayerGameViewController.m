@@ -100,12 +100,23 @@ UIView *sureMatchView;
     self.mpLobbyTableView.tag = 88;
     self.mpLobbyTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.mpLobbyTableView.alwaysBounceVertical = NO;
+    [self.mpLobbyTableView.layer setZPosition:0.0];
     CALayer *mpLobbyLayer = self.mpLobbyTableView.layer;
     mpLobbyLayer.cornerRadius = 8.0f;
     mpLobbyLayer.masksToBounds = YES;
     
+    self.noPlayersAvailableLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 80, SCREEN_WIDTH-40,150)];
+    [self.noPlayersAvailableLabel setText:@"Multiplayer Connection Verified, No Players Available."];
+    [self.noPlayersAvailableLabel setFont:[UIFont fontWithName:cardMainFont size:13]];
+    [self.noPlayersAvailableLabel setAlpha:0];
+    [self.noPlayersAvailableLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.noPlayersAvailableLabel setNumberOfLines:2];
+    [self.noPlayersAvailableLabel.layer setZPosition:1.0];
+    //[self.noPlayersAvailableLabel setTextColor:[UIColor whiteColor]];
+    
     
     [self.view addSubview:self.mpLobbyTableView];
+    [self.view addSubview:self.noPlayersAvailableLabel];
     
     self.chatTableView = [[UITableView alloc] initWithFrame:CGRectMake(20,240,SCREEN_WIDTH-40,100)];
     self.chatTableView.backgroundColor = [UIColor blackColor];
@@ -1060,12 +1071,18 @@ if(tableView.tag ==88)
 
 -(void)updatePlayerLobby:(NSArray *)connectedPlayers
 {
-    self.connectedPlayers = connectedPlayers;
+    if ([connectedPlayers count] > 0) {
+        self.connectedPlayers = connectedPlayers;
+        
+        
+        [self.mpLobbyTableView setAlpha:1.0];
+        [self.noPlayersAvailableLabel setAlpha:0.0];
+    }else{
+        [self.mpLobbyTableView setAlpha:1.0];
+        [self.noPlayersAvailableLabel setAlpha:1.0];
+    }
     
     [self.mpLobbyTableView reloadData];
-    
-    self.mpLobbyTableView.alpha = 1;
-    
     [self.activityIndicator removeFromSuperview];
     
 }
