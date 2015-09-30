@@ -232,6 +232,18 @@ BOOL leftHandViewZone = NO;
     NSError *error;
     [userPF save:&error];
     
+    //Create a deck
+    if (userAllDecks == nil) {
+        DeckModel* newDeck = [[DeckModel alloc] init];
+        newDeck.name = @"New Deck";
+        
+        for (CardModel* card in userAllCards)
+            [newDeck addCard:card];
+        
+        [UserModel saveDeck:newDeck];
+    }
+   
+    
     MainScreenViewController *mainController = [[MainScreenViewController alloc] init];
     mainController.loadedTutorial = YES;
     [self presentViewController:mainController animated:YES completion:nil];
