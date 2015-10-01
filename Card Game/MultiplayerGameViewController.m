@@ -283,7 +283,7 @@ UIView *sureMatchView;
     
     //show a loading bar..
     
-    _activityIndicator.alpha = 0;
+   /* _activityIndicator.alpha = 0;
     _activityLabel.text = @"Finding Opponent...";
     [_activityIndicator setColor:[UIColor whiteColor]];
     [self.view addSubview:_activityIndicator];
@@ -293,7 +293,8 @@ UIView *sureMatchView;
                          _activityIndicator.alpha = 1;
                      }
                      completion:^(BOOL completed){
-                     }];
+                     }];*/
+    [self displayQuickMatchUI];
 
     [MPDataHandler joinQuickMatchChannel];
     
@@ -1478,6 +1479,95 @@ if(tableView.tag ==88)
      */
     [sureMatchView addSubview:notWhoIWantedButton];
     //[sureMatchView addSubview:startConversationButton];
+    
+    bgDarkenView = [[UIView alloc] initWithFrame:self.view.bounds];
+    bgDarkenView.backgroundColor = [UIColor blackColor];
+    bgDarkenView.alpha = 0.7;
+    
+    [self.view addSubview:bgDarkenView];
+    [self.view addSubview:sureMatchView];
+    
+}
+
+-(void)displayQuickMatchUI
+{
+    
+    //show a popup announcing the challenge.
+    sureMatchView = [[UIView alloc] initWithFrame:CGRectMake(20,70,self.view.frame.size.width-40,300)];
+    sureMatchView.center = self.view.center;
+    sureMatchView.backgroundColor = [UIColor whiteColor];
+    CALayer *sureMatchLayer = sureMatchView.layer;
+    sureMatchLayer.cornerRadius = 8.0f;
+    
+    
+    UILabel *sureMatchTitle = [[UILabel alloc] initWithFrame:CGRectMake(20,20,sureMatchView.frame.size.width-40,40)];
+    sureMatchTitle.text = @"Quick Match!";
+    sureMatchTitle.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:30];
+    sureMatchTitle.textAlignment = NSTextAlignmentCenter;
+    
+    [sureMatchView addSubview:sureMatchTitle];
+    
+    
+    /*UILabel *sureMatchCaseNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,70,300,50)];
+    
+    sureMatchCaseNameLabel.font =[UIFont fontWithName:@"Futura-CondensedMedium" size:25];
+    
+    
+    sureMatchCaseNameLabel.text = [[[playerUserName stringByAppendingString:@" ("] stringByAppendingString:eloRating] stringByAppendingString:@")"];
+    
+    
+    UIImageView *sureMatchImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10,120,150,150)];
+    
+    //check to see if there is a caseProfile for this caseID
+    NSString *defaultMatchImgFileName = [[NSBundle mainBundle] pathForResource:@"angryorc" ofType:@"jpeg"];
+    sureMatchImageView.image = [UIImage imageWithContentsOfFile:defaultMatchImgFileName];
+    
+    [sureMatchView addSubview:sureMatchCaseNameLabel];
+    [sureMatchView addSubview:sureMatchImageView];
+    */
+    //add two buttons for "Not Who I Wanted" and "Start a Conversation"
+    UIButton *notWhoIWantedButton = [[UIButton alloc] initWithFrame:CGRectMake(10,140,sureMatchView.frame.size.width-20,50)];
+    notWhoIWantedButton.backgroundColor = [UIColor redColor];
+    notWhoIWantedButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
+    notWhoIWantedButton.titleLabel.textColor = [UIColor whiteColor];
+    notWhoIWantedButton.titleLabel.text = @"Cancel";
+    [notWhoIWantedButton setTitle:@"Cancel" forState:UIControlStateNormal];
+    
+    [notWhoIWantedButton addTarget:self action:@selector(cancelChallenge:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    UIActivityIndicatorView *actIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    
+    [actIndicator setFrame:CGRectMake(10,200,sureMatchView.frame.size.width-20,50)];
+    
+    self.currentLoadStateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 410, SCREEN_WIDTH, 40)];
+    [self.currentLoadStateLabel setCenter:CGPointMake(sureMatchView.frame.size.width/2, 270)];
+    [self.currentLoadStateLabel setFont:[UIFont fontWithName:cardMainFont size:16]];
+    [self.currentLoadStateLabel setTextAlignment:NSTextAlignmentCenter];
+    
+    [self.currentLoadStateLabel setText:@"Finding Opponent..."];
+    [sureMatchView addSubview:actIndicator];
+    [sureMatchView addSubview:self.currentLoadStateLabel];
+    
+    [sureMatchView addSubview:_battleActivityLabel];
+    [actIndicator startAnimating];
+    
+    
+    /*
+     UIButton *startConversationButton = [[UIButton alloc] initWithFrame:CGRectMake(10,360,sureMatchView.frame.size.width-20,50)];
+     
+     startConversationButton.backgroundColor = [UIColor blueColor];
+     startConversationButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
+     startConversationButton.titleLabel.textColor = [UIColor whiteColor];
+     startConversationButton.titleLabel.text = @"Start Conversation";
+     [startConversationButton setTitle:@"Start Match" forState:UIControlStateNormal];
+     
+     [startConversationButton addTarget:self action:@selector(startMatch:) forControlEvents:UIControlEventTouchUpInside];
+     
+    [sureMatchView addSubview:notWhoIWantedButton];*/
+    //[sureMatchView addSubview:startConversationButton];
+    
+    [sureMatchView addSubview:notWhoIWantedButton];
     
     bgDarkenView = [[UIView alloc] initWithFrame:self.view.bounds];
     bgDarkenView.backgroundColor = [UIColor blackColor];

@@ -375,7 +375,7 @@ NSTimer *firstChallengeTimer;
                 NSString *challengedUserID = [msgIncomingDict objectForKey:@"qmOpponentID"];
                 NSString *challengerID = [msgIncomingDict objectForKey:@"challengingUserID"];
                 
-                if([challengedUserID isEqualToString:myUserID])
+                if(![challengerID isEqualToString:myUserID])
                     {
                     //received a challenge!
                     //make sure player isn't already in a challenge
@@ -1173,17 +1173,18 @@ NSTimer *firstChallengeTimer;
     [quickMatchMsgDict setObject:@"qmJOIN" forKey:@"msgType"];
     [quickMatchMsgDict setObject:eloRating forKey:@"eloRating"];
     
+    [PubNub subscribeOn:@[self.quickMatchChannel] withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channels, PNError *error) {
+        
+        //start a timer, after this timer expires the user can fire their first quickMatchChallenge if they didn't get challenged first
+        [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];
+        challengeLockTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(firstChallengeTimer) userInfo:nil repeats:YES];
+        [[NSRunLoop currentRunLoop] addTimer:challengeLockTimer forMode:NSRunLoopCommonModes];
+        
+        [PubNub sendMessage:quickMatchMsgDict toChannel:self.quickMatchChannel];
+        
+    }];
+
     
-[PubNub subscribeOn:@[self.quickMatchChannel] withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channels, PNError *error) {
-    
-    //start a timer, after this timer expires the user can fire their first quickMatchChallenge if they didn't get challenged first
-    [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];
-    challengeLockTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(firstChallengeTimer) userInfo:nil repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:challengeLockTimer forMode:NSRunLoopCommonModes];
-    
-    [PubNub sendMessage:quickMatchMsgDict toChannel:self.quickMatchChannel];
-    
-}];
 }
 
 -(void)sendQuickMatchChallenge:(NSString *)userIDJustJoined
@@ -1198,11 +1199,11 @@ NSTimer *firstChallengeTimer;
         
     }
     
-    if(self.firstQuickMatchEnabled ==FALSE)
+ /*   if(self.firstQuickMatchEnabled ==FALSE)
     {
         return;
         
-    }
+    }*/
     
      NSString *userID = [PFUser currentUser].objectId;
      NSNumber *eloRating = [[PFUser currentUser] objectForKey:@"eloRating"];
