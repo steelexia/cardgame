@@ -1619,7 +1619,7 @@ BOOL leftHandViewZone = NO;
         
         
         CardView*originalView = card.cardView;
-        if (!card.adminPhotoCheck) {
+        if (card.adminPhotoCheck != 1) {
             card.cardView.cardImage.image = placeHolderImage;
         }
         if (!originalView.frontFacing) //TODO depends on skill
@@ -1631,7 +1631,7 @@ BOOL leftHandViewZone = NO;
         card.cardView = originalView;
         
         cardView.center = card.cardView.center; //TODO
-        if (!card.adminPhotoCheck) {
+        if (card.adminPhotoCheck != 1) {
             card.cardView.cardImage.image = placeHolderImage;
           //  cardView.image = placeHolderImage;
         }

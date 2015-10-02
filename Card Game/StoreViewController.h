@@ -21,6 +21,7 @@
 @property (strong)StrokedLabel *userGoldLabel, *userLikesLabel, *userCardLabel;
 /** Cards loaded from last query. No query is required if only filters are being changed. */
 @property (strong)NSMutableArray*currentLoadedSales;
+@property (strong)NSMutableArray*currentPendingImageCards;
 
 @property (strong)StrokedLabel*searchResult;
 @property(strong)UIButton* userGoldIcon, *userCardIcon;
@@ -32,7 +33,7 @@
 @property (strong)UIView*darkFilter;
 @property (strong)CardView*cardView;
 @property (strong)PFObject*cardPF;
-@property (strong)CFButton*buyButton,*sellButton,*editButton,*likeButton, *restockButton, *bumpButton, *reportButton;
+@property (strong)CFButton*buyButton,*sellButton,*editButton,*likeButton, *restockButton, *bumpButton, *reportButton, *approveButton, *declineButton;
 @property (strong)StrokedLabel*creatorLabel, *idLabel, *rarityLabel, *rarityTextLabel, *likesLabel, *goldLabel;
 @property (strong)StrokedLabel*likeHintLabel, *editHintLabel, *buyHintLabel, *reportHintLabel;
 @property (strong)UILabel*cardTagsLabel;

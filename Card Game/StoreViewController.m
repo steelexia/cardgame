@@ -144,6 +144,13 @@ NSArray *_products;
     
     UIImageView *storeIconBanner = [[UIImageView alloc] initWithFrame:CGRectMake(storeXStart,storeYStart,storeWidth,storeHeight)];
     storeIconBanner.image = storeIconImage;
+    
+    UITapGestureRecognizer *storeTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showPendingImageCardsApproval)];
+    [storeTap setNumberOfTapsRequired:1];
+    
+    [storeIconBanner setUserInteractionEnabled:YES];
+    [storeIconBanner addGestureRecognizer:storeTap];
+    
     [self.view addSubview:storeIconBanner];
     
     
@@ -286,11 +293,24 @@ NSArray *_products;
     [_buyButton addTarget:self action:@selector(buyButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_cardInfoView addSubview:_buyButton];
     
+    
     _sellButton = [[CFButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT - 125, 80, 60)];
     _sellButton.label.text = @"Sell";
     [_sellButton setTextSize:22];
     [_sellButton addTarget:self action:@selector(sellButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_cardInfoView addSubview:_sellButton];
+    
+    _approveButton = [[CFButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT - 125, 80, 60)];
+    _approveButton.label.text = @"Approve";
+    [_approveButton setTextSize:16];
+    [_approveButton addTarget:self action:@selector(approveButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    //[_cardInfoView addSubview:_approveButton];
+    
+    _declineButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 0.5 - 40, SCREEN_HEIGHT - 125, 80, 60)];
+    _declineButton.label.text = @"Decline";
+    [_declineButton setTextSize:16];
+    [_declineButton addTarget:self action:@selector(declineButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    //[_cardInfoView addSubview:_declineButton];
     
     _buyHintLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
     _buyHintLabel.textColor = [UIColor whiteColor];
@@ -430,7 +450,7 @@ NSArray *_products;
     _reportButton.label.text = @"Report";
     [_reportButton setTextSize:16];
     [_reportButton addTarget:self action:@selector(reportButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    [_cardInfoView addSubview:_reportButton];
+    //[_cardInfoView addSubview:_reportButton];
     
     _reportHintLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
     _reportHintLabel.textColor = [UIColor whiteColor];
@@ -1413,6 +1433,14 @@ NSArray *_products;
     }
 }
 
+- (void)showPendingImageCardsApproval
+{
+    /*UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Store" message:@"Store Icon Tapped" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    [alert show];*/
+    _currentLoadedSales = _currentPendingImageCards;
+    [self updateFilter];
+}
+
 - (void)likedButtonPressed
 {
     _likedButton.selected = !_likedButton.selected;
@@ -1936,6 +1964,14 @@ NSArray *_products;
     {
         _cardTagsLabel.frame = CGRectMake(_cardTagsLabel.frame.origin.x, _cardTagsLabel.frame.origin.y, _cardTagsLabel.frame.size.width, cardTagsMaxHeight);
     }
+    
+    if ([_cardPF[@"adminPhotoCheck"] intValue] == 0) {
+        [_buyButton removeFromSuperview];
+        [_reportButton removeFromSuperview];
+        [_likeButton removeFromSuperview];
+        [_cardInfoView addSubview:_approveButton];
+        [_cardInfoView addSubview:_declineButton];
+    }
 }
 
 -(void)closeCardInfoView
@@ -2061,6 +2097,73 @@ NSArray *_products;
             //TODO
         }
     } loadingText:@"Processing..." failedText:@"Error selling card."];
+}
+
+-(void)approveButtonPressed
+{
+    [self showActivityIndicatorWithBlock:^BOOL{
+        int currentCardIndex = (int)[_cardsView.currentCards indexOfObject:_cardView.cardModel];
+        NSLog(@"Current Card Index: %d",currentCardIndex);
+        if (currentCardIndex >= 0 && currentCardIndex < _cardsView.currentSales.count)
+        {
+            NSError*error;
+            [PFCloud callFunction:@"approveCardImage" withParameters:@{
+                                                               @"cardID" : _cardView.cardModel.cardPF.objectId} error:&error];
+            
+            if (!error)
+            {
+                [self closeCardInfoView];
+                
+                [_currentLoadedSales removeObjectAtIndex:currentCardIndex];
+                [self updateFilter];
+                
+                [self updateFooterViews];
+            }
+            else
+                NSLog(@"%@", [error localizedDescription]);
+            
+            return YES;
+        }
+        else
+        {
+            NSLog(@"ERROR: FAILED TO FIND SALE IN ARRAY");
+            return NO;
+            //TODO
+        }
+    } loadingText:@"Processing..." failedText:@"Error approving card image."];
+}
+
+- (void)declineButtonPressed
+{
+    [self showActivityIndicatorWithBlock:^BOOL{
+        int currentCardIndex = (int)[_cardsView.currentCards indexOfObject:_cardView.cardModel];
+        NSLog(@"Current Card Index: %d",currentCardIndex);
+        if (currentCardIndex >= 0 && currentCardIndex < _cardsView.currentSales.count)
+        {
+            
+            NSError*error;
+            [PFCloud callFunction:@"declineCardImage" withParameters:@{
+                                                                       @"cardID" : _cardView.cardModel.cardPF.objectId} error:&error];
+            
+            if (!error)
+            {
+                [self closeCardInfoView];
+                [_currentLoadedSales removeObjectAtIndex:currentCardIndex];
+                [self updateFilter];
+                [self updateFooterViews];
+            }
+            else
+                NSLog(@"%@", [error localizedDescription]);
+            
+            return YES;
+        }
+        else
+        {
+            NSLog(@"ERROR: FAILED TO FIND SALE IN ARRAY");
+            return NO;
+            //TODO
+        }
+    } loadingText:@"Processing..." failedText:@"Error declining card image."];
 }
 
 -(void)updateFooterViews
@@ -2464,7 +2567,7 @@ NSArray *_products;
     [self applyFiltersToQuery:salesQuery];
     
     PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
-    [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(YES)];
+    [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(1)];
     [salesQuery     whereKey:@"card" matchesQuery:cardQuery];
     
     [salesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -2482,6 +2585,22 @@ NSArray *_products;
             NSLog(@"ERROR SEARCHING SALES");
         }
     }];
+    
+    PFQuery *pendingCardQuery = [PFQuery queryWithClassName:@"Card"];
+    [pendingCardQuery whereKey:@"adminPhotoCheck" equalTo:@(0)];
+    [pendingCardQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(!error){
+            //load all sales without the cards
+            _currentPendingImageCards = [NSMutableArray arrayWithArray: objects];
+            
+        }
+        else
+        {
+            _searchResult.text = @"Error while searching.";
+            NSLog(@"ERROR SEARCHING SALES");
+        }
+    }];
+
 }
 
 //TODO: this and updateFilterToExistingSearchToObjects are buggy as crap and needs to be fixed eventually, but less terrible when store increment is set to 16. Often has duplication when set to 2 and has filters on
@@ -2505,7 +2624,7 @@ NSArray *_products;
         [self applyFiltersToQuery:salesQuery];
         
         PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
-        [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(YES)];
+        [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(1)];
         [salesQuery     whereKey:@"card" matchesQuery:cardQuery];
         
         if (_isSearching)
@@ -2675,7 +2794,7 @@ NSArray *_products;
     [self applySearchFiltersToQuery:salesQuery];
     
     PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
-    [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(YES)];
+    [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(1)];
     [salesQuery     whereKey:@"card" matchesQuery:cardQuery];
     
     [salesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -2884,7 +3003,7 @@ NSArray *_products;
 
 -(void)storeScrolledToEnd
 {
-    [self loadMoreCardsFromBottom];
+    //[self loadMoreCardsFromBottom];
 }
 
 -(void)activityFailedButtonPressed

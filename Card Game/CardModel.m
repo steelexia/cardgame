@@ -255,7 +255,7 @@ const int CARD_ID_START = 1000;
     NSString *flavourText = cardPF[@"flavourText"];
     NSNumber *version = cardPF[@"version"];
     NSString *rarityUpgradeAvailable = cardPF[@"rarityUpdateAvailable"];
-    BOOL adminPhotoCheck = [cardPF[@"adminPhotoCheck"] boolValue];
+    int adminPhotoCheck = [cardPF[@"adminPhotoCheck"] intValue];
     //TODO in future this should [probably] never be nil
     if (creator != nil && ![creator isEqualToString:@"Unknown"])
     {

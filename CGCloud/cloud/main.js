@@ -652,108 +652,160 @@ response.error("Failed to sell");
 **/
 Parse.Cloud.define("likeCard", function(request, response) {
 //console.log("start");
-var cardQuery = new Parse.Query("Card");
-cardQuery.get(request.params.cardID, {
-success:function(card)
-{
-//console.log("card");
-var saleQuery = new Parse.Query("Sale");
-saleQuery.get(request.params.saleID, {
-success:function(sale)
-{
-//console.log("sale");
-var userLikes = request.user.get("likes");
-if (userLikes <= 0)
-response.error("User has no likes left");
-else if (getLikedCard(request.user, card.get("idNumber")))
-response.error("User already liked card");
-else
-{
-//console.log("enough likes");
-request.user.increment("likes", -1);
-var originalLikes = card.get("likes");
- 
-card.increment("likes", 1);
-sale.increment("likes", 1);
- 
-//TODO can do a push later
-request.user.increment("gold", 5);
- 
-var cardname = card.get("name");
-var fullString;
-var doUpdate = "NO"
-if(originalLikes ==0)
-{
-  fullString = "Your Card " +cardname + " received its first like!  Get more likes to increase the card's power & rarity."
-  doUpdate = "YES";
-}
-if(originalLikes ==9)
-{
-  fullString = "Your Card " +cardname + " received its tenth like!  Get more likes to increase the card's power & rarity."
-  doUpdate = "YES";
-}
-if(originalLikes ==50)
-{
-  fullString = "Your Card " +cardname + " received its 50 like!  Look at you, Mr/Ms popular!"
-  doUpdate = "YES";
-}
-//get the userID of the card owner to notify them about the like
- 
-if(doUpdate =="YES")
-{
- 
- 
-var parseUserID = sale.get("seller");
-//notify the parseUserID
-Parse.Cloud.run('pushNotificationForUser', { userID: parseUserID, messageText:fullString, messageType:"likeNotification" }, {
-  success: function(userNotified) {
-    // ratings should be 4.5
-    console.log("user successfully notified");
-  },
-  error: function(error) {
-    console.log("error notifying user");
-  }
+  var cardQuery = new Parse.Query("Card");
+  cardQuery.get(request.params.cardID, {
+    success:function(card)
+    {
+      //console.log("card");
+      var saleQuery = new Parse.Query("Sale");
+      saleQuery.get(request.params.saleID, {
+        success:function(sale)
+        {
+          //console.log("sale");
+          var userLikes = request.user.get("likes");
+          if (userLikes <= 0)
+            response.error("User has no likes left");
+          else if (getLikedCard(request.user, card.get("idNumber")))
+            response.error("User already liked card");
+          else
+          {
+            //console.log("enough likes");
+            request.user.increment("likes", -1);
+            var originalLikes = card.get("likes");
+   
+            card.increment("likes", 1);
+            sale.increment("likes", 1);
+   
+            //TODO can do a push later
+            request.user.increment("gold", 5);
+     
+            var cardname = card.get("name");
+            var fullString;
+            var doUpdate = "NO"
+            if(originalLikes ==0)
+            {
+              fullString = "Your Card " +cardname + " received its first like!  Get more likes to increase the card's power & rarity."
+              doUpdate = "YES";
+            }
+            if(originalLikes ==9)
+            {
+              fullString = "Your Card " +cardname + " received its tenth like!  Get more likes to increase the card's power & rarity."
+              doUpdate = "YES";
+            }
+            if(originalLikes ==50)
+            {
+              fullString = "Your Card " +cardname + " received its 50 like!  Look at you, Mr/Ms popular!"
+              doUpdate = "YES";
+            }
+            //get the userID of the card owner to notify them about the like
+             
+            if(doUpdate =="YES")
+            {
+   
+   
+              var parseUserID = sale.get("seller");
+              //notify the parseUserID
+              Parse.Cloud.run('pushNotificationForUser', { userID: parseUserID, messageText:fullString, messageType:"likeNotification" }, {
+                success: function(userNotified) {
+                  // ratings should be 4.5
+                  console.log("user successfully notified");
+                },
+                error: function(error) {
+                  console.log("error notifying user");
+                }
+              });
+   
+              Parse.Cloud.run('createMessageForUser', { userID: parseUserID, messageTitle:"Card Like!",messageText:fullString, messageType:"likeNotification" }, {
+                success: function(userNotified) {
+                  // ratings should be 4.5
+                  console.log("user message created");
+                },
+                error: function(error) {
+                  console.log("error creating user message");
+                }
+              });
+   
+            }
+   
+            //saves user
+            setLikedCard(request.user, card.get("idNumber"), true);
+            console.log("liked: " + getLikedCard(request.user, card.get("idNumber")));
+   
+            Parse.Object.saveAll([request.user, card, sale], {
+              success: function(list) {
+              //console.log("saved");
+              //assumes all are saved
+                response.success();
+              },
+              error: function(error) {
+                response.error("Couldn't save");
+              }
+            });
+          }
+        },
+        error:function() {
+          response.error("Couldn't find sale");
+        }
+      });
+    },
+    error:function() {
+     response.error("Couldn't find Card");
+    }
+  });
 });
- 
-Parse.Cloud.run('createMessageForUser', { userID: parseUserID, messageTitle:"Card Like!",messageText:fullString, messageType:"likeNotification" }, {
-  success: function(userNotified) {
-    // ratings should be 4.5
-    console.log("user message created");
-  },
-  error: function(error) {
-    console.log("error creating user message");
-  }
+
+/**
+* Appove card Image
+**/
+Parse.Cloud.define("approveCardImage", function(request, response) {
+  //console.log("Report function started.");
+  var cardQuery = new Parse.Query("Card");
+  cardQuery.get(request.params.cardID, {
+    success: function(card) {
+      card.set("adminPhotoCheck", 1);
+      card.save({
+      }, {
+        success: function() {
+          response.success();
+        },
+        error: function(error) {
+          response.error("Failed to Approve");
+        }
+      });
+    },
+    error: function(error) {
+      response.error("Couldn't approve card image");
+    }
+  });
+
 });
- 
-}
- 
-//saves user
-setLikedCard(request.user, card.get("idNumber"), true);
-console.log("liked: " + getLikedCard(request.user, card.get("idNumber")));
- 
-Parse.Object.saveAll([request.user, card, sale], {
-  success: function(list) {
-  //console.log("saved");
-  //assumes all are saved
-    response.success();
-  },
-  error: function(error) {
-    response.error("Couldn't save");
-  }
+
+/**
+* Decline card Image
+**/
+Parse.Cloud.define("declineCardImage", function(request, response) {
+  //console.log("Report function started.");
+  var cardQuery = new Parse.Query("Card");
+  cardQuery.get(request.params.cardID, {
+    success: function(card) {
+      card.set("adminPhotoCheck", -1);
+      card.save({
+      }, {
+        success: function() {
+          response.success();
+        },
+        error: function(error) {
+          response.error("Failed to Decline");
+        }
+      });
+    },
+    error: function(error) {
+      response.error("Couldn't decline card image");
+    }
+  });
+
 });
-}
-},
-error:function() {
-response.error("Couldn't find sale");
-}
-});
-},
-error:function() {
-response.error("Couldn't find Card");
-}
-});
-});
- 
+
 /**
 * Reports a card. Needs both Card and Sale objects for updating
 *
@@ -1574,4 +1626,123 @@ Parse.Cloud.beforeSave("Sale", function(request, response) {
     request.object.set("reports", request.object.get("card").get("reports"));
   }
   response.success();
+});
+
+/** Calculate + ELO Rating on WIN */
+Parse.Cloud.define("getELORatingOnWin", function(request, response) {
+   
+  var matchWinnerEloRating = request.params.User1Rating;
+  var matchLoserEloRating = request.params.User2Rating;
+   
+  console.log(matchWinnerEloRating);
+   
+  console.log(matchLoserEloRating);
+
+  //calculate elo changes
+  //elo depends upon a table illustrated as such
+  //ELO difference  Expected score:
+  //  0 0.50
+  //  20  0.53
+  //  40  0.58
+  //  60  0.62
+  //  80  0.66
+  //  100 0.69
+  //  120 0.73
+  //  140 0.76
+  //  160 0.79
+  //  180 0.82
+  //  200 0.84
+  //  300 0.93
+  //  400 0.97
+  //
+  //The formula to calculate a player's new rating based on his/her previous one is:
+  //Rn = Ro + C * (S - Se)      (1)
+  //where:
+  //Rn = new rating
+  //Ro = old rating
+  //S  = score  --this is usually 1, representing the "weight" of the match
+  //Se = expected score
+  //C  = constant --this represents the speed/volatility at which ratings will change, we'll use a value of 30
+
+  var C = 30;
+  var eloDifference = Math.abs(matchWinnerEloRating-matchLoserEloRating);
+  console.log("eloDiff");
+  console.log(eloDifference);
+
+  var playerOneNewRating;
+  var scoreRatio;
+  if(eloDifference <=20 && eloDifference >=0)
+  {
+    playerOneNewRating = matchWinnerEloRating + C *(0.51);
+  }
+  else
+  if(eloDifference <=40)
+  {
+    playerOneNewRating = matchWinnerEloRating + C *(1-0.53);
+  }
+  else
+  if(eloDifference <=60)
+  {
+    playerOneNewRating = matchWinnerEloRating + C *(1-0.58);
+  }
+  else
+  if(eloDifference <=80)
+  {
+    playerOneNewRating = matchWinnerEloRating + C *(1-0.62);
+  }
+  else
+  if(eloDifference <=100)
+  {
+    playerOneNewRating = matchWinnerEloRating + C *(1-0.66);
+  }
+  else
+  if(eloDifference <=120)
+  {
+    playerOneNewRating = matchWinnerEloRating + C *(1-0.69);
+  }
+  else
+  if(eloDifference <=140)
+  {
+    playerOneNewRating = matchWinnerEloRating + C *(1-0.73);
+  }
+  else
+  if(eloDifference <=160)
+  {
+    playerOneNewRating = matchWinnerEloRating + C *(1-0.76);
+  }
+  else
+  if(eloDifference <=180)
+  {
+    playerOneNewRating = matchWinnerEloRating + C *(1-0.79);
+  }
+  else
+  if(eloDifference <=200)
+  {
+    playerOneNewRating = matchWinnerEloRating + C *(1-0.82);
+  }
+  else
+  if(eloDifference <=300)
+  {
+    playerOneNewRating = matchWinnerEloRating + C *(1-0.87);
+  }
+  else
+  if(eloDifference <=400)
+  {
+    playerOneNewRating = matchWinnerEloRating + C *(1-0.93);
+  }
+  else
+  if(eloDifference >=401)
+  {
+    playerOneNewRating = matchWinnerEloRating + C *(1-0.95);
+  }
+
+  //subtract the difference of playerOneNewRating to set playerTwoNewRating
+  var player1EloChange = playerOneNewRating-matchWinnerEloRating;
+
+  player1EloChange = Math.ceil(player1EloChange);
+
+  console.log("player1+ELORating");
+  console.log(player1EloChange);
+
+  response.success(player1EloChange);
 });

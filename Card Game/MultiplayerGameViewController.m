@@ -1415,7 +1415,7 @@ if(tableView.tag ==88)
     
     UILabel *sureMatchTitle = [[UILabel alloc] initWithFrame:CGRectMake(20,20,sureMatchView.frame.size.width-40,40)];
     sureMatchTitle.text = @"You Have Challenged A Player!";
-    sureMatchTitle.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:30];
+    sureMatchTitle.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:24];
     sureMatchTitle.textAlignment = NSTextAlignmentCenter;
 
     [sureMatchView addSubview:sureMatchTitle];
@@ -1437,6 +1437,30 @@ if(tableView.tag ==88)
     
     [sureMatchView addSubview:sureMatchCaseNameLabel];
     [sureMatchView addSubview:sureMatchImageView];
+    
+     NSError* error;
+    NSString *eloDiff = [PFCloud callFunction:@"getELORatingOnWin" withParameters:@{
+                                                            @"User1Rating" : [userPF objectForKey:@"eloRating"] , @"User2Rating": eloRating
+                                                              } error:&error];
+    
+    
+    if (!error){
+        [userPF fetch];
+        
+       // NSNumber *newSelfEloRating =  [userPF objectForKey:@"eloRating"];
+        NSLog(@"ELO Rating diff: %@", eloDiff);
+        
+        UILabel *ELORatingOnWin = [[UILabel alloc] initWithFrame:CGRectMake(165, 120, 110, 150)];
+        ELORatingOnWin.textColor = [UIColor colorWithRed:9.0/255.0 green:127.0/255.0 blue:4.0/255.0 alpha:1.0];
+        ELORatingOnWin.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:21];
+        ELORatingOnWin.text = [NSString stringWithFormat:@"+%@ ELO Rating on WIN",eloDiff];
+        ELORatingOnWin.numberOfLines = 3;
+        ELORatingOnWin.textAlignment = NSTextAlignmentCenter;
+        
+        [sureMatchView addSubview:ELORatingOnWin];
+        
+    }
+
     
     //add two buttons for "Not Who I Wanted" and "Start a Conversation"
     UIButton *notWhoIWantedButton = [[UIButton alloc] initWithFrame:CGRectMake(10,300,sureMatchView.frame.size.width-20,50)];

@@ -153,6 +153,9 @@ const int CARD_CELL_INSET = 8;
     
     PFObject *sale = self.currentSales[i];
     PFObject *cardPF = sale[@"card"];
+    if (cardPF == nil) {
+        cardPF = sale;
+    }
     
     [sale save];
     [self performBlockInBackground:^(void){

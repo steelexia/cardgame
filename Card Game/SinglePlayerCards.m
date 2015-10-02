@@ -2701,7 +2701,7 @@ NSMutableDictionary * campaignCards;
     monster.life = monster.maximumLife = 1800;
     monster.cost = 1;
     monster.cooldown = monster.maximumCooldown = 1;
-    monster.adminPhotoCheck = YES;
+    monster.adminPhotoCheck = 1;
     
     [deck addCard:monster];
     
@@ -2711,7 +2711,7 @@ NSMutableDictionary * campaignCards;
     monster.life = monster.maximumLife = 2900;
     monster.cost = 2;
     monster.cooldown = monster.maximumCooldown = 1;
-    monster.adminPhotoCheck = YES;
+    monster.adminPhotoCheck = 1;
     
     [deck addCard:monster];
     
@@ -2721,7 +2721,7 @@ NSMutableDictionary * campaignCards;
     monster.life = monster.maximumLife = 3000;
     monster.cost = 3;
     monster.cooldown = monster.maximumCooldown = 1;
-    monster.adminPhotoCheck = YES;
+    monster.adminPhotoCheck = 1;
     
     [deck addCard:monster];
     
@@ -2731,7 +2731,7 @@ NSMutableDictionary * campaignCards;
     monster.life = monster.maximumLife = 1900;
     monster.cost = 4;
     monster.cooldown = monster.maximumCooldown = 1;
-    monster.adminPhotoCheck = YES;
+    monster.adminPhotoCheck = 1;
     
     [monster addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
     //monster.flavourText = @"Testing a flavour text of the foxy card.";
@@ -2744,7 +2744,7 @@ NSMutableDictionary * campaignCards;
     monster.life = monster.maximumLife = 5600;
     monster.cost = 5;
     monster.cooldown = monster.maximumCooldown = 1;
-    monster.adminPhotoCheck = YES;
+    monster.adminPhotoCheck = 1;
     
     [deck addCard:monster];
     
@@ -2755,7 +2755,7 @@ NSMutableDictionary * campaignCards;
     monster.cost = 4;
     monster.cooldown = monster.maximumCooldown = 2;
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:3100]]];
-    monster.adminPhotoCheck = YES;
+    monster.adminPhotoCheck = 1;
     
     [deck addCard:monster];
     
@@ -2764,7 +2764,7 @@ NSMutableDictionary * campaignCards;
     spell.cost = 2;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:2300]]];
-    spell.adminPhotoCheck = YES;
+    spell.adminPhotoCheck = 1;
     [deck addCard:spell];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:8 type:cardTypeStandard];
@@ -2773,7 +2773,7 @@ NSMutableDictionary * campaignCards;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:2700]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-    spell.adminPhotoCheck = YES;
+    spell.adminPhotoCheck = 1;
     [deck addCard:spell];
     
     monster = [[MonsterCardModel alloc] initWithIdNumber:9 type:cardTypeStandard];
@@ -2783,7 +2783,7 @@ NSMutableDictionary * campaignCards;
     monster.cost = 4;
     monster.cooldown = monster.maximumCooldown = 1;
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:1100]]];
-    monster.adminPhotoCheck = YES;
+    monster.adminPhotoCheck = 1;
     
     [deck addCard:monster];
     
@@ -2792,7 +2792,7 @@ NSMutableDictionary * campaignCards;
     spell.cost = 1;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-    spell.adminPhotoCheck = YES;
+    spell.adminPhotoCheck = 1;
     [deck addCard:spell];
     
     monster = [[MonsterCardModel alloc] initWithIdNumber:11 type:cardTypeStandard];
@@ -2802,7 +2802,7 @@ NSMutableDictionary * campaignCards;
     monster.cost = 1;
     monster.cooldown = monster.maximumCooldown = 1;
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnMove targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
-    monster.adminPhotoCheck = YES;
+    monster.adminPhotoCheck = 1;
     
     [deck addCard:monster];
     
@@ -2813,7 +2813,7 @@ NSMutableDictionary * campaignCards;
     monster.cost = 4;
     monster.cooldown = monster.maximumCooldown = 1;
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-    monster.adminPhotoCheck = YES;
+    monster.adminPhotoCheck = 1;
     
     [deck addCard:monster];
     
@@ -2825,7 +2825,7 @@ NSMutableDictionary * campaignCards;
     monster.cooldown = monster.maximumCooldown = 1;
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
-    monster.adminPhotoCheck = YES;
+    monster.adminPhotoCheck = 1;
     
     [deck addCard:monster];
     
@@ -2834,7 +2834,7 @@ NSMutableDictionary * campaignCards;
     spell.cost = 5;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:4900]]];
-    spell.adminPhotoCheck = YES;
+    spell.adminPhotoCheck = 1;
     [deck addCard:spell];
     
     spell = [[SpellCardModel alloc] initWithIdNumber:15 type:cardTypeStandard];
@@ -2842,7 +2842,7 @@ NSMutableDictionary * campaignCards;
     spell.cost = 4;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:1700]]];
-    spell.adminPhotoCheck = YES;
+    spell.adminPhotoCheck = 1;
     [deck addCard:spell];
     
     monster = [[MonsterCardModel alloc] initWithIdNumber:16 type:cardTypeStandard];
@@ -2852,7 +2852,7 @@ NSMutableDictionary * campaignCards;
     monster.cost = 3;
     monster.cooldown = monster.maximumCooldown = 1;
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnMove targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:1200]]];
-    monster.adminPhotoCheck = YES;
+    monster.adminPhotoCheck = 1;
     
     [deck addCard:monster];
     
@@ -2863,7 +2863,7 @@ NSMutableDictionary * campaignCards;
     monster.cost = 3;
     monster.cooldown = monster.maximumCooldown = 1;
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:1600]]];
-    monster.adminPhotoCheck = YES;
+    monster.adminPhotoCheck = 1;
     
     [deck addCard:monster];
     
@@ -2874,7 +2874,7 @@ NSMutableDictionary * campaignCards;
     monster.cost = 3;
     monster.cooldown = monster.maximumCooldown = 1;
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnHit targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-    monster.adminPhotoCheck = YES;
+    monster.adminPhotoCheck = 1;
     
     [deck addCard:monster];
     
@@ -2885,7 +2885,7 @@ NSMutableDictionary * campaignCards;
     monster.cost = 6;
     monster.cooldown = monster.maximumCooldown = 1;
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnHit targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:1400]]];
-    monster.adminPhotoCheck = YES;
+    monster.adminPhotoCheck = 1;
     
     [deck addCard:monster];
     
@@ -2894,7 +2894,7 @@ NSMutableDictionary * campaignCards;
     spell.cost = 2;
     
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxCooldown castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
-    spell.adminPhotoCheck = YES;
+    spell.adminPhotoCheck = 1;
     
     [deck addCard:spell];
     
