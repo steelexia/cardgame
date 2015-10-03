@@ -324,7 +324,7 @@ Parse.Cloud.define('pushNotificationForUser', function(request, response)
       userMsg.set("body",msgTxt);
       userMsg.set("title",msgTitle);
       userMsg.set("msgType",msgType);
-      if(rareCardID === null || rareCardID === "null" || rareCardID.length < 1 )
+      if(rareCardID === null || rareCardID === "null")
       {
  
       }
@@ -766,6 +766,31 @@ Parse.Cloud.define("approveCardImage", function(request, response) {
       card.save({
       }, {
         success: function() {
+          
+          var cardname = card.get("name");
+          var creator = card.get("creator");
+          var totalMessageFinal = "Your card " + cardname + " has been approved.";
+
+          Parse.Cloud.run('pushNotificationForUser', { userID: creator, messageText:totalMessageFinal, messageType:"cardApprovedNotification" }, {
+            success: function(userNotified) {
+              // ratings should be 4.5
+              console.log("user successfully notified");
+            },
+            error: function(error) {
+              console.log("error notifying user");
+            }
+          });
+           
+          Parse.Cloud.run('createMessageForUser', { userID: creator, messageTitle:"Card Approved!",messageText:totalMessageFinal, messageType:"cardApprovedNotification" }, {
+            success: function(userNotified) {
+              // ratings should be 4.5
+              console.log("user message created");
+            },
+            error: function(error) {
+              console.log("error creating user message");
+            }
+          });
+
           response.success();
         },
         error: function(error) {
