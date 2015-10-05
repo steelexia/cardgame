@@ -63,6 +63,10 @@
         _costLabel.strokeColour = [UIColor blackColor];
         [_statsView addSubview:_costLabel];
         
+        _featuredBanner = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 90, 80)];
+        [_featuredBanner setImage:[UIImage imageNamed:@"FeaturedStoreCardOfTheWeekBanner.png"]];
+        [_statsView addSubview:_featuredBanner];
+        
         self.layer.shouldRasterize = YES;
         self.layer.rasterizationScale = [UIScreen mainScreen].scale;
     }

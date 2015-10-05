@@ -22,6 +22,7 @@
 /** Cards loaded from last query. No query is required if only filters are being changed. */
 @property (strong)NSMutableArray*currentLoadedSales;
 @property (strong)NSMutableArray*currentPendingImageCards;
+@property (strong)NSMutableArray*currentFeaturedCards;
 
 @property (strong)StrokedLabel*searchResult;
 @property(strong)UIButton* userGoldIcon, *userCardIcon;

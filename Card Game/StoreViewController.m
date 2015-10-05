@@ -51,7 +51,7 @@ NSArray *_products;
         _stockedFilter = NO;
         _deckTagsFilter = NO;
         
-        _storeCategoryTab = storeCategoryFeatured;
+        _storeCategoryTab = storeCategoryNewest;
         cardStoreQueryID = 0;
     }
     return self;
@@ -1161,6 +1161,8 @@ NSArray *_products;
      [self.view addSubview:_footerView];
     
     [self.view addSubview:_searchResult];
+    
+    _storeCategoryTab =1;
 }
 
 -(void)tutorialCreateCard
@@ -1551,7 +1553,7 @@ NSArray *_products;
             {
                 //show featured Store
                 _featuredStore.alpha = 1;
-                _cardsView.alpha = 0;
+               // _cardsView.alpha = 0;
                 
             }
             else
@@ -2560,46 +2562,67 @@ NSArray *_products;
     [self.cardsView reloadInputViews];
     [self.cardsView.collectionView reloadData];
     
-    NSLog(@"load card start");
-    PFQuery *salesQuery = [PFQuery queryWithClassName:@"Sale"];
-    salesQuery.limit = STORE_INITIAL_LOAD_AMOUNT;
-    
-    [self applyFiltersToQuery:salesQuery];
-    
-    PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
-    [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(1)];
-    [salesQuery     whereKey:@"card" matchesQuery:cardQuery];
-    
-    [salesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if(!error){
-            //load all sales without the cards
-            _currentLoadedSales = [NSMutableArray arrayWithArray: objects];
-            
-            
-            
-            [self updateFilter];
-        }
-        else
-        {
-            _searchResult.text = @"Error while searching.";
-            NSLog(@"ERROR SEARCHING SALES");
-        }
-    }];
-    
-    PFQuery *pendingCardQuery = [PFQuery queryWithClassName:@"Card"];
-    [pendingCardQuery whereKey:@"adminPhotoCheck" equalTo:@(0)];
-    [pendingCardQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if(!error){
-            //load all sales without the cards
-            _currentPendingImageCards = [NSMutableArray arrayWithArray: objects];
-            
-        }
-        else
-        {
-            _searchResult.text = @"Error while searching.";
-            NSLog(@"ERROR SEARCHING SALES");
-        }
-    }];
+    if (_storeCategoryTab == 0) {
+        PFQuery *featuredCardQuery = [PFQuery queryWithClassName:@"Card"];
+        
+        [featuredCardQuery setLimit:1];
+        
+        [featuredCardQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if(!error){
+                //load all sales without the cards
+                _currentLoadedSales = [NSMutableArray arrayWithArray: objects];
+                [self.cardsView setIsFeaturedCard:YES];
+                [self updateFilter];
+                
+            }
+            else
+            {
+                _searchResult.text = @"Error while searching.";
+                NSLog(@"ERROR SEARCHING SALES");
+            }
+        }];
+    }else{
+        NSLog(@"load card start");
+        PFQuery *salesQuery = [PFQuery queryWithClassName:@"Sale"];
+        salesQuery.limit = STORE_INITIAL_LOAD_AMOUNT;
+        
+        [self applyFiltersToQuery:salesQuery];
+        
+        PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
+        [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(1)];
+        [salesQuery     whereKey:@"card" matchesQuery:cardQuery];
+        
+        [salesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if(!error){
+                //load all sales without the cards
+                _currentLoadedSales = [NSMutableArray arrayWithArray: objects];
+                
+                [self.cardsView setIsFeaturedCard:NO];
+                
+                [self updateFilter];
+            }
+            else
+            {
+                _searchResult.text = @"Error while searching.";
+                NSLog(@"ERROR SEARCHING SALES");
+            }
+        }];
+        
+        PFQuery *pendingCardQuery = [PFQuery queryWithClassName:@"Card"];
+        [pendingCardQuery whereKey:@"adminPhotoCheck" equalTo:@(0)];
+        [pendingCardQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if(!error){
+                //load all sales without the cards
+                _currentPendingImageCards = [NSMutableArray arrayWithArray: objects];
+                
+            }
+            else
+            {
+                _searchResult.text = @"Error while searching.";
+                NSLog(@"ERROR SEARCHING SALES");
+            }
+        }];
+    }
 
 }
 

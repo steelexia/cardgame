@@ -19,7 +19,7 @@
 
 @property (strong) CFLabel*background;
 
-@property (strong) UIImageView*costIcon, *likesIcon;
+@property (strong) UIImageView*costIcon, *likesIcon, *featuredBanner;
 
 @property (strong) UIView *statsView;
 

@@ -101,8 +101,20 @@ const int CARD_CELL_INSET = 8;
             cell.cardView.center = cell.center;
             
             cell.cardView.frame = CGRectMake(CARD_CELL_INSET,CARD_CELL_INSET,STORE_CARD_WIDTH,STORE_CARD_HEIGHT);
-            cell.costLabel.text = [NSString stringWithFormat:@"%d", [GameStore getCardCost:card]];
-            cell.likesLabel.text = [NSString stringWithFormat:@"%d", [cardPF[@"likes"] intValue]];
+            if (!self.isFeaturedCard) {
+                cell.costLabel.text = [NSString stringWithFormat:@"%d", [GameStore getCardCost:card]];
+                cell.likesLabel.text = [NSString stringWithFormat:@"%d", [cardPF[@"likes"] intValue]];
+                [cell.costIcon setHidden:NO];
+                [cell.costIcon setHidden:NO];
+                [cell.costLabel setHidden:NO];
+                [cell.likesLabel setHidden:NO];
+            }else{
+                [cell.costIcon setHidden:YES];
+                [cell.likesIcon setHidden:YES];
+                [cell.costLabel setHidden:YES];
+                [cell.likesLabel setHidden:YES];
+            }
+            
             
             [cell addSubview:cell.cardView];
             [cell addSubview:cell.statsView];
@@ -184,16 +196,35 @@ const int CARD_CELL_INSET = 8;
                 }
                 
                 self.currentCards[i] = cardModel;
+                
+                
                 StoreCardCell *cell = (StoreCardCell *)[_collectionView cellForItemAtIndexPath:indexPath];
                 cell.cardView = [[CardView alloc] initWithModel:cardModel viewMode:cardViewModeEditor viewState:cardModel.cardViewState];
-                cell.likesLabel.text = [NSString stringWithFormat:@"%d", [cardPF[@"likes"] intValue]];
+                //cell.cardView = [[CardView alloc] initWithModel:cardModel withImage:[cardPF objectForKey:@"image"] viewMode:cardViewModeEditor];
                 cell.cardView.frontFacing = YES;
                 cell.cardView.cardHighlightType = cardHighlightNone;
                 //cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
                 cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.7, 0.7);
                 cell.cardView.center = cell.center;
                 cell.cardView.frame = CGRectMake(CARD_CELL_INSET,CARD_CELL_INSET,STORE_CARD_WIDTH, STORE_CARD_HEIGHT);
-                cell.costLabel.text = [NSString stringWithFormat:@"%d", [GameStore getCardCost:cardModel]];
+                
+                
+                if (!self.isFeaturedCard) {
+                    cell.costLabel.text = [NSString stringWithFormat:@"%d", [GameStore getCardCost:cardModel]];
+                    cell.likesLabel.text = [NSString stringWithFormat:@"%d", [cardPF[@"likes"] intValue]];
+                    [cell.costIcon setHidden:NO];
+                    [cell.costIcon setHidden:NO];
+                    [cell.costLabel setHidden:NO];
+                    [cell.likesLabel setHidden:NO];
+                    [cell.featuredBanner setHidden:YES];
+                }else{
+                    [cell.costIcon setHidden:YES];
+                    [cell.likesIcon setHidden:YES];
+                    [cell.costLabel setHidden:YES];
+                    [cell.likesLabel setHidden:YES];
+                    [cell.featuredBanner setHidden:NO];
+                }
+
                 
                 [cell.activityView stopAnimating];
                 [cell.activityView removeFromSuperview];

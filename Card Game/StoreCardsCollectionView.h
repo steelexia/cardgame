@@ -22,5 +22,7 @@
 
 @property (strong) UIViewController*parentViewController;
 
+@property (assign) BOOL isFeaturedCard;
+
 @end
 
