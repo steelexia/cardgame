@@ -506,11 +506,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Game/StoreViewController.m"
-            timestampString = "465752504.889374"
+            timestampString = "465772201.391544"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1970"
-            endingLineNumber = "1970"
+            startingLineNumber = "2029"
+            endingLineNumber = "2029"
             landmarkName = "-updateCardInfoView:"
             landmarkType = "5">
          </BreakpointContent>
@@ -522,11 +522,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Game/StoreViewController.m"
-            timestampString = "465752504.889374"
+            timestampString = "465772201.391544"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2107"
-            endingLineNumber = "2107"
+            startingLineNumber = "2166"
+            endingLineNumber = "2166"
             landmarkName = "-approveButtonPressed"
             landmarkType = "5">
          </BreakpointContent>
@@ -538,11 +538,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Game/StoreViewController.m"
-            timestampString = "465752504.889374"
+            timestampString = "465772201.391544"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2143"
-            endingLineNumber = "2143"
+            startingLineNumber = "2202"
+            endingLineNumber = "2202"
             landmarkName = "-declineButtonPressed"
             landmarkType = "5">
          </BreakpointContent>
@@ -650,7 +650,7 @@
                   moduleName = "cardgame"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/emiliano/Desktop/projects/cardgame/Card%20Game/StoreCardsCollectionView.m"
-                  timestampString = "465758614.467788"
+                  timestampString = "465771604.488182"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "183"
@@ -665,7 +665,7 @@
                   moduleName = "cardgame"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/emiliano/Desktop/projects/cardgame/Card%20Game/StoreCardsCollectionView.m"
-                  timestampString = "465758614.468066"
+                  timestampString = "465771604.488317"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "183"
@@ -768,6 +768,54 @@
             startingLineNumber = "1368"
             endingLineNumber = "1368"
             landmarkName = "+getImageForCard:errorLoading:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Card Game/StoreViewController.m"
+            timestampString = "465763751.838675"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1212"
+            endingLineNumber = "1212"
+            landmarkName = "-displayBoosterPackOption:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Card Game/StoreViewController.m"
+            timestampString = "465771603.351361"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1334"
+            endingLineNumber = "1334"
+            landmarkName = "-closeBoosterBuy:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Card Game/MainScreenViewController.m"
+            timestampString = "465771337.755567"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "612"
+            endingLineNumber = "612"
+            landmarkName = "-storeButtonPressed"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

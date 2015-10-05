@@ -618,10 +618,6 @@ UILabel *loadingLabel;
     AudioServicesCreateSystemSoundID(soundFileURLRef, &soundId);
     AudioServicesPlaySystemSound(soundId);
     CFRelease(soundFileURLRef);
-    NSError *error;
-    
-    [PFCloud callFunction:@"buyBoosterPack" withParameters:@{
-                                                      } error:&error];
     
 }
 

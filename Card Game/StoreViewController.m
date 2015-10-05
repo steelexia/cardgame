@@ -107,14 +107,14 @@ NSArray *_products;
     float boosterPackWRatio = 319/mockupWidth*SCREEN_WIDTH*0.6;
     float boosterPackHRatio = 575/mockupHeight*SCREEN_HEIGHT*0.6;
     UIButton *boosterPack1 = [[UIButton alloc] initWithFrame:CGRectMake(120,90,boosterPackWRatio,boosterPackHRatio)];
-    [boosterPack1 setImage:[UIImage imageNamed:@"FeaturedStoreCardPack003.png" ] forState:UIControlStateNormal];
+    [boosterPack1 setImage:[UIImage imageNamed:@"FeaturedStoreCardPack001.png" ] forState:UIControlStateNormal];
     boosterPack1.tag = 101;
     UIButton *boosterPack2 = [[UIButton alloc] initWithFrame:CGRectMake(10,280,boosterPackWRatio,boosterPackHRatio)];
-    [boosterPack2 setImage:[UIImage imageNamed:@"FeaturedStoreCardPack004.png" ] forState:UIControlStateNormal];
+    [boosterPack2 setImage:[UIImage imageNamed:@"FeaturedStoreCardPack002.png" ] forState:UIControlStateNormal];
     boosterPack2.tag = 102;
     
     UIButton *boosterPack3 = [[UIButton alloc] initWithFrame:CGRectMake(120,280,boosterPackWRatio,boosterPackHRatio)];
-    [boosterPack3 setImage:[UIImage imageNamed:@"FeaturedStoreCardPack005.png" ] forState:UIControlStateNormal];
+    [boosterPack3 setImage:[UIImage imageNamed:@"FeaturedStoreCardPack003.png" ] forState:UIControlStateNormal];
     boosterPack3.tag = 103;
     
     //add functionality
@@ -1179,20 +1179,27 @@ NSArray *_products;
 {
     UIButton *sendButton = (UIButton *)sender;
     NSInteger boosterPack = sendButton.tag;
-    
+    NSInteger option = 0;
     if(boosterPack==101)
     {
         //show this on popup view
+        option =1;
+    }else if (boosterPack==102){
+        option = 2;
+    }else if (boosterPack==103){
+        option = 3;
     }
+    
+    [self displayBoosterPackOption:option];
 }
 
 -(void)displayBoosterPackOption:(NSInteger)option
 {
     //add a dark layer above the view
-    /*self.storeDarkBG = [[UIView alloc] initWithFrame:self.view.bounds];
-    self.storeDarkBG.backgroundColor = [UIColor blackColor];
-    self.storeDarkBG.alpha = 0.7;
-    [self.view addSubview:self.storeDarkBG];
+    self.storeDarkBG = [[UIView alloc] initWithFrame:self.view.bounds];
+    //self.storeDarkBG.backgroundColor = [UIColor blackColor];
+    [self.storeDarkBG setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.7]];
+    
     
     float mockupHeight = 1136.0f;
     float mockupWidth = 640.0f;
@@ -1222,32 +1229,56 @@ NSArray *_products;
     
     
     //-39x, 630 y, 545 W,422H
-    float featuredStoreDialogX = 39/mockupWidth *SCREEN_WIDTH;
+    float featuredStoreDialogX = 42/mockupWidth *SCREEN_WIDTH;
     float featuredStoreDialogY = 630/mockupHeight*SCREEN_HEIGHT;
     float featuredStoreDialogW = 545/mockupWidth*SCREEN_WIDTH;
     float featuredStoreDialogH = 422/mockupHeight*SCREEN_HEIGHT;
     
-    UIImageView *featuredStoreDialog = [[UIImageView alloc] initWithFrame:CGRectMake(featuredStoreDialogX,featuredStoreDialogY,featuredStoreDialogW,featuredStoreDialogH)];
-    featuredStoreDialog.image = [UIImage imageNamed:@"FeaturedStoreDialog.png"];
+    UIView *featuredStoreDialog = [[UIView alloc] initWithFrame:CGRectMake(featuredStoreDialogX,featuredStoreDialogY,featuredStoreDialogW,featuredStoreDialogH)];
+    
+    UIImageView *featuredDialogImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,featuredStoreDialogW,featuredStoreDialogH)];
+    featuredDialogImage.image = [UIImage imageNamed:@"FeaturedStoreDialog.png"];
+    [featuredStoreDialog addSubview:featuredDialogImage];
     
     //add labels to featuredStoreDialog
     //-label1 72X, 66Y,410W
     float label1X = 72/mockupWidth*SCREEN_WIDTH;
-    float label1Y = 66/mockupHeight*SCREEN_HEIGHT;
+    float label1Y = 60/mockupHeight*SCREEN_HEIGHT;
     float label1W = 410/mockupWidth*SCREEN_WIDTH;
     float label1H = 50/mockupHeight*SCREEN_HEIGHT;
     UILabel *featuredStoreLabel1 = [[UILabel alloc] initWithFrame:CGRectMake(label1X,label1Y,label1W,label1H)];
-    featuredStoreLabel1.text = @"5 Card Booster Pack";
+    featuredStoreLabel1.text = @"15 Card Booster Pack";
+    featuredStoreLabel1.textAlignment = NSTextAlignmentCenter;
+    [featuredStoreLabel1 setFont:[UIFont fontWithName:cardFlavourTextFont size:16]];
+    [featuredStoreLabel1 setTextColor:[UIColor colorWithRed:70.0/255.0 green:55.0/255.0 blue:8.0/255.0 alpha:1]];
     
     //118X, 132H, 50H,326W
-    float label2X = 118/mockupWidth*SCREEN_WIDTH;
-    float label2Y = 132/mockupHeight*SCREEN_HEIGHT;
-    float label2W = 326/mockupWidth*SCREEN_WIDTH;
+    float label2X = 101/mockupWidth*SCREEN_WIDTH;
+    float label2Y = 112/mockupHeight*SCREEN_HEIGHT;
+    float label2W = 360/mockupWidth*SCREEN_WIDTH;
     float label2H = 50/mockupHeight*SCREEN_HEIGHT;
     
     UILabel *featuredStoreLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(label2X,label2Y,label2W,label2H)];
     featuredStoreLabel2.textAlignment = NSTextAlignmentCenter;
-    featuredStoreLabel2.text = @"3 Common Cards";
+    featuredStoreLabel2.text = @"10 Common Cards";
+    [featuredStoreLabel2 setFont:[UIFont fontWithName:cardFlavourTextFont   size:16]];
+    [featuredStoreLabel2 setTextColor:[UIColor colorWithRed:70.0/255.0 green:55.0/255.0 blue:8.0/255.0 alpha:1]];
+    
+    label2Y += 15;
+    
+    UILabel *featuredStoreLabel3 = [[UILabel alloc] initWithFrame:CGRectMake(label2X,label2Y,label2W,label2H)];
+    featuredStoreLabel3.textAlignment = NSTextAlignmentCenter;
+    featuredStoreLabel3.text = @"3 Uncommon Cards";
+    [featuredStoreLabel3 setFont:[UIFont fontWithName:cardFlavourTextFont   size:16]];
+    [featuredStoreLabel3 setTextColor:[UIColor colorWithRed:70.0/255.0 green:55.0/255.0 blue:8.0/255.0 alpha:1]];
+    
+    label2Y += 15;
+    
+    UILabel *featuredStoreLabel4 = [[UILabel alloc] initWithFrame:CGRectMake(label2X,label2Y,label2W,label2H)];
+    featuredStoreLabel4.textAlignment = NSTextAlignmentCenter;
+    featuredStoreLabel4.text = @"1 Rare Card";
+    [featuredStoreLabel4 setFont:[UIFont fontWithName:cardFlavourTextFont   size:16]];
+    [featuredStoreLabel4 setTextColor:[UIColor colorWithRed:70.0/255.0 green:55.0/255.0 blue:8.0/255.0 alpha:1]];
     
     //78x78
     
@@ -1255,30 +1286,47 @@ NSArray *_products;
     float closeButtonH = 78/mockupHeight*SCREEN_HEIGHT;
     
     UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(featuredStoreDialog.frame.size.width-closeButtonW/2,-closeButtonH/2,closeButtonW,closeButtonH)];
-    [closeButton addTarget:self action:@selector(closeBoosterBuy:) forControlEvents:UIControlEventTouchUpInside];
+    [closeButton addTarget:self action:@selector(closeBoosterBuy:) forControlEvents:
+UIControlEventTouchUpInside];
+    [closeButton setUserInteractionEnabled:YES];
+
+    [closeButton setBackgroundImage:[UIImage imageNamed:@"toggle_button_on.png"] forState:UIControlStateNormal];
     
     [featuredStoreDialog addSubview:closeButton];
     
     //add button to featuredStoreDialogue
     //-greenButton, 142x, 269H, 282 W,96H
     float purchaseButtonX = 142/mockupWidth*SCREEN_WIDTH;
-    float purchaseButtonY = 269/mockupHeight*SCREEN_WIDTH;
+    float purchaseButtonY = 240/mockupHeight*SCREEN_HEIGHT;
     float purchaseButtonW = 282/mockupWidth*SCREEN_WIDTH;
-    float purchaseButtonH = 96/mockupWidth *SCREEN_HEIGHT;
+    float purchaseButtonH = 60/mockupWidth *SCREEN_HEIGHT;
     UIButton *purchaseButton = [[UIButton alloc] initWithFrame:CGRectMake(purchaseButtonX,purchaseButtonY,purchaseButtonW,purchaseButtonH)];
     [purchaseButton setBackgroundImage:[UIImage imageNamed:@"FeaturedStorePurchaseButton.png" ] forState:UIControlStateNormal];
-    [purchaseButton addTarget:self action:@selector(purchaseBooster) forControlEvents:UIControlEventTouchUpInside ];
+    
+    [purchaseButton addTarget:self action:@selector(purchaseBooster:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UILabel *purchaseCost = [[UILabel alloc] initWithFrame:CGRectMake(purchaseButtonX + 30,purchaseButtonY , purchaseButtonW - 30, purchaseButtonH)];
+    [purchaseCost setFont:[UIFont fontWithName:cardFlavourTextFont size:22]];
+    [purchaseCost setTextColor:[UIColor whiteColor]];
+    [purchaseCost setText:@"1,000"];
+    [purchaseCost setTextAlignment:NSTextAlignmentCenter];
+    [purchaseCost setShadowColor:[UIColor blackColor]];
+    [purchaseCost setShadowOffset:CGSizeMake(-1.0, -1.0)];
+    
     
     [featuredStoreDialog addSubview:featuredStoreLabel1];
     [featuredStoreDialog addSubview:featuredStoreLabel2];
+    [featuredStoreDialog addSubview:featuredStoreLabel3];
+    [featuredStoreDialog addSubview:featuredStoreLabel4];
     [featuredStoreDialog addSubview:purchaseButton];
+    [featuredStoreDialog addSubview:purchaseCost];
     
     
     [self.storeDarkBG addSubview:featuredStoreDialog];
     
-    [_searchToggleButton setBackgroundImage:[UIImage imageNamed:@"CardStoreSearchButtonNoWords.png"] forState:UIControlStateNormal];
+    //[_searchToggleButton setBackgroundImage:[UIImage imageNamed:@"CardStoreSearchButtonNoWords.png"] forState:UIControlStateNormal];
     
-    */
+    [self.view addSubview:self.storeDarkBG];
     
 }
 -(void)closeBoosterBuy:(id)sender
@@ -1289,7 +1337,18 @@ NSArray *_products;
 
 -(void)purchaseBooster:(id)sender
 {
+    NSLog(@"Purchase booster pressed!!");
+    NSError *error;
     
+    [PFCloud callFunction:@"buyBoosterPack" withParameters:@{
+                                                             } error:&error];
+    
+    if (error) {
+        NSLog(@"bought with errors: %@", error.description);
+    }else
+    {
+        NSLog(@"bought with success!!");
+    }
 }
 
 -(void)tutorialLikeCard
