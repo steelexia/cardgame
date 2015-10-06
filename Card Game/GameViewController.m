@@ -233,7 +233,7 @@ BOOL leftHandViewZone = NO;
     [userPF save:&error];
     
     //Create a deck
-    if (userAllDecks == nil) {
+    if ([userAllDecks count] == 0) {
         DeckModel* newDeck = [[DeckModel alloc] init];
         newDeck.name = @"New Deck";
         

@@ -204,7 +204,10 @@
 		90F80F9E19A3D28E007571F4 /* GameViewController+Tutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F80F9D19A3D28E007571F4 /* GameViewController+Tutorial.m */; };
 		90F80FA119A3D3D9007571F4 /* arrow_left_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F80FA019A3D3D9007571F4 /* arrow_left_icon.png */; };
 		90F80FA319A63F4C007571F4 /* card_image_cardeditor_empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F80FA219A63F4B007571F4 /* card_image_cardeditor_empty.png */; };
-		93D3FB131BAB00D300AA35E7 /* LaunchScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 93D3FB121BAB00D300AA35E7 /* LaunchScreen.png */; };
+		9399ACFE1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFA1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png */; settings = {ASSET_TAGS = (); }; };
+		9399ACFF1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFB1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png */; settings = {ASSET_TAGS = (); }; };
+		9399AD001BC44CB9005CC9F3 /* Default-736h@3x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFC1BC44CB9005CC9F3 /* Default-736h@3x~iphone.png */; settings = {ASSET_TAGS = (); }; };
+		9399AD011BC44CB9005CC9F3 /* Default@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFD1BC44CB9005CC9F3 /* Default@2x~iphone.png */; settings = {ASSET_TAGS = (); }; };
 		D31E2CA419BF5A41002E1934 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31E2CA319BF5A41002E1934 /* GameKit.framework */; };
 		D31E2CA819BF5BE8002E1934 /* GameKitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D31E2CA719BF5BE8002E1934 /* GameKitHelper.m */; };
 		D31E2CAB19BFBECF002E1934 /* MultiplayerGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D31E2CAA19BFBECF002E1934 /* MultiplayerGameViewController.m */; };
@@ -764,7 +767,10 @@
 		90F80F9D19A3D28E007571F4 /* GameViewController+Tutorial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GameViewController+Tutorial.m"; sourceTree = "<group>"; };
 		90F80FA019A3D3D9007571F4 /* arrow_left_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = arrow_left_icon.png; path = "Card Game/arrow_left_icon.png"; sourceTree = "<group>"; };
 		90F80FA219A63F4B007571F4 /* card_image_cardeditor_empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_image_cardeditor_empty.png; path = "Card Game/card_image_cardeditor_empty.png"; sourceTree = "<group>"; };
-		93D3FB121BAB00D300AA35E7 /* LaunchScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LaunchScreen.png; sourceTree = "<group>"; };
+		9399ACFA1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
+		9399ACFB1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-667h@2x~iphone.png"; sourceTree = "<group>"; };
+		9399ACFC1BC44CB9005CC9F3 /* Default-736h@3x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-736h@3x~iphone.png"; sourceTree = "<group>"; };
+		9399ACFD1BC44CB9005CC9F3 /* Default@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x~iphone.png"; sourceTree = "<group>"; };
 		D31E2CA319BF5A41002E1934 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		D31E2CA619BF5BE8002E1934 /* GameKitHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameKitHelper.h; sourceTree = "<group>"; };
 		D31E2CA719BF5BE8002E1934 /* GameKitHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameKitHelper.m; sourceTree = "<group>"; };
@@ -1927,7 +1933,10 @@
 		ECAB71C71B4F459A004D4E5C /* DarcyArt */ = {
 			isa = PBXGroup;
 			children = (
-				93D3FB121BAB00D300AA35E7 /* LaunchScreen.png */,
+				9399ACFA1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png */,
+				9399ACFB1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png */,
+				9399ACFC1BC44CB9005CC9F3 /* Default-736h@3x~iphone.png */,
+				9399ACFD1BC44CB9005CC9F3 /* Default@2x~iphone.png */,
 				EC3A5D6E1B6A908B0064055F /* BattleScreenUI */,
 				EC42E8701B5726BC005EDFD5 /* BoosterPackBuy */,
 				EC42E85F1B572651005EDFD5 /* CoinStoreUI */,
@@ -2626,7 +2635,6 @@
 				EC3A5D8D1B6AA1760064055F /* card_4014.jpg in Resources */,
 				EC42E8561B57262D005EDFD5 /* CardStoreCoins.png in Resources */,
 				9032E140199936B2002A6725 /* card_icon.png in Resources */,
-				93D3FB131BAB00D300AA35E7 /* LaunchScreen.png in Resources */,
 				ECFA3E8F1B657FA800C83EE1 /* IconIce.png in Resources */,
 				FAB5832519BB61FD007BFA26 /* card_1005.png in Resources */,
 				90C52890199BE53E00750C54 /* search_button.png in Resources */,
@@ -2700,6 +2708,7 @@
 				EC7A74C91B28D86400D3A53F /* SinglePlayerHammer.png in Resources */,
 				FA033FD519BCFF6600EFEBD8 /* card_0016.png in Resources */,
 				90DA433C195A451000E44AED /* arrow_left_button.png in Resources */,
+				9399ACFF1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png in Resources */,
 				EC10BDAD1B338CCF00F7ABDE /* Icon-Small@2x.png in Resources */,
 				ECCD46F31ACC881400804B06 /* PNLoggerSymbols.plist in Resources */,
 				907020751992AC8100FDE444 /* PLCameraSheetDoneButton.png in Resources */,
@@ -2752,12 +2761,14 @@
 				EC42E87A1B5726E7005EDFD5 /* FeaturedStoreCardOfTheWeekBanner.png in Resources */,
 				90F80F9819A29317007571F4 /* card_1000.png in Resources */,
 				9032E13819986121002A6725 /* filter_button.png in Resources */,
+				9399ACFE1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png in Resources */,
 				90F80FA319A63F4C007571F4 /* card_image_cardeditor_empty.png in Resources */,
 				FACF46D019EC852300D334E0 /* card_2400.png in Resources */,
 				907D9BFD192FD35F0037C0CF /* card_glow_target.png in Resources */,
 				90456EE3198F1B9100B807DC /* buy_button_gray.png in Resources */,
 				EC10BDA71B338CCF00F7ABDE /* Icon-40@3x.png in Resources */,
 				EC7A74DF1B28F70600D3A53F /* envelope.png in Resources */,
+				9399AD001BC44CB9005CC9F3 /* Default-736h@3x~iphone.png in Resources */,
 				FACF46CE19EC852300D334E0 /* card_2302.png in Resources */,
 				907020711992AC8100FDE444 /* PLCameraSheetButton.png in Resources */,
 				ECFA3E801B657F9D00C83EE1 /* CardDescription.png in Resources */,
@@ -2769,6 +2780,7 @@
 				ECFA3E7E1B657F9D00C83EE1 /* CardBackgroundLight.png in Resources */,
 				ECFA3E7C1B657F9D00C83EE1 /* CardBackgroundFire.png in Resources */,
 				EC10BDAE1B338CCF00F7ABDE /* Icon-Small@3x.png in Resources */,
+				9399AD011BC44CB9005CC9F3 /* Default@2x~iphone.png in Resources */,
 				90DA4359195E023600E44AED /* ok_button.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3031,9 +3043,10 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Brian Allen (U536PJZFA3)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Brian Allen (U536PJZFA3)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Agustin Guerra (C44H5ZQ3BY)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Agustin Guerra (C44H5ZQ3BY)";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -3073,9 +3086,10 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Brian Allen (U536PJZFA3)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Brian Allen (U536PJZFA3)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Agustin Guerra (C44H5ZQ3BY)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Agustin Guerra (C44H5ZQ3BY)";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -3096,9 +3110,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Agustin Guerra (C44H5ZQ3BY)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Agustin Guerra (C44H5ZQ3BY)";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/",
@@ -3120,9 +3134,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Agustin Guerra (C44H5ZQ3BY)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Agustin Guerra (C44H5ZQ3BY)";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/",
