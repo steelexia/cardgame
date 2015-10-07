@@ -34,29 +34,29 @@
         [_statsView setUserInteractionEnabled:NO];
         
         _likesIcon = [[UIImageView alloc] initWithImage:LIKE_ICON_IMAGE];
-        _likesIcon.frame = CGRectMake(0, 0, 28, 28);
-        _likesIcon.center = CGPointMake(frame.size.width/3, frame.size.height-35);
+        _likesIcon.frame = CGRectMake(0, 0, CARD_LIKE_ICON_WIDTH, CARD_LIKE_ICON_WIDTH);
+        _likesIcon.center = CGPointMake(frame.size.width/4, frame.size.height-35);
         [_statsView addSubview:_likesIcon];
         
         _likesLabel = [[StrokedLabel alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, 30)];
         _likesLabel.textColor = [UIColor whiteColor];
         _likesLabel.textAlignment = NSTextAlignmentCenter;
-        _likesLabel.font = [UIFont fontWithName:cardMainFont size:20];
-        _likesLabel.center = CGPointMake(frame.size.width/3, frame.size.height-23);
+        _likesLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +5];
+        _likesLabel.center = CGPointMake(frame.size.width/4, frame.size.height-23);
         _likesLabel.strokeOn = YES;
         _likesLabel.strokeThickness = 3;
         _likesLabel.strokeColour = [UIColor blackColor];
         [_statsView addSubview:_likesLabel];
         
         _costIcon = [[UIImageView alloc] initWithImage:GOLD_ICON_IMAGE];
-        _costIcon.frame = CGRectMake(0, 0, 28, 28);
+        _costIcon.frame = CGRectMake(0, 0, CARD_LIKE_ICON_WIDTH, CARD_LIKE_ICON_WIDTH);
         _costIcon.center = CGPointMake(frame.size.width*2/3, frame.size.height-35);
         [_statsView addSubview:_costIcon];
         
         _costLabel = [[StrokedLabel alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, 30)];
         _costLabel.textColor = [UIColor whiteColor];
         _costLabel.textAlignment = NSTextAlignmentCenter;
-        _costLabel.font = [UIFont fontWithName:cardMainFont size:20];
+        _costLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +5];
         _costLabel.center = CGPointMake(frame.size.width*2/3, frame.size.height-23);
         _costLabel.strokeOn = YES;
         _costLabel.strokeThickness = 3;

@@ -208,6 +208,8 @@ const int CARD_CELL_INSET = 8;
                 cell.cardView.center = cell.center;
                 cell.cardView.frame = CGRectMake(CARD_CELL_INSET,CARD_CELL_INSET,STORE_CARD_WIDTH, STORE_CARD_HEIGHT);
                 
+                //cell.cardView.backgroundColor = [UIColor greenColor];
+                
                 
                 if (!self.isFeaturedCard) {
                     cell.costLabel.text = [NSString stringWithFormat:@"%d", [GameStore getCardCost:cardModel]];
@@ -224,7 +226,11 @@ const int CARD_CELL_INSET = 8;
                     [cell.likesLabel setHidden:YES];
                     [cell.featuredBanner setHidden:NO];
                 }
-
+                
+               /* if (indexPath.row % 2)
+                    cell.backgroundColor = [UIColor redColor];
+                else
+                    cell.backgroundColor = [UIColor whiteColor];*/
                 
                 [cell.activityView stopAnimating];
                 [cell.activityView removeFromSuperview];

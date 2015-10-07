@@ -73,7 +73,7 @@ NSArray *_products;
     [self.view addSubview:backgroundImageView];
     
     
-    _headerView = [[UIView alloc]initWithFrame:CGRectMake(0,0,SCREEN_WIDTH, 60)];
+    _headerView = [[UIView alloc]initWithFrame:CGRectMake(0,0,SCREEN_WIDTH, 120)];
     //_headerView.backgroundColor = [UIColor redColor];
     float mockupHeight = 1136.0f;
     float mockupWidth = 640.0f;
@@ -89,14 +89,7 @@ NSArray *_products;
     //_cardsView = [[StoreCardsCollectionView alloc] initWithFrame:CGRectMake(0, _headerView.frame.size.height, self.view.bounds.size.width, self.view.bounds.size.height-_headerView.frame.size.height-_footerView.frame.size.height)];
     
     //float storeRightEdgeXRatio = 445/mockupWidth;
-    float cardsViewWidthRatio = 454/mockupWidth;
-    _cardsView = [[StoreCardsCollectionView alloc] initWithFrame:CGRectMake(0, _headerView.frame.size.height+_headerView.frame.size.height*0.4, cardsViewWidthRatio*SCREEN_WIDTH, self.view.bounds.size.height-_footerView.frame.size.height)];
-    _cardsView.parentViewController = self;
-    _cardsView.backgroundColor = [UIColor clearColor];
     
-    self.view.backgroundColor = [UIColor whiteColor];
-    
-    [self.view addSubview:_cardsView];
     
     //brianJul31 Featured Store Section
     _featuredStore = [[UIScrollView alloc] initWithFrame:_cardsView.bounds];
@@ -152,6 +145,15 @@ NSArray *_products;
     [storeIconBanner addGestureRecognizer:storeTap];
     
     [self.view addSubview:storeIconBanner];
+    
+    float cardsViewWidthRatio = 454/mockupWidth;
+    _cardsView = [[StoreCardsCollectionView alloc] initWithFrame:CGRectMake(0, storeHeight, cardsViewWidthRatio*SCREEN_WIDTH, self.view.bounds.size.height-_footerView.frame.size.height)];
+    _cardsView.parentViewController = self;
+    _cardsView.backgroundColor = [UIColor clearColor];
+    
+    self.view.backgroundColor = [UIColor whiteColor];
+    
+    [self.view addSubview:_cardsView];
     
     
     //------------------footer views------------------//
@@ -234,7 +236,7 @@ NSArray *_products;
     _userGoldLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(_userGoldIcon.frame.origin.x, 986/mockupHeight*SCREEN_HEIGHT, _userGoldIcon.frame.size.width, 40)];
     _userGoldLabel.textAlignment = NSTextAlignmentCenter;
     _userGoldLabel.textColor = [UIColor whiteColor];
-    _userGoldLabel.font = [UIFont fontWithName:cardMainFont size:20];
+    _userGoldLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +5];
     _userGoldLabel.strokeOn = YES;
     _userGoldLabel.strokeThickness = 3;
     _userGoldLabel.strokeColour = [UIColor blackColor];
@@ -273,7 +275,7 @@ NSArray *_products;
     _userLikesLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(_userLikesIcon.frame.origin.x,likeLabelYRatio*SCREEN_HEIGHT,_userLikesIcon.frame.size.width, 40)];
     _userLikesLabel.textAlignment = NSTextAlignmentCenter;
     _userLikesLabel.textColor = [UIColor whiteColor];
-    _userLikesLabel.font = [UIFont fontWithName:cardMainFont size:20];
+    _userLikesLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +5];
     _userLikesLabel.strokeOn = YES;
     _userLikesLabel.strokeThickness = 3;
     _userLikesLabel.strokeColour = [UIColor blackColor];
@@ -287,34 +289,34 @@ NSArray *_products;
     [_darkFilter setUserInteractionEnabled:YES]; //blocks all interaction behind it
     [_cardInfoView addSubview:_darkFilter];
     
-    _buyButton = [[CFButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT - 125, 80, 60)];
+    _buyButton = [[CFButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT -(CARD_DETAIL_BUTTON_HEIGHT*2),CARD_DETAIL_BUTTON_WIDTH , CARD_DETAIL_BUTTON_HEIGHT)];
     _buyButton.label.text = @"Buy";
-    [_buyButton setTextSize:22];
+    [_buyButton setTextSize:CARD_NAME_SIZE +7];
     [_buyButton addTarget:self action:@selector(buyButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_cardInfoView addSubview:_buyButton];
     
     
-    _sellButton = [[CFButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT - 125, 80, 60)];
+    _sellButton = [[CFButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT -(CARD_DETAIL_BUTTON_HEIGHT*2), CARD_DETAIL_BUTTON_WIDTH, CARD_DETAIL_BUTTON_HEIGHT)];
     _sellButton.label.text = @"Sell";
-    [_sellButton setTextSize:22];
+    [_sellButton setTextSize:CARD_NAME_SIZE +7];
     [_sellButton addTarget:self action:@selector(sellButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_cardInfoView addSubview:_sellButton];
     
-    _approveButton = [[CFButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT - 125, 80, 60)];
+    _approveButton = [[CFButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT -(CARD_DETAIL_BUTTON_HEIGHT*2), CARD_DETAIL_BUTTON_WIDTH, CARD_DETAIL_BUTTON_HEIGHT)];
     _approveButton.label.text = @"Approve";
-    [_approveButton setTextSize:16];
+    [_approveButton setTextSize:CARD_NAME_SIZE +1];
     [_approveButton addTarget:self action:@selector(approveButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     //[_cardInfoView addSubview:_approveButton];
     
-    _declineButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 0.5 - 40, SCREEN_HEIGHT - 125, 80, 60)];
+    _declineButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 0.5 - (CARD_DETAIL_BUTTON_WIDTH/2), SCREEN_HEIGHT -(CARD_DETAIL_BUTTON_HEIGHT*2), CARD_DETAIL_BUTTON_WIDTH, CARD_DETAIL_BUTTON_HEIGHT)];
     _declineButton.label.text = @"Decline";
-    [_declineButton setTextSize:16];
+    [_declineButton setTextSize:CARD_NAME_SIZE +1];
     [_declineButton addTarget:self action:@selector(declineButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     //[_cardInfoView addSubview:_declineButton];
     
     _buyHintLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
     _buyHintLabel.textColor = [UIColor whiteColor];
-    _buyHintLabel.font = [UIFont fontWithName:cardMainFont size:14];
+    _buyHintLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE -1];
     _buyHintLabel.textAlignment = NSTextAlignmentCenter;
     _buyHintLabel.strokeOn = YES;
     _buyHintLabel.strokeThickness = 2;
@@ -322,27 +324,27 @@ NSArray *_products;
     _buyHintLabel.center = CGPointMake(60, SCREEN_HEIGHT-55);
     [_cardInfoView addSubview:_buyHintLabel];
     
-    _editButton = [[CFButton alloc] initWithFrame:CGRectMake(120, SCREEN_HEIGHT - 125, 80, 60)];
+    _editButton = [[CFButton alloc] initWithFrame:CGRectMake(120, SCREEN_HEIGHT -(CARD_DETAIL_BUTTON_HEIGHT*2), CARD_DETAIL_BUTTON_WIDTH, CARD_DETAIL_BUTTON_HEIGHT)];
     _editButton.label.text = @"Edit";
-    [_editButton setTextSize:22];
+    [_editButton setTextSize:CARD_NAME_SIZE +7];
     [_editButton addTarget:self action:@selector(editButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     //[_cardInfoView addSubview:_editButton];
     
-    _restockButton = [[CFButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT - 125, 80, 60)];
+    _restockButton = [[CFButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT -(CARD_DETAIL_BUTTON_HEIGHT*2), CARD_DETAIL_BUTTON_WIDTH, CARD_DETAIL_BUTTON_HEIGHT)];
     _restockButton.label.text = @"Restock";
-    [_restockButton setTextSize:18];
+    [_restockButton setTextSize:CARD_NAME_SIZE +3];
     [_restockButton addTarget:self action:@selector(restockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     //[_cardInfoView addSubview:_buyButton];
     
-    _bumpButton = [[CFButton alloc] initWithFrame:CGRectMake(120, SCREEN_HEIGHT - 125, 100, 60)];
+    _bumpButton = [[CFButton alloc] initWithFrame:CGRectMake(120, SCREEN_HEIGHT -(CARD_DETAIL_BUTTON_HEIGHT*2), 100, 60)];
     _bumpButton.label.text = @"Upgrade";
-    [_bumpButton setTextSize:22];
+    [_bumpButton setTextSize:CARD_NAME_SIZE +7];
     [_bumpButton addTarget:self action:@selector(bumpButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     //[_cardInfoView addSubview:_sellButton];
     
     _editHintLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
     _editHintLabel.textColor = [UIColor whiteColor];
-    _editHintLabel.font = [UIFont fontWithName:cardMainFont size:14];
+    _editHintLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE -1];
     _editHintLabel.textAlignment = NSTextAlignmentCenter;
     _editHintLabel.strokeOn = YES;
     _editHintLabel.strokeThickness = 2;
@@ -350,15 +352,15 @@ NSArray *_products;
     _editHintLabel.center = CGPointMake(160, SCREEN_HEIGHT-55);
     [_cardInfoView addSubview:_editHintLabel];
     
-    _likeButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-20-80, SCREEN_HEIGHT - 125, 80, 60)];
+    _likeButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-20- CARD_DETAIL_BUTTON_WIDTH , SCREEN_HEIGHT -(CARD_DETAIL_BUTTON_HEIGHT*2) , CARD_DETAIL_BUTTON_WIDTH, CARD_DETAIL_BUTTON_HEIGHT)];
     _likeButton.label.text = @"Like";
-    [_likeButton setTextSize:22];
+    [_likeButton setTextSize:CARD_NAME_SIZE +7];
     [_likeButton addTarget:self action:@selector(likeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_cardInfoView addSubview:_likeButton];
     
     _likeHintLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
     _likeHintLabel.textColor = [UIColor whiteColor];
-    _likeHintLabel.font = [UIFont fontWithName:cardMainFont size:14];
+    _likeHintLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE-1];
     _likeHintLabel.textAlignment = NSTextAlignmentCenter;
     _likeHintLabel.strokeOn = YES;
     _likeHintLabel.strokeThickness = 2;
@@ -366,15 +368,15 @@ NSArray *_products;
     _likeHintLabel.center = CGPointMake(SCREEN_WIDTH-60, SCREEN_HEIGHT-55);
     [_cardInfoView addSubview:_likeHintLabel];
     
-    UIImageView* goldIcon = [[UIImageView alloc] initWithImage:GOLD_ICON_IMAGE];
-    goldIcon.frame = CGRectMake(0, 0, 50, 50);
-    goldIcon.center = CGPointMake(110 ,SCREEN_HEIGHT-168);
-    [_cardInfoView addSubview:goldIcon];
+    _goldIcon = [[UIImageView alloc] initWithImage:GOLD_ICON_IMAGE];
+    _goldIcon.frame = CGRectMake(0, 0, CARD_LIKE_ICON_WIDTH *2, CARD_LIKE_ICON_WIDTH *2);
+    _goldIcon.center = CGPointMake(110 ,SCREEN_HEIGHT-168);
+    [_cardInfoView addSubview:_goldIcon];
     
-    _goldLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 60, 40)];
+    _goldLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     _goldLabel.textAlignment = NSTextAlignmentCenter;
     _goldLabel.textColor = [UIColor whiteColor];
-    _goldLabel.font = [UIFont fontWithName:cardMainFont size:30];
+    _goldLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE*2];
     [_goldLabel setMinimumScaleFactor:10/30];
     _goldLabel.adjustsFontSizeToFitWidth = YES;
     _goldLabel.strokeOn = YES;
@@ -383,15 +385,15 @@ NSArray *_products;
     _goldLabel.center = CGPointMake(110, SCREEN_HEIGHT-148);
     [_cardInfoView addSubview:_goldLabel];
     
-    UIImageView* likesIcon = [[UIImageView alloc] initWithImage:LIKE_ICON_IMAGE];
-    likesIcon.frame = CGRectMake(0, 0, 50, 50);
-    likesIcon.center = CGPointMake(50 ,SCREEN_HEIGHT-168);
-    [_cardInfoView addSubview:likesIcon];
+    _likesIcon = [[UIImageView alloc] initWithImage:LIKE_ICON_IMAGE];
+    _likesIcon.frame = CGRectMake(0, 0, CARD_LIKE_ICON_WIDTH *2, CARD_LIKE_ICON_WIDTH *2);
+    _likesIcon.center = CGPointMake(50 ,SCREEN_HEIGHT-168);
+    [_cardInfoView addSubview:_likesIcon];
     
-    _likesLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0, 60, 40)];
+    _likesLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0, 60, 60)];
     _likesLabel.textAlignment = NSTextAlignmentCenter;
     _likesLabel.textColor = [UIColor whiteColor];
-    _likesLabel.font = [UIFont fontWithName:cardMainFont size:30];
+    _likesLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE*2];
     [_likesLabel setMinimumScaleFactor:10/30];
     _likesLabel.adjustsFontSizeToFitWidth = YES;
     _likesLabel.strokeOn = YES;
@@ -400,10 +402,10 @@ NSArray *_products;
     _likesLabel.center = CGPointMake(50, SCREEN_HEIGHT-148);
     [_cardInfoView addSubview:_likesLabel];
     
-    _rarityLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(145, SCREEN_HEIGHT-200, 150, 40)];
+    _rarityLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(145, SCREEN_HEIGHT-200, 100, 40)];
     _rarityLabel.textAlignment = NSTextAlignmentLeft;
     _rarityLabel.textColor = [UIColor whiteColor];
-    _rarityLabel.font = [UIFont fontWithName:cardMainFont size:18];
+    _rarityLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +3];
     _rarityLabel.strokeOn = YES;
     _rarityLabel.strokeThickness = 3;
     _rarityLabel.strokeColour = [UIColor blackColor];
@@ -412,16 +414,17 @@ NSArray *_products;
     
     _rarityTextLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(198, SCREEN_HEIGHT-200, 150, 40)];
     _rarityTextLabel.textAlignment = NSTextAlignmentLeft;
-    _rarityTextLabel.font = [UIFont fontWithName:cardMainFont size:18];
+    _rarityTextLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +3];
     _rarityTextLabel.strokeOn = YES;
+    [_rarityTextLabel setMinimumScaleFactor:10/30];
     _rarityTextLabel.strokeThickness = 3;
     _rarityTextLabel.strokeColour = [UIColor blackColor];
     [_cardInfoView addSubview:_rarityTextLabel];
     
-    _creatorLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(145, SCREEN_HEIGHT-180, 150, 40)];
+    _creatorLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(145, SCREEN_HEIGHT-180, 300, 40)];
     _creatorLabel.textAlignment = NSTextAlignmentLeft;
     _creatorLabel.textColor = [UIColor whiteColor];
-    _creatorLabel.font = [UIFont fontWithName:cardMainFont size:18];
+    _creatorLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +3];
     _creatorLabel.strokeOn = YES;
     _creatorLabel.strokeThickness = 3;
     _creatorLabel.strokeColour = [UIColor blackColor];
@@ -430,7 +433,7 @@ NSArray *_products;
     _idLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(145, SCREEN_HEIGHT-160, 150, 40)];
     _idLabel.textAlignment = NSTextAlignmentLeft;
     _idLabel.textColor = [UIColor whiteColor];
-    _idLabel.font = [UIFont fontWithName:cardMainFont size:18];
+    _idLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +3];
     _idLabel.strokeOn = YES;
     _idLabel.strokeThickness = 3;
     _idLabel.strokeColour = [UIColor blackColor];
@@ -438,7 +441,7 @@ NSArray *_products;
     
     _cardTagsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
     _cardTagsLabel.textColor = [UIColor whiteColor];
-    _cardTagsLabel.font = [UIFont fontWithName:cardMainFont size:16];
+    _cardTagsLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +1];
     _cardTagsLabel.numberOfLines = 0;
     _cardTagsLabel.textAlignment = NSTextAlignmentLeft;
     [_cardTagsLabel setUserInteractionEnabled:YES];
@@ -446,15 +449,15 @@ NSArray *_products;
     [_cardInfoView addSubview:_cardTagsLabel];
     
     
-    _reportButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 0.5 - 40, SCREEN_HEIGHT - 125, 80, 60)];
+    _reportButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 0.5 - (CARD_DETAIL_BUTTON_WIDTH/2), SCREEN_HEIGHT -(CARD_DETAIL_BUTTON_HEIGHT*2), CARD_DETAIL_BUTTON_WIDTH, CARD_DETAIL_BUTTON_HEIGHT)];
     _reportButton.label.text = @"Report";
-    [_reportButton setTextSize:16];
+    [_reportButton setTextSize:CARD_NAME_SIZE +1];
     [_reportButton addTarget:self action:@selector(reportButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     //[_cardInfoView addSubview:_reportButton];
     
     _reportHintLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
     _reportHintLabel.textColor = [UIColor whiteColor];
-    _reportHintLabel.font = [UIFont fontWithName:cardMainFont size:14];
+    _reportHintLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE -1];
     _reportHintLabel.textAlignment = NSTextAlignmentCenter;
     _reportHintLabel.strokeOn = YES;
     _reportHintLabel.strokeThickness = 2;
@@ -470,7 +473,7 @@ NSArray *_products;
     [_searchView setBackgroundColor:COLOUR_INTERFACE_BLUE_DARK];
     
     UILabel*searchLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 30)];
-    searchLabel.font = [UIFont fontWithName:cardMainFont size:22];
+    searchLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +7];
     searchLabel.textColor = [UIColor blackColor];
     searchLabel.textAlignment = NSTextAlignmentCenter;
     searchLabel.text = @"Search for a card";
@@ -479,7 +482,7 @@ NSArray *_products;
     
     _searchNameField =  [[UITextField alloc] initWithFrame:CGRectMake(60,60,SCREEN_WIDTH-60-20,30)];
     _searchNameField.textColor = [UIColor blackColor];
-    _searchNameField.font = [UIFont fontWithName:cardMainFont size:12];
+    _searchNameField.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE-3];
     _searchNameField.returnKeyType = UIReturnKeyDone;
     [_searchNameField setPlaceholder:@"Enter card name"];
     [_searchNameField setAutocorrectionType:UITextAutocorrectionTypeNo];
@@ -496,7 +499,7 @@ NSArray *_products;
     [_searchView addSubview:_searchNameField];
     
     UILabel*searchNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 60, 50, 30)];
-    searchNameLabel.font = [UIFont fontWithName:cardMainFont size:16];
+    searchNameLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE+1];
     searchNameLabel.textColor = [UIColor blackColor];
     searchNameLabel.text = @"Name:";
     searchNameLabel.textAlignment = NSTextAlignmentRight;
@@ -504,7 +507,7 @@ NSArray *_products;
     
     _searchTagsField =  [[UITextField alloc] initWithFrame:CGRectMake(60,60 + 40,SCREEN_WIDTH-60-20,30)];
     _searchTagsField.textColor = [UIColor blackColor];
-    _searchTagsField.font = [UIFont fontWithName:cardMainFont size:12];
+    _searchTagsField.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE -3];
     _searchTagsField.returnKeyType = UIReturnKeyDone;
     [_searchTagsField setPlaceholder:@"Enter card tags separated by space"];
     [_searchTagsField setAutocorrectionType:UITextAutocorrectionTypeNo];
@@ -521,7 +524,7 @@ NSArray *_products;
     [_searchView addSubview:_searchTagsField];
     
     UILabel*searchTagsLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 60 + 40, 50, 30)];
-    searchTagsLabel.font = [UIFont fontWithName:cardMainFont size:16];
+    searchTagsLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE+1];
     searchTagsLabel.textColor = [UIColor blackColor];
     searchTagsLabel.text = @"Tags:";
     searchTagsLabel.textAlignment = NSTextAlignmentRight;
@@ -529,7 +532,7 @@ NSArray *_products;
     
     _searchIDField =  [[UITextField alloc] initWithFrame:CGRectMake(60,60 + 80,SCREEN_WIDTH-60-20,30)];
     _searchIDField.textColor = [UIColor blackColor];
-    _searchIDField.font = [UIFont fontWithName:cardMainFont size:12];
+    _searchIDField.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE-3];
     _searchIDField.returnKeyType = UIReturnKeyDone;
     [_searchIDField setPlaceholder:@"Enter one card number"];
     [_searchIDField setAutocorrectionType:UITextAutocorrectionTypeNo];
@@ -546,14 +549,14 @@ NSArray *_products;
     [_searchView addSubview:_searchIDField];
     
     UILabel*searchIDLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 60 + 80, 50, 30)];
-    searchIDLabel.font = [UIFont fontWithName:cardMainFont size:16];
+    searchIDLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE+1];
     searchIDLabel.textColor = [UIColor blackColor];
     searchIDLabel.text = @"ID:";
     searchIDLabel.textAlignment = NSTextAlignmentRight;
     [_searchView addSubview:searchIDLabel];
     
     CFButton*searchButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 50)];
-    [searchButton setTextSize:16];
+    [searchButton setTextSize:CARD_NAME_SIZE+1];
     searchButton.label.text = @"Search";
     //[searchButton setImage:[UIImage imageNamed:@"search_button"] forState:UIControlStateNormal];
     [searchButton addTarget:self action:@selector(searchButtonPressed) forControlEvents:UIControlEventTouchDown];
@@ -571,7 +574,7 @@ NSArray *_products;
     [_likedButton addTarget:self action:@selector(likedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_likedButton.dottedBorder removeFromSuperlayer];
     _likedButton.label.text = @"Hide liked";
-    [_likedButton setTextSize:11];
+    [_likedButton setTextSize:CARD_NAME_SIZE-4];
     _likedButton.center = CGPointMake(60, 60);
     [_filterView addSubview:_likedButton];
     _likedButton.alpha = 0.4;
@@ -580,7 +583,7 @@ NSArray *_products;
     [_ownedButton addTarget:self action:@selector(ownedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_ownedButton.dottedBorder removeFromSuperlayer];
     _ownedButton.label.text = @"Hide owned";
-    [_ownedButton setTextSize:11];
+    [_ownedButton setTextSize:CARD_NAME_SIZE-4];
     _ownedButton.center = CGPointMake(60, 88);
     [_filterView addSubview:_ownedButton];
     _ownedButton.alpha = 0.4;
@@ -589,7 +592,7 @@ NSArray *_products;
     [_stockedButton addTarget:self action:@selector(stockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_stockedButton.dottedBorder removeFromSuperlayer];
     _stockedButton.label.text = @"Hide 0 stock";
-    [_stockedButton setTextSize:11];
+    [_stockedButton setTextSize:CARD_NAME_SIZE-4];
     _stockedButton.center = CGPointMake(60, 116);
     [_filterView addSubview:_stockedButton];
     _stockedButton.alpha = 0.4;
@@ -598,7 +601,7 @@ NSArray *_products;
     [_deckTagsButton addTarget:self action:@selector(deckTagsButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [_deckTagsButton.dottedBorder removeFromSuperlayer];
     _deckTagsButton.label.text = @"Only deck tags";
-    [_deckTagsButton setTextSize:11];
+    [_deckTagsButton setTextSize:CARD_NAME_SIZE-4];
     _deckTagsButton.center = CGPointMake(60, 144);
     [_filterView addSubview:_deckTagsButton];
     _deckTagsButton.alpha = 0.4;
@@ -619,7 +622,7 @@ NSArray *_products;
         costLabel.textAlignment = NSTextAlignmentCenter;
         costLabel.textColor = [UIColor whiteColor];
         costLabel.backgroundColor = [UIColor clearColor];
-        costLabel.font = [UIFont fontWithName:cardMainFontBlack size:22];
+        costLabel.font = [UIFont fontWithName:cardMainFontBlack size:CARD_NAME_SIZE+7];
         costLabel.strokeOn = YES;
         costLabel.strokeColour = [UIColor blackColor];
         costLabel.strokeThickness = 3;
@@ -636,7 +639,7 @@ NSArray *_products;
     for (int i = 0; i <= cardRarityLegendary; i++)
     {
         CFButton*rarityFilterButton = [[CFButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
-        [rarityFilterButton setTextSize:14];
+        [rarityFilterButton setTextSize:CARD_NAME_SIZE-1];
         [rarityFilterButton.dottedBorder removeFromSuperlayer];
         //[rarityFilterButton setImage:[UIImage imageNamed:@"filter_button"] forState:UIControlStateNormal];
         [rarityFilterButton addTarget:self action:@selector(rarityFilterButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -667,7 +670,7 @@ NSArray *_products;
    for (int i = 0; i < 7; i++)
     {
         CFButton*elementFilterButton = [[CFButton alloc] initWithFrame:CGRectMake(0,0,90,25)];
-        [elementFilterButton setTextSize:14];
+        [elementFilterButton setTextSize:CARD_NAME_SIZE-1];
         [elementFilterButton.dottedBorder removeFromSuperlayer];
         //[elementFilterButton setImage:[UIImage imageNamed:@"filter_button"] forState:UIControlStateNormal];
         [elementFilterButton addTarget:self action:@selector(elementFilterButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -820,7 +823,7 @@ NSArray *_products;
     else
         createCardLabel.center = CGPointMake(SCREEN_WIDTH/2, 70);
     
-    createCardLabel.font = [UIFont fontWithName:cardMainFont size:30];
+    createCardLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE*2];
     createCardLabel.strokeOn = YES;
     createCardLabel.strokeColour = [UIColor blackColor];
     createCardLabel.strokeThickness = 5;
@@ -862,7 +865,7 @@ NSArray *_products;
     _remainingCardLabel.textColor = [UIColor whiteColor];
     _remainingCardLabel.backgroundColor = [UIColor clearColor];
     _remainingCardLabel.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 40 - 230);
-    _remainingCardLabel.font = [UIFont fontWithName:cardMainFont size:16];
+    _remainingCardLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE+1];
     _remainingCardLabel.strokeOn = YES;
     _remainingCardLabel.strokeColour = [UIColor blackColor];
     _remainingCardLabel.strokeThickness = 3;
@@ -875,7 +878,7 @@ NSArray *_products;
     buyBlankCardLabel.textColor = [UIColor whiteColor];
     buyBlankCardLabel.backgroundColor = [UIColor clearColor];
     buyBlankCardLabel.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 40 - 195);
-    buyBlankCardLabel.font = [UIFont fontWithName:cardMainFont size:22];
+    buyBlankCardLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE+7];
     buyBlankCardLabel.strokeOn = YES;
     buyBlankCardLabel.strokeColour = [UIColor blackColor];
     buyBlankCardLabel.strokeThickness = 3;
@@ -896,7 +899,7 @@ NSArray *_products;
         StrokedLabel *cardLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 155, 50)];
         cardLabel.textAlignment = NSTextAlignmentCenter;
         cardLabel.textColor = [UIColor whiteColor];
-        cardLabel.font = [UIFont fontWithName:cardMainFont size:40];
+        cardLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE*2 +10];
         cardLabel.strokeOn = YES;
         cardLabel.strokeThickness = 5;
         cardLabel.strokeColour = [UIColor blackColor];
@@ -914,7 +917,7 @@ NSArray *_products;
         StrokedLabel *cardDollarLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 155, 50)];
         cardDollarLabel.textAlignment = NSTextAlignmentCenter;
         cardDollarLabel.textColor = [UIColor whiteColor];
-        cardDollarLabel.font = [UIFont fontWithName:cardMainFont size:26];
+        cardDollarLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE+11];
         cardDollarLabel.strokeOn = YES;
         cardDollarLabel.strokeThickness = 5;
         cardDollarLabel.strokeColour = [UIColor blackColor];
@@ -944,7 +947,7 @@ NSArray *_products;
     buyGoldLabel.textColor = [UIColor whiteColor];
     buyGoldLabel.backgroundColor = [UIColor clearColor];
     
-    buyGoldLabel.font = [UIFont fontWithName:cardMainFont size:26];
+    buyGoldLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +11];
     buyGoldLabel.strokeOn = YES;
     buyGoldLabel.strokeColour = [UIColor blackColor];
     buyGoldLabel.strokeThickness = 5;
@@ -1042,14 +1045,14 @@ NSArray *_products;
     _activityLabel.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 60);
     _activityLabel.textAlignment = NSTextAlignmentCenter;
     _activityLabel.textColor = [UIColor whiteColor];
-    _activityLabel.font = [UIFont fontWithName:cardMainFont size:20];
+    _activityLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE+5];
     _activityLabel.text = [NSString stringWithFormat:@"Processing..."];
     [_activityIndicator addSubview:_activityLabel];
     
     _activityFailedButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     _activityFailedButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 60);
     _activityFailedButton.label.text = @"Ok";
-    [_activityFailedButton setTextSize:18];
+    [_activityFailedButton setTextSize:CARD_NAME_SIZE+3];
     [_activityFailedButton addTarget:self action:@selector(activityFailedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
     //-----------------search result----------------//
@@ -1058,7 +1061,7 @@ NSArray *_products;
     _searchResult.textColor = [UIColor whiteColor];
     _searchResult.backgroundColor = [UIColor clearColor];
     
-    _searchResult.font = [UIFont fontWithName:cardMainFont size:30];
+    _searchResult.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE*2];
     _searchResult.strokeOn = YES;
     _searchResult.strokeColour = [UIColor blackColor];
     _searchResult.strokeThickness = 4;
@@ -1875,15 +1878,41 @@ UIControlEventTouchUpInside];
     cardModel.cardView = originalView;
     _cardView.cardViewState = cardViewStateCardViewer;
     
-    if (SCREEN_HEIGHT < 568)
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+    {
+        if (SCREEN_HEIGHT < 568)
+        {
+            _cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.2, 1.2);
+            _cardView.center = CGPointMake(_cardView.frame.size.width/2+10, 150);
+        }
+        else
+        {
+            _cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.5, 1.5);
+            _cardView.center = CGPointMake(_cardView.frame.size.width/2+10, 200);
+        }
+        
+    }
+    else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
     {
         _cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.2, 1.2);
-        _cardView.center = CGPointMake(_cardView.frame.size.width/2+10, 150);
-    }
-    else
-    {
-        _cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.5, 1.5);
-        _cardView.center = CGPointMake(_cardView.frame.size.width/2+10, 200);
+        _cardView.center = CGPointMake(_cardView.frame.size.width/2+10, _cardView.frame.size.height/2+10);
+        int goldLabelY = _cardView.frame.origin.y + _cardView.frame.size.height + _goldLabel.frame.size.height;
+        _goldLabel.center = CGPointMake(SCREEN_WIDTH/3, goldLabelY + _goldIcon.frame.size.height/3);
+        _goldIcon.center = CGPointMake(SCREEN_WIDTH/3, goldLabelY);
+        _likesLabel.center = CGPointMake(SCREEN_WIDTH/7, goldLabelY + _likesIcon.frame.size.height/3);
+        _likesIcon.center = CGPointMake(SCREEN_WIDTH/7, goldLabelY);
+        int rarityX = _goldIcon.center.x + _goldIcon.frame.size.width + (_rarityLabel.frame.size.width/2);
+        int rarityY = _goldIcon.frame.origin.y + _rarityLabel.frame.size.height/2;
+        _rarityLabel.center = CGPointMake(rarityX, rarityY);
+        int creatorY = rarityY + _creatorLabel.frame.size.height;
+        int creatorX = _goldIcon.center.x + _goldIcon.frame.size.width + (_creatorLabel.frame.size.width/2);
+        _creatorLabel.center = CGPointMake(creatorX, creatorY);
+        int idY = creatorY + _idLabel.frame.size.height;
+        int idLabelX = _goldIcon.center.x + _goldIcon.frame.size.width + (_idLabel.frame.size.width/2);
+        _idLabel.center = CGPointMake(idLabelX, idY);
+        
+        int rarityTextX = _rarityLabel.frame.origin.x + _rarityLabel.frame.size.width + (_rarityTextLabel.frame.size.width/2);
+        _rarityTextLabel.center = CGPointMake(rarityTextX, rarityY);
     }
     
     [_cardInfoView addSubview:_cardView];

@@ -41,8 +41,16 @@
  float CARD_DEFAULT_SCALE = 0.4f;
  float CARD_DRAGGING_SCALE = 1.0f;
 
+
 int CARD_IMAGE_WIDTH;
 int CARD_IMAGE_HEIGHT;
+
+int CARD_NAME_SIZE;
+
+int CARD_DETAIL_BUTTON_WIDTH;
+int CARD_DETAIL_BUTTON_HEIGHT;
+
+int CARD_LIKE_ICON_WIDTH;
 
 /** Dummy initial values, will be changed in setup */
 int CARD_WIDTH = 50, CARD_HEIGHT = 80;
@@ -74,14 +82,22 @@ NSDictionary *singlePlayerCardImages;
     {
         CARD_WIDTH = 57;
         CARD_HEIGHT = (CARD_WIDTH *  CARD_HEIGHT_RATIO / CARD_WIDTH_RATIO);
+        CARD_NAME_SIZE = 15;
+        CARD_LIKE_ICON_WIDTH = 28;
+        CARD_DETAIL_BUTTON_WIDTH = 80;
+        CARD_DETAIL_BUTTON_HEIGHT = 60;
     }
     else if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
     {
-        CARD_WIDTH = 114; //TODO ipad make this 2 times but also fix bunch of other stuff
+        CARD_WIDTH = 262; //TODO ipad make this 2 times but also fix bunch of other stuff
         CARD_HEIGHT = (CARD_WIDTH *  CARD_HEIGHT_RATIO / CARD_WIDTH_RATIO);
         
         CARD_DEFAULT_SCALE = 0.8f;
         CARD_DRAGGING_SCALE = 2.0f;
+        CARD_NAME_SIZE = 30;
+        CARD_LIKE_ICON_WIDTH = 56;
+        CARD_DETAIL_BUTTON_WIDTH = 160;
+        CARD_DETAIL_BUTTON_HEIGHT = 120;
     }
     
     CARD_FULL_WIDTH = CARD_WIDTH/CARD_DEFAULT_SCALE;
@@ -271,10 +287,10 @@ NSDictionary *singlePlayerCardImages;
     
     abilityTextParagrahStyle = [[NSMutableParagraphStyle alloc] init];
     //[abilityTextParagrahStyle setLineSpacing:];
-    [abilityTextParagrahStyle setMaximumLineHeight:10];
-    abilityTextAttributtes = @{NSParagraphStyleAttributeName : abilityTextParagrahStyle, NSFontAttributeName : [UIFont fontWithName:cardMainFont size:10]};
+    [abilityTextParagrahStyle setMaximumLineHeight:CARD_NAME_SIZE-5];
+    abilityTextAttributtes = @{NSParagraphStyleAttributeName : abilityTextParagrahStyle, NSFontAttributeName : [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE -5]};
     
-    flavourTextAttributes = @{NSParagraphStyleAttributeName : abilityTextParagrahStyle, NSFontAttributeName : [UIFont fontWithName:cardFlavourTextFont size:9]};
+    flavourTextAttributes = @{NSParagraphStyleAttributeName : abilityTextParagrahStyle, NSFontAttributeName : [UIFont fontWithName:cardFlavourTextFont size:CARD_NAME_SIZE -6]};
     
     standardCardImages = [[NSMutableDictionary alloc] init];
 }
@@ -401,8 +417,15 @@ NSDictionary *singlePlayerCardImages;
                 self.cardImage = [[UIImageView alloc]initWithImage:loadingImage];
             }
             
-            self.cardImage.frame = CGRectMake(0, 0, CARD_FULL_WIDTH - 16, (CARD_FULL_WIDTH-16) * CARD_IMAGE_RATIO);
-            self.cardImage.center = CGPointMake(CARD_FULL_WIDTH/2, 80);
+            float frameImageWidth = 330.0f/400.0f * CARD_FULL_WIDTH;
+            
+            float frameImageHeight = 270.0f/590.0f *CARD_FULL_HEIGHT;
+            float frameImageX = 60.0f/400.0f/2 * CARD_FULL_WIDTH;
+            float frameImageY = 100.0f/590.0f/2 * CARD_FULL_HEIGHT;
+
+            self.cardImage.frame = CGRectMake(frameImageX, frameImageY, frameImageWidth, frameImageHeight);
+           // self.cardImage.frame = CGRectMake(0, 0, CARD_FULL_WIDTH - 16, (CARD_FULL_WIDTH-16) * CARD_IMAGE_RATIO);
+            //self.cardImage.center = CGPointMake(CARD_FULL_WIDTH/2, (CARD_FULL_WIDTH * CARD_IMAGE_RATIO)/2);
             self.cardImage.backgroundColor = [UIColor whiteColor];
             [_frontViews addSubview:self.cardImage];
             
@@ -494,6 +517,7 @@ NSDictionary *singlePlayerCardImages;
         float descriptionBGX = 29.0f/2/400.0f*CARD_FULL_WIDTH;
         float descriptionBGY = 368.0f/590.0f*CARD_FULL_HEIGHT;
         
+        
         UIImageView *descriptionBGFrame = [[UIImageView alloc] initWithFrame:CGRectMake(descriptionBGX,descriptionBGY,descriptionBGWidth,descriptionBGHeight)];
         if (cardModel.type == cardTypePlayer)
         {
@@ -517,13 +541,13 @@ NSDictionary *singlePlayerCardImages;
         [_transformView insertSubview:self.highlight atIndex:0];
         
         //draws common card elements such as name and cost
-        self.nameLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,96,30)];
-        self.nameLabel.center = CGPointMake(CARD_FULL_WIDTH/2 + CARD_FULL_WIDTH/10 + 2, 16);
+        self.nameLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,(CARD_FULL_WIDTH/4)*3,30)];
+        self.nameLabel.center = CGPointMake(CARD_FULL_WIDTH/2 + CARD_FULL_WIDTH/10 + 2, (descriptionHeightRatio*CARD_FULL_HEIGHT)/2 );
         self.nameLabel.textAlignment = NSTextAlignmentCenter;
         self.nameLabel.textColor = [UIColor whiteColor];
         self.nameLabel.backgroundColor = [UIColor clearColor];
-        self.nameLabel.font = [UIFont fontWithName:cardMainFont size:15];
-        [self.nameLabel setMinimumScaleFactor:6.f/15];
+        self.nameLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE];
+        [self.nameLabel setMinimumScaleFactor:6.f/CARD_NAME_SIZE];
         self.nameLabel.strokeOn = YES;
         self.nameLabel.strokeThickness = 2;
         
@@ -532,11 +556,11 @@ NSDictionary *singlePlayerCardImages;
         [_frontViews addSubview: nameLabel];
         
         self.costLabel = [[StrokedLabel alloc] initWithFrame:self.bounds];
-        self.costLabel.center = CGPointMake(17, 19);
+        self.costLabel.center = CGPointMake(CARD_FULL_WIDTH/8, (descriptionHeightRatio*CARD_FULL_HEIGHT)/2);
         self.costLabel.textAlignment = NSTextAlignmentCenter;
         self.costLabel.textColor = [UIColor whiteColor];
         self.costLabel.backgroundColor = [UIColor clearColor];
-        self.costLabel.font = [UIFont fontWithName:cardMainFontBlack size:24];
+        self.costLabel.font = [UIFont fontWithName:cardMainFontBlack size:CARD_NAME_SIZE +9];
         self.costLabel.strokeOn = YES;
         self.costLabel.strokeColour = [UIColor blackColor];
         self.costLabel.strokeThickness = 3;
@@ -548,26 +572,29 @@ NSDictionary *singlePlayerCardImages;
         self.reportedLabel.textAlignment = NSTextAlignmentCenter;
         self.reportedLabel.textColor = [UIColor redColor];
         self.reportedLabel.backgroundColor = [UIColor clearColor];
-        self.reportedLabel.font = [UIFont fontWithName:cardMainFont size:22];
-        [self.reportedLabel setMinimumScaleFactor:6.f/15];
+        self.reportedLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE + 7];
+        [self.reportedLabel setMinimumScaleFactor:6.f/CARD_NAME_SIZE];
         self.reportedLabel.adjustsFontSizeToFitWidth = YES;
         
         [_frontViews addSubview: reportedLabel];
         
+        NSLog(@"DescriptionBGHeight = %f",descriptionBGHeight);
+        NSLog(@"DescriptionBGY = %f",descriptionBGY);
+        
         self.elementLabel = [[StrokedLabel alloc] initWithFrame:self.bounds];
-        self.elementLabel.center = CGPointMake(CARD_FULL_WIDTH/2, 150);
+        self.elementLabel.center = CGPointMake(CARD_FULL_WIDTH/2, descriptionBGY+ (descriptionBGHeight/10));
         self.elementLabel.textAlignment = NSTextAlignmentCenter;
         self.elementLabel.textColor = [UIColor whiteColor];
         self.elementLabel.backgroundColor = [UIColor clearColor];
         self.elementLabel.strokeOn = YES;
         self.elementLabel.strokeColour = [UIColor blackColor];
         self.elementLabel.strokeThickness = 2.5;
-        self.elementLabel.font = [UIFont fontWithName:cardMainFont size:10];
+        self.elementLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE -5];
         self.elementLabel.text = [CardModel elementToString:cardModel.element];
         //NOTE added above other stuff
         
         //original value -10 for width
-        self.baseAbilityLabel = [[UITextView alloc] initWithFrame:CGRectMake(5, 157, CARD_FULL_WIDTH - 15, 60)]; //NOTE changing this is useless, do it down below
+        self.baseAbilityLabel = [[UITextView alloc] initWithFrame:CGRectMake(30, descriptionBGY+ (descriptionBGHeight/6), descriptionBGWidth - 40, (descriptionBGHeight/8)*5)]; //NOTE changing this is useless, do it down below
         [self.baseAbilityLabel  setTextContainerInset:UIEdgeInsetsMake(0, 0, 0, 0)];
         self.baseAbilityLabel.textColor = [UIColor whiteColor];
         self.baseAbilityLabel.backgroundColor = [UIColor clearColor];
@@ -650,12 +677,12 @@ NSDictionary *singlePlayerCardImages;
                 float attackLabelY = 330.0f/590.0f*CARD_FULL_HEIGHT;
                 
                 //original size 18
-                self.attackLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,CARD_FULL_WIDTH/2,20)];
+                self.attackLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,CARD_FULL_WIDTH/2,30)];
                 self.attackLabel.center = CGPointMake(attackLabelX, attackLabelY);
                 self.attackLabel.textAlignment = NSTextAlignmentCenter;
                 self.attackLabel.textColor = [UIColor whiteColor];
                 self.attackLabel.backgroundColor = [UIColor clearColor];
-                self.attackLabel.font = [UIFont fontWithName:cardMainFont size:18];
+                self.attackLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +3];
                 self.attackLabel.strokeOn = YES;
                 self.attackLabel.strokeColour = [UIColor blackColor];
                 self.attackLabel.strokeThickness = 2.5;
@@ -665,7 +692,7 @@ NSDictionary *singlePlayerCardImages;
                 
                 float lifeLabelX = 345.0f/400.0f*CARD_FULL_WIDTH;
                 float lifeLabelY = 330.0f/590.0f*CARD_FULL_HEIGHT;
-                self.lifeLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,CARD_FULL_WIDTH/2,20)];
+                self.lifeLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,CARD_FULL_WIDTH/2,30)];
                 self.lifeLabel.center = CGPointMake(lifeLabelX, lifeLabelY);
                 self.lifeLabel.textAlignment = NSTextAlignmentCenter;
                 self.lifeLabel.textColor = [UIColor whiteColor];
@@ -673,7 +700,7 @@ NSDictionary *singlePlayerCardImages;
                 self.lifeLabel.strokeOn = YES;
                 self.lifeLabel.strokeColour = [UIColor blackColor];
                 self.lifeLabel.strokeThickness = 2.5;
-                self.lifeLabel.font = [UIFont fontWithName:cardMainFont size:18];
+                self.lifeLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +3];
                 self.lifeLabel.text = [NSString stringWithFormat:@"%d", monsterCard.life];
                 
                 [_frontViews addSubview: lifeLabel];
@@ -688,7 +715,7 @@ NSDictionary *singlePlayerCardImages;
                 self.cooldownLabel.strokeOn = YES;
                 self.cooldownLabel.strokeColour = [UIColor blackColor];
                 self.cooldownLabel.strokeThickness = 2.5;
-                self.cooldownLabel.font = [UIFont fontWithName:cardMainFont size:22];
+                self.cooldownLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE + 7];
                 self.cooldownLabel.text = [NSString stringWithFormat:@"%d", monsterCard.cooldown];
                 
                 [_frontViews addSubview: cooldownLabel];
@@ -700,7 +727,7 @@ NSDictionary *singlePlayerCardImages;
         else if ([cardModel isKindOfClass:[SpellCardModel class]])
         {
             //element is a little higher
-            self.elementLabel.center = CGPointMake(CARD_FULL_WIDTH/2, 144);
+            //self.elementLabel.center = CGPointMake(CARD_FULL_WIDTH/2, 144);
             [_frontViews addSubview: elementLabel];
         }
         
@@ -709,7 +736,7 @@ NSDictionary *singlePlayerCardImages;
         self.damagePopup.textAlignment = NSTextAlignmentCenter;
         self.damagePopup.textColor = [UIColor redColor];
         self.damagePopup.backgroundColor = [UIColor clearColor];
-        self.damagePopup.font = [UIFont fontWithName:cardMainFontBlack size:28];
+        self.damagePopup.font = [UIFont fontWithName:cardMainFontBlack size:CARD_NAME_SIZE + 13];
         //self.damagePopup.strokeOn = YES;
         //self.damagePopup.strokeColour = [UIColor blackColor];
         //self.damagePopup.strokeThickness = 2.5;

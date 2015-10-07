@@ -136,6 +136,12 @@ extern double CARD_VIEWER_SCALE, CARD_VIEWER_MAXED_SCALE;
 
 extern int CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT;
 
+extern int CARD_NAME_SIZE;
+extern int CARD_LIKE_ICON_WIDTH;
+
+extern int CARD_DETAIL_BUTTON_WIDTH;
+extern int CARD_DETAIL_BUTTON_HEIGHT;
+
 /** State of the card's view for positioning */
 enum CardViewState{
     cardViewStateNone,
