@@ -252,8 +252,8 @@ NSTimer *firstChallengeTimer;
     // #1 Add the +addPresenceEventObserver+ which will catch events received on the channel.
     [[PNObservationCenter defaultCenter] addPresenceEventObserver:self withBlock:^(PNPresenceEvent *event) {
         
-        
-        [self getPubNubConnectedPlayers];
+        [self performSelector:@selector(getPubNubConnectedPlayers) withObject:nil afterDelay:1.0];
+        //[self getPubNubConnectedPlayers];
         // NSLog(@"OBSERVER: Presence: %u", event.type);
         if(event.channel == self.currentMPGameChannel)
         {

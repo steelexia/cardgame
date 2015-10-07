@@ -1372,7 +1372,8 @@ NSDictionary *singlePlayerCardImages;
                 PFFile *file = imagePF[@"image"];
                 if (file != nil)
                 {
-                    NSData*data = [file getData];
+                   
+                    NSData *data = [file getData];
                     if (data != nil)
                     {
                         UIImage *image = [UIImage imageWithData:data];
@@ -1382,11 +1383,13 @@ NSDictionary *singlePlayerCardImages;
                             [standardCardImages setObject:image  forKey:@(card.idNumber)];
                             return image;
                         }
-                        else
+                        else{
                             NSLog(@"%d image nil", card.idNumber);
+                        }
                     }
-                    else
+                    else{
                         NSLog(@"%d data nil", card.idNumber);
+                    }
                 }
                 else
                     *errorLoading = YES;

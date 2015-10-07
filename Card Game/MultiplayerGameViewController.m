@@ -111,7 +111,7 @@ UIView *sureMatchView;
     [self.noPlayersAvailableLabel setAlpha:0];
     [self.noPlayersAvailableLabel setTextAlignment:NSTextAlignmentCenter];
     [self.noPlayersAvailableLabel setNumberOfLines:2];
-    [self.noPlayersAvailableLabel.layer setZPosition:1.0];
+    [self.noPlayersAvailableLabel.layer setZPosition:0.1];
     //[self.noPlayersAvailableLabel setTextColor:[UIColor whiteColor]];
     
     
@@ -1079,6 +1079,7 @@ if(tableView.tag ==88)
         [self.mpLobbyTableView setAlpha:1.0];
         [self.noPlayersAvailableLabel setAlpha:0.0];
     }else{
+        self.connectedPlayers = nil;
         [self.mpLobbyTableView setAlpha:1.0];
         [self.noPlayersAvailableLabel setAlpha:1.0];
     }
@@ -1572,6 +1573,7 @@ if(tableView.tag ==88)
     [self.currentLoadStateLabel setText:@"Finding Opponent..."];
     [sureMatchView addSubview:actIndicator];
     [sureMatchView addSubview:self.currentLoadStateLabel];
+    [self.noPlayersAvailableLabel setHidden:YES];
     
     [sureMatchView addSubview:_battleActivityLabel];
     [actIndicator startAnimating];
@@ -1607,7 +1609,7 @@ if(tableView.tag ==88)
     
     //send data through MPDataHandler to notify the other player the challenge is cancelled
     [MPDataHandler cancelChallenge];
-    
+    [self.noPlayersAvailableLabel setHidden:NO];
     [bgDarkenView removeFromSuperview];
     [sureMatchView removeFromSuperview];
     
@@ -1695,6 +1697,7 @@ if(tableView.tag ==88)
      [startConversationButton addTarget:self action:@selector(startMatch:) forControlEvents:UIControlEventTouchUpInside];
      */
     [sureMatchView addSubview:notWhoIWantedButton];
+    [sureMatchView.layer setZPosition:1.0];
     //[sureMatchView addSubview:startConversationButton];
     
     bgDarkenView = [[UIView alloc] initWithFrame:self.view.bounds];
