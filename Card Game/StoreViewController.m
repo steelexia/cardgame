@@ -93,20 +93,20 @@ NSArray *_products;
     
     //brianJul31 Featured Store Section
     _featuredStore = [[UIScrollView alloc] initWithFrame:_cardsView.bounds];
-   // _featuredStore.backgroundColor = [UIColor redColor];
+    //_featuredStore.backgroundColor = [UIColor redColor];
     
     //booster pack dimensions
     //319x575
     float boosterPackWRatio = 319/mockupWidth*SCREEN_WIDTH*0.6;
     float boosterPackHRatio = 575/mockupHeight*SCREEN_HEIGHT*0.6;
-    UIButton *boosterPack1 = [[UIButton alloc] initWithFrame:CGRectMake(120,90,boosterPackWRatio,boosterPackHRatio)];
+    UIButton *boosterPack1 = [[UIButton alloc] initWithFrame:CGRectMake(120,0,boosterPackWRatio,boosterPackHRatio)];
     [boosterPack1 setImage:[UIImage imageNamed:@"FeaturedStoreCardPack001.png" ] forState:UIControlStateNormal];
     boosterPack1.tag = 101;
-    UIButton *boosterPack2 = [[UIButton alloc] initWithFrame:CGRectMake(10,280,boosterPackWRatio,boosterPackHRatio)];
+    UIButton *boosterPack2 = [[UIButton alloc] initWithFrame:CGRectMake(10,190,boosterPackWRatio,boosterPackHRatio)];
     [boosterPack2 setImage:[UIImage imageNamed:@"FeaturedStoreCardPack002.png" ] forState:UIControlStateNormal];
     boosterPack2.tag = 102;
     
-    UIButton *boosterPack3 = [[UIButton alloc] initWithFrame:CGRectMake(120,280,boosterPackWRatio,boosterPackHRatio)];
+    UIButton *boosterPack3 = [[UIButton alloc] initWithFrame:CGRectMake(120,190,boosterPackWRatio,boosterPackHRatio)];
     [boosterPack3 setImage:[UIImage imageNamed:@"FeaturedStoreCardPack003.png" ] forState:UIControlStateNormal];
     boosterPack3.tag = 103;
     
@@ -120,7 +120,7 @@ NSArray *_products;
     [_featuredStore addSubview:boosterPack2];
     [_featuredStore addSubview:boosterPack3];
     [_featuredStore setAlpha:0];
-    [self.view addSubview:_featuredStore];
+   
     
     
     
@@ -152,9 +152,10 @@ NSArray *_products;
     _cardsView.backgroundColor = [UIColor clearColor];
     
     self.view.backgroundColor = [UIColor whiteColor];
-    
     [self.view addSubview:_cardsView];
     
+    [_featuredStore setFrame:_cardsView.frame];
+     [self.view addSubview:_featuredStore];
     
     //------------------footer views------------------//
     
@@ -1203,6 +1204,12 @@ NSArray *_products;
     //self.storeDarkBG.backgroundColor = [UIColor blackColor];
     [self.storeDarkBG setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.7]];
     
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeBoosterBuy:)];
+    [tapGesture setNumberOfTapsRequired:1];
+    
+    [self.storeDarkBG setUserInteractionEnabled:YES];
+    [self.storeDarkBG addGestureRecognizer:tapGesture];
+    
     
     float mockupHeight = 1136.0f;
     float mockupWidth = 640.0f;
@@ -1213,6 +1220,8 @@ NSArray *_products;
     float boostPackW = 315/mockupWidth*SCREEN_WIDTH;
     float boostPackH = 568/mockupHeight*SCREEN_HEIGHT;
     UIImageView *boosterPackImageView = [[UIImageView alloc] initWithFrame:CGRectMake(boostPackX,boostPackY,boostPackW,boostPackH)];
+    
+    
 
     //check type of booster pack and alternate the images
     if(option==1)
@@ -1615,7 +1624,7 @@ UIControlEventTouchUpInside];
             {
                 //show featured Store
                 _featuredStore.alpha = 1;
-               // _cardsView.alpha = 0;
+                _cardsView.alpha = 1;
                 
             }
             else
