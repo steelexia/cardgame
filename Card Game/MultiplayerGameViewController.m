@@ -1724,6 +1724,8 @@ if(tableView.tag ==88)
 -(void)resetAllVariables
 {
     [self refreshLobby:self];
+    [sureMatchView removeFromSuperview];
+    [bgDarkenView removeFromSuperview];
     //[MPDataHandler resetAllMPVariables];
 }
 
