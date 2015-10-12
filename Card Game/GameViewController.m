@@ -62,7 +62,10 @@ UIImageView *playerFieldHighlight, *opponentFieldHighlight, *playerFieldEdge, *o
 UIImageView *battlefieldBackground;
 
 CFButton *quitConfirmButton, *quitCancelButton;
+
 UILabel *quitConfirmLabel;
+
+
 
 StrokedLabel *pickATargetLabel;
 CFButton *giveupAbilityButton;
@@ -136,6 +139,7 @@ BOOL leftHandViewZone = NO;
                     
                     self.gameModel.decks = decks;
                     [self.gameModel startGame];
+                    [self startEndTurnTimer];
                 }
             });
         }];
@@ -223,6 +227,7 @@ BOOL leftHandViewZone = NO;
         [self.view addSubview:skipButton];
         [self tutorialMessageGameStart];
     }
+    
     
 }
 
@@ -351,6 +356,19 @@ BOOL leftHandViewZone = NO;
     [self.backgroundView addSubview:opponentFieldHighlight];
     [self.backgroundView addSubview:opponentFieldEdge];
     
+    //----set up counter view-------//
+    self.counterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 150, 20)];
+    self.counterView.backgroundColor = [UIColor whiteColor];
+    [self.counterView setHidden:YES];
+    [self.counterView.layer setZPosition:0.0];
+    [self.counterView setCenter:CGPointMake(SCREEN_WIDTH/2 - self.counterView.frame.size.width/4, playerFieldEdge.frame.origin.y + playerFieldEdge.frame.size.height + self.counterView.frame.size.height/2)];
+    self.counterSubView = [[UIView alloc] initWithFrame:CGRectMake(0,0, 50, self.counterView.frame.size.height)];
+    [self.counterSubView setBackgroundColor:[UIColor redColor]];
+    
+    [self.counterView addSubview:self.counterSubView];
+    [self.view addSubview:self.counterView];
+    
+    
     /*UIView*backgroundOverlay = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"battle_background_0_overlay"]];
     backgroundOverlay.frame = self.view.bounds;
     [self.backgroundView addSubview:backgroundOverlay];*/
@@ -423,7 +441,7 @@ BOOL leftHandViewZone = NO;
     
     CardView *playerHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[PLAYER_SIDE]).playerMonster viewMode:cardViewModeIngame];
     playerHeroView.frontFacing = YES;
-    playerHeroView.center = CGPointMake((SCREEN_WIDTH - playerFieldEdge.bounds.size.width)/2 + PLAYER_HERO_WIDTH/2, playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*2 + PLAYER_HERO_HEIGHT/2);
+    playerHeroView.center = CGPointMake((SCREEN_WIDTH - playerFieldEdge.bounds.size.width)/2 + PLAYER_HERO_WIDTH/2, playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*6 + PLAYER_HERO_HEIGHT/2);
     playerHeroView.cardModel.name = userPF.username;
     [playerHeroView updateView];
     [self.fieldView addSubview:playerHeroView];
@@ -598,6 +616,7 @@ BOOL leftHandViewZone = NO;
                 [self flashOn:self.endTurnButton];
             }
         }
+        [self startEndTurnTimer];
     }
 }
 
@@ -806,7 +825,8 @@ BOOL leftHandViewZone = NO;
 
 
 -(void) endTurn{
-    
+    self.shouldCallEndTurn = NO;
+    [self.counterView setHidden:YES];
     self.shouldBlink = NO;
     [self endFlash:self.endTurnButton];
     
@@ -834,6 +854,7 @@ BOOL leftHandViewZone = NO;
     else
     {
         currentSide = PLAYER_SIDE;
+        [self startEndTurnTimer];
     }
     
     //update turn ender's views
@@ -2165,6 +2186,7 @@ BOOL leftHandViewZone = NO;
     [_gameOverScreen removeFromSuperview];
     [_gameOverProgressIndicator stopAnimating];
     [_gameOverSaveLabel removeFromSuperview];
+    [self startEndTurnTimer];
 }
 
 -(void)saveLevelProgress

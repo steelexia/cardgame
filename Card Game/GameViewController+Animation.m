@@ -334,4 +334,38 @@
 //    v.alpha = 1;
 }
 
+- (void)startEndTurnTimer{
+    
+    self.shouldCallEndTurn = YES;
+    [self.counterSubView setFrame:CGRectMake(0, 0, 0, self.counterView.frame.size.height)];
+    
+    [self performSelector:@selector(showProgressView) withObject:nil afterDelay:10];
+    
+    /*self.timer = [NSTimer timerWithTimeInterval:0.2
+                                         target:self
+                                       selector:@selector(updateProgressView)
+                                       userInfo:nil
+                                        repeats:YES];
+    
+    [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
+    
+    [self.timer fire];*/
+    [UIView animateWithDuration:25 animations:^{
+        //animation
+        [self.counterSubView setFrame:CGRectMake(0, 0, self.counterView.frame.size.width, self.counterView.frame.size.height)];
+        
+    } completion:^(BOOL finished) {
+        //completion
+        if (self.shouldCallEndTurn) {
+            [self endTurn];
+        }
+        
+    }];
+}
+
+- (void)showProgressView{
+    if (self.shouldCallEndTurn) {
+        [self.counterView setHidden:NO];
+    }
+}
 @end

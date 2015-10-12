@@ -101,6 +101,11 @@
 @property int currentCardIndex;
 @property (nonatomic) uint32_t playerSeed, opponentSeed;
 
+@property (strong) NSTimer *timer;
+@property (strong) UIView *counterView;
+@property (strong) UIView *counterSubView;
+@property (assign) BOOL shouldCallEndTurn;
+
 /** updates the position of all hands with the gameModel, adding views to cards that don't have one yet */
 //-(void)updateHandsView;
 
