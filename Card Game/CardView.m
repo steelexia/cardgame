@@ -448,7 +448,15 @@ NSDictionary *singlePlayerCardImages;
                 _activityView = [[UIActivityIndicatorView alloc] initWithFrame:self.cardImage.bounds];
                 [self.cardImage addSubview:_activityView];
                 [_activityView startAnimating];
-                if (cardViewMode != cardViewModeZoomedIngame ) {
+                /*if (cardViewMode != cardViewModeZoomedIngame ) {
+                    [self performBlockInBackground:^(void){
+                        [self loadImage];
+                    }];
+                }else{
+                    [self.cardImage setImage:placeHolderImage];
+                    [self.activityView stopAnimating];
+                }*/
+                if ([cardModel.cardPF[@"adminPhotoCheck"] intValue] == 1) {
                     [self performBlockInBackground:^(void){
                         [self loadImage];
                     }];
@@ -456,6 +464,7 @@ NSDictionary *singlePlayerCardImages;
                     [self.cardImage setImage:placeHolderImage];
                     [self.activityView stopAnimating];
                 }
+                
                 
             }
         }

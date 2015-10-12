@@ -112,10 +112,12 @@ NSTimer *firstChallengeTimer;
 
 -(void)setPubnubConfigDetails
 {
+    
     [PNLogger loggerEnabled:FALSE];
     
     PNConfiguration *configuration = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"
                                                                   publishKey:@"pub-c-d1465391-f40c-44e3-8fc9-9d92be0a63c5" subscribeKey:@"sub-c-cac0d926-d8ab-11e4-8301-0619f8945a4f" secretKey:@"sec-c-MzAzYzM3ZGMtZjFmNC00Mjk3LTkxOTEtMTRmNzUxNDBjYzdi"];
+    
     
     NSString *uuid = userPF.objectId;
     [PubNub setClientIdentifier:uuid];
@@ -385,7 +387,10 @@ NSTimer *firstChallengeTimer;
                             
                             //join a channel with the two users
                             [self acceptChallenge:challengerID];
-                        
+                            [challengeLockTimer invalidate];
+                            challengeLockTimer = nil;
+                            
+                            
                             //send a message when joined to start the game
                             
                             
@@ -399,12 +404,15 @@ NSTimer *firstChallengeTimer;
             [quickMatchMsgDict setObject:@"qmJOIN" forKey:@"msgType"];
             [quickMatchMsgDict setObject:eloRating forKey:@"eloRating"];
              */
-            if([msgType isEqualToString:@"qmJOIN"])
+            NSString *joinedUser= [msgIncomingDict objectForKey:@"userID"];
+            if([msgType isEqualToString:@"qmJOIN"] && ![joinedUser isEqualToString:myUserID])
             {
                 //always try to send the challenge, it will prevent the user if the lock is not enabled or they already have an opponentID
-                NSString *joinedUser= [msgIncomingDict objectForKey:@"userID"];
+                
                 
                 [self sendQuickMatchChallenge:joinedUser];
+                [challengeLockTimer invalidate];
+                challengeLockTimer = nil;
                 
             }
         }
@@ -788,6 +796,19 @@ NSTimer *firstChallengeTimer;
     
 }
 
+- (void)pubnubClient:(PubNub *)client willSuspendWithBlock:(void(^)(void(^)(void(^)(void))))preSuspensionBlock {
+    
+    if ([client isConnected]) {
+        
+        preSuspensionBlock(^(void(^completionBlock)(void)){
+            
+            // Do last calls here
+            // Always call this block as soon as required amount of tasks completed.
+            completionBlock();
+        });
+    }
+}
+
 -(void)getPubNubConnectedPlayers
 {
     
@@ -1132,11 +1153,11 @@ NSTimer *firstChallengeTimer;
         
     NSMutableArray *channelsToLeave = [[NSMutableArray alloc] init];
     [channelsToLeave addObject:self.currentMPGameChannel];
-        if(self.quickMatchChannel !=nil)
-        {
-            [channelsToLeave addObject:self.quickMatchChannel];
+    if(self.quickMatchChannel !=nil)
+    {
+        [channelsToLeave addObject:self.quickMatchChannel];
             
-        }
+    }
     
     //leave game channel
     [PubNub unsubscribeFrom:channelsToLeave withCompletionHandlingBlock:^(NSArray *channels, PNError *error) {
@@ -1176,9 +1197,10 @@ NSTimer *firstChallengeTimer;
     [PubNub subscribeOn:@[self.quickMatchChannel] withCompletionHandlingBlock:^(PNSubscriptionProcessState state, NSArray *channels, PNError *error) {
         
         //start a timer, after this timer expires the user can fire their first quickMatchChallenge if they didn't get challenged first
-        [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];
+        /*[[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];
         challengeLockTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(firstChallengeTimer) userInfo:nil repeats:YES];
-        [[NSRunLoop currentRunLoop] addTimer:challengeLockTimer forMode:NSRunLoopCommonModes];
+        [[NSRunLoop currentRunLoop] addTimer:challengeLockTimer forMode:NSRunLoopCommonModes];*/
+        self.firstQuickMatchEnabled = YES;
         
         [PubNub sendMessage:quickMatchMsgDict toChannel:self.quickMatchChannel];
         

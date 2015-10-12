@@ -213,7 +213,7 @@ UIView *sureMatchView;
     [self loadParseChatMessages];
     
     
-    [self startConnectingPubNub];
+    
     
     
 }
@@ -251,7 +251,7 @@ UIView *sureMatchView;
 
 -(void)startConnectingPubNub
 {
-    
+
     MPDataHandler = [multiplayerDataHandler sharedInstance];
     [MPDataHandler setPubnubConfigDetails];
     
@@ -1716,6 +1716,7 @@ if(tableView.tag ==88)
 }
 -(void)viewWillAppear:(BOOL)animated
 {
+    [self startConnectingPubNub];
     [super viewWillAppear:animated];
     [self resetAllVariables];
     
@@ -1726,6 +1727,12 @@ if(tableView.tag ==88)
     [self refreshLobby:self];
     [sureMatchView removeFromSuperview];
     [bgDarkenView removeFromSuperview];
+    [MPDataHandler setInChallengeProcess:NO];
+    [MPDataHandler setQuickMatchLock:NO];
+    [MPDataHandler setQuickMatchChannel:nil];
+    [MPDataHandler setOpponentIDChallenged:@""];
+    [MPDataHandler setFirstQuickMatchEnabled:NO];
+    [MPDataHandler resetAllMPVariables];
     //[MPDataHandler resetAllMPVariables];
 }
 
