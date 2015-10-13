@@ -13,6 +13,7 @@
 #import "Ability.h"
 #import "StrokedLabel.h"
 #import "CustomView.h"
+#import "UserModel.h"
 /**
  Handles the view aspect of the card. Draws the card based on the model object.
  The attached cardModel can be any of the child classes, such as MonsterCardModel or SpellCardModel.

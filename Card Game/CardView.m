@@ -456,7 +456,7 @@ NSDictionary *singlePlayerCardImages;
                     [self.cardImage setImage:placeHolderImage];
                     [self.activityView stopAnimating];
                 }*/
-                if ([cardModel.cardPF[@"adminPhotoCheck"] intValue] == 1) {
+                if ([cardModel.cardPF[@"adminPhotoCheck"] intValue] == 1 || [self thisCardAreInMyDecks:[cardModel.cardPF objectForKey:@"idNumber"]]) {
                     [self performBlockInBackground:^(void){
                         [self loadImage];
                     }];
@@ -1589,5 +1589,22 @@ NSDictionary *singlePlayerCardImages;
  [self.baseAbilityLabel touchesMoved:touches withEvent:event];
  }
  */
+
+- (BOOL)thisCardAreInMyDecks:(NSNumber *)cardID{
+    
+    if ([cardID isEqual:[NSNumber numberWithInt:1419]]) {
+        NSLog(@"1419");
+    }
+    
+    for (PFObject *deck in [userPF objectForKey:@"decks"]) {
+        NSArray *cards = [deck objectForKey:@"cards"];
+        if ([cards containsObject:cardID]) {
+            return true;
+        }
+    }
+    
+    
+    return false;
+}
 
 @end
