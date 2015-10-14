@@ -1882,7 +1882,7 @@ UIControlEventTouchUpInside];
     [_cardView removeFromSuperview];
     
     CardView*originalView = cardModel.cardView;
-    _cardView = [[CardView alloc] initWithModel:cardModel viewMode:cardViewModeEditor];
+    _cardView = [[CardView alloc] initWithModel:cardModel viewMode:cardViewModeToValidate];
     _cardView.frontFacing = YES;
     cardModel.cardView = originalView;
     _cardView.cardViewState = cardViewStateCardViewer;

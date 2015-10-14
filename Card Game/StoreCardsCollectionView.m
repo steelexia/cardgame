@@ -93,7 +93,7 @@ const int CARD_CELL_INSET = 8;
             //CardModel*card = self.currentCards[indexPath.row];
             PFObject*cardPF = self.currentCardsPF[indexPath.row];
             
-            cell.cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeEditor viewState:card.cardViewState];
+            cell.cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeToValidate viewState:card.cardViewState];
             cell.cardView.frontFacing = YES;
             cell.cardView.cardHighlightType = cardHighlightNone;
             //cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
@@ -199,7 +199,7 @@ const int CARD_CELL_INSET = 8;
                 
                 
                 StoreCardCell *cell = (StoreCardCell *)[_collectionView cellForItemAtIndexPath:indexPath];
-                cell.cardView = [[CardView alloc] initWithModel:cardModel viewMode:cardViewModeEditor viewState:cardModel.cardViewState];
+                cell.cardView = [[CardView alloc] initWithModel:cardModel viewMode:cardViewModeToValidate viewState:cardModel.cardViewState];
                 //cell.cardView = [[CardView alloc] initWithModel:cardModel withImage:[cardPF objectForKey:@"image"] viewMode:cardViewModeEditor];
                 cell.cardView.frontFacing = YES;
                 cell.cardView.cardHighlightType = cardHighlightNone;

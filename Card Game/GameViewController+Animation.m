@@ -336,27 +336,33 @@
 
 - (void)startEndTurnTimer{
     
+    
     self.shouldCallEndTurn = YES;
     [self.counterSubView setFrame:CGRectMake(0, 0, 0, self.counterView.frame.size.height)];
     
-    [self performSelector:@selector(showProgressView) withObject:nil afterDelay:10];
+    //[self performSelector:@selector(showProgressView) withObject:nil afterDelay:10];
     
-    /*self.timer = [NSTimer timerWithTimeInterval:0.2
+    self.timer = [NSTimer timerWithTimeInterval:10.0
                                          target:self
-                                       selector:@selector(updateProgressView)
+                                       selector:@selector(showProgressView)
                                        userInfo:nil
-                                        repeats:YES];
+                                        repeats:NO];
     
-    [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
+
+    [self performBlock:^{
+        [self.timer fire];
+    } afterDelay:10.0];
     
-    [self.timer fire];*/
+    //[[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
+    
+    
     [UIView animateWithDuration:25 animations:^{
         //animation
         [self.counterSubView setFrame:CGRectMake(0, 0, self.counterView.frame.size.width, self.counterView.frame.size.height)];
         
     } completion:^(BOOL finished) {
         //completion
-        if (self.shouldCallEndTurn) {
+        if (![self.counterView isHidden]) {
             [self endTurn];
         }
         
@@ -365,6 +371,8 @@
 
 - (void)showProgressView{
     if (self.shouldCallEndTurn) {
+        [self.timer invalidate];
+        self.timer = nil;
         [self.counterView setHidden:NO];
     }
 }
