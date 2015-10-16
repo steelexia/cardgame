@@ -204,6 +204,12 @@
 		90F80F9E19A3D28E007571F4 /* GameViewController+Tutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F80F9D19A3D28E007571F4 /* GameViewController+Tutorial.m */; };
 		90F80FA119A3D3D9007571F4 /* arrow_left_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F80FA019A3D3D9007571F4 /* arrow_left_icon.png */; };
 		90F80FA319A63F4C007571F4 /* card_image_cardeditor_empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 90F80FA219A63F4B007571F4 /* card_image_cardeditor_empty.png */; };
+		9319F3831BD0377400F939FE /* StoreViewController+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9319F3821BD0377400F939FE /* StoreViewController+Animation.m */; settings = {ASSET_TAGS = (); }; };
+		9319F38E1BD164D200F939FE /* poof_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F3891BD164D200F939FE /* poof_1.png */; settings = {ASSET_TAGS = (); }; };
+		9319F38F1BD164D200F939FE /* poof_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F38A1BD164D200F939FE /* poof_2.png */; settings = {ASSET_TAGS = (); }; };
+		9319F3901BD164D200F939FE /* poof_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F38B1BD164D200F939FE /* poof_3.png */; settings = {ASSET_TAGS = (); }; };
+		9319F3911BD164D200F939FE /* poof_4.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F38C1BD164D200F939FE /* poof_4.png */; settings = {ASSET_TAGS = (); }; };
+		9319F3921BD164D200F939FE /* poof_5.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F38D1BD164D200F939FE /* poof_5.png */; settings = {ASSET_TAGS = (); }; };
 		9399ACFE1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFA1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png */; settings = {ASSET_TAGS = (); }; };
 		9399ACFF1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFB1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png */; settings = {ASSET_TAGS = (); }; };
 		9399AD001BC44CB9005CC9F3 /* Default-736h@3x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFC1BC44CB9005CC9F3 /* Default-736h@3x~iphone.png */; settings = {ASSET_TAGS = (); }; };
@@ -767,6 +773,13 @@
 		90F80F9D19A3D28E007571F4 /* GameViewController+Tutorial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GameViewController+Tutorial.m"; sourceTree = "<group>"; };
 		90F80FA019A3D3D9007571F4 /* arrow_left_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = arrow_left_icon.png; path = "Card Game/arrow_left_icon.png"; sourceTree = "<group>"; };
 		90F80FA219A63F4B007571F4 /* card_image_cardeditor_empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_image_cardeditor_empty.png; path = "Card Game/card_image_cardeditor_empty.png"; sourceTree = "<group>"; };
+		9319F3811BD0377400F939FE /* StoreViewController+Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "StoreViewController+Animation.h"; sourceTree = "<group>"; };
+		9319F3821BD0377400F939FE /* StoreViewController+Animation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "StoreViewController+Animation.m"; sourceTree = "<group>"; };
+		9319F3891BD164D200F939FE /* poof_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = poof_1.png; path = "Card Game/poof/poof_1.png"; sourceTree = "<group>"; };
+		9319F38A1BD164D200F939FE /* poof_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = poof_2.png; path = "Card Game/poof/poof_2.png"; sourceTree = "<group>"; };
+		9319F38B1BD164D200F939FE /* poof_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = poof_3.png; path = "Card Game/poof/poof_3.png"; sourceTree = "<group>"; };
+		9319F38C1BD164D200F939FE /* poof_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = poof_4.png; path = "Card Game/poof/poof_4.png"; sourceTree = "<group>"; };
+		9319F38D1BD164D200F939FE /* poof_5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = poof_5.png; path = "Card Game/poof/poof_5.png"; sourceTree = "<group>"; };
 		9399ACFA1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
 		9399ACFB1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-667h@2x~iphone.png"; sourceTree = "<group>"; };
 		9399ACFC1BC44CB9005CC9F3 /* Default-736h@3x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-736h@3x~iphone.png"; sourceTree = "<group>"; };
@@ -1279,6 +1292,8 @@
 			children = (
 				90456ED1198D717200B807DC /* StoreViewController.h */,
 				90456ED2198D717200B807DC /* StoreViewController.m */,
+				9319F3811BD0377400F939FE /* StoreViewController+Animation.h */,
+				9319F3821BD0377400F939FE /* StoreViewController+Animation.m */,
 				90456ED4198D72AA00B807DC /* StoreCardsCollectionView.h */,
 				90456ED5198D72AA00B807DC /* StoreCardsCollectionView.m */,
 				90456ED7198DAAE700B807DC /* StoreCardCell.h */,
@@ -1828,6 +1843,18 @@
 			name = Singleplayer;
 			sourceTree = "<group>";
 		};
+		9319F3881BD164B500F939FE /* Poof */ = {
+			isa = PBXGroup;
+			children = (
+				9319F3891BD164D200F939FE /* poof_1.png */,
+				9319F38A1BD164D200F939FE /* poof_2.png */,
+				9319F38B1BD164D200F939FE /* poof_3.png */,
+				9319F38C1BD164D200F939FE /* poof_4.png */,
+				9319F38D1BD164D200F939FE /* poof_5.png */,
+			);
+			name = Poof;
+			sourceTree = "<group>";
+		};
 		D31E2CA519BF5BBE002E1934 /* GameKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -1866,6 +1893,7 @@
 		EC42E8481B5725DF005EDFD5 /* StoreUI */ = {
 			isa = PBXGroup;
 			children = (
+				9319F3881BD164B500F939FE /* Poof */,
 				EC42E84F1B57262D005EDFD5 /* CardStoreBottomButtonNoWords.png */,
 				EC42E8501B57262D005EDFD5 /* CardStoreBottomRow.png */,
 				EC42E8511B57262D005EDFD5 /* CardStoreCardIcon.png */,
@@ -2514,6 +2542,7 @@
 				EC3A5D891B6AA1760064055F /* card_4008.jpg in Resources */,
 				EC42E85E1B572647005EDFD5 /* CardStoreSearchButtonNoWords.png in Resources */,
 				90AB1511197AEC310008FCDD /* card_ability_icon_assassin.png in Resources */,
+				9319F3911BD164D200F939FE /* poof_4.png in Resources */,
 				EC42E84E1B57261F005EDFD5 /* CardStoreBlueButton.png in Resources */,
 				90C528A4199D613B00750C54 /* screen_background_top.png in Resources */,
 				EC42E8691B5726B2005EDFD5 /* CoinPile002.png in Resources */,
@@ -2522,6 +2551,7 @@
 				9032E13319984875002A6725 /* toggle_button_off.png in Resources */,
 				90DA43C31969D21500E44AED /* save_card_button_gray.png in Resources */,
 				90DA43BF1969D21500E44AED /* monster_button.png in Resources */,
+				9319F3901BD164D200F939FE /* poof_3.png in Resources */,
 				90456EE7198F1B9100B807DC /* like_button_gray.png in Resources */,
 				EC10BDAA1B338CCF00F7ABDE /* Icon-76.png in Resources */,
 				ECFA3E821B657F9D00C83EE1 /* HammerHeartHourglass.png in Resources */,
@@ -2552,6 +2582,7 @@
 				EC3A5D711B6A90980064055F /* GameBoardPaperWithPlayedBG.png in Resources */,
 				FACF46C019EC852300D334E0 /* card_2004.png in Resources */,
 				EC3A5D841B6AA1760064055F /* card_4003.jpeg in Resources */,
+				9319F38F1BD164D200F939FE /* poof_2.png in Resources */,
 				EC42E8811B5726E7005EDFD5 /* FeaturedStoreDialog.png in Resources */,
 				FACF46A319EC850E00D334E0 /* card_0007.png in Resources */,
 				FA54990219E43A7000C8F492 /* ios_distribution.cer in Resources */,
@@ -2631,6 +2662,7 @@
 				90DA43C11969D21500E44AED /* spell_button.png in Resources */,
 				9032E13619986006002A6725 /* dummy_button.png in Resources */,
 				FA033FC619BCFF6600EFEBD8 /* card_0001.png in Resources */,
+				9319F3921BD164D200F939FE /* poof_5.png in Resources */,
 				9032E13A19991146002A6725 /* filter_toggle_button.png in Resources */,
 				EC3A5D8D1B6AA1760064055F /* card_4014.jpg in Resources */,
 				EC42E8561B57262D005EDFD5 /* CardStoreCoins.png in Resources */,
@@ -2770,6 +2802,7 @@
 				EC7A74DF1B28F70600D3A53F /* envelope.png in Resources */,
 				9399AD001BC44CB9005CC9F3 /* Default-736h@3x~iphone.png in Resources */,
 				FACF46CE19EC852300D334E0 /* card_2302.png in Resources */,
+				9319F38E1BD164D200F939FE /* poof_1.png in Resources */,
 				907020711992AC8100FDE444 /* PLCameraSheetButton.png in Resources */,
 				ECFA3E801B657F9D00C83EE1 /* CardDescription.png in Resources */,
 				90F352CF191595F400601130 /* card_background_front.png in Resources */,
@@ -2851,6 +2884,7 @@
 				9032E12D19953EAE002A6725 /* CardVote.m in Sources */,
 				ECCD46EC1ACC881400804B06 /* PNWhereNowRequest.m in Sources */,
 				90DA434A195B271900E44AED /* CustomTableView.m in Sources */,
+				9319F3831BD0377400F939FE /* StoreViewController+Animation.m in Sources */,
 				90456ECC198D4DB500B807DC /* DeckCell.m in Sources */,
 				90F7DB01199ACF0C00D4FD97 /* CampaignMenuViewController.m in Sources */,
 				90456EDC198DBECC00B807DC /* GameStore.m in Sources */,

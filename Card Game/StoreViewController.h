@@ -55,6 +55,13 @@
 
 //Brian Aug 23
 @property (strong) UIView *storeDarkBG;
+@property (strong) UIView *featuredStoreDialog;
+@property (strong) UIView *boosterPackImageViewContainer;
+@property (strong) UIImageView *boosterPackImageView;
+@property (strong) UIImageView *boosterPackImageBackView;
+
+@property (strong) UITapGestureRecognizer *boosterPackTap;
+
 
 //filter views
 @property (strong)UIView*filterView;
