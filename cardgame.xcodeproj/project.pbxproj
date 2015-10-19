@@ -210,6 +210,8 @@
 		9319F3901BD164D200F939FE /* poof_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F38B1BD164D200F939FE /* poof_3.png */; settings = {ASSET_TAGS = (); }; };
 		9319F3911BD164D200F939FE /* poof_4.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F38C1BD164D200F939FE /* poof_4.png */; settings = {ASSET_TAGS = (); }; };
 		9319F3921BD164D200F939FE /* poof_5.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F38D1BD164D200F939FE /* poof_5.png */; settings = {ASSET_TAGS = (); }; };
+		9319F3951BD5343B00F939FE /* StorePackCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9319F3941BD5343B00F939FE /* StorePackCell.m */; settings = {ASSET_TAGS = (); }; };
+		9319F3981BD53C7400F939FE /* PackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9319F3971BD53C7400F939FE /* PackView.m */; settings = {ASSET_TAGS = (); }; };
 		9399ACFE1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFA1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png */; settings = {ASSET_TAGS = (); }; };
 		9399ACFF1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFB1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png */; settings = {ASSET_TAGS = (); }; };
 		9399AD001BC44CB9005CC9F3 /* Default-736h@3x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFC1BC44CB9005CC9F3 /* Default-736h@3x~iphone.png */; settings = {ASSET_TAGS = (); }; };
@@ -780,6 +782,10 @@
 		9319F38B1BD164D200F939FE /* poof_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = poof_3.png; path = "Card Game/poof/poof_3.png"; sourceTree = "<group>"; };
 		9319F38C1BD164D200F939FE /* poof_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = poof_4.png; path = "Card Game/poof/poof_4.png"; sourceTree = "<group>"; };
 		9319F38D1BD164D200F939FE /* poof_5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = poof_5.png; path = "Card Game/poof/poof_5.png"; sourceTree = "<group>"; };
+		9319F3931BD5343B00F939FE /* StorePackCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StorePackCell.h; sourceTree = "<group>"; };
+		9319F3941BD5343B00F939FE /* StorePackCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StorePackCell.m; sourceTree = "<group>"; };
+		9319F3961BD53C7400F939FE /* PackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackView.h; sourceTree = "<group>"; };
+		9319F3971BD53C7400F939FE /* PackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackView.m; sourceTree = "<group>"; };
 		9399ACFA1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
 		9399ACFB1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-667h@2x~iphone.png"; sourceTree = "<group>"; };
 		9399ACFC1BC44CB9005CC9F3 /* Default-736h@3x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-736h@3x~iphone.png"; sourceTree = "<group>"; };
@@ -1300,6 +1306,10 @@
 				90456ED8198DAAE700B807DC /* StoreCardCell.m */,
 				90456EDA198DBECC00B807DC /* GameStore.h */,
 				90456EDB198DBECC00B807DC /* GameStore.m */,
+				9319F3961BD53C7400F939FE /* PackView.h */,
+				9319F3971BD53C7400F939FE /* PackView.m */,
+				9319F3931BD5343B00F939FE /* StorePackCell.h */,
+				9319F3941BD5343B00F939FE /* StorePackCell.m */,
 			);
 			name = "Store Screen";
 			sourceTree = "<group>";
@@ -2876,6 +2886,7 @@
 				ECCD46DB1ACC881400804B06 /* PNChannelGroupRemoveRequest.m in Sources */,
 				ECCD46F61ACC89B300804B06 /* multiplayerDataHandler.m in Sources */,
 				90F7DB04199AD69C00D4FD97 /* Campaign.m in Sources */,
+				9319F3981BD53C7400F939FE /* PackView.m in Sources */,
 				ECCD46C01ACC881400804B06 /* PNJSONSerialization.m in Sources */,
 				ECCD46AA1ACC881400804B06 /* PNGroupChannelsListChangeParser.m in Sources */,
 				ECCD46CA1ACC881400804B06 /* NSDate+PNAdditions.m in Sources */,
@@ -2904,6 +2915,7 @@
 				ECCD46B51ACC881400804B06 /* PNCache.m in Sources */,
 				FA19FC8519B232F100B38943 /* IAPHelper.m in Sources */,
 				ECCD46A81ACC881400804B06 /* PNClientStateUpdateResponseParser.m in Sources */,
+				9319F3951BD5343B00F939FE /* StorePackCell.m in Sources */,
 				ECCD46C81ACC881400804B06 /* NSArray+PNAdditions.m in Sources */,
 				ECCD46E41ACC881400804B06 /* PNLeaveRequest.m in Sources */,
 				ECCD46D11ACC881400804B06 /* NSObject+PNAdditions.m in Sources */,

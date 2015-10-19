@@ -13,6 +13,7 @@
 #import "SinglePlayerCards.h"
 #import "GameStore.h"
 #import "PickIAPHelper.h"
+#import "StorePackCell.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface StoreViewController ()
@@ -1641,7 +1642,7 @@ UIControlEventTouchUpInside];
             if(i==0)
             {
                 //show featured Store
-                _featuredStore.alpha = 1;
+                _featuredStore.alpha = 0;
                 _cardsView.alpha = 1;
                 
             }
@@ -1847,6 +1848,13 @@ UIControlEventTouchUpInside];
             [self setFilterViewState:NO];
         if ([self isSearchOpen])
             [self setSearchViewState:NO];
+    }else if([touchedView.superview isKindOfClass:[StorePackCell class]]){
+        StorePackCell *packCell = (StorePackCell*)touchedView.superview;
+        int option = 1;
+        if (packCell != nil) {
+            option = packCell.packView.tag;
+        }
+        [self displayBoosterPackOption:option];
     }
 }
 
@@ -1943,6 +1951,12 @@ UIControlEventTouchUpInside];
     }
     
     [_cardInfoView addSubview:_cardView];
+    
+    if (self.cardsView.isFeaturedCard) {
+        self.featuredBanner = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"FeaturedStoreCardOfTheWeekBanner.png"]];
+        [self.featuredBanner setFrame:CGRectMake(_cardView.frame.origin.x, _cardView.frame.origin.y,_cardView.frame.size.width/6 *5, _cardView.frame.size.height/2)];
+        [_cardInfoView addSubview:self.featuredBanner];
+    }
     
     //TODO when viewing own cards, don't show the buy buttons etc. use if sale.seller == current user
     
@@ -2818,6 +2832,12 @@ UIControlEventTouchUpInside];
         
         if (shouldFilter && ![_cardsView.currentSales containsObject:salePF])
             [_cardsView.currentSales addObject:salePF];
+       
+        if ([self.cardsView isFeaturedCard]) {
+            for (int i =0; i <3; i++) {
+                [_cardsView.currentSales addObject:salePF];
+            }
+        }
     }
     
     _cardsView.currentCards = [NSMutableArray arrayWithCapacity:_cardsView.currentSales.count];
