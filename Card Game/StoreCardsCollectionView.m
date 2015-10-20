@@ -8,6 +8,7 @@
 
 #import "StoreCardsCollectionView.h"
 #import "StoreCardCell.h"
+#import "StorePackCell.h"
 #import "GameStore.h"
 #import "StoreViewController.h"
 
@@ -46,6 +47,7 @@ const int CARD_CELL_INSET = 8;
         self.collectionView = [[CustomCollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
         
         [self.collectionView registerClass:[StoreCardCell class] forCellWithReuseIdentifier:@"storeCardsCollectionCell"];
+        [self.collectionView registerClass:[StorePackCell class] forCellWithReuseIdentifier:@"StorePacksCollectionsCell"];
         [self.collectionView setBackgroundColor:[UIColor clearColor]];
         
         [self.collectionView setDataSource:self];
@@ -68,62 +70,84 @@ const int CARD_CELL_INSET = 8;
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    StoreCardCell *cell=[collectionView dequeueReusableCellWithReuseIdentifier:@"storeCardsCollectionCell" forIndexPath:indexPath];
     
-    //cell.backgroundColor=[UIColor greenColor];
-    //if (cell.cardView != nil)
-    [cell.cardView removeFromSuperview];
-    [cell.statsView removeFromSuperview];
-    
-    [cell addSubview:cell.activityView];
-    [cell.activityView startAnimating];
-    
-    if (indexPath.row >= 0 && indexPath.row < self.currentCards.count)
-    {
-        CardModel*card = self.currentCards[indexPath.row];
+    if (self.isFeaturedCard && indexPath.row > 0) {
         
-        //card may be null at this point (hasn't been loaded)
-        if (card == (id)[NSNull null] && ![_loadingCells containsObject:indexPath])
+        StorePackCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"StorePacksCollectionsCell" forIndexPath:indexPath];
+        
+         NSString *packImageName = [NSString stringWithFormat:@"FeaturedStoreCardPack00%d.png",indexPath.row];
+        
+        
+        [cell.packView setImage:[UIImage imageNamed:packImageName]];
+        [cell.packView setTag:indexPath.row];
+        [cell addSubview:cell.packView];
+
+        
+        return cell;
+    }else{
+        StoreCardCell *cell=[collectionView dequeueReusableCellWithReuseIdentifier:@"storeCardsCollectionCell" forIndexPath:indexPath];
+        
+        //cell.backgroundColor=[UIColor greenColor];
+        //if (cell.cardView != nil)
+        [cell.cardView removeFromSuperview];
+        [cell.statsView removeFromSuperview];
+        
+        [cell addSubview:cell.activityView];
+        [cell.activityView startAnimating];
+        
+        
+        
+        if (indexPath.row >= 0 && indexPath.row < self.currentCards.count)
         {
-            [self loadCellAtIndexPath:indexPath];
-        }
-        //loaded
-        else if (![_loadingCells containsObject:indexPath]) //i.e. not loading
-        {
-            //CardModel*card = self.currentCards[indexPath.row];
-            PFObject*cardPF = self.currentCardsPF[indexPath.row];
+            CardModel*card = self.currentCards[indexPath.row];
             
-            cell.cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeEditor viewState:card.cardViewState];
-            cell.cardView.frontFacing = YES;
-            cell.cardView.cardHighlightType = cardHighlightNone;
-            //cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
-            cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.7, 0.7);
-            cell.cardView.center = cell.center;
-            
-            cell.cardView.frame = CGRectMake(CARD_CELL_INSET,CARD_CELL_INSET,STORE_CARD_WIDTH,STORE_CARD_HEIGHT);
-            if (!self.isFeaturedCard) {
-                cell.costLabel.text = [NSString stringWithFormat:@"%d", [GameStore getCardCost:card]];
-                cell.likesLabel.text = [NSString stringWithFormat:@"%d", [cardPF[@"likes"] intValue]];
-                [cell.costIcon setHidden:NO];
-                [cell.costIcon setHidden:NO];
-                [cell.costLabel setHidden:NO];
-                [cell.likesLabel setHidden:NO];
-            }else{
-                [cell.costIcon setHidden:YES];
-                [cell.likesIcon setHidden:YES];
-                [cell.costLabel setHidden:YES];
-                [cell.likesLabel setHidden:YES];
+            //card may be null at this point (hasn't been loaded)
+            if (card == (id)[NSNull null] && ![_loadingCells containsObject:indexPath])
+            {
+                [self loadCellAtIndexPath:indexPath];
             }
-            
-            
-            [cell addSubview:cell.cardView];
-            [cell addSubview:cell.statsView];
-            
-            [cell.activityView stopAnimating];
-            [cell.activityView removeFromSuperview];
+            //loaded
+            else if (![_loadingCells containsObject:indexPath]) //i.e. not loading
+            {
+                //CardModel*card = self.currentCards[indexPath.row];
+                PFObject*cardPF = self.currentCardsPF[indexPath.row];
+                
+                cell.cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeToValidate viewState:card.cardViewState];
+                cell.cardView.frontFacing = YES;
+                cell.cardView.cardHighlightType = cardHighlightNone;
+                //cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+                cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.7, 0.7);
+                cell.cardView.center = cell.center;
+                
+                cell.cardView.frame = CGRectMake(CARD_CELL_INSET,CARD_CELL_INSET,STORE_CARD_WIDTH,STORE_CARD_HEIGHT);
+                if (!self.isFeaturedCard) {
+                    cell.costLabel.text = [NSString stringWithFormat:@"%d", [GameStore getCardCost:card]];
+                    cell.likesLabel.text = [NSString stringWithFormat:@"%d", [cardPF[@"likes"] intValue]];
+                    //[cell.costIcon setHidden:NO];
+                    //[cell.costIcon setHidden:NO];
+                    //[cell.costLabel setHidden:NO];
+                    //[cell.likesLabel setHidden:NO];
+                    [cell.featuredBanner setHidden:YES];
+                }else{
+                    //[cell.costIcon setHidden:YES];
+                    //[cell.likesIcon setHidden:YES];
+                    //[cell.costLabel setHidden:YES];
+                    //[cell.likesLabel setHidden:YES];
+                    [cell.featuredBanner setHidden:NO];
+                    [cell.featuredBanner.layer setZPosition:1.0];
+                }
+                
+                
+                [cell addSubview:cell.cardView];
+                [cell addSubview:cell.statsView];
+                
+                [cell.activityView stopAnimating];
+                [cell.activityView removeFromSuperview];
+            }
         }
+        return cell;
     }
-    return cell;
+    
 }
 
 //this function prevents loading for the wrong cell when scrolling is too fast
@@ -199,7 +223,7 @@ const int CARD_CELL_INSET = 8;
                 
                 
                 StoreCardCell *cell = (StoreCardCell *)[_collectionView cellForItemAtIndexPath:indexPath];
-                cell.cardView = [[CardView alloc] initWithModel:cardModel viewMode:cardViewModeEditor viewState:cardModel.cardViewState];
+                cell.cardView = [[CardView alloc] initWithModel:cardModel viewMode:cardViewModeToValidate viewState:cardModel.cardViewState];
                 //cell.cardView = [[CardView alloc] initWithModel:cardModel withImage:[cardPF objectForKey:@"image"] viewMode:cardViewModeEditor];
                 cell.cardView.frontFacing = YES;
                 cell.cardView.cardHighlightType = cardHighlightNone;
@@ -214,29 +238,25 @@ const int CARD_CELL_INSET = 8;
                 if (!self.isFeaturedCard) {
                     cell.costLabel.text = [NSString stringWithFormat:@"%d", [GameStore getCardCost:cardModel]];
                     cell.likesLabel.text = [NSString stringWithFormat:@"%d", [cardPF[@"likes"] intValue]];
-                    [cell.costIcon setHidden:NO];
+                    /*[cell.costIcon setHidden:NO];
                     [cell.costIcon setHidden:NO];
                     [cell.costLabel setHidden:NO];
-                    [cell.likesLabel setHidden:NO];
+                    [cell.likesLabel setHidden:NO];*/
                     [cell.featuredBanner setHidden:YES];
                 }else{
-                    [cell.costIcon setHidden:YES];
+                    /*[cell.costIcon setHidden:YES];
                     [cell.likesIcon setHidden:YES];
                     [cell.costLabel setHidden:YES];
-                    [cell.likesLabel setHidden:YES];
+                    [cell.likesLabel setHidden:YES];*/
                     [cell.featuredBanner setHidden:NO];
+                    [cell.featuredBanner.layer setZPosition:1.0];
                 }
                 
-               /* if (indexPath.row % 2)
-                    cell.backgroundColor = [UIColor redColor];
-                else
-                    cell.backgroundColor = [UIColor whiteColor];*/
-                
+                [cell addSubview:cell.statsView];
+                [cell addSubview:cell.cardView];
+                [cell addSubview:cell.featuredBanner];
                 [cell.activityView stopAnimating];
                 [cell.activityView removeFromSuperview];
-                
-                [cell addSubview:cell.cardView];
-                [cell addSubview:cell.statsView];
                 
                 [self.collectionView reloadInputViews];
                 

@@ -65,6 +65,7 @@
         
         _featuredBanner = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 90, 80)];
         [_featuredBanner setImage:[UIImage imageNamed:@"FeaturedStoreCardOfTheWeekBanner.png"]];
+        [_featuredBanner.layer setZPosition:1.0];
         [_statsView addSubview:_featuredBanner];
         
         self.layer.shouldRasterize = YES;

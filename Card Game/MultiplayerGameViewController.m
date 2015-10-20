@@ -1083,7 +1083,7 @@ if(tableView.tag ==88)
         [self.mpLobbyTableView setAlpha:1.0];
         [self.noPlayersAvailableLabel setAlpha:1.0];
     }
-    
+
     [self.mpLobbyTableView reloadData];
     [self.activityIndicator removeFromSuperview];
     
@@ -1711,6 +1711,8 @@ if(tableView.tag ==88)
 -(void)refreshLobby:(id)sender
 {
     //get participants
+    [self.view addSubview:self.activityIndicator];
+    [self.activityIndicator startAnimating];
     [MPDataHandler getPubNubConnectedPlayers];
     
 }

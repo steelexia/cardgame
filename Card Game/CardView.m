@@ -456,7 +456,7 @@ NSDictionary *singlePlayerCardImages;
                     [self.cardImage setImage:placeHolderImage];
                     [self.activityView stopAnimating];
                 }*/
-                if ([cardModel.cardPF[@"adminPhotoCheck"] intValue] == 1 || [self thisCardAreInMyDecks:[cardModel.cardPF objectForKey:@"idNumber"]]) {
+                if ([cardModel.cardPF[@"adminPhotoCheck"] intValue] == 1 || [self thisCardAreInMyDecks:[cardModel.cardPF objectForKey:@"idNumber"]] || cardViewMode == cardViewModeToValidate) {
                     [self performBlockInBackground:^(void){
                         [self loadImage];
                     }];

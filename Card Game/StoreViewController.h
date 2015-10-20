@@ -36,7 +36,7 @@
 @property (strong)PFObject*cardPF;
 @property (strong)CFButton*buyButton,*sellButton,*editButton,*likeButton, *restockButton, *bumpButton, *reportButton, *approveButton, *declineButton;
 @property (strong)StrokedLabel*creatorLabel, *idLabel, *rarityLabel, *rarityTextLabel, *likesLabel, *goldLabel;
-@property (strong)UIImageView*goldIcon,*likesIcon;
+@property (strong)UIImageView*goldIcon,*likesIcon,*featuredBanner;
 @property (strong)StrokedLabel*likeHintLabel, *editHintLabel, *buyHintLabel, *reportHintLabel;
 @property (strong)UILabel*cardTagsLabel;
 
@@ -55,6 +55,13 @@
 
 //Brian Aug 23
 @property (strong) UIView *storeDarkBG;
+@property (strong) UIView *featuredStoreDialog;
+@property (strong) UIView *boosterPackImageViewContainer;
+@property (strong) UIImageView *boosterPackImageView;
+@property (strong) UIImageView *boosterPackImageBackView;
+
+@property (strong) UITapGestureRecognizer *boosterPackTap;
+
 
 //filter views
 @property (strong)UIView*filterView;

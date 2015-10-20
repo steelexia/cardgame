@@ -139,7 +139,8 @@ BOOL leftHandViewZone = NO;
                     
                     self.gameModel.decks = decks;
                     [self.gameModel startGame];
-                    [self startEndTurnTimer];
+                    if (!_isTutorial && !self.shouldCallEndTurn)
+                        [self startEndTurnTimer];
                 }
             });
         }];
@@ -616,7 +617,8 @@ BOOL leftHandViewZone = NO;
                 [self flashOn:self.endTurnButton];
             }
         }
-        [self startEndTurnTimer];
+        if (!_isTutorial && !self.shouldCallEndTurn)
+            [self startEndTurnTimer];
     }
 }
 
@@ -825,6 +827,8 @@ BOOL leftHandViewZone = NO;
 
 
 -(void) endTurn{
+    [self.timer invalidate];
+    self.timer = nil;
     self.shouldCallEndTurn = NO;
     [self.counterView setHidden:YES];
     self.shouldBlink = NO;
@@ -854,7 +858,8 @@ BOOL leftHandViewZone = NO;
     else
     {
         currentSide = PLAYER_SIDE;
-        [self startEndTurnTimer];
+        if (!_isTutorial && !self.shouldCallEndTurn)
+            [self startEndTurnTimer];
     }
     
     //update turn ender's views
@@ -1640,7 +1645,7 @@ BOOL leftHandViewZone = NO;
         
         
         CardView*originalView = card.cardView;
-        if (card.adminPhotoCheck != 1) {
+        if (card.adminPhotoCheck != 1 && card.adminPhotoCheck != nil) {
             card.cardView.cardImage.image = placeHolderImage;
         }
         if (!originalView.frontFacing) //TODO depends on skill
@@ -1652,7 +1657,7 @@ BOOL leftHandViewZone = NO;
         card.cardView = originalView;
         
         cardView.center = card.cardView.center; //TODO
-        if (card.adminPhotoCheck != 1) {
+        if (card.adminPhotoCheck != 1 && card.adminPhotoCheck != nil) {
             card.cardView.cardImage.image = placeHolderImage;
           //  cardView.image = placeHolderImage;
         }
@@ -2186,7 +2191,8 @@ BOOL leftHandViewZone = NO;
     [_gameOverScreen removeFromSuperview];
     [_gameOverProgressIndicator stopAnimating];
     [_gameOverSaveLabel removeFromSuperview];
-    [self startEndTurnTimer];
+    if (!_isTutorial && !self.shouldCallEndTurn)
+        [self startEndTurnTimer];
 }
 
 -(void)saveLevelProgress

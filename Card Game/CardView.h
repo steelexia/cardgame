@@ -171,6 +171,7 @@ enum CardViewMode
     cardViewModeZoomedIngame,
     /** When viewed in an editor outside of games. Does not animate when values change. */
     cardViewModeEditor,
+    cardViewModeToValidate,
 };
 
 enum CardAbilityIcon
