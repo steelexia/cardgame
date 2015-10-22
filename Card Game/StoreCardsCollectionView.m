@@ -272,6 +272,7 @@ const int CARD_CELL_INSET = 8;
     
 }
 
+
 -(void)scrolledToEnd
 {
     if (_parentViewController != nil && [_parentViewController isKindOfClass:[StoreViewController class]])

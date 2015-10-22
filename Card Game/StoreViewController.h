@@ -59,6 +59,7 @@
 @property (strong) UIView *boosterPackImageViewContainer;
 @property (strong) UIImageView *boosterPackImageView;
 @property (strong) UIImageView *boosterPackImageBackView;
+@property (strong) NSMutableArray *purchasedCards;
 
 @property (strong) UITapGestureRecognizer *boosterPackTap;
 

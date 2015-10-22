@@ -102,20 +102,23 @@
     // I take 5 cards from my cards, in the future we will have to get these cards from Parse
     
     NSMutableArray *cardsView = [[NSMutableArray alloc] init];
-    CGRect cardViewFrame = CGRectMake(0, 0, 0, 0);
+    CGRect cardViewFrame = CGRectMake(0, 0, 142, 227);
     
-    for (int i = 0; i < 5; i++) {
-        CardModel *card = [userAllCards objectAtIndex:i];
-        CardView *cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeToValidate viewState:card.cardViewState];
-        card.cardView = cardView;
-        card.cardView.frontFacing = YES;
-        card.cardView.cardHighlightType = cardHighlightNone;
-        card.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.1, 1.1);
-        card.cardView.center = self.storeDarkBG.center;
+    for (int i = 0; i < self.purchasedCards.count; i++) {
+        [CardModel createCardFromPFObject:[self.purchasedCards objectAtIndex:i] onFinish:^(CardModel *card) {
+            
+            //code
+            CardView *cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeToValidate viewState:card.cardViewState];
+            card.cardView = cardView;
+            card.cardView.frontFacing = YES;
+            card.cardView.cardHighlightType = cardHighlightNone;
+            card.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.1, 1.1);
+            card.cardView.center = self.storeDarkBG.center;
+            
+            [cardsView addObject:card.cardView];
+            [self.storeDarkBG addSubview:card.cardView];
+        }];
         
-        [cardsView addObject:card.cardView];
-        cardViewFrame = card.cardView.frame;
-        [self.storeDarkBG addSubview:card.cardView];
     }
     
     CGRect bounds = self.storeDarkBG.bounds;

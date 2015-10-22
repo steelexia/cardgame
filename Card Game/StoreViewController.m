@@ -30,6 +30,7 @@
 /** Screen dimension for convinience */
 float SCREEN_WIDTH, SCREEN_HEIGHT;
 
+
 int STORE_INITIAL_LOAD_AMOUNT = 96;
 int STORE_ADDITIONAL_INCREMENT = 16;
 
@@ -1365,13 +1366,23 @@ UIControlEventTouchUpInside];
     
     [self fadeOut:self.featuredStoreDialog inDuration:1.0];
     self.boosterPackImageView.image = [UIImage imageNamed:@"FeaturedStoreCardPack002.png"];
+   // [self performSelectorInBackground:@selector(buyBoosterPackEffect) withObject:nil];
     [self buyBoosterPackEffect];
     
     NSLog(@"Purchase booster pressed!!");
-    NSError *error;
     
+    [PFCloud callFunctionInBackground:@"buyBoosterPack" withParameters:@{} block:^(NSArray *object, NSError *error) {
+        //code
+        if (error) {
+            NSLog(@"bought with errors: %@", error.description);
+        }else
+        {
+            self.purchasedCards = [object mutableCopy];
+            NSLog(@"bought with success!!");
+        }
+    }];
     
-    [PFCloud callFunction:@"buyBoosterPack" withParameters:@{
+    /*[PFCloud callFunction:@"buyBoosterPack" withParameters:@{
                                                              } error:&error];
     
     if (error) {
@@ -1379,7 +1390,7 @@ UIControlEventTouchUpInside];
     }else
     {
         NSLog(@"bought with success!!");
-    }
+    }*/
 }
 
 -(void)tutorialLikeCard

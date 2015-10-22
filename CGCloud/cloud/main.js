@@ -485,7 +485,7 @@ Parse.Cloud.define("buyBoosterPack", function(request, response) {
   saleQuery.descending("createdAt");
   saleQuery.include("card");
   //saleQuery.include("card.rarity");
-  saleQuery.limit(5);
+  //saleQuery.limit(5);
   saleQuery.find({
               success: function(results) {
  
@@ -494,21 +494,27 @@ Parse.Cloud.define("buyBoosterPack", function(request, response) {
                var rareCards = new Array();
  
                var resultsLength = results.length;
- 
-                 for (var j = 0; j<resultsLength; j++)
+
+        
+                 for (var j = 0; j<5; j++)
                {
-                  var resultCard = results[j];
+
+                  var value = Math.floor((Math.random() * resultsLength))
+
+                  var resultCard = results[value];
                   //var cardName = resultCard.get("name");
  
                   var cardObj = resultCard.get("card");
+                  
                   console.log(cardObj.get("name"));
                   setOwnedCard(request.user, cardObj.get("idNumber"), true);
- 
+                  rareCards.push(cardObj);
+
                   Parse.Object.saveAll([request.user, cardObj], {
                     success: function(list) {
                       //console.log("saved");
                       //assumes all are saved
-                      response.success();
+                      
                     },
                     error: function(error) {
                       response.error("Couldn't save User");
@@ -516,6 +522,7 @@ Parse.Cloud.define("buyBoosterPack", function(request, response) {
                   });
  
                 }
+                response.success(rareCards);
               }
            });
  
