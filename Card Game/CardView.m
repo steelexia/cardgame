@@ -682,7 +682,7 @@ NSDictionary *singlePlayerCardImages;
                 
                 [_frontViews addSubview:monsterOverlay];
                 
-                float attackLabelX = 47.0f/400.0f*CARD_FULL_WIDTH;
+                float attackLabelX = 57.0f/400.0f*CARD_FULL_WIDTH;
                 float attackLabelY = 330.0f/590.0f*CARD_FULL_HEIGHT;
                 
                 //original size 18
@@ -691,7 +691,7 @@ NSDictionary *singlePlayerCardImages;
                 self.attackLabel.textAlignment = NSTextAlignmentCenter;
                 self.attackLabel.textColor = [UIColor whiteColor];
                 self.attackLabel.backgroundColor = [UIColor clearColor];
-                self.attackLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +3];
+                self.attackLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE -3];
                 self.attackLabel.strokeOn = YES;
                 self.attackLabel.strokeColour = [UIColor blackColor];
                 self.attackLabel.strokeThickness = 2.5;
@@ -699,7 +699,7 @@ NSDictionary *singlePlayerCardImages;
                 
                 [_frontViews addSubview: attackLabel];
                 
-                float lifeLabelX = 345.0f/400.0f*CARD_FULL_WIDTH;
+                float lifeLabelX = 355.0f/400.0f*CARD_FULL_WIDTH;
                 float lifeLabelY = 330.0f/590.0f*CARD_FULL_HEIGHT;
                 self.lifeLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,CARD_FULL_WIDTH/2,30)];
                 self.lifeLabel.center = CGPointMake(lifeLabelX, lifeLabelY);
@@ -709,7 +709,7 @@ NSDictionary *singlePlayerCardImages;
                 self.lifeLabel.strokeOn = YES;
                 self.lifeLabel.strokeColour = [UIColor blackColor];
                 self.lifeLabel.strokeThickness = 2.5;
-                self.lifeLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +3];
+                self.lifeLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE -3];
                 self.lifeLabel.text = [NSString stringWithFormat:@"%d", monsterCard.life];
                 
                 [_frontViews addSubview: lifeLabel];

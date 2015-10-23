@@ -108,6 +108,7 @@
         [CardModel createCardFromPFObject:[self.purchasedCards objectAtIndex:i] onFinish:^(CardModel *card) {
             
             //code
+            [userAllCards addObject:card];
             CardView *cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeToValidate viewState:card.cardViewState];
             card.cardView = cardView;
             card.cardView.frontFacing = YES;

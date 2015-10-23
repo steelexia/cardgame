@@ -1963,11 +1963,11 @@ UIControlEventTouchUpInside];
     
     [_cardInfoView addSubview:_cardView];
     
-    if (self.cardsView.isFeaturedCard) {
+    /*if (self.cardsView.isFeaturedCard) {
         self.featuredBanner = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"FeaturedStoreCardOfTheWeekBanner.png"]];
         [self.featuredBanner setFrame:CGRectMake(_cardView.frame.origin.x, _cardView.frame.origin.y,_cardView.frame.size.width/6 *5, _cardView.frame.size.height/2)];
         [_cardInfoView addSubview:self.featuredBanner];
-    }
+    }*/
     
     //TODO when viewing own cards, don't show the buy buttons etc. use if sale.seller == current user
     
