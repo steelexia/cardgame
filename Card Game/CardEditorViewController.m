@@ -16,6 +16,7 @@
 #import "MainScreenViewController.h"
 #import "AbilityTableView.h"
 #import "CardPointsUtility.h"
+#import "AbilityViewController.h"
 
 #import "GameStore.h"
 
@@ -42,6 +43,8 @@ const int MAX_COOLDOWN = 5, MIN_COOLDOWN = 1, COOLDOWN_INCREMENT = 1;
 const int MIN_COST = 0, COST_INCREMENT = 1; //maxCost is an array
 
 UITextField *nameTextField;
+UIImage *scaledImage;
+UIButton *abilityButton,*flavourButton;
 
 CFButton *damageIncButton, *damageDecButton, *lifeIncButton, *lifeDecButton, *cdIncButton, *cdDecButton, *costIncButton, *costDecButton;
 
@@ -311,7 +314,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     [abilityExistingTableView setHidden:YES];
     //[self.view addSubview:abilityExistingTableView];
     
-    CFLabel*abilityNewTableViewBackground = [[CFLabel alloc] initWithFrame:CGRectMake(80, 345, 186, SCREEN_HEIGHT - 345 - 28)];
+    CFLabel*abilityNewTableViewBackground = [[CFLabel alloc] initWithFrame:CGRectMake(120, 345, 186, SCREEN_HEIGHT - 345 - 28)];
     [abilityNewTableViewBackground setHidden:YES];
     [self.view addSubview:abilityNewTableViewBackground];
     
@@ -620,6 +623,29 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     _modalFilter.backgroundColor = [[UIColor alloc]initWithHue:0 saturation:0 brightness:0 alpha:0.8];
     [_modalFilter setUserInteractionEnabled:YES]; //blocks all interaction behind it
     
+    
+    //--------------------- abilities and fluvour button ---------------//
+    
+    abilityButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 90, 40)];
+    [abilityButton setTitle:@"Abilities" forState:UIControlStateNormal];
+    [abilityButton setCenter:CGPointMake(self.currentCardView.center.x, customizeCardButton.center.y)];
+    [abilityButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [abilityButton.titleLabel setFont:[UIFont fontWithName:cardMainFont size:11]];
+    [abilityButton setBackgroundImage:[UIImage imageNamed:@"CardCreateBlueButton.png"] forState:UIControlStateNormal];
+    [abilityButton addTarget:self action:@selector(showAbilities) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:abilityButton];
+    
+    flavourButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 90, 40)];
+    [flavourButton setTitle:@"Flavour text" forState:UIControlStateNormal];
+    [flavourButton setCenter:CGPointMake(self.currentCardView.center.x, cancelCardButton.center.y)];
+    [flavourButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [flavourButton.titleLabel setFont:[UIFont fontWithName:cardMainFont size:11]];
+    [flavourButton setBackgroundImage:[UIImage imageNamed:@"CardCreateRedButton.png"] forState:UIControlStateNormal];
+    
+    [self.view addSubview:flavourButton];
+    
+    
     //----------------------element edit screen--------------------//
     neutralLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 60)];
     neutralLabel.font = [UIFont fontWithName:cardMainFont size:25];
@@ -817,6 +843,8 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [spellCardButton setEnabled:NO];
         abilityNewTableView.currentCard = _currentCardModel;
         abilityExistingTableView.currentCard = _currentCardModel;
+        [abilityButton setHidden:YES];
+        [flavourButton setHidden:YES];
     }
     else if (_editorMode == cardEditorModeTutorialOne)
     {
@@ -877,6 +905,8 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [spellCardButton setEnabled:NO];
         [monsterCardButton setEnabled:NO];
         [cancelCardButton setEnabled:NO];
+        [abilityButton setHidden:YES];
+        [flavourButton setHidden:YES];
         abilityNewTableView.tableView.alpha = 0.5;
 
         [abilityNewTableView setUserInteractionEnabled:NO];
@@ -967,6 +997,9 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [self.tutLabel.label setTextAlignment:NSTextAlignmentCenter];
         [self.view addSubview:_tutLabel];
         [self.view addSubview:_tutOkButton];
+        
+        [abilityButton setHidden:NO];
+        [flavourButton setHidden:NO];
         
         UIImageView *arrowImage1 = [[UIImageView alloc] initWithImage:ARROW_RIGHT_ICON_IMAGE];
         arrowImage1.frame = CGRectMake(0,0,80,80);
@@ -1082,6 +1115,9 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         self.tutLabel.label.text = @"This time you're free to create any card you want.";
         [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
         self.tutLabel.label.textAlignment = NSTextAlignmentCenter;
+        
+        [abilityButton setHidden:NO];
+        [flavourButton setHidden:NO];
         
         [self modalScreen];
         
@@ -1278,6 +1314,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
 {
     //NSLog(@"%d", nameTextField.adjustsFontSizeToFitWidth);
     //NSLog(@"%f", nameTextField.font.pointSize);
+    NSLog(@"NAME: %@",nameTextField.text);
     
     //TODO SHOULD NOT BE DOING THIS MANUALLY BUT THE AUTOMATIC ONE DOESN'T WORK
     
@@ -1800,6 +1837,8 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
 -(void)reloadCardView
 {
     UIImage*originalImage = _currentCardView.cardImage.image;
+    
+    NSInteger index = [self.view indexOfAccessibilityElement:_currentCardView];
     [_currentCardView removeFromSuperview];
     
     if (_editorMode == cardEditorModeTutorialTwo)
@@ -1822,7 +1861,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     _currentCardView.center = CGPointMake(210, 185);
     
     [_currentCardView updateView];
-    [self.view insertSubview:_currentCardView atIndex:0];
+    [self.view insertSubview:_currentCardView atIndex:1];
 }
 
 -(void)removeAllStatButtons
@@ -2346,7 +2385,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [self selectElement: elementDark];
     }
     
-    [self abilityEditAreaSetEnabled:touchedView == abilityEditArea];
+  //  [self abilityEditAreaSetEnabled:touchedView == abilityEditArea];
 }
 
 -(void)selectElement:(enum CardElement)element
@@ -2436,6 +2475,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
 
 -(void)abilityEditAreaSetEnabled:(BOOL)state
 {
+    [abilityExistingTableView setCenter:CGPointMake(_currentCardView.center.x, _currentCardView.center.y + _currentCardView.frame.size.height/3 -10)];
     //enable
     if (state)
     {
@@ -2616,7 +2656,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
 
 - (void)imagePicker:(GKImagePicker *)imagePicker pickedImage:(UIImage *)image
 {
-    UIImage *scaledImage = [CardEditorViewController imageWithImage:image scaledToSize:CGSizeMake(CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT)];
+    scaledImage = [CardEditorViewController imageWithImage:image scaledToSize:CGSizeMake(CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT)];
     self.currentCardView.cardImage.image = scaledImage;
     
     //NSLog(@"view %f %f, image %f %f", self.currentCardView.cardImage.frame.size.width, self.currentCardView.cardImage.frame.size.height, image.size.width, image.size.height);
@@ -3177,5 +3217,23 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
 }
 
 - (BOOL)prefersStatusBarHidden {return YES;}
+
+-(void)showAbilities{
+    
+    AbilityViewController *AVC = [[AbilityViewController alloc] init];
+    
+    
+    [AVC setOriginalCard:self.currentCardModel];
+    [AVC setCardImage:scaledImage];
+    [AVC setCardName:nameTextField.text];
+    [AVC setEditorMode:_editorMode];
+    [AVC setDelegate:self];
+    
+    [self presentViewController:AVC animated:YES completion:nil];
+}
+
+- (void)cardUpdated:(CardModel *)card{
+    [self reloadCardView];
+}
 
 @end

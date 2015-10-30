@@ -50,8 +50,8 @@
     
     COLOUR_STAT_MODED = [[UIColor alloc] initWithRed:255/255.f green:191/255.f blue:191/255.f alpha:1];
     
-    RESOURCE_ICON_IMAGE = [UIImage imageNamed:@"resource_icon"];
-    POINTS_ICON_IMAGE = [UIImage imageNamed:@"points_icon"];
+    RESOURCE_ICON_IMAGE = [UIImage imageNamed:@"CardCreateGem"];
+    POINTS_ICON_IMAGE = [UIImage imageNamed:@"CardCreateStar"];
     GOLD_ICON_IMAGE = [UIImage imageNamed:@"gold_icon"];
     LIKE_ICON_IMAGE = [UIImage imageNamed:@"like_icon"];
     CARD_ICON_IMAGE = [UIImage imageNamed:@"card_icon"];

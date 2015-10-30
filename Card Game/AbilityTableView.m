@@ -17,7 +17,8 @@
 
 @synthesize currentAbilities = _currentAbilities;
 
-const int ABILITY_TABLE_VIEW_ROW_HEIGHT = 20;
+const int ABILITY_TABLE_VIEW_ROW_HEIGHT = 25;
+int ABILITY_TABLE_VIEW_ROW_WIDTH;
 
 - (id)initWithFrame:(CGRect)frame mode:(enum AbilityTableViewMode)viewMode
 {
@@ -26,10 +27,10 @@ const int ABILITY_TABLE_VIEW_ROW_HEIGHT = 20;
         self.viewMode = viewMode;
         _tableView = [[UITableView alloc] initWithFrame:self.bounds];
         [_tableView setBackgroundColor:[UIColor clearColor]];
-        
-        _tableView.separatorColor = COLOUR_INTERFACE_GRAY_TRANSPARENT;
-        //_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        ABILITY_TABLE_VIEW_ROW_WIDTH = frame.size.width;
+        //_tableView.separatorColor = COLOUR_INTERFACE_GRAY_TRANSPARENT;
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+       // _tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
         
         [_tableView registerClass:[AbilityTableViewCell class] forCellReuseIdentifier:@"abilityTableCell"];
 
@@ -51,6 +52,10 @@ const int ABILITY_TABLE_VIEW_ROW_HEIGHT = 20;
 -(int)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return [self.currentAbilities count];
+}
+
+-(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 34.0;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -79,7 +84,9 @@ const int ABILITY_TABLE_VIEW_ROW_HEIGHT = 20;
     
     CGSize textSize = [[abilityText string] sizeWithFont:[cell.abilityText font]];
     cell.abilityText.attributedText = abilityText;
-    cell.abilityText.frame = CGRectMake(50,0,textSize.width, cell.bounds.size.height);
+    cell.abilityText.frame = CGRectMake(60,0,ABILITY_TABLE_VIEW_ROW_WIDTH/2, cell.bounds.size.height);
+    [cell.abilityText setNumberOfLines:2];
+    [cell.abilityText setTextColor:[UIColor whiteColor]];
     cell.abilityMinCost.text = [NSString stringWithFormat:@"%d", wrapper.minCost];
     cell.abilityPoints.text = [NSString stringWithFormat:@"%d", wrapper.currentPoints];
     cell.scrollView.frame = cell.bounds;
@@ -105,6 +112,14 @@ const int ABILITY_TABLE_VIEW_ROW_HEIGHT = 20;
     
     if (!wrapper.enabled)
         [cell.abilityText setTextColor:COLOUR_INTERFACE_GRAY_TRANSPARENT];
+    
+    [cell.abilityIconType setCenter:CGPointMake(ABILITY_TABLE_VIEW_ROW_WIDTH - ABILITY_TABLE_VIEW_ROW_HEIGHT/2 -5, ABILITY_TABLE_VIEW_ROW_HEIGHT/2 +5)];
+    
+    if (indexPath.row %2) {
+        [cell.abilityIconType setImage:[UIImage imageNamed:@"CardCreateIconMute"]];
+    }else{
+        [cell.abilityIconType setImage:[UIImage imageNamed:@"CardCreateIconNinja"]];
+    }
     
     /*
     NSLog(@"cell %@ scroll %@ text %@", cell.bounds, cell.scrollView.contentSize, cell.abilityText.frame);

@@ -15,5 +15,6 @@
 @property CustomScrollView*scrollView;
 @property UILabel*abilityText;
 @property StrokedLabel*abilityMinCost, *abilityPoints;
+@property UIImageView *abilityIconType;
 
 @end

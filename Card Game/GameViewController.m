@@ -65,6 +65,8 @@ CFButton *quitConfirmButton, *quitCancelButton;
 
 UILabel *quitConfirmLabel;
 
+UIImageView *topView,*topRightView,*rightView,*bottomRightView,*bottomView,*bottomLeftView,*leftView,*topLeftView;
+
 
 
 StrokedLabel *pickATargetLabel;
@@ -377,7 +379,9 @@ BOOL leftHandViewZone = NO;
     //----end turn button----//
     //UIImage* endTurnImage = [UIImage imageNamed:@"end_turn_button_up.png"]; //TODO all these images to load function
     //UIImage* endTurnDisabledImage = [UIImage imageNamed:@"end_turn_button_disabled.png"];
+    
     self.endTurnButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 60, 35)];
+    
     [self.endTurnButton setImage:[UIImage imageNamed:@"end_turn_button_up"] forState:UIControlStateNormal];
     [self.endTurnButton setImage:[UIImage imageNamed:@"end_turn_button_disabled"] forState:UIControlStateDisabled];
     //self.endTurnButton.buttonStyle = CFButtonStyleWarning;
@@ -389,6 +393,78 @@ BOOL leftHandViewZone = NO;
     //[self.endTurnButton setBackgroundImage:endTurnImage forState:UIControlStateNormal];
     //[self.endTurnButton setBackgroundImage:endTurnDisabledImage forState:UIControlStateDisabled];
     [self.endTurnButton addTarget:self action:@selector(endTurn)    forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    UIImageView *backEndTurn = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 45)];
+    [backEndTurn setImage:[UIImage imageNamed:@"timer_background"]];
+    backEndTurn.center =   CGPointMake(SCREEN_WIDTH - (SCREEN_WIDTH - playerFieldEdge.bounds.size.width)/2 - self.endTurnButton.frame.size.width/2, playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*2 + self.endTurnButton.frame.size.height/2);
+    
+    [self.backgroundView addSubview:backEndTurn];
+    
+    
+    ////// ADD COUNTER GREEN INDICATOR //////////////
+    
+    topView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 3)];
+    [topView setImage:[UIImage imageNamed:@"timer_rect"]];
+    
+    
+    topRightView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
+    [topRightView setImage:[UIImage imageNamed:@"timer_curve"]];
+    
+    
+    rightView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 3)];
+    [rightView setImage:[UIImage imageNamed:@"timer_rect"]];
+    rightView.transform = CGAffineTransformMakeRotation(M_PI_2);
+    
+    bottomRightView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
+    [bottomRightView setImage:[UIImage imageNamed:@"timer_curve"]];
+    bottomRightView.transform = CGAffineTransformMakeRotation(M_PI_2);
+    
+    bottomView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 3)];
+    [bottomView setImage:[UIImage imageNamed:@"timer_rect"]];
+    
+    bottomLeftView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
+    [bottomLeftView setImage:[UIImage imageNamed:@"timer_curve"]];
+    bottomLeftView.transform = CGAffineTransformMakeRotation(M_PI);
+    
+    leftView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 3)];
+    [leftView setImage:[UIImage imageNamed:@"timer_rect"]];
+    leftView.transform = CGAffineTransformMakeRotation(M_PI_2);
+    
+    topLeftView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
+    [topLeftView setImage:[UIImage imageNamed:@"timer_curve"]];
+    topLeftView.transform = CGAffineTransformMakeRotation(- M_PI_2);
+    
+    
+    topLeftView.center = CGPointMake(backEndTurn.frame.origin.x +topLeftView.frame.size.width/2 + 2, backEndTurn.frame.origin.y + topLeftView.frame.size.height/2 + 2);
+    [self.backgroundView addSubview:topLeftView];
+    
+    topView.center = CGPointMake(topLeftView.frame.origin.x + topLeftView.frame.size.width +topView.frame.size.width/2, backEndTurn.frame.origin.y + topView.frame.size.height/2 +2.5);
+    [self.backgroundView addSubview:topView];
+    
+    topRightView.center = CGPointMake(backEndTurn.frame.origin.x + backEndTurn.frame.size.width -topLeftView.frame.size.width/2 - 2, backEndTurn.frame.origin.y + topLeftView.frame.size.height/2 + 2);
+    [self.backgroundView addSubview:topRightView];
+    
+    rightView.center = CGPointMake(backEndTurn.frame.origin.x + backEndTurn.frame.size.width -rightView.frame.size.width/2 - 2.5, backEndTurn.center.y);
+    [self.backgroundView addSubview:rightView];
+    
+    bottomRightView.center = CGPointMake(backEndTurn.frame.origin.x + backEndTurn.frame.size.width -topLeftView.frame.size.width/2 - 2, backEndTurn.frame.origin.y + backEndTurn.frame.size.height - bottomRightView.frame.size.height/2 -2.5);
+    [self.backgroundView addSubview:bottomRightView];
+    
+    bottomView.center = CGPointMake(backEndTurn.center.x, backEndTurn.frame.origin.y + backEndTurn.frame.size.height - bottomView.frame.size.height/2 -2.5);
+    [self.backgroundView addSubview:bottomView];
+    
+    bottomLeftView.center = CGPointMake(backEndTurn.frame.origin.x +bottomLeftView.frame.size.width/2 + 2, backEndTurn.frame.origin.y + backEndTurn.frame.size.height - bottomLeftView.frame.size.height/2 -2);
+    [self.backgroundView addSubview:bottomLeftView];
+    
+    leftView.center = CGPointMake(backEndTurn.frame.origin.x +leftView.frame.size.width/2 + 2.5, backEndTurn.center.y);
+    [self.backgroundView addSubview:leftView];
+    
+    
+    
+    
+    /////////////////////////////////////////////////////
+
     
     //end button is aligned with field's right border and has same distance away as the distance between the two fields
     self.endTurnButton.center = CGPointMake(SCREEN_WIDTH - (SCREEN_WIDTH - playerFieldEdge.bounds.size.width)/2 - self.endTurnButton.frame.size.width/2, playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*2 + self.endTurnButton.frame.size.height/2);
@@ -827,6 +903,35 @@ BOOL leftHandViewZone = NO;
 
 
 -(void) endTurn{
+    
+   /* UIBezierPath * path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(topRightView.frame.origin.x, topRightView.frame.origin.y + topRightView.frame.size.height)
+                                   radius:topRightView.frame.size.height
+                               startAngle:-M_PI_2
+                                 endAngle:-M_PI_4
+                                clockwise:YES];
+    path.lineWidth = 2;
+
+    
+    //[path drawLayer:topRightView.layer inContext:(__bridge CGContextRef _Nonnull)(self.backgroundView)];
+    
+    UIGraphicsBeginImageContextWithOptions(path.bounds.size, NO, 0.0); //size of the image, opaque, and scale (set to screen default with 0)
+    [path fill]; //or [path stroke]
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    topRightView.image = image;
+    UIGraphicsEndImageContext();*/
+    
+    
+    /*[UIView animateWithDuration:4.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
+        //code
+        //topRightView.frame = CGRectMake(topRightView.frame.origin.x + topRightView.frame.size.width, topRightView.frame.origin.y, 0, topRightView.frame.size.height);
+        
+        //[topRightView drawRect:CGRectMake(topRightView.frame.origin.x, topRightView.frame.origin.y + topRightView.frame.size.height, 0, topRightView.frame.size.height)];
+        
+    } completion:^(BOOL finished) {
+        //code
+    }];*/
+    
+    
     [self.timer invalidate];
     self.timer = nil;
     self.shouldCallEndTurn = NO;
@@ -894,6 +999,8 @@ BOOL leftHandViewZone = NO;
     //if playing against AI, AI now makes a move
     if (self.gameModel.gameMode == GameModeSingleplayer && currentSide == OPPONENT_SIDE)
         [self.gameModel.aiPlayer newTurn];
+     
+    
 }
 
 -(void)updateHandsView: (int)side
