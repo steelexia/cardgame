@@ -326,7 +326,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     [self.view addSubview:abilityNewTableView];
     
     
-    tagsField =  [[UITextField alloc] initWithFrame:CGRectMake(120,SCREEN_HEIGHT- 24,196,20)];
+    tagsField =  [[UITextField alloc] initWithFrame:CGRectMake(130,SCREEN_HEIGHT- 24,186,20)];
     
     tagsField.textColor = [UIColor blackColor];
     tagsField.font = [UIFont fontWithName:cardMainFont size:12];
@@ -340,17 +340,17 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     [tagsField.layer setBorderColor:[UIColor blackColor].CGColor];
     [tagsField.layer setBorderWidth:2];
     [tagsField setBackgroundColor:COLOUR_INTERFACE_BLUE_LIGHT];
-    [tagsField setHidden:YES];
+   // [tagsField setHidden:YES];
     tagsField.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0);
     //tagsField.layer.cornerRadius = 4.0;
     [tagsField addTarget:self action:@selector(tagsTextFieldEdited) forControlEvents:UIControlEventEditingChanged];
     
     [self.view addSubview:tagsField];
     
-    tagsLabel = [[UILabel alloc] initWithFrame:CGRectMake(80, SCREEN_HEIGHT-24, 80, 20)];
+    tagsLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, SCREEN_HEIGHT-24, 80, 20)];
     tagsLabel.font = [UIFont fontWithName:cardMainFont size:16];
     tagsLabel.textColor = [UIColor blackColor];
-    [tagsLabel setHidden:YES];
+    //[tagsLabel setHidden:YES];
     tagsLabel.text = @"Tags:";
     [self.view addSubview:tagsLabel];
     

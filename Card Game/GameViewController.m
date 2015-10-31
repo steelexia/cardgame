@@ -65,7 +65,9 @@ CFButton *quitConfirmButton, *quitCancelButton;
 
 UILabel *quitConfirmLabel;
 
-UIImageView *topView,*topRightView,*rightView,*bottomRightView,*bottomView,*bottomLeftView,*leftView,*topLeftView;
+CGRect topFrame,topRightFrame,rightFrame,bottomRightFrame,bottomFrame,bottomLeftFrame,leftFrame,topLeftFrame;
+
+@synthesize topView,topRightView,rightView,bottomRightView,bottomView,bottomLeftView,leftView,topLeftView;
 
 
 
@@ -460,6 +462,16 @@ BOOL leftHandViewZone = NO;
     leftView.center = CGPointMake(backEndTurn.frame.origin.x +leftView.frame.size.width/2 + 2.5, backEndTurn.center.y);
     [self.backgroundView addSubview:leftView];
     
+    topFrame = topView.frame;
+    topRightFrame = topRightView.frame;
+    rightFrame = rightView.frame;
+    bottomRightFrame = bottomRightView.frame;
+    bottomFrame = bottomView.frame;
+    bottomLeftFrame = bottomLeftView.frame;
+    leftFrame = leftView.frame;
+    topLeftFrame = topLeftView.frame;
+    
+    
     
     
     
@@ -488,6 +500,15 @@ BOOL leftHandViewZone = NO;
         {
             [_quitButton setEnabled:NO];
         }
+        
+        [topView setHidden:YES];
+        [topRightView setHidden:YES];
+        [rightView setHidden:YES];
+        [bottomRightView setHidden:YES];
+        [bottomView setHidden:YES];
+        [bottomLeftView setHidden:YES];
+        [leftView setHidden:YES];
+        [topLeftView setHidden:YES];
     }
     
     quitConfirmLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*1/8, SCREEN_HEIGHT/4, SCREEN_WIDTH*6/8, SCREEN_HEIGHT)];
@@ -680,6 +701,18 @@ BOOL leftHandViewZone = NO;
                                            action:@selector(tapRegistered:)];
     [tapGesture setCancelsTouchesInView:NO];
     [self.view addGestureRecognizer:tapGesture];
+}
+
+-(void)setTimerFrames{
+    [topView setFrame:topFrame];
+    [topRightView setFrame:topRightFrame];
+    [rightView setFrame:rightFrame];
+    [bottomRightView setFrame:bottomRightFrame];
+    [bottomView setFrame:bottomFrame];
+    [bottomLeftView setFrame:bottomLeftFrame];
+    [leftView setFrame:leftFrame];
+    [topLeftView setFrame:topLeftFrame];
+    
 }
 
 -(void)newGame
@@ -921,17 +954,6 @@ BOOL leftHandViewZone = NO;
     UIGraphicsEndImageContext();*/
     
     
-    /*[UIView animateWithDuration:4.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
-        //code
-        //topRightView.frame = CGRectMake(topRightView.frame.origin.x + topRightView.frame.size.width, topRightView.frame.origin.y, 0, topRightView.frame.size.height);
-        
-        //[topRightView drawRect:CGRectMake(topRightView.frame.origin.x, topRightView.frame.origin.y + topRightView.frame.size.height, 0, topRightView.frame.size.height)];
-        
-    } completion:^(BOOL finished) {
-        //code
-    }];*/
-    
-    
     [self.timer invalidate];
     self.timer = nil;
     self.shouldCallEndTurn = NO;
@@ -999,7 +1021,7 @@ BOOL leftHandViewZone = NO;
     //if playing against AI, AI now makes a move
     if (self.gameModel.gameMode == GameModeSingleplayer && currentSide == OPPONENT_SIDE)
         [self.gameModel.aiPlayer newTurn];
-     
+    
     
 }
 
