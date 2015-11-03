@@ -338,36 +338,128 @@
     
     
     self.shouldCallEndTurn = YES;
-    [self.counterSubView setFrame:CGRectMake(0, 0, 0, self.counterView.frame.size.height)];
+//    [self.counterSubView setFrame:CGRectMake(0, 0, 0, self.counterView.frame.size.height)];
+//    
+//    //[self performSelector:@selector(showProgressView) withObject:nil afterDelay:10];
+//    
+//    self.timer = [NSTimer timerWithTimeInterval:10.0
+//                                         target:self
+//                                       selector:@selector(showProgressView)
+//                                       userInfo:nil
+//                                        repeats:NO];
+//    
+//
+//    [self performBlock:^{
+//        [self.timer fire];
+//    } afterDelay:10.0];
+//    
+//    //[[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
+//    
+//    
+//    [UIView animateWithDuration:25 animations:^{
+//        //animation
+//        [self.counterSubView setFrame:CGRectMake(0, 0, self.counterView.frame.size.width, self.counterView.frame.size.height)];
+//        
+//    } completion:^(BOOL finished) {
+//        //completion
+//        if (![self.counterView isHidden]) {
+//            [self endTurn];
+//        }
+//        
+//    }];
+    [self setTimerFrames];
     
-    //[self performSelector:@selector(showProgressView) withObject:nil afterDelay:10];
     
-    self.timer = [NSTimer timerWithTimeInterval:10.0
-                                         target:self
-                                       selector:@selector(showProgressView)
-                                       userInfo:nil
-                                        repeats:NO];
-    
-
-    [self performBlock:^{
-        [self.timer fire];
-    } afterDelay:10.0];
-    
-    //[[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
-    
-    
-    [UIView animateWithDuration:25 animations:^{
-        //animation
-        [self.counterSubView setFrame:CGRectMake(0, 0, self.counterView.frame.size.width, self.counterView.frame.size.height)];
+    [UIView animateWithDuration:7.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
+       
+        self.topView.frame = CGRectMake(self.topView.frame.origin.x + self.topView.frame.size.width, self.topView.frame.origin.y, 0, self.topView.frame.size.height);
         
     } completion:^(BOOL finished) {
-        //completion
-        if (![self.counterView isHidden]) {
-            [self endTurn];
-        }
-        
+        //code
+        [self animateTopRightCorner];
     }];
 }
+
+-(void)animateTopRightCorner{
+    [UIView animateWithDuration:2.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
+        
+        self.topRightView.frame = CGRectMake(self.topRightView.frame.origin.x + self.topRightView.frame.size.width, self.topRightView.frame.origin.y + self.topRightView.frame.size.height, 0, 0);
+        
+    } completion:^(BOOL finished) {
+        //code
+        [self animateRightHand];
+    }];
+}
+
+-(void)animateRightHand{
+    [UIView animateWithDuration:4.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
+        
+        self.rightView.frame = CGRectMake(self.rightView.frame.origin.x, self.rightView.frame.origin.y + self.rightView.frame.size.height, self.rightView.frame.size.width, 0);
+        
+    } completion:^(BOOL finished) {
+        //code
+        [self animateBottomRightCorner];
+    }];
+}
+
+-(void)animateBottomRightCorner{
+    [UIView animateWithDuration:2.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
+        
+        self.bottomRightView.frame = CGRectMake(self.bottomRightView.frame.origin.x , self.bottomRightView.frame.origin.y + self.bottomRightView.frame.size.height, 0, 0);
+        
+    } completion:^(BOOL finished) {
+        //code
+        [self animateBottomHand];
+    }];
+}
+
+-(void)animateBottomHand{
+    [UIView animateWithDuration:7.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
+        
+        self.bottomView.frame = CGRectMake(self.bottomView.frame.origin.x, self.bottomView.frame.origin.y, 0, self.bottomView.frame.size.height);
+        
+    } completion:^(BOOL finished) {
+        //code
+        [self animateBottomLeftCorner];
+    }];
+}
+
+-(void)animateBottomLeftCorner{
+    [UIView animateWithDuration:2.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
+        
+        self.bottomLeftView.frame = CGRectMake(self.bottomLeftView.frame.origin.x , self.bottomLeftView.frame.origin.y, 0, 0);
+        
+    } completion:^(BOOL finished) {
+        //code
+        [self animateLeftHand];
+    }];
+}
+
+-(void)animateLeftHand{
+    [UIView animateWithDuration:4.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
+        
+        self.leftView.frame = CGRectMake(self.leftView.frame.origin.x , self.leftView.frame.origin.y, self.leftView.frame.size.width, 0);
+        
+    } completion:^(BOOL finished) {
+        //code
+        [self animateTopleftCorner];
+    }];
+}
+
+-(void)animateTopleftCorner{
+    [UIView animateWithDuration:2.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
+        
+        self.topLeftView.frame = CGRectMake(self.topLeftView.frame.origin.x + self.topLeftView.frame.size.width, self.topLeftView.frame.origin.y, 0, 0);
+        
+    } completion:^(BOOL finished) {
+        //code
+        if (self.shouldCallEndTurn) {
+             [self endTurn];
+        }
+    }];
+}
+
+
 
 - (void)showProgressView{
     if (self.shouldCallEndTurn) {

@@ -23,14 +23,14 @@
 
 @end
 
-@interface CardEditorViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate, GKImagePickerDelegate>
+@interface CardEditorViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate, GKImagePickerDelegate,MyCardEditDelegate>
 
 @property (nonatomic, weak) id<MyCardEditDelegate> delegate;
 
 @property CardModel*currentCardModel;
 /** Used for voting. Will not edit it */
 @property CardModel*originalCard;
-@property CardView*currentCardView;
+@property (strong) CardView*currentCardView;
 @property int currentCost;
 @property int maxCost;
 @property (strong) GKImagePicker *imagePicker;

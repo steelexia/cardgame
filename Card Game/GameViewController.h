@@ -64,6 +64,8 @@
 /** Will know how many viewControllers to dismiss. General levels has a deck selector, but tutorials don't. When set to YES, will only dismiss one */
 @property BOOL noPreviousView;
 
+@property (strong) UIImageView *topView,*topRightView,*rightView,*bottomRightView,*bottomView,*bottomLeftView,*leftView,*topLeftView;
+
 /** Note that while level is the current level, nextLevel is the level that will be immediately played following the current level. This should only be the case for the 3rd level, where it goes straight to the boss fight */ 
 @property (strong)Level *level, *nextLevel;
 
@@ -149,6 +151,7 @@
 -(void)setOpponentDeck: (DeckModel*)deck;
 -(void)setCurrentSide:(int)side;
 -(void)opponentSummonedCard:(int)cardIndex withTarget:(int)target;
+-(void)setTimerFrames;
 
 @end
 

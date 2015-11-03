@@ -230,6 +230,10 @@
 		9319F3BA1BD96D7A00F939FE /* CardCreateTypeHere.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F3AA1BD96D7A00F939FE /* CardCreateTypeHere.png */; settings = {ASSET_TAGS = (); }; };
 		9319F3BB1BD96D7A00F939FE /* CardCreateYellowStar.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F3AB1BD96D7A00F939FE /* CardCreateYellowStar.png */; settings = {ASSET_TAGS = (); }; };
 		9319F3BD1BDA850900F939FE /* CardCreateDialog2.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F3BC1BDA850900F939FE /* CardCreateDialog2.png */; settings = {ASSET_TAGS = (); }; };
+		9319F3C21BDE646C00F939FE /* timer_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F3BF1BDE646C00F939FE /* timer_background.png */; settings = {ASSET_TAGS = (); }; };
+		9319F3C31BDE646C00F939FE /* timer_curve.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F3C01BDE646C00F939FE /* timer_curve.png */; settings = {ASSET_TAGS = (); }; };
+		9319F3C41BDE646C00F939FE /* timer_rect.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F3C11BDE646C00F939FE /* timer_rect.png */; settings = {ASSET_TAGS = (); }; };
+		9319F3C71BDEC61300F939FE /* AbilityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9319F3C61BDEC61300F939FE /* AbilityViewController.m */; settings = {ASSET_TAGS = (); }; };
 		9399ACFE1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFA1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png */; settings = {ASSET_TAGS = (); }; };
 		9399ACFF1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFB1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png */; settings = {ASSET_TAGS = (); }; };
 		9399AD001BC44CB9005CC9F3 /* Default-736h@3x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFC1BC44CB9005CC9F3 /* Default-736h@3x~iphone.png */; settings = {ASSET_TAGS = (); }; };
@@ -822,6 +826,11 @@
 		9319F3AA1BD96D7A00F939FE /* CardCreateTypeHere.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CardCreateTypeHere.png; path = "Card Game/_CardCreatePNGs/CardCreateTypeHere.png"; sourceTree = "<group>"; };
 		9319F3AB1BD96D7A00F939FE /* CardCreateYellowStar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CardCreateYellowStar.png; path = "Card Game/_CardCreatePNGs/CardCreateYellowStar.png"; sourceTree = "<group>"; };
 		9319F3BC1BDA850900F939FE /* CardCreateDialog2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CardCreateDialog2.png; path = "Card Game/_CardCreatePNGs/CardCreateDialog2.png"; sourceTree = "<group>"; };
+		9319F3BF1BDE646C00F939FE /* timer_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = timer_background.png; path = "Card Game/Timer/timer_background.png"; sourceTree = "<group>"; };
+		9319F3C01BDE646C00F939FE /* timer_curve.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = timer_curve.png; path = "Card Game/Timer/timer_curve.png"; sourceTree = "<group>"; };
+		9319F3C11BDE646C00F939FE /* timer_rect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = timer_rect.png; path = "Card Game/Timer/timer_rect.png"; sourceTree = "<group>"; };
+		9319F3C51BDEC61300F939FE /* AbilityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbilityViewController.h; sourceTree = "<group>"; };
+		9319F3C61BDEC61300F939FE /* AbilityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbilityViewController.m; sourceTree = "<group>"; };
 		9399ACFA1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
 		9399ACFB1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-667h@2x~iphone.png"; sourceTree = "<group>"; };
 		9399ACFC1BC44CB9005CC9F3 /* Default-736h@3x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-736h@3x~iphone.png"; sourceTree = "<group>"; };
@@ -1660,6 +1669,8 @@
 				90DA43D8196A222800E44AED /* CustomScrollView.m */,
 				9032E12E19959483002A6725 /* CardPointsUtility.h */,
 				9032E12F19959483002A6725 /* CardPointsUtility.m */,
+				9319F3C51BDEC61300F939FE /* AbilityViewController.h */,
+				9319F3C61BDEC61300F939FE /* AbilityViewController.m */,
 			);
 			name = "Card Editor Screen";
 			sourceTree = "<group>";
@@ -1925,6 +1936,16 @@
 			name = CardCreate;
 			sourceTree = "<group>";
 		};
+		9319F3BE1BDE644C00F939FE /* Timer */ = {
+			isa = PBXGroup;
+			children = (
+				9319F3BF1BDE646C00F939FE /* timer_background.png */,
+				9319F3C01BDE646C00F939FE /* timer_curve.png */,
+				9319F3C11BDE646C00F939FE /* timer_rect.png */,
+			);
+			name = Timer;
+			sourceTree = "<group>";
+		};
 		D31E2CA519BF5BBE002E1934 /* GameKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -2031,6 +2052,7 @@
 		ECAB71C71B4F459A004D4E5C /* DarcyArt */ = {
 			isa = PBXGroup;
 			children = (
+				9319F3BE1BDE644C00F939FE /* Timer */,
 				9319F39B1BD96D5400F939FE /* CardCreate */,
 				9319F3991BD9616B00F939FE /* CardCreateSidebar.png */,
 				9399ACFA1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png */,
@@ -2619,6 +2641,7 @@
 				90AB1511197AEC310008FCDD /* card_ability_icon_assassin.png in Resources */,
 				9319F3911BD164D200F939FE /* poof_4.png in Resources */,
 				EC42E84E1B57261F005EDFD5 /* CardStoreBlueButton.png in Resources */,
+				9319F3C41BDE646C00F939FE /* timer_rect.png in Resources */,
 				90C528A4199D613B00750C54 /* screen_background_top.png in Resources */,
 				EC42E8691B5726B2005EDFD5 /* CoinPile002.png in Resources */,
 				90AB1512197AEC310008FCDD /* card_ability_icon_remove_ability.png in Resources */,
@@ -2680,6 +2703,7 @@
 				EC42E86B1B5726B2005EDFD5 /* CoinPile004.png in Resources */,
 				FA033FD719BCFF6600EFEBD8 /* card_0018.png in Resources */,
 				EC3A5D8C1B6AA1760064055F /* card_4013.jpeg in Resources */,
+				9319F3C31BDE646C00F939FE /* timer_curve.png in Resources */,
 				FA033FD419BCFF6600EFEBD8 /* card_0015.png in Resources */,
 				ECFA3E8E1B657FA800C83EE1 /* IconFire.png in Resources */,
 				FA033FC819BCFF6600EFEBD8 /* card_0003.png in Resources */,
@@ -2793,6 +2817,7 @@
 				EC3A5D781B6A983B0064055F /* card_4001.jpg in Resources */,
 				90DA43C01969D21500E44AED /* spell_button_gray.png in Resources */,
 				FACF46D219EC852300D334E0 /* hero_c_2_l_2.png in Resources */,
+				9319F3C21BDE646C00F939FE /* timer_background.png in Resources */,
 				90DA43BA1969D21500E44AED /* battle_button_gray.png in Resources */,
 				907020781992AC8100FDE444 /* PLCameraSheetDoneButtonPressed@2x.png in Resources */,
 				EC42E8541B57262D005EDFD5 /* CardStoreBottomRow.png in Resources */,
@@ -3018,6 +3043,7 @@
 				90DA436B195F6E6000E44AED /* CGPointUtilities.m in Sources */,
 				ECCD46E11ACC881400804B06 /* PNHeartbeatRequest.m in Sources */,
 				907D9C1E193F87BE0037C0CF /* AbilityWrapper.m in Sources */,
+				9319F3C71BDEC61300F939FE /* AbilityViewController.m in Sources */,
 				ECCD46C61ACC881400804B06 /* PNTimer.m in Sources */,
 				ECCD46BA1ACC881400804B06 /* PNClient.m in Sources */,
 				ECCD469E1ACC881400804B06 /* PNAccessRightsResponseParser.m in Sources */,
