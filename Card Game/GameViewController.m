@@ -59,7 +59,7 @@ NSArray *resourceLabels;
 
 UIImageView *playerFieldHighlight, *opponentFieldHighlight, *playerFieldEdge, *opponentFieldEdge;
 
-UIImageView *battlefieldBackground;
+UIImageView *battlefieldBackground,*backEndTurn;
 
 CFButton *quitConfirmButton, *quitCancelButton;
 
@@ -397,7 +397,7 @@ BOOL leftHandViewZone = NO;
     [self.endTurnButton addTarget:self action:@selector(endTurn)    forControlEvents:UIControlEventTouchUpInside];
     
     
-    UIImageView *backEndTurn = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 45)];
+    backEndTurn = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 44)];
     [backEndTurn setImage:[UIImage imageNamed:@"timer_background"]];
     backEndTurn.center =   CGPointMake(SCREEN_WIDTH - (SCREEN_WIDTH - playerFieldEdge.bounds.size.width)/2 - self.endTurnButton.frame.size.width/2, playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*2 + self.endTurnButton.frame.size.height/2);
     
@@ -409,8 +409,8 @@ BOOL leftHandViewZone = NO;
     topView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 3)];
     [topView setImage:[UIImage imageNamed:@"timer_rect"]];
     
-    
-    topRightView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
+    topRightFrame = CGRectMake(0, 0, 8, 8);
+    topRightView = [[UIImageView alloc] initWithFrame:topRightFrame];
     [topRightView setImage:[UIImage imageNamed:@"timer_curve"]];
     
     
@@ -418,14 +418,16 @@ BOOL leftHandViewZone = NO;
     [rightView setImage:[UIImage imageNamed:@"timer_rect"]];
     rightView.transform = CGAffineTransformMakeRotation(M_PI_2);
     
-    bottomRightView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
+    bottomRightFrame = CGRectMake(0, 0, 8, 8);
+    bottomRightView = [[UIImageView alloc] initWithFrame:bottomRightFrame];
     [bottomRightView setImage:[UIImage imageNamed:@"timer_curve"]];
     bottomRightView.transform = CGAffineTransformMakeRotation(M_PI_2);
     
     bottomView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 3)];
     [bottomView setImage:[UIImage imageNamed:@"timer_rect"]];
     
-    bottomLeftView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
+    bottomLeftFrame = CGRectMake(0, 0, 8, 8);
+    bottomLeftView = [[UIImageView alloc] initWithFrame: bottomLeftFrame];
     [bottomLeftView setImage:[UIImage imageNamed:@"timer_curve"]];
     bottomLeftView.transform = CGAffineTransformMakeRotation(M_PI);
     
@@ -433,7 +435,8 @@ BOOL leftHandViewZone = NO;
     [leftView setImage:[UIImage imageNamed:@"timer_rect"]];
     leftView.transform = CGAffineTransformMakeRotation(M_PI_2);
     
-    topLeftView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
+    topLeftFrame = CGRectMake(0, 0, 8, 8);
+    topLeftView = [[UIImageView alloc] initWithFrame:topLeftFrame];
     [topLeftView setImage:[UIImage imageNamed:@"timer_curve"]];
     topLeftView.transform = CGAffineTransformMakeRotation(- M_PI_2);
     
@@ -463,17 +466,9 @@ BOOL leftHandViewZone = NO;
     [self.backgroundView addSubview:leftView];
     
     topFrame = topView.frame;
-    topRightFrame = topRightView.frame;
     rightFrame = rightView.frame;
-    bottomRightFrame = bottomRightView.frame;
     bottomFrame = bottomView.frame;
-    bottomLeftFrame = bottomLeftView.frame;
     leftFrame = leftView.frame;
-    topLeftFrame = topLeftView.frame;
-    
-    
-    
-    
     
     /////////////////////////////////////////////////////
 
@@ -704,6 +699,17 @@ BOOL leftHandViewZone = NO;
 }
 
 -(void)setTimerFrames{
+    
+    [topRightView setHidden:NO];
+    [bottomRightView setHidden:NO];
+    [bottomLeftView setHidden:NO];
+    [topLeftView setHidden:NO];
+    
+    [topRightView.layer setAnchorPoint:CGPointMake(.5, .5)];
+    [bottomRightView.layer setAnchorPoint:CGPointMake(.5, .5)];
+    [bottomLeftView.layer setAnchorPoint:CGPointMake(.5, .5)];
+    [topLeftView.layer setAnchorPoint:CGPointMake(.5, .5)];
+    
     [topView setFrame:topFrame];
     [topRightView setFrame:topRightFrame];
     [rightView setFrame:rightFrame];
@@ -713,6 +719,10 @@ BOOL leftHandViewZone = NO;
     [leftView setFrame:leftFrame];
     [topLeftView setFrame:topLeftFrame];
     
+    topLeftView.center = CGPointMake(backEndTurn.frame.origin.x +topLeftView.frame.size.width/2 + 2, backEndTurn.frame.origin.y + topLeftView.frame.size.height/2 + 2);
+    topRightView.center = CGPointMake(backEndTurn.frame.origin.x + backEndTurn.frame.size.width -topLeftView.frame.size.width/2 - 2, backEndTurn.frame.origin.y + topLeftView.frame.size.height/2 + 2);
+    bottomRightView.center = CGPointMake(backEndTurn.frame.origin.x + backEndTurn.frame.size.width -topLeftView.frame.size.width/2 - 2, backEndTurn.frame.origin.y + backEndTurn.frame.size.height - bottomRightView.frame.size.height/2 -2.5);
+    bottomLeftView.center = CGPointMake(backEndTurn.frame.origin.x +bottomLeftView.frame.size.width/2 + 2, backEndTurn.frame.origin.y + backEndTurn.frame.size.height - bottomLeftView.frame.size.height/2 -2);
 }
 
 -(void)newGame
