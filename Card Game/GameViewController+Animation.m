@@ -338,128 +338,157 @@
     
     
     self.shouldCallEndTurn = YES;
-//    [self.counterSubView setFrame:CGRectMake(0, 0, 0, self.counterView.frame.size.height)];
-//    
-//    //[self performSelector:@selector(showProgressView) withObject:nil afterDelay:10];
-//    
-//    self.timer = [NSTimer timerWithTimeInterval:10.0
-//                                         target:self
-//                                       selector:@selector(showProgressView)
-//                                       userInfo:nil
-//                                        repeats:NO];
-//    
-//
-//    [self performBlock:^{
-//        [self.timer fire];
-//    } afterDelay:10.0];
-//    
-//    //[[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
-//    
-//    
-//    [UIView animateWithDuration:25 animations:^{
-//        //animation
-//        [self.counterSubView setFrame:CGRectMake(0, 0, self.counterView.frame.size.width, self.counterView.frame.size.height)];
-//        
-//    } completion:^(BOOL finished) {
-//        //completion
-//        if (![self.counterView isHidden]) {
-//            [self endTurn];
-//        }
-//        
-//    }];
+
     [self setTimerFrames];
-    
-    
-    [UIView animateWithDuration:7.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
-       
-        self.topView.frame = CGRectMake(self.topView.frame.origin.x + self.topView.frame.size.width, self.topView.frame.origin.y, 0, self.topView.frame.size.height);
-        
-    } completion:^(BOOL finished) {
-        //code
-        [self animateTopRightCorner];
-    }];
+    [self animateTopRightCorner];
+   
 }
 
 -(void)animateTopRightCorner{
-    [UIView animateWithDuration:2.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
-        
-        self.topRightView.frame = CGRectMake(self.topRightView.frame.origin.x + self.topRightView.frame.size.width, self.topRightView.frame.origin.y + self.topRightView.frame.size.height, 0, 0);
-        
-    } completion:^(BOOL finished) {
-        //code
-        [self animateRightHand];
-    }];
+    CABasicAnimation *radarHand;
+    
+    radarHand = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+    
+    radarHand.fromValue = [NSNumber numberWithFloat:0];
+    
+    radarHand.byValue = [NSNumber numberWithFloat:((90*M_PI)/180)];
+    
+    radarHand.duration = 2.0f;
+    radarHand.delegate = self;
+    
+    radarHand.repeatCount = 1;
+    [radarHand setRemovedOnCompletion:YES];
+    
+    [self.topRightView setCenter:CGPointMake(self.topRightView.frame.origin.x, self.topRightView.frame.origin.y + self.topRightView.frame.size.height)];
+    [self.topRightView.layer addAnimation:radarHand forKey:nil];
+    [self.topRightView.layer setAnchorPoint:CGPointMake(0,1)];
+    [self performSelector:@selector(animateRightHand) withObject:nil afterDelay:1.6f];
 }
 
 -(void)animateRightHand{
+    [self.topRightView setHidden:YES];
     [UIView animateWithDuration:4.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
         
         self.rightView.frame = CGRectMake(self.rightView.frame.origin.x, self.rightView.frame.origin.y + self.rightView.frame.size.height, self.rightView.frame.size.width, 0);
         
     } completion:^(BOOL finished) {
         //code
-        [self animateBottomRightCorner];
+        //[self animateBottomRightCorner];
     }];
+    
+    [self performSelector:@selector(animateBottomRightCorner) withObject:nil afterDelay:3.5];
 }
 
 -(void)animateBottomRightCorner{
-    [UIView animateWithDuration:2.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
-        
-        self.bottomRightView.frame = CGRectMake(self.bottomRightView.frame.origin.x , self.bottomRightView.frame.origin.y + self.bottomRightView.frame.size.height, 0, 0);
-        
-    } completion:^(BOOL finished) {
-        //code
-        [self animateBottomHand];
-    }];
+    
+    CABasicAnimation *radarHand;
+    
+    radarHand = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+    
+    radarHand.fromValue = [NSNumber numberWithFloat:M_PI_2];
+    
+    radarHand.byValue = [NSNumber numberWithFloat:((180*M_PI_2)/180)]; //((360*M_PI)/180)
+    
+    radarHand.duration = 2.0f;
+    radarHand.delegate = self;
+    
+    radarHand.repeatCount = 1;
+    [radarHand setRemovedOnCompletion:YES];
+    
+    [self.bottomRightView setCenter:CGPointMake(self.bottomRightView.frame.origin.x, self.bottomRightView.frame.origin.y)];
+    [self.bottomRightView.layer addAnimation:radarHand forKey:nil];
+    [self.bottomRightView.layer setAnchorPoint:CGPointMake(0,1)];
+    [self performSelector:@selector(animateBottomHand) withObject:nil afterDelay:1.6f];
 }
 
 -(void)animateBottomHand{
-    [UIView animateWithDuration:7.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
+    [self.bottomRightView setHidden:YES];
+   [UIView animateWithDuration:6.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
         
         self.bottomView.frame = CGRectMake(self.bottomView.frame.origin.x, self.bottomView.frame.origin.y, 0, self.bottomView.frame.size.height);
         
     } completion:^(BOOL finished) {
         //code
-        [self animateBottomLeftCorner];
+        //[self animateBottomLeftCorner];
     }];
+    [self performSelector:@selector(animateBottomLeftCorner) withObject:nil afterDelay:5.5];
 }
 
 -(void)animateBottomLeftCorner{
-    [UIView animateWithDuration:2.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
-        
-        self.bottomLeftView.frame = CGRectMake(self.bottomLeftView.frame.origin.x , self.bottomLeftView.frame.origin.y, 0, 0);
-        
-    } completion:^(BOOL finished) {
-        //code
-        [self animateLeftHand];
-    }];
+   
+    CABasicAnimation *radarHand;
+    
+    radarHand = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+    
+    radarHand.fromValue = [NSNumber numberWithFloat:M_PI];
+    
+    radarHand.byValue = [NSNumber numberWithFloat:((180*M_PI_2)/180)]; //((360*M_PI)/180)
+    
+    radarHand.duration = 2.0f;
+    radarHand.delegate = self;
+    
+    radarHand.repeatCount = 1;
+    [radarHand setRemovedOnCompletion:YES];
+    
+    [self.bottomLeftView setCenter:CGPointMake(self.bottomLeftView.frame.origin.x + self.bottomLeftView.frame.size.width, self.bottomLeftView.frame.origin.y)];
+    [self.bottomLeftView.layer addAnimation:radarHand forKey:nil];
+    [self.bottomLeftView.layer setAnchorPoint:CGPointMake(0,1)];
+    [self performSelector:@selector(animateLeftHand) withObject:nil afterDelay:1.6f];
 }
 
 -(void)animateLeftHand{
+    [self.bottomLeftView setHidden:YES];
     [UIView animateWithDuration:4.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
         
         self.leftView.frame = CGRectMake(self.leftView.frame.origin.x , self.leftView.frame.origin.y, self.leftView.frame.size.width, 0);
         
     } completion:^(BOOL finished) {
         //code
-        [self animateTopleftCorner];
+        //[self animateTopleftCorner];
     }];
+    [self performSelector:@selector(animateTopleftCorner) withObject:nil afterDelay:3.5];
 }
 
 -(void)animateTopleftCorner{
-    [UIView animateWithDuration:2.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
-        
-        self.topLeftView.frame = CGRectMake(self.topLeftView.frame.origin.x + self.topLeftView.frame.size.width, self.topLeftView.frame.origin.y, 0, 0);
-        
-    } completion:^(BOOL finished) {
-        //code
-        if (self.shouldCallEndTurn) {
-             [self endTurn];
-        }
-    }];
+    
+    CABasicAnimation *radarHand;
+    
+    radarHand = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+    
+    radarHand.fromValue = [NSNumber numberWithFloat:(- M_PI_2)];
+    
+    radarHand.byValue = [NSNumber numberWithFloat:(M_PI_2)]; //
+    
+    radarHand.duration = 2.0f;
+    radarHand.delegate = self;
+    
+    radarHand.repeatCount = 1;
+    [radarHand setRemovedOnCompletion:YES];
+    
+    [self.topLeftView setCenter:CGPointMake(self.topLeftView.frame.origin.x +self.topLeftView.frame.size.width , self.topLeftView.frame.origin.y + self.topLeftView.frame.size.height)];
+    [self.topLeftView.layer addAnimation:radarHand forKey:nil];
+    [self.topLeftView.layer setAnchorPoint:CGPointMake(0,1)];
+    [self performSelector:@selector(animateTopView) withObject:nil afterDelay:1.6f];
 }
 
+-(void)animateTopView{
+    [self.topLeftView setHidden:YES];
+     [UIView animateWithDuration:6.0 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^{
+     
+     self.topView.frame = CGRectMake(self.topView.frame.origin.x + self.topView.frame.size.width, self.topView.frame.origin.y, 0, self.topView.frame.size.height);
+     
+     } completion:^(BOOL finished) {
+         
+         if (self.shouldCallEndTurn) {
+             [self endTurn];
+             [self.topLeftView setHidden:YES];
+         }
+     }];
+}
 
+- (void)animationDidStop:(CAAnimation *)theAnimation finished:(BOOL)flag{
+    NSLog(@"on animationDidStop");
+}
 
 - (void)showProgressView{
     if (self.shouldCallEndTurn) {
