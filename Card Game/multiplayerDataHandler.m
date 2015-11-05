@@ -68,7 +68,13 @@ NSTimer *firstChallengeTimer;
 {
     PNChannel *mainLobbyChannel = [PNChannel channelWithName:@"main_lobby"];
     
-    [PubNub sendMessage:msg toChannel:mainLobbyChannel];
+    [PubNub sendMessage:msg toChannel:mainLobbyChannel compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+        //code
+        if ([data isKindOfClass:[NSError class]]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+        }
+    }];
 }
 
 -(void)getPlayerState
@@ -106,7 +112,13 @@ NSTimer *firstChallengeTimer;
     [BeginMsgDict setObject:fullGameBeginMessage forKey:@"text"];
     [BeginMsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
     
-    [PubNub sendMessage:BeginMsgDict toChannel:self.currentMPGameChannel];
+    [PubNub sendMessage:BeginMsgDict toChannel:self.currentMPGameChannel  compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+        //code
+        if ([data isKindOfClass:[NSError class]]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+        }
+    }];
     
 }
 
@@ -611,7 +623,13 @@ NSTimer *firstChallengeTimer;
                    NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
                    [MsgDict setObject:[NSString stringWithFormat:@"Start2"] forKey:@"text"];
                    [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-                   [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel];
+                   [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel  compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+                       //code
+                       if ([data isKindOfClass:[NSError class]]) {
+                           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                           [alert show];
+                       }
+                   }];
                    playerNumber = 1;
                    NSLog(@"setting self player 1");
                }
@@ -621,7 +639,13 @@ NSTimer *firstChallengeTimer;
                    NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
                    [MsgDict setObject:[NSString stringWithFormat:@"Start1"] forKey:@"text"];
                    [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-                   [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel];
+                   [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel  compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+                       //code
+                       if ([data isKindOfClass:[NSError class]]) {
+                           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                           [alert show];
+                       }
+                   }];
                    playerNumber = 2;
                    NSLog(@"setting self player 2");
                }
@@ -646,7 +670,13 @@ NSTimer *firstChallengeTimer;
             [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
             
             sentDeck=TRUE;
-            [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
+            [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel  compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+                //code
+                if ([data isKindOfClass:[NSError class]]) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                    [alert show];
+                }
+            }];
             
         }
         if([prefix isEqualToString:@"PDeck"])
@@ -675,7 +705,13 @@ NSTimer *firstChallengeTimer;
                 NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
                 [MsgDict setObject:totalDeckString forKey:@"text"];
                 [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-                [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
+                [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel  compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+                    //code
+                    if ([data isKindOfClass:[NSError class]]) {
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                        [alert show];
+                    }
+                }];
                 sentDeck=YES;
                  NSLog(@"Sending Deck & Starting Deck Download");
                 [self.delegate updateStatusLabelText:@"Sending Deck"];
@@ -780,7 +816,13 @@ NSTimer *firstChallengeTimer;
                  NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
                  [MsgDict setObject:@"LoadG" forKey:@"text"];
                  [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-                 [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
+                [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel  compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+                    //code
+                    if ([data isKindOfClass:[NSError class]]) {
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                        [alert show];
+                    }
+                }];
                 
                  [self.delegate startLoadingMatch];
             }
@@ -814,21 +856,29 @@ NSTimer *firstChallengeTimer;
     
     [PubNub requestParticipantsListFor:@[gameChannel] clientIdentifiersRequired:YES clientState:YES withCompletionBlock:^(PNHereNow *presenceInformation, NSArray *channels, PNError *error) {
         NSArray *participants = [presenceInformation participantsForChannel:gameChannel];
+         NSMutableArray *playerArray = [[NSMutableArray alloc] init];
         
-        NSLog(@"got participants");
-        NSLog(@"%ld",participants.count);
-        NSMutableArray *playerArray = [[NSMutableArray alloc] init];
-        
-        for(PNClient *heldClient in participants)
-        {
-          NSDictionary *stateInChannel = [heldClient stateForChannel:gameChannel];
-            if(stateInChannel !=nil && ![[stateInChannel objectForKey:@"usernameCustom"] isEqual:userPF.username])
-            {
-                 [playerArray addObject:stateInChannel];
-            }
+        if (error == nil) {
+            NSLog(@"got participants");
+            NSLog(@"%ld",participants.count);
            
             
+            for(PNClient *heldClient in participants)
+            {
+                NSDictionary *stateInChannel = [heldClient stateForChannel:gameChannel];
+                if(stateInChannel !=nil && ![[stateInChannel objectForKey:@"usernameCustom"] isEqual:userPF.username])
+                {
+                    [playerArray addObject:stateInChannel];
+                }
+                
+                
+            }
+            
+        }else{
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
         }
+        
         [self.delegate updatePlayerLobby:[playerArray copy]];
         NSLog(@"got here");
 
@@ -879,7 +929,13 @@ NSTimer *firstChallengeTimer;
     NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
     [MsgDict setObject:@"LoadG" forKey:@"text"];
     [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-    [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
+    [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel  compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+        //code
+        if ([data isKindOfClass:[NSError class]]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+        }
+    }];
     self.opponentDeckLoaded = @"YES";
 }
 
@@ -900,7 +956,13 @@ NSTimer *firstChallengeTimer;
     
     [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
     
-    [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
+    [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel  compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+        //code
+        if ([data isKindOfClass:[NSError class]]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+        }
+    }];
 }
 //ATTAC
 //NSNumber *attackerPosition = [msgIncomingDict objectForKey:@"attackerPosition"];
@@ -919,7 +981,13 @@ NSTimer *firstChallengeTimer;
     [MsgDict setObject:targetPositionNum forKey:@"targetPosition"];
     [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
     
-    [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
+    [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel  compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+        //code
+        if ([data isKindOfClass:[NSError class]]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+        }
+    }];
 }
 
 -(void)playerForfeit
@@ -937,7 +1005,13 @@ NSTimer *firstChallengeTimer;
     NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
     [MsgDict setObject:@"ENDTR" forKey:@"text"];
     [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-    [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
+    [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel  compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+        //code
+        if ([data isKindOfClass:[NSError class]]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+        }
+    }];
     self.opponentDeckLoaded = @"YES";
 }
 -(void)sendSeedMessage:(NSString *)msg
@@ -957,7 +1031,13 @@ NSTimer *firstChallengeTimer;
     NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
     [MsgDict setObject:seedSend forKey:@"text"];
     [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-    [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
+        [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel  compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+            //code
+            if ([data isKindOfClass:[NSError class]]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                [alert show];
+            }
+        }];
     _playerSeed = randomSeed;
     }
 }
@@ -968,7 +1048,13 @@ NSTimer *firstChallengeTimer;
     NSMutableDictionary *MsgDict = [[NSMutableDictionary alloc] init];
     [MsgDict setObject:gotSeed forKey:@"text"];
     [MsgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
-    [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel ];
+    [PubNub sendMessage:MsgDict toChannel:self.currentMPGameChannel  compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+        //code
+        if ([data isKindOfClass:[NSError class]]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+        }
+    }];
 
 }
 
@@ -999,7 +1085,13 @@ NSTimer *firstChallengeTimer;
 
 -(void)sendChatWithDict:(NSDictionary *)Dict
 {
- [PubNub sendMessage:Dict toChannel:chatChannel];
+    [PubNub sendMessage:Dict toChannel:chatChannel  compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+        //code
+        if ([data isKindOfClass:[NSError class]]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+        }
+    }];
 }
 
 -(void)sendChallengeToPlayerObj:(NSDictionary *)Dict
@@ -1036,7 +1128,14 @@ NSTimer *firstChallengeTimer;
     
      self.inChallengeProcess = YES;
     
-    [PubNub sendMessage:challengeMsgDict toChannel:gameChannel];
+    [PubNub sendMessage:challengeMsgDict toChannel:gameChannel  compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+        //code
+        if ([data isKindOfClass:[NSError class]]) {
+            [self.delegate dismissChallengeUI:@""];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+        }
+    }];
     
 }
 
@@ -1061,7 +1160,13 @@ NSTimer *firstChallengeTimer;
         //set opponent elo rating
         
         //do nothing, start event will be fired by occupancy 2 only by challenger
-         [PubNub sendMessage:challengeAcceptMsgDict toChannel:gameChannel];
+        [PubNub sendMessage:challengeAcceptMsgDict toChannel:gameChannel compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+            //code
+            if ([data isKindOfClass:[NSError class]]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                [alert show];
+            }
+        }];
         
     }];
 
@@ -1077,7 +1182,13 @@ NSTimer *firstChallengeTimer;
     [challengeRejectMsgDict setObject:@"challengeReject" forKey:@"msgType"];
     [challengeRejectMsgDict setObject:reason forKey:@"reason"];
     
-     [PubNub sendMessage:challengeRejectMsgDict toChannel:gameChannel];
+    [PubNub sendMessage:challengeRejectMsgDict toChannel:gameChannel compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+        //code
+        if ([data isKindOfClass:[NSError class]]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+        }
+    }];
      self.inChallengeProcess = NO;
 }
 
@@ -1089,7 +1200,13 @@ NSTimer *firstChallengeTimer;
     [challengeCancelMsgDict setObject:@"main_lobby" forKey:@"channel"];
     [challengeCancelMsgDict setObject:@"challengeCancel" forKey:@"msgType"];
     
-    [PubNub sendMessage:challengeCancelMsgDict toChannel:gameChannel];
+    [PubNub sendMessage:challengeCancelMsgDict toChannel:gameChannel compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+        //code
+        if ([data isKindOfClass:[NSError class]]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+        }
+    }];
      self.inChallengeProcess = NO;
 }
 
@@ -1202,7 +1319,14 @@ NSTimer *firstChallengeTimer;
         [[NSRunLoop currentRunLoop] addTimer:challengeLockTimer forMode:NSRunLoopCommonModes];*/
         self.firstQuickMatchEnabled = YES;
         
-        [PubNub sendMessage:quickMatchMsgDict toChannel:self.quickMatchChannel];
+        [PubNub sendMessage:quickMatchMsgDict toChannel:self.quickMatchChannel compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+            //code
+            if ([data isKindOfClass:[NSError class]]) {
+                [self.delegate dismissChallengeUI:@""];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                [alert show];
+            }
+        }];
         
     }];
 
