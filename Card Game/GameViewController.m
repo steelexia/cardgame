@@ -704,6 +704,10 @@ BOOL leftHandViewZone = NO;
     [bottomRightView setHidden:NO];
     [bottomLeftView setHidden:NO];
     [topLeftView setHidden:NO];
+    [topView setHidden:NO];
+    [rightView setHidden:NO];
+    [bottomView setHidden:NO];
+    [leftView setHidden:NO];
     
     [topRightView.layer setAnchorPoint:CGPointMake(.5, .5)];
     [bottomRightView.layer setAnchorPoint:CGPointMake(.5, .5)];
