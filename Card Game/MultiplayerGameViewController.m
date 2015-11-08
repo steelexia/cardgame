@@ -1639,10 +1639,10 @@ if(tableView.tag ==88)
     }
     NSString *rejectionString = [@"Reason: " stringByAppendingString:reason];
     
-
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Player Rejected Challenge" message:rejectionString delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    [alert show];
-    
+    if (![reason isEqualToString:@""]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Player Rejected Challenge" message:rejectionString delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert show];
+    }
 }
 
 -(void)searchForQuickMatchUI
