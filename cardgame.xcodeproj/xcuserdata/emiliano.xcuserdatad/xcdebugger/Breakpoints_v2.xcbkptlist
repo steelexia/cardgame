@@ -513,6 +513,38 @@
             endingLineNumber = "1322"
             landmarkName = "-joinQuickMatchChannel"
             landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__47-[multiplayerDataHandler joinQuickMatchChannel]_block_invoke"
+                  moduleName = "cardgame"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/emiliano/Desktop/projects/cardgame/Card%20Game/multiplayerDataHandler.m"
+                  timestampString = "468766157.208881"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1322"
+                  endingLineNumber = "1322"
+                  offsetFromSymbolStart = "141">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__47-[multiplayerDataHandler joinQuickMatchChannel]_block_invoke_2"
+                  moduleName = "cardgame"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/emiliano/Desktop/projects/cardgame/Card%20Game/multiplayerDataHandler.m"
+                  timestampString = "468766157.209029"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1322"
+                  endingLineNumber = "1322"
+                  offsetFromSymbolStart = "58">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -793,44 +825,12 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Card Game/GameViewController.m"
-            timestampString = "468424322.544459"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1804"
-            endingLineNumber = "1804"
-            landmarkName = "-summonCard:fromSide:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Card Game/GameViewController.m"
-            timestampString = "468424322.544459"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1791"
-            endingLineNumber = "1791"
-            landmarkName = "-summonCard:fromSide:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Card Game/GameViewController+Animation.m"
-            timestampString = "468424322.544459"
+            timestampString = "468773030.398935"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "518"
-            endingLineNumber = "518"
+            startingLineNumber = "632"
+            endingLineNumber = "632"
             landmarkName = "-showProgressView"
             landmarkType = "5">
          </BreakpointContent>
@@ -1088,6 +1088,22 @@
             startingLineNumber = "2837"
             endingLineNumber = "2837"
             landmarkName = "-saveCardButtonPressed"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Card Game/MultiplayerGameViewController.m"
+            timestampString = "468515178.718942"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1075"
+            endingLineNumber = "1075"
+            landmarkName = "-updatePlayerLobby:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

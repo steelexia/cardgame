@@ -120,7 +120,6 @@
     cardView.inDestructionAnimation=YES;
     
     CGPoint newCenter = CGPointMake(cardView.center.x, cardView.center.y);
-    //NSLog(@"%f %f %f %f", cardView.center.x,cardView.center.y, cardView.originalPosition.x, cardView.originalPosition.y);
     
     [self addAnimationCounter];
     newCenter.y -= CARD_HEIGHT/4;
@@ -128,19 +127,134 @@
     //brings to front so doesn't get covered by other cards that are still alive
     [[cardView superview] bringSubviewToFront:cardView];
     
-    [UIView animateWithDuration:0.6 delay:delay options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         cardView.alpha = 0.0;
-                         cardView.center = newCenter;
-                     }
-                     completion:^(BOOL finished){
-                         [cardView removeFromSuperview];
-                         [self performBlock:^{
-                             [self updateBattlefieldView:side];
-                             [self decAnimationCounter];
-                             cardView.inDestructionAnimation = NO;
-                         }  afterDelay:0.5];
-                     }];
+    if (![cardView.cardModel isKindOfClass:[SpellCardModel class]]) {
+        CardView *topImgView =  [[CardView alloc] initWithModel:cardView.cardModel viewMode:cardViewModeEditor];
+        CardView *bottomImgView = [[CardView alloc] initWithModel:cardView.cardModel viewMode:cardViewModeEditor];;
+        
+        [topImgView setFrontFacing:YES];
+        [bottomImgView setFrontFacing:YES];
+        //[topImgView flipCard];
+        //[bottomImgView flipCard];
+        
+        UIBezierPath* trianglePath = [UIBezierPath bezierPath];
+        [trianglePath moveToPoint:CGPointMake(0, 0)];
+        [trianglePath addLineToPoint:CGPointMake(0,CARD_FULL_HEIGHT)];
+        [trianglePath addLineToPoint:CGPointMake(CARD_FULL_WIDTH, 0)];
+        [trianglePath closePath];
+        
+        CAShapeLayer *triangleMaskLayer = [CAShapeLayer layer];
+        [triangleMaskLayer setPath:trianglePath.CGPath];
+        
+        UIBezierPath* trianglePath2 = [UIBezierPath bezierPath];
+        [trianglePath2 moveToPoint:CGPointMake(CARD_FULL_WIDTH, 0)];
+        [trianglePath2 addLineToPoint:CGPointMake(0, CARD_FULL_HEIGHT)];
+        [trianglePath2 addLineToPoint:CGPointMake(CARD_FULL_WIDTH,CARD_FULL_HEIGHT)];
+        [trianglePath2 closePath];
+        
+        CAShapeLayer *triangleMaskLayer2 = [CAShapeLayer layer];
+        [triangleMaskLayer2 setPath:trianglePath2.CGPath];
+        
+        
+        //[topImgView setBackgroundColor:[UIColor blackColor]];
+        
+        [topImgView.layer setMask:triangleMaskLayer];
+        [bottomImgView.layer setMask:triangleMaskLayer2];
+        
+        
+        [topImgView setCenter:cardView.center];
+        [bottomImgView setCenter:cardView.center];
+        
+        //bottomImgView.transform = CGAffineTransformMakeTranslation(bottomImgView.frame.size.width/2, 0);
+        
+        [[cardView superview] addSubview:topImgView];
+        [[cardView superview] addSubview:bottomImgView];
+        
+        UIView *theView = [[UIView alloc] initWithFrame:cardView.frame];
+        theView.backgroundColor = [UIColor blackColor];
+        theView.center = cardView.center;
+        //[[cardView superview] addSubview:theView];
+        //[[cardView superview] bringSubviewToFront:topImgView];
+        //[[cardView superview] bringSubviewToFront:bottomImgView];
+        
+        CAShapeLayer *shape = [self getLineFromCardview:cardView];
+        [[cardView superview].layer addSublayer:shape];
+        //[[cardView superview] sendSubviewToBack:cardView];
+        [cardView setHidden:YES];
+        
+        [self animateShapeBounds:shape OnView:cardView];
+        [self performSelector:@selector(hideShape:) withObject:shape afterDelay:0.1];
+        
+        CGPoint n_top_center = topImgView.center;
+        n_top_center.x -= 10;
+        n_top_center.y -= 10;
+        
+        CGPoint n_bottom_center = bottomImgView.center;
+        n_bottom_center.x += 10;
+        n_bottom_center.y += 10;
+        
+        [UIView animateWithDuration:0.3 animations:^{
+            topImgView.center = n_top_center;
+            topImgView.alpha = 0.0;
+            bottomImgView.center = n_bottom_center;
+            bottomImgView.alpha = 0.0;
+            
+        } completion:^(BOOL finished) {
+            [cardView removeFromSuperview];
+            [self performBlock:^{
+                [self updateBattlefieldView:side];
+                [self decAnimationCounter];
+                //cardView.inDestructionAnimation = NO;
+                [topImgView removeFromSuperview];
+                [bottomImgView removeFromSuperview];
+            }  afterDelay:0.5];
+        }];
+    }else{
+        [cardView removeFromSuperview];
+        [self performBlock:^{
+            [self updateBattlefieldView:side];
+            [self decAnimationCounter];
+            cardView.inDestructionAnimation = NO;
+        }  afterDelay:0.5];
+    }
+    
+    
+    
+}
+
+-(CAShapeLayer *)getLineFromCardview:(CardView *)cardView{
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    [path moveToPoint:CGPointMake(cardView.frame.origin.x + (cardView.frame.size.width/10 *1),cardView.frame.origin.y + cardView.frame.size.height/10 *9)];
+    [path addLineToPoint:CGPointMake(cardView.frame.origin.x,cardView.frame.origin.y + cardView.frame.size.height)];
+    
+    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+    shapeLayer.path = [path CGPath];
+    shapeLayer.strokeColor = [[UIColor whiteColor] CGColor];
+    shapeLayer.lineWidth = 2.0;
+    shapeLayer.fillColor = [[UIColor clearColor] CGColor];
+    
+    return shapeLayer;
+}
+
+-(void)animateShapeBounds:(CAShapeLayer*)shape OnView:(CardView *)cardView{
+    
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    [path moveToPoint:CGPointMake(cardView.frame.origin.x + cardView.frame.size.width,cardView.frame.origin.y)];
+    [path addLineToPoint:CGPointMake(cardView.frame.origin.x,cardView.frame.origin.y + cardView.frame.size.height)];
+    
+    CABasicAnimation* pathAnim = [CABasicAnimation animationWithKeyPath:@"path"];
+    pathAnim.toValue = (__bridge id _Nullable)([path CGPath]);
+    pathAnim.duration = 0.1;
+    pathAnim.cumulative = NO;
+    pathAnim.repeatCount = 1.0;
+    pathAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    pathAnim.removedOnCompletion = YES;
+    pathAnim.fillMode = kCAFillModeForwards;
+    
+    [shape addAnimation:pathAnim forKey:@"path"];
+}
+
+-(void)hideShape:(CAShapeLayer *)shape{
+    [shape removeFromSuperlayer];
 }
 
 -(void) animateCardDamage: (CardView*) cardView forDamage: (int) damage fromSide: (int) side
