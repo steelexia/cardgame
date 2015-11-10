@@ -236,6 +236,7 @@
 		9319F3C71BDEC61300F939FE /* AbilityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9319F3C61BDEC61300F939FE /* AbilityViewController.m */; settings = {ASSET_TAGS = (); }; };
 		93905D2C1BF1316F0067809E /* Snowflake.png in Resources */ = {isa = PBXBuildFile; fileRef = 93905D2B1BF1316F0067809E /* Snowflake.png */; settings = {ASSET_TAGS = (); }; };
 		93905D2E1BF241770067809E /* Smoke.png in Resources */ = {isa = PBXBuildFile; fileRef = 93905D2D1BF241770067809E /* Smoke.png */; settings = {ASSET_TAGS = (); }; };
+		93905D321BF262C20067809E /* Thunder.png in Resources */ = {isa = PBXBuildFile; fileRef = 93905D311BF262C20067809E /* Thunder.png */; settings = {ASSET_TAGS = (); }; };
 		9399ACFE1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFA1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png */; settings = {ASSET_TAGS = (); }; };
 		9399ACFF1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFB1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png */; settings = {ASSET_TAGS = (); }; };
 		9399AD001BC44CB9005CC9F3 /* Default-736h@3x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFC1BC44CB9005CC9F3 /* Default-736h@3x~iphone.png */; settings = {ASSET_TAGS = (); }; };
@@ -835,6 +836,7 @@
 		9319F3C61BDEC61300F939FE /* AbilityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbilityViewController.m; sourceTree = "<group>"; };
 		93905D2B1BF1316F0067809E /* Snowflake.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Snowflake.png; path = "Card Game/Snowflake.png"; sourceTree = "<group>"; };
 		93905D2D1BF241770067809E /* Smoke.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Smoke.png; path = "Card Game/Smoke.png"; sourceTree = "<group>"; };
+		93905D311BF262C20067809E /* Thunder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Thunder.png; path = "Card Game/Thunder.png"; sourceTree = "<group>"; };
 		9399ACFA1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
 		9399ACFB1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-667h@2x~iphone.png"; sourceTree = "<group>"; };
 		9399ACFC1BC44CB9005CC9F3 /* Default-736h@3x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-736h@3x~iphone.png"; sourceTree = "<group>"; };
@@ -1455,6 +1457,7 @@
 		907D9BD919226B4C0037C0CF /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				93905D311BF262C20067809E /* Thunder.png */,
 				93905D2D1BF241770067809E /* Smoke.png */,
 				93905D2B1BF1316F0067809E /* Snowflake.png */,
 				ECAB71C71B4F459A004D4E5C /* DarcyArt */,
@@ -2747,6 +2750,7 @@
 				9069AAE7195501AB006D1D98 /* card_background_front_neutral_common.png in Resources */,
 				ECAB71C61B4F4532004D4E5C /* Images.xcassets in Resources */,
 				EC42E87F1B5726E7005EDFD5 /* FeaturedStoreCardPack005.png in Resources */,
+				93905D321BF262C20067809E /* Thunder.png in Resources */,
 				9069AAE1195501AB006D1D98 /* card_background_front_dark_common.png in Resources */,
 				FA033FD919BCFF6600EFEBD8 /* card_0020.png in Resources */,
 				EC42E87C1B5726E7005EDFD5 /* FeaturedStoreCardPack002.png in Resources */,

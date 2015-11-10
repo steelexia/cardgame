@@ -359,6 +359,57 @@
     } afterDelay:.2];
 }
 
+-(void) animateCardThunderDamage:(CardView*)cardView fromSide:(int)side{
+    
+    NSString *imageName = @"Thunder";
+    UIImage *image = [UIImage imageNamed:imageName];
+    //assert(image);
+    
+    CAEmitterCell *cell = [CAEmitterCell emitterCell];
+    [cell setName:imageName];
+    float defaultBirthRate = 70.0f;
+    
+    [cell setBirthRate:defaultBirthRate];
+    [cell setVelocity:120];
+    [cell setVelocityRange:0.0f];
+    [cell setYAcceleration:0.0f];
+    [cell setEmissionLongitude:-M_PI_2];
+    [cell setEmissionRange:-M_PI];
+    [cell setScale:0.2f];
+    [cell setScaleSpeed:1.0f];
+    [cell setScaleRange:0.5f];
+    [cell setContents:(id)image.CGImage];
+    //[cell setColor:[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.5].CGColor];
+    
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+    {
+        [cell setLifetime:6.0f];
+        [cell setLifetimeRange:2.0f];
+    }
+    else
+    {
+        [cell setLifetime:0.6f];
+        [cell setLifetimeRange:0.2f];
+    }
+    
+    CAEmitterLayer *emitter = [CAEmitterLayer layer];
+    [emitter setEmitterCells:@[cell]];
+    CGRect CVF = CGRectMake(cardView.frame.origin.x,cardView.frame.origin.y, 20, 20);
+    [emitter setFrame:CVF];
+    CGPoint emitterPosition = (CGPoint) {cardView.frame.size.width/2, cardView.frame.size.height/2};
+    [emitter setEmitterPosition:emitterPosition];
+    [emitter setEmitterSize:(CGSize){0.5f, 0.5f}];
+    [emitter setEmitterShape:kCAEmitterLayerRectangle];
+    [emitter setRenderMode:kCAEmitterLayerAdditive];
+    [emitter setZPosition:1];
+    [[cardView superview].layer addSublayer:emitter];
+    
+    [self performBlock:^{
+        [emitter removeFromSuperlayer];
+    } afterDelay:.2];
+}
+
 -(void) animateCardDamage: (CardView*) cardView forDamage: (int) damage fromSide: (int) side
 {
     //no animation if no damage
