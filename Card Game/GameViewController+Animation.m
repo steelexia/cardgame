@@ -257,6 +257,108 @@
     [shape removeFromSuperlayer];
 }
 
+-(void) animateCardIceDamage:(CardView*)cardView fromSide:(int)side{
+    
+    NSString *imageName = @"Snowflake";
+    UIImage *image = [UIImage imageNamed:imageName];
+    //assert(image);
+    
+    CAEmitterCell *cell = [CAEmitterCell emitterCell];
+    [cell setName:imageName];
+    float defaultBirthRate = 70.0f;
+    
+    [cell setBirthRate:defaultBirthRate];
+    [cell setVelocity:120];
+    [cell setVelocityRange:0.0f];
+    [cell setYAcceleration:0.0f];
+    [cell setEmissionLongitude:-M_PI_2];
+    [cell setEmissionRange:-M_PI];
+    [cell setScale:0.2f];
+    [cell setScaleSpeed:1.0f];
+    [cell setScaleRange:0.5f];
+    [cell setContents:(id)image.CGImage];
+    [cell setColor:[UIColor colorWithRed:0.9 green:0.9 blue:1 alpha:0.5].CGColor];
+    
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+    {
+        [cell setLifetime:6.0f];
+        [cell setLifetimeRange:2.0f];
+    }
+    else
+    {
+        [cell setLifetime:0.6f];
+        [cell setLifetimeRange:0.2f];
+    }
+    
+    CAEmitterLayer *emitter = [CAEmitterLayer layer];
+    [emitter setEmitterCells:@[cell]];
+    CGRect CVF = CGRectMake(cardView.frame.origin.x,cardView.frame.origin.y, 20, 20);
+    [emitter setFrame:CVF];
+    CGPoint emitterPosition = (CGPoint) {cardView.frame.size.width/2, cardView.frame.size.height/2};
+    [emitter setEmitterPosition:emitterPosition];
+    [emitter setEmitterSize:(CGSize){0.5f, 0.5f}];
+    [emitter setEmitterShape:kCAEmitterLayerRectangle];
+    [emitter setRenderMode:kCAEmitterLayerAdditive];
+    [emitter setZPosition:1];
+    [[cardView superview].layer addSublayer:emitter];
+    
+    [self performBlock:^{
+        [emitter removeFromSuperlayer];
+    } afterDelay:.2];
+}
+
+-(void) animateCardFireDamage:(CardView*)cardView fromSide:(int)side{
+    
+    NSString *imageName = @"Smoke";
+    UIImage *image = [UIImage imageNamed:imageName];
+    //assert(image);
+    
+    CAEmitterCell *cell = [CAEmitterCell emitterCell];
+    [cell setName:imageName];
+    float defaultBirthRate = 70.0f;
+    
+    [cell setBirthRate:defaultBirthRate];
+    [cell setVelocity:120];
+    [cell setVelocityRange:0.0f];
+    [cell setYAcceleration:0.0f];
+    [cell setEmissionLongitude:-M_PI_2];
+    [cell setEmissionRange:-M_PI];
+    [cell setScale:0.2f];
+    [cell setScaleSpeed:1.0f];
+    [cell setScaleRange:0.5f];
+    [cell setContents:(id)image.CGImage];
+    [cell setColor:[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.5].CGColor];
+    
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+    {
+        [cell setLifetime:6.0f];
+        [cell setLifetimeRange:2.0f];
+    }
+    else
+    {
+        [cell setLifetime:0.6f];
+        [cell setLifetimeRange:0.2f];
+    }
+    
+    CAEmitterLayer *emitter = [CAEmitterLayer layer];
+    [emitter setEmitterCells:@[cell]];
+    CGRect CVF = CGRectMake(cardView.frame.origin.x,cardView.frame.origin.y, 20, 20);
+    [emitter setFrame:CVF];
+    CGPoint emitterPosition = (CGPoint) {cardView.frame.size.width/2, cardView.frame.size.height/2};
+    [emitter setEmitterPosition:emitterPosition];
+    [emitter setEmitterSize:(CGSize){0.5f, 0.5f}];
+    [emitter setEmitterShape:kCAEmitterLayerRectangle];
+    [emitter setRenderMode:kCAEmitterLayerAdditive];
+    [emitter setZPosition:1];
+    [[cardView superview].layer addSublayer:emitter];
+    
+    [self performBlock:^{
+        [emitter removeFromSuperlayer];
+    } afterDelay:.2];
+}
+
 -(void) animateCardDamage: (CardView*) cardView forDamage: (int) damage fromSide: (int) side
 {
     //no animation if no damage
@@ -318,8 +420,9 @@
                              if (((MonsterCardModel*)cardView.cardModel).dead)
                                  [self animateCardDestruction:cardView fromSide:side withDelay: 0.4];
                              //not dead, move back to position
-                             else
-                                 [self animateMoveToWithBounce:cardView toPosition:originalPoint inDuration:0.25 withDelay:0.4];
+                             //else
+                                // [self animateCardIceDamage:cardView fromSide:side];
+                                 //[self animateMoveToWithBounce:cardView toPosition:originalPoint inDuration:0.25 withDelay:0.4];
                              //[self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
                              [self decAnimationCounter];
                          }
@@ -453,6 +556,15 @@
     [self.bottomLeftView setHidden:YES];
     [self.leftView setHidden:YES];
     [self.topLeftView setHidden:YES];
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(animateTopRightCorner) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(animateRightHand) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(animateBottomRightCorner) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(animateBottomHand) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(animateBottomLeftCorner) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(animateLeftHand) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(animateTopleftCorner) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(animateTopView) object:nil];
 //    v.alpha = 1;
 }
 

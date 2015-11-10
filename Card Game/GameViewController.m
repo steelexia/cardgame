@@ -1628,8 +1628,8 @@ BOOL leftHandViewZone = NO;
             [self flashOn:self.endTurnButton];
         }
     }else{
-        self.shouldBlink = NO;
-        [self endFlash:self.endTurnButton];
+       // self.shouldBlink = NO;
+       // [self endFlash:self.endTurnButton];
     }
 
 }
@@ -1647,6 +1647,13 @@ BOOL leftHandViewZone = NO;
     NSArray *damages = [self.gameModel attackCard:card fromSide:side target:targetCard];
     
     [self performBlock:^{
+        if (card.element == elementIce) {
+            [self animateCardIceDamage:targetCard.cardView fromSide:oppositeSide];
+        }else if(card.element == elementFire){
+            [self animateCardFireDamage:targetCard.cardView fromSide:oppositeSide];
+        }
+        
+        
         [self animateCardDamage:targetCard.cardView forDamage:[damages[0] integerValue] fromSide:oppositeSide];
     } afterDelay:0.1];
     
@@ -1695,6 +1702,12 @@ BOOL leftHandViewZone = NO;
     
     
     [self performBlock:^{
+        if (card.element == elementIce) {
+            [self animateCardIceDamage:targetCard.cardView fromSide:oppositeSide];
+        }else if(card.element == elementFire){
+            [self animateCardFireDamage:targetCard.cardView fromSide:oppositeSide];
+        }
+
         [self animateCardDamage:targetCard.cardView forDamage:[damages[0] integerValue] fromSide:oppositeSide];
     } afterDelay:0.1];
     

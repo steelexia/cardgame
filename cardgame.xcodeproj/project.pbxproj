@@ -234,6 +234,8 @@
 		9319F3C31BDE646C00F939FE /* timer_curve.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F3C01BDE646C00F939FE /* timer_curve.png */; settings = {ASSET_TAGS = (); }; };
 		9319F3C41BDE646C00F939FE /* timer_rect.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F3C11BDE646C00F939FE /* timer_rect.png */; settings = {ASSET_TAGS = (); }; };
 		9319F3C71BDEC61300F939FE /* AbilityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9319F3C61BDEC61300F939FE /* AbilityViewController.m */; settings = {ASSET_TAGS = (); }; };
+		93905D2C1BF1316F0067809E /* Snowflake.png in Resources */ = {isa = PBXBuildFile; fileRef = 93905D2B1BF1316F0067809E /* Snowflake.png */; settings = {ASSET_TAGS = (); }; };
+		93905D2E1BF241770067809E /* Smoke.png in Resources */ = {isa = PBXBuildFile; fileRef = 93905D2D1BF241770067809E /* Smoke.png */; settings = {ASSET_TAGS = (); }; };
 		9399ACFE1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFA1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png */; settings = {ASSET_TAGS = (); }; };
 		9399ACFF1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFB1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png */; settings = {ASSET_TAGS = (); }; };
 		9399AD001BC44CB9005CC9F3 /* Default-736h@3x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFC1BC44CB9005CC9F3 /* Default-736h@3x~iphone.png */; settings = {ASSET_TAGS = (); }; };
@@ -831,6 +833,8 @@
 		9319F3C11BDE646C00F939FE /* timer_rect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = timer_rect.png; path = "Card Game/Timer/timer_rect.png"; sourceTree = "<group>"; };
 		9319F3C51BDEC61300F939FE /* AbilityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbilityViewController.h; sourceTree = "<group>"; };
 		9319F3C61BDEC61300F939FE /* AbilityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbilityViewController.m; sourceTree = "<group>"; };
+		93905D2B1BF1316F0067809E /* Snowflake.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Snowflake.png; path = "Card Game/Snowflake.png"; sourceTree = "<group>"; };
+		93905D2D1BF241770067809E /* Smoke.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Smoke.png; path = "Card Game/Smoke.png"; sourceTree = "<group>"; };
 		9399ACFA1BC44CB9005CC9F3 /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
 		9399ACFB1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-667h@2x~iphone.png"; sourceTree = "<group>"; };
 		9399ACFC1BC44CB9005CC9F3 /* Default-736h@3x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-736h@3x~iphone.png"; sourceTree = "<group>"; };
@@ -1451,6 +1455,8 @@
 		907D9BD919226B4C0037C0CF /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				93905D2D1BF241770067809E /* Smoke.png */,
+				93905D2B1BF1316F0067809E /* Snowflake.png */,
 				ECAB71C71B4F459A004D4E5C /* DarcyArt */,
 				FA8410161B37537D0023FA36 /* end_turn_button_up.png */,
 				FA8410141B25254C0023FA36 /* battle_background_0.png */,
@@ -2783,6 +2789,7 @@
 				FACF46DA19EC8A0300D334E0 /* hero_5.png in Resources */,
 				EC42E85D1B572647005EDFD5 /* CardStoreRightRow.png in Resources */,
 				EC42E8821B5726E7005EDFD5 /* FeaturedStorePurchaseButton.png in Resources */,
+				93905D2E1BF241770067809E /* Smoke.png in Resources */,
 				90DA43C21969D21500E44AED /* cancel_card_button.png in Resources */,
 				907020531992A1CB00FDE444 /* upload_from_camera_button.png in Resources */,
 				ECFA3E8D1B657FA800C83EE1 /* IconDark.png in Resources */,
@@ -2800,6 +2807,7 @@
 				EC42E87B1B5726E7005EDFD5 /* FeaturedStoreCardPack001.png in Resources */,
 				90F80F8319A259A3007571F4 /* menu_logo.png in Resources */,
 				90C52898199C2A1300750C54 /* filter_button_small.png in Resources */,
+				93905D2C1BF1316F0067809E /* Snowflake.png in Resources */,
 				9319F3B01BD96D7A00F939FE /* CardCreateForwardButton.png in Resources */,
 				FA033FC719BCFF6600EFEBD8 /* card_0002.png in Resources */,
 				90AB1509197AD6DA0008FCDD /* card_ability_icon_cast_on_hit.png in Resources */,
