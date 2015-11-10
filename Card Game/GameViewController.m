@@ -1651,7 +1651,7 @@ BOOL leftHandViewZone = NO;
             [self animateCardIceDamage:targetCard.cardView fromSide:oppositeSide];
         }else if(card.element == elementFire){
             [self animateCardFireDamage:targetCard.cardView fromSide:oppositeSide];
-        }else if(card.element == elementLight){
+        }else if(card.element == elementLightning){
             [self animateCardThunderDamage:targetCard.cardView fromSide:oppositeSide];
         }
         
@@ -1708,7 +1708,7 @@ BOOL leftHandViewZone = NO;
             [self animateCardIceDamage:targetCard.cardView fromSide:oppositeSide];
         }else if(card.element == elementFire){
             [self animateCardFireDamage:targetCard.cardView fromSide:oppositeSide];
-        }else if(card.element == elementLight){
+        }else if(card.element == elementLightning){
             [self animateCardThunderDamage:targetCard.cardView fromSide:oppositeSide];
         }
 
