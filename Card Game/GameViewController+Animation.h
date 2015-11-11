@@ -46,6 +46,15 @@
 /** Used when a field card is dead, with a delay */
 -(void) animateCardDestruction: (CardView*) cardView fromSide: (int)side withDelay: (float) delay;
 
+/** Used to animate a card's ice attack animation */
+-(void) animateCardIceDamage:(CardView*)cardView fromSide:(int)side;
+
+/** Used to animate a card's fire attack animation */
+-(void) animateCardFireDamage:(CardView*)cardView fromSide:(int)side;
+
+/** Used to animate a card's thunder attack animation */
+-(void) animateCardThunderDamage:(CardView*)cardView fromSide:(int)side;
+
 /** Used to animate the damage dealt to a card */
 -(void) animateCardDamage: (CardView*) cardView forDamage: (int) damage fromSide:(int) side;
 
