@@ -1854,6 +1854,17 @@ enum GameMode __gameMode; //because C functions cant access
         int originalLife = monster.life;
         [monster loseLife:[ability.value intValue]];
         int lostAmount = [ability.value intValue] < originalLife ? [ability.value intValue] : originalLife;
+        
+        if (self.gameViewController.currentSpellCard) {
+            if (self.gameViewController.currentSpellCard.element == elementLightning) {
+                [self.gameViewController animateCardThunderDamage:monster.cardView fromSide:monster.side];
+            }else if (self.gameViewController.currentSpellCard.element == elementFire) {
+                [self.gameViewController animateCardFireDamage:monster.cardView fromSide:monster.side];
+            }else if (self.gameViewController.currentSpellCard.element == elementIce){
+                [self.gameViewController animateCardIceDamage:monster.cardView fromSide:monster.side];
+            }
+            
+        }
         [self.gameViewController animateCardDamage:monster.cardView forDamage:lostAmount fromSide:monster.side];
         
         //cast on damanged is casted here by monster
@@ -2053,6 +2064,7 @@ enum GameMode __gameMode; //because C functions cant access
     }
     //TODO when adding new instant effects, include them in the AIPlayer
     
+    self.gameViewController.currentSpellCard = nil;
     //update view and check for death
     [monster.cardView updateView];
     

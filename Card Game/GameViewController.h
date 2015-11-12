@@ -79,6 +79,7 @@
 @property (assign) bool shouldBlink;
 @property (assign) bool handMovementsLeft;
 @property (assign) bool battleMovementsLeft;
+@property (strong) CardModel* currentSpellCard;
 
 @property (strong)CFButton*quitButton;
 
