@@ -122,6 +122,7 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     abilityExistingTableView = [[AbilityTableView alloc] initWithFrame:CGRectMake(80, 242, 150, 80)  mode:abilityTableViewExisting];
     abilityExistingTableView.cevc = (id)self;
     //[abilityExistingTableView setHidden:YES];
+    [abilityExistingTableView.layer setZPosition:2];
     [abilityExistingTableView setUserInteractionEnabled:YES];
     [self.view addSubview:abilityExistingTableView];
     
@@ -132,6 +133,7 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     //new
     abilityNewTableView = [[AbilityTableView alloc] initWithFrame:CGRectMake(30, (SCREEN_HEIGHT/5)*3 +20, SCREEN_WIDTH -60, (abilityBack.frame.size.height/6)*4) mode:abilityTableViewNew];
     abilityNewTableView.cevc = (id)self;
+    [abilityNewTableView.layer setZPosition:2];
     [self.view addSubview:abilityNewTableView];
     
    /* pointsImageBackground = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"CardCreateYellowStar"]];
