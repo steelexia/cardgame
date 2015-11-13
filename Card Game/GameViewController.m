@@ -249,9 +249,13 @@ BOOL leftHandViewZone = NO;
         DeckModel* newDeck = [[DeckModel alloc] init];
         newDeck.name = @"New Deck";
         
-        for (CardModel* card in userAllCards)
-            [newDeck addCard:card];
-        
+        for (CardModel* card in userAllCards){
+            if (newDeck.cards.count < 20) {
+                [newDeck addCard:card];
+            }else
+                break;
+           
+        }
         [UserModel saveDeck:newDeck];
     }
    
@@ -1947,6 +1951,34 @@ BOOL leftHandViewZone = NO;
     [self endGame];
 }
 
+-(void)completeTutorial{
+    userPF[@"completedLevels"] = @[@"d_1_c_1_l_1",@"d_1_c_1_l_2",@"d_1_c_1_l_4"];
+    NSError *error;
+    [userPF save:&error];
+    
+    //Create a deck
+    if ([userAllDecks count] == 0) {
+        DeckModel* newDeck = [[DeckModel alloc] init];
+        newDeck.name = @"New Deck";
+        
+        for (CardModel* card in userAllCards){
+            if (newDeck.cards.count < 20) {
+                [newDeck addCard:card];
+            }else
+                break;
+            
+        }
+        [UserModel saveDeck:newDeck];
+    }
+    
+    if (_noPreviousView)
+        [self.presentingViewController
+         dismissViewControllerAnimated:YES completion:nil];
+    else
+        [self.presentingViewController.presentingViewController
+         dismissViewControllerAnimated:YES completion:nil];
+}
+
 -(void)endGame
 {
     //needs to tell MPengine to disconnect and call to end the match
@@ -2417,8 +2449,13 @@ BOOL leftHandViewZone = NO;
                 NSLog(@"Progress saved");
                 if (_nextLevel != nil)
                     [self beginNextLevel];
-                else
-                    [self endGame];
+                else{
+                    if (_level.isTutorial) {
+                        [self completeTutorial];
+                    }else{
+                        [self endGame]; 
+                    }
+                }
             }
             else{
                 dispatch_sync(dispatch_get_main_queue(), ^(void) {
