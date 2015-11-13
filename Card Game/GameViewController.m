@@ -34,6 +34,7 @@
 @synthesize tutOkButton = _tutOkButton;
 @synthesize quickMatchDeck = _quickMatchDeck;
 @synthesize quickMatchDeckLoaded = _quickMatchDeckLoaded;
+@synthesize currentSpellCard;
 
 /** Screen dimension for convinience */
 int SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -89,6 +90,7 @@ enum GameControlState{
 
 /** Currently selected card. The actual card depends on gameControlState. E.g. during gameControlStateSelectedHandCard this card is a card in the hand */
 CardModel* currentCard;
+
 
 
 /** Used to reduce amount of calculation needed for viewing hand cards via dragging. This flag is set when a touch enters/leaves the zone so it only needs to be updated once */
@@ -1529,6 +1531,10 @@ BOOL leftHandViewZone = NO;
         
         //is possible to summon card as touchesStart checks the possibility
         //must be able to summon this card (e.g. enough space, enough resource)
+        if ([currentCard isKindOfClass: [SpellCardModel class]]) {
+            currentSpellCard = currentCard;
+        }
+        
         if (CGRectContainsPoint(fieldRect.bounds, relativePoint) && [self.gameModel canSummonCard:currentCard side:currentSide] && currentSide == PLAYER_SIDE)
         {
             [self summonCard:currentCard fromSide:PLAYER_SIDE];
