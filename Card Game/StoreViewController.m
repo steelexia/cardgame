@@ -473,6 +473,13 @@ NSArray *_products;
     _reportHintLabel.center = CGPointMake(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT-55);
     [_cardInfoView addSubview:_reportHintLabel];
     
+    
+    UITapGestureRecognizer *cardInfoTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeCardInfoView)];
+    [cardInfoTap setNumberOfTapsRequired:1];
+    
+    [_cardInfoView setUserInteractionEnabled:YES];
+    [_cardInfoView addGestureRecognizer:cardInfoTap];
+    
    
     
     _searchView = [[CFLabel alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-40, self.view.bounds.size.width, 260)];
@@ -2390,6 +2397,7 @@ UIControlEventTouchUpInside];
                         
                         [self updateCardInfoView:_cardView.cardModel];
                         [self updateFooterViews];
+                        [self closeCardInfoView];
                     }
                     else
                         NSLog(@"%@", [error localizedDescription]);

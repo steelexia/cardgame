@@ -330,11 +330,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Game/StoreViewController.m"
-            timestampString = "467325744.688356"
+            timestampString = "469199789.671672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2110"
-            endingLineNumber = "2110"
+            startingLineNumber = "2117"
+            endingLineNumber = "2117"
             landmarkName = "-updateCardInfoView:"
             landmarkType = "5">
          </BreakpointContent>
@@ -346,11 +346,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Game/StoreViewController.m"
-            timestampString = "467325744.688356"
+            timestampString = "469199789.671672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2247"
-            endingLineNumber = "2247"
+            startingLineNumber = "2254"
+            endingLineNumber = "2254"
             landmarkName = "-approveButtonPressed"
             landmarkType = "5">
          </BreakpointContent>
@@ -362,11 +362,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Game/StoreViewController.m"
-            timestampString = "467325744.688356"
+            timestampString = "469199789.671672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2283"
-            endingLineNumber = "2283"
+            startingLineNumber = "2290"
+            endingLineNumber = "2290"
             landmarkName = "-declineButtonPressed"
             landmarkType = "5">
          </BreakpointContent>
@@ -378,11 +378,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Game/StoreViewController.m"
-            timestampString = "467063307.718175"
+            timestampString = "469199789.671672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1231"
-            endingLineNumber = "1231"
+            startingLineNumber = "1238"
+            endingLineNumber = "1238"
             landmarkName = "-displayBoosterPackOption:"
             landmarkType = "5">
          </BreakpointContent>
@@ -842,11 +842,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Game/StoreViewController.m"
-            timestampString = "467325744.688356"
+            timestampString = "469199789.671672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1868"
-            endingLineNumber = "1868"
+            startingLineNumber = "1875"
+            endingLineNumber = "1875"
             landmarkName = "-touchesEnded:withEvent:"
             landmarkType = "5">
          </BreakpointContent>
@@ -858,11 +858,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Card Game/StoreViewController.m"
-            timestampString = "467325744.688356"
+            timestampString = "469199789.671672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1924"
-            endingLineNumber = "1924"
+            startingLineNumber = "1931"
+            endingLineNumber = "1931"
             landmarkName = "-updateCardInfoView:"
             landmarkType = "5">
          </BreakpointContent>
