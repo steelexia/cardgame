@@ -52,6 +52,9 @@ CFButton *damageIncButton, *damageDecButton, *lifeIncButton, *lifeDecButton, *cd
 UIImage *scaledImage;
 UIImageView*pointsImageBackground;
 
+StrokedLabel*currentCostLabel, *maxCostLabel;
+UIImageView*pointsImageBackground;
+
 AbilityTableView *abilityNewTableView,*abilityExistingTableView;
 
 - (void)viewDidLoad
@@ -136,12 +139,58 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     [abilityNewTableView.layer setZPosition:2];
     [self.view addSubview:abilityNewTableView];
     
+    
+    abilityRemoveButton = [[CFButton alloc] initWithFrame:CGRectMake(270, 314, 46, 32)];
+    [abilityRemoveButton setImage:[UIImage imageNamed:@"remove_deck_button"] forState:UIControlStateNormal];
+    //[abilityRemoveButton setImage:[UIImage imageNamed:@"remove_deck_button_gray"] forState:UIControlStateDisabled];
+    [abilityRemoveButton addTarget:self action:@selector(abilityRemoveButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    [abilityRemoveButton setEnabled:NO];
+    
    /* pointsImageBackground = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"CardCreateYellowStar"]];
     pointsImageBackground.frame = CGRectMake(0,0,74, 74);
     pointsImageBackground.center = CGPointMake(40, 180);
     
     [self.view addSubview:pointsImageBackground];*/
     
+    pointsImageBackground = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"CardCreateYellowStar"]];
+    pointsImageBackground.frame = CGRectMake(0,0,74, 74);
+    pointsImageBackground.center = CGPointMake(40, 180);
+    
+    [self.view addSubview:pointsImageBackground];
+    
+    currentCostLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,46,32)];
+    currentCostLabel.center = CGPointMake(40, 175);
+    currentCostLabel.textAlignment = NSTextAlignmentCenter;
+    currentCostLabel.textColor = [UIColor whiteColor];
+    currentCostLabel.backgroundColor = [UIColor clearColor];
+    currentCostLabel.font = [UIFont fontWithName:cardMainFont size:12];
+    [currentCostLabel setMinimumScaleFactor:12.f/20];
+    currentCostLabel.adjustsFontSizeToFitWidth = YES;
+    currentCostLabel.strokeOn = YES;
+    currentCostLabel.strokeColour = [UIColor blackColor];
+    currentCostLabel.strokeThickness = 2;
+    
+    [self.view addSubview:currentCostLabel];
+    
+    maxCostLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,46,32)];
+    maxCostLabel.center = CGPointMake(40, 190);
+    maxCostLabel.textAlignment = NSTextAlignmentCenter;
+    maxCostLabel.textColor = [UIColor whiteColor];
+    maxCostLabel.backgroundColor = [UIColor clearColor];
+    maxCostLabel.font = [UIFont fontWithName:cardMainFont size:12];
+    [maxCostLabel setMinimumScaleFactor:12.f/20];
+    maxCostLabel.adjustsFontSizeToFitWidth = YES;
+    maxCostLabel.strokeOn = YES;
+    maxCostLabel.strokeColour = [UIColor blackColor];
+    maxCostLabel.strokeThickness = 2;
+    
+    [self.view addSubview:maxCostLabel];
+    
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [maxCostLabel setText:[NSString stringWithFormat:@"%d",self.maxCost]];
+    [currentCostLabel setText:[NSString stringWithFormat:@"%d",self.currentCost]];
 }
 
 -(void)yesButtonPressed{
@@ -676,7 +725,7 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
          [abilityNewTableView reloadInputViews];
          */
         
-        [abilityAddButton setEnabled:NO];
+        //[abilityAddButton setEnabled:NO];
         
         AbilityWrapper *dupWrapper = [[AbilityWrapper alloc] initWithAbilityWrapper:wrapper];
         if (dupWrapper.ability.otherValues.count > 0)
@@ -692,9 +741,10 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
         //update new abilities
         [self.currentCardModel addBaseAbility:dupWrapper.ability];
         
-        [self updateNewAbilityList];
+        
         
         [self updateCost:self.currentCardModel];
+        [self updateNewAbilityList];
     }
 }
 
@@ -796,14 +846,14 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
         //remove from table
         [abilityExistingTableView.currentAbilities removeObjectAtIndex:selectedIndexPath.row];
         
-        [self updateNewAbilityList];
-        [self updateExistingAbilityList];
-        
         [abilityRemoveButton setEnabled:NO];
         [abilityIncButton setEnabled:NO];
         [abilityDecButton setEnabled:NO];
         
         [self updateCost:self.currentCardModel];
+        
+        [self updateNewAbilityList];
+        [self updateExistingAbilityList];
     }
 }
 
@@ -864,19 +914,19 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
         self.currentCost += [CardPointsUtility getStatsPointsForMonsterCard:monster];
     }
     
-//    currentCostLabel.text = [NSString stringWithFormat:@"%d", self.currentCost];
-//    maxCostLabel.text = [NSString stringWithFormat:@"%d", self.maxCost];
+    currentCostLabel.text = [NSString stringWithFormat:@"%d", self.currentCost];
+    maxCostLabel.text = [NSString stringWithFormat:@"%d", self.maxCost];
     
-//    if (self.currentCost > self.maxCost)
-//    {
-//        currentCostLabel.textColor = [UIColor redColor];
-//        [saveCardButton setEnabled:NO];
-//    }
-//    else if(_editorMode != cardEditorModeTutorialOne)
-//    {
-//        currentCostLabel.textColor = [UIColor whiteColor];
-//        [saveCardButton setEnabled:YES];
-//    }
+    if (self.currentCost > self.maxCost)
+    {
+        currentCostLabel.textColor = [UIColor redColor];
+        //[saveCardButton setEnabled:NO];
+    }
+    else if(_editorMode != cardEditorModeTutorialOne)
+    {
+        currentCostLabel.textColor = [UIColor whiteColor];
+        //[saveCardButton setEnabled:YES];
+    }
 }
 
 -(void)setupExistingCard

@@ -3227,6 +3227,8 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     [AVC setCardImage:scaledImage];
     [AVC setCardName:nameTextField.text];
     [AVC setEditorMode:_editorMode];
+    [AVC setCurrentCost:self.currentCost];
+    [AVC setMaxCost:self.maxCost];
     [AVC setDelegate:self];
     
     [self presentViewController:AVC animated:YES completion:nil];
