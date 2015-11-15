@@ -69,7 +69,7 @@ int ABILITY_TABLE_VIEW_ROW_WIDTH;
     AbilityWrapper*wrapper = self.currentAbilities[indexPath.row];
     
     if (wrapper.enabled)
-        [cell.abilityText setTextColor:[UIColor blackColor]];
+        [cell.abilityText setTextColor:[UIColor whiteColor]];
     
     /*
      ios 7 only
@@ -93,7 +93,7 @@ int ABILITY_TABLE_VIEW_ROW_WIDTH;
     [cell.scrollView setContentSize:CGSizeMake(textSize.width + 50, cell.bounds.size.height)];
     [cell.scrollView setContentOffset:CGPointMake(0,0)];
     
-    if (wrapper.currentPoints > wrapper.basePoints)
+    if (wrapper.currentPoints > wrapper.basePoints ||(self.cevc.maxCost - self.cevc.currentCost) < wrapper.currentPoints)
     {
         cell.abilityPoints.textColor = [UIColor redColor];
         //NSLog(@"RED: %d %d", wrapper.currentPoints, wrapper.basePoints);
@@ -110,8 +110,12 @@ int ABILITY_TABLE_VIEW_ROW_WIDTH;
         cell.abilityPoints.textColor = [UIColor whiteColor];
     }
     
-    if (!wrapper.enabled)
+    if (!wrapper.enabled){
         [cell.abilityText setTextColor:COLOUR_INTERFACE_GRAY_TRANSPARENT];
+        [cell setUserInteractionEnabled:NO];
+    }else{
+        [cell setUserInteractionEnabled:YES];
+    }
     
     [cell.abilityIconType setCenter:CGPointMake(ABILITY_TABLE_VIEW_ROW_WIDTH - ABILITY_TABLE_VIEW_ROW_HEIGHT/2 -5, ABILITY_TABLE_VIEW_ROW_HEIGHT/2 +5)];
     

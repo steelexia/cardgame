@@ -1080,9 +1080,12 @@ DeckModel * allCards;
         DeckModel* newDeck = [[DeckModel alloc] init];
         newDeck.name = @"New Deck";
         
-        for (CardModel* card in self.deckView.currentCells)
-            [newDeck addCard:card];
-     
+        for (CardModel* card in self.deckView.currentCells){
+            if (newDeck.cards.count < 20) {
+                [newDeck addCard:card];
+            }
+            
+        }
         deckToSave = newDeck;
     }
     else
@@ -1090,9 +1093,12 @@ DeckModel * allCards;
         //clear the deck and add the new cards in
         [currentDeck.cards removeAllObjects];
         
-        for (CardModel* card in self.deckView.currentCells)
-            [currentDeck addCard:card];
-        
+        for (CardModel* card in self.deckView.currentCells){
+            if (currentDeck.cards.count < 20) {
+                [currentDeck addCard:card];
+            }
+            
+        }
         deckToSave = currentDeck;
     }
     
