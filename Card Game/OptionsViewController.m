@@ -112,7 +112,11 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
    // [PFUser logOut];
     [UserModel logout];
     [SSKeychain deletePasswordForService:@"com.contentgames.cardgame" account:@"username"];
-    [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+   // [self.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+    //[self.presentingViewController.presentingViewController dismissViewControllerAnimated:NO completion:nil];
+    
+    [self.view.window.rootViewController dismissViewControllerAnimated:NO completion:nil];
+
 }
 
 - (void)didReceiveMemoryWarning

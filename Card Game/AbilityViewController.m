@@ -287,6 +287,24 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     
     [self.view addSubview:cdEditArea];
     
+    
+    
+    if (_editorMode == cardEditorModeTutorialTwo) {
+        self.tutOkButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
+        self.tutOkButton.label.text = @"Ok";
+        
+        _arrowImage = [[UIImageView alloc] initWithImage:ARROW_RIGHT_ICON_IMAGE];
+        _arrowImage.frame = CGRectMake(0,0,80,80);
+        
+        self.tutLabel = [[CFLabel alloc] initWithFrame:CGRectMake(0,0,260,180)];
+        [self setTutLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/4)];
+        [self.tutLabel setIsDialog:YES];
+        [self.tutLabel.label setTextAlignment:NSTextAlignmentCenter];
+        [self.view addSubview:_tutLabel];
+        [self.view addSubview:_tutOkButton];
+        [self tutorialAbility];
+    }
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -298,18 +316,6 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     [welcomeView removeFromSuperview];
     [imageEditArea setUserInteractionEnabled:YES];
     [nameTextField setUserInteractionEnabled:YES];
-}
-
--(void)tutorialPoints
-{
-    [self removeAllStatButtons];
-    
-    _arrowImage.image = ARROW_LEFT_ICON_IMAGE;
-    [self.view addSubview:_arrowImage];
-    _arrowImage.alpha = 1.0;
-    _arrowImage.center = CGPointMake(pointsImageBackground.center.x + 70, pointsImageBackground.center.y);
-    
-    [self tutorialAbility];
 }
 
 -(void)tutorialAbility
@@ -325,98 +331,23 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     
     [self setTutLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/4)];
     
-    [self tutorialElement];
+    self.tutLabel.label.text = @"The list below shows the abilities you can add to the card. Some abilities have adjustable values, and having different combinations of abilities can give bonuses and penalties to your points.";
     
     
-    [UIView animateWithDuration:0.2
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         _arrowImage.alpha = 0.0;
-                     }
-                     completion:^(BOOL finished) {
-                         _arrowImage.image = ARROW_DOWN_ICON_IMAGE;
-                         _arrowImage.center = CGPointMake(abilityNewTableView.center.x, abilityNewTableView.frame.origin.y - 40);
-                         
-                         [UIView animateWithDuration:0.2
-                                               delay:0
-                                             options:UIViewAnimationOptionCurveEaseInOut
-                                          animations:^{
-                                              _arrowImage.alpha = 1.0;
-                                          }
-                                          completion:^(BOOL finished) {
-                                              
-                                          }];
-                     }];
+    [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
     
+    _arrowImage.image = ARROW_DOWN_ICON_IMAGE;
+    [self.view addSubview:_arrowImage];
+    _arrowImage.center = CGPointMake(abilityNewTableView.center.x, abilityNewTableView.frame.origin.y - 40);
+    _arrowImage.alpha = 1.0;
 }
 
--(void)tutorialElement
-{
-    [self.view addSubview:elementEditArea];
-   
-    
-    [UIView animateWithDuration:0.2
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         _arrowImage.alpha = 0.0;
-                     }
-                     completion:^(BOOL finished) {
-                         _arrowImage.image = ARROW_RIGHT_ICON_IMAGE;
-                         CGPoint target = [self.view convertPoint:self.currentCardView.elementLabel.center fromView:self.currentCardView];
-                         _arrowImage.center = CGPointMake(target.x - 60, target.y);
-                         
-                         [UIView animateWithDuration:0.2
-                                               delay:0
-                                             options:UIViewAnimationOptionCurveEaseInOut
-                                          animations:^{
-                                              _arrowImage.alpha = 1.0;
-                                          }
-                                          completion:^(BOOL finished) {
-                                              
-                                          }];
-                     }];
-    
-    [self tutorialTags];
-}
-
--(void)tutorialTags
-{
-    [self modalScreen];
-    
-    [self.view addSubview:damageEditArea];
-    [self.view addSubview:lifeEditArea];
-    [self.view addSubview:costEditArea];
-    [self.view addSubview:cdEditArea];
-    
-    [UIView animateWithDuration:0.2
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         _arrowImage.alpha = 0.0;
-                     }
-                     completion:^(BOOL finished) {
-                         _arrowImage.image = ARROW_DOWN_ICON_IMAGE;
-                        // _arrowImage.center = CGPointMake(tagsField.center.x, tagsField.center.y - 50);
-                         
-                         [UIView animateWithDuration:0.2
-                                               delay:0
-                                             options:UIViewAnimationOptionCurveEaseInOut
-                                          animations:^{
-                                              _arrowImage.alpha = 1.0;
-                                          }
-                                          completion:^(BOOL finished) {
-                                              
-                                          }];
-                     }];
-    
-    [self removeAllTutorialViews];
-}
 
 -(void)removeAllTutorialViews
 {
     [self unmodalScreen];
+    [self.tutLabel removeFromSuperview];
+    [self.tutOkButton removeFromSuperview];
     
     [UIView animateWithDuration:0.2
                           delay:0
@@ -2244,13 +2175,13 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
 
 -(void)unmodalScreen
 {
-//    [_modalFilter removeFromSuperview];
+   // [_modalFilter removeFromSuperview];
 }
 
 -(void)setTutLabelCenter:(CGPoint) center
 {
-//    self.tutLabel.center = center;
-//    self.tutOkButton.center = CGPointMake(center.x, center.y + self.tutLabel.bounds.size.height/2 - 40);
+    self.tutLabel.center = center;
+    self.tutOkButton.center = CGPointMake(center.x, center.y + self.tutLabel.bounds.size.height/2 - 40);
 }
 
 //block delay functions

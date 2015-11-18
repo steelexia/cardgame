@@ -25,6 +25,8 @@
 @property int currentCost;
 @property int maxCost;
 @property (strong) GKImagePicker *imagePicker;
+@property (strong) CFLabel*tutLabel;
+@property (strong) CFButton*tutOkButton;
 @property (strong) UIImageView*arrowImage;
 @property enum CardEditorMode editorMode;
 @end
