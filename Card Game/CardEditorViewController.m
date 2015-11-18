@@ -249,7 +249,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     [self updateAllIncrementButtons];
     
     CGPoint cardImagePoint = [self.view convertPoint:self.currentCardView.cardImage.center fromView:self.currentCardView];
-    imageEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.currentCardView.cardImage.frame.size.width*CARD_EDITOR_SCALE, self.currentCardView.cardImage.frame.size.height*CARD_EDITOR_SCALE)];
+    imageEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.currentCardView.cardImage.frame.size.width*CARD_EDITOR_SCALE, self.currentCardView.cardImage.frame.size.height*CARD_EDITOR_SCALE -40)];
     imageEditArea.center = CGPointMake(cardImagePoint.x, cardImagePoint.y);
     
     
