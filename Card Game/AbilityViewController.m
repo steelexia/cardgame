@@ -186,6 +186,125 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     
     [self.view addSubview:maxCostLabel];
     
+    
+    CGPoint attackLabelPoint = [self.view convertPoint:self.currentCardView.attackLabel.center fromView:self.currentCardView];
+    damageIncButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
+    damageIncButton.center = CGPointMake(attackLabelPoint.x, attackLabelPoint.y - 28);
+    [damageIncButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateNormal];
+    //[damageIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
+    [damageIncButton addTarget:self action:@selector(damageIncButtonPressed)    forControlEvents:UIControlEventTouchDown];
+    
+    //[self.view addSubview:damageIncButton];
+    
+    damageDecButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
+    damageDecButton.center = CGPointMake(attackLabelPoint.x, attackLabelPoint.y + 32);
+    [damageDecButton setImage:[UIImage imageNamed:@"decrement_button"] forState:UIControlStateNormal];
+    //[damageDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
+    [damageDecButton addTarget:self action:@selector(damageDecButtonPressed)    forControlEvents:UIControlEventTouchDown];
+    
+   // [self.view addSubview:damageDecButton];
+    
+    CGPoint lifeLabelPoint = [self.view convertPoint:self.currentCardView.lifeLabel.center fromView:self.currentCardView];
+    lifeIncButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
+    lifeIncButton.center = CGPointMake(lifeLabelPoint.x, lifeLabelPoint.y - 28);
+    [lifeIncButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateNormal];
+    //[lifeIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
+    [lifeIncButton addTarget:self action:@selector(lifeIncButtonPressed)    forControlEvents:UIControlEventTouchDown];
+    
+   // [self.view addSubview:lifeIncButton];
+    
+    lifeDecButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
+    lifeDecButton.center = CGPointMake(lifeLabelPoint.x, lifeLabelPoint.y + 32);
+    [lifeDecButton setImage:[UIImage imageNamed:@"decrement_button"] forState:UIControlStateNormal];
+    //[lifeDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
+    [lifeDecButton addTarget:self action:@selector(lifeDecButtonPressed)    forControlEvents:UIControlEventTouchDown];
+    
+   // [self.view addSubview:lifeDecButton];
+    
+    CGPoint cdLabelPoint = [self.view convertPoint:self.currentCardView.cooldownLabel.center fromView:self.currentCardView];
+    cdIncButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
+    cdIncButton.center = CGPointMake(cdLabelPoint.x, cdLabelPoint.y - 32);
+    [cdIncButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateNormal];
+    //[cdIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
+    [cdIncButton addTarget:self action:@selector(cdIncButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+   // [self.view addSubview:cdIncButton];
+    
+    cdDecButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
+    cdDecButton.center = CGPointMake(cdLabelPoint.x, cdLabelPoint.y + 34);
+    [cdDecButton setImage:[UIImage imageNamed:@"decrement_button"] forState:UIControlStateNormal];
+    //[cdDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
+    [cdDecButton addTarget:self action:@selector(cdDecButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+   // [self.view addSubview:cdDecButton];
+    
+    CGPoint costLabelPoint = [self.view convertPoint:self.currentCardView.costLabel.center fromView:self.currentCardView];
+    costIncButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
+    costIncButton.center = CGPointMake(costLabelPoint.x, costLabelPoint.y - 36);
+    [costIncButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateNormal];
+    //[costIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
+    [costIncButton addTarget:self action:@selector(costIncButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    //[self.view addSubview:costIncButton];
+    
+    costDecButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
+    costDecButton.center = CGPointMake(costLabelPoint.x, costLabelPoint.y + 38);
+    [costDecButton setImage:[UIImage imageNamed:@"decrement_button"] forState:UIControlStateNormal];
+    //[costDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
+    [costDecButton addTarget:self action:@selector(costDecButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    //[self.view addSubview:costDecButton];
+    
+    damageEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 60, 36)];
+    damageEditArea.center = CGPointMake(attackLabelPoint.x, attackLabelPoint.y);
+    
+    //damageEditArea.backgroundColor = [UIColor redColor];
+    //damageEditArea.alpha = 0.5;
+    
+    [self.view addSubview:damageEditArea];
+    
+    lifeEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 60, 36)];
+    lifeEditArea.center = CGPointMake(lifeLabelPoint.x, lifeLabelPoint.y);
+    
+    //lifeEditArea.backgroundColor = [UIColor redColor];
+    //lifeEditArea.alpha = 0.5;
+    
+    [self.view addSubview:lifeEditArea];
+    
+    costEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 56, 56)];
+    costEditArea.center = CGPointMake(costLabelPoint.x, costLabelPoint.y);
+    
+    //costEditArea.backgroundColor = [UIColor redColor];
+    //costEditArea.alpha = 0.5;
+    
+    [self.view addSubview:costEditArea];
+    
+    cdEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 40, 40)];
+    cdEditArea.center = CGPointMake(cdLabelPoint.x, cdLabelPoint.y);
+    
+    //cdEditArea.backgroundColor = [UIColor redColor];
+    //cdEditArea.alpha = 0.5;
+    
+    [self.view addSubview:cdEditArea];
+    
+    
+    
+    if (_editorMode == cardEditorModeTutorialTwo) {
+        self.tutOkButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
+        self.tutOkButton.label.text = @"Ok";
+        
+        _arrowImage = [[UIImageView alloc] initWithImage:ARROW_RIGHT_ICON_IMAGE];
+        _arrowImage.frame = CGRectMake(0,0,80,80);
+        
+        self.tutLabel = [[CFLabel alloc] initWithFrame:CGRectMake(0,0,260,180)];
+        [self setTutLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/4)];
+        [self.tutLabel setIsDialog:YES];
+        [self.tutLabel.label setTextAlignment:NSTextAlignmentCenter];
+        [self.view addSubview:_tutLabel];
+        [self.view addSubview:_tutOkButton];
+        [self tutorialAbility];
+    }
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -197,18 +316,6 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     [welcomeView removeFromSuperview];
     [imageEditArea setUserInteractionEnabled:YES];
     [nameTextField setUserInteractionEnabled:YES];
-}
-
--(void)tutorialPoints
-{
-    [self removeAllStatButtons];
-    
-    _arrowImage.image = ARROW_LEFT_ICON_IMAGE;
-    [self.view addSubview:_arrowImage];
-    _arrowImage.alpha = 1.0;
-    _arrowImage.center = CGPointMake(pointsImageBackground.center.x + 70, pointsImageBackground.center.y);
-    
-    [self tutorialAbility];
 }
 
 -(void)tutorialAbility
@@ -224,98 +331,23 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     
     [self setTutLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/4)];
     
-    [self tutorialElement];
+    self.tutLabel.label.text = @"The list below shows the abilities you can add to the card. Some abilities have adjustable values, and having different combinations of abilities can give bonuses and penalties to your points.";
     
     
-    [UIView animateWithDuration:0.2
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         _arrowImage.alpha = 0.0;
-                     }
-                     completion:^(BOOL finished) {
-                         _arrowImage.image = ARROW_DOWN_ICON_IMAGE;
-                         _arrowImage.center = CGPointMake(abilityNewTableView.center.x, abilityNewTableView.frame.origin.y - 40);
-                         
-                         [UIView animateWithDuration:0.2
-                                               delay:0
-                                             options:UIViewAnimationOptionCurveEaseInOut
-                                          animations:^{
-                                              _arrowImage.alpha = 1.0;
-                                          }
-                                          completion:^(BOOL finished) {
-                                              
-                                          }];
-                     }];
+    [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
     
+    _arrowImage.image = ARROW_DOWN_ICON_IMAGE;
+    [self.view addSubview:_arrowImage];
+    _arrowImage.center = CGPointMake(abilityNewTableView.center.x, abilityNewTableView.frame.origin.y - 40);
+    _arrowImage.alpha = 1.0;
 }
 
--(void)tutorialElement
-{
-    [self.view addSubview:elementEditArea];
-   
-    
-    [UIView animateWithDuration:0.2
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         _arrowImage.alpha = 0.0;
-                     }
-                     completion:^(BOOL finished) {
-                         _arrowImage.image = ARROW_RIGHT_ICON_IMAGE;
-                         CGPoint target = [self.view convertPoint:self.currentCardView.elementLabel.center fromView:self.currentCardView];
-                         _arrowImage.center = CGPointMake(target.x - 60, target.y);
-                         
-                         [UIView animateWithDuration:0.2
-                                               delay:0
-                                             options:UIViewAnimationOptionCurveEaseInOut
-                                          animations:^{
-                                              _arrowImage.alpha = 1.0;
-                                          }
-                                          completion:^(BOOL finished) {
-                                              
-                                          }];
-                     }];
-    
-    [self tutorialTags];
-}
-
--(void)tutorialTags
-{
-    [self modalScreen];
-    
-    [self.view addSubview:damageEditArea];
-    [self.view addSubview:lifeEditArea];
-    [self.view addSubview:costEditArea];
-    [self.view addSubview:cdEditArea];
-    
-    [UIView animateWithDuration:0.2
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         _arrowImage.alpha = 0.0;
-                     }
-                     completion:^(BOOL finished) {
-                         _arrowImage.image = ARROW_DOWN_ICON_IMAGE;
-                        // _arrowImage.center = CGPointMake(tagsField.center.x, tagsField.center.y - 50);
-                         
-                         [UIView animateWithDuration:0.2
-                                               delay:0
-                                             options:UIViewAnimationOptionCurveEaseInOut
-                                          animations:^{
-                                              _arrowImage.alpha = 1.0;
-                                          }
-                                          completion:^(BOOL finished) {
-                                              
-                                          }];
-                     }];
-    
-    [self removeAllTutorialViews];
-}
 
 -(void)removeAllTutorialViews
 {
     [self unmodalScreen];
+    [self.tutLabel removeFromSuperview];
+    [self.tutOkButton removeFromSuperview];
     
     [UIView animateWithDuration:0.2
                           delay:0
@@ -1242,129 +1274,129 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     UITouch *touch = [touches anyObject];
     UIView*touchedView = touch.view;
     
-//    if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
-//    {
-//        if (touchedView == damageEditArea)
-//        {
-//            [self.view addSubview:damageDecButton];
-//            [self.view addSubview:damageIncButton];
-//            damageDecButton.alpha = 0;
-//            damageIncButton.alpha = 0;
-//            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
-//                             animations:^{
-//                                 damageDecButton.alpha = 1;
-//                                 damageIncButton.alpha = 1;
-//                             }
-//                             completion:^(BOOL completed){
-//                                 
-//                             }];
-//        }
-//        else if (touchedView != self.currentCardView)
-//        {
-//            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
-//                             animations:^{
-//                                 damageDecButton.alpha = 0;
-//                                 damageIncButton.alpha = 0;
-//                             }
-//                             completion:^(BOOL completed){
-//                                 [damageDecButton removeFromSuperview];
-//                                 [damageIncButton removeFromSuperview];
-//                             }];
-//        }
-//        
-//        
-//        if (touchedView == lifeEditArea)
-//        {
-//            [self.view addSubview:lifeDecButton];
-//            [self.view addSubview:lifeIncButton];
-//            lifeDecButton.alpha = 0;
-//            lifeIncButton.alpha = 0;
-//            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
-//                             animations:^{
-//                                 lifeDecButton.alpha = 1;
-//                                 lifeIncButton.alpha = 1;
-//                             }
-//                             completion:^(BOOL completed){
-//                                 
-//                             }];
-//        }
-//        else if (touchedView != self.currentCardView)
-//        {
-//            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
-//                             animations:^{
-//                                 lifeDecButton.alpha = 0;
-//                                 lifeIncButton.alpha = 0;
-//                             }
-//                             completion:^(BOOL completed){
-//                                 [lifeDecButton removeFromSuperview];
-//                                 [lifeIncButton removeFromSuperview];
-//                             }];
-//        }
-//        
-//        if (touchedView == cdEditArea)
-//        {
-//            [self.view addSubview:cdDecButton];
-//            [self.view addSubview:cdIncButton];
-//            cdDecButton.alpha = 0;
-//            cdIncButton.alpha = 0;
-//            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
-//                             animations:^{
-//                                 cdDecButton.alpha = 1;
-//                                 cdIncButton.alpha = 1;
-//                             }
-//                             completion:^(BOOL completed){
-//                                 
-//                             }];
-//        }
-//        else if (touchedView != self.currentCardView)
-//        {
-//            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
-//                             animations:^{
-//                                 cdDecButton.alpha = 0;
-//                                 cdIncButton.alpha = 0;
-//                             }
-//                             completion:^(BOOL completed){
-//                                 [cdDecButton removeFromSuperview];
-//                                 [cdIncButton removeFromSuperview];
-//                             }];
-//        }
-//    }
-//    
-//    if (touchedView == costEditArea)
-//    {
-//        [self.view addSubview:costDecButton];
-//        [self.view addSubview:costIncButton];
-//        costDecButton.alpha = 0;
-//        costIncButton.alpha = 0;
-//        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
-//                         animations:^{
-//                             costDecButton.alpha = 1;
-//                             costIncButton.alpha = 1;
-//                         }
-//                         completion:^(BOOL completed){
-//                             
-//                         }];
-//    }
-//    else if (touchedView == elementEditArea)
-//    {
-//        [self openElementEditScreen];
-//    }
-//    else if (touchedView == imageEditArea)
-//    {
-//        [self openImageUploadScreen];
-//    }
-//    else if (touchedView != self.currentCardView)
-//    {
-//        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
-//                         animations:^{
-//                             costDecButton.alpha = 0;
-//                             costIncButton.alpha = 0;
-//                         }
-//                         completion:^(BOOL completed){
-//                             [costDecButton removeFromSuperview];
-//                             [costIncButton removeFromSuperview];
-//                         }];
-//    }
+    if ([self.currentCardModel isKindOfClass:[MonsterCardModel class]])
+    {
+        if (touchedView == damageEditArea)
+        {
+            [self.view addSubview:damageDecButton];
+            [self.view addSubview:damageIncButton];
+            damageDecButton.alpha = 0;
+            damageIncButton.alpha = 0;
+            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 damageDecButton.alpha = 1;
+                                 damageIncButton.alpha = 1;
+                             }
+                             completion:^(BOOL completed){
+                                 
+                             }];
+        }
+        else if (touchedView != self.currentCardView)
+        {
+            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 damageDecButton.alpha = 0;
+                                 damageIncButton.alpha = 0;
+                             }
+                             completion:^(BOOL completed){
+                                 [damageDecButton removeFromSuperview];
+                                 [damageIncButton removeFromSuperview];
+                             }];
+        }
+        
+        
+        if (touchedView == lifeEditArea)
+        {
+            [self.view addSubview:lifeDecButton];
+            [self.view addSubview:lifeIncButton];
+            lifeDecButton.alpha = 0;
+            lifeIncButton.alpha = 0;
+            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 lifeDecButton.alpha = 1;
+                                 lifeIncButton.alpha = 1;
+                             }
+                             completion:^(BOOL completed){
+                                 
+                             }];
+        }
+        else if (touchedView != self.currentCardView)
+        {
+            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 lifeDecButton.alpha = 0;
+                                 lifeIncButton.alpha = 0;
+                             }
+                             completion:^(BOOL completed){
+                                 [lifeDecButton removeFromSuperview];
+                                 [lifeIncButton removeFromSuperview];
+                             }];
+        }
+        
+        if (touchedView == cdEditArea)
+        {
+            [self.view addSubview:cdDecButton];
+            [self.view addSubview:cdIncButton];
+            cdDecButton.alpha = 0;
+            cdIncButton.alpha = 0;
+            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 cdDecButton.alpha = 1;
+                                 cdIncButton.alpha = 1;
+                             }
+                             completion:^(BOOL completed){
+                                 
+                             }];
+        }
+        else if (touchedView != self.currentCardView)
+        {
+            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 cdDecButton.alpha = 0;
+                                 cdIncButton.alpha = 0;
+                             }
+                             completion:^(BOOL completed){
+                                 [cdDecButton removeFromSuperview];
+                                 [cdIncButton removeFromSuperview];
+                             }];
+        }
+    }
+    
+    if (touchedView == costEditArea)
+    {
+        [self.view addSubview:costDecButton];
+        [self.view addSubview:costIncButton];
+        costDecButton.alpha = 0;
+        costIncButton.alpha = 0;
+        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             costDecButton.alpha = 1;
+                             costIncButton.alpha = 1;
+                         }
+                         completion:^(BOOL completed){
+                             
+                         }];
+    }
+    else if (touchedView == elementEditArea)
+    {
+        [self openElementEditScreen];
+    }
+    else if (touchedView == imageEditArea)
+    {
+        //[self openImageUploadScreen];
+    }
+    else if (touchedView != self.currentCardView)
+    {
+        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             costDecButton.alpha = 0;
+                             costIncButton.alpha = 0;
+                         }
+                         completion:^(BOOL completed){
+                             [costDecButton removeFromSuperview];
+                             [costIncButton removeFromSuperview];
+                         }];
+    }
     
     
     //element select
@@ -1647,7 +1679,7 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
         
         //[self abilityEditAreaSetEnabled:NO]; //turn off the other table's buttons
         
-       // [self removeAllStatButtons];
+        [self removeAllStatButtons];
     }
     else if (tableView == abilityExistingTableView)
     {
@@ -2143,13 +2175,13 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
 
 -(void)unmodalScreen
 {
-//    [_modalFilter removeFromSuperview];
+   // [_modalFilter removeFromSuperview];
 }
 
 -(void)setTutLabelCenter:(CGPoint) center
 {
-//    self.tutLabel.center = center;
-//    self.tutOkButton.center = CGPointMake(center.x, center.y + self.tutLabel.bounds.size.height/2 - 40);
+    self.tutLabel.center = center;
+    self.tutOkButton.center = CGPointMake(center.x, center.y + self.tutLabel.bounds.size.height/2 - 40);
 }
 
 //block delay functions

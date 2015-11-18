@@ -27,6 +27,12 @@ const NSString*SERVICE_NAME = @"com.contentgames.cardgame";
 const NSString*ACCOUNT_NAME = @"username";
 const NSString*PASSWORD_NAME = @"password";
 
+CFButton*loginButton;
+UIButton*signupButton;
+CFLabel *passwordFieldBackground;
+UILabel *passwordFieldLabel;
+BOOL isNewDevice;
+
 - (id)init
 {
     self = [super init];
@@ -88,7 +94,7 @@ const NSString*PASSWORD_NAME = @"password";
     [self.view addSubview:usernameFieldBackground];
     [self.view addSubview:_usernameField];
     
-    UILabel*passwordFieldLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 120, 30)];
+    passwordFieldLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 120, 30)];
     passwordFieldLabel.text = @"Password:";
     [passwordFieldLabel setFont:[UIFont fontWithName:cardMainFont size:12]];
     [passwordFieldLabel setTextAlignment:NSTextAlignmentRight];
@@ -105,18 +111,25 @@ const NSString*PASSWORD_NAME = @"password";
     [_passwordField addTarget:self action:@selector(fieldBegan) forControlEvents:UIControlEventEditingDidBegin];
     [_passwordField addTarget:self action:@selector(fieldFinished) forControlEvents:UIControlEventEditingDidEnd];
     
-    CFLabel *passwordFieldBackground = [[CFLabel alloc] initWithFrame:CGRectInset(_passwordField.frame, -6, -4)];
+    passwordFieldBackground = [[CFLabel alloc] initWithFrame:CGRectInset(_passwordField.frame, -6, -4)];
     [passwordFieldBackground setBackgroundColor:COLOUR_INTERFACE_BLUE_LIGHT];
     [self.view addSubview:passwordFieldBackground];
     [self.view addSubview:_passwordField];
     
-    CFButton*loginButton = [[CFButton alloc] initWithFrame:CGRectMake(0,0,80,40)];
+    loginButton = [[CFButton alloc] initWithFrame:CGRectMake(0,0,80,40)];
     [loginButton setTextSize:12];
     loginButton.label.text = @"Log In";
     loginButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT*2/3 + 100);
     [loginButton addTarget:self action:@selector(loginButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:loginButton];
     
+    signupButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
+    [signupButton setTitle:@"Sign Up" forState:UIControlStateNormal];
+    [signupButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    signupButton.center = CGPointMake(SCREEN_WIDTH/5 *4, SCREEN_HEIGHT*2/3 + 130);
+    [signupButton.titleLabel setFont:[UIFont fontWithName:cardFlavourTextFont size:12]];
+    [signupButton addTarget:self action:@selector(signupButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:signupButton];
     
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
                                            initWithTarget:self
@@ -145,7 +158,16 @@ const NSString*PASSWORD_NAME = @"password";
     _loginMessageButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT*4/5);
     [_loginMessageButton addTarget:self action:@selector(closeLoadingView)    forControlEvents:UIControlEventTouchUpInside];
     
-    BOOL isNewDevice = [self checkIsNewDevice];
+    isNewDevice = [self checkIsNewDevice];
+    
+    if (!isNewDevice) {
+        [self loginButtonPressed];
+    }
+}
+
+-(void)signupButtonPressed
+{
+    
     
     if (isNewDevice)
     {
@@ -157,12 +179,24 @@ const NSString*PASSWORD_NAME = @"password";
         loginButton.label.text = @"Sign Up";
         [loginButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
         [loginButton addTarget:self action:@selector(logInDefaultUser)    forControlEvents:UIControlEventTouchUpInside];
+        [signupButton setTitle:@"Log in" forState:UIControlStateNormal];
+        isNewDevice = NO;
     }
     else
     {
+        [self.view addSubview:_passwordField];
+        [self.view addSubview:passwordFieldBackground];
+        [self.view addSubview:passwordFieldLabel];
+        
+        loginButton.label.text = @"Log In";
+        [loginButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+        [loginButton addTarget:self action:@selector(loginButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+        [signupButton setTitle:@"Sign Up" forState:UIControlStateNormal];
+        isNewDevice = YES;
         NSLog(@"not new device");
-        [self loginButtonPressed];
+        //[self loginButtonPressed];
     }
+
 }
 
 -(void)logInDefaultUser

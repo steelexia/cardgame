@@ -249,7 +249,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     [self updateAllIncrementButtons];
     
     CGPoint cardImagePoint = [self.view convertPoint:self.currentCardView.cardImage.center fromView:self.currentCardView];
-    imageEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.currentCardView.cardImage.frame.size.width*CARD_EDITOR_SCALE, self.currentCardView.cardImage.frame.size.height*CARD_EDITOR_SCALE)];
+    imageEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.currentCardView.cardImage.frame.size.width*CARD_EDITOR_SCALE, self.currentCardView.cardImage.frame.size.height*CARD_EDITOR_SCALE -40)];
     imageEditArea.center = CGPointMake(cardImagePoint.x, cardImagePoint.y);
     
     
@@ -921,7 +921,8 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [self.view addSubview:tutorialOneLabel];*/
         
         [self.view addSubview:_arrowImage];
-        _arrowImage.center = CGPointMake(60, 130);
+        
+        _arrowImage.center = CGPointMake(yesButton.center.x - 100 + welcomeView.frame.origin.x, yesButton.center.y + welcomeView.frame.origin.y);
         
         //arow showing image
         [self performBlock:^{
@@ -944,6 +945,28 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
                              }];
         } afterDelay:2];
         
+        //arow showing image
+        [self performBlock:^{
+            _arrowImage.center = CGPointMake(60, 130);
+            [UIView animateWithDuration:0.2
+                                  delay:0
+                                options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 _arrowImage.alpha = 1.0;
+                             }
+                             completion:^(BOOL finished) {
+                                 [UIView animateWithDuration:0.2
+                                                       delay:2
+                                                     options:UIViewAnimationOptionCurveEaseInOut
+                                                  animations:^{
+                                                      _arrowImage.alpha = 0.0;
+                                                  }
+                                                  completion:^(BOOL finished) {
+                                                      
+                                                  }];
+                             }];
+        } afterDelay:5];
+        
         //arrow showing name
         [self performBlock:^{
             _arrowImage.center = CGPointMake(90, 50);
@@ -964,7 +987,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
                                                       
                                                   }];
                              }];
-        } afterDelay:5];
+        } afterDelay:8];
         
     }
     else if (_editorMode == cardEditorModeTutorialTwo)
@@ -1188,7 +1211,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     
     [self setTutLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/4)];
     
-    self.tutLabel.label.text = @"The list below shows the abilities you can add to the card. Some abilities have adjustable values, and having different combinations of abilities can give bonuses and penalties to your points.";
+    self.tutLabel.label.text = @"You can also change the abilities of the card by tapping on the Ability button.";
     
     [self.tutOkButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
     [self.tutOkButton addTarget:self action:@selector(tutorialElement) forControlEvents:UIControlEventTouchUpInside];
@@ -1202,7 +1225,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
                      }
                      completion:^(BOOL finished) {
                          _arrowImage.image = ARROW_DOWN_ICON_IMAGE;
-                         _arrowImage.center = CGPointMake(abilityNewTableView.center.x, abilityNewTableView.frame.origin.y - 40);
+                         _arrowImage.center = CGPointMake(abilityButton.center.x, abilityButton.frame.origin.y - 40);
                          
                          [UIView animateWithDuration:0.2
                                                delay:0
