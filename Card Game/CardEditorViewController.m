@@ -57,7 +57,7 @@ const int SPELL_CARD_BONUS_ABILITY_COUNT = 1;
 StrokedLabel*currentCostLabel, *maxCostLabel;
 
 /** New is for adding new abilities, existing is for editing existing abilities */
-AbilityTableView *abilityNewTableView, *abilityExistingTableView;
+AbilityTableView *abilityExistingTableView;
 
 UILabel*abilityValueLabel;
 CFButton *abilityIncButton, *abilityDecButton, *abilityAddButton, *abilityRemoveButton;
@@ -178,152 +178,111 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     [self.view addSubview:nameTextField];
     
     
-    CGPoint attackLabelPoint = [self.view convertPoint:self.currentCardView.attackLabel.center fromView:self.currentCardView];
+    
+    
+    abilityExistingTableView = [[AbilityTableView alloc] initWithFrame:CGRectMake(90, 242, 172, 90)  mode:abilityTableViewExisting];
+    abilityExistingTableView.cevc = self;
+    //[abilityExistingTableView setHidden:YES];
+    
+    //[abilityExistingTableView setBackgroundColor:[UIColor blueColor]];
+    [self.view addSubview:abilityExistingTableView];
+    
     damageIncButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
-    damageIncButton.center = CGPointMake(attackLabelPoint.x, attackLabelPoint.y - 28);
     [damageIncButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateNormal];
     //[damageIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
-    [damageIncButton addTarget:self action:@selector(damageIncButtonPressed)    forControlEvents:UIControlEventTouchDown];
     
-    //[self.view addSubview:damageIncButton];
     
     damageDecButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
-    damageDecButton.center = CGPointMake(attackLabelPoint.x, attackLabelPoint.y + 32);
     [damageDecButton setImage:[UIImage imageNamed:@"decrement_button"] forState:UIControlStateNormal];
     //[damageDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
-    [damageDecButton addTarget:self action:@selector(damageDecButtonPressed)    forControlEvents:UIControlEventTouchDown];
     
-    //[self.view addSubview:damageDecButton];
     
-    CGPoint lifeLabelPoint = [self.view convertPoint:self.currentCardView.lifeLabel.center fromView:self.currentCardView];
     lifeIncButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
-    lifeIncButton.center = CGPointMake(lifeLabelPoint.x, lifeLabelPoint.y - 28);
     [lifeIncButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateNormal];
     //[lifeIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
-    [lifeIncButton addTarget:self action:@selector(lifeIncButtonPressed)    forControlEvents:UIControlEventTouchDown];
     
-    //[self.view addSubview:lifeIncButton];
     
     lifeDecButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
-    lifeDecButton.center = CGPointMake(lifeLabelPoint.x, lifeLabelPoint.y + 32);
     [lifeDecButton setImage:[UIImage imageNamed:@"decrement_button"] forState:UIControlStateNormal];
     //[lifeDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
-    [lifeDecButton addTarget:self action:@selector(lifeDecButtonPressed)    forControlEvents:UIControlEventTouchDown];
     
-    //[self.view addSubview:lifeDecButton];
     
-    CGPoint cdLabelPoint = [self.view convertPoint:self.currentCardView.cooldownLabel.center fromView:self.currentCardView];
     cdIncButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
-    cdIncButton.center = CGPointMake(cdLabelPoint.x, cdLabelPoint.y - 32);
     [cdIncButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateNormal];
     //[cdIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
-    [cdIncButton addTarget:self action:@selector(cdIncButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    //[self.view addSubview:cdIncButton];
     
     cdDecButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
-    cdDecButton.center = CGPointMake(cdLabelPoint.x, cdLabelPoint.y + 34);
     [cdDecButton setImage:[UIImage imageNamed:@"decrement_button"] forState:UIControlStateNormal];
     //[cdDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
-    [cdDecButton addTarget:self action:@selector(cdDecButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    //[self.view addSubview:cdDecButton];
     
-    CGPoint costLabelPoint = [self.view convertPoint:self.currentCardView.costLabel.center fromView:self.currentCardView];
     costIncButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
-    costIncButton.center = CGPointMake(costLabelPoint.x, costLabelPoint.y - 36);
     [costIncButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateNormal];
     //[costIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
-    [costIncButton addTarget:self action:@selector(costIncButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    //[self.view addSubview:costIncButton];
     
     costDecButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
-    costDecButton.center = CGPointMake(costLabelPoint.x, costLabelPoint.y + 38);
     [costDecButton setImage:[UIImage imageNamed:@"decrement_button"] forState:UIControlStateNormal];
     //[costDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
+    
+    
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    
+    CGPoint attackLabelPoint = [self.view convertPoint:self.currentCardView.attackLabel.center fromView:self.currentCardView];
+    damageIncButton.center = CGPointMake(attackLabelPoint.x, attackLabelPoint.y - 28);
+    //[self.view addSubview:damageIncButton];
+    [damageIncButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [damageIncButton addTarget:self action:@selector(damageIncButtonPressed)    forControlEvents:UIControlEventTouchDown];
+    
+    damageDecButton.center = CGPointMake(attackLabelPoint.x, attackLabelPoint.y + 32);
+    //[self.view addSubview:damageDecButton];
+    [damageDecButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [damageDecButton addTarget:self action:@selector(damageDecButtonPressed)    forControlEvents:UIControlEventTouchDown];
+    
+    CGPoint lifeLabelPoint = [self.view convertPoint:self.currentCardView.lifeLabel.center fromView:self.currentCardView];
+    
+    lifeIncButton.center = CGPointMake(lifeLabelPoint.x, lifeLabelPoint.y - 28);
+    //[self.view addSubview:lifeIncButton];
+    [lifeIncButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [lifeIncButton addTarget:self action:@selector(lifeIncButtonPressed)    forControlEvents:UIControlEventTouchDown];
+    
+    lifeDecButton.center = CGPointMake(lifeLabelPoint.x, lifeLabelPoint.y + 32);
+    //[self.view addSubview:lifeDecButton];
+    [lifeDecButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [lifeDecButton addTarget:self action:@selector(lifeDecButtonPressed)    forControlEvents:UIControlEventTouchDown];
+    
+    CGPoint cdLabelPoint = [self.view convertPoint:self.currentCardView.cooldownLabel.center fromView:self.currentCardView];
+    
+    cdIncButton.center = CGPointMake(cdLabelPoint.x, cdLabelPoint.y - 32);
+    //[self.view addSubview:cdIncButton];
+    [cdIncButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [cdIncButton addTarget:self action:@selector(cdIncButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    cdDecButton.center = CGPointMake(cdLabelPoint.x, cdLabelPoint.y + 34);
+    //[self.view addSubview:cdDecButton];
+    [cdDecButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [cdDecButton addTarget:self action:@selector(cdDecButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    CGPoint costLabelPoint = [self.view convertPoint:self.currentCardView.costLabel.center fromView:self.currentCardView];
+    
+    costIncButton.center = CGPointMake(costLabelPoint.x, costLabelPoint.y - 36);
+    //[self.view addSubview:costIncButton];
+    [costIncButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [costIncButton addTarget:self action:@selector(costIncButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    costDecButton.center = CGPointMake(costLabelPoint.x, costLabelPoint.y + 38);
+    //[self.view addSubview:costDecButton];
+    [costDecButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
     [costDecButton addTarget:self action:@selector(costDecButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    //[self.view addSubview:costDecButton];
-    
     [self updateAllIncrementButtons];
-    
-    CGPoint cardImagePoint = [self.view convertPoint:self.currentCardView.cardImage.center fromView:self.currentCardView];
-    imageEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.currentCardView.cardImage.frame.size.width*CARD_EDITOR_SCALE, self.currentCardView.cardImage.frame.size.height*CARD_EDITOR_SCALE -40)];
-    imageEditArea.center = CGPointMake(cardImagePoint.x, cardImagePoint.y);
-    
-    
-    //imageEditArea.backgroundColor = [UIColor redColor];
-    //imageEditArea.alpha = 0.5;
-    [self.view addSubview:imageEditArea];
-    
-    damageEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 60, 36)];
-    damageEditArea.center = CGPointMake(attackLabelPoint.x, attackLabelPoint.y);
-    
-    //damageEditArea.backgroundColor = [UIColor redColor];
-    //damageEditArea.alpha = 0.5;
-    
-    [self.view addSubview:damageEditArea];
-    
-    lifeEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 60, 36)];
-    lifeEditArea.center = CGPointMake(lifeLabelPoint.x, lifeLabelPoint.y);
-    
-    //lifeEditArea.backgroundColor = [UIColor redColor];
-    //lifeEditArea.alpha = 0.5;
-    
-    [self.view addSubview:lifeEditArea];
-    
-    costEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 56, 56)];
-    costEditArea.center = CGPointMake(costLabelPoint.x, costLabelPoint.y);
-    
-    //costEditArea.backgroundColor = [UIColor redColor];
-    //costEditArea.alpha = 0.5;
-    
-    [self.view addSubview:costEditArea];
-    
-    cdEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 40, 40)];
-    cdEditArea.center = CGPointMake(cdLabelPoint.x, cdLabelPoint.y);
-    
-    //cdEditArea.backgroundColor = [UIColor redColor];
-    //cdEditArea.alpha = 0.5;
-    
-    [self.view addSubview:cdEditArea];
-    
-    CGPoint elementLabelPoint = [self.view convertPoint:self.currentCardView.elementLabel.center fromView:self.currentCardView];
-    elementEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 56, 28)];
-    elementEditArea.center = CGPointMake(elementLabelPoint.x, elementLabelPoint.y);
-    
-    //elementEditArea.backgroundColor = [UIColor redColor];
-    //elementEditArea.alpha = 0.5;
-    
-    if (_editorMode == cardEditorModeCreation || _editorMode == cardEditorModeTutorialTwo || _editorMode == cardEditorModeTutorialThree)
-        [self.view addSubview:elementEditArea];
-    
-    abilityEditArea = [[UIView alloc] initWithFrame: CGRectMake(80, 242, 186, 90)];
-    
-    //abilityEditArea.backgroundColor = [UIColor redColor];
-    //abilityEditArea.alpha = 0.5;
-    
-    [self.view addSubview:abilityEditArea];
     
     //-------------------------ability views------------------------//
     
     //existing
-    abilityExistingTableView = [[AbilityTableView alloc] initWithFrame:CGRectMake(90, 242, 172, 90)  mode:abilityTableViewExisting];
-    abilityExistingTableView.cevc = self;
-    [abilityExistingTableView setHidden:YES];
-    //[self.view addSubview:abilityExistingTableView];
-    
-    CFLabel*abilityNewTableViewBackground = [[CFLabel alloc] initWithFrame:CGRectMake(120, 345, 186, SCREEN_HEIGHT - 345 - 28)];
-    [abilityNewTableViewBackground setHidden:YES];
-    [self.view addSubview:abilityNewTableViewBackground];
-    
-    //new
-    abilityNewTableView = [[AbilityTableView alloc] initWithFrame:CGRectInset(abilityNewTableViewBackground.frame, 8, 6) mode:abilityTableViewNew];
-    abilityNewTableView.cevc = self;
-    [abilityNewTableView setHidden:YES];
-    
-    [self.view addSubview:abilityNewTableView];
     
     
     tagsField =  [[UITextField alloc] initWithFrame:CGRectMake(130,SCREEN_HEIGHT- 24,186,20)];
@@ -340,7 +299,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     [tagsField.layer setBorderColor:[UIColor blackColor].CGColor];
     [tagsField.layer setBorderWidth:2];
     [tagsField setBackgroundColor:COLOUR_INTERFACE_BLUE_LIGHT];
-   // [tagsField setHidden:YES];
+    // [tagsField setHidden:YES];
     tagsField.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0);
     //tagsField.layer.cornerRadius = 4.0;
     [tagsField addTarget:self action:@selector(tagsTextFieldEdited) forControlEvents:UIControlEventEditingChanged];
@@ -427,7 +386,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     //[monsterCardButton setImage:[UIImage imageNamed:@"monster_button"] forState:UIControlStateNormal];
     //[monsterCardButton setImage:[UIImage imageNamed:@"monster_button_gray"] forState:UIControlStateDisabled];
     //[monsterCardButton setTextSize:11];
-   /// monsterCardButton.label.text = @"Monster";
+    /// monsterCardButton.label.text = @"Monster";
     [monsterCardButton setTitle:@"Monster" forState:UIControlStateNormal];
     [monsterCardButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [monsterCardButton.titleLabel setFont:[UIFont fontWithName:cardMainFont size:11]];
@@ -435,7 +394,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     [monsterCardButton setBackgroundImage:[UIImage imageNamed:@"CardCreateBlueButton.png"] forState:UIControlStateNormal];
     [monsterCardButton addTarget:self action:@selector(monsterButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:monsterCardButton];
-
+    
     spellCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 70, 40)];
     //[spellCardButton setImage:[UIImage imageNamed:@"spell_button"] forState:UIControlStateNormal];
     //[spellCardButton setImage:[UIImage imageNamed:@"spell_button_gray"] forState:UIControlStateDisabled];
@@ -454,7 +413,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     //[saveCardButton setImage:[UIImage imageNamed:@"save_card_button"] forState:UIControlStateNormal];
     //[saveCardButton setImage:[UIImage imageNamed:@"save_card_button_gray"] forState:UIControlStateDisabled];
     //[saveCardButton setTextSize:14];
-   // saveCardButton.label.text = @"Save";
+    // saveCardButton.label.text = @"Save";
     [saveCardButton setTitle:@"Save" forState:UIControlStateNormal];
     [saveCardButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [saveCardButton.titleLabel setFont:[UIFont fontWithName:cardMainFont size:11]];
@@ -828,6 +787,74 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     _arrowImage.frame = CGRectMake(0,0,80,80);
     _arrowImage.alpha = 0.0;
     
+    //------ Set Edit Areas -----//
+    
+    CGPoint cardImagePoint = [self.view convertPoint:self.currentCardView.cardImage.center fromView:self.currentCardView];
+    imageEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.currentCardView.cardImage.frame.size.width*CARD_EDITOR_SCALE, self.currentCardView.cardImage.frame.size.height*CARD_EDITOR_SCALE -40)];
+    imageEditArea.center = CGPointMake(cardImagePoint.x, cardImagePoint.y);
+    
+    
+    //imageEditArea.backgroundColor = [UIColor redColor];
+    //imageEditArea.alpha = 0.5;
+    [self.view addSubview:imageEditArea];
+    
+    CGPoint damagePoint = [self.view convertPoint:self.currentCardView.attackLabel.center fromView:self.currentCardView];
+    damageEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 60, 36)];
+    damageEditArea.center = CGPointMake(damagePoint.x, damagePoint.y);
+    
+//    damageEditArea.backgroundColor = [UIColor redColor];
+//    damageEditArea.alpha = 0.5;
+    
+    [self.view addSubview:damageEditArea];
+    
+    CGPoint lifePoint = [self.view convertPoint:self.currentCardView.lifeLabel.center fromView:self.currentCardView];
+    
+    lifeEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 60, 36)];
+    lifeEditArea.center = CGPointMake(lifePoint.x, lifePoint.y);
+    
+//    lifeEditArea.backgroundColor = [UIColor blueColor];
+//    lifeEditArea.alpha = 0.5;
+    
+    [self.view addSubview:lifeEditArea];
+    
+    CGPoint costPoint = [self.view convertPoint:self.currentCardView.costLabel.center fromView:self.currentCardView];
+    
+    costEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 56, 56)];
+    costEditArea.center = CGPointMake(costPoint.x, costPoint.y);
+    
+//    costEditArea.backgroundColor = [UIColor greenColor];
+//    costEditArea.alpha = 0.5;
+    
+    [self.view addSubview:costEditArea];
+    
+    CGPoint cdPoint = [self.view convertPoint:self.currentCardView.cooldownLabel.center fromView:self.currentCardView];
+    
+    cdEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 40, 40)];
+    cdEditArea.center = CGPointMake(cdPoint.x, cdPoint.y);
+    
+//    cdEditArea.backgroundColor = [UIColor grayColor];
+//    cdEditArea.alpha = 0.5;
+    
+    [self.view addSubview:cdEditArea];
+    
+    CGPoint elementLabelPoint = [self.view convertPoint:self.currentCardView.elementLabel.center fromView:self.currentCardView];
+    elementEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 56, 28)];
+    elementEditArea.center = CGPointMake(elementLabelPoint.x, elementLabelPoint.y);
+    
+//    elementEditArea.backgroundColor = [UIColor yellowColor];
+//    elementEditArea.alpha = 0.5;
+    
+    if (_editorMode == cardEditorModeCreation || _editorMode == cardEditorModeTutorialTwo || _editorMode == cardEditorModeTutorialThree)
+        [self.view addSubview:elementEditArea];
+    
+    abilityEditArea = [[UIView alloc] initWithFrame: CGRectMake(120, 242, 186, 90)];
+    
+//    abilityEditArea.backgroundColor = [UIColor lightGrayColor];
+//    abilityEditArea.alpha = 0.5;
+    [self.view addSubview:abilityEditArea];
+    
+    //----- Customize Views ---------//
+    
     if (_editorMode == cardEditorModeVoting)
         [saveCardConfirmButton addTarget:self action:@selector(voteCardConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     else
@@ -841,7 +868,6 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [tagsLabel setTextColor:COLOUR_INTERFACE_GRAY];
         [monsterCardButton setEnabled:NO];
         [spellCardButton setEnabled:NO];
-        abilityNewTableView.currentCard = _currentCardModel;
         abilityExistingTableView.currentCard = _currentCardModel;
         [abilityButton setHidden:YES];
         [flavourButton setHidden:YES];
@@ -885,10 +911,10 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [yesButton setCenter:CGPointMake(welcomeView.frame.size.width/2, welcomeView.frame.size.height - 40)];
         
         [yesButton addTarget:self action:@selector(yesButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-       
+        
         [welcomeView addSubview:yesButton];
         
-       // [welcomeView setBackgroundColor:[UIColor colorWithRed:79.0/255.0 green:79.0/255.0 blue:79.0/255.0 alpha:1.0]];
+        // [welcomeView setBackgroundColor:[UIColor colorWithRed:79.0/255.0 green:79.0/255.0 blue:79.0/255.0 alpha:1.0]];
         [self.view addSubview:welcomeView];
         
         //disable most views
@@ -907,18 +933,15 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [cancelCardButton setEnabled:NO];
         [abilityButton setHidden:YES];
         [flavourButton setHidden:YES];
-        abilityNewTableView.tableView.alpha = 0.5;
-
-        [abilityNewTableView setUserInteractionEnabled:NO];
         
         [nameTextField setUserInteractionEnabled:NO];
         [imageEditArea setUserInteractionEnabled:NO];
         
-       /* CFLabel*tutorialOneLabel = [[CFLabel alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH*3/4,  SCREEN_HEIGHT/4)];
-        tutorialOneLabel.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - SCREEN_HEIGHT/3);
-        tutorialOneLabel.label.text = @"This is the card forging interface. Give your card an image and a name before pressing save. We'll ignore the other buttons for now.";
-        
-        [self.view addSubview:tutorialOneLabel];*/
+        /* CFLabel*tutorialOneLabel = [[CFLabel alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH*3/4,  SCREEN_HEIGHT/4)];
+         tutorialOneLabel.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - SCREEN_HEIGHT/3);
+         tutorialOneLabel.label.text = @"This is the card forging interface. Give your card an image and a name before pressing save. We'll ignore the other buttons for now.";
+         
+         [self.view addSubview:tutorialOneLabel];*/
         
         [self.view addSubview:_arrowImage];
         
@@ -1004,7 +1027,6 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         //[abilityEditArea removeFromSuperview];
         
         //unlocked after
-        [abilityNewTableView setUserInteractionEnabled:NO];
         [elementEditArea removeFromSuperview];
         
         //[self modalScreen];
@@ -1131,6 +1153,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         //just a short instruction
         self.tutOkButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
         self.tutOkButton.label.text = @"Ok";
+        [spellCardButton setEnabled:YES];
         
         self.tutLabel = [[CFLabel alloc] initWithFrame:CGRectMake(0,0,260,180)];
         [self setTutLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)];
@@ -1150,7 +1173,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     
     //UIView*damageEditArea, *lifeEditArea, *costEditArea, *cdEditArea, *imageEditArea, *elementEditArea, *abilityEditArea;
     
-    [self resetAbilityViews];
+   // [self resetAbilityViews];
     [self selectElement: _currentCardModel.element];
     
     if (_editorMode == cardEditorModeVoting)
@@ -1166,6 +1189,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     {
         //[self openImageUploadScreen];
     }
+
 }
 
 -(void)yesButtonPressed{
@@ -1202,12 +1226,11 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
 {
     [self removeAllStatButtons];
     [abilityExistingTableView setUserInteractionEnabled:YES];
-    [abilityNewTableView setUserInteractionEnabled:YES];
     [damageEditArea removeFromSuperview];
     [lifeEditArea removeFromSuperview];
     [costEditArea removeFromSuperview];
     [cdEditArea removeFromSuperview];
-    [self.view addSubview:abilityEditArea];
+    //[self.view addSubview:abilityEditArea];
     
     [self setTutLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/4)];
     
@@ -1476,7 +1499,6 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [self.currentCardView updateView];
         [self updateCost:self.currentCardModel];
         [self updateExistingAbilityList];
-        [self updateNewAbilityList];
     }
     
     [self updateIncrementButton:damageDecButton];
@@ -1529,7 +1551,6 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [self.currentCardView updateView];
         [self updateCost:self.currentCardModel];
         [self updateExistingAbilityList];
-        [self updateNewAbilityList];
     }
     
     [self updateIncrementButton:lifeDecButton];
@@ -1557,7 +1578,6 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [self.currentCardView updateView];
         [self updateCost:self.currentCardModel];
         [self updateExistingAbilityList];
-        [self updateNewAbilityList];
     }
     
     [self updateIncrementButton:cdDecButton];
@@ -1588,7 +1608,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [self.currentCardView updateView];
         [self updateCost:self.currentCardModel];
         [self updateExistingAbilityList];
-        [self updateNewAbilityList]; //changing cost may unlock new abilities
+       
     }
     
     [self updateIncrementButton:costDecButton];
@@ -1711,92 +1731,6 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     [self updateAbilityButtons:wrapper];
 }
 
--(void)abilityAddButtonPressed
-{
-    NSIndexPath *selectedIndexPath = [abilityNewTableView.tableView indexPathForSelectedRow];
-    
-    if (selectedIndexPath!=nil)
-    {
-        AbilityWrapper *wrapper = abilityNewTableView.currentAbilities[selectedIndexPath.row];
-        AbilityTableViewCell *cell = (AbilityTableViewCell*)[abilityNewTableView.tableView cellForRowAtIndexPath:selectedIndexPath];
-        
-        /*
-         [abilityNewTableView setAbilityAt:selectedIndexPath toState:NO];
-         [abilityNewTableView.tableView reloadData];
-         [abilityNewTableView reloadInputViews];
-         */
-        
-        [abilityAddButton setEnabled:NO];
-        
-        AbilityWrapper *dupWrapper = [[AbilityWrapper alloc] initWithAbilityWrapper:wrapper];
-        if (dupWrapper.ability.otherValues.count > 0)
-            dupWrapper.ability.value = dupWrapper.ability.otherValues[0];
-        
-        
-        [abilityExistingTableView.currentAbilities addObject:dupWrapper];
-        [abilityExistingTableView.tableView reloadData];
-        [abilityExistingTableView reloadInputViews];
-        [self abilityEditAreaSetEnabled:YES];
-        
-        
-        //update new abilities
-        [self.currentCardModel addBaseAbility:dupWrapper.ability];
-        
-        [self updateNewAbilityList];
-        
-        [self updateCost:self.currentCardModel];
-    }
-}
-
--(void)updateNewAbilityList
-{
-    //[self loadAllValidAbilities];
-    
-    //int i = 0;
-    for (AbilityWrapper*wrapper in abilityNewTableView.currentAbilities)
-    {
-        wrapper.enabled = YES;
-        
-        //update the icon in the tableView
-        [CardPointsUtility updateAbilityPoints:self.currentCardModel forWrapper:wrapper withWrappers:abilityExistingTableView.currentAbilities];
-
-        for (AbilityWrapper*existingWrapper in abilityExistingTableView.currentAbilities)
-        {
-            if ([existingWrapper.ability isEqualTypeTo:wrapper.ability])
-            {
-                //NSLog(@"NOT ENABLED DUE TO EQUAL TYPE: %@", [[Ability getDescription:wrapper.ability fromCard:_currentCardModel]string]);
-                wrapper.enabled = NO;
-                break;
-            }
-        }
-        
-        if (![wrapper isCompatibleWithCardModel:self.currentCardModel])
-        {
-            //NSLog(@"NOT ENABLED DUE COMPATIBILITY OR COST %@", [[Ability getDescription:wrapper.ability fromCard:_currentCardModel]string]);
-            wrapper.enabled = NO;
-        }
-        
-        if (wrapper.minCost > self.currentCardModel.cost)
-            wrapper.enabled = NO;
-        
-        //max count reached
-        if ([CardPointsUtility getMaxAbilityCountForCard:self.currentCardModel] <= self.currentCardModel.abilities.count)
-            wrapper.enabled = NO;
-    }
-    
-    [abilityNewTableView.tableView reloadData];
-    [abilityNewTableView reloadInputViews];
-    
-    NSIndexPath *selectedPath = [abilityNewTableView.tableView indexPathForSelectedRow];
-    if (selectedPath != nil)
-    {
-        //if reached max ability limit, disable it
-        if ([CardPointsUtility getMaxAbilityCountForCard:self.currentCardModel] > self.currentCardModel.abilities.count)
-            [abilityAddButton setEnabled:[abilityNewTableView.currentAbilities[selectedPath.row] enabled]];
-        else
-            [abilityAddButton setEnabled:NO];
-    }
-}
 
 /** Only for when changing the element etc., to remove abilities that are no longer compatible */
 -(void)updateExistingAbilityList
@@ -1833,20 +1767,12 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         //remove from monster
         [self.currentCardModel.abilities removeObject:wrapper.ability];
         
-        //enable the wrapper back in newAbilities
-        for (AbilityWrapper*newWrapper in abilityNewTableView.currentAbilities)
-        {
-            if ([newWrapper.ability isEqualTypeTo:wrapper.ability])
-            {
-                newWrapper.enabled = YES;
-                break;
-            }
-        }
+        
         
         //remove from table
         [abilityExistingTableView.currentAbilities removeObjectAtIndex:selectedIndexPath.row];
         
-        [self updateNewAbilityList];
+        
         [self updateExistingAbilityList];
         
         [abilityRemoveButton setEnabled:NO];
@@ -1955,9 +1881,12 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     _currentCardModel.abilities = [NSMutableArray arrayWithCapacity:originalAbilities.count];
     
     //add abilities:
+    
+     NSArray*allAbilities = [AbilityWrapper allAbilities];
+    
     for (Ability*ability in originalAbilities)
     {
-        for (AbilityWrapper *wrapper in abilityNewTableView.currentAbilities)
+        for (AbilityWrapper *wrapper in allAbilities)
         {
             if ([wrapper.ability isEqualTypeTo: ability])
             {
@@ -2027,7 +1956,6 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         monster.name = @"";
     
     _currentCardModel = monster;
-    abilityNewTableView.currentCard = _currentCardModel;
     abilityExistingTableView.currentCard = _currentCardModel;
 }
 
@@ -2061,7 +1989,6 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         spell.name = @"";
     
     _currentCardModel = spell;
-    abilityNewTableView.currentCard = _currentCardModel;
     abilityExistingTableView.currentCard = _currentCardModel;
 }
 
@@ -2073,10 +2000,6 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     [abilityExistingTableView.tableView reloadData];
     [abilityExistingTableView.tableView reloadInputViews];
     
-    [abilityNewTableView.currentAbilities removeAllObjects];
-    [self loadAllValidAbilities];
-    [abilityNewTableView.tableView reloadData];
-    [abilityNewTableView.tableView reloadInputViews];
 }
 
 -(void)updateCardTypeButtons
@@ -2408,7 +2331,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [self selectElement: elementDark];
     }
     
-  //  [self abilityEditAreaSetEnabled:touchedView == abilityEditArea];
+    [self abilityEditAreaSetEnabled:touchedView == abilityEditArea];
 }
 
 -(void)selectElement:(enum CardElement)element
@@ -2503,13 +2426,14 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     if (state)
     {
         [abilityAddButton setEnabled:NO]; //turn off the other table's buttons/
-        [abilityNewTableView.tableView deselectRowAtIndexPath:abilityNewTableView.tableView.indexPathForSelectedRow animated:YES];
+   
         
         //enable editing buttons
         [self.view addSubview:abilityIncButton];
         [self.view addSubview:abilityDecButton];
         [self.view addSubview:abilityRemoveButton];
         [self.view insertSubview:abilityExistingTableView aboveSubview:abilityEditArea];
+        //[self.view bringSubviewToFront:abilityExistingTableView];
         abilityIncButton.alpha = 0;
         abilityDecButton.alpha = 0;
         abilityRemoveButton.alpha = 0;
@@ -2635,9 +2559,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     
     //[self resetAbilityViews];
     [self updateExistingAbilityList];
-    [abilityNewTableView.currentAbilities removeAllObjects];
     [self loadAllValidAbilities];
-    [self updateNewAbilityList];
     [self reloadCardView];
     [self updateCost:_currentCardModel];
 }
@@ -2710,21 +2632,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
 
 -(void)rowSelected:(AbilityTableView*)tableView indexPath:(NSIndexPath *)indexPath
 {
-    if (tableView == abilityNewTableView)
-    {
-        if (indexPath.row < 0 || indexPath.row >= abilityNewTableView.currentAbilities.count) //being defensive
-            return;
-        
-        if ([CardPointsUtility getMaxAbilityCountForCard:self.currentCardModel] > self.currentCardModel.abilities.count)
-            [abilityAddButton setEnabled:[abilityNewTableView.currentAbilities[indexPath.row] enabled]];
-        else
-            [abilityAddButton setEnabled:NO];
-        
-        [self abilityEditAreaSetEnabled:NO]; //turn off the other table's buttons
-        
-        [self removeAllStatButtons];
-    }
-    else if (tableView == abilityExistingTableView)
+    if (tableView == abilityExistingTableView)
     {
         if (indexPath.row < 0 || indexPath.row >= abilityExistingTableView.currentAbilities.count) //being defensive
             return;
@@ -2779,7 +2687,6 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         //must be valid element and rarity
         if ([wrapper isCompatibleWithCardModel:_currentCardModel])
         {
-            [abilityNewTableView.currentAbilities addObject:wrapper];
             if (wrapper.ability.otherValues != nil && wrapper.ability.otherValues.count >= 2)
             {
                 NSNumber *valueA = wrapper.ability.otherValues[0];
@@ -2793,15 +2700,7 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     
     if (_editorMode == cardEditorModeVoting)
         _currentCardModel.abilities = cardAbilitiesBackup;
-    
-    //sort the valid abilities
-    [abilityNewTableView.currentAbilities sortUsingComparator:^(AbilityWrapper* a, AbilityWrapper* b){
-        NSString *aString = [[Ability getDescription:a.ability fromCard:self.currentCardModel] string];
-        NSString *bString = [[Ability getDescription:b.ability fromCard:self.currentCardModel] string];
-        return [aString compare:bString];
-    }];
-    
-    [self updateNewAbilityList];
+
 }
 
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
@@ -3188,8 +3087,6 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     _currentCardModel = currentCardModel;
     
     //update the points for the two views
-    if (abilityNewTableView != nil)
-        abilityNewTableView.currentCard = currentCardModel;
     if (abilityExistingTableView != nil)
         abilityExistingTableView.currentCard = currentCardModel;
 }
@@ -3245,8 +3142,10 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     
     AbilityViewController *AVC = [[AbilityViewController alloc] init];
     
+    [self removeAllStatButtons];
     
     [AVC setOriginalCard:self.currentCardModel];
+    [AVC setCurrentCardModel:self.currentCardModel];
     [AVC setCardImage:scaledImage];
     [AVC setCardName:nameTextField.text];
     [AVC setEditorMode:_editorMode];
@@ -3258,7 +3157,30 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
 }
 
 - (void)cardUpdated:(CardModel *)card{
+    self.currentCardModel = card;
     [self reloadCardView];
+    //[self updateCost:card];
+    //[self addAbilitiesToTableView];
+   
+}
+
+- (void)updateAbilities:(NSMutableArray *)abilities{
+    abilityExistingTableView.currentAbilities = abilities;
+    [abilityExistingTableView reloadInputViews];
+    [abilityExistingTableView.tableView reloadData];
+}
+
+- (void)addAbilitiesToTableView{
+    
+    abilityExistingTableView.currentAbilities = [[NSMutableArray alloc] init];
+    
+    for (AbilityWrapper*wrapper in self.currentCardModel.abilities)
+    {
+        [abilityExistingTableView.currentAbilities addObject:wrapper];
+    }
+    
+    [abilityExistingTableView reloadInputViews];
+    [abilityExistingTableView.tableView reloadData];
 }
 
 @end

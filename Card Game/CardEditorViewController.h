@@ -20,6 +20,7 @@
 @protocol MyCardEditDelegate
 
 - (void)cardUpdated:(CardModel *)card;
+- (void)updateAbilities:(NSMutableArray *)abilities;
 
 @end
 

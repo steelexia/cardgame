@@ -127,6 +127,9 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     //[abilityExistingTableView setHidden:YES];
     [abilityExistingTableView.layer setZPosition:2];
     [abilityExistingTableView setUserInteractionEnabled:YES];
+    
+    
+  
     [self.view addSubview:abilityExistingTableView];
     
     CFLabel*abilityNewTableViewBackground = [[CFLabel alloc] initWithFrame:CGRectMake(80, 345, 186, SCREEN_HEIGHT - 345 - 28)];
@@ -287,7 +290,8 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     
     [self.view addSubview:cdEditArea];
     
-    
+    abilityEditArea = [[UIView alloc] initWithFrame: CGRectMake(80, 242, 186, 90)];
+    [self.view addSubview:abilityEditArea];
     
     if (_editorMode == cardEditorModeTutorialTwo) {
         self.tutOkButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
@@ -308,8 +312,13 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
+    [self setupExistingCard];
     [maxCostLabel setText:[NSString stringWithFormat:@"%d",self.maxCost]];
     [currentCostLabel setText:[NSString stringWithFormat:@"%d",self.currentCost]];
+    
+    if (self.currentCost > self.maxCost ) {
+        [currentCostLabel setTextColor:[UIColor redColor]];
+    }
 }
 
 -(void)yesButtonPressed{
@@ -327,7 +336,6 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     [lifeEditArea removeFromSuperview];
     [costEditArea removeFromSuperview];
     [cdEditArea removeFromSuperview];
-    [self.view addSubview:abilityEditArea];
     
     [self setTutLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/4)];
     
@@ -840,7 +848,7 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
         //update the icon in the tableView
         [CardPointsUtility updateAbilityPoints:self.currentCardModel forWrapper:wrapper withWrappers:abilityExistingTableView.currentAbilities];
         
-        if (![wrapper isCompatibleWithCardModel:self.originalCard] || wrapper.minCost > self.originalCard.cost)
+        if (![wrapper isCompatibleWithCardModel:self.currentCardModel] || wrapper.minCost > self.currentCardModel.cost)
         {
             [abilityExistingTableView.currentAbilities removeObjectAtIndex:i];
             
@@ -895,7 +903,7 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     [_currentCardView removeFromSuperview];
     
     
-    _currentCardView = [[CardView alloc] initWithModel:self.originalCard withImage:originalImage viewMode:cardViewModeEditor];
+    _currentCardView = [[CardView alloc] initWithModel:self.currentCardModel withImage:originalImage viewMode:cardViewModeEditor];
     
     _currentCardView.frontFacing = YES;
     _currentCardView.cardViewState = cardViewStateCardViewer;
@@ -972,8 +980,8 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
      */
     
     //create a new array since the original does not include otherValues
-    NSArray*originalAbilities = self.originalCard.abilities;
-    self.originalCard.abilities = [NSMutableArray arrayWithCapacity:originalAbilities.count];
+    NSArray*originalAbilities = self.currentCardModel.abilities;
+    self.currentCardModel.abilities = [NSMutableArray arrayWithCapacity:originalAbilities.count];
     
     //add abilities:
     for (Ability*ability in originalAbilities)
@@ -985,9 +993,10 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
                 AbilityWrapper *dupWrapper = [[AbilityWrapper alloc] initWithAbilityWrapper:wrapper];
                 wrapper.enabled = NO;
                 dupWrapper.ability.value = ability.value;
-                [self.originalCard addBaseAbility:dupWrapper.ability];
+                [self.currentCardModel addBaseAbility:dupWrapper.ability];
                 
                 [abilityExistingTableView.currentAbilities addObject:dupWrapper];
+                [self abilityEditAreaSetEnabled:YES];
                 break;
             }
         }
@@ -1006,7 +1015,7 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     
     [self resetAbilityViews];
     [self updateCost:self.currentCardModel];
-    [self selectElement: self.originalCard.element];
+    [self selectElement: self.currentCardModel.element];
     
     [self updateCardTypeButtons];
     [self removeAllStatButtons];
@@ -1047,9 +1056,9 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     else
         monster.name = @"";
     
-    self.originalCard = monster;
-    abilityNewTableView.currentCard = self.originalCard;
-    abilityExistingTableView.currentCard = self.originalCard;
+    self.currentCardModel = monster;
+    abilityNewTableView.currentCard = self.currentCardModel;
+    abilityExistingTableView.currentCard = self.currentCardModel;
 }
 
 -(void)spellButtonPressed
@@ -1058,7 +1067,7 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     
     [self resetAbilityViews];
     [self updateCost:self.currentCardModel];
-    [self selectElement: self.originalCard.element];
+    [self selectElement: self.currentCardModel.element];
     
     [self updateCardTypeButtons];
     [self removeAllStatButtons];
@@ -1081,9 +1090,9 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     else
         spell.name = @"";
     
-    self.originalCard = spell;
-    abilityNewTableView.currentCard = self.originalCard;
-    abilityExistingTableView.currentCard = self.originalCard;
+    self.currentCardModel = spell;
+    abilityNewTableView.currentCard = self.currentCardModel;
+    abilityExistingTableView.currentCard = self.currentCardModel;
 }
 
 
@@ -1398,37 +1407,6 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
                          }];
     }
     
-    
-    //element select
-//    if (touchedView == neutralLabel)
-//    {
-//        [self selectElement: elementNeutral];
-//    }
-//    else if (touchedView == fireLabel)
-//    {
-//        [self selectElement:  elementFire];
-//    }
-//    else if (touchedView == iceLabel)
-//    {
-//        [self selectElement:  elementIce];
-//    }
-//    else if (touchedView == lightningLabel)
-//    {
-//        [self selectElement:  elementLightning];
-//    }
-//    else if (touchedView == earthLabel)
-//    {
-//        [self selectElement: elementEarth];
-//    }
-//    else if (touchedView == lightLabel)
-//    {
-//        [self selectElement: elementLight];
-//    }
-//    else if (touchedView == darkLabel)
-//    {
-//        [self selectElement: elementDark];
-//    }
-//    
     [self abilityEditAreaSetEnabled:touchedView == abilityEditArea];
 }
 
@@ -1659,7 +1637,7 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     [self loadAllValidAbilities];
     [self updateNewAbilityList];
     [self reloadCardView];
-    [self updateCost:self.originalCard];
+    [self updateCost:self.currentCardModel];
 }
 
 
@@ -1727,15 +1705,19 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     if (_editorMode == cardEditorModeVoting)
     {
         //clear the abilities temporarily to prevent some abilities not added to the list
-        cardAbilitiesBackup = self.originalCard.abilities;
-        self.originalCard.abilities = [NSMutableArray array];
+        cardAbilitiesBackup = self.currentCardModel.abilities;
+        self.currentCardModel.abilities = [NSMutableArray array];
     }
     
     for (AbilityWrapper*wrapper in allAbilities)
     {
         //must be valid element and rarity
-        if ([wrapper isCompatibleWithCardModel:self.originalCard])
+        if ([wrapper isCompatibleWithCardModel:self.currentCardModel])
         {
+            if ([self.currentCardModel.abilities containsObject:wrapper]) {
+                wrapper.enabled = false;
+            }
+            
             [abilityNewTableView.currentAbilities addObject:wrapper];
             if (wrapper.ability.otherValues != nil && wrapper.ability.otherValues.count >= 2)
             {
@@ -1749,7 +1731,7 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     }
     
     if (_editorMode == cardEditorModeVoting)
-        self.originalCard.abilities = cardAbilitiesBackup;
+        self.currentCardModel.abilities = cardAbilitiesBackup;
     
     //sort the valid abilities
     [abilityNewTableView.currentAbilities sortUsingComparator:^(AbilityWrapper* a, AbilityWrapper* b){
@@ -2140,21 +2122,21 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
 }
 
 
--(void)setCurrentCardModel:(CardModel *)currentCardModel
-{
-    self.originalCard = currentCardModel;
-    
-    //update the points for the two views
-    if (abilityNewTableView != nil)
-        abilityNewTableView.currentCard = currentCardModel;
-    if (abilityExistingTableView != nil)
-        abilityExistingTableView.currentCard = currentCardModel;
-}
+//-(void)setCurrentCardModel:(CardModel *)currentCardModel
+//{
+//    self.currentCardModel = currentCardModel;
+//    
+//    //update the points for the two views
+//    if (abilityNewTableView != nil)
+//        abilityNewTableView.currentCard = currentCardModel;
+//    if (abilityExistingTableView != nil)
+//        abilityExistingTableView.currentCard = currentCardModel;
+//}
 
--(CardModel*)currentCardModel
-{
-    return self.originalCard;
-}
+//-(CardModel*)currentCardModel
+//{
+//    return self.currentCardModel;
+//}
 
 + (UIImage*)imageWithImage:(UIImage*)image
               scaledToSize:(CGSize)newSize
@@ -2198,17 +2180,6 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
 
 - (BOOL)prefersStatusBarHidden {return YES;}
 
--(void)showAbilities{
-    
-    AbilityViewController *AVC = [[AbilityViewController alloc] init];
-    
-    
-    [AVC setOriginalCard:self.currentCardModel];
-    [AVC setCardImage:scaledImage];
-    [AVC setCardName:nameTextField.text];
-    
-    [self presentViewController:AVC animated:YES completion:nil];
-}
 
 -(void)goBack{
     abilityExistingTableView.currentAbilities = [[NSMutableArray alloc] init];
@@ -2217,7 +2188,8 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     self.originalCard.abilities = [[NSMutableArray alloc] init];
     if(self.delegate !=nil)
     {
-        [self.delegate cardUpdated:self.originalCard];
+        [self.delegate cardUpdated:self.currentCardModel];
+        [self.delegate updateAbilities:abilityExistingTableView.currentAbilities];
         
     }
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -2226,8 +2198,8 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
 -(void)saveAndGoBack{
     if(self.delegate !=nil)
     {
-        [self.delegate cardUpdated:self.originalCard];
-        
+        [self.delegate cardUpdated:self.currentCardModel];
+        [self.delegate updateAbilities:abilityExistingTableView.currentAbilities];
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
