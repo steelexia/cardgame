@@ -44,7 +44,7 @@ const int MIN_COST = 0, COST_INCREMENT = 1; //maxCost is an array
 
 UITextField *nameTextField;
 UIImage *scaledImage;
-UIButton *abilityButton,*flavourButton;
+UIButton *abilityButton,*flavourButton,*elementButton;
 
 CFButton *damageIncButton, *damageDecButton, *lifeIncButton, *lifeDecButton, *cdIncButton, *cdDecButton, *costIncButton, *costDecButton;
 
@@ -583,7 +583,17 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     [_modalFilter setUserInteractionEnabled:YES]; //blocks all interaction behind it
     
     
-    //--------------------- abilities and fluvour button ---------------//
+    //--------------------- abilities and Type buttons ---------------//
+    
+    elementButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 90, 40)];
+    [elementButton setTitle:@"Element" forState:UIControlStateNormal];
+    [elementButton setCenter:CGPointMake(self.currentCardView.center.x, customizeCardButton.center.y - 45)];
+    [elementButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [elementButton.titleLabel setFont:[UIFont fontWithName:cardMainFont size:11]];
+    [elementButton setBackgroundImage:[UIImage imageNamed:@"CardCreateGreenButton.png"] forState:UIControlStateNormal];
+    [elementButton addTarget:self action:@selector(openElementEditScreen) forControlEvents:UIControlEventTouchUpInside];
+    if (_editorMode == cardEditorModeCreation || _editorMode == cardEditorModeTutorialTwo || _editorMode == cardEditorModeTutorialThree)
+        [self.view addSubview:elementButton];
     
     abilityButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 90, 40)];
     [abilityButton setTitle:@"Abilities" forState:UIControlStateNormal];
@@ -837,15 +847,6 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
     
     [self.view addSubview:cdEditArea];
     
-    CGPoint elementLabelPoint = [self.view convertPoint:self.currentCardView.elementLabel.center fromView:self.currentCardView];
-    elementEditArea = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 56, 28)];
-    elementEditArea.center = CGPointMake(elementLabelPoint.x, elementLabelPoint.y);
-    
-//    elementEditArea.backgroundColor = [UIColor yellowColor];
-//    elementEditArea.alpha = 0.5;
-    
-    if (_editorMode == cardEditorModeCreation || _editorMode == cardEditorModeTutorialTwo || _editorMode == cardEditorModeTutorialThree)
-        [self.view addSubview:elementEditArea];
     
     abilityEditArea = [[UIView alloc] initWithFrame: CGRectMake(120, 242, 186, 90)];
     
@@ -931,8 +932,8 @@ UIImage*CARD_EDITOR_EMPTY_IMAGE;
         [spellCardButton setEnabled:NO];
         [monsterCardButton setEnabled:NO];
         [cancelCardButton setEnabled:NO];
-        [abilityButton setHidden:YES];
-        [flavourButton setHidden:YES];
+        //[abilityButton setHidden:YES];
+        //[flavourButton setHidden:YES];
         
         [nameTextField setUserInteractionEnabled:NO];
         [imageEditArea setUserInteractionEnabled:NO];
