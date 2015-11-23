@@ -19,6 +19,7 @@
 @property (weak, nonatomic) id<MyCardEditDelegate> delegate;
 
 @property CardModel*originalCard;
+@property CardModel*currentCardModel;
 @property CardView*currentCardView;
 @property (strong) UIImage *cardImage;
 @property (strong) NSString *cardName;
