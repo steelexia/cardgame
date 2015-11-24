@@ -417,6 +417,7 @@ NSDictionary *singlePlayerCardImages;
                 self.cardImage = [[UIImageView alloc]initWithImage:loadingImage];
             }
             
+            
             float frameImageWidth = 330.0f/400.0f * CARD_FULL_WIDTH;
             
             float frameImageHeight = 270.0f/590.0f *CARD_FULL_HEIGHT;
@@ -456,7 +457,7 @@ NSDictionary *singlePlayerCardImages;
                     [self.cardImage setImage:placeHolderImage];
                     [self.activityView stopAnimating];
                 }*/
-                if ([cardModel.cardPF[@"adminPhotoCheck"] intValue] == 1 || [self thisCardAreInMyDecks:[cardModel.cardPF objectForKey:@"idNumber"]] || cardViewMode == cardViewModeToValidate) {
+                if ([cardModel.cardPF[@"adminPhotoCheck"] intValue] == 1 || [self thisCardAreInMyDecks:[cardModel.cardPF objectForKey:@"idNumber"]] || cardViewMode == cardViewModeToValidate || [[cardModel.cardPF objectForKey:@"creator"] isEqualToString:userPF.objectId]) {
                     [self performBlockInBackground:^(void){
                         [self loadImage];
                     }];
@@ -477,6 +478,9 @@ NSDictionary *singlePlayerCardImages;
             self.cardImage.backgroundColor = [UIColor whiteColor];
             [_frontViews addSubview:self.cardImage];
         }
+        
+        
+        
         
         //brian Jul26
         //add subview for the frame of the image
