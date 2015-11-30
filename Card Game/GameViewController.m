@@ -70,8 +70,6 @@ CGRect topFrame,topRightFrame,rightFrame,bottomRightFrame,bottomFrame,bottomLeft
 
 @synthesize topView,topRightView,rightView,bottomRightView,bottomView,bottomLeftView,leftView,topLeftView;
 
-
-
 StrokedLabel *pickATargetLabel;
 CFButton *giveupAbilityButton;
 
@@ -1940,10 +1938,21 @@ BOOL leftHandViewZone = NO;
     if (_gameMode == GameModeMultiplayer)
     {
         //[_networkingEngine sendOpponentForfeit];
-        [self.MPDataHandler sendOpponentForfeit];
-        _gameModel.playerOneDefeated = YES;
         
-        [self.MPDataHandler resetAllMPVariables];
+        if(quitConfirmButton.tag ==4)
+            //player shouldn't forfeit, should just reset all MP stuff
+        {
+              [self.MPDataHandler resetAllMPVariables];
+        }
+        else
+        {
+            [self.MPDataHandler sendOpponentForfeit];
+            _gameModel.playerOneDefeated = YES;
+             [self.MPDataHandler resetAllMPVariables];
+        }
+    
+        
+      
     }
     
     
@@ -2154,6 +2163,10 @@ BOOL leftHandViewZone = NO;
             else
             {
                 [_gameOverOkButton addTarget:self action:@selector(quitConfirmButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+                
+                //setting tag to 4 when opponent wins so it knows not to forfeit
+                _gameOverOkButton.tag = 4;
+                
             }
         }
         /*}

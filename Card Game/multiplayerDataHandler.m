@@ -769,7 +769,7 @@ NSTimer *firstChallengeTimer;
             
             [_gameDelegate opponentAttackCard:attackerPositionInt withTarget:targetPositionInt];
         }
-        if([prefix isEqualToString:@"FORFE"])
+        if([prefix isEqualToString:@"ILOSE"])
         {
             NSLog(@"opponent forfeit!");
             [_gameDelegate opponentForfeit];
@@ -997,7 +997,17 @@ NSTimer *firstChallengeTimer;
 //the player has quit the game, the other player will win
 -(void)sendOpponentForfeit
 {
-    
+    NSMutableDictionary *msgDict = [[NSMutableDictionary alloc] init];
+    [msgDict setObject:@"ILOSE" forKey:@"text"];
+    [msgDict setObject:userPF.objectId forKey:@"msgSenderParseID"];
+    [PubNub sendMessage:msgDict toChannel:self.currentMPGameChannel  compressed:NO withCompletionBlock:^(PNMessageState state, id data) {
+        //code
+        if ([data isKindOfClass:[NSError class]]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Multiplayer Connection Failed" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+        }
+    }];
+
 }
 //ENDTR
 -(void)sendEndTurn
