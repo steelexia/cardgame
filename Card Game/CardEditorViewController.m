@@ -179,9 +179,6 @@ bool shouldSetUpView = YES;
     [nameTextField setDelegate:self];
     [self.view addSubview:nameTextField];
     
-    
-    
-    
     abilityExistingTableView = [[AbilityTableView alloc] initWithFrame:CGRectMake(90, 242, 172, 90)  mode:abilityTableViewExisting];
     abilityExistingTableView.cevc = self;
     //[abilityExistingTableView setHidden:YES];
@@ -2288,7 +2285,7 @@ bool shouldSetUpView = YES;
     }
     else if (touchedView == elementEditArea)
     {
-        [self openElementEditScreen];
+        //[self openElementEditScreen];
     }
     else if (touchedView == imageEditArea)
     {
@@ -2434,6 +2431,12 @@ bool shouldSetUpView = YES;
     {
         [abilityAddButton setEnabled:NO]; //turn off the other table's buttons/
    
+        //if there are no active abilities, do not show these buttons
+        if([self.currentCardModel.abilities count] ==0)
+        {
+            return;
+            
+        }
         
         //enable editing buttons
         [self.view addSubview:abilityIncButton];

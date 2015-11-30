@@ -341,7 +341,6 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     
     self.tutLabel.label.text = @"The list below shows the abilities you can add to the card. Some abilities have adjustable values, and having different combinations of abilities can give bonuses and penalties to your points.";
     
-    
     [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
     
     _arrowImage.image = ARROW_DOWN_ICON_IMAGE;
@@ -775,13 +774,14 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
         [abilityExistingTableView.currentAbilities addObject:dupWrapper];
         [abilityExistingTableView.tableView reloadData];
         [abilityExistingTableView reloadInputViews];
-        [self abilityEditAreaSetEnabled:YES];
-        
         
         //update new abilities
         [self.currentCardModel addBaseAbility:dupWrapper.ability];
         
         
+        [self abilityEditAreaSetEnabled:YES];
+        
+     
         
         [self updateCost:self.currentCardModel];
         [self updateNewAbilityList];
@@ -1500,6 +1500,14 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     //enable
     if (state )
     {
+        //if there are no active abilities, do not show these buttons
+        if([self.currentCardModel.abilities count] ==0)
+        {
+            return;
+            
+        }
+
+        
         [abilityAddButton setEnabled:NO]; //turn off the other table's buttons/
         [abilityNewTableView.tableView deselectRowAtIndexPath:abilityNewTableView.tableView.indexPathForSelectedRow animated:YES];
         
@@ -2196,6 +2204,15 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
 }
 
 -(void)saveAndGoBack{
+    
+    if(self.currentCost>self.maxCost)
+    {
+        UIAlertView *costAlert = [[UIAlertView alloc] initWithTitle:@"Cost Too High" message:@"Reduce Abilities or ATK/HP To Create Card" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [costAlert show];
+        return;
+        
+    }
+    
     if(self.delegate !=nil)
     {
         [self.delegate cardUpdated:self.currentCardModel];

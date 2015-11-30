@@ -95,7 +95,10 @@ int ABILITY_TABLE_VIEW_ROW_WIDTH;
     
     if (wrapper.currentPoints > wrapper.basePoints ||(self.cevc.maxCost - self.cevc.currentCost) < wrapper.currentPoints)
     {
+        
+       
         cell.abilityPoints.textColor = [UIColor redColor];
+        
         //NSLog(@"RED: %d %d", wrapper.currentPoints, wrapper.basePoints);
         //NSLog(@"%@", [[Ability getDescription:wrapper.ability fromCard:_currentCardModel]string]);
     }
