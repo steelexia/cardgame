@@ -1790,3 +1790,193 @@ Parse.Cloud.define("getELORatingOnWin", function(request, response) {
 
   response.success(player1EloChange);
 });
+
+/**
+* increments player xp and level, client specifies small, medium, or large xp gain value and number of cards used from each element.  Request parameters as follows:
+*userXPGain (small, medium, large)
+*userXP
+*userLevel
+*earthCards
+*fireCards
+*iceCards
+*lightCards
+*darkCards
+*lightningCards
+Server calculates net gain in XP/Level for the following user variables: 
+*userXP
+*userLevel 
+*userEarthXP 
+*userEarthLevel
+*userFireXP
+*userFireLevel
+*userIceXP
+*userIceLevel 
+*userLightXP
+*userLightLevel
+*userDarkXP
+*userDarkLevel
+*userLightningXP
+*userLightningLevel 
+Server awards unlocked cards or coin awards to player inventory, client runs same logic to know what to display if call is successful
+**/
+Parse.Cloud.define(“awardUserXP”, function(request, response) {
+var xpGain = request.params.userXPGain;
+var userLevel = request.user.get(“userLevel”);
+var userXP = request.user.get(“userXP”);
+//variables for the # of cards used by player deck
+var earthCards = request.params.earthCards;
+var fireCards = request.params.fireCards;
+var iceCards = request.params.iceCards;
+var lightCards = request.params.lightCards;
+var darkCards = request.params.darkCards;
+var lightningCards = request.params.lightningCards;
+
+console.log(userXP);
+console.log(userLevel);
+var xpIncrement = 0;
+//smallXPGain
+if (xpGain==1)
+{
+xpIncrement = 5;
+}
+if (xpGain==2)
+{
+xpIncrement = 10;
+}
+if (xpGain==3)
+{
+xpIncrement= 20;
+}
+
+  //calculate new level and xp.  xp follows straight linear increase (100 xp for level 1, 200xp level 2, 4000 xp level 40)
+  //level 1>2 requires 100XP.
+  //level 2>3 requires 200XP
+  //level 10+ requires 1000XP
+
+var newXPThreshold = userLevel *100;
+
+//add xpGain to currentXP
+var newXPTotal = userXP + xpIncrement;
+
+if(newXPTotal>newXPThreshold)
+{
+request.user.increment(“userLevel”, 1);
+request.user.increment(“userXP”,xpIncrement);
+}
+else
+{
+request.user.increment(“userXP”,xpIncrement);
+}
+
+  //calculate specific cards (fire, ice, lightning, etc.) xp.  xp follows straight linear increase by 1000 per level (1000 xp for level 1, 2000xp level 2, 40000 xp level 40)
+  //level 1>2 requires 1000XP.
+  //level 2>3 requires 2000XP
+  //level 10+ requires 10000XP
+
+//xp increment for each card type follows # of cards used
+var EarthCardXPIncrement = xpIncrement *earthCards;
+var IceCardXPIncrement = xpIncrement *iceCards;
+var FireCardXPIncrement = xpIncrement * fireCards;
+var LightningCardXPIncrement = xpIncrement * lightningCards;
+var DarkCardXPIncrement = xpIncrement *darkCards;
+var LightCardXPIncrement = xpIncrement *lightCards;
+
+var userEarthLevel = request.user.get(“userEarthLevel”);
+var userIceLevel = request.user.get(“userIceLevel”);
+var userFireLevel = request.user.get(“userFireLevel”);
+var userLightningLevel = request.user.get(“userLightningLevel”);
+var userDarkLevel = request.user.get(“userDarkLevel”);
+var userLightLevel = request.user.get(“userLightLevel”);
+
+var userEarthXP = request.user.get(“userEarthXP”);
+var userIceXP = request.user.get(“userIceXP”);
+var userFireXP = request.user.get(“userFireXP”);
+var userLightningXP = request.user.get(“userLightningXP”);
+var userDarkXP = request.user.get(“userDarkXP”);
+var userLightXP = request.user.get(“userLightXP”);
+
+var EarthXPThreshold = userEarthLevel *1000;
+var IceXPThreshold = userIceLevel *1000;
+var FireXPThreshold = userFireLevel *1000;
+var LightningXPThreshold = userLightningLevel*1000;
+var DarkXPThreshold = userDarkLevel*1000;
+var LightXPThreshold = userLightLevel*1000;
+
+var newEarthXPTotal = userEarthXP+EarthCardXPIncrement;
+if(newEarthXPTotal>EarthXPThreshold)
+{
+request.user.increment(“userEarthLevel”, 1);
+request.user.increment(“userEarthXP”,EarthCardXPIncrement);
+}
+else
+{
+request.user.increment(“userEarthXP”,EarthCardXPIncrement);
+}
+
+var newIceXPTotal = userIceXP+IceCardXPIncrement;
+if(newIceXPTotal>IceXPThreshold)
+{
+request.user.increment(“userIceLevel”, 1);
+request.user.increment(“userIceXP”,IceCardXPIncrement);
+}
+else
+{
+request.user.increment(“userIceXP”,IceCardXPIncrement);
+}
+
+var newFireXPTotal = userFireXP+FireCardXPIncrement;
+if(newFireXPTotal>FireXPThreshold)
+{
+request.user.increment(“userFireLevel”, 1);
+request.user.increment(“userFireXP”,FireCardXPIncrement);
+}
+else
+{
+request.user.increment(“userFireXP”,FireCardXPIncrement);
+}
+
+var newLightningXPTotal = userLightningXP+LightningCardXPIncrement;
+if(newLightningXPTotal>LightningXPThreshold)
+{
+request.user.increment(“userLightningLevel”, 1);
+request.user.increment(“userLightningXP”,LightningCardXPIncrement);
+}
+else
+{
+request.user.increment(“userLightningXP”,LightningCardXPIncrement);
+}
+
+var newDarkXPTotal = userDarkXP+DarkCardXPIncrement;
+if(newDarkXPTotal>DarkXPThreshold)
+{
+request.user.increment(“userDarkLevel”, 1);
+request.user.increment(“userDarkXP”,DarkCardXPIncrement);
+}
+else
+{
+request.user.increment(“userDarkXP”,DarkCardXPIncrement);
+}
+
+var newLightXPTotal = userLightXP+LightCardXPIncrement;
+if(newLightXPTotal>LightXPThreshold)
+{
+request.user.increment(“userLightLevel”, 1);
+request.user.increment(“userLightXP”,LightCardXPIncrement);
+}
+else
+{
+request.user.increment(“userLightXP”,LightCardXPIncrement);
+}
+
+request.user.save({
+}, {
+
+success: function() {
+response.success();
+},
+error: function(error) {
+response.error("Failed to update XP”);
+}
+});
+});
+

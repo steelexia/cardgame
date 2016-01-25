@@ -103,6 +103,16 @@
          
          userDeckLimit = [userPF[@"maxDecks"] intValue];
          
+         //brianupdateJan24
+         userXP = [userPF[@"userXP"] intValue];
+         userLevel = [userPF[@"userLevel"] intValue];
+         userEarthXP = [userPF[@"userEarthXP"] intValue];
+         userEarthLevel = [userPF[@"userEarthLevel"] intValue];
+         userFireXP = [userPF[@"userFireXP"] intValue];
+         userFireLevel = [userPF[@"userFireLevel"] intValue];
+         userIceXP = [userPF[@"userIceXP"] intValue];
+         userIceLevel = [userPF[@"userIceLevel"] intValue];
+         
          [self loadAllCards]; //also loads decks
          
          NSError *error;

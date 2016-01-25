@@ -71,6 +71,15 @@ NSManagedObjectContext*userCDContext;
 DeckModel *userCurrentDeck;
 int userDeckLimit;
 int userGold;
+int userLevel;
+int userXP;
+int userEarthXP;
+int userEarthLevel;
+int userFireXP;
+int userFireLevel;
+int userIceXP;
+int userIceLevel;
+
 PFUser *userPF;
 BOOL userInfoLoaded;
 BOOL userInitError;

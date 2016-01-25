@@ -26,9 +26,6 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     SCREEN_WIDTH = self.view.bounds.size.width;
     SCREEN_HEIGHT = self.view.bounds.size.height;
     
-   
-    
-    
     //background view
     UIImageView*backgroundImageTop = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_top"]];
     backgroundImageTop.frame = CGRectMake(0, 0, SCREEN_WIDTH, 40);
