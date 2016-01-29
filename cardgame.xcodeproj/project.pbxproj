@@ -89,7 +89,6 @@
 		907D9C13193E43870037C0CF /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907D9C12193E43870037C0CF /* MobileCoreServices.framework */; };
 		907D9C15193E438E0037C0CF /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907D9C14193E438E0037C0CF /* QuartzCore.framework */; };
 		907D9C17193E43950037C0CF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907D9C16193E43950037C0CF /* Security.framework */; };
-		907D9C19193E439B0037C0CF /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907D9C18193E439B0037C0CF /* StoreKit.framework */; };
 		907D9C1B193E43A80037C0CF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907D9C1A193E43A80037C0CF /* SystemConfiguration.framework */; };
 		907D9C1E193F87BE0037C0CF /* AbilityWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 907D9C1D193F87BE0037C0CF /* AbilityWrapper.m */; };
 		907D9C2019509E850037C0CF /* battle_background_old.png in Resources */ = {isa = PBXBuildFile; fileRef = 907D9C1F19509E850037C0CF /* battle_background_old.png */; };
@@ -241,7 +240,6 @@
 		9399ACFF1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFB1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png */; };
 		9399AD001BC44CB9005CC9F3 /* Default-736h@3x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFC1BC44CB9005CC9F3 /* Default-736h@3x~iphone.png */; };
 		9399AD011BC44CB9005CC9F3 /* Default@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 9399ACFD1BC44CB9005CC9F3 /* Default@2x~iphone.png */; };
-		D31E2CA419BF5A41002E1934 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31E2CA319BF5A41002E1934 /* GameKit.framework */; };
 		D31E2CA819BF5BE8002E1934 /* GameKitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D31E2CA719BF5BE8002E1934 /* GameKitHelper.m */; };
 		D31E2CAB19BFBECF002E1934 /* MultiplayerGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D31E2CAA19BFBECF002E1934 /* MultiplayerGameViewController.m */; };
 		D31E2CB419BFF502002E1934 /* MultiplayerNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = D31E2CB319BFF502002E1934 /* MultiplayerNetworking.m */; };
@@ -637,7 +635,6 @@
 		907D9C12193E43870037C0CF /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		907D9C14193E438E0037C0CF /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		907D9C16193E43950037C0CF /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		907D9C18193E439B0037C0CF /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		907D9C1A193E43A80037C0CF /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		907D9C1C193F87BE0037C0CF /* AbilityWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbilityWrapper.h; sourceTree = "<group>"; };
 		907D9C1D193F87BE0037C0CF /* AbilityWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbilityWrapper.m; sourceTree = "<group>"; };
@@ -841,7 +838,6 @@
 		9399ACFB1BC44CB9005CC9F3 /* Default-667h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-667h@2x~iphone.png"; sourceTree = "<group>"; };
 		9399ACFC1BC44CB9005CC9F3 /* Default-736h@3x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-736h@3x~iphone.png"; sourceTree = "<group>"; };
 		9399ACFD1BC44CB9005CC9F3 /* Default@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x~iphone.png"; sourceTree = "<group>"; };
-		D31E2CA319BF5A41002E1934 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		D31E2CA619BF5BE8002E1934 /* GameKitHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameKitHelper.h; sourceTree = "<group>"; };
 		D31E2CA719BF5BE8002E1934 /* GameKitHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameKitHelper.m; sourceTree = "<group>"; };
 		D31E2CA919BFBECF002E1934 /* MultiplayerGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiplayerGameViewController.h; sourceTree = "<group>"; };
@@ -1326,7 +1322,6 @@
 				ECBEE57F1B23C2D200D131E7 /* CoreData.framework in Frameworks */,
 				FAFCC26F1A0185D600705584 /* Bolts.framework in Frameworks */,
 				907D9C1B193E43A80037C0CF /* SystemConfiguration.framework in Frameworks */,
-				907D9C19193E439B0037C0CF /* StoreKit.framework in Frameworks */,
 				907D9C17193E43950037C0CF /* Security.framework in Frameworks */,
 				FAFCC26D1A0185B600705584 /* Parse.framework in Frameworks */,
 				907D9C15193E438E0037C0CF /* QuartzCore.framework in Frameworks */,
@@ -1334,7 +1329,6 @@
 				907D9C11193E43800037C0CF /* libz.dylib in Frameworks */,
 				907D9C0F193E43740037C0CF /* CoreLocation.framework in Frameworks */,
 				907D9C0D193E436B0037C0CF /* CFNetwork.framework in Frameworks */,
-				D31E2CA419BF5A41002E1934 /* GameKit.framework in Frameworks */,
 				90F35299191595C200601130 /* CoreGraphics.framework in Frameworks */,
 				90F3529B191595C200601130 /* UIKit.framework in Frameworks */,
 				90F35297191595C200601130 /* Foundation.framework in Frameworks */,
@@ -1712,9 +1706,7 @@
 				ECBEE57E1B23C2D200D131E7 /* CoreData.framework */,
 				FAFCC26E1A0185D600705584 /* Bolts.framework */,
 				FAFCC26C1A0185B600705584 /* Parse.framework */,
-				D31E2CA319BF5A41002E1934 /* GameKit.framework */,
 				907D9C1A193E43A80037C0CF /* SystemConfiguration.framework */,
-				907D9C18193E439B0037C0CF /* StoreKit.framework */,
 				907D9C16193E43950037C0CF /* Security.framework */,
 				907D9C14193E438E0037C0CF /* QuartzCore.framework */,
 				907D9C12193E43870037C0CF /* MobileCoreServices.framework */,
@@ -2593,10 +2585,13 @@
 				ORGANIZATIONNAME = "Content Games";
 				TargetAttributes = {
 					90F35292191595C200601130 = {
-						DevelopmentTeam = U536PJZFA3;
+						DevelopmentTeam = V2KKYCCJQ7;
 						SystemCapabilities = {
 							com.apple.GameCenter = {
-								enabled = 1;
+								enabled = 0;
+							};
+							com.apple.InAppPurchase = {
+								enabled = 0;
 							};
 						};
 					};

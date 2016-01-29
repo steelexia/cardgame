@@ -2218,9 +2218,10 @@ UIControlEventTouchUpInside];
             int cost = [GameStore getCardSellPrice:_cardView.cardModel];
             
             NSError*error;
-            [PFCloud callFunction:@"sellCard" withParameters:@{
-                                                               @"cardNumber" : @(_cardView.cardModel.idNumber),
-                                                               @"cost" : @(cost)} error:&error];
+            [PFCloud callFunction:@"sellCard"
+                   withParameters:@{@"cardNumber" : @(_cardView.cardModel.idNumber),
+                                    @"cost" : @(cost)}
+                            error:&error];
             
             if (!error)
             {
