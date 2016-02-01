@@ -2088,7 +2088,7 @@ BOOL leftHandViewZone = NO;
     [self.view addSubview:_gameOverBlockingView];
     [userPF fetch];
     newEloRating = [[userPF objectForKey:@"eloRating"] intValue];
-    
+    [UserModel increaseUserXP:UMXPGainType_Large];
     [self performBlock:^{
         [self openGameOverScreen];
     } afterDelay:2];

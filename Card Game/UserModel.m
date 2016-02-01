@@ -689,6 +689,95 @@
     return deck;
 }
 
+/*
+ var xpGain         = request.params.userXPGain;
+ var userLevel      = request.user.get(“userLevel”);
+ var userXP         = request.user.get(“userXP”);
+ //variables for the # of cards used by player deck
+ var earthCards     = request.params.earthCards;
+ var fireCards      = request.params.fireCards;
+ var iceCards       = request.params.iceCards;
+ var lightCards     = request.params.lightCards;
+ var darkCards      = request.params.darkCards;
+ var lightningCards = request.params.lightningCards;
+ 
+ 
+ enum CardElement
+ {
+ elementNeutral,
+ elementFire,
+ elementIce,
+ elementLightning,
+ elementEarth,
+ elementLight,
+ elementDark,
+ //TODO single player AI cards may have other elements
+ };
+ */
+
+/**
+ *  Calls the server to increase the users XP, typically after a game completion.
+ *
+ *  @param gainType The size of the XP increase
+ *
+ *  @return Whether or not the call was successful
+ */
++ (BOOL)increaseUserXP:(UMXPGainType) gainType
+{
+    if (!userCurrentDeck)
+    {
+        NSLog(@"increaseUserXP error: no current deck");
+        return false;
+    }
+    
+    NSArray* currentDeckSummary = [DeckModel getElementArraySummary:userCurrentDeck];
+    
+    NSInteger xpGain = 0;
+    switch (gainType) {
+        case UMXPGainType_Small: {
+            xpGain = 1;
+            break;
+        }
+        case UMXPGainType_Medium: {
+            xpGain = 2;
+            break;
+        }
+        case UMXPGainType_Large: {
+            xpGain = 3;
+            break;
+        }
+        default:
+            return false;
+    }
+    
+    NSError* error;
+    
+    NSDictionary* parseCallParams = @{
+                                      @"xpGain"           : @(xpGain),
+                                      @"earthCards"       : currentDeckSummary[elementEarth],
+                                      @"fireCards"        : currentDeckSummary[elementFire],
+                                      @"iceCards"         : currentDeckSummary[elementIce],
+                                      @"lightCards"       : currentDeckSummary[elementLight],
+                                      @"darkCards"        : currentDeckSummary[elementDark],
+                                      @"lightningCards"   : currentDeckSummary[elementLightning]
+                                      };
+    
+    NSLog(@"increaseUserXP Parse Call Params: %@", parseCallParams);
+    
+    [PFCloud callFunction:@"awardUserXP"
+           withParameters:parseCallParams
+                    error:&error];
+    
+    if (error)
+    {
+        NSLog(@"increaseUserXP: error %@", error);
+        return false;
+    } else {
+        NSLog(@"increaseUserXP : success");
+        return true;
+    }
+}
+
 +(BOOL)saveDeck:(DeckModel*)deck
 {
     NSMutableArray*currentDecks = [NSMutableArray arrayWithArray:userPF[@"decks"]];

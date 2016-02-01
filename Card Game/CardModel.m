@@ -85,17 +85,17 @@ const int CARD_ID_START = 1000;
             MonsterCardModel *selfMonster = [[MonsterCardModel alloc] initWithIdNumber:card.idNumber];
             MonsterCardModel *otherMonster = (MonsterCardModel*)card;
             
-            selfMonster.damage = otherMonster.baseDamage;
-            selfMonster.life = otherMonster.life;
-            selfMonster.maximumLife = otherMonster.baseMaxLife;
-            selfMonster.cooldown = otherMonster.cooldown;
+            selfMonster.damage          = otherMonster.baseDamage;
+            selfMonster.life            = otherMonster.life;
+            selfMonster.maximumLife     = otherMonster.baseMaxLife;
+            selfMonster.cooldown        = otherMonster.cooldown;
             selfMonster.maximumCooldown = otherMonster.baseMaxCooldown;
-            
-            selfMonster.deployed = otherMonster.deployed;
-            selfMonster.side = otherMonster.side;
-            selfMonster.dead = otherMonster.dead;
-            selfMonster.turnEnded = otherMonster.turnEnded;
-            selfMonster.heroic = otherMonster.heroic;
+
+            selfMonster.deployed        = otherMonster.deployed;
+            selfMonster.side            = otherMonster.side;
+            selfMonster.dead            = otherMonster.dead;
+            selfMonster.turnEnded       = otherMonster.turnEnded;
+            selfMonster.heroic          = otherMonster.heroic;
             self = selfMonster;
         }
         else if ([card isKindOfClass:[SpellCardModel class]])
@@ -105,15 +105,15 @@ const int CARD_ID_START = 1000;
         }
         
         //deep copy of all attributes
-        self.type = card.type;
-        self.element = card.element;
-        self.likes = card.likes;
-        self.reports = card.reports;
+        self.type         = card.type;
+        self.element      = card.element;
+        self.likes        = card.likes;
+        self.reports      = card.reports;
         self.userReported = card.userReported;
-        self.tags = card.tags;
-        self.cardPF = card.cardPF;
-        self.flavourText = card.flavourText;
-        self.version = card.version;
+        self.tags         = card.tags;
+        self.cardPF       = card.cardPF;
+        self.flavourText  = card.flavourText;
+        self.version      = card.version;
         
         
         for (Ability*ability in card.abilities)

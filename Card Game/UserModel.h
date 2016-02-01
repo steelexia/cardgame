@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "DeckModel.h"
+
+typedef NS_ENUM(NSInteger, UMXPGainType){
+    UMXPGainType_Small,
+    UMXPGainType_Medium,
+    UMXPGainType_Large
+};
+
 /** Stores all the data of a user, such as cards, decks, coins, etc. NOT to be confused with PlayerModel, which is used during in-game. All data is stored as static variables */
 @interface UserModel : NSObject
 
@@ -58,6 +65,8 @@
 +(NSArray*)getAllOwnedCardID;
 
 +(DeckModel*)downloadDeckFromPF:(PFObject*)deckPF;
+
++ (BOOL)increaseUserXP:(UMXPGainType) gainType;
 
 +(void)logout;
 
