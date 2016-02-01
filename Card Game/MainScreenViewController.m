@@ -17,6 +17,7 @@
 #import "Campaign.h"
 #import "PNImports.h"
 #import "AppDelegate.h"
+#import "CFPopupViewController.h"
 @import AudioToolbox;
 
 
@@ -331,6 +332,8 @@ UILabel *loadingLabel;
     PFInstallation *installation = [PFInstallation currentInstallation];
     installation[@"user"] = [PFUser currentUser];
     [installation saveInBackground];
+    
+    
 }
 
 -(void) setPubNubConfigDetails
@@ -560,8 +563,20 @@ UILabel *loadingLabel;
 
 -(void)optionButtonPressed
 {
-    OptionsViewController *vc = [[OptionsViewController alloc] init];
-    [self presentViewController:vc animated:NO completion:nil];
+    //display CFPopup over top for testing
+    CFPopupViewController *cfPopup = [[CFPopupViewController alloc] init];
+    cfPopup.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    
+    cfPopup.popupTitle = @"Testing Title";
+    //[self.view addSubview:cfPopup.view];
+    
+    cfPopup.popupMessage = @"Your card snobby hero test card has been approved.  Other players can now buy it in the store, and its rarity can be increased if others in the community like it!";
+    
+    [self presentViewController:cfPopup animated:YES completion:nil];
+    
+
+    //OptionsViewController *vc = [[OptionsViewController alloc] init];
+    //[self presentViewController:vc animated:NO completion:nil];
 }
 
 -(void)singlePlayerButtonPressed

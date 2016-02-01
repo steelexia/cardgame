@@ -2758,6 +2758,8 @@ UIControlEventTouchUpInside];
         
         PFQuery *pendingCardQuery = [PFQuery queryWithClassName:@"Card"];
         [pendingCardQuery whereKey:@"adminPhotoCheck" equalTo:@(0)];
+        [pendingCardQuery orderByDescending:@"createdAt"];
+        
         [pendingCardQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(!error){
                 //load all sales without the cards

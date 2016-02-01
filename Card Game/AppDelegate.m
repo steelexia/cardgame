@@ -12,7 +12,7 @@
 #import "SSKeychain.h"
 #import "PickIAPHelper.h"
 #import "LoginViewController.h"
-
+#import "CFPopupViewController.h"
 
 @implementation AppDelegate
 
@@ -217,6 +217,28 @@ const BOOL OFFLINE_DEBUGGING = NO;
     [currentInstallation saveInBackground];
 }
 
+//Brian Jan30
+//adding code to retrieve the currently active viewController so we can show a notification popup from anywhere in the app
+- (UIViewController *)topViewController{
+    return [self topViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
+}
+
+- (UIViewController *)topViewController:(UIViewController *)rootViewController
+{
+    if (rootViewController.presentedViewController == nil) {
+        return rootViewController;
+    }
+    
+    if ([rootViewController.presentedViewController isKindOfClass:[UINavigationController class]]) {
+        UINavigationController *navigationController = (UINavigationController *)rootViewController.presentedViewController;
+        UIViewController *lastViewController = [[navigationController viewControllers] lastObject];
+        return [self topViewController:lastViewController];
+    }
+    
+    UIViewController *presentedViewController = (UIViewController *)rootViewController.presentedViewController;
+    return [self topViewController:presentedViewController];
+}
+
 //Brian June 5
 //update push here
 //need to open a screen to edit the card that was liked
@@ -225,6 +247,28 @@ const BOOL OFFLINE_DEBUGGING = NO;
 
     if ( application.applicationState == UIApplicationStateActive )
     {
+        //show a popup on the current view controller telling the user the contents of the card Approval
+        UIViewController *activeVC = [self topViewController];
+        //show an alert in the activeVC
+        
+      
+        UIAlertController *myAlertController = [[UIAlertController alloc] init];
+        [myAlertController setTitle:@"Incoming Push"];
+      
+        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * action) {}];
+        
+        [myAlertController addAction:defaultAction];
+        
+        CFPopupViewController *myCFPopup = [[CFPopupViewController alloc] init];
+        myCFPopup.popupTitle = @"BrianTest";
+        
+        
+        [activeVC presentViewController:myCFPopup animated:NO completion:nil];
+        
+        
+        //[activeVC.view addSubview:messageAlertView];
+        
         // app was already in the foreground
         NSString *messageType = [userInfo objectForKey:@"messageType"];
         
@@ -237,13 +281,23 @@ const BOOL OFFLINE_DEBUGGING = NO;
             //do nothing, pubnub already handling
         }
         application.applicationIconBadgeNumber = 0;
+        
+        if([messageType isEqualToString:@"cardApprovedNotification"])
+        {
+            //show a popup on the current view controller telling the user the contents of the card Approval
+            UIViewController *activeVC = [self topViewController];
+            //show an alert in the activeVC
+            UIAlertView *messageAlertView = [[UIAlertView alloc] initWithTitle:@"cardApproved" message:@"Your Card Was Approved" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [activeVC.view addSubview:messageAlertView];
+            
+        }
     }
     
     else
     {
         // app was just brought from background to foreground
         [PFPush handlePush:userInfo];
-        application.applicationIconBadgeNumber = 0;
+        application.applicationIconBadgeNumber +=1;
         
     }
 

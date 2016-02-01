@@ -2,7 +2,7 @@
 /*
 Parse.Cloud.define("getNewCardID", function(request, response) {
 var query = new Parse.Query("Database");
- 
+
 query.find({
 success: function(results) {
 results[0].increment("cardIdCounter");
@@ -14,8 +14,8 @@ response.error(-1);
 }
 })
 });*/
- 
- 
+
+
 /**
 * Finishes a multiplayer match, function sent by winner of match
 * User1 - ParseUserID of Winner
@@ -25,15 +25,15 @@ response.error(-1);
 Parse.Cloud.define("mpMatchComplete", function(request, response) {
   var matchWinner = request.params.User1;
   var matchLoser = request.params.User2;
-   
+
   console.log(matchWinner);
   console.log(matchLoser);
-   
+
   var matchWinnerEloRating = request.params.User1Rating;
   var matchLoserEloRating = request.params.User2Rating;
-   
+
   console.log(matchWinnerEloRating);
-   
+
   console.log(matchLoserEloRating);
 
   //calculate elo changes
@@ -166,7 +166,7 @@ Parse.Cloud.define("mpMatchComplete", function(request, response) {
   userQuery.find({
     success: function(results) {
       console.log(results.count);
- 
+
       var userObject1 = results[0];
       var userObject2 = results[1];
       if(userObject1.objectId ==matchWinner)
@@ -178,11 +178,11 @@ Parse.Cloud.define("mpMatchComplete", function(request, response) {
       {
         userObject2.set("eloRating",playerOneNewRating);
         userObject1.set("eloRating",playerTwoNewRating);
-   
+
       }
       updatedUserObjects.push(userObject1);
       updatedUserObjects.push(userObject2);
- 
+
     },
     error: function() {
       response.error("Query Failed");
@@ -190,7 +190,7 @@ Parse.Cloud.define("mpMatchComplete", function(request, response) {
   }).then(function(saveObjects)
   {
     Parse.Object.saveAll(updatedUserObjects, {
-   
+
       success: function(list) {
       //assumes all are saved
         response.success("user EloRatings Saved Successfully");
@@ -202,32 +202,32 @@ Parse.Cloud.define("mpMatchComplete", function(request, response) {
     });
   });
 });
- 
+
 /**
 //afterSave function for notifying user about a like received on their cards
 //client will open a notification and bring the user to the editing screen to increase the power level of their card
 //notification will send out on first, 10th, and 50th likes
 //notification will contain separate data indicating when the card
 has reached a new tier in rarity and the player can modify its stats
- 
+
 //get cardID from cardLike
 //query for card object
 //check number of likes
 //
 **/
- 
+
 Parse.Cloud.afterSave("cardLike", function(request) {
   var cardID = request.params.cardID;
- 
+
   cardQuery = new Parse.Query("Card");
   query.get(request.params.cardID, {
   success:function(card)
   {
- 
+
       var originalLikes = card.get("likes");
       //add to card likes
       card.increment("likes");
- 
+
       if(originalLikes==0)
       {
         //send a message for the first like notification
@@ -242,37 +242,41 @@ Parse.Cloud.afterSave("cardLike", function(request) {
       {
         //send a message for the 50th like notification
       }
- 
+
   },
     error: function(error) {
       console.error("Got an error " + error.code + " : " + error.message);
   }
   });
 });
- 
+
 /**
 function for sending a push notification to a particular userID
 //parameter: ParseUser
 */
- 
+
 Parse.Cloud.define('pushNotificationForUser', function(request, response)
 {
   var ParseUserPointer = request.params.userID;
- 
+
+
+  var query = new Parse.Query(Parse.User);
+  query.equalTo('objectId', ParseUserPointer);
+  // Find devices associated with these users
+  var pushQuery = new Parse.Query(Parse.Installation);
+  // need to have users linked to installations
+  pushQuery.matchesQuery('user', query);
+
     console.log(ParseUserPointer);
- 
-    //loop through the array of finalParseUsers and send a notification
-    var pushQuery = new Parse.Query(Parse.Installation);
-    pushQuery.exists("user");
-    pushQuery.equalTo("user",ParseUserPointer);
- 
+  
+
     var promise = new Parse.Promise();
     var msgTxt = request.params.messageText;
     var msgType = request.params.messageType;
- 
+
     console.log(msgTxt);
     console.log(msgType);
- 
+
     // Send push notification to query
     Parse.Push.send({
                     where: pushQuery, // Set our installation query
@@ -303,10 +307,10 @@ Parse.Cloud.define('pushNotificationForUser', function(request, response)
                              promise.reject(error);
                              });
     return promise;
- 
+
   });
- 
- 
+
+
   Parse.Cloud.define('createMessageForUser', function(request, response)
   {
       var ParseUserPointer = request.params.userID;
@@ -314,11 +318,11 @@ Parse.Cloud.define('pushNotificationForUser', function(request, response)
       var msgType = request.params.messageType;
       var msgTitle = request.params.messageTitle;
       var rareCardID = request.params.rareCardID;
- 
+
       console.log(ParseUserPointer);
       console.log(msgTxt);
       console.log(msgType);
- 
+
       var userMsg = new Parse.Object("Message");
       userMsg.set("userPointer", ParseUserPointer);
       userMsg.set("body",msgTxt);
@@ -326,7 +330,7 @@ Parse.Cloud.define('pushNotificationForUser', function(request, response)
       userMsg.set("msgType",msgType);
       if(rareCardID === null || rareCardID === "null")
       {
- 
+
       }
       else
       {
@@ -344,8 +348,8 @@ Parse.Cloud.define('pushNotificationForUser', function(request, response)
       }
       });
   });
- 
- 
+
+
 /**
 * Not actually any secure, but having function in cloud prevents errors in updating.
 * In future can store level costs in cloud code
@@ -355,18 +359,18 @@ Parse.Cloud.define('pushNotificationForUser', function(request, response)
 * blankCards - integer
 *
 */
- 
- 
- 
+
+
+
 Parse.Cloud.define("levelComplete", function(request, response) {
 var completedLevels = request.user.get("completedLevels");
- 
+
 if (completedLevels.indexOf(request.params.levelID) == -1)
 {
 request.user.increment("gold", request.params.gold);
 request.user.increment("blankCards", request.params.goldReward);
 completedLevels.push(request.params.levelID);
- 
+
 request.user.save({},{
 success: function() {
 response.success();
@@ -380,7 +384,7 @@ else{
 response.error("Level already completed");
 }
 });
- 
+
 /**
 * Publishes the card
 * cardID - Card's objectID
@@ -391,7 +395,7 @@ if (request.user.get("blankCards") <= 0)
 response.error("No blank cards left");
 return;
 }
- 
+
 var cardQuery = new Parse.Query("Card");
 cardQuery.get(request.params.cardID, {
 success:function(card)
@@ -403,7 +407,7 @@ success: function(database) {
 var idNumber = database.get("cardIdCounter");
 database.increment("cardIdCounter");
 card.set("idNumber", idNumber);
- 
+
 var sale = new Parse.Object("Sale");
 sale.set("cardID", idNumber);
 sale.set("likes", 0);
@@ -412,12 +416,12 @@ sale.set("stock", 10);
 sale.set("card", card);
 sale.set("name", card.get("name"));
 sale.set("tags", card.get("tags"));
- 
+
 //TODO go through each tag and increment tag counters
- 
+
 request.user.increment("blankCards", -1);
 setOwnedCard(request.user, idNumber, true);
- 
+
 Parse.Object.saveAll([request.user, card, database, sale], {
 success: function(list) {
 //assumes all are saved
@@ -435,7 +439,7 @@ response.error(-1);
 },
 error: function() {
 response.error("Couldn't find card");
-} 
+}
 })
 });
 
@@ -444,15 +448,15 @@ response.error("Couldn't find card");
 * cardID - Card's objectID
 */
 Parse.Cloud.define("setCardAsFeatured", function(request, response) {
- 
+
   var cardQuery = new Parse.Query("Card");
-  cardQuery.get(request.params.cardID, 
+  cardQuery.get(request.params.cardID,
   {
     success:function(card)
     {
       var featuredCard = new Parse.Object("FeaturedCard");
       featuredCard.set("card", card);
-       
+
       featuredCard.save({
       }, {
         success: function() {
@@ -468,17 +472,17 @@ Parse.Cloud.define("setCardAsFeatured", function(request, response) {
     }
   })
 });
- 
+
 /**
 * Buys a boosterPack
 * packType - numeric value representing one of three pack types (bronze, silver, gold)
 * cost - positive integer
 **/
- 
+
 Parse.Cloud.define("buyBoosterPack", function(request, response) {
- 
+
   var Card = Parse.Object.extend("Card");
- 
+
   var innerQuery = new Parse.Query(Card);
   var saleQuery = new Parse.Query("Sale");
   saleQuery.greaterThan("stock", 1);
@@ -488,14 +492,14 @@ Parse.Cloud.define("buyBoosterPack", function(request, response) {
   //saleQuery.limit(5);
   saleQuery.find({
               success: function(results) {
- 
+
                //loop through the results to create an array of things to return.
                var commonCards = new Array();
                var rareCards = new Array();
- 
+
                var resultsLength = results.length;
 
-        
+
                  for (var j = 0; j<5; j++)
                {
 
@@ -503,9 +507,9 @@ Parse.Cloud.define("buyBoosterPack", function(request, response) {
 
                   var resultCard = results[value];
                   //var cardName = resultCard.get("name");
- 
+
                   var cardObj = resultCard.get("card");
-                  
+
                   console.log(cardObj.get("name"));
                   setOwnedCard(request.user, cardObj.get("idNumber"), true);
                   rareCards.push(cardObj);
@@ -514,20 +518,20 @@ Parse.Cloud.define("buyBoosterPack", function(request, response) {
                     success: function(list) {
                       //console.log("saved");
                       //assumes all are saved
-                      
+
                     },
                     error: function(error) {
                       response.error("Couldn't save User");
                     }
                   });
- 
+
                 }
                 response.success(rareCards);
               }
            });
- 
+
 });
- 
+
 /**
 * Buys a card
 * saleID - Sale's objectID
@@ -552,33 +556,33 @@ else
 {
 sale.increment("stock", -1);
 request.user.increment("gold", -request.params.cost);
- 
+
 //TODO probably need push later, and add money to creator
 //TODO defintely push to seller when sold out
 var sellingUser = sale.get("seller");
 console.log("the selling user");
 console.log(sellingUser);
- 
+
 //give user 5% of the cost, notify them via push notification, notify them via message
 var amountForSeller = Math.ceil(0.05*request.params.cost);
 var buyingUserName = request.user.get("username");
 var cardname = card.get("name");
- 
+
 var messageForSeller1 = buyingUserName + " has bought your card ";
 var messageForSeller2 = messageForSeller1 + cardname;
 var totalMessage = messageForSeller2 + ". You received ";
 var totalMessageFinal = totalMessage + amountForSeller + " gold!";
- 
+
 Parse.Cloud.run('giveSellerGold', {sellerID: sellingUser, sellerGold:amountForSeller }, {
   success: function(userNotified) {
- 
+
     console.log("seller gold given");
   },
   error: function(error) {
     console.log("error giving seller gold");
   }
 });
- 
+
 Parse.Cloud.run('pushNotificationForUser', { userID: sellingUser, messageText:totalMessageFinal, messageType:"soldNotification" }, {
   success: function(userNotified) {
     // ratings should be 4.5
@@ -588,7 +592,7 @@ Parse.Cloud.run('pushNotificationForUser', { userID: sellingUser, messageText:to
     console.log("error notifying user");
   }
 });
- 
+
 Parse.Cloud.run('createMessageForUser', { userID: sellingUser, messageTitle:"Card Sold!",messageText:totalMessageFinal, messageType:"soldNotification" }, {
   success: function(userNotified) {
     // ratings should be 4.5
@@ -598,10 +602,10 @@ Parse.Cloud.run('createMessageForUser', { userID: sellingUser, messageTitle:"Car
     console.log("error creating user message");
   }
 });
- 
+
 //saves user
 setOwnedCard(request.user, card.get("idNumber"), true);
- 
+
 Parse.Object.saveAll([request.user, card, sale], {
 success: function(list) {
 //console.log("saved");
@@ -624,7 +628,7 @@ response.error("Couldn't find Sale");
 }
 });
 });
- 
+
 Parse.Cloud.define("giveSellerGold", function(request, response) {
   Parse.Cloud.useMasterKey();
     var user = new Parse.User();
@@ -641,7 +645,7 @@ Parse.Cloud.define("giveSellerGold", function(request, response) {
        }
     });
  });
- 
+
 /**
 * Sells a card, only need card ID, since it only changes the user. However client will specify the cost of the card
 * cardNumber- integer
@@ -650,7 +654,7 @@ Parse.Cloud.define("giveSellerGold", function(request, response) {
 Parse.Cloud.define("sellCard", function(request, response) {
 request.user.increment("gold", request.params.cost);
 setOwnedCard(request.user, request.params.cardNumber, false);
- 
+
 request.user.save({
 }, {
 success: function() {
@@ -661,7 +665,7 @@ response.error("Failed to sell");
 }
 });
 });
- 
+
 /**
 * Like a card. Needs both Card and Sale objects for updating
 *
@@ -691,13 +695,13 @@ Parse.Cloud.define("likeCard", function(request, response) {
             //console.log("enough likes");
             request.user.increment("likes", -1);
             var originalLikes = card.get("likes");
-   
+
             card.increment("likes", 1);
             sale.increment("likes", 1);
-   
+
             //TODO can do a push later
             request.user.increment("gold", 5);
-     
+
             var cardname = card.get("name");
             var fullString;
             var doUpdate = "NO"
@@ -717,11 +721,11 @@ Parse.Cloud.define("likeCard", function(request, response) {
               doUpdate = "YES";
             }
             //get the userID of the card owner to notify them about the like
-             
+
             if(doUpdate =="YES")
             {
-   
-   
+
+
               var parseUserID = sale.get("seller");
               //notify the parseUserID
               Parse.Cloud.run('pushNotificationForUser', { userID: parseUserID, messageText:fullString, messageType:"likeNotification" }, {
@@ -733,7 +737,7 @@ Parse.Cloud.define("likeCard", function(request, response) {
                   console.log("error notifying user");
                 }
               });
-   
+
               Parse.Cloud.run('createMessageForUser', { userID: parseUserID, messageTitle:"Card Like!",messageText:fullString, messageType:"likeNotification" }, {
                 success: function(userNotified) {
                   // ratings should be 4.5
@@ -743,13 +747,13 @@ Parse.Cloud.define("likeCard", function(request, response) {
                   console.log("error creating user message");
                 }
               });
-   
+
             }
-   
+
             //saves user
             setLikedCard(request.user, card.get("idNumber"), true);
             console.log("liked: " + getLikedCard(request.user, card.get("idNumber")));
-   
+
             Parse.Object.saveAll([request.user, card, sale], {
               success: function(list) {
               //console.log("saved");
@@ -785,10 +789,10 @@ Parse.Cloud.define("approveCardImage", function(request, response) {
       card.save({
       }, {
         success: function() {
-          
+
           var cardname = card.get("name");
           var creator = card.get("creator");
-          var totalMessageFinal = "Your card " + cardname + " has been approved.";
+          var totalMessageFinal = "Your card " + cardname + " has been approved. Users can now view it on the store and buy it, giving you a percent of the gold!  If the community likes your card, you will also get a chance to increase its rarity";
 
           Parse.Cloud.run('pushNotificationForUser', { userID: creator, messageText:totalMessageFinal, messageType:"cardApprovedNotification" }, {
             success: function(userNotified) {
@@ -799,7 +803,7 @@ Parse.Cloud.define("approveCardImage", function(request, response) {
               console.log("error notifying user");
             }
           });
-           
+
           Parse.Cloud.run('createMessageForUser', { userID: creator, messageTitle:"Card Approved!",messageText:totalMessageFinal, messageType:"cardApprovedNotification" }, {
             success: function(userNotified) {
               // ratings should be 4.5
@@ -836,6 +840,30 @@ Parse.Cloud.define("declineCardImage", function(request, response) {
       card.save({
       }, {
         success: function() {
+          var cardname = card.get("name");
+          var creator = card.get("creator");
+          var totalMessageFinal = "Your card " + cardname + " has been declined.  One of our moderators found an objection to its content under our terms and conditions.";
+
+          Parse.Cloud.run('pushNotificationForUser', { userID: creator, messageText:totalMessageFinal, messageType:"cardApprovedNotification" }, {
+            success: function(userNotified) {
+              // ratings should be 4.5
+              console.log("user successfully notified");
+            },
+            error: function(error) {
+              console.log("error notifying user");
+            }
+          });
+
+          Parse.Cloud.run('createMessageForUser', { userID: creator, messageTitle:"Card Approved!",messageText:totalMessageFinal, messageType:"cardApprovedNotification" }, {
+            success: function(userNotified) {
+              // ratings should be 4.5
+              console.log("user message created");
+            },
+            error: function(error) {
+              console.log("error creating user message");
+            }
+          });
+
           response.success();
         },
         error: function(error) {
@@ -874,13 +902,13 @@ Parse.Cloud.define("reportCard", function(request, response) {
         var originalReports = card.get("reports");
         card.increment("reports");
         sale.increment("reports");
- 
+
         var cardName = card.get("name");
         var fullString;
         var doUpdate = false;
         if(originalReports == 4) {
           //console.log("Card reported 5 times");
- 
+
           // Copies the card to the reported cards.
           var takenOutCard = new Parse.Object("ReportedCards");
           /**takenOutCard.set("name", cardName);
@@ -905,7 +933,7 @@ Parse.Cloud.define("reportCard", function(request, response) {
           takenOutCard.set("version", card.get("version"));
           takenOutCard.set("rarityUpdateAvailable", card.get("rarityUpdateAvailable"));
           takenOutCard.set("skipDelete", false);
- 
+
           takenOutCard.save(null, {
             success: function(takenOutCard) {
               card.set("skipDelete", true);
@@ -925,12 +953,12 @@ Parse.Cloud.define("reportCard", function(request, response) {
                 response.error("Couldn't copy card: " + error.message);
             }
           }); */
- 
- 
- 
+
+
+
           // TODO: Perhaps notify staff that a card has been taken out.
         }
- 
+
         if(doUpdate == true) {
           //get the userID of the card owner to notify them about the like
           var parseUserID = card.get("creator");
@@ -943,7 +971,7 @@ Parse.Cloud.define("reportCard", function(request, response) {
               console.log("error notifying user");
             }
           });
- 
+
           Parse.Cloud.run('createMessageForUser', { userID: parseUserID, messageTitle:"Card reported :(",messageText:fullString, messageType:"createNotification" }, {
             success: function(userNotified) {
               console.log("user message created");
@@ -953,11 +981,11 @@ Parse.Cloud.define("reportCard", function(request, response) {
             }
           });
         }
- 
+
         //saves user
         setReportedCard(request.user, card.get("idNumber"), true);
         console.log("reported: " + getReportedCard(request.user, card.get("idNumber")));
- 
+
         if (!takenOutCard) {
           Parse.Object.saveAll([request.user, card, sale], {
             success: function(list) {
@@ -981,7 +1009,7 @@ Parse.Cloud.define("reportCard", function(request, response) {
           });
         }
       }
- 
+
       },
       error:function() {
         response.error("Couldn't find sale");
@@ -993,38 +1021,38 @@ Parse.Cloud.define("reportCard", function(request, response) {
     }
   });
 });
- 
- 
+
+
 /***************************************************
 Functions for getting user's interacted cards
 ***************************************************/
- 
+
 function getLikedCard(user, cardID)
 {
 return getCardInteraction(user, cardID, 0);
 }
- 
+
 function getEditedCard(user, cardID)
 {
 return getCardInteraction(user, cardID, 1);
 }
- 
+
 function getOwnedCard(user, cardID)
 {
 return getCardInteraction(user, cardID, 2);
 }
- 
+
 function getReportedCard(user, cardID)
 {
   return getCardInteraction(user, cardID, 3);
 }
- 
+
 function getCardInteraction(user, cardID, atBit){
 var interactionDic = user.get("interactedCards");
- 
+
 if (interactionDic == null)
 return false;
- 
+
 var interaction = interactionDic[cardID+""];
 if (interaction == null)
 return false;
@@ -1033,41 +1061,41 @@ else
 if ((interaction >> atBit) % 2 == 1)
 return true;
 }
- 
+
 return false;
 }
- 
+
 /***************************************************
 Functions for setting user's interacted cards
 ***************************************************/
- 
+
 function setLikedCard(user, cardID, state)
 {
 return setCardInteraction(user, cardID, 0, state);
 }
- 
+
 function setEditedCard(user, cardID, state)
 {
 return setCardInteraction(user, cardID, 1, state);
 }
- 
+
 function setOwnedCard(user, cardID, state)
 {
 return setCardInteraction(user, cardID, 2, state);
 }
- 
+
 function setReportedCard(user, cardID, state)
 {
   return setCardInteraction(user, cardID, 3, state);
 }
- 
+
 /** NOTE that this does NOT save the user */
 function setCardInteraction(user, cardID, atBit, state){
 var interactionDic = user.get("interactedCards");
- 
+
 if (interactionDic == null)
 interactionDic = [];
- 
+
 var interaction = interactionDic[cardID+""];
 if (interaction == null)
 {
@@ -1083,17 +1111,17 @@ interaction = interaction | (1 << atBit);
 else
 interaction = interaction & ~(1 << atBit);
 }
- 
+
 interactionDic[cardID+""] = interaction;
 user.set("interactedCards", interactionDic);
 }
- 
+
 /**********************************************************
 *
 *  Jobs
 *
 **********************************************************/
- 
+
 /**
 * Runs once a ?week to evaluate the rarity of all cards
 */
@@ -1105,18 +1133,18 @@ databaseQuery.first({
 success: function(database) {
 var daysSinceLastRarityUpdate = database.get("daysSinceLastRarityUpdate");
 database.increment("daysSinceLastRarityUpdate", 1);
- 
+
 //only update if rarity update is 3
 if (daysSinceLastRarityUpdate >= 0)
 {
 console.log("needs to update");
 var cardsQuery = new Parse.Query("Card");
 cardsQuery.greaterThan("createdAt", database.get("dateSinceLastRarityUpdate"));
- 
+
 //find total number of cards updated after last update
 cardsQuery.count({
 success: function(lastPeriodCards) {
- 
+
 //find total number of cards overall
 var allCardsQuery = new Parse.Query("Card");
 allCardsQuery.count({
@@ -1165,8 +1193,8 @@ status.error("Couldn't find database");
 }
 });
 });
- 
- 
+
+
 /**
 * Recursive function to ensure all cards from the current period has been updated
 */
@@ -1180,27 +1208,27 @@ cardsQuery.skip(updatedCount);
 cardsQuery.limit(QUERY_COUNT);
 cardsQuery.greaterThan("createdAt", lastUpdateDate); //first search only looks at cards from last update
 cardsQuery.descending("likes");
- 
+
 cardsQuery.find({
 success: function(cards) {
 //console.log("found cards: " + cards.length);
- 
+
 for (var i = 0; i < cards.length; i++)
 {
 var rarityPercent = (updatedCount+i)/totalCards;
 var card = cards[i];
- 
+
 var likes = card.get("likes");
 var originalRarity = card.get("rarity");
 var rarity = getRarity(rarityPercent,likes);
- 
+
 if (rarity > originalRarity) //rarity can never decrease
 {
 console.log("updating " + card.get("idNumber") + " to rarity " + rarity);
 card.set("rarity", rarity);
 }
 }
- 
+
 if (cards.length >= QUERY_COUNT)
 {
 //tries to save all the cards before continuing
@@ -1233,7 +1261,7 @@ status.error("ERROR: Failed to find cards to update");
 }
 })
 }*/
- 
+
 /**
 * Recursive function to ensure all cards from the all periods has been updated
 */
@@ -1245,17 +1273,17 @@ var cardsQuery = new Parse.Query("Card");
 cardsQuery.skip(updatedCount);
 cardsQuery.limit(QUERY_COUNT);
 cardsQuery.descending("likes");
- 
+
 cardsQuery.find({
 success: function(cards) {
 console.log("found cards: " + cards.length);
- 
+
 for (var i = 0; i < cards.length; i++)
 {
 var card = cards[i];
 var rarityPercent;
 var creationDate = card.get("createdAt");
- 
+
 //cards from last period has "bonus" in getting a higher rarity, as it only compares to other cards in the same period
 if (creationDate > lastUpdateDate)
 {
@@ -1266,24 +1294,24 @@ else
 {
 rarityPercent = (updatedCount+i)/totalCards;
 }
- 
+
 var likes = card.get("likes");
 var originalRarity = card.get("rarity");
 var rarity = getRarity(rarityPercent,likes);
 var cardCreator = card.get("creator");
- 
+
 if (rarity > originalRarity) //rarity can never decrease
 {
 console.log("updating " + card.get("idNumber") + " to rarity " + rarity);
 card.set("rarity", rarity);
 card.set("rarityUpdateAvailable","YES");
- 
+
 var cardName = card.get("name");
- 
+
 var cardID = card.get("idNumber");
- 
+
 console.log("cardObjectID:" +cardID);
- 
+
 var rarityStatus;
 if(rarity==1)
 {
@@ -1312,7 +1340,7 @@ Parse.Cloud.run('pushNotificationForUser', { userID: cardCreator, messageText:to
     console.log("error notifying user");
   }
 });
- 
+
 Parse.Cloud.run('createMessageForUser', { userID: cardCreator, messageTitle:"Card Rarity Increase!",messageText:totalMessageFinal, messageType:"rareNotification",rareCardID:cardID }, {
   success: function(userNotified) {
     // ratings should be 4.5
@@ -1322,10 +1350,10 @@ Parse.Cloud.run('createMessageForUser', { userID: cardCreator, messageTitle:"Car
     console.log("error creating user message");
   }
 });
- 
+
 }
 }
- 
+
 if (cards.length >= QUERY_COUNT)
 {
 //tries to save all the cards before continuing
@@ -1358,7 +1386,7 @@ status.error("ERROR: Failed to find cards to update");
 }
 })
 }
- 
+
 /**
 * Returns a card's rarity based on the number of likes and its % standing
 *
@@ -1369,7 +1397,7 @@ status.error("ERROR: Failed to find cards to update");
 * Exceptional - 3
 * Legendary - 4
 */
- 
+
 function getRarity(percent, likes)
 {
 var rarity = 0;
@@ -1382,7 +1410,7 @@ rarity = 2;
 else if (percent < 0.4) //1 in 4 cards (25/100) are uncommon
 rarity = 1;
 //3 in 5 cards (60/100) are common
- 
+
 //hard caps of likes required for reach rarities:
 if (likes < 50 && rarity == 4) //legendary requires at least 50 likes
 rarity = 3;
@@ -1392,11 +1420,11 @@ if (likes < 10 && rarity == 2) //rare cards requires at least 10 likes
 rarity = 1;
 if (likes < 1 && rarity == 1) //uncommon cards require 1 like
 rarity = 0;
- 
+
 return rarity;
 }
- 
- 
+
+
 /**
 * Runs once a day to update all cards into their voted versions
 */
@@ -1418,30 +1446,30 @@ for (var i = 0; i < results.length; i++)
 card = results[i];
 //console.log("card: " + card.get("idNumber"));
 var cardVote = card.get("cardVote");
- 
+
 //console.log("cardVote: " + cardVote);
 if (cardVote != undefined)
 {
 var votedCard = cardVote.get("currentVotedCard");
 //console.log("votedCard: " + votedCard);
- 
+
 if (votedCard != undefined)
 {
 votedCard.fetch();
- 
+
 card.set("cost", votedCard.get("cost"));
 card.set("damage", votedCard.get("damage"));
 card.set("life", votedCard.get("life"));
 card.set("cooldown", votedCard.get("cooldown"));
- 
+
 //remove all previous abilities
 var oldAbilities = card.get("abilities");
 //console.log("old abilities: " + oldAbilities + " count: " + oldAbilities.length);
- 
+
 for (var j = 0; j < oldAbilities.length; j++)
 {
 var ability = oldAbilities[j];
- 
+
 ability.destroy({
 wait: true,
 success: function(myObject)
@@ -1454,27 +1482,27 @@ error: function(myObject, error)
 }
 });
 }
- 
+
 var votedAbilities = votedCard.get("abilities");
 var newAbilities = [];
- 
+
 //since votedCard's abilities get deleted every vote, need to create copies
 for (var j = 0; j < votedAbilities.length; j++)
 {
 var ability = votedAbilities[j];
 //console.log("ability objectID: " + ability.id);
 //console.log("ability: " + ability.get("idNumber"));
- 
+
 var abilityCopy = new Parse.Object("Ability");
 abilityCopy.set("idNumber", ability.get("idNumber"));
 abilityCopy.set("value", ability.get("value"));
 abilityCopy.set("otherValues", ability.get("otherValues"));
- 
+
 newAbilities.push(abilityCopy);
 }
- 
+
 card.set("abilities", newAbilities);
- 
+
 unsavedCards++;
 card.save({
 }, {
@@ -1483,14 +1511,14 @@ success: function(gameTurnAgain) {
 unsavedCards--;
 if (unsavedCards == 0 && reachedEnd)
 status.success("Updated " + totalUpdated + " cards");
- 
+
 },
 error: function(gameTurnAgain, error) {
 // The save failed.  Error is an instance of Parse.Error.
 console.log("save failed " + error);
 }
 });
- 
+
 totalUpdated++;
 }
 }
@@ -1502,18 +1530,18 @@ status.error("ERROR: Couldn't find cards to update.");
 }
 })
 });
- 
+
 /**********************************************************
 *
 *  Maintenance
 *
 **********************************************************/
- 
+
 /** Deletes a card and its data */
 Parse.Cloud.afterDelete("Card", function(request) {
 if (request.object.get("skipDelete") == false || request.object.get("skipDelete") = null){
 console.log("card after delete");
- 
+
 //delete all abilities
 var abilities = request.object.get("abilities");
 if (abilities != null)
@@ -1523,7 +1551,7 @@ error: function(error) {
 console.error("Error deleting abilities. " + error.code + ": " + error.message);
 }
 });
- 
+
 //delete image
 var image = request.object.get("image");
 if (image != null)
@@ -1533,7 +1561,7 @@ error: function(error) {
 console.error("Error deleting CardImage. " + error.code + ": " + error.message);
 }
 });
- 
+
 //delete cardvote
 var cardVote = request.object.get("cardVote");
 if (cardVote != null)
@@ -1543,11 +1571,11 @@ error: function(error) {
 console.error("Error deleting CardVote. " + error.code + ": " + error.message);
 }
 });
- 
+
 //delete sale. there is no pointer to sale, so must find it
 var saleQuery = new Parse.Query("Sale");
 saleQuery.equalTo("cardID", request.object.get("idNumber"));
- 
+
 saleQuery.first({
 success: function(sale) {
 sale.destroy({
@@ -1561,16 +1589,16 @@ error: function(error) {
 console.error("Error finding Sale for card. " + error.code + ": " + error.message);
 }
 });
- 
+
 //add message to creator and all owners (and push) TODO
 }
 });
- 
+
 /** Sames as for Card, TODO: make the inside a shared function. */
 Parse.Cloud.afterDelete("ReportedCards", function(request) {
 if (request.object.get("skipDelete") == false || request.object.get("skipDelete") = null){
 console.log("card after delete");
- 
+
 //delete all abilities
 var abilities = request.object.get("abilities");
 if (abilities != null)
@@ -1580,7 +1608,7 @@ error: function(error) {
 console.error("Error deleting abilities. " + error.code + ": " + error.message);
 }
 });
- 
+
 //delete image
 var image = request.object.get("image");
 if (image != null)
@@ -1590,7 +1618,7 @@ error: function(error) {
 console.error("Error deleting CardImage. " + error.code + ": " + error.message);
 }
 });
- 
+
 //delete cardvote
 var cardVote = request.object.get("cardVote");
 if (cardVote != null)
@@ -1600,11 +1628,11 @@ error: function(error) {
 console.error("Error deleting CardVote. " + error.code + ": " + error.message);
 }
 });
- 
+
 //delete sale. there is no pointer to sale, so must find it
 var saleQuery = new Parse.Query("Sale");
 saleQuery.equalTo("cardID", request.object.get("idNumber"));
- 
+
 saleQuery.first({
 success: function(sale) {
 sale.destroy({
@@ -1618,16 +1646,16 @@ error: function(error) {
 console.error("Error finding Sale for card. " + error.code + ": " + error.message);
 }
 });
- 
+
 //add message to creator and all owners (and push) TODO
 }
 });
- 
+
 /** Deletes a card vote and its data */
 Parse.Cloud.afterDelete("CardVote", function(request) {
 console.log("card vote after delete");
 var votedCard = request.object.get("currentVotedCard");
- 
+
 if (votedCard != null)
 votedCard.destroy({
 success: function() {},
@@ -1636,12 +1664,12 @@ console.error("Error deleting VotedCard. " + error.code + ": " + error.message);
 }
 });
 });
- 
+
 /** Deletes a card vote and its data */
 Parse.Cloud.afterDelete("VotedCard", function(request) {
 console.log("voted card after delete");
 var abilities = request.object.get("abilities");
- 
+
 if (abilities != null)
 Parse.Object.destroyAll(abilities, {
 success: function() {},
@@ -1650,7 +1678,7 @@ console.error("Error deleting VotedCard abilities. " + error.code + ": " + error
 }
 });
 });
- 
+
 /** Called before saving a card gives default values */
 Parse.Cloud.beforeSave("Card", function(request, response) {
   console.log("saving card");
@@ -1662,7 +1690,7 @@ Parse.Cloud.beforeSave("Card", function(request, response) {
   }
   response.success();
 });
- 
+
 /** Called before saving a sale gives default values */
 Parse.Cloud.beforeSave("Sale", function(request, response) {
   console.log("saving sale");
@@ -1674,12 +1702,12 @@ Parse.Cloud.beforeSave("Sale", function(request, response) {
 
 /** Calculate + ELO Rating on WIN */
 Parse.Cloud.define("getELORatingOnWin", function(request, response) {
-   
+
   var matchWinnerEloRating = request.params.User1Rating;
   var matchLoserEloRating = request.params.User2Rating;
-   
+
   console.log(matchWinnerEloRating);
-   
+
   console.log(matchLoserEloRating);
 
   //calculate elo changes
@@ -1802,27 +1830,27 @@ Parse.Cloud.define("getELORatingOnWin", function(request, response) {
 *lightCards
 *darkCards
 *lightningCards
-Server calculates net gain in XP/Level for the following user variables: 
+Server calculates net gain in XP/Level for the following user variables:
 *userXP
-*userLevel 
-*userEarthXP 
+*userLevel
+*userEarthXP
 *userEarthLevel
 *userFireXP
 *userFireLevel
 *userIceXP
-*userIceLevel 
+*userIceLevel
 *userLightXP
 *userLightLevel
 *userDarkXP
 *userDarkLevel
 *userLightningXP
-*userLightningLevel 
+*userLightningLevel
 Server awards unlocked cards or coin awards to player inventory, client runs same logic to know what to display if call is successful
 **/
-Parse.Cloud.define(“awardUserXP”, function(request, response) {
+Parse.Cloud.define("awardUserXP", function(request, response) {
 var xpGain = request.params.userXPGain;
-var userLevel = request.user.get(“userLevel”);
-var userXP = request.user.get(“userXP”);
+var userLevel = request.user.get("userLevel");
+var userXP = request.user.get("userXP");
 //variables for the # of cards used by player deck
 var earthCards = request.params.earthCards;
 var fireCards = request.params.fireCards;
@@ -1860,12 +1888,12 @@ var newXPTotal = userXP + xpIncrement;
 
 if(newXPTotal>newXPThreshold)
 {
-request.user.increment(“userLevel”, 1);
-request.user.increment(“userXP”,xpIncrement);
+request.user.increment("userLevel", 1);
+request.user.increment("userXP",xpIncrement);
 }
 else
 {
-request.user.increment(“userXP”,xpIncrement);
+request.user.increment("userXP",xpIncrement);
 }
 
   //calculate specific cards (fire, ice, lightning, etc.) xp.  xp follows straight linear increase by 1000 per level (1000 xp for level 1, 2000xp level 2, 40000 xp level 40)
@@ -1881,19 +1909,19 @@ var LightningCardXPIncrement = xpIncrement * lightningCards;
 var DarkCardXPIncrement = xpIncrement *darkCards;
 var LightCardXPIncrement = xpIncrement *lightCards;
 
-var userEarthLevel = request.user.get(“userEarthLevel”);
-var userIceLevel = request.user.get(“userIceLevel”);
-var userFireLevel = request.user.get(“userFireLevel”);
-var userLightningLevel = request.user.get(“userLightningLevel”);
-var userDarkLevel = request.user.get(“userDarkLevel”);
-var userLightLevel = request.user.get(“userLightLevel”);
+var userEarthLevel = request.user.get("userEarthLevel");
+var userIceLevel = request.user.get("userIceLevel");
+var userFireLevel = request.user.get("userFireLevel");
+var userLightningLevel = request.user.get("userLightningLevel");
+var userDarkLevel = request.user.get("userDarkLevel");
+var userLightLevel = request.user.get("userLightLevel");
 
-var userEarthXP = request.user.get(“userEarthXP”);
-var userIceXP = request.user.get(“userIceXP”);
-var userFireXP = request.user.get(“userFireXP”);
-var userLightningXP = request.user.get(“userLightningXP”);
-var userDarkXP = request.user.get(“userDarkXP”);
-var userLightXP = request.user.get(“userLightXP”);
+var userEarthXP = request.user.get("userEarthXP");
+var userIceXP = request.user.get("userIceXP");
+var userFireXP = request.user.get("userFireXP");
+var userLightningXP = request.user.get("userLightningXP");
+var userDarkXP = request.user.get("userDarkXP");
+var userLightXP = request.user.get("userLightXP");
 
 var EarthXPThreshold = userEarthLevel *1000;
 var IceXPThreshold = userIceLevel *1000;
@@ -1905,78 +1933,76 @@ var LightXPThreshold = userLightLevel*1000;
 var newEarthXPTotal = userEarthXP+EarthCardXPIncrement;
 if(newEarthXPTotal>EarthXPThreshold)
 {
-request.user.increment(“userEarthLevel”, 1);
-request.user.increment(“userEarthXP”,EarthCardXPIncrement);
+request.user.increment("userEarthLevel", 1);
+request.user.increment("userEarthXP",EarthCardXPIncrement);
 }
 else
 {
-request.user.increment(“userEarthXP”,EarthCardXPIncrement);
+request.user.increment("userEarthXP",EarthCardXPIncrement);
 }
 
 var newIceXPTotal = userIceXP+IceCardXPIncrement;
 if(newIceXPTotal>IceXPThreshold)
 {
-request.user.increment(“userIceLevel”, 1);
-request.user.increment(“userIceXP”,IceCardXPIncrement);
+request.user.increment("userIceLevel", 1);
+request.user.increment("userIceXP",IceCardXPIncrement);
 }
 else
 {
-request.user.increment(“userIceXP”,IceCardXPIncrement);
+request.user.increment("userIceXP",IceCardXPIncrement);
 }
 
 var newFireXPTotal = userFireXP+FireCardXPIncrement;
 if(newFireXPTotal>FireXPThreshold)
 {
-request.user.increment(“userFireLevel”, 1);
-request.user.increment(“userFireXP”,FireCardXPIncrement);
+request.user.increment("userFireLevel", 1);
+request.user.increment("userFireXP",FireCardXPIncrement);
 }
 else
 {
-request.user.increment(“userFireXP”,FireCardXPIncrement);
+request.user.increment("userFireXP",FireCardXPIncrement);
 }
 
 var newLightningXPTotal = userLightningXP+LightningCardXPIncrement;
 if(newLightningXPTotal>LightningXPThreshold)
 {
-request.user.increment(“userLightningLevel”, 1);
-request.user.increment(“userLightningXP”,LightningCardXPIncrement);
+request.user.increment("userLightningLevel", 1);
+request.user.increment("userLightningXP",LightningCardXPIncrement);
 }
 else
 {
-request.user.increment(“userLightningXP”,LightningCardXPIncrement);
+request.user.increment("userLightningXP",LightningCardXPIncrement);
 }
 
 var newDarkXPTotal = userDarkXP+DarkCardXPIncrement;
 if(newDarkXPTotal>DarkXPThreshold)
 {
-request.user.increment(“userDarkLevel”, 1);
-request.user.increment(“userDarkXP”,DarkCardXPIncrement);
+request.user.increment("userDarkLevel", 1);
+request.user.increment("userDarkXP",DarkCardXPIncrement);
 }
 else
 {
-request.user.increment(“userDarkXP”,DarkCardXPIncrement);
+request.user.increment("userDarkXP",DarkCardXPIncrement);
 }
 
 var newLightXPTotal = userLightXP+LightCardXPIncrement;
 if(newLightXPTotal>LightXPThreshold)
 {
-request.user.increment(“userLightLevel”, 1);
-request.user.increment(“userLightXP”,LightCardXPIncrement);
+request.user.increment("userLightLevel", 1);
+request.user.increment("userLightXP",LightCardXPIncrement);
 }
 else
 {
-request.user.increment(“userLightXP”,LightCardXPIncrement);
+request.user.increment("userLightXP",LightCardXPIncrement);
 }
 
 request.user.save({
 }, {
-
 success: function() {
 response.success();
 },
 error: function(error) {
-response.error("Failed to update XP”);
+response.error("Failed to sell");
 }
 });
 });
-
