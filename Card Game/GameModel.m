@@ -539,6 +539,7 @@ enum GameMode __gameMode; //because C functions cant access
     }
     
     self.decks = @[playerDeck, opponentDeck];
+    //NSLog(@"Breakpoint, loadDecks"); // testing purposes
     
     //while ([playerDeck count] > 20) //limit to 20 cards
     //    [playerDeck removeCardAtIndex:0];

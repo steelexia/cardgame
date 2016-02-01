@@ -128,7 +128,9 @@ NSTimer *firstChallengeTimer;
     [PNLogger loggerEnabled:FALSE];
     
     PNConfiguration *configuration = [PNConfiguration configurationForOrigin:@"pubsub.pubnub.com"
-                                                                  publishKey:@"pub-c-d1465391-f40c-44e3-8fc9-9d92be0a63c5" subscribeKey:@"sub-c-cac0d926-d8ab-11e4-8301-0619f8945a4f" secretKey:@"sec-c-MzAzYzM3ZGMtZjFmNC00Mjk3LTkxOTEtMTRmNzUxNDBjYzdi"];
+                                                                  publishKey:@"pub-c-d1465391-f40c-44e3-8fc9-9d92be0a63c5"
+                                                                subscribeKey:@"sub-c-cac0d926-d8ab-11e4-8301-0619f8945a4f"
+                                                                   secretKey:@"sec-c-MzAzYzM3ZGMtZjFmNC00Mjk3LTkxOTEtMTRmNzUxNDBjYzdi"];
     
     
     NSString *uuid = userPF.objectId;
@@ -139,14 +141,16 @@ NSTimer *firstChallengeTimer;
     [PubNub connect];
    
     // #1 Define our channel name with +PNChannel+.
-    gameChannel = [PNChannel channelWithName:@"main_lobby"
-                                 shouldObservePresence:YES];
+    gameChannel = [PNChannel channelWithName:@"main_lobby" shouldObservePresence:YES];
     
     chatChannel = [PNChannel channelWithName:@"chat" shouldObservePresence:YES];
     
     
     
-    [[PNObservationCenter defaultCenter] addClientConnectionStateObserver:self withCallbackBlock:^(NSString *origin, BOOL connected, PNError *connectionError){
+    [[PNObservationCenter defaultCenter] addClientConnectionStateObserver:self
+                                                        withCallbackBlock:^(NSString *origin,
+                                                                            BOOL connected,
+                                                                            PNError *connectionError){
         
         if (connected)
         {
@@ -166,10 +170,10 @@ NSTimer *firstChallengeTimer;
                                                                  }];
              */
             NSMutableDictionary *clientStateMutable = [[NSMutableDictionary alloc] init];
-            [clientStateMutable setObject:eloVal forKey:@"eloRating"];
-            [clientStateMutable setObject:userName forKey:@"usernameCustom"];
-            [clientStateMutable setObject:userPF.objectId forKey:@"userID"];
-            [clientStateMutable setObject:@"Lobby" forKey:@"gameState"];
+            [clientStateMutable setObject:eloVal            forKey:@"eloRating"];
+            [clientStateMutable setObject:userName          forKey:@"usernameCustom"];
+            [clientStateMutable setObject:userPF.objectId   forKey:@"userID"];
+            [clientStateMutable setObject:@"Lobby"          forKey:@"gameState"];
             NSDictionary *myDict = [clientStateMutable copy];
             
             [PubNub subscribeOn:@[gameChannel,chatChannel] withClientState:myDict
@@ -334,7 +338,11 @@ NSTimer *firstChallengeTimer;
                 break;
         }
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"alert" message:@"case2Found" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"alert"
+                                                        message:@"case2Found"
+                                                       delegate:self
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
         // #3. Add logic that sends messages to the channel based on channel occupancy.
         switch (event.occupancy) {
             case 1:
@@ -1226,9 +1234,13 @@ NSTimer *firstChallengeTimer;
     NSNumber *selfEloRating = [[PFUser currentUser] objectForKey:@"eloRating"];
     NSNumber *opponentEloRating = [NSNumber numberWithInt:self.opponentEloRating];
      NSError* error;
-    [PFCloud callFunction:@"mpMatchComplete" withParameters:@{
-                                                              @"User1" : [PFUser currentUser].objectId, @"User2" :self.opponentID, @"User1Rating" :selfEloRating,@"User2Rating": opponentEloRating
-                                                              } error:&error];
+    [PFCloud callFunction:@"mpMatchComplete"
+           withParameters:@{ @"User1" : [PFUser currentUser].objectId,
+                             @"User2" :self.opponentID,
+                             @"User1Rating" :selfEloRating,
+                             @"User2Rating": opponentEloRating
+                             }
+                    error:&error];
     if (!error){
         [userPF fetch];
         

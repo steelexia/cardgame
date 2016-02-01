@@ -79,7 +79,6 @@ int userFireXP;
 int userFireLevel;
 int userIceXP;
 int userIceLevel;
-
 PFUser *userPF;
 BOOL userInfoLoaded;
 BOOL userInitError;

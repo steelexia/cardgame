@@ -25,15 +25,15 @@
 
 @implementation GameViewController
 
-@synthesize gameModel = _gameModel;
+@synthesize gameModel                 = _gameModel;
 @synthesize handsView, fieldView, uiView, backgroundView;
-@synthesize currentAbilities = _currentAbilities;
-@synthesize endTurnButton = _endTurnButton;
+@synthesize currentAbilities          = _currentAbilities;
+@synthesize endTurnButton             = _endTurnButton;
 @synthesize currentNumberOfAnimations = _currentNumberOfAnimations;
-@synthesize tutLabel = _tutLabel;
-@synthesize tutOkButton = _tutOkButton;
-@synthesize quickMatchDeck = _quickMatchDeck;
-@synthesize quickMatchDeckLoaded = _quickMatchDeckLoaded;
+@synthesize tutLabel                  = _tutLabel;
+@synthesize tutOkButton               = _tutOkButton;
+@synthesize quickMatchDeck            = _quickMatchDeck;
+@synthesize quickMatchDeckLoaded      = _quickMatchDeckLoaded;
 @synthesize currentSpellCard;
 
 /** Screen dimension for convinience */
@@ -93,8 +93,10 @@ CardModel* currentCard;
 
 /** Used to reduce amount of calculation needed for viewing hand cards via dragging. This flag is set when a touch enters/leaves the zone so it only needs to be updated once */
 BOOL leftHandViewZone = NO;
-
--(instancetype)initWithGameMode:(enum GameMode)gameMode withLevel:(Level*)level
+// ------------------------------------------------------------------------------------------------
+- (instancetype) initWithGameMode: (enum GameMode)  gameMode
+                        withLevel: (Level*)         level
+// ------------------------------------------------------------------------------------------------
 {
     self = [super init];
     
@@ -156,8 +158,9 @@ BOOL leftHandViewZone = NO;
     
     return self;
 }
-
+// ------------------------------------------------------------------------------------------------
 - (void)viewDidLoad
+// ------------------------------------------------------------------------------------------------
 {
     [super viewDidLoad];
     
@@ -181,7 +184,10 @@ BOOL leftHandViewZone = NO;
     [self setupUI];
     
     //start a new game, each player draws three cards
-    if ([TUTORIAL_ONE isEqualToString:_level.levelID] || [TUTORIAL_TWO isEqualToString:_level.levelID]|| [TUTORIAL_THREE isEqualToString:_level.levelID]|| [TUTORIAL_FOUR isEqualToString:_level.levelID])
+    if ([TUTORIAL_ONE isEqualToString:_level.levelID]   ||
+        [TUTORIAL_TWO isEqualToString:_level.levelID]   ||
+        [TUTORIAL_THREE isEqualToString:_level.levelID] ||
+        [TUTORIAL_FOUR isEqualToString:_level.levelID])
     {
         //these tutorials do not start game immediately
     }
@@ -228,15 +234,19 @@ BOOL leftHandViewZone = NO;
         [skipButton setTextSize:12];
         skipButton.label.text = @"Skip";
         skipButton.center = CGPointMake(42, 30);
-        [skipButton addTarget:self action:@selector(skipButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+        [skipButton addTarget:self
+                       action:@selector(skipButtonPressed)
+             forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:skipButton];
         [self tutorialMessageGameStart];
     }
     
     
 }
-
--(void)skipButtonPressed{
+// ------------------------------------------------------------------------------------------------
+- (void) skipButtonPressed
+// ------------------------------------------------------------------------------------------------
+{
     
     userPF[@"completedLevels"] = @[@"d_1_c_1_l_1",@"d_1_c_1_l_2",@"d_1_c_1_l_4"];
     NSError *error;
@@ -263,8 +273,10 @@ BOOL leftHandViewZone = NO;
     [self presentViewController:mainController animated:YES completion:nil];
 }
 
+// ------------------------------------------------------------------------------------------------
 /** Purely for organization, called once when the view is first set up */
--(void) setupUI
+- (void) setupUI
+// ------------------------------------------------------------------------------------------------
 {
     //set up UI
     darkFilter = [[UIView alloc] initWithFrame:self.view.bounds];
@@ -297,34 +309,34 @@ BOOL leftHandViewZone = NO;
     attackLine.backgroundColor = [UIColor colorWithRed:0.67 green:0.08 blue:0 alpha:0.6];
     
     //----set up the resource labels----//
-    StrokedLabel*playerResourceLabel = [[StrokedLabel alloc] initWithFrame: CGRectMake(0, 0, 60, 30)];
-    playerResourceLabel.center = CGPointMake(SCREEN_WIDTH - 30, SCREEN_HEIGHT - 30);
-    playerResourceLabel.textAlignment = NSTextAlignmentCenter;
-    playerResourceLabel.textColor = [UIColor whiteColor];
-    playerResourceLabel.backgroundColor = [UIColor clearColor];
-    playerResourceLabel.font = [UIFont fontWithName:cardMainFont size:20];
+    StrokedLabel*playerResourceLabel              = [[StrokedLabel alloc] initWithFrame: CGRectMake(0, 0, 60, 30)];
+    playerResourceLabel.center                    = CGPointMake(SCREEN_WIDTH - 30, SCREEN_HEIGHT - 30);
+    playerResourceLabel.textAlignment             = NSTextAlignmentCenter;
+    playerResourceLabel.textColor                 = [UIColor whiteColor];
+    playerResourceLabel.backgroundColor           = [UIColor clearColor];
+    playerResourceLabel.font                      = [UIFont fontWithName:cardMainFont size:20];
     playerResourceLabel.adjustsFontSizeToFitWidth = YES;
-    playerResourceLabel.strokeColour = [UIColor blackColor];
-    playerResourceLabel.strokeOn = YES;
-    playerResourceLabel.strokeThickness = 3;
-    UIImageView *playerResourceIcon = [[UIImageView alloc] initWithImage:RESOURCE_ICON_IMAGE];
-    playerResourceIcon.frame = CGRectMake(0, 0, 45, 45);
-    playerResourceIcon.center = playerResourceLabel.center;
+    playerResourceLabel.strokeColour              = [UIColor blackColor];
+    playerResourceLabel.strokeOn                  = YES;
+    playerResourceLabel.strokeThickness           = 3;
+    UIImageView *playerResourceIcon               = [[UIImageView alloc] initWithImage:RESOURCE_ICON_IMAGE];
+    playerResourceIcon.frame                      = CGRectMake(0, 0, 45, 45);
+    playerResourceIcon.center                     = playerResourceLabel.center;
     
-    StrokedLabel*opponentResourceLabel = [[StrokedLabel alloc] initWithFrame: CGRectMake(0,0, 60, 30)];
-    opponentResourceLabel.center = CGPointMake(SCREEN_WIDTH - 30, 30);
-    opponentResourceLabel.textAlignment = NSTextAlignmentCenter;
-    opponentResourceLabel.textColor = [UIColor whiteColor];
-    opponentResourceLabel.backgroundColor = [UIColor clearColor];
-    opponentResourceLabel.font = [UIFont fontWithName:cardMainFont size:20];
+    StrokedLabel*opponentResourceLabel              = [[StrokedLabel alloc] initWithFrame: CGRectMake(0,0, 60, 30)];
+    opponentResourceLabel.center                    = CGPointMake(SCREEN_WIDTH - 30, 30);
+    opponentResourceLabel.textAlignment             = NSTextAlignmentCenter;
+    opponentResourceLabel.textColor                 = [UIColor whiteColor];
+    opponentResourceLabel.backgroundColor           = [UIColor clearColor];
+    opponentResourceLabel.font                      = [UIFont fontWithName:cardMainFont size:20];
     opponentResourceLabel.adjustsFontSizeToFitWidth = YES;
-    opponentResourceLabel.strokeColour = [UIColor blackColor];
-    opponentResourceLabel.strokeOn = YES;
-    opponentResourceLabel.strokeThickness = 3;
-    UIImageView *opponentResourceIcon = [[UIImageView alloc] initWithImage:RESOURCE_ICON_IMAGE];
-    opponentResourceIcon.frame = CGRectMake(0, 0, 45, 45);
-    opponentResourceIcon.center = opponentResourceLabel.center;
-    resourceLabels = @[playerResourceLabel,opponentResourceLabel];
+    opponentResourceLabel.strokeColour              = [UIColor blackColor];
+    opponentResourceLabel.strokeOn                  = YES;
+    opponentResourceLabel.strokeThickness           = 3;
+    UIImageView *opponentResourceIcon               = [[UIImageView alloc] initWithImage:RESOURCE_ICON_IMAGE];
+    opponentResourceIcon.frame                      = CGRectMake(0, 0, 45, 45);
+    opponentResourceIcon.center                     = opponentResourceLabel.center;
+    resourceLabels                                  = @[playerResourceLabel,opponentResourceLabel];
     [self.uiView addSubview:playerResourceIcon];
     [self.uiView addSubview:opponentResourceIcon];
     [self.uiView addSubview:resourceLabels[PLAYER_SIDE]];
@@ -701,8 +713,10 @@ BOOL leftHandViewZone = NO;
     [tapGesture setCancelsTouchesInView:NO];
     [self.view addGestureRecognizer:tapGesture];
 }
-
--(void)setTimerFrames{
+// ------------------------------------------------------------------------------------------------
+- (void) setTimerFrames
+// ------------------------------------------------------------------------------------------------
+{
     
     [topRightView setHidden:NO];
     [bottomRightView setHidden:NO];
@@ -732,8 +746,9 @@ BOOL leftHandViewZone = NO;
     bottomRightView.center = CGPointMake(backEndTurn.frame.origin.x + backEndTurn.frame.size.width -topLeftView.frame.size.width/2 - 2, backEndTurn.frame.origin.y + backEndTurn.frame.size.height - bottomRightView.frame.size.height/2 -2.5);
     bottomLeftView.center = CGPointMake(backEndTurn.frame.origin.x +bottomLeftView.frame.size.width/2 + 2, backEndTurn.frame.origin.y + backEndTurn.frame.size.height - bottomLeftView.frame.size.height/2 -2);
 }
-
--(void)newGame
+// ------------------------------------------------------------------------------------------------
+- (void) newGame
+// ------------------------------------------------------------------------------------------------
 {
     if (currentSide == PLAYER_SIDE){
         [self animatePlayerTurn];
@@ -748,13 +763,15 @@ BOOL leftHandViewZone = NO;
             [self startEndTurnTimer];
     }
 }
-
--(void)setCurrentSide:(int)newSide
+// ------------------------------------------------------------------------------------------------
+- (void) setCurrentSide: (int) newSide
+// ------------------------------------------------------------------------------------------------
 {
     currentSide = newSide;
 }
-
--(void)opponentEndTurn
+// ------------------------------------------------------------------------------------------------
+- (void) opponentEndTurn
+// ------------------------------------------------------------------------------------------------
 {
     [self endTurn];
     if (![self checkMovementsLeft]) {
@@ -1950,13 +1967,7 @@ BOOL leftHandViewZone = NO;
             _gameModel.playerOneDefeated = YES;
              [self.MPDataHandler resetAllMPVariables];
         }
-    
-        
-      
     }
-    
-    
-    
     [self endGame];
 }
 
