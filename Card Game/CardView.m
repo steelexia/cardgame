@@ -422,7 +422,7 @@ NSDictionary *singlePlayerCardImages;
             
             float frameImageHeight = 270.0f/590.0f *CARD_FULL_HEIGHT;
             float frameImageX = 60.0f/400.0f/2 * CARD_FULL_WIDTH;
-            float frameImageY = 100.0f/590.0f/2 * CARD_FULL_HEIGHT;
+            float frameImageY = 170.0f/590.0f/2 * CARD_FULL_HEIGHT;
 
             self.cardImage.frame = CGRectMake(frameImageX, frameImageY, frameImageWidth, frameImageHeight);
            // self.cardImage.frame = CGRectMake(0, 0, CARD_FULL_WIDTH - 16, (CARD_FULL_WIDTH-16) * CARD_IMAGE_RATIO);
@@ -498,8 +498,8 @@ NSDictionary *singlePlayerCardImages;
         
         float frameImageHeight = 353.0f/590.0f *CARD_FULL_HEIGHT;
         float frameImageX = 24.0f/400.0f/2 * CARD_FULL_WIDTH;
-        float frameImageY = 0;
-        frameImageView.frame = CGRectMake(frameImageX,0,frameImageWidth,frameImageHeight);
+        float frameImageY = 55.0f/590.0f/2 * CARD_FULL_HEIGHT;
+        frameImageView.frame = CGRectMake(frameImageX,frameImageY,frameImageWidth,frameImageHeight);
         
         [_frontViews addSubview:frameImageView];
         
@@ -607,19 +607,14 @@ NSDictionary *singlePlayerCardImages;
         //NOTE added above other stuff
         
         //original value -10 for width
-        self.baseAbilityLabel = [[UITextView alloc] initWithFrame:CGRectMake(30, descriptionBGY+ (descriptionBGHeight/6), descriptionBGWidth - 40, (descriptionBGHeight/8)*5)]; //NOTE changing this is useless, do it down below
+        self.baseAbilityLabel = [[UITextView alloc] initWithFrame:CGRectMake(12, descriptionBGY+ (descriptionBGHeight/6), descriptionBGWidth - 15, (descriptionBGHeight/8)*5)]; //NOTE changing this is useless, do it down below
         [self.baseAbilityLabel  setTextContainerInset:UIEdgeInsetsMake(0, 0, 0, 0)];
         self.baseAbilityLabel.textColor = [UIColor whiteColor];
         self.baseAbilityLabel.backgroundColor = [UIColor clearColor];
         self.baseAbilityLabel.editable = NO;
         self.baseAbilityLabel.selectable = NO;
         
-        //self.baseAbilityLabel.numberOfLines = 0;
-        //self.baseAbilityLabel.textAlignment = NSTextAlignmentCenter;
-        [self.baseAbilityLabel setTextAlignment:NSTextAlignmentCenter];
-        
-        //self.baseAbilityLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        //self.baseAbilityLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        [self.baseAbilityLabel setTextAlignment:NSTextAlignmentLeft]; //note that this is set again in the update function
         
         //[self.baseAbilityLabel sizeToFit];
         [self addSubview: baseAbilityLabel];
@@ -1066,8 +1061,8 @@ NSDictionary *singlePlayerCardImages;
        
         
         self.baseAbilityLabel.attributedText = finalString;
-         self.baseAbilityLabel.textColor = [UIColor whiteColor];
-        self.baseAbilityLabel.textAlignment = NSTextAlignmentCenter;
+        self.baseAbilityLabel.textColor = [UIColor whiteColor];
+        self.baseAbilityLabel.textAlignment = NSTextAlignmentLeft;
     }
     //back facing
     else
