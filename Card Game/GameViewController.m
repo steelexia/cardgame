@@ -145,7 +145,7 @@ BOOL leftHandViewZone = NO;
                     
                     self.gameModel.decks = decks;
                     [self.gameModel startGame];
-                    if (!_isTutorial && !self.shouldCallEndTurn)
+                    if (!_isTutorial && !self.shouldCallEndTurn && self.gameMode == GameModeMultiplayer)
                         [self startEndTurnTimer];
                 }
             });
@@ -759,7 +759,7 @@ BOOL leftHandViewZone = NO;
                 [self flashOn:self.endTurnButton];
             }
         }
-        if (!_isTutorial && !self.shouldCallEndTurn)
+        if (!_isTutorial && !self.shouldCallEndTurn && self.gameMode == GameModeMultiplayer)
             [self startEndTurnTimer];
     }
 }
@@ -1020,7 +1020,7 @@ BOOL leftHandViewZone = NO;
     else
     {
         currentSide = PLAYER_SIDE;
-        if (!_isTutorial && !self.shouldCallEndTurn)
+        if (!_isTutorial && !self.shouldCallEndTurn && self.gameMode == GameModeMultiplayer)
             [self startEndTurnTimer];
     }
     
@@ -2413,7 +2413,7 @@ BOOL leftHandViewZone = NO;
     [_gameOverScreen removeFromSuperview];
     [_gameOverProgressIndicator stopAnimating];
     [_gameOverSaveLabel removeFromSuperview];
-    if (!_isTutorial && !self.shouldCallEndTurn)
+    if (!_isTutorial && !self.shouldCallEndTurn && self.gameMode == GameModeMultiplayer)
         [self startEndTurnTimer];
 }
 
