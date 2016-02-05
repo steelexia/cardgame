@@ -427,14 +427,32 @@
             shouldHighlightValue = YES;
         }
         else if (ability.otherValues.count > 0)
-            valueDescription = [NSString stringWithFormat:@"%@", ability.otherValues[0]];
+        {
+            //TODO CRITICAL SX - temporarily rounding all numbers to appear as if they're smaller numbers, REMOVE this eventually, uncomment line below
+            
+            float temporaryRounding = [ability.otherValues[0] floatValue];
+            if (temporaryRounding >= 100)
+                temporaryRounding /= 500;
+            
+            valueDescription = [NSString stringWithFormat:@"%d", (int)ceilf(temporaryRounding)];
+            
+            //valueDescription = [NSString stringWithFormat:@"%@", ability.otherValues[0]];
+        }
     }
     else
     {
         if (ability.otherValues.count >= 2 && [ability.otherValues[0] integerValue] != [ability.otherValues[1] integerValue])
             shouldHighlightValue = YES;
         
-        valueDescription = [NSString stringWithFormat:@"%@", ability.value];
+        //TODO CRITICAL SX - temporarily rounding all numbers to appear as if they're smaller numbers, REMOVE this eventually, uncomment line below
+        float temporaryRounding = [ability.value floatValue];
+        if (temporaryRounding >= 100)
+            temporaryRounding /= 500;
+        
+        valueDescription = [NSString stringWithFormat:@"%d", (int)ceilf(temporaryRounding)];
+        
+        
+        //valueDescription = [NSString stringWithFormat:@"%@", ability.value];
     }
     
     if (abilityType == abilityNil)
@@ -574,6 +592,12 @@
 +(NSString*) getAbilityTypeDescriptionFromAbility:(Ability*)ability withValueDescription:(NSString*)valueDescription
 {
     NSString* description = @"NO DESCRIPTION";
+    
+    //TODO CRITICAL SX - temporarily rounding all numbers to appear as if they're smaller numbers, REMOVE this eventually
+    float temporaryRounding = [valueDescription floatValue];
+    if (temporaryRounding >= 100)
+        temporaryRounding /= 500;
+    valueDescription = [NSString stringWithFormat:@"%d", (int)ceilf(temporaryRounding)];
     
     enum AbilityType abilityType = ability.abilityType;
     

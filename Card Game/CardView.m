@@ -638,7 +638,13 @@ NSDictionary *singlePlayerCardImages;
                 self.lifeLabel.strokeColour = [UIColor blackColor];
                 self.lifeLabel.strokeThickness = 2.5;
                 self.lifeLabel.font = [UIFont fontWithName:cardMainFont size:20];
-                self.lifeLabel.text = [NSString stringWithFormat:@"%d", monsterCard.life];
+                
+                //TODO CRITICAL SX - temporarily rounding all numbers to appear as if they're smaller numbers, REMOVE this eventually, uncomment line below
+                float temporaryRounding = (float) monsterCard.life;
+                temporaryRounding /= 500;
+                self.lifeLabel.text = [NSString stringWithFormat:@"%d", (int)ceilf(temporaryRounding)];
+                
+                //self.lifeLabel.text = [NSString stringWithFormat:@"%d", monsterCard.life];
                 
                 [_frontViews addSubview: lifeLabel];
                 
@@ -690,11 +696,17 @@ NSDictionary *singlePlayerCardImages;
                 self.attackLabel.textAlignment = NSTextAlignmentCenter;
                 self.attackLabel.textColor = [UIColor whiteColor];
                 self.attackLabel.backgroundColor = [UIColor clearColor];
-                self.attackLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE -3];
+                self.attackLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +9]; //originally -3
                 self.attackLabel.strokeOn = YES;
                 self.attackLabel.strokeColour = [UIColor blackColor];
                 self.attackLabel.strokeThickness = 2.5;
-                self.attackLabel.text = [NSString stringWithFormat:@"%d", monsterCard.damage];
+                
+                //TODO CRITICAL SX - temporarily rounding all numbers to appear as if they're smaller numbers, REMOVE this eventually, uncomment line below
+                float temporaryRounding = (float) monsterCard.damage;
+                temporaryRounding /= 500;
+                self.attackLabel.text = [NSString stringWithFormat:@"%d", (int)ceilf(temporaryRounding)];
+                
+                //self.attackLabel.text = [NSString stringWithFormat:@"%d", monsterCard.damage];
                 
                 [_frontViews addSubview: attackLabel];
                 
@@ -708,8 +720,13 @@ NSDictionary *singlePlayerCardImages;
                 self.lifeLabel.strokeOn = YES;
                 self.lifeLabel.strokeColour = [UIColor blackColor];
                 self.lifeLabel.strokeThickness = 2.5;
-                self.lifeLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE -3];
+                self.lifeLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE + 9]; //originally -3
                 self.lifeLabel.text = [NSString stringWithFormat:@"%d", monsterCard.life];
+                //TODO CRITICAL SX - temporarily rounding all numbers to appear as if they're smaller numbers, REMOVE this eventually
+                temporaryRounding = (float) monsterCard.life;
+                temporaryRounding /= 500;
+                self.lifeLabel.text = [NSString stringWithFormat:@"%d", (int)ceilf(temporaryRounding)];
+                
                 
                 [_frontViews addSubview: lifeLabel];
                 
@@ -864,6 +881,11 @@ NSDictionary *singlePlayerCardImages;
             {
                 self.attackLabel.text = newDamageString;
                 self.attackLabel.textColor = newDamageColour;
+                
+                //TODO CRITICAL SX - temporarily rounding all numbers to appear as if they're smaller numbers, REMOVE this eventually, uncomment line below
+                float temporaryRounding = [newDamageString floatValue];
+                temporaryRounding /= 500;
+                self.attackLabel.text = [NSString stringWithFormat:@"%d", (int)ceilf(temporaryRounding)];
             }
             
             //update life label
@@ -884,6 +906,11 @@ NSDictionary *singlePlayerCardImages;
             {
                 self.lifeLabel.text = newLifeString;
                 self.lifeLabel.textColor = newLifeColour;
+                
+                //TODO CRITICAL SX - temporarily rounding all numbers to appear as if they're smaller numbers, REMOVE this eventually, uncomment line below
+                float temporaryRounding = [newLifeString floatValue];
+                temporaryRounding /= 500;
+                self.lifeLabel.text = [NSString stringWithFormat:@"%d", (int)ceilf(temporaryRounding)];
             }
             
             //update cooldown label
@@ -1189,6 +1216,11 @@ NSDictionary *singlePlayerCardImages;
 
 -(void)setPopupDamage:(int)damage
 {
+    //TODO CRITICAL SX - temporarily rounding all numbers to appear as if they're smaller numbers, REMOVE this eventually
+    float temporaryRounding = (float) damage;
+    temporaryRounding /= 500;
+    damage = (int)ceilf(temporaryRounding);
+    
     //assuming this will always be animated in this scale
     
     //new damage
@@ -1486,11 +1518,21 @@ NSDictionary *singlePlayerCardImages;
                          {
                              MonsterCardModel*monsterCard = (MonsterCardModel*)cardView.cardModel;
                              newString = [NSString stringWithFormat:@"%d", monsterCard.damage];
+                             
+                             //TODO CRITICAL SX - temporarily rounding all numbers to appear as if they're smaller numbers, REMOVE this eventually
+                             float temporaryRounding = (float) monsterCard.damage;
+                             temporaryRounding /= 500;
+                             newString = [NSString stringWithFormat:@"%d", (int)ceilf(temporaryRounding)];
                          }
                          else if (label == cardView.lifeLabel)
                          {
                              MonsterCardModel*monsterCard = (MonsterCardModel*)cardView.cardModel;
                              newString = [NSString stringWithFormat:@"%d", monsterCard.life];
+                             
+                             //TODO CRITICAL SX - temporarily rounding all numbers to appear as if they're smaller numbers, REMOVE this eventually
+                             float temporaryRounding = (float) monsterCard.life;
+                             temporaryRounding /= 500;
+                             newString = [NSString stringWithFormat:@"%d", (int)ceilf(temporaryRounding)];
                          }
                          else if (label == cardView.cooldownLabel)
                          {
