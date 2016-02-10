@@ -44,7 +44,23 @@ NSMutableDictionary * campaignCards;
     }
     else if ([levelID isEqualToString:@"d_1_c_2_l_4"])
     {
+        monster = [[MonsterCardModel alloc] initWithIdNumber:2400 type:cardTypeSinglePlayer];
+        monster.rarity = cardRarityLegendary;
+        monster.element = elementNeutral;
+        monster.name = @"Skywhale Flagship"; //?
+        monster.damage = 0;
+        monster.life = monster.maximumLife = 30000;
+        monster.cost = 10;
+        monster.cooldown = monster.maximumCooldown = 1;
+        monster.heroic = YES;
         
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityHeroic castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+        
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:800]]];
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnMove targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
+        
+        return monster;
+
     }
     else if ([levelID isEqualToString:@"d_1_c_3_l_4"])
     {
@@ -1002,12 +1018,12 @@ NSMutableDictionary * campaignCards;
             monster = [[MonsterCardModel alloc] initWithIdNumber:3000 type:cardTypeSinglePlayer];
             monster.element = elementLightning;
             monster.rarity = cardRarityCommon;
-            monster.name = @"? Walker";
-            monster.damage = 1100;
-            monster.life = monster.maximumLife = 1100;
+            monster.name = @"? Walker"; //mech assassin
+            monster.damage = 2000;
+            monster.life = monster.maximumLife = 1000;
             monster.cost = 1;
             monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1600]]];
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAssassin castType:castOnSummon targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
             
             [deck addCard:monster];
         }
@@ -1017,9 +1033,9 @@ NSMutableDictionary * campaignCards;
             monster = [[MonsterCardModel alloc] initWithIdNumber:3001 type:cardTypeSinglePlayer];
             monster.element = elementIce;
             monster.rarity = cardRarityCommon;
-            monster.name = @"? Sentry";
-            monster.damage = 800;
-            monster.life = monster.maximumLife = 3900;
+            monster.name = @"? Robot"; //big robot
+            monster.damage = 1000;
+            monster.life = monster.maximumLife = 4000;
             monster.cost = 3;
             monster.cooldown = monster.maximumCooldown = 1;
             [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
@@ -1030,17 +1046,14 @@ NSMutableDictionary * campaignCards;
         
         for (int i = 0; i < 2; i++)
         {
-            //TODO
             monster = [[MonsterCardModel alloc] initWithIdNumber:3002 type:cardTypeSinglePlayer];
             monster.element = elementFire;
             monster.rarity = cardRarityCommon;
-            monster.name = @"? Walker";
-            monster.damage = 800;
-            monster.life = monster.maximumLife = 3900;
-            monster.cost = 3;
+            monster.name = @"Praka Mech"; //mech praca
+            monster.damage = 2500;
+            monster.life = monster.maximumLife = 2500;
+            monster.cost = 2;
             monster.cooldown = monster.maximumCooldown = 1;
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
-            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:1200]]];
             
             [deck addCard:monster];
         }
@@ -1048,6 +1061,21 @@ NSMutableDictionary * campaignCards;
         for (int i = 0; i < 2; i++)
         {
             monster = [[MonsterCardModel alloc] initWithIdNumber:3003 type:cardTypeSinglePlayer];
+            monster.element = elementFire;
+            monster.rarity = cardRarityUncommon;
+            monster.name = @"? Walker"; //mech concept
+            monster.damage = 3500;
+            monster.life = monster.maximumLife = 4500;
+            monster.cost = 5;
+            monster.cooldown = monster.maximumCooldown = 1;
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:2500]]];
+            
+            [deck addCard:monster];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            monster = [[MonsterCardModel alloc] initWithIdNumber:3004 type:cardTypeSinglePlayer];
             monster.element = elementLight;
             monster.rarity = cardRarityCommon;
             monster.name = @"Gravity Defier Mk. II"; //support version
@@ -1064,7 +1092,7 @@ NSMutableDictionary * campaignCards;
         for (int i = 0; i < 2; i++)
         {
             //give assassin for the insane version
-            monster = [[MonsterCardModel alloc] initWithIdNumber:3004 type:cardTypeSinglePlayer];
+            monster = [[MonsterCardModel alloc] initWithIdNumber:3005 type:cardTypeSinglePlayer];
             monster.element = elementIce;
             monster.rarity = cardRarityCommon;
             monster.name = @"Gravity Defier Mk. III";
@@ -1081,7 +1109,7 @@ NSMutableDictionary * campaignCards;
         for (int i = 0; i < 2; i++)
         {
             //give assassin for the insane version
-            monster = [[MonsterCardModel alloc] initWithIdNumber:3005 type:cardTypeSinglePlayer];
+            monster = [[MonsterCardModel alloc] initWithIdNumber:3006 type:cardTypeSinglePlayer];
             monster.element = elementIce;
             monster.rarity = cardRarityCommon;
             monster.name = @"? Explorer";
@@ -1096,7 +1124,7 @@ NSMutableDictionary * campaignCards;
         
         for (int i = 0; i < 2; i++)
         {
-            spell = [[SpellCardModel alloc] initWithIdNumber:3006 type:cardTypeSinglePlayer];
+            spell = [[SpellCardModel alloc] initWithIdNumber:3007 type:cardTypeSinglePlayer];
             spell.rarity = cardRarityRare;
             spell.element = elementLight;
             spell.name = @"? Beam";
@@ -1108,8 +1136,140 @@ NSMutableDictionary * campaignCards;
             [deck addCard:spell];
         }
         
+        for (int i = 0; i < 2; i++)
+        {
+            spell = [[SpellCardModel alloc] initWithIdNumber:3008 type:cardTypeSinglePlayer];
+            spell.rarity = cardRarityExceptional;
+            spell.element = elementFire;
+            spell.name = @"Tactical Nuke";
+            spell.cost = 4;
+            
+            [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAll withDuration:durationInstant withValue:[NSNumber numberWithInt:4000]]];
+            
+            [deck addCard:spell];
+        }
         
+        for (int i = 0; i < 2; i++)
+        {
+            spell = [[SpellCardModel alloc] initWithIdNumber:3009 type:cardTypeSinglePlayer];
+            spell.rarity = cardRarityExceptional;
+            spell.element = elementLight;
+            spell.name = @"UAV Recon";
+            spell.cost = 4;
+            
+            [spell addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+            [spell addBaseAbility: [[Ability alloc] initWithType:abilityRemoveAbility castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+            
+            [deck addCard:spell];
+        }
         
+        for (int i = 0; i < 2; i++)
+        {
+            monster = [[MonsterCardModel alloc] initWithIdNumber:3100 type:cardTypeSinglePlayer];
+            monster.element = elementLight;
+            monster.rarity = cardRarityCommon;
+            monster.name = @"Imperial Infantry";
+            monster.damage = 1500;
+            monster.life = monster.maximumLife = 2500;
+            monster.cost = 1;
+            monster.cooldown = monster.maximumCooldown = 1;
+            
+            [deck addCard:monster];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            monster = [[MonsterCardModel alloc] initWithIdNumber:3101 type:cardTypeSinglePlayer];
+            monster.element = elementLight;
+            monster.rarity = cardRarityExceptional;
+            monster.name = @"Imperial Battlecruiser";
+            monster.damage = 3000;
+            monster.life = monster.maximumLife = 5000;
+            monster.cost = 6;
+            monster.cooldown = monster.maximumCooldown = 1;
+            
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:2500]]];
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1000]]];
+            
+            [deck addCard:monster];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            monster = [[MonsterCardModel alloc] initWithIdNumber:3102 type:cardTypeSinglePlayer];
+            monster.element = elementDark;
+            monster.rarity = cardRarityExceptional;
+            monster.name = @"? Mech";
+            monster.damage = 8500;
+            monster.life = monster.maximumLife = 7500;
+            monster.cost = 8;
+            monster.cooldown = monster.maximumCooldown = 1;
+            
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAll withDuration:durationForever withValue:[NSNumber numberWithInt:2000]]];
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnMove targetType:targetHeroEnemy withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
+            
+            [deck addCard:monster];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            spell = [[SpellCardModel alloc] initWithIdNumber:3103 type:cardTypeSinglePlayer];
+            spell.rarity = cardRarityRare;
+            spell.element = elementLightning;
+            spell.name = @"Close Air Support";
+            spell.cost = 3;
+            
+            [spell addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:2500]]];
+            [spell addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetOneRandomEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:2500]]];
+            
+            [deck addCard:spell];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            spell = [[SpellCardModel alloc] initWithIdNumber:3104 type:cardTypeSinglePlayer];
+            spell.rarity = cardRarityRare;
+            spell.element = elementLightning;
+            spell.name = @"? Landing";
+            spell.cost = 2;
+            
+            //would be cool if had special ability to summon imperial infantry
+            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:2000]]];
+            
+            [deck addCard:spell];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            spell = [[SpellCardModel alloc] initWithIdNumber:3105 type:cardTypeSinglePlayer];
+            spell.rarity = cardRarityRare;
+            spell.element = elementLight;
+            spell.name = @"? Resupply";
+            spell.cost = 5;
+            
+            //would be cool if had special ability to summon imperial infantry
+            [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:2500]]];
+            [spell addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
+            
+            [deck addCard:spell];
+        }
+        
+        for (int i = 0; i < 2; i++)
+        {
+            monster = [[MonsterCardModel alloc] initWithIdNumber:3102 type:cardTypeSinglePlayer];
+            monster.element = elementDark;
+            monster.rarity = cardRarityExceptional;
+            monster.name = @"Armoured Barge";
+            monster.damage = 1000;
+            monster.life = monster.maximumLife = 1500;
+            monster.cost = 4;
+            monster.cooldown = monster.maximumCooldown = 1;
+            
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddResource castType:castOnMove targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+            [monster addBaseAbility: [[Ability alloc] initWithType:abilityDrawCard castType:castOnMove targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+            
+            [deck addCard:monster];
+        }
     }
     else if ([levelID isEqualToString:@"d_2_c_3_l_2"])
     {
