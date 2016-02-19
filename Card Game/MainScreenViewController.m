@@ -332,8 +332,6 @@ UILabel *loadingLabel;
     PFInstallation *installation = [PFInstallation currentInstallation];
     installation[@"user"] = [PFUser currentUser];
     [installation saveInBackground];
-    
-    
 }
 
 -(void) setPubNubConfigDetails

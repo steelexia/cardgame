@@ -56,7 +56,7 @@ Level*quickMatchLevel;
     level.breakBeforeNextLevel = NO;
     level.opponentShuffleDeck = NO;
     level.playerShuffleDeck = NO;
-    level.opponentHealth = 10000;
+    level.opponentHealth = 25;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_1_l_2"];
@@ -69,7 +69,7 @@ Level*quickMatchLevel;
     level.breakBeforeNextLevel = NO;
     level.opponentShuffleDeck = NO;
     level.playerShuffleDeck = NO;
-    level.opponentHealth = 12000;
+    level.opponentHealth = 30;
     [campaignLevels addObject:level];
     
     level = [[Level alloc] initWithID:@"d_1_c_1_l_3"];
@@ -79,7 +79,7 @@ Level*quickMatchLevel;
     level.breakBeforeNextLevel = NO;
     level.opponentShuffleDeck = NO;
     level.playerShuffleDeck = NO;
-    level.opponentHealth = 18000;
+    level.opponentHealth = 45;
     level.endBattleText = @"Some text talking about how the current level is beaten but a boss has shown up to stop you.";
     [campaignLevels addObject:level];
     

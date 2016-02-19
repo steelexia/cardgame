@@ -900,14 +900,7 @@ enum GameMode __gameMode; //because C functions cant access
     if ([card isKindOfClass: [MonsterCardModel class]])
     {
         MonsterCardModel *monsterCard = (MonsterCardModel*) card;
-        
-        [self addCardToBattlefield:monsterCard side:side];
-        //update it first for better animations
-        //[self.gameViewController updateBattlefieldView: side];
-        
-        [self.gameViewController addAnimationCounter]; //the delayed cast counts as an animation
-        
-        //cast a little later for better visuals
+
         [self.gameViewController performBlock:^{
             //CastType castOnSummon is casted here
             for (int i = 0; i < [monsterCard.abilities count]; i++) //castAbility may insert objects in end
@@ -926,7 +919,14 @@ enum GameMode __gameMode; //because C functions cant access
             {
                 [_gameViewController.MPDataHandler sendSummonCard:_gameViewController.currentCardIndex withTarget:positionNoPosition];
             }
-        } afterDelay:0.4];
+        } afterDelay:0.0];
+        
+        //TODO honestly these two lines should only be called AFTER castAbility is resolved (a bit tricky to do, also includes spell cards)
+        [self addCardToBattlefield:monsterCard side:side];
+        //update it first for better animations
+        //[self.gameViewController updateBattlefieldView: side];
+        
+        [self.gameViewController addAnimationCounter]; //the delayed cast counts as an animation
     }
     else if ([card isKindOfClass: [SpellCardModel class]])
     {

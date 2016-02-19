@@ -1036,13 +1036,13 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     //TUTORIAL default stats
     if (_editorMode == cardEditorModeTutorialOne)
     {
-        monster.damage = 1400;
-        monster.life = monster.maximumLife = 2600;
+        monster.damage = 5;
+        monster.life = monster.maximumLife = 5;
     }
     else if (_editorMode == cardEditorModeTutorialTwo)
     {
-        monster.damage = 1400;
-        monster.life = monster.maximumLife = 2600;
+        monster.damage = 5;
+        monster.life = monster.maximumLife = 5;
         if (userTutorialOneCardName!=nil)
             monster.name = userTutorialOneCardName;
     }

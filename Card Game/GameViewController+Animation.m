@@ -536,11 +536,6 @@
 
 -(void) animateCardHeal: (CardView*) cardView forLife: (int) life
 {
-    //TODO CRITICAL SX - temporarily rounding all numbers to appear as if they're smaller numbers, REMOVE this eventually
-    float temporaryRounding = (float) life;
-    temporaryRounding /= 500;
-    life = (int)ceilf(temporaryRounding);
-    
     UILabel *lifePopup = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 50)];
     lifePopup.text = [NSString stringWithFormat:@"+%d", life];
     lifePopup.center = cardView.center;
