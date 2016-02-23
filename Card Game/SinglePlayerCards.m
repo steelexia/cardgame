@@ -49,15 +49,15 @@ NSMutableDictionary * campaignCards;
         monster.element = elementNeutral;
         monster.name = @"Skywhale Flagship"; //?
         monster.damage = 0;
-        monster.life = monster.maximumLife = 30000;
+        monster.life = monster.maximumLife = 90; //used to be 30k
         monster.cost = 10;
         monster.cooldown = monster.maximumCooldown = 1;
         monster.heroic = YES;
         
         [monster addBaseAbility: [[Ability alloc] initWithType:abilityHeroic castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
         
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:800]]];
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnMove targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:500]]];
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:2]]];
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnMove targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
         
         return monster;
 
@@ -288,7 +288,7 @@ NSMutableDictionary * campaignCards;
         for (int i = 0; i < 2; i++)
         {
             //gob raider
-            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1103"]]];
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1003"]]];
         }
         
         //dragon 1
@@ -333,7 +333,7 @@ NSMutableDictionary * campaignCards;
             [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1001"]]];
             
             //gob raider
-            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1103"]]];
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d1_1003"]]];
         }
     }
     else if ([levelID isEqualToString:@"d_1_c_1_l_4"])

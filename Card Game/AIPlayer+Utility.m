@@ -140,7 +140,7 @@
     if (targetType == targetOneAny || targetType == targetHeroAny)
         return abs(points*1);
     if (targetType == targetOneAnyMinion)
-        return abs(points*0.9);
+        return abs((int)(points*0.9));
     if (targetType == targetOneRandomAny || targetType == targetOneRandomMinion)
         return 0;
     if (targetType == targetAttacker || targetType == targetVictim || targetType == targetVictimMinion)
