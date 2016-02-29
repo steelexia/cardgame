@@ -137,13 +137,11 @@ DeckModel * allCards;
     int counter = 0;
     for (CardModel *card in allCards.cards)
     {
-        
-        if([card.creator length] <=1)
+        //id lower than starting ID are starter cards
+        if(card.idNumber < CARD_ID_START)
         {
             NSNumber *starterCardIndexNum = [NSNumber numberWithInt:counter];
             [self.indexOfStarterCards addObject:starterCardIndexNum];
-            
-           
         }
         else
         {

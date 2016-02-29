@@ -21,7 +21,7 @@
 @synthesize dead = _dead;
 @synthesize turnEnded = _turnEnded;
 
-const int HERO_MAX_LIFE = 25000;
+const int HERO_MAX_LIFE = 75;
 
 /** constructor with id number, all other fields will be defaut values */
 -(instancetype)initWithIdNumber: (int)idNumber

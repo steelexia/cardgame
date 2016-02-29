@@ -245,6 +245,24 @@ NSDictionary *singlePlayerCardImages;
                                @"2303" : [UIImage imageNamed:@"card_2303"],
                                @"2400" : [UIImage imageNamed:@"card_2400"],
                                
+                               @"3000" : [UIImage imageNamed:@"card_3000"],
+                               @"3001" : [UIImage imageNamed:@"card_3001"],
+                               @"3002" : [UIImage imageNamed:@"card_3002"],
+                               @"3003" : [UIImage imageNamed:@"card_3003"],
+                               @"3004" : [UIImage imageNamed:@"card_3004"],
+                               @"3005" : [UIImage imageNamed:@"card_3005"],
+                               @"3006" : [UIImage imageNamed:@"card_3006"],
+                               @"3007" : [UIImage imageNamed:@"card_3007"],
+                               @"3008" : [UIImage imageNamed:@"card_3008"],
+                               @"3009" : [UIImage imageNamed:@"card_3009"],
+                               @"3100" : [UIImage imageNamed:@"card_3100"],
+                               @"3101" : [UIImage imageNamed:@"card_3101"],
+                               @"3102" : [UIImage imageNamed:@"card_3102"],
+                               @"3103" : [UIImage imageNamed:@"card_3103"],
+                               @"3200" : [UIImage imageNamed:@"card_3200"],
+                               @"3201" : [UIImage imageNamed:@"card_3201"],
+                               @"3202" : [UIImage imageNamed:@"card_3202"],
+
                                @"4001" : [UIImage imageNamed:@"card_4001.jpg"],
                                @"4002" : [UIImage imageNamed:@"card_4002.jpg"],
                                @"4003" : [UIImage imageNamed:@"card_4003.jpeg"],
@@ -422,7 +440,7 @@ NSDictionary *singlePlayerCardImages;
             
             float frameImageHeight = 270.0f/590.0f *CARD_FULL_HEIGHT;
             float frameImageX = 60.0f/400.0f/2 * CARD_FULL_WIDTH;
-            float frameImageY = 100.0f/590.0f/2 * CARD_FULL_HEIGHT;
+            float frameImageY = 170.0f/590.0f/2 * CARD_FULL_HEIGHT;
 
             self.cardImage.frame = CGRectMake(frameImageX, frameImageY, frameImageWidth, frameImageHeight);
            // self.cardImage.frame = CGRectMake(0, 0, CARD_FULL_WIDTH - 16, (CARD_FULL_WIDTH-16) * CARD_IMAGE_RATIO);
@@ -498,8 +516,8 @@ NSDictionary *singlePlayerCardImages;
         
         float frameImageHeight = 353.0f/590.0f *CARD_FULL_HEIGHT;
         float frameImageX = 24.0f/400.0f/2 * CARD_FULL_WIDTH;
-        float frameImageY = 0;
-        frameImageView.frame = CGRectMake(frameImageX,0,frameImageWidth,frameImageHeight);
+        float frameImageY = 55.0f/590.0f/2 * CARD_FULL_HEIGHT;
+        frameImageView.frame = CGRectMake(frameImageX,frameImageY,frameImageWidth,frameImageHeight);
         
         [_frontViews addSubview:frameImageView];
         
@@ -591,8 +609,8 @@ NSDictionary *singlePlayerCardImages;
         
         [_frontViews addSubview: reportedLabel];
         
-        NSLog(@"DescriptionBGHeight = %f",descriptionBGHeight);
-        NSLog(@"DescriptionBGY = %f",descriptionBGY);
+        //NSLog(@"DescriptionBGHeight = %f",descriptionBGHeight);
+        //NSLog(@"DescriptionBGY = %f",descriptionBGY);
         
         self.elementLabel = [[StrokedLabel alloc] initWithFrame:self.bounds];
         self.elementLabel.center = CGPointMake(CARD_FULL_WIDTH/2, descriptionBGY+ (descriptionBGHeight/10));
@@ -607,19 +625,14 @@ NSDictionary *singlePlayerCardImages;
         //NOTE added above other stuff
         
         //original value -10 for width
-        self.baseAbilityLabel = [[UITextView alloc] initWithFrame:CGRectMake(30, descriptionBGY+ (descriptionBGHeight/6), descriptionBGWidth - 40, (descriptionBGHeight/8)*5)]; //NOTE changing this is useless, do it down below
+        self.baseAbilityLabel = [[UITextView alloc] initWithFrame:CGRectMake(12, descriptionBGY+ (descriptionBGHeight/6), descriptionBGWidth - 15, (descriptionBGHeight/8)*5)]; //NOTE changing this is useless, do it down below
         [self.baseAbilityLabel  setTextContainerInset:UIEdgeInsetsMake(0, 0, 0, 0)];
         self.baseAbilityLabel.textColor = [UIColor whiteColor];
         self.baseAbilityLabel.backgroundColor = [UIColor clearColor];
         self.baseAbilityLabel.editable = NO;
         self.baseAbilityLabel.selectable = NO;
         
-        //self.baseAbilityLabel.numberOfLines = 0;
-        //self.baseAbilityLabel.textAlignment = NSTextAlignmentCenter;
-        [self.baseAbilityLabel setTextAlignment:NSTextAlignmentCenter];
-        
-        //self.baseAbilityLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        //self.baseAbilityLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        [self.baseAbilityLabel setTextAlignment:NSTextAlignmentLeft]; //note that this is set again in the update function
         
         //[self.baseAbilityLabel sizeToFit];
         [self addSubview: baseAbilityLabel];
@@ -643,6 +656,7 @@ NSDictionary *singlePlayerCardImages;
                 self.lifeLabel.strokeColour = [UIColor blackColor];
                 self.lifeLabel.strokeThickness = 2.5;
                 self.lifeLabel.font = [UIFont fontWithName:cardMainFont size:20];
+                
                 self.lifeLabel.text = [NSString stringWithFormat:@"%d", monsterCard.life];
                 
                 [_frontViews addSubview: lifeLabel];
@@ -695,10 +709,11 @@ NSDictionary *singlePlayerCardImages;
                 self.attackLabel.textAlignment = NSTextAlignmentCenter;
                 self.attackLabel.textColor = [UIColor whiteColor];
                 self.attackLabel.backgroundColor = [UIColor clearColor];
-                self.attackLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE -3];
+                self.attackLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +9]; //originally -3
                 self.attackLabel.strokeOn = YES;
                 self.attackLabel.strokeColour = [UIColor blackColor];
                 self.attackLabel.strokeThickness = 2.5;
+                
                 self.attackLabel.text = [NSString stringWithFormat:@"%d", monsterCard.damage];
                 
                 [_frontViews addSubview: attackLabel];
@@ -713,9 +728,9 @@ NSDictionary *singlePlayerCardImages;
                 self.lifeLabel.strokeOn = YES;
                 self.lifeLabel.strokeColour = [UIColor blackColor];
                 self.lifeLabel.strokeThickness = 2.5;
-                self.lifeLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE -3];
+                self.lifeLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE + 9]; //originally -3
                 self.lifeLabel.text = [NSString stringWithFormat:@"%d", monsterCard.life];
-                
+
                 [_frontViews addSubview: lifeLabel];
                 
                 float cooldownLabelX = 204.0f/400.0f*CARD_FULL_WIDTH;
@@ -1066,8 +1081,8 @@ NSDictionary *singlePlayerCardImages;
        
         
         self.baseAbilityLabel.attributedText = finalString;
-         self.baseAbilityLabel.textColor = [UIColor whiteColor];
-        self.baseAbilityLabel.textAlignment = NSTextAlignmentCenter;
+        self.baseAbilityLabel.textColor = [UIColor whiteColor];
+        self.baseAbilityLabel.textAlignment = NSTextAlignmentLeft;
     }
     //back facing
     else

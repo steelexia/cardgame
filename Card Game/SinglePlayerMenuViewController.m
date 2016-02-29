@@ -82,6 +82,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     challengesButton.center = CGPointMake(self.view.bounds.size.width/3 - 5, self.view.bounds.size.height*2/3 + 58);
     [challengesButton setTitle:@"Challenges" forState:UIControlStateNormal];
     [challengesButton addTarget:self action:@selector(challengesButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    [challengesButton setEnabled:FALSE];
     
     [self.view addSubview:challengesButton];
     

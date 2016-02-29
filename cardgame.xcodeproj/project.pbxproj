@@ -7,6 +7,33 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5FD2CBE91C6FBCF700692D88 /* card_3000.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBD81C6FBCF700692D88 /* card_3000.png */; };
+		5FD2CBEA1C6FBCF700692D88 /* card_3001.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBD91C6FBCF700692D88 /* card_3001.png */; };
+		5FD2CBEB1C6FBCF700692D88 /* card_3002.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBDA1C6FBCF700692D88 /* card_3002.png */; };
+		5FD2CBEC1C6FBCF700692D88 /* card_3003.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBDB1C6FBCF700692D88 /* card_3003.png */; };
+		5FD2CBED1C6FBCF700692D88 /* card_3004.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBDC1C6FBCF700692D88 /* card_3004.png */; };
+		5FD2CBEE1C6FBCF700692D88 /* card_3005.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBDD1C6FBCF700692D88 /* card_3005.png */; };
+		5FD2CBEF1C6FBCF700692D88 /* card_3006.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBDE1C6FBCF700692D88 /* card_3006.png */; };
+		5FD2CBF01C6FBCF700692D88 /* card_3007.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBDF1C6FBCF700692D88 /* card_3007.png */; };
+		5FD2CBF11C6FBCF700692D88 /* card_3008.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBE01C6FBCF700692D88 /* card_3008.png */; };
+		5FD2CBF21C6FBCF700692D88 /* card_3009.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBE11C6FBCF700692D88 /* card_3009.png */; };
+		5FD2CBF31C6FBCF700692D88 /* card_3100.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBE21C6FBCF700692D88 /* card_3100.png */; };
+		5FD2CBF41C6FBCF700692D88 /* card_3101.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBE31C6FBCF700692D88 /* card_3101.png */; };
+		5FD2CBF51C6FBCF700692D88 /* card_3102.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBE41C6FBCF700692D88 /* card_3102.png */; };
+		5FD2CBF61C6FBCF700692D88 /* card_3103.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBE51C6FBCF700692D88 /* card_3103.png */; };
+		5FD2CBF71C6FBCF700692D88 /* card_3200.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBE61C6FBCF700692D88 /* card_3200.png */; };
+		5FD2CBF81C6FBCF700692D88 /* card_3201.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBE71C6FBCF700692D88 /* card_3201.png */; };
+		5FD2CBF91C6FBCF700692D88 /* card_3202.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBE81C6FBCF700692D88 /* card_3202.png */; };
+		8F4B0A2E1C6004B200F90AAA /* PMValidationEmailType.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B0A231C6004B100F90AAA /* PMValidationEmailType.m */; };
+		8F4B0A2F1C6004B200F90AAA /* PMValidationLengthType.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B0A251C6004B100F90AAA /* PMValidationLengthType.m */; };
+		8F4B0A301C6004B200F90AAA /* PMValidationRegexType.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B0A271C6004B200F90AAA /* PMValidationRegexType.m */; };
+		8F4B0A311C6004B200F90AAA /* PMValidationStringCompareType.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B0A291C6004B200F90AAA /* PMValidationStringCompareType.m */; };
+		8F4B0A321C6004B200F90AAA /* PMValidationType.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B0A2B1C6004B200F90AAA /* PMValidationType.m */; };
+		8F4B0A331C6004B200F90AAA /* PMValidationUITextCompareType.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B0A2D1C6004B200F90AAA /* PMValidationUITextCompareType.m */; };
+		8F4B0A391C6004CA00F90AAA /* PMValidationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B0A361C6004CA00F90AAA /* PMValidationManager.m */; };
+		8F4B0A3A1C6004CA00F90AAA /* PMValidationUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B0A381C6004CA00F90AAA /* PMValidationUnit.m */; };
+		8F4B0A401C6004E300F90AAA /* DHConstraintUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B0A3D1C6004E300F90AAA /* DHConstraintUtility.m */; };
+		8F4B0A411C6004E300F90AAA /* DHModularPopupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B0A3F1C6004E300F90AAA /* DHModularPopupController.m */; };
 		9032E127199446BB002A6725 /* upload_from_camera_button_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 9032E126199446BB002A6725 /* upload_from_camera_button_gray.png */; };
 		9032E12D19953EAE002A6725 /* CardVote.m in Sources */ = {isa = PBXBuildFile; fileRef = 9032E12C19953EAE002A6725 /* CardVote.m */; };
 		9032E13019959483002A6725 /* CardPointsUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 9032E12F19959483002A6725 /* CardPointsUtility.m */; };
@@ -531,6 +558,43 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5FD2CBD81C6FBCF700692D88 /* card_3000.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3000.png; sourceTree = "<group>"; };
+		5FD2CBD91C6FBCF700692D88 /* card_3001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3001.png; sourceTree = "<group>"; };
+		5FD2CBDA1C6FBCF700692D88 /* card_3002.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3002.png; sourceTree = "<group>"; };
+		5FD2CBDB1C6FBCF700692D88 /* card_3003.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3003.png; sourceTree = "<group>"; };
+		5FD2CBDC1C6FBCF700692D88 /* card_3004.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3004.png; sourceTree = "<group>"; };
+		5FD2CBDD1C6FBCF700692D88 /* card_3005.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3005.png; sourceTree = "<group>"; };
+		5FD2CBDE1C6FBCF700692D88 /* card_3006.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3006.png; sourceTree = "<group>"; };
+		5FD2CBDF1C6FBCF700692D88 /* card_3007.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3007.png; sourceTree = "<group>"; };
+		5FD2CBE01C6FBCF700692D88 /* card_3008.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3008.png; sourceTree = "<group>"; };
+		5FD2CBE11C6FBCF700692D88 /* card_3009.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3009.png; sourceTree = "<group>"; };
+		5FD2CBE21C6FBCF700692D88 /* card_3100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3100.png; sourceTree = "<group>"; };
+		5FD2CBE31C6FBCF700692D88 /* card_3101.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3101.png; sourceTree = "<group>"; };
+		5FD2CBE41C6FBCF700692D88 /* card_3102.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3102.png; sourceTree = "<group>"; };
+		5FD2CBE51C6FBCF700692D88 /* card_3103.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3103.png; sourceTree = "<group>"; };
+		5FD2CBE61C6FBCF700692D88 /* card_3200.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3200.png; sourceTree = "<group>"; };
+		5FD2CBE71C6FBCF700692D88 /* card_3201.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3201.png; sourceTree = "<group>"; };
+		5FD2CBE81C6FBCF700692D88 /* card_3202.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3202.png; sourceTree = "<group>"; };
+		8F4B0A221C6004B100F90AAA /* PMValidationEmailType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMValidationEmailType.h; path = PMValidation/ValidationTypes/PMValidationEmailType.h; sourceTree = "<group>"; };
+		8F4B0A231C6004B100F90AAA /* PMValidationEmailType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMValidationEmailType.m; path = PMValidation/ValidationTypes/PMValidationEmailType.m; sourceTree = "<group>"; };
+		8F4B0A241C6004B100F90AAA /* PMValidationLengthType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMValidationLengthType.h; path = PMValidation/ValidationTypes/PMValidationLengthType.h; sourceTree = "<group>"; };
+		8F4B0A251C6004B100F90AAA /* PMValidationLengthType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMValidationLengthType.m; path = PMValidation/ValidationTypes/PMValidationLengthType.m; sourceTree = "<group>"; };
+		8F4B0A261C6004B200F90AAA /* PMValidationRegexType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMValidationRegexType.h; path = PMValidation/ValidationTypes/PMValidationRegexType.h; sourceTree = "<group>"; };
+		8F4B0A271C6004B200F90AAA /* PMValidationRegexType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMValidationRegexType.m; path = PMValidation/ValidationTypes/PMValidationRegexType.m; sourceTree = "<group>"; };
+		8F4B0A281C6004B200F90AAA /* PMValidationStringCompareType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMValidationStringCompareType.h; path = PMValidation/ValidationTypes/PMValidationStringCompareType.h; sourceTree = "<group>"; };
+		8F4B0A291C6004B200F90AAA /* PMValidationStringCompareType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMValidationStringCompareType.m; path = PMValidation/ValidationTypes/PMValidationStringCompareType.m; sourceTree = "<group>"; };
+		8F4B0A2A1C6004B200F90AAA /* PMValidationType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMValidationType.h; path = PMValidation/ValidationTypes/PMValidationType.h; sourceTree = "<group>"; };
+		8F4B0A2B1C6004B200F90AAA /* PMValidationType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMValidationType.m; path = PMValidation/ValidationTypes/PMValidationType.m; sourceTree = "<group>"; };
+		8F4B0A2C1C6004B200F90AAA /* PMValidationUITextCompareType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMValidationUITextCompareType.h; path = PMValidation/ValidationTypes/PMValidationUITextCompareType.h; sourceTree = "<group>"; };
+		8F4B0A2D1C6004B200F90AAA /* PMValidationUITextCompareType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMValidationUITextCompareType.m; path = PMValidation/ValidationTypes/PMValidationUITextCompareType.m; sourceTree = "<group>"; };
+		8F4B0A351C6004CA00F90AAA /* PMValidationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMValidationManager.h; path = PMValidation/PMValidationManager.h; sourceTree = "<group>"; };
+		8F4B0A361C6004CA00F90AAA /* PMValidationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMValidationManager.m; path = PMValidation/PMValidationManager.m; sourceTree = "<group>"; };
+		8F4B0A371C6004CA00F90AAA /* PMValidationUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMValidationUnit.h; path = PMValidation/PMValidationUnit.h; sourceTree = "<group>"; };
+		8F4B0A381C6004CA00F90AAA /* PMValidationUnit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMValidationUnit.m; path = PMValidation/PMValidationUnit.m; sourceTree = "<group>"; };
+		8F4B0A3C1C6004E300F90AAA /* DHConstraintUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DHConstraintUtility.h; sourceTree = "<group>"; };
+		8F4B0A3D1C6004E300F90AAA /* DHConstraintUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DHConstraintUtility.m; sourceTree = "<group>"; };
+		8F4B0A3E1C6004E300F90AAA /* DHModularPopupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DHModularPopupController.h; sourceTree = "<group>"; };
+		8F4B0A3F1C6004E300F90AAA /* DHModularPopupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DHModularPopupController.m; sourceTree = "<group>"; };
 		9032E126199446BB002A6725 /* upload_from_camera_button_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = upload_from_camera_button_gray.png; path = "Card Game/upload_from_camera_button_gray.png"; sourceTree = "<group>"; };
 		9032E12B19953EAE002A6725 /* CardVote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardVote.h; sourceTree = "<group>"; };
 		9032E12C19953EAE002A6725 /* CardVote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardVote.m; sourceTree = "<group>"; };
@@ -1341,6 +1405,49 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8F4B0A341C6004BB00F90AAA /* Validation Types */ = {
+			isa = PBXGroup;
+			children = (
+				8F4B0A221C6004B100F90AAA /* PMValidationEmailType.h */,
+				8F4B0A231C6004B100F90AAA /* PMValidationEmailType.m */,
+				8F4B0A241C6004B100F90AAA /* PMValidationLengthType.h */,
+				8F4B0A251C6004B100F90AAA /* PMValidationLengthType.m */,
+				8F4B0A261C6004B200F90AAA /* PMValidationRegexType.h */,
+				8F4B0A271C6004B200F90AAA /* PMValidationRegexType.m */,
+				8F4B0A281C6004B200F90AAA /* PMValidationStringCompareType.h */,
+				8F4B0A291C6004B200F90AAA /* PMValidationStringCompareType.m */,
+				8F4B0A2A1C6004B200F90AAA /* PMValidationType.h */,
+				8F4B0A2B1C6004B200F90AAA /* PMValidationType.m */,
+				8F4B0A2C1C6004B200F90AAA /* PMValidationUITextCompareType.h */,
+				8F4B0A2D1C6004B200F90AAA /* PMValidationUITextCompareType.m */,
+			);
+			name = "Validation Types";
+			sourceTree = "<group>";
+		};
+		8F4B0A3B1C6004D100F90AAA /* PMValidation */ = {
+			isa = PBXGroup;
+			children = (
+				8F4B0A351C6004CA00F90AAA /* PMValidationManager.h */,
+				8F4B0A361C6004CA00F90AAA /* PMValidationManager.m */,
+				8F4B0A371C6004CA00F90AAA /* PMValidationUnit.h */,
+				8F4B0A381C6004CA00F90AAA /* PMValidationUnit.m */,
+				8F4B0A341C6004BB00F90AAA /* Validation Types */,
+			);
+			name = PMValidation;
+			sourceTree = "<group>";
+		};
+		8F4B0A421C6004E800F90AAA /* Popup */ = {
+			isa = PBXGroup;
+			children = (
+				8F4B0A3C1C6004E300F90AAA /* DHConstraintUtility.h */,
+				8F4B0A3D1C6004E300F90AAA /* DHConstraintUtility.m */,
+				8F4B0A3E1C6004E300F90AAA /* DHModularPopupController.h */,
+				8F4B0A3F1C6004E300F90AAA /* DHModularPopupController.m */,
+				8F4B0A3B1C6004D100F90AAA /* PMValidation */,
+			);
+			name = Popup;
+			sourceTree = "<group>";
+		};
 		90456ED0198D715700B807DC /* Store Screen */ = {
 			isa = PBXGroup;
 			children = (
@@ -1744,6 +1851,7 @@
 				90F352A8191595C200601130 /* Main_iPhone.storyboard */,
 				90F352AB191595C200601130 /* Main_iPad.storyboard */,
 				90DA43D11969E4F100E44AED /* CardGame.xcdatamodeld */,
+				8F4B0A421C6004E800F90AAA /* Popup */,
 				90F352A5191595C200601130 /* AppDelegate.h */,
 				90F352A6191595C200601130 /* AppDelegate.m */,
 				FAB2D16719C3970900963ADC /* LoginViewController.h */,
@@ -1880,6 +1988,23 @@
 				FACF46B619EC852300D334E0 /* card_2302.png */,
 				FACF46B719EC852300D334E0 /* card_2303.png */,
 				FACF46B819EC852300D334E0 /* card_2400.png */,
+				5FD2CBD81C6FBCF700692D88 /* card_3000.png */,
+				5FD2CBD91C6FBCF700692D88 /* card_3001.png */,
+				5FD2CBDA1C6FBCF700692D88 /* card_3002.png */,
+				5FD2CBDB1C6FBCF700692D88 /* card_3003.png */,
+				5FD2CBDC1C6FBCF700692D88 /* card_3004.png */,
+				5FD2CBDD1C6FBCF700692D88 /* card_3005.png */,
+				5FD2CBDE1C6FBCF700692D88 /* card_3006.png */,
+				5FD2CBDF1C6FBCF700692D88 /* card_3007.png */,
+				5FD2CBE01C6FBCF700692D88 /* card_3008.png */,
+				5FD2CBE11C6FBCF700692D88 /* card_3009.png */,
+				5FD2CBE21C6FBCF700692D88 /* card_3100.png */,
+				5FD2CBE31C6FBCF700692D88 /* card_3101.png */,
+				5FD2CBE41C6FBCF700692D88 /* card_3102.png */,
+				5FD2CBE51C6FBCF700692D88 /* card_3103.png */,
+				5FD2CBE61C6FBCF700692D88 /* card_3200.png */,
+				5FD2CBE71C6FBCF700692D88 /* card_3201.png */,
+				5FD2CBE81C6FBCF700692D88 /* card_3202.png */,
 				EC3A5D761B6A983B0064055F /* card_4001.jpg */,
 				EC3A5D771B6A983B0064055F /* card_4002.jpg */,
 				EC3A5D7A1B6AA1750064055F /* card_4003.jpeg */,
@@ -2653,6 +2778,7 @@
 				9319F3C41BDE646C00F939FE /* timer_rect.png in Resources */,
 				90C528A4199D613B00750C54 /* screen_background_top.png in Resources */,
 				EC42E8691B5726B2005EDFD5 /* CoinPile002.png in Resources */,
+				5FD2CBF11C6FBCF700692D88 /* card_3008.png in Resources */,
 				90AB1512197AEC310008FCDD /* card_ability_icon_remove_ability.png in Resources */,
 				EC10BDAB1B338CCF00F7ABDE /* Icon-76@2x.png in Resources */,
 				9032E13319984875002A6725 /* toggle_button_off.png in Resources */,
@@ -2662,6 +2788,7 @@
 				90456EE7198F1B9100B807DC /* like_button_gray.png in Resources */,
 				EC10BDAA1B338CCF00F7ABDE /* Icon-76.png in Resources */,
 				ECFA3E821B657F9D00C83EE1 /* HammerHeartHourglass.png in Resources */,
+				5FD2CBF71C6FBCF700692D88 /* card_3200.png in Resources */,
 				EC42E87D1B5726E7005EDFD5 /* FeaturedStoreCardPack003.png in Resources */,
 				90DA4358195E023600E44AED /* no_button.png in Resources */,
 				9319F3AE1BD96D7A00F939FE /* CardCreateDialog.png in Resources */,
@@ -2709,7 +2836,9 @@
 				9319F3B91BD96D7A00F939FE /* CardCreateTrace.jpg in Resources */,
 				90AB14F3196CA7E60008FCDD /* card_background_front_overlay_common.png in Resources */,
 				EC42E86E1B5726B2005EDFD5 /* StoreBanner.png in Resources */,
+				5FD2CBF51C6FBCF700692D88 /* card_3102.png in Resources */,
 				EC42E86B1B5726B2005EDFD5 /* CoinPile004.png in Resources */,
+				5FD2CBF91C6FBCF700692D88 /* card_3202.png in Resources */,
 				FA033FD719BCFF6600EFEBD8 /* card_0018.png in Resources */,
 				EC3A5D8C1B6AA1760064055F /* card_4013.jpeg in Resources */,
 				9319F3C31BDE646C00F939FE /* timer_curve.png in Resources */,
@@ -2718,16 +2847,19 @@
 				FA033FC819BCFF6600EFEBD8 /* card_0003.png in Resources */,
 				EC7A74D91B28E79300D3A53F /* BottomFlag.png in Resources */,
 				9319F3BA1BD96D7A00F939FE /* CardCreateTypeHere.png in Resources */,
+				5FD2CBF41C6FBCF700692D88 /* card_3101.png in Resources */,
 				90456EE5198F1B9100B807DC /* edit_button_gray.png in Resources */,
 				EC42E85B1B572647005EDFD5 /* CardStoreLikeButton.png in Resources */,
 				EC7A74D71B28E5AB00D3A53F /* MultiplayerHammers.png in Resources */,
 				FA033FD219BCFF6600EFEBD8 /* card_0013.png in Resources */,
 				EC3A5D851B6AA1760064055F /* card_4004.jpg in Resources */,
 				907020731992AC8100FDE444 /* PLCameraSheetButtonPressed.png in Resources */,
+				5FD2CBF21C6FBCF700692D88 /* card_3009.png in Resources */,
 				90C52897199C2A1300750C54 /* search_button_small.png in Resources */,
 				9319F3B11BD96D7A00F939FE /* CardCreateGem.png in Resources */,
 				FA54990119E43A7000C8F492 /* ios_development.cer in Resources */,
 				90AB150D197AE3CF0008FCDD /* card_ability_icon_cast_on_damaged.png in Resources */,
+				5FD2CBEC1C6FBCF700692D88 /* card_3003.png in Resources */,
 				EC42E86C1B5726B2005EDFD5 /* CoinPile005.png in Resources */,
 				ECAB71CB1B4F45BE004D4E5C /* TopFlag2.png in Resources */,
 				ECFA3E941B6580D400C83EE1 /* CardBase.png in Resources */,
@@ -2743,10 +2875,12 @@
 				FACF46DB19EC8A0300D334E0 /* hero_6.png in Resources */,
 				FA14AA6519CFC3C20080230B /* cardgamewithTien.mobileprovision in Resources */,
 				FACF46C219EC852300D334E0 /* card_2006.png in Resources */,
+				5FD2CBF81C6FBCF700692D88 /* card_3201.png in Resources */,
 				FAB5831E19BA0AF6007BFA26 /* arrow_right_icon.png in Resources */,
 				EC7A74CB1B28D86A00D3A53F /* TopFlag.png in Resources */,
 				9032E142199946F9002A6725 /* add_icon.png in Resources */,
 				90AB15021979FB5E0008FCDD /* resource_icon.png in Resources */,
+				5FD2CBF31C6FBCF700692D88 /* card_3100.png in Resources */,
 				9069AAE7195501AB006D1D98 /* card_background_front_neutral_common.png in Resources */,
 				ECAB71C61B4F4532004D4E5C /* Images.xcassets in Resources */,
 				EC42E87F1B5726E7005EDFD5 /* FeaturedStoreCardPack005.png in Resources */,
@@ -2788,6 +2922,7 @@
 				FAB5832519BB61FD007BFA26 /* card_1005.png in Resources */,
 				90C52890199BE53E00750C54 /* search_button.png in Resources */,
 				9070204D19915FD500FDE444 /* card_background_front_overlay_rare.png in Resources */,
+				5FD2CBED1C6FBCF700692D88 /* card_3004.png in Resources */,
 				90DA434E195C941400E44AED /* add_button_gray.png in Resources */,
 				ECCBF4861B48D2F6007C7594 /* titleGongSound.wav in Resources */,
 				FACF46DA19EC8A0300D334E0 /* hero_5.png in Resources */,
@@ -2803,6 +2938,7 @@
 				FA14AA5D19CCB9E50080230B /* LinLibertine_aRL.ttf in Resources */,
 				FA033FCA19BCFF6600EFEBD8 /* card_0005.png in Resources */,
 				907020771992AC8100FDE444 /* PLCameraSheetDoneButtonPressed.png in Resources */,
+				5FD2CBE91C6FBCF700692D88 /* card_3000.png in Resources */,
 				EC3A5D8B1B6AA1760064055F /* card_4012.jpg in Resources */,
 				907020721992AC8100FDE444 /* PLCameraSheetButton@2x.png in Resources */,
 				90DA4355195E022B00E44AED /* yes_button.png in Resources */,
@@ -2814,6 +2950,7 @@
 				93905D2C1BF1316F0067809E /* Snowflake.png in Resources */,
 				9319F3B01BD96D7A00F939FE /* CardCreateForwardButton.png in Resources */,
 				FA033FC719BCFF6600EFEBD8 /* card_0002.png in Resources */,
+				5FD2CBEB1C6FBCF700692D88 /* card_3002.png in Resources */,
 				90AB1509197AD6DA0008FCDD /* card_ability_icon_cast_on_hit.png in Resources */,
 				EC7A74D51B28E33500D3A53F /* BOOKOSB.TTF in Resources */,
 				907020761992AC8100FDE444 /* PLCameraSheetDoneButton@2x.png in Resources */,
@@ -2823,6 +2960,7 @@
 				EC3A5D6D1B67F6360064055F /* WoodBG.jpg in Resources */,
 				FAB5832619BB61FD007BFA26 /* card_1006.png in Resources */,
 				FA19FC8C19B2580900B38943 /* card_1001.png in Resources */,
+				5FD2CBF61C6FBCF700692D88 /* card_3103.png in Resources */,
 				90AB150A197AD6DA0008FCDD /* card_ability_icon_cast_on_move.png in Resources */,
 				90AB1516198355F00008FCDD /* points_icon.png in Resources */,
 				FACF46C319EC852300D334E0 /* card_2007.png in Resources */,
@@ -2848,6 +2986,7 @@
 				EC3A5D881B6AA1760064055F /* card_4007.jpg in Resources */,
 				FA8410171B37537D0023FA36 /* end_turn_button_up.png in Resources */,
 				907D9BF1192D3DFB0037C0CF /* card_image_placeholder.png in Resources */,
+				5FD2CBEA1C6FBCF700692D88 /* card_3001.png in Resources */,
 				9319F3AD1BD96D7A00F939FE /* CardCreateBlueButton.png in Resources */,
 				EC42E85C1B572647005EDFD5 /* CardStorePlusButton.png in Resources */,
 				EC42E84A1B5725FB005EDFD5 /* CardStoreBackButton.png in Resources */,
@@ -2880,8 +3019,10 @@
 				FA14AA5F19CCBE480080230B /* LiberationSans-BoldItalic.ttf in Resources */,
 				90F7DAF91999AE5100D4FD97 /* invalid_deck_button.png in Resources */,
 				FAB5832019BA13CA007BFA26 /* arrow_down_icon.png in Resources */,
+				5FD2CBF01C6FBCF700692D88 /* card_3007.png in Resources */,
 				907D9BE11922AE0D0037C0CF /* field_highlight.png in Resources */,
 				FACF46C819EC852300D334E0 /* card_2102.png in Resources */,
+				5FD2CBEE1C6FBCF700692D88 /* card_3005.png in Resources */,
 				EC10BDA81B338CCF00F7ABDE /* Icon-60@2x.png in Resources */,
 				90DA4341195A4A6E00E44AED /* remove_button.png in Resources */,
 				90AB14F7196CB7720008FCDD /* no_target_button.png in Resources */,
@@ -2893,6 +3034,7 @@
 				90DA437619608F4D00E44AED /* decrement_button_gray.png in Resources */,
 				90C528A3199D613B00750C54 /* screen_background_center.png in Resources */,
 				EC42E8531B57262D005EDFD5 /* CardStoreBottomButtonNoWords.png in Resources */,
+				5FD2CBEF1C6FBCF700692D88 /* card_3006.png in Resources */,
 				FACF46C119EC852300D334E0 /* card_2005.png in Resources */,
 				9032E13E199918F8002A6725 /* category_tab_disabled.png in Resources */,
 				90C52892199BE87500750C54 /* search_toggle_button.png in Resources */,
@@ -2957,6 +3099,7 @@
 				9060540B191AAE1B000B3B93 /* DeckModel.m in Sources */,
 				FA19FC8819B2336100B38943 /* PickIAPHelper.m in Sources */,
 				FAB2D16919C3970900963ADC /* LoginViewController.m in Sources */,
+				8F4B0A411C6004E300F90AAA /* DHModularPopupController.m in Sources */,
 				90AB14EE196B5ECC0008FCDD /* GameInfoTableViewCell.m in Sources */,
 				ECCD46F11ACC881400804B06 /* PNConnection.m in Sources */,
 				ECCD46CC1ACC881400804B06 /* NSError+PNAdditions.m in Sources */,
@@ -2977,8 +3120,10 @@
 				ECCD46B21ACC881400804B06 /* PNAccessRightOptions.m in Sources */,
 				9070206B1992AC8100FDE444 /* GKCropBorderView.m in Sources */,
 				ECCD46D81ACC881400804B06 /* PNChangeAccessRightsRequest.m in Sources */,
+				8F4B0A391C6004CA00F90AAA /* PMValidationManager.m in Sources */,
 				ECCD46AE1ACC881400804B06 /* PNResponseDeserialize.m in Sources */,
 				90F80F9319A27FA5007571F4 /* SSKeychainQuery.m in Sources */,
+				8F4B0A321C6004B200F90AAA /* PMValidationType.m in Sources */,
 				ECCD469C1ACC881400804B06 /* PNPresenceEvent.m in Sources */,
 				90456EC9198AFD6B00B807DC /* CardsCollectionCell.m in Sources */,
 				ECCD46CD1ACC881400804B06 /* NSInvocation+PNAdditions.m in Sources */,
@@ -3021,6 +3166,7 @@
 				90DA43CA1969DBDB00E44AED /* DeckChooserViewController.m in Sources */,
 				90DA435E195E45B500E44AED /* MainScreenViewController.m in Sources */,
 				ECCD46CF1ACC881400804B06 /* NSMutableSet+PNAdditions.m in Sources */,
+				8F4B0A331C6004B200F90AAA /* PMValidationUITextCompareType.m in Sources */,
 				ECCD46EF1ACC881400804B06 /* PNReachability.m in Sources */,
 				FA19FCA419B4C63C00B38943 /* MessageModel.m in Sources */,
 				ECCD46A91ACC881400804B06 /* PNErrorResponseParser.m in Sources */,
@@ -3031,6 +3177,7 @@
 				90DA4364195F5DE700E44AED /* CardEditorViewController.m in Sources */,
 				ECCD46B51ACC881400804B06 /* PNCache.m in Sources */,
 				FA19FC8519B232F100B38943 /* IAPHelper.m in Sources */,
+				8F4B0A2E1C6004B200F90AAA /* PMValidationEmailType.m in Sources */,
 				ECCD46A81ACC881400804B06 /* PNClientStateUpdateResponseParser.m in Sources */,
 				9319F3951BD5343B00F939FE /* StorePackCell.m in Sources */,
 				ECCD46C81ACC881400804B06 /* NSArray+PNAdditions.m in Sources */,
@@ -3046,6 +3193,7 @@
 				ECCD46D71ACC881400804B06 /* PNBaseRequest.m in Sources */,
 				90C528AD199E59ED00750C54 /* Level.m in Sources */,
 				FA19FC9E19B3F24E00B38943 /* MessageTableView.m in Sources */,
+				8F4B0A2F1C6004B200F90AAA /* PMValidationLengthType.m in Sources */,
 				9070206F1992AC8100FDE444 /* GKImagePicker.m in Sources */,
 				ECCD468F1ACC881400804B06 /* PubNub+Cipher.m in Sources */,
 				ECCD46B91ACC881400804B06 /* PNChannelGroupNamespace.m in Sources */,
@@ -3114,17 +3262,21 @@
 				ECCD46971ACC881400804B06 /* PubNub+Time.m in Sources */,
 				90DA43CD1969DD9000E44AED /* CDCardModel.m in Sources */,
 				ECCD469F1ACC881400804B06 /* PNActionResponseParser.m in Sources */,
+				8F4B0A3A1C6004CA00F90AAA /* PMValidationUnit.m in Sources */,
 				FA19FCA119B3F39500B38943 /* MessagesViewController.m in Sources */,
 				9070206E1992AC8100FDE444 /* GKImageCropViewController.m in Sources */,
 				ECCD46EB1ACC881400804B06 /* PNTimeTokenRequest.m in Sources */,
 				90DA43791960B7EA00E44AED /* AbilityTableView.m in Sources */,
+				8F4B0A311C6004B200F90AAA /* PMValidationStringCompareType.m in Sources */,
 				ECCD46DD1ACC881400804B06 /* PNChannelsForGroupRequest.m in Sources */,
 				90F352DE1916BB9300601130 /* SpellCardModel.m in Sources */,
 				EC8B3C351B12390F00DE04A9 /* LeaderboardsViewController.m in Sources */,
 				9070206C1992AC8100FDE444 /* GKImageCropOverlayView.m in Sources */,
+				8F4B0A301C6004B200F90AAA /* PMValidationRegexType.m in Sources */,
 				ECCD46C31ACC881400804B06 /* PNOperationStatus.m in Sources */,
 				FA4025971956331300FCCBAB /* DeckEditorViewController.m in Sources */,
 				ECCD46B11ACC881400804B06 /* PNWhereNowResponseParser.m in Sources */,
+				8F4B0A401C6004E300F90AAA /* DHConstraintUtility.m in Sources */,
 				90F80F9E19A3D28E007571F4 /* GameViewController+Tutorial.m in Sources */,
 				90DA436E195F833400E44AED /* CustomTextField.m in Sources */,
 				90DA43D31969E4F100E44AED /* CardGame.xcdatamodeld in Sources */,
@@ -3291,7 +3443,7 @@
 				PRODUCT_NAME = cardgame;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -3316,7 +3468,7 @@
 				PRODUCT_NAME = cardgame;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

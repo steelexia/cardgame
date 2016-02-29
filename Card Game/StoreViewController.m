@@ -241,7 +241,7 @@ NSArray *_products;
     [self.view addSubview:plusButton3];
     
     //label3–986Y
-    _userGoldLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(_userGoldIcon.frame.origin.x, 986/mockupHeight*SCREEN_HEIGHT, _userGoldIcon.frame.size.width, 40)];
+    _userGoldLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(_userGoldIcon.frame.origin.x, 946/mockupHeight*SCREEN_HEIGHT, _userGoldIcon.frame.size.width, 40)];
     _userGoldLabel.textAlignment = NSTextAlignmentCenter;
     _userGoldLabel.textColor = [UIColor whiteColor];
     _userGoldLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +5];
@@ -278,7 +278,7 @@ NSArray *_products;
     
     //brian jul23
     //label2–820Y,
-    float likeLabelYRatio = 820/mockupHeight;
+    float likeLabelYRatio = 780/mockupHeight;
     
     _userLikesLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(_userLikesIcon.frame.origin.x,likeLabelYRatio*SCREEN_HEIGHT,_userLikesIcon.frame.size.width, 40)];
     _userLikesLabel.textAlignment = NSTextAlignmentCenter;

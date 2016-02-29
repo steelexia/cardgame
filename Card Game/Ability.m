@@ -427,7 +427,9 @@
             shouldHighlightValue = YES;
         }
         else if (ability.otherValues.count > 0)
+        {
             valueDescription = [NSString stringWithFormat:@"%@", ability.otherValues[0]];
+        }
     }
     else
     {
@@ -515,11 +517,11 @@
     }
     else if (abilityType == abilityAddResource){
         if (ability.targetType == targetHeroEnemy)
-            description = [NSString stringWithFormat:@"%@Opponent gains %@ resource(s)%@.", castDescription, valueDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Opponent gains %@ resource%@.", castDescription, valueDescription, durationDescription];
         else if (ability.targetType == targetHeroFriendly)
-            description = [NSString stringWithFormat:@"%@Gain %@ resource(s)%@.", castDescription, valueDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Gain %@ resource%@.", castDescription, valueDescription, durationDescription];
         else if (ability.targetType == targetAll)
-            description = [NSString stringWithFormat:@"%@All players gain %@ resource(s)%@.", castDescription, valueDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@All players gain %@ resource%@.", castDescription, valueDescription, durationDescription];
     }
     else if (abilityType == abilityRemoveAbility){
         if (ability.targetType == targetSelf)
@@ -537,7 +539,7 @@
         if (ability.targetType == targetSelf)
             description = [NSString stringWithFormat:@"%@Withdraw%@.", castDescription, durationDescription];
         else
-            description = [NSString stringWithFormat:@"%@Widthdraw %@%@.", castDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Withdraw %@%@.", castDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityPierce){
         if (ability.targetType == targetSelf)
@@ -831,7 +833,7 @@
 
 +(NSNumber*)getCastTypeOrder:(enum CastType)castType
 {
-    //NOTE: give enoguh space between numbers so can add more in future
+    //NOTE: give enough space between numbers so can add more in future
     if (castType == castAlways)
         return @100;
     else if (castType == castOnSummon)
