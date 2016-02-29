@@ -1745,11 +1745,10 @@ NSMutableDictionary * campaignCards;
     monster.element = elementNeutral;
     monster.rarity = cardRarityRare;
     monster.name = @"Skywhale";
-    monster.damage = 0;
+    monster.damage = 7;
     monster.life = monster.maximumLife = 26;
     monster.cost = 7;
     monster.cooldown = monster.maximumCooldown = 1;
-    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:11]]];
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnMove targetType:targetAllFriendlyMinions withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:5]]];
     
     [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
@@ -1798,6 +1797,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:8]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:8]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    
     
     [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
@@ -2208,11 +2208,10 @@ NSMutableDictionary * campaignCards;
     monster.element = elementNeutral;
     monster.rarity = cardRarityRare;
     monster.name = @"Skywhale";
-    monster.damage = 0;
+    monster.damage = 3000;
     monster.life = monster.maximumLife = 10200;
     monster.cost = 7;
     monster.cooldown = monster.maximumCooldown = 1;
-    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:4200]]];
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnMove targetType:targetAllFriendlyMinions withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:2200]]];
     
     [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];

@@ -403,12 +403,19 @@ int enemyTotalStrength, friendlyTotalStrength;
         else
         {
             //enemy hero having high life makes dealing damage unattractive, but enemy having low life makes any damage attractive
-            double damageModifier = (((float)(enemyPlayer.playerMonster.maximumLife - enemyPlayer.playerMonster.life) / enemyPlayer.playerMonster.maximumLife))*2 * STAT_POINT_MULTIPLIER;
+            double damageModifier = (((float)(enemyPlayer.playerMonster.maximumLife - enemyPlayer.playerMonster.life) / enemyPlayer.playerMonster.maximumLife))* 2;
+            
+            //min modifier is 25%
+            if (damageModifier < 0.25)
+                damageModifier = 0.25;
             
             NSLog(@"AI: enemy hero damage modifier %f", damageModifier);
             
             //not a fatal blow, attraction depends on enemy hero's life
             points += damageDealt * damageModifier;
+            points *= STAT_POINT_MULTIPLIER;
+            
+            
             NSLog(@"AI: high damage hitting enemy hero +%f points", damageDealt * damageModifier);
         }
     }
@@ -610,7 +617,7 @@ int enemyTotalStrength, friendlyTotalStrength;
             int abilityPoint = [self evaluateAbilityPoints:copyAbility caster:nil target:monster fromSide:monster.side withCost:0];
             
             if (abilityPoint == VICTORY_MOVE)
-                abilityPoint = VICTORY_MOVE;
+                return VICTORY_MOVE;
             else if (abilityPoint == IMPOSSIBLE_MOVE)
                 return IMPOSSIBLE_MOVE;
             else if (abilityPoint == USELESS_MOVE)
@@ -625,6 +632,7 @@ int enemyTotalStrength, friendlyTotalStrength;
             }
             
             NSLog(@"AI: Points so far %d", points);
+            NSLog(@"AI: Adding ability %@ with %d points (will divide by 2)", [Ability getDescription:ability fromCard:monster], abilityPoint);
             points += abilityPoint / 2; //half as effective
             NSLog(@"AI: New point after adding last ability %d", points);
         }
@@ -818,17 +826,18 @@ int enemyTotalStrength, friendlyTotalStrength;
         //base points from amount of health healed
         points = [ability.value intValue] < lifeDifference ? [ability.value intValue] : lifeDifference;
         points *= STAT_POINT_MULTIPLIER;
-        points *= -1; //"good" abilities are negative
     
         //all repeated casts have similar algorithms
         if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn || castType == castOnDeath)
         {
+            //TODO warning these all assume heal is a friendly target
+            
             //healing is exponentially good if monster has enough life
             if (castType != castOnDeath)
             {
                 if (target.maximumLife > 4)
                 {
-                    points -= pow((target.maximumLife * STAT_POINT_MULTIPLIER) - 1000, 1.1);
+                    points += pow((target.maximumLife * STAT_POINT_MULTIPLIER) - 1000, 1.1);
                 }
                 else
                 {
@@ -854,36 +863,59 @@ int enemyTotalStrength, friendlyTotalStrength;
             }
             
             //cheap method: multiplied by what and how many it targets
-            points = [self getTargetTypeMultipliedPoints:ability.targetType points:points];
+            points = -[self getTargetTypeMultipliedPoints:ability.targetType points:points];
         }
         else
         {
             if (points == 0)
                 return 0;
             
-            int targetPoints = -[self evaluateMonsterValue:target];
+            int targetPoints = [self evaluateMonsterValue:target];
             
             //any other cast types
-            points += targetPoints * 0.2; //stronger target = better move
             
-            if (target.side == side)
-                points = -points;
             
+            
+            
+            /*
             if (castType == castAlways)
             {
-                //heal the copy so other abilities can evaluate the updated "state"
+                //TODO heal the copy so other abilities can evaluate the updated "state"
                 [target healLife:[ability.value intValue]];
             }
+            */
             
-            //TODO healing low life hero is critical
+            //healing low life hero is critical
+            if (target.type == cardTypePlayer)
+            {
+                if (target.side == side && target.life < 20)
+                {
+                    //up to 9.55x more valuable to heal low life hero
+                    float heroLowLifeMultiplier = (20 - target.life) / 20 * 9;
+                    points += points * heroLowLifeMultiplier;
+                }
+            }
+            else
+            {
+                if (target.side != side)
+                {
+                    points = -points;
+                    points -= targetPoints * 0.2; //stronger enemy target = worse move
+                }
+                //on same side
+                else
+                {
+                    points += targetPoints * 0.2; //stronger target = better move
+                }
+            }
+                
         }
         
         NSLog(@"AI: ability heal, %d points", points);
     }
     else if (ability.abilityType == abilityAddMaxLife)
     {
-        //remember that positive point means good when casted on enemy
-        int lifeChange = -[ability.value intValue];
+        int lifeChange = [ability.value intValue];
         
         if (castType == castOnDamaged || castType == castOnHit || castType == castOnMove || castType == castOnEndOfTurn || castType == castOnDeath)
         {
@@ -892,6 +924,7 @@ int enemyTotalStrength, friendlyTotalStrength;
             //repeated damage is exponentially good if monster has enough life
             if (castType != castOnDeath)
             {
+                //TODO WARNING this code assumes target is on a friendly target
                 if (target.maximumLife > 4)
                 {
                     points += pow((target.maximumLife * STAT_POINT_MULTIPLIER) - 1000, 1.1);
@@ -919,8 +952,8 @@ int enemyTotalStrength, friendlyTotalStrength;
                 }
             }
             
-            //multiplied by what and how many it targets
-            points = [self getTargetTypeMultipliedPoints:ability.targetType points:points];
+            //multiplied by what and how many it targets, negative because default target is enemy
+            points = -[self getTargetTypeMultipliedPoints:ability.targetType points:points];
         }
         else
         {
@@ -1080,6 +1113,11 @@ int enemyTotalStrength, friendlyTotalStrength;
                     points *= 2; //otherwise just twice as good
                 }
             }
+            //special case for chapter 2 boss bombs
+            else if (targetType == targetSelf)
+            {
+                return points = 0;
+            }
             
             if (castType == castOnDamaged)
             {
@@ -1158,6 +1196,11 @@ int enemyTotalStrength, friendlyTotalStrength;
         }
         else
         {
+            //special case for chapter 2 boss that adds cooldown to hero
+            if (targetType == targetHeroFriendly)
+                return -1000;
+            
+
             //cannot reduce cooldown below 0
             if (cooldownChange < 0 && abs(cooldownChange) > target.cooldown)
                 cooldownChange = -target.cooldown;
@@ -1525,7 +1568,7 @@ int enemyTotalStrength, friendlyTotalStrength;
         {
             points = [self getMonsterPerTurnValue:target]; //TODO not exactly correct since on move is not that relevant
             
-            if (points != side)
+            if (target.side != side)
                 points = -points;
         }
     }
@@ -1538,8 +1581,8 @@ int enemyTotalStrength, friendlyTotalStrength;
         }
         else
         {
-            points = target.damage / target.maximumCooldown / 2;
-            if (points != side)
+            points = target.damage * STAT_POINT_MULTIPLIER / target.maximumCooldown / 2;
+            if (target.side != side)
                 points = -points;
         }
     }
@@ -1567,7 +1610,7 @@ int enemyTotalStrength, friendlyTotalStrength;
                     points *= (float)fractureCount / [ability.value intValue];
             }
             
-            if (points != side)
+            if (target.side != side)
                 points = -points;
         }
     }
@@ -1614,6 +1657,10 @@ int enemyTotalStrength, friendlyTotalStrength;
                 points *= -1;
         }
     }
+    else if (ability.abilityType == abilityHeroic)
+    {
+        points = 0;
+    }
     else
     {
         NSLog(@"AI: unimplemented ability, useless move");
@@ -1642,7 +1689,7 @@ int enemyTotalStrength, friendlyTotalStrength;
     
     damagePerCD /= 2; //half as effective
     
-    int targetPoint = damagePerCD;
+    int targetPoint = damagePerCD * STAT_POINT_MULTIPLIER;
     
     //check all cast on move and hit abilities, their points also contribute
     for(Ability*ability in monster.abilities)
