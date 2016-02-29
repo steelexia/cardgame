@@ -56,8 +56,6 @@ float height = 400;
     
     [self.bgImageView addSubview:popupDescription];
     
-    
-    
     //button height/width
     float buttonWidth = 100.0f/320.0f*SCREEN_WIDTH;
     float buttonHeight = 80.0f/960.0f*SCREEN_HEIGHT;
