@@ -24,8 +24,8 @@
 @implementation MultiplayerGameViewController
 
 /** Screen dimension for convinience */
-int SCREEN_WIDTH, SCREEN_HEIGHT;
-
+float SCREEN_WIDTH, SCREEN_HEIGHT;
+float baseHeight, baseWidth;
 BOOL playerAuthenticated;
 BOOL alreadyLoadedMatch;
 MultiplayerNetworking *_networkingEngine;
@@ -39,39 +39,77 @@ UIView *sureMatchView;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+   //font-name
+    //GrilledCheeseBTN
+    
+    
+    
     SCREEN_WIDTH = [[UIScreen mainScreen] bounds].size.width;
     SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
     
-    //iPhone 4S Values
+    //base resolution of assets
+    //2048h
+    //1153w
+    
+    baseHeight = 2048.0f;
+    baseWidth = 1153.0f;
+    
     
     //background view
-    UIImageView*backgroundImageTop = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_top"]];
-    backgroundImageTop.frame = CGRectMake(0, 0, SCREEN_WIDTH, 40);
-    [self.view addSubview:backgroundImageTop];
-    
-    UIImageView*backgroundImageMiddle = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_center"]];
-    backgroundImageMiddle.frame = CGRectMake(0, 40, SCREEN_WIDTH, SCREEN_HEIGHT - 40 - 40);
-    
-    [self.view addSubview:backgroundImageMiddle];
-    
-    UIImageView*backgroundImageBottom = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_bottom"]];
-    backgroundImageBottom.frame = CGRectMake(0, SCREEN_HEIGHT-40, SCREEN_WIDTH, 40);
-    [self.view addSubview:backgroundImageBottom];
+    UIImageView*backgroundImageTotal = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"multiscreen_01"]];
+    backgroundImageTotal.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    [self.view addSubview:backgroundImageTotal];
     
     
-    CFLabel*menuLogoBackground = [[CFLabel alloc] initWithFrame:CGRectMake(0,0,250,50)];
-    menuLogoBackground.center = CGPointMake(SCREEN_WIDTH/2, 50);
-    menuLogoBackground.label.textAlignment = NSTextAlignmentCenter;
-    [menuLogoBackground setTextSize:30];
-    menuLogoBackground.label.text = @"Multiplayer";
-    [self.view addSubview:menuLogoBackground];
+    /*
+    UILabel*MultiplayerTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,250,50)];
+    MultiplayerTitleLabel.center = CGPointMake(SCREEN_WIDTH/2,50);
+    MultiplayerTitleLabel.textAlignment = NSTextAlignmentCenter;
+    MultiplayerTitleLabel.font = [UIFont fontWithName:@"GrilledCheeseBTN" size:35];
+    MultiplayerTitleLabel.text = @"Multiplayer";
+    [self.view addSubview:MultiplayerTitleLabel];
+    */
+    
+    //setImageProfile
+    //210x210
+    //x131, y345
+    UIImageView *profileImageView = [[UIImageView alloc] initWithFrame:CGRectMake(131/baseWidth*SCREEN_WIDTH,345/baseHeight*SCREEN_HEIGHT,210/baseWidth*SCREEN_WIDTH,210/baseWidth*SCREEN_WIDTH)];
+    [profileImageView setImage:[UIImage imageNamed:@"angryorc.jpeg"]];
+    [profileImageView setBackgroundColor:[UIColor redColor]];
+   profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2;
+    profileImageView.clipsToBounds = YES;
+    [self.view addSubview:profileImageView];
     
     
-    self.quickMatchButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 200, 130)];
-    self.quickMatchButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 150);
-    [self.quickMatchButton.label setText:@"Quick Match"];
-
     
+    //quickmatchButton--547x207
+    //x 300, y 878
+    self.quickMatchButton = [[UIButton alloc] initWithFrame:CGRectMake(300/baseWidth*SCREEN_WIDTH, 878/baseHeight*SCREEN_HEIGHT, 547/baseHeight*SCREEN_HEIGHT, 207/baseHeight*SCREEN_HEIGHT)];
+    [self.quickMatchButton setBackgroundImage:[UIImage imageNamed:@"multi_quickmatch_button_01"] forState:UIControlStateNormal];
+    
+    //222 w 194 height
+    //1845 y
+    //44x
+    UIButton* backButton = [[UIButton alloc] initWithFrame:CGRectMake(44/baseWidth*SCREEN_WIDTH, 1845/baseHeight*SCREEN_HEIGHT, 222/baseWidth*SCREEN_WIDTH, 194/baseHeight*SCREEN_HEIGHT)];
+    [backButton setImage:[UIImage imageNamed:@"multi_back_button_01"] forState:UIControlStateNormal];
+    [backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:backButton];
+    
+    //668x,1855y
+    //Pixel Height: 176
+    //Pixel Width: 474
+    UIButton* leaderboardButton = [[UIButton alloc] initWithFrame:CGRectMake(668/baseWidth*SCREEN_WIDTH, 1845/baseHeight*SCREEN_HEIGHT, 474/baseWidth*SCREEN_WIDTH, 176/baseHeight*SCREEN_HEIGHT)];
+    [leaderboardButton setImage:[UIImage imageNamed:@"multi_leaderboards_button_01"] forState:UIControlStateNormal];
+    [leaderboardButton addTarget:self action:@selector(viewLeaderboards)    forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:leaderboardButton];
+    
+    //300x, 1845y
+    //Pixel Height: 184
+    //Pixel Width: 345
+    UIButton *chatButton = [[UIButton alloc] initWithFrame:CGRectMake(300/baseWidth*SCREEN_WIDTH,1845/baseHeight*SCREEN_HEIGHT,345/baseWidth*SCREEN_WIDTH,184/baseHeight*SCREEN_HEIGHT)];
+    [chatButton setBackgroundImage:[UIImage imageNamed:@"multi_chat_button_01"] forState:UIControlStateNormal];
+    [chatButton addTarget:self action:@selector(viewChat)    forControlEvents:UIControlEventTouchUpInside];
+     [self.view addSubview:chatButton];
     //[startButton addTarget:self action:@selector(startGameCenterButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.quickMatchButton addTarget:self action:@selector(quickMatch)    forControlEvents:UIControlEventTouchUpInside];
     
@@ -85,18 +123,16 @@ UIView *sureMatchView;
     
     //[self.view addSubview:connectButton];
 
-    CFButton* leaderboardButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
-    leaderboardButton.center = CGPointMake(SCREEN_WIDTH-70, SCREEN_HEIGHT - 45);
-    [leaderboardButton.label setText:@"Leaderboards"];
     
-    [leaderboardButton addTarget:self action:@selector(viewLeaderboards)    forControlEvents:UIControlEventTouchUpInside];
+    //set MPLobbyTable Dimensions
+    //x68,y1125
+    //930x630
     
-    [self.view addSubview:leaderboardButton];
-    
-    self.mpLobbyTableView = [[UITableView alloc] initWithFrame:CGRectMake(20,80,SCREEN_WIDTH-40,150)];
+    self.mpLobbyTableView = [[UITableView alloc] initWithFrame:CGRectMake(68/baseWidth*SCREEN_WIDTH,1125/baseHeight*SCREEN_HEIGHT,930/baseWidth*SCREEN_WIDTH,630/baseHeight*SCREEN_HEIGHT)];
    self.mpLobbyTableView.delegate = self;
     self.mpLobbyTableView.dataSource = self;
     self.mpLobbyTableView.alpha = 0;
+    self.mpLobbyTableView.backgroundColor = [UIColor clearColor];
     self.mpLobbyTableView.tag = 88;
     self.mpLobbyTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.mpLobbyTableView.alwaysBounceVertical = NO;
@@ -104,6 +140,7 @@ UIView *sureMatchView;
     CALayer *mpLobbyLayer = self.mpLobbyTableView.layer;
     mpLobbyLayer.cornerRadius = 8.0f;
     mpLobbyLayer.masksToBounds = YES;
+    
     
     self.noPlayersAvailableLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 80, SCREEN_WIDTH-40,150)];
     [self.noPlayersAvailableLabel setText:@"Multiplayer Connection Verified, No Players Available."];
@@ -116,7 +153,7 @@ UIView *sureMatchView;
     
     
     [self.view addSubview:self.mpLobbyTableView];
-    [self.view addSubview:self.noPlayersAvailableLabel];
+    //[self.view addSubview:self.noPlayersAvailableLabel];
     
     self.chatTableView = [[UITableView alloc] initWithFrame:CGRectMake(20,240,SCREEN_WIDTH-40,100)];
     self.chatTableView.backgroundColor = [UIColor blackColor];
@@ -129,9 +166,9 @@ UIView *sureMatchView;
     chatTableLayer.cornerRadius = 8.0f;
     chatTableLayer.masksToBounds = YES;
     
+
     
-    [self.view addSubview:self.mpLobbyTableView];
-    
+    /*
     self.chatTableView.delegate = self;
     [self.view addSubview:self.chatTableView];
     
@@ -145,6 +182,7 @@ UIView *sureMatchView;
     chatFieldLayer.masksToBounds = YES;
     
     [self.view addSubview:self.chatField];
+    */
     
     self.chatSendButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-70,345,50,30)];
     //self.chatSendButton.backgroundColor = [UIColor blueColor];
@@ -165,10 +203,7 @@ UIView *sureMatchView;
     [self.chatTableView addGestureRecognizer:chatTapRecognizer];
     
     
-    UIButton* backButton = [[CFButton alloc] initWithFrame:CGRectMake(35, SCREEN_HEIGHT - 32 - 30, 46, 32)];
-    [backButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
-    [backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:backButton];
+  
     
     self.currentLoadStateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20,200,300,50)];
     self.currentLoadStateLabel.text = @"Default Text";
@@ -731,7 +766,9 @@ UIView *sureMatchView;
     
     if(tableView.tag ==88)
     {
-      return 40.0;
+      //return 40.0;
+        return 0;
+         
     }
     else
     {
@@ -739,12 +776,15 @@ UIView *sureMatchView;
         
     }
 }
-
+ /*
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
+   
+    
     if(tableView.tag==88)
     {
       
+        
         UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,40)];
         
     
@@ -775,14 +815,15 @@ UIView *sureMatchView;
         return nil;
         
     }
+     
 }
-
+*/
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     if(tableView.tag==88)
     {
-        return self.connectedPlayers.count;
-        
+        //return self.connectedPlayers.count;
+        return 20;
     }
     else
     {
@@ -857,9 +898,14 @@ UIView *sureMatchView;
       
    }
     else
+        //this is for the non chat table view
+        //Pixel Height: 205
+        //Pixel Width: 974
         
     {
-      return 25;
+    
+        float HeightForTableViewBar = 205/baseHeight*SCREEN_HEIGHT;
+      return HeightForTableViewBar;
     }
     
 }
@@ -915,12 +961,33 @@ if(tableView.tag ==88)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                       reuseIdentifier:MyIdentifier];
+        
+        //cell background
+        //Pixel Height: 205
+        //Pixel Width: 974
+        UIImageView *cellBackgroundImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,974/baseWidth*SCREEN_WIDTH,205/baseHeight*SCREEN_HEIGHT)];
+        
+        [cellBackgroundImage setImage:[UIImage imageNamed:@"multi_woodbar_01"]];
+        
+        [cell addSubview:cellBackgroundImage];
+        
+        
         userNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,100,25)];
         userStateLabel = [[UILabel alloc] initWithFrame:CGRectMake(191,0,70,25)];
         userEloLabel = [[UILabel alloc] initWithFrame:CGRectMake(105,0,40,25)];
         challengeButton = [[UIButton alloc] initWithFrame:CGRectMake(175,2,90,21)];
+        //challenge button stats
+        //button starts at row width-20 pixels
+        //Pixel Height: 157
+        //Pixel Width: 308
         [challengeButton setBackgroundColor:[UIColor blueColor]];
         [challengeButton setTitle:@"Challenge" forState:UIControlStateNormal];
+        
+        float chgButtonWidth = 308/baseWidth*SCREEN_WIDTH;
+        float chgButtonHeight = 157/baseHeight*SCREEN_HEIGHT;
+        [challengeButton setFrame:CGRectMake(cell.frame.size.width-240/baseWidth*SCREEN_WIDTH-chgButtonWidth,25/baseHeight*SCREEN_HEIGHT,chgButtonWidth,chgButtonHeight)];
+        [challengeButton setImage:[UIImage imageNamed:@"multi_battle_button_01"] forState:UIControlStateNormal];
+        
         challengeButton.titleLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:12];
         
         [challengeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];

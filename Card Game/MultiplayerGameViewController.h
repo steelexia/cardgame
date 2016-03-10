@@ -31,7 +31,7 @@
 @property (strong,nonatomic) UITableView *chatTableView;
 @property (strong,nonatomic) UITextField *chatField;
 @property (strong,nonatomic) UIButton *chatSendButton;
-@property (strong,nonatomic) CFButton *quickMatchButton;
+@property (strong,nonatomic) UIButton *quickMatchButton;
 @property (strong,nonatomic) UILabel *noPlayersAvailableLabel;
 
 
