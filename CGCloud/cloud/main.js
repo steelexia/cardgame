@@ -268,7 +268,7 @@ Parse.Cloud.define('pushNotificationForUser', function(request, response)
   pushQuery.matchesQuery('user', query);
 
     console.log(ParseUserPointer);
-  
+
 
     var promise = new Parse.Promise();
     var msgTxt = request.params.messageText;
@@ -1539,7 +1539,7 @@ status.error("ERROR: Couldn't find cards to update.");
 
 /** Deletes a card and its data */
 Parse.Cloud.afterDelete("Card", function(request) {
-if (request.object.get("skipDelete") == false || request.object.get("skipDelete") = null){
+if (request.object.get("skipDelete") == false || request.object.get("skipDelete") == null){
 console.log("card after delete");
 
 //delete all abilities
