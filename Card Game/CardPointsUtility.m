@@ -10,10 +10,16 @@
 
 @implementation CardPointsUtility
 
+/* stats multiplied by this number is its cost (life or attack) */
+const int STAT_MULTIPLIER = 10;
+
+/* Minimum amount of points a monster (with no abilities) can be at */
+const int MIN_MONSTER_POINTS = 2 * STAT_MULTIPLIER;
+
 +(int)getMaxPointsForCard:(CardModel*)card
 {
-    int maxCost = 1000; //base
-    maxCost += card.cost * 1000;
+    int maxCost = 50; //base
+    maxCost += card.cost * 50;
     
     //rarity gives bonus to max cost
     if (card.rarity == cardRarityUncommon)
@@ -72,15 +78,15 @@
     int points = 0;
     //TODO it's much more complicated (add damage/life modifiers from abilities)
     if (monster.damage == 0)
-        points -= 250; //experimental: no damange = can't attack = gain some extra points
+        points -= 5 * STAT_MULTIPLIER; //no damange = can't attack = gain some extra points
     else
     {
         BOOL hasTaunt = [CardPointsUtility cardHasTaunt:monster];
         
-        //no taunt, every 1k attack is worth 500 points, and divided by cooldown
+        //no taunt, every 1 attack is worth STAT_MULTIPLIER points, and divided by cooldown
         if (hasTaunt)
         {
-            points += ceil(monster.damage / 2 / (monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown));
+            points += ceil(monster.damage * STAT_MULTIPLIER / (monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown));
         }
         //has taunt, cooldown provides much fewer reduction
         else
@@ -89,11 +95,14 @@
             if (cooldown > 1)
                 cooldown = cooldown/15.f + 1; //only about 20% more damage at cooldown of 5
             
-            points += ceil(monster.damage / 2 / cooldown);
+            points += ceil(monster.damage * STAT_MULTIPLIER / cooldown);
         }
     }
     
-    points += ceil(monster.maximumLife / 2);
+    points += ceil(monster.maximumLife * STAT_MULTIPLIER);
+    
+    if (points < MIN_MONSTER_POINTS)
+        points = MIN_MONSTER_POINTS;
     
     return points;
 }

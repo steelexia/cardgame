@@ -737,7 +737,7 @@
         if ([cardModel isKindOfClass:[SpellCardModel class]])
             return [NSString stringWithFormat:@""]; //no description since this is default behaviour
         else
-            return [NSString stringWithFormat:@"On summon: "];
+            return [NSString stringWithFormat:@"On play: "];
     }
     else if (castType == castAlways)
         return [NSString stringWithFormat:@""];
@@ -748,7 +748,7 @@
     else if (castType == castOnMove)
         return [NSString stringWithFormat:@"On move: "];
     else if (castType == castOnEndOfTurn)
-        return [NSString stringWithFormat:@"On end of turn: "];
+        return [NSString stringWithFormat:@"On turn end: "];
     else if (castType == castOnDeath)
         return [NSString stringWithFormat:@"On death: "];
     
@@ -762,7 +762,7 @@
     else if (durationType == durationInstant)
         return [NSString stringWithFormat:@""]; //no description needed
     else if (durationType == durationUntilEndOfTurn)
-        return [NSString stringWithFormat:@" until the end of the turn"];
+        return [NSString stringWithFormat:@" this turn"];
     else if (durationType == durationUntilDeath)
         return [NSString stringWithFormat:@" until the caster dies"];
     else if (durationType == durationForever)
@@ -785,9 +785,9 @@
     else if (ability.abilityType == abilityPierce)
         return @"Pierce: Attack damage dealt above target's health is deal to the enemy hero.";
     else if (ability.abilityType == abilityFracture)
-        return @"Fracture: Summons weaker copies of itself that has no abilities.";
+        return @"Fracture: Summons weaker copies of itself without abilities.";
     else if (ability.abilityType == abilityHeroic)
-        return @"Heoric: Acts as the hero.";
+        return @"Heoric: Functions as the hero.";
     
     return nil;
 }

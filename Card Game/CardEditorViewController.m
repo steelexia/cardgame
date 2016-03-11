@@ -37,9 +37,9 @@ const double CARD_EDITOR_SCALE = 1.4;
 const int MAX_NAME_FONT_SIZE = 15;
 
 /** A monster's base stat cannot be higher than these. (not that it's even easy to get to these stats */
-const int MAX_DAMAGE = 20000, MIN_DAMAGE = 0, DAMAGE_INCREMENT = 100;
-const int MAX_LIFE = 20000, MIN_LIFE = 1000, LIFE_INCREMENT = 100;
-const int MAX_COOLDOWN = 5, MIN_COOLDOWN = 1, COOLDOWN_INCREMENT = 1;
+const int MAX_DAMAGE = 30, MIN_DAMAGE = 0, DAMAGE_INCREMENT = 1;
+const int MAX_LIFE = 30, MIN_LIFE = 1, LIFE_INCREMENT = 1;
+const int MAX_COOLDOWN = 4, MIN_COOLDOWN = 1, COOLDOWN_INCREMENT = 1;
 const int MIN_COST = 0, COST_INCREMENT = 1; //maxCost is an array
 
 UITextField *nameTextField;
@@ -353,11 +353,11 @@ bool shouldSetUpView = YES;
         [self.view addSubview:pointsImageBackground];
         
         currentCostLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,46,32)];
-        currentCostLabel.center = CGPointMake(40, 175);
+        currentCostLabel.center = CGPointMake(40, 172);
         currentCostLabel.textAlignment = NSTextAlignmentCenter;
         currentCostLabel.textColor = [UIColor whiteColor];
         currentCostLabel.backgroundColor = [UIColor clearColor];
-        currentCostLabel.font = [UIFont fontWithName:cardMainFont size:12];
+        currentCostLabel.font = [UIFont fontWithName:cardMainFont size:20];
         [currentCostLabel setMinimumScaleFactor:12.f/20];
         currentCostLabel.adjustsFontSizeToFitWidth = YES;
         currentCostLabel.strokeOn = YES;
@@ -367,11 +367,11 @@ bool shouldSetUpView = YES;
         [self.view addSubview:currentCostLabel];
         
         maxCostLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,46,32)];
-        maxCostLabel.center = CGPointMake(40, 190);
+        maxCostLabel.center = CGPointMake(40, 193);
         maxCostLabel.textAlignment = NSTextAlignmentCenter;
         maxCostLabel.textColor = [UIColor whiteColor];
         maxCostLabel.backgroundColor = [UIColor clearColor];
-        maxCostLabel.font = [UIFont fontWithName:cardMainFont size:12];
+        maxCostLabel.font = [UIFont fontWithName:cardMainFont size:20];
         [maxCostLabel setMinimumScaleFactor:12.f/20];
         maxCostLabel.adjustsFontSizeToFitWidth = YES;
         maxCostLabel.strokeOn = YES;
@@ -1459,16 +1459,18 @@ bool shouldSetUpView = YES;
 -(void)damageIncButtonPressed
 {
     [self modifyDamage:DAMAGE_INCREMENT];
-    [self damageButtonHeld:DAMAGE_INCREMENT];
+    //[self damageButtonHeld:DAMAGE_INCREMENT];
 }
 
 -(void)damageDecButtonPressed
 {
     
     [self modifyDamage:-DAMAGE_INCREMENT];
-    [self damageButtonHeld:-DAMAGE_INCREMENT];
+    //[self damageButtonHeld:-DAMAGE_INCREMENT];
 }
 
+//these functions are not used anymore since the new numbers are too small to really need these
+/*
 -(void)damageButtonHeld: (int)change
 {
     static BOOL running; //prevents this "thread" from having more than one copy
@@ -1490,6 +1492,7 @@ bool shouldSetUpView = YES;
         } afterDelay:0.15];
     }
 }
+ */
 
 /** Assumes currentCard is a monsterCard */
 -(void)modifyDamage:(int)change
@@ -1512,15 +1515,16 @@ bool shouldSetUpView = YES;
 -(void)lifeIncButtonPressed
 {
     [self modifyLife:LIFE_INCREMENT];
-    [self lifeButtonHeld:LIFE_INCREMENT];
+    //[self lifeButtonHeld:LIFE_INCREMENT];
 }
 
 -(void)lifeDecButtonPressed
 {
     [self modifyLife:-LIFE_INCREMENT];
-    [self lifeButtonHeld:-LIFE_INCREMENT];
+    //[self lifeButtonHeld:-LIFE_INCREMENT];
 }
 
+/*
 -(void)lifeButtonHeld: (int)change
 {
     static BOOL running; //prevents this "thread" from having more than one copy
@@ -1541,7 +1545,7 @@ bool shouldSetUpView = YES;
                 running = NO;
         } afterDelay:0.15];
     }
-}
+}*/
 
 /** Assumes currentCard is a monsterCard */
 -(void)modifyLife:(int)change
@@ -1931,21 +1935,21 @@ bool shouldSetUpView = YES;
 {
     MonsterCardModel*monster = [[MonsterCardModel alloc] initWithIdNumber:NO_ID];
     
-    monster.life = monster.maximumLife = 1000;
-    monster.damage = 1000;
+    monster.life = monster.maximumLife = 1;
+    monster.damage = 1;
     monster.cost = 1;
     monster.cooldown = monster.maximumCooldown = 1;
     
     //TUTORIAL default stats
     if (_editorMode == cardEditorModeTutorialOne)
     {
-        monster.damage = 5;
-        monster.life = monster.maximumLife = 5;
+        monster.damage = 7;
+        monster.life = monster.maximumLife = 8;
     }
     else if (_editorMode == cardEditorModeTutorialTwo)
     {
-        monster.damage = 5;
-        monster.life = monster.maximumLife = 5;
+        monster.damage = 7;
+        monster.life = monster.maximumLife = 8;
         if (userTutorialOneCardName!=nil)
             monster.name = userTutorialOneCardName;
     }
