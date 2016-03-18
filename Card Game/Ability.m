@@ -333,7 +333,7 @@
         Ability*lastAbility = ability; //keeps track of the last ability in the sentence
         
         //look for abilities with same cast type
-        for (int i = [sortedAbilities count] - 1; i >= 0; i--)
+        for (int i = (int)[sortedAbilities count] - 1; i >= 0; i--)
         {
             Ability*otherAbility = sortedAbilities[i];
 
@@ -485,9 +485,9 @@
     }
     else if (abilityType == abilityAddMaxCooldown){
         if (ability.targetType == targetSelf)
-            description = [NSString stringWithFormat:@"%@+%@ maximum cooldown%@.", castDescription, valueDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@+%@ max cooldown%@.", castDescription, valueDescription, durationDescription];
         else
-            description = [NSString stringWithFormat:@"%@+%@ maximum cooldown to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@+%@ max cooldown to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityLoseCooldown){
         if (ability.targetType == targetSelf)
@@ -497,19 +497,19 @@
     }
     else if (abilityType == abilityLoseMaxCooldown){
         if (ability.targetType == targetSelf)
-            description = [NSString stringWithFormat:@"%@-%@ maximum cooldown%@.", castDescription, valueDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@-%@ max cooldown%@.", castDescription, valueDescription, durationDescription];
         else
-            description = [NSString stringWithFormat:@"%@-%@ maximum cooldown to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@-%@ max cooldown to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityTaunt){
         if (ability.targetType == targetSelf)
             description = [NSString stringWithFormat:@"%@Guardian%@.", castDescription, durationDescription];
         else
-            description = [NSString stringWithFormat:@"%@Give Guardian to %@%@.", castDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Guardian to %@%@.", castDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityDrawCard){
         if (ability.targetType == targetHeroEnemy)
-            description = [NSString stringWithFormat:@"%@Opponent draws %@ card%@.", castDescription, valueDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Enemy draws %@ card%@.", castDescription, valueDescription, durationDescription];
         else if (ability.targetType == targetHeroFriendly)
             description = [NSString stringWithFormat:@"%@Draw %@ card%@.", castDescription, valueDescription, durationDescription];
         else if (ability.targetType == targetAll)
@@ -517,15 +517,15 @@
     }
     else if (abilityType == abilityAddResource){
         if (ability.targetType == targetHeroEnemy)
-            description = [NSString stringWithFormat:@"%@Opponent gains %@ resource%@.", castDescription, valueDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Enemy gains %@ mana%@.", castDescription, valueDescription, durationDescription];
         else if (ability.targetType == targetHeroFriendly)
-            description = [NSString stringWithFormat:@"%@Gain %@ resource%@.", castDescription, valueDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Gain %@ mana%@.", castDescription, valueDescription, durationDescription];
         else if (ability.targetType == targetAll)
-            description = [NSString stringWithFormat:@"%@All players gain %@ resource%@.", castDescription, valueDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@All players gain %@ mana%@.", castDescription, valueDescription, durationDescription];
     }
     else if (abilityType == abilityRemoveAbility){
         if (ability.targetType == targetSelf)
-            description = [NSString stringWithFormat:@"%@Mute%@.", castDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Muted%@.", castDescription, durationDescription];
         else
             description = [NSString stringWithFormat:@"%@Mute %@%@.", castDescription, targetDescription, durationDescription];
     }
@@ -533,25 +533,25 @@
         if (ability.targetType == targetSelf)
             description = [NSString stringWithFormat:@"%@Assassin%@.", castDescription, durationDescription];
         else
-            description = [NSString stringWithFormat:@"%@Give Assassin to %@%@.", castDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Assassin to %@%@.", castDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityReturnToHand){
         if (ability.targetType == targetSelf)
-            description = [NSString stringWithFormat:@"%@Withdraw%@.", castDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Return%@.", castDescription, durationDescription];
         else
-            description = [NSString stringWithFormat:@"%@Withdraw %@%@.", castDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Return %@%@.", castDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityPierce){
         if (ability.targetType == targetSelf)
             description = [NSString stringWithFormat:@"%@Pierce%@.", castDescription, durationDescription];
         else
-            description = [NSString stringWithFormat:@"%@Give Pierce to %@%@.", castDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Pierce to %@%@.", castDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityFracture){
         if (ability.targetType == targetSelf)
             description = [NSString stringWithFormat:@"%@Fractures into %@ pieces%@.", castDescription, valueDescription, durationDescription];
         else
-            description = [NSString stringWithFormat:@"%@Gives Fracture %@ to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Fracture %@ to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
     }
     else if (abilityType == abilityHeroic)
     {
@@ -597,7 +597,7 @@
         description = [NSString stringWithFormat:@"Deal %@ damage", valueDescription];
     }
     else if (abilityType == abilityKill){
-        description = [NSString stringWithFormat:@"Destroy"];
+        description = [NSString stringWithFormat:@"Kill"];
     }
     else if (abilityType == abilitySetCooldown){
         if (ability.targetType == targetSelf)
@@ -609,32 +609,32 @@
             description = [NSString stringWithFormat:@"+%@ cooldown", valueDescription];
     }
     else if (abilityType == abilityAddMaxCooldown){
-            description = [NSString stringWithFormat:@"+%@ maximum cooldown", valueDescription];
+            description = [NSString stringWithFormat:@"+%@ max cooldown", valueDescription];
     }
     else if (abilityType == abilityLoseCooldown){
             description = [NSString stringWithFormat:@"-%@ cooldown", valueDescription];
     }
     else if (abilityType == abilityLoseMaxCooldown){
-            description = [NSString stringWithFormat:@"-%@ maximum cooldown", valueDescription];
+            description = [NSString stringWithFormat:@"-%@ max cooldown", valueDescription];
     }
     else if (abilityType == abilityTaunt){
             description = [NSString stringWithFormat:@"Guardian"];
     }
     else if (abilityType == abilityDrawCard){
         if (ability.targetType == targetHeroEnemy)
-            description = [NSString stringWithFormat:@"Opponent draws %@ card(s)", valueDescription];
+            description = [NSString stringWithFormat:@"Enemy draws %@ card", valueDescription];
         else if (ability.targetType == targetHeroFriendly)
-            description = [NSString stringWithFormat:@"Draw %@ card(s)", valueDescription];
+            description = [NSString stringWithFormat:@"Draw %@ card", valueDescription];
         else if (ability.targetType == targetAll)
-            description = [NSString stringWithFormat:@"All players draw %@ card(s)", valueDescription];
+            description = [NSString stringWithFormat:@"All players draw %@ card", valueDescription];
     }
     else if (abilityType == abilityAddResource){
         if (ability.targetType == targetHeroEnemy)
-            description = [NSString stringWithFormat:@"Opponent gains %@ resource(s)", valueDescription];
+            description = [NSString stringWithFormat:@"Enemy gains %@ mana)", valueDescription];
         else if (ability.targetType == targetHeroFriendly)
-            description = [NSString stringWithFormat:@"Gain %@ resource(s)", valueDescription];
+            description = [NSString stringWithFormat:@"Gain %@ mana", valueDescription];
         else if (ability.targetType == targetAll)
-            description = [NSString stringWithFormat:@"All players gain %@ resource(s)", valueDescription];
+            description = [NSString stringWithFormat:@"All players gain %@ mana", valueDescription];
     }
     else if (abilityType == abilityRemoveAbility){
             description = [NSString stringWithFormat:@"Mute"];
@@ -643,7 +643,7 @@
         if (ability.targetType == targetSelf)
             description = [NSString stringWithFormat:@"Assassin"];
         else
-            description = [NSString stringWithFormat:@"Give Assassin"];
+            description = [NSString stringWithFormat:@"Assassin"];
     }
     else if (abilityType == abilityReturnToHand){
             description = [NSString stringWithFormat:@"Withdraw"];
@@ -652,13 +652,13 @@
         if (ability.targetType == targetSelf)
             description = [NSString stringWithFormat:@"Pierce"];
         else
-            description = [NSString stringWithFormat:@"Give Pierce"];
+            description = [NSString stringWithFormat:@"Pierce"];
     }
     else if (abilityType == abilityFracture){
         if (ability.targetType == targetSelf)
             description = [NSString stringWithFormat:@"Fractures into %@ pieces",  valueDescription];
         else
-            description = [NSString stringWithFormat:@"Gives Fracture %@", valueDescription];
+            description = [NSString stringWithFormat:@"Fracture %@", valueDescription];
     }
     else if (abilityType == abilityHeroic)
     {
@@ -687,11 +687,11 @@
     else if (targetType == targetOneAnyMinion)
         return [NSString stringWithFormat:@"a creature"];
     else if (targetType == targetOneFriendly)
-        return [NSString stringWithFormat:@"a friendly character"];
+        return [NSString stringWithFormat:@"an ally"];
     else if (targetType == targetOneFriendlyMinion)
-        return [NSString stringWithFormat:@"a friendly creature"];
+        return [NSString stringWithFormat:@"an ally creature"];
     else if (targetType == targetOneEnemy)
-        return [NSString stringWithFormat:@"an enemy character"];
+        return [NSString stringWithFormat:@"an enemy"];
     else if (targetType == targetOneEnemyMinion)
         return [NSString stringWithFormat:@"an enemy creature"];
     else if (targetType == targetAll)
@@ -699,11 +699,11 @@
     else if (targetType == targetAllMinion)
         return [NSString stringWithFormat:@"all other creatures"];
     else if (targetType == targetAllFriendly)
-        return [NSString stringWithFormat:@"all other friendly characters"];
+        return [NSString stringWithFormat:@"all other allies"];
     else if (targetType == targetAllFriendlyMinions)
-        return [NSString stringWithFormat:@"all other friendly creatures"];
+        return [NSString stringWithFormat:@"all other ally creatures"];
     else if (targetType == targetAllEnemy)
-        return [NSString stringWithFormat:@"all enemy characters"];
+        return [NSString stringWithFormat:@"all enemies"];
     else if (targetType == targetAllEnemyMinions)
         return [NSString stringWithFormat:@"all enemy creatures"];
     else if (targetType == targetOneRandomAny)
@@ -711,11 +711,11 @@
     else if (targetType == targetOneRandomMinion)
         return [NSString stringWithFormat:@"a random creature"];
     else if (targetType == targetOneRandomFriendly)
-        return [NSString stringWithFormat:@"a random friendly character"];
+        return [NSString stringWithFormat:@"a random ally"];
     else if (targetType == targetOneRandomFriendlyMinion)
-        return [NSString stringWithFormat:@"a random friendly creature"];
+        return [NSString stringWithFormat:@"a random ally creature"];
     else if (targetType == targetOneRandomEnemy)
-        return [NSString stringWithFormat:@"a random enemy character"];
+        return [NSString stringWithFormat:@"a random enemy"];
     else if (targetType == targetOneRandomEnemyMinion)
         return [NSString stringWithFormat:@"a random enemy creature"];
     else if (targetType == targetHeroAny)
@@ -723,7 +723,7 @@
     else if (targetType == targetHeroFriendly)
         return [NSString stringWithFormat:@"your hero"];
     else if (targetType == targetHeroEnemy)
-        return [NSString stringWithFormat:@"your enemy's hero"];
+        return [NSString stringWithFormat:@"enemy's hero"];
     
     return [NSString stringWithFormat:@"target type %d", targetType];
 }
@@ -781,7 +781,7 @@
     else if (ability.abilityType == abilityAssassin)
         return @"Assassin: Target does not receive recoil damage when attacking.";
     else if (ability.abilityType == abilityReturnToHand)
-        return @"Withdraw: Target is returned to the owner's hand.";
+        return @"Return: Target is put back to the owner's hand.";
     else if (ability.abilityType == abilityPierce)
         return @"Pierce: Attack damage dealt above target's health is deal to the enemy hero.";
     else if (ability.abilityType == abilityFracture)

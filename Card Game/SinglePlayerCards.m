@@ -580,7 +580,7 @@ NSMutableDictionary * campaignCards;
     }
     //------------difficulty 2------------//
     //----chapter 1----//
-    if ([levelID isEqualToString:@"d_2_c_1_l_1"])
+    else if ([levelID isEqualToString:@"d_2_c_1_l_1"])
     {
         for (int i = 0; i < 2; i++)
         {
@@ -1190,7 +1190,7 @@ NSMutableDictionary * campaignCards;
     }
     //------------difficulty 3------------//
     //----chapter 1----//
-    if ([levelID isEqualToString:@"d_3_c_1_l_1"])
+    else if ([levelID isEqualToString:@"d_3_c_1_l_1"])
     {
         
     }

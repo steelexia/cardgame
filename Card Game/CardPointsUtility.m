@@ -36,30 +36,51 @@ const int MIN_MONSTER_POINTS = 2 * STAT_MULTIPLIER;
 
 +(int)getMaxAbilityCountForCard:(CardModel*)card
 {
-    int count = 2;
+    int count = 1;
     
-    //TEMPORARY FOR TESTING TODO:
-    if (card.rarity == cardRarityCommon)
-        count = 4;
-    
-    if (card.rarity >= cardRarityLegendary)
-        count = 4;
-    else if (card.rarity >= cardRarityRare)
-        count = 3;
-    
-    if ([card isKindOfClass:[SpellCardModel class]])
-        count++;
+#ifdef DEBUG_COST
+    count = 4;
+#else
+    if ([card isKindOfClass:[MonsterCardModel class]])
+    {
+        if (card.rarity == cardRarityCommon)
+            count = 1;
+        else if (card.rarity == cardRarityUncommon)
+            count = 1;
+        else if (card.rarity == cardRarityRare)
+            count = 2;
+        else if (card.rarity == cardRarityExceptional)
+            count = 2;
+        else if (card.rarity == cardRarityLegendary)
+            count = 3;
+
+    }
+    else if ([card isKindOfClass:[SpellCardModel class]])
+    {
+        if (card.rarity == cardRarityCommon)
+            count = 1;
+        else if (card.rarity == cardRarityUncommon)
+            count = 2;
+        else if (card.rarity == cardRarityRare)
+            count = 2;
+        else if (card.rarity == cardRarityExceptional)
+            count = 3;
+        else if (card.rarity == cardRarityLegendary)
+            count = 4;
+    }
+#endif
     
     return count;
 }
 
 +(int)getMaxCostForCard:(CardModel*)card
 {
-    //TEMPORARY FOR TESTING TODO:
-    if (card.rarity == cardRarityCommon)
-        return 10;
-    
+#ifdef DEBUG_COST
+    return 10;
+#else
     return card.rarity + 6;
+#endif
+    
 }
 
 +(int)getWrappersTotalPoints:(NSArray*)wrappers forCard:(CardModel*)card
@@ -179,55 +200,61 @@ const int MIN_MONSTER_POINTS = 2 * STAT_MULTIPLIER;
         {
             //base cost
             int cooldown = (monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown);
-            abilityCost += monster.damage * 0.5 / cooldown;
-            abilityCost += monster.life * 0.5;
+            abilityCost += monster.damage * STAT_MULTIPLIER / cooldown;
+            abilityCost += monster.life * STAT_MULTIPLIER;
             
             if (castType == castOnDamaged)
                 abilityCost *= 1.5;
             else if (castType == castOnEndOfTurn)
-                abilityCost *= 2.25;
+                abilityCost *= 2.5;
             else if (castType == castOnMove)
-                abilityCost *= 2.25;
+                abilityCost *= 1.8;
         }
         else if (abilityType == abilityLoseDamage)
         {
             //lose damage abilities' negative points are capped by the minion's actual damage. e.g. if minion has 2000 damage, -2500 damage on hit is same as -2000
             if (targetType == targetSelf)
             {
+                int minPoints = wrapper.minPoints; //ASSUMING LINEAR POINTS
                 if (castType == castOnHit)
                 {
-                    if (![CardPointsUtility cardHasTaunt:card]) //taunt removes the bonus
+                    if (![CardPointsUtility cardHasTaunt:card]) //taunt removes the bonus TODO shouldn't remove, should just be big penalty
                     {
-                        if (abilityCost < -monster.damage*0.1)
-                            abilityCost = -monster.damage*0.1;
+                        if (abilityCost < -monster.damage*minPoints) //multiplied by points cost
+                            abilityCost = -monster.damage*minPoints;
                     }
                 }
                 else if (castType == castOnDamaged)
                 {
-                    if (abilityCost < -monster.damage*0.2)
-                        abilityCost = -monster.damage*0.2;
+                    if (abilityCost < -monster.damage*minPoints)
+                        abilityCost = -monster.damage*minPoints;
                 }
                 else if (castType == castOnMove)
                 {
-                    if (abilityCost < -monster.damage*0.4)
-                        abilityCost = -monster.damage*0.4;
+                    if (abilityCost < -monster.damage*minPoints)
+                        abilityCost = -monster.damage*minPoints;
                 }
             }
         }
-        else if (abilityType == abilityAddCooldown || abilityType == abilityAddMaxCooldown)
+        else if (abilityType == abilityAddMaxCooldown)
         {
             if (targetType == targetSelf)
             {
                 //adding cooldown to self depends on the damage
                 if (castType == castOnHit)
                 {
-                    if (![CardPointsUtility cardHasTaunt:card]) //taunt removes the bonus
+                    float multiplier = 0;
+                    
+                    if ([CardPointsUtility cardHasTaunt:card]) //taunt has less bonus
                     {
-                        if (abilityType == abilityAddCooldown)
-                            abilityCost = -monster.damage*0.05;
-                        else if (abilityType == abilityAddMaxCooldown)
-                            abilityCost = -monster.damage*0.1;
+                        multiplier = 0.2;
                     }
+                    else
+                    {
+                        multiplier = 0.5;
+                    }
+                    
+                    abilityCost = -monster.damage * STAT_MULTIPLIER * multiplier;
                 }
             }
         }
@@ -238,15 +265,13 @@ const int MIN_MONSTER_POINTS = 2 * STAT_MULTIPLIER;
                 //taunt has its special case for values
                 if (abilityType == abilityTaunt)
                 {
-                    //costs 10% of stats
-                    abilityCost += monster.damage * 0.1;
-                    abilityCost += monster.maximumLife * 0.1;
+                    //costs % of stats
+                    abilityCost += (monster.damage + monster.maximumLife) * STAT_MULTIPLIER * 0.05;
                 }
                 else if (abilityType == abilityAssassin)
                 {
-                    //costs 40% of stats
-                    abilityCost += monster.damage * 0.25;
-                    abilityCost += monster.maximumLife * 0.25;
+                    //costs % of stats
+                    abilityCost += (monster.damage + monster.maximumLife) * STAT_MULTIPLIER * 0.125;
                     abilityCost /= monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown;
                     
                     //damageless assassin has it cheaper
@@ -255,21 +280,24 @@ const int MIN_MONSTER_POINTS = 2 * STAT_MULTIPLIER;
                 }
                 else if (abilityType == abilityPierce)
                 {
-                    abilityCost += monster.damage * 0.4;
+                    abilityCost += monster.damage * STAT_MULTIPLIER * 0.3;
                 }
                 else if (abilityType == abilityRemoveAbility)
                 {
-                    abilityCost += monster.damage * 0.1;
-                    abilityCost += monster.maximumLife * 0.1;
+                    abilityCost += (monster.damage + monster.maximumLife) * STAT_MULTIPLIER * 0.05;
                 }
             }
+            
+            //these cannot be free or negative
+            if (abilityCost <= 0)
+                abilityCost = 1;
         }
         else if (castType == castOnSummon)
         {
             //if is charge (assuming value = 0)
             if (abilityType == abilitySetCooldown && targetType == targetSelf)
             {
-                abilityCost += monster.damage * 0.6; //having charge is equivalent in cost as having a deal damage ability
+                abilityCost += monster.damage * STAT_MULTIPLIER * 1.2; //having charge is equivalent in cost as having a deal damage ability
                 //NOTE: affects cast on hit abilities' cost
             }
         }

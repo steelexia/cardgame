@@ -11,6 +11,7 @@
 #import "MonsterCardModel.h"
 #import "SpellCardModel.h"
 #import "Ability.h"
+#import "AbilityWrapper.h"
 #import "StrokedLabel.h"
 #import "CustomView.h"
 #import "UserModel.h"

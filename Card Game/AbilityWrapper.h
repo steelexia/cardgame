@@ -10,6 +10,8 @@
 #import "CardModel.h"
 #import "Ability.h"
 
+#define DEBUG_COST
+
 @class PFObject;
 
 /** 
