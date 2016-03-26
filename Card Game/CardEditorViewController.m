@@ -49,7 +49,7 @@ UIButton *abilityButton,*flavourButton,*elementButton;
 CFButton *damageIncButton, *damageDecButton, *lifeIncButton, *lifeDecButton, *cdIncButton, *cdDecButton, *costIncButton, *costDecButton;
 
 /** Transparent views used to register touch events for enabling the buttons for editing the stats. */
-UIView*damageEditArea, *lifeEditArea, *costEditArea, *cdEditArea, *imageEditArea, *elementEditArea, *abilityEditArea,*welcomeView;
+UIView*damageEditArea, *lifeEditArea, *costEditArea, *cdEditArea, *imageEditArea, *elementEditArea, *abilityEditArea,*welcomeView,*abilityView;
 
 /** Spell cards can have this many extra abilities compared to Monster cards */
 const int SPELL_CARD_BONUS_ABILITY_COUNT = 1;
@@ -57,10 +57,11 @@ const int SPELL_CARD_BONUS_ABILITY_COUNT = 1;
 StrokedLabel*currentCostLabel, *maxCostLabel;
 
 /** New is for adding new abilities, existing is for editing existing abilities */
-AbilityTableView *abilityExistingTableView;
+AbilityTableView *abilityNewTableView, *abilityExistingTableView;
 
 UILabel*abilityValueLabel;
-CFButton *abilityIncButton, *abilityDecButton, *abilityAddButton, *abilityRemoveButton;
+CFButton *abilityIncButton, *abilityDecButton, *abilityRemoveButton;
+UIButton *abilityAddButton;
 
 UILabel*tagsLabel;
 UITextField*tagsField;
@@ -186,6 +187,12 @@ bool shouldSetUpView = YES;
     //[abilityExistingTableView setBackgroundColor:[UIColor blueColor]];
     [self.view addSubview:abilityExistingTableView];
     
+    
+    CFLabel*abilityNewTableViewBackground = [[CFLabel alloc] initWithFrame:CGRectMake(80, 345, 186, SCREEN_HEIGHT - 345 - 28)];
+    [abilityNewTableViewBackground setHidden:YES];
+    [self.view addSubview:abilityNewTableViewBackground];
+
+    
     damageIncButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 46, 32)];
     [damageIncButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateNormal];
     //[damageIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
@@ -226,6 +233,41 @@ bool shouldSetUpView = YES;
     //[costDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
     
     
+
+    abilityView = [[UIView alloc] initWithFrame:CGRectMake(0, (SCREEN_HEIGHT/5)*3 +10, SCREEN_WIDTH, (SCREEN_HEIGHT/5)*2)];
+    [abilityView setUserInteractionEnabled:TRUE];
+    //[abilityView setBackgroundColor:COLOUR_INTERFACE_RED];
+    //[self.view addSubview:abilityView];
+    
+    
+    UIImageView *abilityBackground = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, abilityView.frame.size.width, abilityView.frame.size.height)];
+    [abilityBackground setImage:[UIImage imageNamed:@"CardCreateDialog.png"]];
+    [abilityView addSubview:abilityBackground];
+    
+    abilityNewTableView = [[AbilityTableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH -60, abilityBackground.frame.size.height - 68) mode:abilityTableViewNew];
+    abilityNewTableView.cevc = self;
+    [abilityNewTableView.layer setZPosition:2];
+    [abilityView addSubview:abilityNewTableView];
+    abilityNewTableView.center = CGPointMake(abilityView.frame.size.width/2, 0);
+    abilityNewTableView.frame = CGRectMake(abilityNewTableView.frame.origin.x, 10, abilityView.frame.size.width, abilityView.frame.size.height);
+    
+    
+    UIButton *abilityBackButton = [[UIButton alloc] initWithFrame:CGRectMake(10, abilityView.frame.size.height - 38 - 15, 50, 38)];
+    [abilityBackButton setImage:[UIImage imageNamed:@"CardCreateBackButton.png"] forState:UIControlStateNormal];
+    [abilityBackButton addTarget:self action:@selector(abilityBackButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [abilityView addSubview:abilityBackButton];
+    
+    abilityAddButton = [[UIButton alloc] initWithFrame:CGRectMake(abilityView.frame.size.width - 65 - 13, abilityView.frame.size.height - 38 - 15, 65, 38)];
+    [abilityAddButton setTitle:@"Add" forState:UIControlStateNormal];
+    [abilityAddButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [abilityAddButton setTitleColor:COLOUR_INTERFACE_GRAY_TRANSPARENT forState:UIControlStateDisabled];
+    [abilityAddButton.titleLabel setFont:[UIFont fontWithName:cardMainFont size:11]];
+    [abilityAddButton setBackgroundImage:[UIImage imageNamed:@"CardCreateGreenButton.png"] forState:UIControlStateNormal];
+    [abilityAddButton addTarget:self action:@selector(abilityAddButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [abilityView addSubview:abilityAddButton];
+    [abilityAddButton setEnabled:NO]; //start out nothing selected
+    
+    [self loadAllValidAbilities];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -337,14 +379,6 @@ bool shouldSetUpView = YES;
         
         //[self.view addSubview:abilityRemoveButton];
         
-        abilityAddButton = [[CFButton alloc] initWithFrame:CGRectMake(270, SCREEN_HEIGHT - 60, 46, 32)];
-        [abilityAddButton setImage:[UIImage imageNamed:@"add_deck_button"] forState:UIControlStateNormal];
-        //[abilityAddButton setImage:[UIImage imageNamed:@"add_deck_button_gray"] forState:UIControlStateDisabled];
-        [abilityAddButton addTarget:self action:@selector(abilityAddButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-        [abilityAddButton setEnabled:NO];
-        [abilityAddButton setHidden:YES];
-        
-        [self.view addSubview:abilityAddButton];
         
         pointsImageBackground = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"CardCreateYellowStar"]];
         pointsImageBackground.frame = CGRectMake(0,0,74, 74);
@@ -435,6 +469,7 @@ bool shouldSetUpView = YES;
         [cancelCardButton addTarget:self action:@selector(cancelCardButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:cancelCardButton];
         
+        //TODO this button might not exist
         customizeCardButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 70, 40)];
         //[customizeCardButton setTextSize:12];
         //customizeCardButton.label.text = @"Custom";
@@ -445,7 +480,7 @@ bool shouldSetUpView = YES;
         customizeCardButton.center = CGPointMake(40, SCREEN_HEIGHT - 115);
         [customizeCardButton setEnabled:NO];
         [customizeCardButton addTarget:self action:@selector(customizeButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:customizeCardButton];
+        //[self.view addSubview:customizeCardButton];
         
         if (_editorMode == cardEditorModeVoting)
             [customizeCardButton setEnabled:NO];
@@ -601,7 +636,7 @@ bool shouldSetUpView = YES;
         [abilityButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [abilityButton.titleLabel setFont:[UIFont fontWithName:cardMainFont size:11]];
         [abilityButton setBackgroundImage:[UIImage imageNamed:@"CardCreateBlueButton.png"] forState:UIControlStateNormal];
-        [abilityButton addTarget:self action:@selector(showAbilities) forControlEvents:UIControlEventTouchUpInside];
+        [abilityButton addTarget:self action:@selector(abilityButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         
         [self.view addSubview:abilityButton];
         
@@ -611,6 +646,7 @@ bool shouldSetUpView = YES;
         [flavourButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [flavourButton.titleLabel setFont:[UIFont fontWithName:cardMainFont size:11]];
         [flavourButton setBackgroundImage:[UIImage imageNamed:@"CardCreateRedButton.png"] forState:UIControlStateNormal];
+        [flavourButton addTarget:self action:@selector(customizeButtonPressed) forControlEvents:UIControlEventTouchUpInside]; //TODO temporary menu
         
         [self.view addSubview:flavourButton];
         
@@ -870,6 +906,7 @@ bool shouldSetUpView = YES;
             [monsterCardButton setEnabled:NO];
             [spellCardButton setEnabled:NO];
             abilityExistingTableView.currentCard = _currentCardModel;
+            abilityNewTableView.currentCard = _currentCardModel;
             [abilityButton setHidden:YES];
             [flavourButton setHidden:YES];
         }
@@ -1230,6 +1267,7 @@ bool shouldSetUpView = YES;
 {
     [self removeAllStatButtons];
     [abilityExistingTableView setUserInteractionEnabled:YES];
+    [abilityNewTableView setUserInteractionEnabled:YES];
     [damageEditArea removeFromSuperview];
     [lifeEditArea removeFromSuperview];
     [costEditArea removeFromSuperview];
@@ -1506,6 +1544,7 @@ bool shouldSetUpView = YES;
         [self.currentCardView updateView];
         [self updateCost:self.currentCardModel];
         [self updateExistingAbilityList];
+        [self updateNewAbilityList];
     }
     
     [self updateIncrementButton:damageDecButton];
@@ -1559,6 +1598,7 @@ bool shouldSetUpView = YES;
         [self.currentCardView updateView];
         [self updateCost:self.currentCardModel];
         [self updateExistingAbilityList];
+        [self updateNewAbilityList];
     }
     
     [self updateIncrementButton:lifeDecButton];
@@ -1586,6 +1626,7 @@ bool shouldSetUpView = YES;
         [self.currentCardView updateView];
         [self updateCost:self.currentCardModel];
         [self updateExistingAbilityList];
+        [self updateNewAbilityList];
     }
     
     [self updateIncrementButton:cdDecButton];
@@ -1616,7 +1657,7 @@ bool shouldSetUpView = YES;
         [self.currentCardView updateView];
         [self updateCost:self.currentCardModel];
         [self updateExistingAbilityList];
-       
+        [self updateNewAbilityList];
     }
     
     [self updateIncrementButton:costDecButton];
@@ -1715,6 +1756,8 @@ bool shouldSetUpView = YES;
     [abilityExistingTableView reloadInputViews];
     [abilityExistingTableView.tableView reloadData];
     
+    [abilityNewTableView.tableView reloadData];
+    
     [abilityExistingTableView.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     
     [self updateCost:self.currentCardModel];
@@ -1732,6 +1775,8 @@ bool shouldSetUpView = YES;
     [abilityExistingTableView reloadInputViews];
     [abilityExistingTableView.tableView reloadData];
     
+    [abilityNewTableView.tableView reloadData];
+    
     [abilityExistingTableView.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     
     [self updateCost:self.currentCardModel];
@@ -1739,11 +1784,66 @@ bool shouldSetUpView = YES;
     [self updateAbilityButtons:wrapper];
 }
 
+-(void)updateNewAbilityList
+{
+    //[self loadAllValidAbilities];
+    
+    //int i = 0;
+    for (AbilityWrapper*wrapper in abilityNewTableView.currentAbilities)
+    {
+        wrapper.enabled = YES;
+        
+        //update the icon in the tableView
+        [CardPointsUtility updateAbilityPoints:self.currentCardModel forWrapper:wrapper withWrappers:abilityExistingTableView.currentAbilities];
+        
+        for (AbilityWrapper*existingWrapper in abilityExistingTableView.currentAbilities)
+        {
+            if ([existingWrapper.ability isEqualTypeTo:wrapper.ability])
+            {
+                //NSLog(@"NOT ENABLED DUE TO EQUAL TYPE: %@", [[Ability getDescription:wrapper.ability fromCard:_currentCardModel]string]);
+                wrapper.enabled = NO;
+                break;
+            }
+        }
+        
+        if (![wrapper isCompatibleWithCardModel:self.currentCardModel])
+        {
+            //NSLog(@"NOT ENABLED DUE COMPATIBILITY OR COST %@", [[Ability getDescription:wrapper.ability fromCard:_currentCardModel]string]);
+            wrapper.enabled = NO;
+        }
+        
+        if (wrapper.minCost > self.currentCardModel.cost)
+            wrapper.enabled = NO;
+        
+        //max count reached
+        if ([CardPointsUtility getMaxAbilityCountForCard:self.currentCardModel] <= self.currentCardModel.abilities.count)
+            wrapper.enabled = NO;
+    }
+    
+    [abilityNewTableView.tableView reloadData];
+    [abilityNewTableView reloadInputViews];
+    
+    /*
+    NSIndexPath *selectedPath = [abilityNewTableView.tableView indexPathForSelectedRow];
+    if (selectedPath != nil)
+    {
+        //if reached max ability limit, disable it
+        if ([CardPointsUtility getMaxAbilityCountForCard:self.currentCardModel] > self.currentCardModel.abilities.count)
+            [abilityAddButton setEnabled:[abilityNewTableView.currentAbilities[selectedPath.row] enabled]];
+        else
+            [abilityAddButton setEnabled:NO];
+    }
+     */
+    
+    //right now it gets deselected, so should set this to NO
+    [abilityAddButton setEnabled:NO];
+}
+
 
 /** Only for when changing the element etc., to remove abilities that are no longer compatible */
 -(void)updateExistingAbilityList
 {
-    for (int i = abilityExistingTableView.currentAbilities.count - 1; i >= 0; i--)
+    for (int i = (int)abilityExistingTableView.currentAbilities.count - 1; i >= 0; i--)
     {
         AbilityWrapper*wrapper = abilityExistingTableView.currentAbilities[i];
         
@@ -1774,15 +1874,13 @@ bool shouldSetUpView = YES;
         
         //remove from monster
         [self.currentCardModel.abilities removeObject:wrapper.ability];
-        
-        
-        
+
         //remove from table
         [abilityExistingTableView.currentAbilities removeObjectAtIndex:selectedIndexPath.row];
         
         
         [self updateExistingAbilityList];
-        
+        [self updateNewAbilityList];
         [abilityRemoveButton setEnabled:NO];
         [abilityIncButton setEnabled:NO];
         [abilityDecButton setEnabled:NO];
@@ -1921,6 +2019,7 @@ bool shouldSetUpView = YES;
     [self setupNewMonster];
     
     [self resetAbilityViews];
+    [self updateExistingAbilityList];
     [self updateCost:self.currentCardModel];
     [self selectElement: _currentCardModel.element];
     
@@ -1963,8 +2062,12 @@ bool shouldSetUpView = YES;
     else
         monster.name = @"";
     
+    if (_currentCardModel != nil)
+        monster.abilities = _currentCardModel.abilities; //note that invalid ones wil be automatically removed
+    
     _currentCardModel = monster;
     abilityExistingTableView.currentCard = _currentCardModel;
+    abilityNewTableView.currentCard = _currentCardModel;
 }
 
 -(void)spellButtonPressed
@@ -1972,6 +2075,7 @@ bool shouldSetUpView = YES;
     [self setupNewSpell];
     
     [self resetAbilityViews];
+    [self updateExistingAbilityList];
     [self updateCost:self.currentCardModel];
     [self selectElement: _currentCardModel.element];
     
@@ -1996,18 +2100,25 @@ bool shouldSetUpView = YES;
     else
         spell.name = @"";
     
+    if (_currentCardModel != nil)
+        spell.abilities = _currentCardModel.abilities; //note that invalid ones wil be automatically removed
     _currentCardModel = spell;
     abilityExistingTableView.currentCard = _currentCardModel;
+    abilityNewTableView.currentCard = _currentCardModel;
 }
 
 
 -(void)resetAbilityViews
 {
-    NSLog(@"resetting ability views");
-    [abilityExistingTableView.currentAbilities removeAllObjects];
+    //NSLog(@"resetting ability views");
+    /*[abilityExistingTableView.currentAbilities removeAllObjects];
     [abilityExistingTableView.tableView reloadData];
     [abilityExistingTableView.tableView reloadInputViews];
-    
+    */
+    [abilityNewTableView.currentAbilities removeAllObjects];
+    [self loadAllValidAbilities];
+    [abilityNewTableView.tableView reloadData];
+    [abilityNewTableView.tableView reloadInputViews];
 }
 
 -(void)updateCardTypeButtons
@@ -2571,9 +2682,10 @@ bool shouldSetUpView = YES;
                          [elementDescriptionLabel removeFromSuperview];
                      }];
     
-    //[self resetAbilityViews];
+    [self resetAbilityViews];
     [self updateExistingAbilityList];
-    [self loadAllValidAbilities];
+    //[self updateNewAbilityList];
+    //[self loadAllValidAbilities];
     [self reloadCardView];
     [self updateCost:_currentCardModel];
 }
@@ -2647,7 +2759,21 @@ bool shouldSetUpView = YES;
 
 -(void)rowSelected:(AbilityTableView*)tableView indexPath:(NSIndexPath *)indexPath
 {
-    if (tableView == abilityExistingTableView)
+    if (tableView == abilityNewTableView)
+    {
+        if (indexPath.row < 0 || indexPath.row >= abilityNewTableView.currentAbilities.count) //being defensive
+            return;
+        
+        if ([CardPointsUtility getMaxAbilityCountForCard:self.currentCardModel] > self.currentCardModel.abilities.count)
+            [abilityAddButton setEnabled:[abilityNewTableView.currentAbilities[indexPath.row] enabled]];
+        else
+            [abilityAddButton setEnabled:NO];
+        
+        //[self abilityEditAreaSetEnabled:NO]; //turn off the other table's buttons
+        
+        [self removeAllStatButtons];
+    }
+    else if (tableView == abilityExistingTableView)
     {
         if (indexPath.row < 0 || indexPath.row >= abilityExistingTableView.currentAbilities.count) //being defensive
             return;
@@ -2658,6 +2784,11 @@ bool shouldSetUpView = YES;
         
         [self updateAbilityButtons:wrapper];
     }
+}
+
+-(void)rowDeselected:(AbilityTableView*)tableView
+{
+    [abilityAddButton setEnabled:NO];
 }
 
 -(void)updateAbilityButtons:(AbilityWrapper*)wrapper
@@ -2693,29 +2824,48 @@ bool shouldSetUpView = YES;
     if (_editorMode == cardEditorModeVoting)
     {
         //clear the abilities temporarily to prevent some abilities not added to the list
-        cardAbilitiesBackup = _currentCardModel.abilities;
-        _currentCardModel.abilities = [NSMutableArray array];
+        cardAbilitiesBackup = self.currentCardModel.abilities;
+        self.currentCardModel.abilities = [NSMutableArray array];
     }
     
     for (AbilityWrapper*wrapper in allAbilities)
     {
+        AbilityWrapper*wrappyCopy = [[AbilityWrapper alloc] initWithAbilityWrapper:wrapper];
+        
         //must be valid element and rarity
-        if ([wrapper isCompatibleWithCardModel:_currentCardModel])
+        if ([wrappyCopy isCompatibleWithCardModel:self.currentCardModel])
         {
-            if (wrapper.ability.otherValues != nil && wrapper.ability.otherValues.count >= 2)
+            if ([self.currentCardModel.abilities containsObject:wrappyCopy]) {
+                wrappyCopy.enabled = false;
+            }
+            
+            [abilityNewTableView.currentAbilities addObject:wrappyCopy];
+            
+            wrappyCopy.ability.value = nil;
+            
+            /*
+            if (wrappyCopy.ability.otherValues != nil && wrappyCopy.ability.otherValues.count >= 2)
             {
                 NSNumber *valueA = wrapper.ability.otherValues[0];
                 NSNumber *valueB = wrapper.ability.otherValues[1];
                 wrapper.ability.value = abs(wrapper.minPoints) < abs(wrapper.maxPoints) ? valueA : valueB;
             }
             else
-                wrapper.ability.value = 0;
+                wrapper.ability.value = 0;*/
         }
     }
     
     if (_editorMode == cardEditorModeVoting)
-        _currentCardModel.abilities = cardAbilitiesBackup;
-
+        self.currentCardModel.abilities = cardAbilitiesBackup;
+    
+    //sort the valid abilities
+    [abilityNewTableView.currentAbilities sortUsingComparator:^(AbilityWrapper* a, AbilityWrapper* b){
+        NSString *aString = [[Ability getDescription:a.ability fromCard:self.currentCardModel] string];
+        NSString *bString = [[Ability getDescription:b.ability fromCard:self.currentCardModel] string];
+        return [aString compare:bString];
+    }];
+    
+    [self updateNewAbilityList];
 }
 
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
@@ -2794,10 +2944,10 @@ bool shouldSetUpView = YES;
             saveCardConfirmLabel.text = @"Are you sure you want to cast your vote? You will not be able to edit it again.";
         else if(_editorMode ==cardEditorModeRarityUpdate)
         {
-            saveCardConfirmLabel.text = @"Are you sure you want to update your card with these stats/abilities?  You will not be able to edit it again.";
+            saveCardConfirmLabel.text = @"Are you sure you want to update your card with these stats/abilities?";
         }
         else
-            saveCardConfirmLabel.text = @"Are you sure you want to create this card? You will not be able to edit it again.";
+            saveCardConfirmLabel.text = @"Are you sure you want to create this card? This will publish the card onto the store.";
         [self.view addSubview:saveCardConfirmButton];
         [self.view addSubview:confirmCancelButton];
     }
@@ -3069,6 +3219,45 @@ bool shouldSetUpView = YES;
                      }];
 }
 
+-(void)abilityBackButtonPressed
+{
+    [abilityView removeFromSuperview];
+}
+
+-(void)abilityAddButtonPressed
+{
+    NSIndexPath *selectedIndexPath = [abilityNewTableView.tableView indexPathForSelectedRow];
+    
+    if (selectedIndexPath!=nil)
+    {
+        AbilityWrapper *wrapper = abilityNewTableView.currentAbilities[selectedIndexPath.row];
+        
+         //[abilityNewTableView setAbilityAt:selectedIndexPath toState:NO];
+         //[abilityNewTableView.tableView reloadData];
+         //[abilityNewTableView reloadInputViews];
+         
+        
+        [abilityAddButton setEnabled:NO];
+        
+        AbilityWrapper *dupWrapper = [[AbilityWrapper alloc] initWithAbilityWrapper:wrapper];
+        if (dupWrapper.ability.otherValues.count > 0)
+            dupWrapper.ability.value = dupWrapper.ability.otherValues[0];
+        
+        
+        [abilityExistingTableView.currentAbilities addObject:dupWrapper];
+        [abilityExistingTableView.tableView reloadData];
+        [abilityExistingTableView reloadInputViews];
+        
+        //update new abilities
+        [self.currentCardModel addBaseAbility:dupWrapper.ability];
+        
+        [self abilityEditAreaSetEnabled:YES];
+        
+        [self updateCost:self.currentCardModel];
+        [self updateNewAbilityList];
+    }
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -3107,6 +3296,8 @@ bool shouldSetUpView = YES;
     //update the points for the two views
     if (abilityExistingTableView != nil)
         abilityExistingTableView.currentCard = currentCardModel;
+    if (abilityNewTableView != nil)
+        abilityNewTableView.currentCard = currentCardModel;
 }
 
 -(CardModel*)currentCardModel
@@ -3156,8 +3347,9 @@ bool shouldSetUpView = YES;
 
 - (BOOL)prefersStatusBarHidden {return YES;}
 
--(void)showAbilities{
+-(void)abilityButtonPressed{
     
+    /*
     AbilityViewController *AVC = [[AbilityViewController alloc] init];
     
     [self removeAllStatButtons];
@@ -3171,7 +3363,10 @@ bool shouldSetUpView = YES;
     [AVC setMaxCost:self.maxCost];
     [AVC setDelegate:self];
     
-    [self presentViewController:AVC animated:YES completion:nil];
+    [self presentViewController:AVC animated:YES completion:nil];*/
+    
+    //TODO at some point should add animation of it sliding over
+    [self.view addSubview:abilityView];
 }
 
 - (void)cardUpdated:(CardModel *)card{

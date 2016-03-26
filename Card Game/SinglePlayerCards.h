@@ -16,14 +16,13 @@
 /** Stores the pre-designed cards for single player so that there's no need to read them from a file. */
 @interface SinglePlayerCards : NSObject
 
-+(DeckModel*) getDeckOne;
 +(MonsterCardModel*) getCampaignBossWithID:(NSString*)levelID;
 +(DeckModel*) getCampaignDeckWithID:(NSString*)levelID;
 /** Only for tutorials */
 +(DeckModel*) getPlayerCampaignDeckWithID:(NSString*)levelID;
 +(DeckModel*) getStartingDeck;
++(DeckModel*) getElementDeck: (enum CardElement) element;
 
-+(void)uploadPlayerDeck;
 + (void) loadCampaignCards;
 
 @end

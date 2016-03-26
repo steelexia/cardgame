@@ -13,6 +13,8 @@
 #import "CardEditorViewController.h"
 #import "UIConstants.h"
 
+@class SpellCardModel;
+
 @implementation AbilityTableView
 
 @synthesize currentAbilities = _currentAbilities;
@@ -81,32 +83,34 @@ int ABILITY_TABLE_VIEW_ROW_WIDTH;
      */
     
     NSAttributedString*abilityText = [Ability getDescription:wrapper.ability fromCard:self.currentCard];
+    //NSLog(@"current card is spell card? %d", [self.currentCard isKindOfClass:[SpellCardModel class]]);
     
     CGSize textSize = [[abilityText string] sizeWithFont:[cell.abilityText font]];
     cell.abilityText.attributedText = abilityText;
-    cell.abilityText.frame = CGRectMake(60,0,ABILITY_TABLE_VIEW_ROW_WIDTH/2, cell.bounds.size.height);
+    cell.abilityText.frame = CGRectMake(60,0,ABILITY_TABLE_VIEW_ROW_WIDTH * 3 / 4, cell.bounds.size.height);
     [cell.abilityText setNumberOfLines:2];
     [cell.abilityText setTextColor:[UIColor whiteColor]];
     cell.abilityMinCost.text = [NSString stringWithFormat:@"%d", wrapper.minCost];
+    [cell.abilityMinCost setTextColor:[UIColor whiteColor]];
     cell.abilityPoints.text = [NSString stringWithFormat:@"%d", wrapper.currentPoints];
     cell.scrollView.frame = cell.bounds;
     [cell.scrollView setContentSize:CGSizeMake(textSize.width + 50, cell.bounds.size.height)];
     [cell.scrollView setContentOffset:CGPointMake(0,0)];
     
-    if (wrapper.currentPoints > wrapper.basePoints ||(self.cevc.maxCost - self.cevc.currentCost) < wrapper.currentPoints)
+    //ability too expensive to add
+    if ((self.cevc.maxCost - self.cevc.currentCost) < wrapper.currentPoints)
     {
-        
-       
         cell.abilityPoints.textColor = [UIColor redColor];
-        
-        //NSLog(@"RED: %d %d", wrapper.currentPoints, wrapper.basePoints);
-        //NSLog(@"%@", [[Ability getDescription:wrapper.ability fromCard:_currentCardModel]string]);
     }
+    //ability would take penalty when added
+    else if (wrapper.currentPoints > wrapper.basePoints)
+    {
+        cell.abilityPoints.textColor = [UIColor orangeColor];
+    }
+    //ability would take bonus when added
     else if (wrapper.currentPoints < wrapper.basePoints)
     {
         cell.abilityPoints.textColor = [UIColor greenColor];
-        //NSLog(@"GREEN: %d %d", wrapper.currentPoints, wrapper.basePoints);
-        //NSLog(@"%@", [[Ability getDescription:wrapper.ability fromCard:_currentCardModel]string]);
     }
     else
     {
@@ -115,6 +119,14 @@ int ABILITY_TABLE_VIEW_ROW_WIDTH;
     
     if (!wrapper.enabled){
         [cell.abilityText setTextColor:COLOUR_INTERFACE_GRAY_TRANSPARENT];
+        
+        //mana icon becomes red if too mana too high for card
+        if (wrapper.minCost > self.cevc.currentCardModel.cost)
+        {
+            [cell.abilityMinCost setTextColor:COLOUR_INTERFACE_RED];
+        }
+        
+        
         [cell setUserInteractionEnabled:NO];
     }else{
         [cell setUserInteractionEnabled:YES];
@@ -122,11 +134,12 @@ int ABILITY_TABLE_VIEW_ROW_WIDTH;
     
     [cell.abilityIconType setCenter:CGPointMake(ABILITY_TABLE_VIEW_ROW_WIDTH - ABILITY_TABLE_VIEW_ROW_HEIGHT/2 -5, ABILITY_TABLE_VIEW_ROW_HEIGHT/2 +5)];
     
+    /*
     if (indexPath.row %2) {
         [cell.abilityIconType setImage:[UIImage imageNamed:@"CardCreateIconMute"]];
     }else{
         [cell.abilityIconType setImage:[UIImage imageNamed:@"CardCreateIconNinja"]];
-    }
+    }*/
     
     /*
     NSLog(@"cell %@ scroll %@ text %@", cell.bounds, cell.scrollView.contentSize, cell.abilityText.frame);
@@ -139,6 +152,12 @@ int ABILITY_TABLE_VIEW_ROW_WIDTH;
 {
     [self.cevc rowSelected:self indexPath:indexPath];
 }
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self.cevc rowDeselected:self];
+}
+
 
 -(void)removeCellAt:(int)index {
     if (index < self.currentAbilities.count)

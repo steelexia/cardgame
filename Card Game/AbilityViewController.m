@@ -339,6 +339,7 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     
     [self setTutLabelCenter:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/4)];
     
+    //TODO move to card editor
     self.tutLabel.label.text = @"The list below shows the abilities you can add to the card. Some abilities have adjustable values, and having different combinations of abilities can give bonuses and penalties to your points.";
     
     [self.tutOkButton addTarget:self action:@selector(removeAllTutorialViews) forControlEvents:UIControlEventTouchUpInside];
@@ -767,8 +768,11 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
         //[abilityAddButton setEnabled:NO];
         
         AbilityWrapper *dupWrapper = [[AbilityWrapper alloc] initWithAbilityWrapper:wrapper];
+        
         if (dupWrapper.ability.otherValues.count > 0)
+        {
             dupWrapper.ability.value = dupWrapper.ability.otherValues[0];
+        }
         
         
         [abilityExistingTableView.currentAbilities addObject:dupWrapper];
@@ -1719,22 +1723,41 @@ AbilityTableView *abilityNewTableView,*abilityExistingTableView;
     
     for (AbilityWrapper*wrapper in allAbilities)
     {
+        AbilityWrapper*wrappyCopy = [[AbilityWrapper alloc] initWithAbilityWrapper:wrapper];
+        
         //must be valid element and rarity
-        if ([wrapper isCompatibleWithCardModel:self.currentCardModel])
+        if ([wrappyCopy isCompatibleWithCardModel:self.currentCardModel])
         {
-            if ([self.currentCardModel.abilities containsObject:wrapper]) {
-                wrapper.enabled = false;
+            if ([self.currentCardModel.abilities containsObject:wrappyCopy]) {
+                wrappyCopy.enabled = false;
             }
             
-            [abilityNewTableView.currentAbilities addObject:wrapper];
-            if (wrapper.ability.otherValues != nil && wrapper.ability.otherValues.count >= 2)
+            [abilityNewTableView.currentAbilities addObject:wrappyCopy];
+            /*
+            if (wrappyCopy.ability.otherValues != nil && wrappyCopy.ability.otherValues.count >= 2)
             {
-                NSNumber *valueA = wrapper.ability.otherValues[0];
-                NSNumber *valueB = wrapper.ability.otherValues[1];
-                wrapper.ability.value = abs(wrapper.minPoints) < abs(wrapper.maxPoints) ? valueA : valueB;
+                if (wrappyCopy.ability.otherValues[0] != wrappyCopy.ability.otherValues[1])
+                {
+                    //value is a range, display "X"
+                    wrappyCopy.ability.value = nil;
+                    
+             
+                    //NSNumber *valueA = wrapper.ability.otherValues[0];
+                    //NSNumber *valueB = wrapper.ability.otherValues[1];
+                    //wrapper.ability.value = abs(wrapper.minPoints) < abs(wrapper.maxPoints) ? valueA : valueB;
+             
+                }
+                else
+                {
+                    //value not range, just display it
+                    wrappyCopy.ability.value = wrappyCopy.ability.otherValues[0];
+                }
+                    
+                
             }
             else
-                wrapper.ability.value = 0;
+                wrappyCopy.ability.value = nil;
+            */
         }
     }
     

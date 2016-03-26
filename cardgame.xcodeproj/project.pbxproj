@@ -272,7 +272,6 @@
 		9319F3C21BDE646C00F939FE /* timer_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F3BF1BDE646C00F939FE /* timer_background.png */; };
 		9319F3C31BDE646C00F939FE /* timer_curve.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F3C01BDE646C00F939FE /* timer_curve.png */; };
 		9319F3C41BDE646C00F939FE /* timer_rect.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F3C11BDE646C00F939FE /* timer_rect.png */; };
-		9319F3C71BDEC61300F939FE /* AbilityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9319F3C61BDEC61300F939FE /* AbilityViewController.m */; };
 		93905D2C1BF1316F0067809E /* Snowflake.png in Resources */ = {isa = PBXBuildFile; fileRef = 93905D2B1BF1316F0067809E /* Snowflake.png */; };
 		93905D2E1BF241770067809E /* Smoke.png in Resources */ = {isa = PBXBuildFile; fileRef = 93905D2D1BF241770067809E /* Smoke.png */; };
 		93905D321BF262C20067809E /* Thunder.png in Resources */ = {isa = PBXBuildFile; fileRef = 93905D311BF262C20067809E /* Thunder.png */; };
@@ -920,8 +919,6 @@
 		9319F3BF1BDE646C00F939FE /* timer_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = timer_background.png; path = "Card Game/Timer/timer_background.png"; sourceTree = "<group>"; };
 		9319F3C01BDE646C00F939FE /* timer_curve.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = timer_curve.png; path = "Card Game/Timer/timer_curve.png"; sourceTree = "<group>"; };
 		9319F3C11BDE646C00F939FE /* timer_rect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = timer_rect.png; path = "Card Game/Timer/timer_rect.png"; sourceTree = "<group>"; };
-		9319F3C51BDEC61300F939FE /* AbilityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbilityViewController.h; sourceTree = "<group>"; };
-		9319F3C61BDEC61300F939FE /* AbilityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbilityViewController.m; sourceTree = "<group>"; };
 		93905D2B1BF1316F0067809E /* Snowflake.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Snowflake.png; path = "Card Game/Snowflake.png"; sourceTree = "<group>"; };
 		93905D2D1BF241770067809E /* Smoke.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Smoke.png; path = "Card Game/Smoke.png"; sourceTree = "<group>"; };
 		93905D311BF262C20067809E /* Thunder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Thunder.png; path = "Card Game/Thunder.png"; sourceTree = "<group>"; };
@@ -1809,8 +1806,6 @@
 				90DA43D8196A222800E44AED /* CustomScrollView.m */,
 				9032E12E19959483002A6725 /* CardPointsUtility.h */,
 				9032E12F19959483002A6725 /* CardPointsUtility.m */,
-				9319F3C51BDEC61300F939FE /* AbilityViewController.h */,
-				9319F3C61BDEC61300F939FE /* AbilityViewController.m */,
 			);
 			name = "Card Editor Screen";
 			sourceTree = "<group>";
@@ -3267,7 +3262,6 @@
 				90DA436B195F6E6000E44AED /* CGPointUtilities.m in Sources */,
 				ECCD46E11ACC881400804B06 /* PNHeartbeatRequest.m in Sources */,
 				907D9C1E193F87BE0037C0CF /* AbilityWrapper.m in Sources */,
-				9319F3C71BDEC61300F939FE /* AbilityViewController.m in Sources */,
 				921816EA1C5ED4BB00E70F20 /* CFPopupViewController.m in Sources */,
 				ECCD46C61ACC881400804B06 /* PNTimer.m in Sources */,
 				ECCD46BA1ACC881400804B06 /* PNClient.m in Sources */,

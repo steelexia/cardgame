@@ -168,7 +168,7 @@ const int MIN_MONSTER_POINTS = 2 * STAT_MULTIPLIER;
     enum TargetType targetType = wrapper.ability.targetType;
     
     //has min and max values, lerp the abilityCost
-    if (wrapper.ability.otherValues != nil && wrapper.ability.otherValues.count >= 2)
+    if (wrapper.ability.value != nil && wrapper.ability.otherValues != nil && wrapper.ability.otherValues.count >= 2)
     {
         int minValue = [wrapper.ability.otherValues[0] intValue];
         int maxValue = [wrapper.ability.otherValues[1] intValue];
@@ -220,19 +220,19 @@ const int MIN_MONSTER_POINTS = 2 * STAT_MULTIPLIER;
                 {
                     if (![CardPointsUtility cardHasTaunt:card]) //taunt removes the bonus TODO shouldn't remove, should just be big penalty
                     {
-                        if (abilityCost < -monster.damage*minPoints) //multiplied by points cost
-                            abilityCost = -monster.damage*minPoints;
+                        if (abilityCost < monster.damage*minPoints) //multiplied by points cost
+                            abilityCost = monster.damage*minPoints;
                     }
                 }
                 else if (castType == castOnDamaged)
                 {
-                    if (abilityCost < -monster.damage*minPoints)
-                        abilityCost = -monster.damage*minPoints;
+                    if (abilityCost < monster.damage*minPoints)
+                        abilityCost = monster.damage*minPoints;
                 }
                 else if (castType == castOnMove)
                 {
-                    if (abilityCost < -monster.damage*minPoints)
-                        abilityCost = -monster.damage*minPoints;
+                    if (abilityCost < monster.damage*minPoints)
+                        abilityCost = monster.damage*minPoints;
                 }
             }
         }
@@ -254,7 +254,7 @@ const int MIN_MONSTER_POINTS = 2 * STAT_MULTIPLIER;
                         multiplier = 0.5;
                     }
                     
-                    abilityCost = -monster.damage * STAT_MULTIPLIER * multiplier;
+                    abilityCost = monster.damage * STAT_MULTIPLIER * multiplier;
                 }
             }
         }
@@ -265,32 +265,32 @@ const int MIN_MONSTER_POINTS = 2 * STAT_MULTIPLIER;
                 //taunt has its special case for values
                 if (abilityType == abilityTaunt)
                 {
-                    //costs % of stats
-                    abilityCost += (monster.damage + monster.maximumLife) * STAT_MULTIPLIER * 0.05;
+                    //costs % of stats, at least 10 points
+                    abilityCost += MAX(10,(monster.damage + monster.maximumLife) * STAT_MULTIPLIER * 0.1);
                 }
                 else if (abilityType == abilityAssassin)
                 {
                     //costs % of stats
-                    abilityCost += (monster.damage + monster.maximumLife) * STAT_MULTIPLIER * 0.125;
+                    abilityCost += (monster.damage + monster.maximumLife) * STAT_MULTIPLIER * 0.2;
                     abilityCost /= monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown;
                     
                     //damageless assassin has it cheaper
                     if (monster.damage == 0)
                         abilityCost *= 0.6;
+                    
+                    abilityCost = MAX(10,abilityCost); //costs at least 10
                 }
                 else if (abilityType == abilityPierce)
                 {
                     abilityCost += monster.damage * STAT_MULTIPLIER * 0.3;
+                    abilityCost = MAX(10,abilityCost); //costs at least 10
                 }
                 else if (abilityType == abilityRemoveAbility)
                 {
-                    abilityCost += (monster.damage + monster.maximumLife) * STAT_MULTIPLIER * 0.05;
+                    abilityCost += (monster.damage + monster.maximumLife) * STAT_MULTIPLIER * 0.1;
+                    abilityCost = MAX(10,abilityCost); //costs at least 10
                 }
             }
-            
-            //these cannot be free or negative
-            if (abilityCost <= 0)
-                abilityCost = 1;
         }
         else if (castType == castOnSummon)
         {
