@@ -40,6 +40,10 @@
 @property (strong,nonatomic) PNChannel *chatChannel;
 @property (strong,nonatomic) NSString *challengerUserID;
 
+@property (strong,nonatomic) NSString *playerName;
+@property (strong,nonatomic) NSNumber *eloRating;
+@property (strong,nonatomic) NSString *questDescription;
+
 
 @property (strong)GameViewController *gvc;
 //@property (strong)DeckChooserViewController *dcvc;

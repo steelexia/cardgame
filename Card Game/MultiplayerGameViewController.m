@@ -80,7 +80,8 @@ UIView *sureMatchView;
     profileImageView.clipsToBounds = YES;
     [self.view addSubview:profileImageView];
     
-    
+    //x375,y380
+   // UILabel *playerNameLabel = [[UILabel alloc] initWithFrame:]
     
     //quickmatchButton--547x207
     //x 300, y 878
