@@ -272,6 +272,11 @@
         //loads the starting deck
         [userAllCards addObjectsFromArray:[SinglePlayerCards getStartingDeck].cards];
         
+        //TODO temp for testing, add all fire and ice cards
+        [userAllCards addObjectsFromArray:[SinglePlayerCards getElementDeck:elementFire].cards];
+        [userAllCards addObjectsFromArray:[SinglePlayerCards getElementDeck:elementIce].cards];
+        
+        
         //load all decks once all cards have been loaded
         [self loadAllDecks];
     }

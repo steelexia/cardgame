@@ -18,7 +18,7 @@
     COLOUR_INTERFACE_BLUE_TRANSPARENT = [[UIColor alloc] initWithRed:0 green:0.45 blue:1 alpha:0.5];
     COLOUR_INTERFACE_BLUE_TOGGLE = [[UIColor alloc] initWithRed:55/255.f green:100/255.f blue:160/255.f alpha:1];
     COLOUR_INTERFACE_BLUE_LIGHT = [[UIColor alloc] initWithRed:64/255.f green:163/255.f blue:255/255.f alpha:1];
-    COLOUR_INTERFACE_GRAY_TRANSPARENT = [[UIColor alloc] initWithRed:0.35 green:0.35 blue:0.35 alpha:0.5];
+    COLOUR_INTERFACE_GRAY_TRANSPARENT = [[UIColor alloc] initWithRed:0.6 green:0.6 blue:0.6 alpha:0.5];
     COLOUR_INTERFACE_GRAY = [[UIColor alloc] initWithRed:0.47 green:0.47 blue:0.47 alpha:1];
     COLOUR_BACKGROUND_GRAY = [[UIColor alloc] initWithRed:70/255.f green:70/255.f blue:70/255.f alpha:1];
     

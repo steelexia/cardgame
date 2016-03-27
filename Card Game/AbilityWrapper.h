@@ -55,8 +55,11 @@
 
 -(BOOL)isCompatibleWithCardModel:(CardModel*)card;
 
-/** Returns all ability wrappers. Be careful to not modify anything inside */
+/** Returns all ability wrappers. WARNING: DO NOT MODIFY!!! */
 +(NSArray*)allAbilities;
+
+/** Returns a copy of all ability wrappers*/
++(NSArray*)allAbilitiesCopy;
 
 /** Finds the id of the ability wrapper that is identical to the ability in terms of the types. (value doesn't matter) Returns -1 if it cannot find one that matches. */
 +(int)getIdWithAbility:(Ability*)ability;

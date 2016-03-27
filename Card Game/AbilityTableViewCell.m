@@ -37,12 +37,12 @@
         resourceIcon.frame = CGRectMake(0,5,ABILITY_TABLE_VIEW_ROW_HEIGHT, ABILITY_TABLE_VIEW_ROW_HEIGHT);
         
         self.abilityPoints = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,ABILITY_TABLE_VIEW_ROW_HEIGHT*1.5,ABILITY_TABLE_VIEW_ROW_HEIGHT)];
-        self.abilityPoints.font = [UIFont fontWithName:cardMainFont size:10];
+        self.abilityPoints.font = [UIFont fontWithName:cardMainFont size:14];
         [self.abilityPoints setAdjustsFontSizeToFitWidth:YES];
         [self.abilityPoints setMinimumScaleFactor:8.f/10];
         self.abilityPoints.textColor = [UIColor whiteColor];
         self.abilityPoints.strokeOn = YES;
-        self.abilityPoints.strokeThickness = 1;
+        self.abilityPoints.strokeThickness = 2;
         self.abilityPoints.strokeColour = [UIColor blackColor];
         self.abilityPoints.textAlignment = NSTextAlignmentCenter;
         self.abilityPoints.center = CGPointMake(ABILITY_TABLE_VIEW_ROW_HEIGHT * 1.7, ABILITY_TABLE_VIEW_ROW_HEIGHT/2 +5);

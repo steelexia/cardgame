@@ -54,6 +54,7 @@
 - (id)initWithMode: (enum CardEditorMode)editorMode WithCard:(CardModel*)card;
 
 -(void)rowSelected:(AbilityTableView*)tableView indexPath:(NSIndexPath *)indexPath;
+-(void)rowDeselected:(AbilityTableView*)tableView ;
 
 @end
 
