@@ -81,7 +81,29 @@ UIView *sureMatchView;
     [self.view addSubview:profileImageView];
     
     //x375,y380
-   // UILabel *playerNameLabel = [[UILabel alloc] initWithFrame:]
+    UILabel *playerNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(375/baseWidth*SCREEN_WIDTH,392/baseHeight*SCREEN_HEIGHT,490/baseWidth*SCREEN_WIDTH,70/baseHeight*SCREEN_HEIGHT)];
+    playerNameLabel.text = @"Zeothul123LongName";
+    playerNameLabel.textColor = [UIColor whiteColor];
+    playerNameLabel.font = [UIFont fontWithName:@"GrilledCheeseBTN" size:20];
+    
+    [self.view addSubview:playerNameLabel];
+    
+    //405x 608y
+    UILabel *questTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(405/baseWidth*SCREEN_WIDTH,608/baseHeight*SCREEN_HEIGHT,500/baseWidth*SCREEN_WIDTH,50/baseHeight*SCREEN_HEIGHT)];
+    questTextLabel.textColor = [UIColor whiteColor];
+    questTextLabel.text = @"Win 3 Games";
+    questTextLabel.font = [UIFont fontWithName:@"GrilledCheeseBTN" size:15];
+    [self.view addSubview:questTextLabel];
+    
+    //112,700
+    UILabel *eloNumberLabel = [[UILabel alloc] initWithFrame:CGRectMake(112/baseWidth*SCREEN_WIDTH,706/baseHeight*SCREEN_HEIGHT,240/baseWidth*SCREEN_WIDTH,68/baseHeight*SCREEN_HEIGHT)];
+    eloNumberLabel.text = @"1234";
+    eloNumberLabel.font = [UIFont fontWithName:@"GrilledCheeseBTN" size:15];
+    eloNumberLabel.textColor = [UIColor yellowColor];
+    eloNumberLabel.textAlignment = NSTextAlignmentCenter;
+    
+    [self.view addSubview:eloNumberLabel];
+    
     
     //quickmatchButton--547x207
     //x 300, y 878
