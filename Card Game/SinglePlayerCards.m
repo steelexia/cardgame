@@ -3129,6 +3129,7 @@ NSMutableDictionary * campaignCards;
     {
         monster = [[MonsterCardModel alloc] initWithIdNumber:200 type:cardTypeStandard];
         monster.name = @"Ice Elf";
+        monster.element = elementIce;
         monster.damage = 3;
         monster.life = monster.maximumLife = 5;
         monster.cost = 2;
@@ -3140,6 +3141,7 @@ NSMutableDictionary * campaignCards;
         
         spell = [[SpellCardModel alloc] initWithIdNumber:201 type:cardTypeStandard];
         spell.name = @"Glacial Twister";
+        spell.element = elementIce;
         spell.rarity = cardRarityCommon;
         spell.cost = 3;
         
@@ -3150,6 +3152,7 @@ NSMutableDictionary * campaignCards;
         
         monster = [[MonsterCardModel alloc] initWithIdNumber:202 type:cardTypeStandard];
         monster.name = @"Kryocrius";
+        monster.element = elementIce;
         monster.damage = 5;
         monster.life = monster.maximumLife = 13;
         monster.cost = 4;
@@ -3163,6 +3166,7 @@ NSMutableDictionary * campaignCards;
         //unique for common to have 2 abilities
         spell = [[SpellCardModel alloc] initWithIdNumber:203 type:cardTypeStandard];
         spell.name = @"Noble Retainer";
+        spell.element = elementIce;
         spell.rarity = cardRarityCommon;
         spell.cost = 1;
         
@@ -3175,6 +3179,7 @@ NSMutableDictionary * campaignCards;
         //unique thunder ability, but relatively poor stat distribution
         monster = [[MonsterCardModel alloc] initWithIdNumber:204 type:cardTypeStandard];
         monster.name = @"Frost Panther";
+        monster.element = elementIce;
         monster.damage = 4;
         monster.life = monster.maximumLife = 4;
         monster.cost = 1;
@@ -3185,17 +3190,74 @@ NSMutableDictionary * campaignCards;
         monster.adminPhotoCheck = 1;
         [deck addCard:monster];
         
-        //
+        //effectively 100% efficiency for an uncommon card (extra points cant be used)
         spell = [[SpellCardModel alloc] initWithIdNumber:205 type:cardTypeStandard];
-        spell.name = @"";
+        spell.name = @"Arctic Tomb";
+        spell.element = elementIce;
         spell.rarity = cardRarityUncommon;
         spell.cost = 4;
    
-        [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:5]]];
-        [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+        [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
+        [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:2]]];
         
         spell.adminPhotoCheck = 1;
         [deck addCard:spell];
+        
+        //exceptional ability on uncommon card
+        monster = [[MonsterCardModel alloc] initWithIdNumber:206 type:cardTypeStandard];
+        monster.name = @"Tundra Troll";
+        monster.element = elementIce;
+        monster.damage = 8;
+        monster.life = monster.maximumLife = 9;
+        monster.cost = 3;
+        monster.cooldown = monster.maximumCooldown = 1;
+        monster.rarity = cardRarityUncommon;
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnHit targetType:targetVictimMinion withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
+        
+        monster.adminPhotoCheck = 1;
+        [deck addCard:monster];
+        
+        //with non existing ability, deal damage to friendly hero on death
+        monster = [[MonsterCardModel alloc] initWithIdNumber:207 type:cardTypeStandard];
+        monster.name = @"Titanic Tortoise";
+        monster.element = elementIce;
+        monster.damage = 6;
+        monster.life = monster.maximumLife = 21;
+        monster.cost = 5;
+        monster.cooldown = monster.maximumCooldown = 1;
+        monster.rarity = cardRarityRare;
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetHeroFriendly withDuration:durationForever withValue:[NSNumber numberWithInt:10]]];
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+        
+        monster.adminPhotoCheck = 1;
+        [deck addCard:monster];
+        
+        //poor efficiency, but unique earth ability for extra +cooldown stacking in a deck
+        spell = [[SpellCardModel alloc] initWithIdNumber:208 type:cardTypeStandard];
+        spell.name = @"Elf Wizards' Blessing";
+        spell.element = elementIce;
+        spell.rarity = cardRarityExceptional;
+        spell.cost = 6;
+        
+        [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxCooldown castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
+        [spell addBaseAbility: [[Ability alloc] initWithType:abilityTaunt castType:castOnSummon targetType:targetAllFriendlyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+        
+        spell.adminPhotoCheck = 1;
+        [deck addCard:spell];
+        
+        //non existing ability (although roughly equal to +cd on summon with +cd on move), good point efficiency, but poor stat distribution
+        monster = [[MonsterCardModel alloc] initWithIdNumber:209 type:cardTypeStandard];
+        monster.name = @"Empress of Ice";
+        monster.element = elementIce;
+        monster.damage = 12;
+        monster.life = monster.maximumLife = 8;
+        monster.cost = 9;
+        monster.cooldown = monster.maximumCooldown = 1;
+        monster.rarity = cardRarityLegendary;
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnEndOfTurn targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
+        
+        monster.adminPhotoCheck = 1;
+        [deck addCard:monster];
     }
     
     return deck;

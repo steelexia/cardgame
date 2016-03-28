@@ -193,6 +193,7 @@ NSDictionary *singlePlayerCardImages;
     
     singlePlayerCardImages = @{
                                //starting deck
+                               //neutral
                                @"1" : [UIImage imageNamed:@"card_0001"],
                                @"2" : [UIImage imageNamed:@"card_0002"],
                                @"3" : [UIImage imageNamed:@"card_0003"],
@@ -213,6 +214,21 @@ NSDictionary *singlePlayerCardImages;
                                @"18" : [UIImage imageNamed:@"card_0018"],
                                @"19" : [UIImage imageNamed:@"card_0019"],
                                @"20" : [UIImage imageNamed:@"card_0020"],
+                               
+                               //fire
+                               
+                               //ice
+                               @"200" : [UIImage imageNamed:@"card_0200"],
+                               @"201" : [UIImage imageNamed:@"card_0201"],
+                               @"202" : [UIImage imageNamed:@"card_0202"],
+                               @"203" : [UIImage imageNamed:@"card_0203"],
+                               @"204" : [UIImage imageNamed:@"card_0204"],
+                               @"205" : [UIImage imageNamed:@"card_0205"],
+                               @"206" : [UIImage imageNamed:@"card_0206"],
+                               @"207" : [UIImage imageNamed:@"card_0207"],
+                               @"208" : [UIImage imageNamed:@"card_0208"],
+                               @"209" : [UIImage imageNamed:@"card_0209"],
+                              
                                
                                @"1000" : [UIImage imageNamed:@"card_1000"],
                                @"1001" : [UIImage imageNamed:@"card_1001"],
