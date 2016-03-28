@@ -119,15 +119,19 @@
 
 /** Dimension of the card in its default state (i.e. on the field, in hand, etc.)*/
 extern int CARD_WIDTH, CARD_HEIGHT;
+extern int CARD_GAMEPLAY_WIDTH, CARD_GAMEPLAY_HEIGHT;
 
 /** Dimension of the card at its maximum zoom */
 extern int CARD_FULL_WIDTH, CARD_FULL_HEIGHT;
+extern int CARD_GAMEPLAY_FULL_WIDTH, CARD_GAMEPLAY_FULL_HEIGHT;
 
 /** Dimension of the hero card */
 extern int PLAYER_HERO_WIDTH, PLAYER_HERO_HEIGHT;
 
 /** Scales of the card during different states */
 extern float CARD_DEFAULT_SCALE, CARD_DRAGGING_SCALE;
+
+extern float CARD_GAMEPLAY_SCALE;
 
 /** Dimensions' ratio */
 extern int  CARD_WIDTH_RATIO, CARD_HEIGHT_RATIO;

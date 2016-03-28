@@ -40,6 +40,7 @@
 //original value 0.4f
  float CARD_DEFAULT_SCALE = 0.4f;
  float CARD_DRAGGING_SCALE = 1.0f;
+float CARD_GAMEPLAY_SCALE = 0.5f;
 
 
 int CARD_IMAGE_WIDTH;
@@ -54,7 +55,12 @@ int CARD_LIKE_ICON_WIDTH;
 
 /** Dummy initial values, will be changed in setup */
 int CARD_WIDTH = 50, CARD_HEIGHT = 80;
+int CARD_GAMEPLAY_WIDTH = 50, CARD_GAMEPLAY_HEIGHT= 80;
+int CARD_NAME_SIZE_GAMEPLAY;
+
 int CARD_FULL_WIDTH = 50, CARD_FULL_HEIGHT = 80;
+int CARD_GAMEPLAY_FULL_WIDTH = 50, CARD_GAMEPLAY_FULL_HEIGHT = 80;
+
 int PLAYER_HERO_WIDTH = 50, PLAYER_HERO_HEIGHT = 50;
 
 UIImage *backgroundMonsterOverlayImage, *selectHighlightImage, *targetHighlightImage, *heroSelectHighlightImage, *heroTargetHighlightImage;
@@ -89,12 +95,18 @@ NSDictionary *singlePlayerCardImages;
     }
     else if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
     {
+        CARD_GAMEPLAY_WIDTH = 140;
+        CARD_GAMEPLAY_HEIGHT = CARD_GAMEPLAY_WIDTH * CARD_HEIGHT_RATIO/ CARD_WIDTH_RATIO;
         CARD_WIDTH = 262; //TODO ipad make this 2 times but also fix bunch of other stuff
         CARD_HEIGHT = (CARD_WIDTH *  CARD_HEIGHT_RATIO / CARD_WIDTH_RATIO);
+        
+        //CARD_DEFAULT_SCALE = 0.8f;
+        CARD_GAMEPLAY_SCALE = 0.5f;
         
         CARD_DEFAULT_SCALE = 0.8f;
         CARD_DRAGGING_SCALE = 2.0f;
         CARD_NAME_SIZE = 30;
+        CARD_NAME_SIZE_GAMEPLAY = 20;
         CARD_LIKE_ICON_WIDTH = 56;
         CARD_DETAIL_BUTTON_WIDTH = 160;
         CARD_DETAIL_BUTTON_HEIGHT = 120;
@@ -102,6 +114,11 @@ NSDictionary *singlePlayerCardImages;
     
     CARD_FULL_WIDTH = CARD_WIDTH/CARD_DEFAULT_SCALE;
     CARD_FULL_HEIGHT = CARD_HEIGHT/CARD_DEFAULT_SCALE;
+    
+    CARD_GAMEPLAY_FULL_HEIGHT = CARD_GAMEPLAY_HEIGHT/CARD_DEFAULT_SCALE;
+    CARD_GAMEPLAY_FULL_WIDTH = CARD_GAMEPLAY_WIDTH/CARD_DEFAULT_SCALE;
+    
+    
     
     CARD_IMAGE_WIDTH = 265;
     CARD_IMAGE_HEIGHT = 225;
@@ -370,6 +387,40 @@ NSDictionary *singlePlayerCardImages;
     
     if (self != nil)
     {
+        //if ipad, make card size use CARD_GAMEPLAY_HEIGHT for metrics instead.
+        if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+        {
+            //brian March 26
+            //if ipad && if gameplay, do scale differently
+            if(cardViewMode ==cardViewModeIngame)
+            {
+                CARD_FULL_HEIGHT = CARD_GAMEPLAY_FULL_HEIGHT;
+                CARD_FULL_WIDTH = CARD_GAMEPLAY_FULL_WIDTH;
+                
+                
+                
+                //brian--todoMarch27: investigate why this call resets things for the store as well as the gameplay.  Try to make it cause its effect in gameplay only.
+                
+                
+                abilityTextParagrahStyle = [[NSMutableParagraphStyle alloc] init];
+                //[abilityTextParagrahStyle setLineSpacing:];
+                [abilityTextParagrahStyle setMaximumLineHeight:CARD_NAME_SIZE_GAMEPLAY-5];
+                abilityTextAttributtes = @{NSParagraphStyleAttributeName : abilityTextParagrahStyle, NSFontAttributeName : [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE_GAMEPLAY -5]};
+                
+                flavourTextAttributes = @{NSParagraphStyleAttributeName : abilityTextParagrahStyle, NSFontAttributeName : [UIFont fontWithName:cardFlavourTextFont size:CARD_NAME_SIZE_GAMEPLAY -6]};
+                
+            }
+            else
+            {
+                abilityTextParagrahStyle = [[NSMutableParagraphStyle alloc] init];
+                //[abilityTextParagrahStyle setLineSpacing:];
+                [abilityTextParagrahStyle setMaximumLineHeight:CARD_NAME_SIZE-5];
+                abilityTextAttributtes = @{NSParagraphStyleAttributeName : abilityTextParagrahStyle, NSFontAttributeName : [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE -5]};
+                
+                flavourTextAttributes = @{NSParagraphStyleAttributeName : abilityTextParagrahStyle, NSFontAttributeName : [UIFont fontWithName:cardFlavourTextFont size:CARD_NAME_SIZE -6]};
+            }
+        }
+        
         _cardModel = cardModel;
         cardModel.cardView = self; //point model's view back to itself
         
@@ -636,12 +687,31 @@ NSDictionary *singlePlayerCardImages;
         self.elementLabel.strokeOn = YES;
         self.elementLabel.strokeColour = [UIColor blackColor];
         self.elementLabel.strokeThickness = 2.5;
-        self.elementLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE -5];
+        //brian mar27 make this conditional on ipad gameplay or not ipad gameplay
+        if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && cardViewMode == cardViewModeIngame)
+        {
+              self.elementLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE_GAMEPLAY -5];
+        }
+        else
+        {
+             self.elementLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE -5];
+        }
+        
+      
         self.elementLabel.text = [CardModel elementToString:cardModel.element];
         //NOTE added above other stuff
         
         //original value -10 for width
-        self.baseAbilityLabel = [[UITextView alloc] initWithFrame:CGRectMake(12, descriptionBGY+ (descriptionBGHeight/6), descriptionBGWidth - 15, (descriptionBGHeight/8)*5)]; //NOTE changing this is useless, do it down below
+        
+        //brianmar27
+        //need to add additional margins for the width for iPad values.
+        //should calculate left margin as a ratio of the cardWidth (can use description width here for value
+        //default xMargin, 12/baseWidth (129, 83)
+        
+        float xMarginRatio = 12.0f/129.0f;
+        float xRightMarginRatio = 15.0f/129.0f;
+        
+        self.baseAbilityLabel = [[UITextView alloc] initWithFrame:CGRectMake(xMarginRatio*descriptionBGWidth, descriptionBGY+ (descriptionBGHeight/6), descriptionBGWidth - xRightMarginRatio*descriptionBGWidth, (descriptionBGHeight/8)*5)]; //NOTE changing this is useless, do it down below
         [self.baseAbilityLabel  setTextContainerInset:UIEdgeInsetsMake(0, 0, 0, 0)];
         self.baseAbilityLabel.textColor = [UIColor whiteColor];
         self.baseAbilityLabel.backgroundColor = [UIColor clearColor];
@@ -803,6 +873,7 @@ NSDictionary *singlePlayerCardImages;
     }
     
     
+   
     
     return self;
 }

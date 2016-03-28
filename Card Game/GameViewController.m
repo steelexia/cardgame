@@ -310,34 +310,62 @@ BOOL leftHandViewZone = NO;
     attackLine.backgroundColor = [UIColor colorWithRed:0.67 green:0.08 blue:0 alpha:0.6];
     
     //----set up the resource labels----//
-    StrokedLabel*playerResourceLabel              = [[StrokedLabel alloc] initWithFrame: CGRectMake(0, 0, 60, 30)];
-    playerResourceLabel.center                    = CGPointMake(SCREEN_WIDTH - 30, SCREEN_HEIGHT - 30);
+    //brianMar27
+    //customize resourceSection for iPad UI
+    float baseScreenHeight = 1334.0f/2.0f;
+    float baseScreenWidth = 750.0f/2.0f;
+    
+    
+    float labelSizeWidth = 60/baseScreenWidth*SCREEN_WIDTH;
+    float labelSizeHeight = 30/baseScreenHeight*SCREEN_HEIGHT;
+    
+    int iPadManaGemFont = 40;
+    int iPhoneManaGemFont = 20;
+    
+    int manaGemFont;
+    
+    if (IS_IPAD)
+    {
+        manaGemFont = iPadManaGemFont;
+    }
+    else
+    {
+        manaGemFont = iPhoneManaGemFont;
+    }
+    
+    StrokedLabel*playerResourceLabel              = [[StrokedLabel alloc] initWithFrame: CGRectMake(0, 0, labelSizeWidth, labelSizeHeight)];
+    playerResourceLabel.center                    = CGPointMake(SCREEN_WIDTH - labelSizeWidth/2, SCREEN_HEIGHT - labelSizeHeight);
     playerResourceLabel.textAlignment             = NSTextAlignmentCenter;
     playerResourceLabel.textColor                 = [UIColor whiteColor];
     playerResourceLabel.backgroundColor           = [UIColor clearColor];
-    playerResourceLabel.font                      = [UIFont fontWithName:cardMainFont size:20];
+    playerResourceLabel.font                      = [UIFont fontWithName:cardMainFont size:manaGemFont];
     playerResourceLabel.adjustsFontSizeToFitWidth = YES;
     playerResourceLabel.strokeColour              = [UIColor blackColor];
     playerResourceLabel.strokeOn                  = YES;
     playerResourceLabel.strokeThickness           = 3;
     UIImageView *playerResourceIcon               = [[UIImageView alloc] initWithImage:RESOURCE_ICON_IMAGE];
-    playerResourceIcon.frame                      = CGRectMake(0, 0, 45, 45);
+    
+    float playerResourceIconWidth = 45/baseScreenWidth*SCREEN_WIDTH;
+    float playerResourceIconHeight = 45/baseScreenWidth*SCREEN_WIDTH;
+    playerResourceIcon.frame                      = CGRectMake(0, 0, playerResourceIconWidth, playerResourceIconHeight);
+    
     playerResourceIcon.center                     = playerResourceLabel.center;
     
-    StrokedLabel*opponentResourceLabel              = [[StrokedLabel alloc] initWithFrame: CGRectMake(0,0, 60, 30)];
-    opponentResourceLabel.center                    = CGPointMake(SCREEN_WIDTH - 30, 30);
+    StrokedLabel*opponentResourceLabel              = [[StrokedLabel alloc] initWithFrame: CGRectMake(0,0, labelSizeWidth, labelSizeHeight)];
+    opponentResourceLabel.center                    = CGPointMake(SCREEN_WIDTH - labelSizeWidth/2, labelSizeHeight);
     opponentResourceLabel.textAlignment             = NSTextAlignmentCenter;
     opponentResourceLabel.textColor                 = [UIColor whiteColor];
     opponentResourceLabel.backgroundColor           = [UIColor clearColor];
-    opponentResourceLabel.font                      = [UIFont fontWithName:cardMainFont size:20];
+    opponentResourceLabel.font                      = [UIFont fontWithName:cardMainFont size:manaGemFont];
     opponentResourceLabel.adjustsFontSizeToFitWidth = YES;
     opponentResourceLabel.strokeColour              = [UIColor blackColor];
     opponentResourceLabel.strokeOn                  = YES;
     opponentResourceLabel.strokeThickness           = 3;
     UIImageView *opponentResourceIcon               = [[UIImageView alloc] initWithImage:RESOURCE_ICON_IMAGE];
-    opponentResourceIcon.frame                      = CGRectMake(0, 0, 45, 45);
+    opponentResourceIcon.frame                      = CGRectMake(0, 0, playerResourceIconWidth, playerResourceIconHeight);
     opponentResourceIcon.center                     = opponentResourceLabel.center;
     resourceLabels                                  = @[playerResourceLabel,opponentResourceLabel];
+    
     [self.uiView addSubview:playerResourceIcon];
     [self.uiView addSubview:opponentResourceIcon];
     [self.uiView addSubview:resourceLabels[PLAYER_SIDE]];
@@ -356,13 +384,35 @@ BOOL leftHandViewZone = NO;
     //fields are not at center Y, instead move up a little since opponent has no end button
     int fieldsYOffset = 0; //TODO probably make this dynamic
     
+    
+    //brian mar27 trying to fix hero position and card fields position
+    //opponent field position y = 400/1344.0f;
+    //player field position y = 680/1344.0f
+    
+    
     if (IS_IPAD)
     {
+        
+        playerFieldHighlight.bounds = CGRectMake(0,0,(CARD_GAMEPLAY_WIDTH *5) + CARD_GAMEPLAY_HEIGHT*0.1f, CARD_GAMEPLAY_HEIGHT + CARD_GAMEPLAY_HEIGHT * 0.1);
+        playerFieldHighlight.center = CGPointMake(SCREEN_WIDTH/2, 800/1344.0f*SCREEN_HEIGHT) ;
+        
+        playerFieldEdge.bounds = CGRectMake(0,0,(CARD_GAMEPLAY_WIDTH*5)  + CARD_GAMEPLAY_HEIGHT * 0.1, CARD_GAMEPLAY_HEIGHT + CARD_GAMEPLAY_HEIGHT * 0.1);
+        playerFieldEdge.center = CGPointMake(SCREEN_WIDTH/2, 800/1344.0f*SCREEN_HEIGHT) ;
+        
+        opponentFieldHighlight.bounds = CGRectMake(0,0,(CARD_GAMEPLAY_WIDTH*5)  + CARD_GAMEPLAY_HEIGHT * 0.1, CARD_GAMEPLAY_HEIGHT + CARD_GAMEPLAY_HEIGHT * 0.1);
+        opponentFieldHighlight.center = CGPointMake(SCREEN_WIDTH/2, 450/1344.0f*SCREEN_HEIGHT) ;
+        
+        opponentFieldEdge.bounds = CGRectMake(0,0,(CARD_GAMEPLAY_WIDTH*5) + CARD_GAMEPLAY_HEIGHT * 0.1, CARD_GAMEPLAY_HEIGHT + CARD_GAMEPLAY_HEIGHT * 0.1);
+        opponentFieldEdge.center = CGPointMake(SCREEN_WIDTH/2, 450/1344.0f*SCREEN_HEIGHT) ;
+        
+        /*
+         old code
         playerFieldHighlight.bounds = CGRectMake(0,0,(CARD_WIDTH * 5)  + CARD_HEIGHT * 0.1, CARD_HEIGHT + CARD_HEIGHT * 0.1);
         playerFieldHighlight.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/3 + fieldsDistanceHalf + playerFieldHighlight.bounds.size.height/2 + fieldsYOffset) ;
         
         playerFieldEdge.bounds = CGRectMake(0,0,(CARD_WIDTH * 5)  + CARD_HEIGHT * 0.1, CARD_HEIGHT + CARD_HEIGHT * 0.1);
         playerFieldEdge.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/3 + fieldsDistanceHalf + playerFieldEdge.bounds.size.height/2 + fieldsYOffset) ;
+         */
     }
     else if (IS_IPHONE)
     {
@@ -371,6 +421,13 @@ BOOL leftHandViewZone = NO;
         
         playerFieldEdge.bounds = CGRectMake(0,0,(CARD_WIDTH * 5)  + CARD_HEIGHT * 0.1, CARD_HEIGHT + CARD_HEIGHT * 0.1);
         playerFieldEdge.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + fieldsDistanceHalf + playerFieldEdge.bounds.size.height/2 + fieldsYOffset) ;
+        
+        opponentFieldHighlight.bounds = CGRectMake(0,0,(CARD_WIDTH * 5)  + CARD_HEIGHT * 0.1, CARD_HEIGHT + CARD_HEIGHT * 0.1);
+        opponentFieldHighlight.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - fieldsDistanceHalf - opponentFieldHighlight.bounds.size.height/2 + fieldsYOffset) ;
+        
+        opponentFieldEdge.bounds = CGRectMake(0,0,(CARD_WIDTH * 5)  + CARD_HEIGHT * 0.1, CARD_HEIGHT + CARD_HEIGHT * 0.1);
+        opponentFieldEdge.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - fieldsDistanceHalf - opponentFieldEdge.bounds.size.height/2 + fieldsYOffset) ;
+
     }
     
     playerFieldHighlight.alpha = 0;
@@ -378,16 +435,40 @@ BOOL leftHandViewZone = NO;
     [self.backgroundView addSubview:playerFieldHighlight];
     [self.backgroundView addSubview:playerFieldEdge];
     
-    opponentFieldHighlight.bounds = CGRectMake(0,0,(CARD_WIDTH * 5)  + CARD_HEIGHT * 0.1, CARD_HEIGHT + CARD_HEIGHT * 0.1);
-    opponentFieldHighlight.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - fieldsDistanceHalf - opponentFieldHighlight.bounds.size.height/2 + fieldsYOffset) ;
-    
-    opponentFieldEdge.bounds = CGRectMake(0,0,(CARD_WIDTH * 5)  + CARD_HEIGHT * 0.1, CARD_HEIGHT + CARD_HEIGHT * 0.1);
-    opponentFieldEdge.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - fieldsDistanceHalf - opponentFieldEdge.bounds.size.height/2 + fieldsYOffset) ;
     
     opponentFieldHighlight.alpha = 0;
     
     [self.backgroundView addSubview:opponentFieldHighlight];
     [self.backgroundView addSubview:opponentFieldEdge];
+    
+    //brianMar27 update player hero code for iPad UI
+    //-----Player's heroes-----//
+    
+    CardView *playerHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[PLAYER_SIDE]).playerMonster viewMode:cardViewModeIngame];
+    playerHeroView.frontFacing = YES;
+    
+    playerHeroView.center = CGPointMake((SCREEN_WIDTH - playerFieldEdge.bounds.size.width)/2 + PLAYER_HERO_WIDTH/2, playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*6 + PLAYER_HERO_HEIGHT/2);
+    playerHeroView.cardModel.name = userPF.username;
+    [playerHeroView updateView];
+    [self.fieldView addSubview:playerHeroView];
+    
+    if (_level!=nil && !_level.isBossFight) //boss fight's is not the same
+    {
+        ((PlayerModel*)self.gameModel.players[OPPONENT_SIDE]).playerMonster.idNumber = _level.heroId;
+    }
+    
+    CardView *opponentHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[OPPONENT_SIDE]).playerMonster viewMode:cardViewModeIngame];
+    opponentHeroView.frontFacing = YES;
+    opponentHeroView.center = CGPointMake((SCREEN_WIDTH - opponentFieldEdge.bounds.size.width)/2 + PLAYER_HERO_WIDTH/2, opponentFieldEdge.center.y - opponentFieldEdge.bounds.size.height/2 - fieldsDistanceHalf*2 - PLAYER_HERO_HEIGHT/2);
+    
+    if (_level != nil)
+    {
+        if (_level.isBossFight)
+            opponentHeroView.center = CGPointMake(SCREEN_WIDTH/2, opponentFieldHighlight.center.y);
+    }
+    [self.fieldView addSubview:opponentHeroView];
+    
+    self.playerHeroViews = @[playerHeroView, opponentHeroView];
     
     //----set up counter view-------//
     self.counterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 150, 20)];
@@ -558,32 +639,7 @@ BOOL leftHandViewZone = NO;
     //[quitCancelButton setImage:[UIImage imageNamed:@"no_button"] forState:UIControlStateNormal];
     [quitCancelButton addTarget:self action:@selector(quitCancelButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    //-----Player's heroes-----//
     
-    CardView *playerHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[PLAYER_SIDE]).playerMonster viewMode:cardViewModeIngame];
-    playerHeroView.frontFacing = YES;
-    playerHeroView.center = CGPointMake((SCREEN_WIDTH - playerFieldEdge.bounds.size.width)/2 + PLAYER_HERO_WIDTH/2, playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*6 + PLAYER_HERO_HEIGHT/2);
-    playerHeroView.cardModel.name = userPF.username;
-    [playerHeroView updateView];
-    [self.fieldView addSubview:playerHeroView];
-    
-    if (_level!=nil && !_level.isBossFight) //boss fight's is not the same
-    {
-        ((PlayerModel*)self.gameModel.players[OPPONENT_SIDE]).playerMonster.idNumber = _level.heroId;
-    }
-    
-    CardView *opponentHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[OPPONENT_SIDE]).playerMonster viewMode:cardViewModeIngame];
-    opponentHeroView.frontFacing = YES;
-    opponentHeroView.center = CGPointMake((SCREEN_WIDTH - opponentFieldEdge.bounds.size.width)/2 + PLAYER_HERO_WIDTH/2, opponentFieldEdge.center.y - opponentFieldEdge.bounds.size.height/2 - fieldsDistanceHalf*2 - PLAYER_HERO_HEIGHT/2);
-    
-    if (_level != nil)
-    {
-        if (_level.isBossFight)
-            opponentHeroView.center = CGPointMake(SCREEN_WIDTH/2, opponentFieldHighlight.center.y);
-    }
-    [self.fieldView addSubview:opponentHeroView];
-    
-    self.playerHeroViews = @[playerHeroView, opponentHeroView];
     
     //-----ability extra description-----//
     extraAbilityView = [[GameInfoTableView alloc] initWithFrame:CGRectMake(0, 0, 80, SCREEN_HEIGHT*2/5) withTitle:@"Added Abilities"];
