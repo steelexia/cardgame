@@ -91,7 +91,7 @@ NSMutableDictionary * campaignCards;
         monster.element = elementNeutral;
         monster.name = @"Skywhale Flagship"; //?
         monster.damage = 0;
-        monster.life = monster.maximumLife = 41000;
+        monster.life = monster.maximumLife = 41000; //should be ~120
         monster.cost = 10;
         monster.cooldown = monster.maximumCooldown = 1;
         monster.heroic = YES;
@@ -105,7 +105,22 @@ NSMutableDictionary * campaignCards;
     }
     else if ([levelID isEqualToString:@"d_2_c_3_l_4"])
     {
+        monster = [[MonsterCardModel alloc] initWithIdNumber:3400 type:cardTypeSinglePlayer];
+        monster.rarity = cardRarityLegendary;
+        monster.element = elementIce;
+        monster.name = @"? Battleship"; //?
+        monster.damage = 0;
+        monster.life = monster.maximumLife = 140;
+        monster.cost = 10;
+        monster.cooldown = monster.maximumCooldown = 1;
+        monster.heroic = YES;
         
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityHeroic castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+        //[monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:5]]];
+        //[monster addBaseAbility: [[Ability alloc] initWithType:abilitySetDamage castType:castOnHit targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityAssassin castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+        
+        return monster;
     }
     else if ([levelID isEqualToString:@"d_3_c_1_l_4"])
     {
@@ -1186,7 +1201,29 @@ NSMutableDictionary * campaignCards;
     }
     else if ([levelID isEqualToString:@"d_2_c_3_l_4"])
     {
+        for (int i = 0; i < 10; i++)
+        {
+            //blaster
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_3300"]]];
+        }
         
+        for (int i = 0; i < 4; i++)
+        {
+            //repair drone
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_3301"]]];
+        }
+        
+        for (int i = 0; i < 4; i++)
+        {
+            //particle beam
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_3302"]]];
+        }
+        
+        for (int i = 0; i < 4; i++)
+        {
+            //fighter dock
+            [deck addCard:[[CardModel alloc] initWithCardModel:campaignCards[@"d2_3303"]]];
+        }
     }
     //------------difficulty 3------------//
     //----chapter 1----//
@@ -2474,6 +2511,103 @@ NSMutableDictionary * campaignCards;
     
     //------LEVEL 4--------//
     
+    spell = [[SpellCardModel alloc] initWithIdNumber:3300 type:cardTypeSinglePlayer];
+    spell.rarity = cardRarityUncommon;
+    spell.element = elementLightning;
+    spell.name = @"Proton Blaster";
+    spell.cost = 2;
+    
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetHeroFriendly withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:10]]];
+    
+    [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:3301 type:cardTypeSinglePlayer];
+    monster.element = elementLight;
+    monster.rarity = cardRarityRare;
+    monster.name = @"Repair Drones";
+    monster.damage = 2;
+    monster.life = monster.maximumLife = 15;
+    monster.cost = 3;
+    monster.cooldown = monster.maximumCooldown = 3;
+    
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnEndOfTurn targetType:targetHeroFriendly withDuration:durationForever withValue:[NSNumber numberWithInt:6]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityReturnToHand castType:castOnMove targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:3302 type:cardTypeSinglePlayer];
+    monster.element = elementIce;
+    monster.rarity = cardRarityRare;
+    monster.name = @"Particle Beam Cannon";
+    monster.damage = 5;
+    monster.life = monster.maximumLife = 12;
+    monster.cost = 4;
+    monster.cooldown = monster.maximumCooldown = 2;
+    
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnMove targetType:targetHeroEnemy withDuration:durationForever withValue:[NSNumber numberWithInt:20]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityReturnToHand castType:castOnMove targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    int c3FighterDamage = 5;
+    int c3FighterLife = 5;
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:3303 type:cardTypeSinglePlayer];
+    monster.element = elementLightning;
+    monster.rarity = cardRarityExceptional;
+    monster.name = @"Fighter Bay";
+    monster.damage = 3;
+    monster.life = monster.maximumLife = 14;
+    monster.cost = 0;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilitySummonFighter castType:castOnMove targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:3304] withOtherValues:@[@(c3FighterDamage),@(c3FighterLife),@(2)]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnMove targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
+
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    //not summonable
+    monster = [[MonsterCardModel alloc] initWithIdNumber:3304 type:cardTypeSinglePlayer];
+    monster.element = elementLightning;
+    monster.rarity = cardRarityCommon;
+    monster.name = @"Escort Fighter";
+    monster.damage = c3FighterDamage;
+    monster.life = monster.maximumLife = c3FighterLife;
+    monster.cost = 1;
+    monster.cooldown = monster.maximumCooldown = 1;
+    
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    
+    [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     //-----------------------------------------DIFFICULTY 3--------------------------------------------//
     //-----------------CHAPTER 1----------------//
     //------LEVEL 1--------//
@@ -3122,7 +3256,130 @@ NSMutableDictionary * campaignCards;
     //ID 100 to 199
     if (element == elementFire)
     {
+        //basic card, 93% efficiency
+        monster = [[MonsterCardModel alloc] initWithIdNumber:100 type:cardTypeStandard];
+        monster.name = @"Shadow Hunter";
+        monster.element = elementFire;
+        monster.damage = 4;
+        monster.life = monster.maximumLife = 2;
+        monster.cost = 2;
+        monster.cooldown = monster.maximumCooldown = 1;
+        monster.rarity = cardRarityCommon;
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:4]]];
+        monster.adminPhotoCheck = 1;
+        [deck addCard:monster];
         
+        //basic signature card, practically 100% efficiency for common
+        spell = [[SpellCardModel alloc] initWithIdNumber:101 type:cardTypeStandard];
+        spell.name = @"Lampad's Breath";
+        spell.element = elementFire;
+        spell.rarity = cardRarityCommon;
+        spell.cost = 2;
+        
+        [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:7]]];
+        spell.adminPhotoCheck = 1;
+        [deck addCard:spell];
+        
+        //~96% efficiency and regular ability
+        monster = [[MonsterCardModel alloc] initWithIdNumber:102 type:cardTypeStandard];
+        monster.name = @"Pryodemon";
+        monster.element = elementFire;
+        monster.damage = 9;
+        monster.life = monster.maximumLife = 9;
+        monster.cost = 4;
+        monster.cooldown = monster.maximumCooldown = 1;
+        monster.rarity = cardRarityCommon;
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnHit targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:5]]];
+        monster.adminPhotoCheck = 1;
+        [deck addCard:monster];
+        
+        //unique version of ability, which allows decks to have additional pierce cards, basically 100% efficiency of common, unique for having 2 abilities
+        spell = [[SpellCardModel alloc] initWithIdNumber:103 type:cardTypeStandard];
+        spell.name = @"Searing Decree";
+        spell.element = elementFire;
+        spell.rarity = cardRarityCommon;
+        spell.cost = 1;
+        
+        [spell addBaseAbility: [[Ability alloc] initWithType:abilityPierce castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+        [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:3]]];
+        spell.adminPhotoCheck = 1;
+        [deck addCard:spell];
+        
+        //unique ability but poor stats distribution, lightning as similar (perma attack+)
+        monster = [[MonsterCardModel alloc] initWithIdNumber:104 type:cardTypeStandard];
+        monster.name = @"Hellfire Lumberjack";
+        monster.element = elementFire;
+        monster.damage = 4;
+        monster.life = monster.maximumLife = 2;
+        monster.cost = 1;
+        monster.cooldown = monster.maximumCooldown = 1;
+        monster.rarity = cardRarityUncommon;
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnHit targetType:targetOneFriendlyMinion withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:4]]];
+        monster.adminPhotoCheck = 1;
+        [deck addCard:monster];
+        
+        //unique target enemy only kill, would be 104% efficiency of common if target any, basically dark card
+        spell = [[SpellCardModel alloc] initWithIdNumber:105 type:cardTypeStandard];
+        spell.name = @"Reckoning";
+        spell.element = elementFire;
+        spell.rarity = cardRarityUncommon;
+        spell.cost = 4;
+        
+        [spell addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneEnemyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+        [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:7]]];
+        spell.adminPhotoCheck = 1;
+        [deck addCard:spell];
+        
+        //very poor stats distribution, but powerful unique ability
+        monster = [[MonsterCardModel alloc] initWithIdNumber:106 type:cardTypeStandard];
+        monster.name = @"Kindler Bowman";
+        monster.element = elementFire;
+        monster.damage = 6;
+        monster.life = monster.maximumLife = 3;
+        monster.cost = 3;
+        monster.cooldown = monster.maximumCooldown = 1;
+        monster.rarity = cardRarityUncommon;
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnEndOfTurn targetType:targetOneEnemy withDuration:durationForever withValue:[NSNumber numberWithInt:6]]];
+        monster.adminPhotoCheck = 1;
+        [deck addCard:monster];
+        
+        //100% common efficiency, unique ability although equal to two light abilities (uncommon and exceptional), used to synergize with the fact that most fire cards have low health and high damage
+        monster = [[MonsterCardModel alloc] initWithIdNumber:107 type:cardTypeStandard];
+        monster.name = @"Hellfire Lumberjack";
+        monster.element = elementFire;
+        monster.damage = 12;
+        monster.life = monster.maximumLife = 7;
+        monster.cost = 5;
+        monster.cooldown = monster.maximumCooldown = 1;
+        monster.rarity = cardRarityRare;
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddMaxLife castType:castOnSummon targetType:targetAllMinion withDuration:durationForever withValue:[NSNumber numberWithInt:5]]];
+        monster.adminPhotoCheck = 1;
+        [deck addCard:monster];
+        
+        //106% efficiency of common, basically lightning card
+        spell = [[SpellCardModel alloc] initWithIdNumber:108 type:cardTypeStandard];
+        spell.name = @"Immolation";
+        spell.element = elementFire;
+        spell.rarity = cardRarityExceptional;
+        spell.cost = 7;
+        
+        [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAllEnemyMinions withDuration:durationInstant withValue:[NSNumber numberWithInt:14]]];
+
+        spell.adminPhotoCheck = 1;
+        [deck addCard:spell];
+        
+        //100% common efficiency, ice ability so won't count towards fire's max
+        monster = [[MonsterCardModel alloc] initWithIdNumber:109 type:cardTypeStandard];
+        monster.name = @"Inferno Lord";
+        monster.element = elementFire;
+        monster.damage = 20;
+        monster.life = monster.maximumLife = 12;
+        monster.cost = 9;
+        monster.cooldown = monster.maximumCooldown = 1;
+        monster.rarity = cardRarityRare;
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnHit targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:8]]];
+        monster.adminPhotoCheck = 1;
+        [deck addCard:monster];
     }
     //ID 200 to 299
     else if (element == elementIce)
@@ -3261,6 +3518,11 @@ NSMutableDictionary * campaignCards;
     }
     
     return deck;
+}
+
++(CardModel*) getCampaignCardWithFullID:(NSString*)cardID
+{
+    return [[CardModel alloc] initWithCardModel:campaignCards[cardID]];
 }
 
 @end

@@ -610,18 +610,31 @@ NSDictionary *singlePlayerCardImages;
         //brianJuly27
         //add abilitydescriptionBGFrame
         //355 × 221 pixels
-        float descriptionBGWidth = 365.0f/400.0f*CARD_FULL_WIDTH;
-        float descriptionBGHeight = 216.0f/590.0f*CARD_FULL_HEIGHT;
+        float descriptionBGWidth = 360.0f/400.0f*CARD_FULL_WIDTH; //stretched a bit
+        float descriptionBGHeight = 215.0f/590.0f*CARD_FULL_HEIGHT;
         float descriptionBGX = 29.0f/2/400.0f*CARD_FULL_WIDTH;
         float descriptionBGY = 368.0f/590.0f*CARD_FULL_HEIGHT;
         
         
+        UIImageView *descriptionBG = [[UIImageView alloc] initWithFrame:CGRectMake(descriptionBGX,descriptionBGY,descriptionBGWidth,descriptionBGHeight)];
+        descriptionBG.center = CGPointMake(CARD_FULL_WIDTH / 2, descriptionBG.center.y);
+        if (cardModel.type == cardTypePlayer)
+        {
+            descriptionBG.alpha = 0.0f;
+        }
+        else{
+            descriptionBG.alpha = 1.0f;
+        }
+        descriptionBG.image = [UIImage imageNamed:@"CardDescription.png"];
+        [_frontViews addSubview:descriptionBG];
+        
         UIImageView *descriptionBGFrame = [[UIImageView alloc] initWithFrame:CGRectMake(descriptionBGX,descriptionBGY,descriptionBGWidth,descriptionBGHeight)];
+        descriptionBGFrame.center = CGPointMake(CARD_FULL_WIDTH / 2, descriptionBGFrame.center.y);
         if (cardModel.type == cardTypePlayer)
         {
             descriptionBGFrame.alpha = 0;
         }
-        descriptionBGFrame.image = [UIImage imageNamed:@"CardDescription.png"];
+        descriptionBGFrame.image = [UIImage imageNamed:@"CardDescriptionEdge.png"];
         [_frontViews addSubview:descriptionBGFrame];
         
         

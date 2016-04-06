@@ -359,7 +359,7 @@
             }
             else
             {
-                description = [NSString stringWithFormat:@"%@ %@ %@", description, [Ability getAbilityPreposition:lastAbility], [Ability getTargetTypeDescription:targetType]];
+                description = [NSString stringWithFormat:@"%@ %@ %@", description, [Ability getAbilityPreposition:lastAbility], [Ability getTargetTypeDescription:targetType fromCard:card]];
             }
         }
         
@@ -410,7 +410,7 @@
     
     enum AbilityType abilityType = ability.abilityType;
     
-    NSString *targetDescription = [Ability getTargetTypeDescription:ability.targetType];
+    NSString *targetDescription = [Ability getTargetTypeDescription:ability.targetType fromCard:cardModel];
     NSString *castDescription = [Ability getCastTypeDescription:ability.castType fromCard:cardModel];
     NSString *durationDescription = [Ability getDurationTypeDescription:ability.durationType];
     NSString *valueDescription = @"NO VALUE";
@@ -453,6 +453,12 @@
         else
             description = [NSString stringWithFormat:@"%@-%@ damage to %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
     }
+    else if (abilityType == abilitySetDamage){
+        if (ability.targetType == targetSelf)
+            description = [NSString stringWithFormat:@"%@ Set damage to %@%@.", castDescription, valueDescription, durationDescription];
+        else
+            description = [NSString stringWithFormat:@"%@ Set %@ damage to %@%@.", castDescription, targetDescription, valueDescription, durationDescription];
+    }
     else if (abilityType == abilityAddLife){
         if (ability.targetType == targetSelf)
             description = [NSString stringWithFormat:@"%@Heal %@ life%@.", castDescription, valueDescription, durationDescription];
@@ -473,9 +479,9 @@
     }
     else if (abilityType == abilitySetCooldown){
         if (ability.targetType == targetSelf)
-            description = [NSString stringWithFormat:@"%@Set its cooldown to %@%@.", castDescription, valueDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Set cooldown to %@%@.", castDescription, valueDescription, durationDescription];
         else
-            description = [NSString stringWithFormat:@"%@Set cooldown to %@ for %@%@.", castDescription, valueDescription, targetDescription, durationDescription];
+            description = [NSString stringWithFormat:@"%@Set %@ cooldown to %@%@.", castDescription, targetDescription, valueDescription, durationDescription];
     }
     else if (abilityType == abilityAddCooldown){
         if (ability.targetType == targetSelf)
@@ -557,6 +563,9 @@
     {
         description = [NSString stringWithFormat:@"Heroic"];
     }
+    else if (abilityType == abilitySummonFighter){
+        description = [NSString stringWithFormat:@"%@Summon a %@/%@ Fighter%@.", castDescription, ability.otherValues[0], ability.otherValues[1], durationDescription];
+    }
     else
         description = [NSString stringWithFormat:@"ability no name %d", ability.abilityType];
     
@@ -587,6 +596,12 @@
     else if (abilityType == abilityLoseDamage){
             description = [NSString stringWithFormat:@"-%@ damage", valueDescription];
     }
+    else if (abilityType == abilitySetDamage){
+        if (ability.targetType == targetSelf)
+            description = [NSString stringWithFormat:@"Set damage to %@", valueDescription];
+        else
+            description = [NSString stringWithFormat:@"Set damage to %@ for ", valueDescription];
+    }
     else if (abilityType == abilityAddLife){
             description = [NSString stringWithFormat:@"Heal %@ life", valueDescription];
     }
@@ -601,7 +616,7 @@
     }
     else if (abilityType == abilitySetCooldown){
         if (ability.targetType == targetSelf)
-            description = [NSString stringWithFormat:@"Set its cooldown to %@", valueDescription];
+            description = [NSString stringWithFormat:@"Set cooldown to %@", valueDescription];
         else
             description = [NSString stringWithFormat:@"Set cooldown to %@ for ", valueDescription];
     }
@@ -664,13 +679,16 @@
     {
         description = [NSString stringWithFormat:@"Heroic"];
     }
+    else if (abilityType == abilitySummonFighter){
+        description = [NSString stringWithFormat:@"Summon a %@/%@ Fighter", ability.otherValues[0], ability.otherValues[1]];
+    }
     else
         description = [NSString stringWithFormat:@"ability no name %d", ability.abilityType];
     
     return description;
 }
 
-+(NSString*) getTargetTypeDescription: (enum TargetType) targetType
++(NSString*) getTargetTypeDescription: (enum TargetType) targetType fromCard: (CardModel*) cardModel
 {
     if (targetType == targetNil)
         return [NSString stringWithFormat:@"nil"];
@@ -695,13 +713,33 @@
     else if (targetType == targetOneEnemyMinion)
         return [NSString stringWithFormat:@"an enemy creature"];
     else if (targetType == targetAll)
-        return [NSString stringWithFormat:@"all characters"];
+    {
+        if ([cardModel isKindOfClass:[SpellCardModel class]])
+            return [NSString stringWithFormat:@"all characters"];
+        else
+            return [NSString stringWithFormat:@"all other characters"];
+    }
     else if (targetType == targetAllMinion)
-        return [NSString stringWithFormat:@"all other creatures"];
+    {
+        if ([cardModel isKindOfClass:[SpellCardModel class]])
+            return [NSString stringWithFormat:@"all creatures"];
+        else
+            return [NSString stringWithFormat:@"all other creatures"];
+    }
     else if (targetType == targetAllFriendly)
-        return [NSString stringWithFormat:@"all other allies"];
+    {
+        if ([cardModel isKindOfClass:[SpellCardModel class]])
+            return [NSString stringWithFormat:@"all allies"];
+        else
+            return [NSString stringWithFormat:@"all other allies"];
+    }
     else if (targetType == targetAllFriendlyMinions)
-        return [NSString stringWithFormat:@"all other ally creatures"];
+    {
+        if ([cardModel isKindOfClass:[SpellCardModel class]])
+            return [NSString stringWithFormat:@"all ally creatures"];
+        else
+            return [NSString stringWithFormat:@"all other ally creatures"];
+    }
     else if (targetType == targetAllEnemy)
         return [NSString stringWithFormat:@"all enemies"];
     else if (targetType == targetAllEnemyMinions)
@@ -742,7 +780,7 @@
     else if (castType == castAlways)
         return [NSString stringWithFormat:@""];
     else if (castType == castOnHit)
-        return [NSString stringWithFormat:@"On attack: "];
+        return [NSString stringWithFormat:@"On hit: "];
     else if (castType == castOnDamaged)
         return [NSString stringWithFormat:@"On damaged: "];
     else if (castType == castOnMove)

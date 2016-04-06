@@ -34,6 +34,8 @@
 		5FE2067F1CA7670F00352535 /* card_0207.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FE206751CA7670F00352535 /* card_0207.png */; };
 		5FE206801CA7670F00352535 /* card_0208.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FE206761CA7670F00352535 /* card_0208.png */; };
 		5FE206811CA7670F00352535 /* card_0209.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FE206771CA7670F00352535 /* card_0209.png */; };
+		5FF070491CA9BE4D00C76642 /* CardDescription.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FF070481CA9BE4D00C76642 /* CardDescription.png */; };
+		5FF0704B1CA9BF8500C76642 /* CardDescriptionEdge.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FF0704A1CA9BF8500C76642 /* CardDescriptionEdge.png */; };
 		8F4B0A2E1C6004B200F90AAA /* PMValidationEmailType.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B0A231C6004B100F90AAA /* PMValidationEmailType.m */; };
 		8F4B0A2F1C6004B200F90AAA /* PMValidationLengthType.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B0A251C6004B100F90AAA /* PMValidationLengthType.m */; };
 		8F4B0A301C6004B200F90AAA /* PMValidationRegexType.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F4B0A271C6004B200F90AAA /* PMValidationRegexType.m */; };
@@ -482,7 +484,6 @@
 		ECFA3E7D1B657F9D00C83EE1 /* CardBackgroundIce.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E751B657F9D00C83EE1 /* CardBackgroundIce.png */; };
 		ECFA3E7E1B657F9D00C83EE1 /* CardBackgroundLight.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E761B657F9D00C83EE1 /* CardBackgroundLight.png */; };
 		ECFA3E7F1B657F9D00C83EE1 /* CardBackgroundLightning.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E771B657F9D00C83EE1 /* CardBackgroundLightning.png */; };
-		ECFA3E801B657F9D00C83EE1 /* CardDescription.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E781B657F9D00C83EE1 /* CardDescription.png */; };
 		ECFA3E811B657F9D00C83EE1 /* CardTitleBacking.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E791B657F9D00C83EE1 /* CardTitleBacking.png */; };
 		ECFA3E821B657F9D00C83EE1 /* HammerHeartHourglass.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E7A1B657F9D00C83EE1 /* HammerHeartHourglass.png */; };
 		ECFA3E8B1B657FA800C83EE1 /* Heart.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFA3E831B657FA800C83EE1 /* Heart.png */; };
@@ -606,6 +607,8 @@
 		5FE206751CA7670F00352535 /* card_0207.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_0207.png; sourceTree = "<group>"; };
 		5FE206761CA7670F00352535 /* card_0208.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_0208.png; sourceTree = "<group>"; };
 		5FE206771CA7670F00352535 /* card_0209.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_0209.png; sourceTree = "<group>"; };
+		5FF070481CA9BE4D00C76642 /* CardDescription.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardDescription.png; sourceTree = "<group>"; };
+		5FF0704A1CA9BF8500C76642 /* CardDescriptionEdge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardDescriptionEdge.png; sourceTree = "<group>"; };
 		8F4B0A221C6004B100F90AAA /* PMValidationEmailType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMValidationEmailType.h; path = PMValidation/ValidationTypes/PMValidationEmailType.h; sourceTree = "<group>"; };
 		8F4B0A231C6004B100F90AAA /* PMValidationEmailType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PMValidationEmailType.m; path = PMValidation/ValidationTypes/PMValidationEmailType.m; sourceTree = "<group>"; };
 		8F4B0A241C6004B100F90AAA /* PMValidationLengthType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PMValidationLengthType.h; path = PMValidation/ValidationTypes/PMValidationLengthType.h; sourceTree = "<group>"; };
@@ -1315,7 +1318,6 @@
 		ECFA3E751B657F9D00C83EE1 /* CardBackgroundIce.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardBackgroundIce.png; sourceTree = "<group>"; };
 		ECFA3E761B657F9D00C83EE1 /* CardBackgroundLight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardBackgroundLight.png; sourceTree = "<group>"; };
 		ECFA3E771B657F9D00C83EE1 /* CardBackgroundLightning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardBackgroundLightning.png; sourceTree = "<group>"; };
-		ECFA3E781B657F9D00C83EE1 /* CardDescription.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardDescription.png; sourceTree = "<group>"; };
 		ECFA3E791B657F9D00C83EE1 /* CardTitleBacking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CardTitleBacking.png; sourceTree = "<group>"; };
 		ECFA3E7A1B657F9D00C83EE1 /* HammerHeartHourglass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = HammerHeartHourglass.png; sourceTree = "<group>"; };
 		ECFA3E831B657FA800C83EE1 /* Heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Heart.png; sourceTree = "<group>"; };
@@ -2270,6 +2272,8 @@
 		ECAB71CE1B4F6C7D004D4E5C /* CardUI */ = {
 			isa = PBXGroup;
 			children = (
+				5FF0704A1CA9BF8500C76642 /* CardDescriptionEdge.png */,
+				5FF070481CA9BE4D00C76642 /* CardDescription.png */,
 				ECFA3E831B657FA800C83EE1 /* Heart.png */,
 				ECFA3E841B657FA800C83EE1 /* Hourglass.png */,
 				ECFA3E851B657FA800C83EE1 /* IconDark.png */,
@@ -2284,7 +2288,6 @@
 				ECFA3E751B657F9D00C83EE1 /* CardBackgroundIce.png */,
 				ECFA3E761B657F9D00C83EE1 /* CardBackgroundLight.png */,
 				ECFA3E771B657F9D00C83EE1 /* CardBackgroundLightning.png */,
-				ECFA3E781B657F9D00C83EE1 /* CardDescription.png */,
 				ECFA3E791B657F9D00C83EE1 /* CardTitleBacking.png */,
 				ECFA3E7A1B657F9D00C83EE1 /* HammerHeartHourglass.png */,
 				ECFA3E711B657F8900C83EE1 /* CardBackgroundDark.png */,
@@ -2927,6 +2930,7 @@
 				5FD2CBF91C6FBCF700692D88 /* card_3202.png in Resources */,
 				FA033FD719BCFF6600EFEBD8 /* card_0018.png in Resources */,
 				EC3A5D8C1B6AA1760064055F /* card_4013.jpeg in Resources */,
+				5FF070491CA9BE4D00C76642 /* CardDescription.png in Resources */,
 				9319F3C31BDE646C00F939FE /* timer_curve.png in Resources */,
 				FA033FD419BCFF6600EFEBD8 /* card_0015.png in Resources */,
 				ECFA3E8E1B657FA800C83EE1 /* IconFire.png in Resources */,
@@ -3058,6 +3062,7 @@
 				FACF46C319EC852300D334E0 /* card_2007.png in Resources */,
 				EC3A5D781B6A983B0064055F /* card_4001.jpg in Resources */,
 				90DA43C01969D21500E44AED /* spell_button_gray.png in Resources */,
+				5FF0704B1CA9BF8500C76642 /* CardDescriptionEdge.png in Resources */,
 				FACF46D219EC852300D334E0 /* hero_c_2_l_2.png in Resources */,
 				9319F3C21BDE646C00F939FE /* timer_background.png in Resources */,
 				90DA43BA1969D21500E44AED /* battle_button_gray.png in Resources */,
@@ -3172,7 +3177,6 @@
 				FACF46CE19EC852300D334E0 /* card_2302.png in Resources */,
 				9319F38E1BD164D200F939FE /* poof_1.png in Resources */,
 				907020711992AC8100FDE444 /* PLCameraSheetButton.png in Resources */,
-				ECFA3E801B657F9D00C83EE1 /* CardDescription.png in Resources */,
 				90F352CF191595F400601130 /* card_background_front.png in Resources */,
 				90AB1506197AC71E0008FCDD /* card_ability_icon_taunt.png in Resources */,
 				907D9BFF192FD3910037C0CF /* hero_glow_target.png in Resources */,

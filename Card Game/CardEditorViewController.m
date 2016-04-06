@@ -355,7 +355,7 @@ bool shouldSetUpView = YES;
         tagsLabel.text = @"Tags:";
         [self.view addSubview:tagsLabel];
         
-        abilityIncButton = [[CFButton alloc] initWithFrame:CGRectMake(270, 222, 46, 32)];
+        abilityIncButton = [[CFButton alloc] initWithFrame:CGRectMake(80, 222, 46, 32)];
         [abilityIncButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateNormal];
         //[abilityIncButton setImage:[UIImage imageNamed:@"increment_button_gray"] forState:UIControlStateDisabled];
         [abilityIncButton addTarget:self action:@selector(abilityIncButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
@@ -363,7 +363,7 @@ bool shouldSetUpView = YES;
         
         //[self.view addSubview:abilityIncButton];
         
-        abilityDecButton = [[CFButton alloc] initWithFrame:CGRectMake(270, 258, 46, 32)];
+        abilityDecButton = [[CFButton alloc] initWithFrame:CGRectMake(80, 258, 46, 32)];
         [abilityDecButton setImage:[UIImage imageNamed:@"decrement_button"] forState:UIControlStateNormal];
         //[abilityDecButton setImage:[UIImage imageNamed:@"decrement_button_gray"] forState:UIControlStateDisabled];
         [abilityDecButton addTarget:self action:@selector(abilityDecButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
@@ -371,7 +371,7 @@ bool shouldSetUpView = YES;
         
         //[self.view addSubview:abilityDecButton];
         
-        abilityRemoveButton = [[CFButton alloc] initWithFrame:CGRectMake(270, 314, 46, 32)];
+        abilityRemoveButton = [[CFButton alloc] initWithFrame:CGRectMake(80, 314, 46, 32)];
         [abilityRemoveButton setImage:[UIImage imageNamed:@"remove_deck_button"] forState:UIControlStateNormal];
         //[abilityRemoveButton setImage:[UIImage imageNamed:@"remove_deck_button_gray"] forState:UIControlStateDisabled];
         [abilityRemoveButton addTarget:self action:@selector(abilityRemoveButtonPressed)    forControlEvents:UIControlEventTouchUpInside];

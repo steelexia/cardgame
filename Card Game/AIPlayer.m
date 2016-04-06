@@ -1114,9 +1114,9 @@ int enemyTotalStrength, friendlyTotalStrength;
                 }
             }
             //special case for chapter 2 boss bombs
-            else if (targetType == targetSelf)
+            if (targetType == targetSelf)
             {
-                return points = 0;
+                return 0;
             }
             
             if (castType == castOnDamaged)
@@ -1642,6 +1642,10 @@ int enemyTotalStrength, friendlyTotalStrength;
         {
             //WAY too complicated
             points = [self getTargetTypeMultipliedPoints:ability.targetType points:1000];
+            
+            //for chapter 3 boss fight
+            if  (targetType == targetSelf)
+                points = 0;
         }
         else
         {
@@ -1660,6 +1664,10 @@ int enemyTotalStrength, friendlyTotalStrength;
     else if (ability.abilityType == abilityHeroic)
     {
         points = 0;
+    }
+    else if (ability.abilityType == abilitySummonFighter)
+    {
+        points = 10000; //cheap way
     }
     else
     {
