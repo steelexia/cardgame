@@ -1764,7 +1764,7 @@ enum GameMode __gameMode; //because C functions cant access
     //---SPECIAL CASE ABILITIES HERE---//
     
     //these abilities do not target any minion, so simply cast it
-    if (ability.abilityType == abilityDrawCard || ability.abilityType == abilityAddResource)
+    if (ability.abilityType == abilityDrawCard || ability.abilityType == abilityAddResource || ability.abilityType == abilitySummonFighter)
     {
         [self castInstantAbility:ability onMonsterCard:nil fromSide:side];
         return;
@@ -2049,7 +2049,7 @@ enum GameMode __gameMode; //because C functions cant access
             fracture.cooldown = fracture.maximumCooldown = monster.baseMaxCooldown;
             
             NSArray*monsterField = self.battlefield[monster.side];
-            int currentMonsterCount = [monsterField count];
+            int currentMonsterCount = (int)[monsterField count];
             if (monster.dead)
                 currentMonsterCount--;
             
@@ -2058,6 +2058,26 @@ enum GameMode __gameMode; //because C functions cant access
         }
         
         return YES;
+    }
+    else if (ability.abilityType == abilitySummonFighter)
+    {
+        NSArray*monsterField = self.battlefield[side];
+        int currentMonsterCount = (int)[monsterField count];
+        if (monster.dead)
+            currentMonsterCount--;
+        
+        if (currentMonsterCount < MAX_BATTLEFIELD_SIZE)
+        {
+            NSString *cardID = [NSString stringWithFormat:@"d%@_%@",ability.otherValues[2], ability.value];
+            
+            MonsterCardModel*fighter = (MonsterCardModel*)[SinglePlayerCards getCampaignCardWithFullID:cardID];
+            fighter.side = side;
+            fighter.cooldown = 0;
+            NSLog(@"NAME: %@ SIDE: %d, monster: %@", fighter.name, monster.side, monster.name);
+            
+            
+            [self addCardToBattlefield:fighter side:side];
+        }
     }
     else
     {

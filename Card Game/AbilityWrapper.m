@@ -412,7 +412,7 @@ NSArray *allAbilities;
                      //---kill---// //WARNING!!! ADD ADDITIONAL ABILITIES AT BOTTOM, DO NOT INSERT IN MIDDLE!!!
                      //kill 1 minion
                      [[AbilityWrapper alloc] initWithAbility:
-                      [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[OFFENSIVE_ELEMENTS] rarity:cardRarityUncommon minPoints:290 maxPoints:290 maxCount:1 minCost:1],
+                      [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[OFFENSIVE_ELEMENTS] rarity:cardRarityUncommon minPoints:285 maxPoints:285 maxCount:1 minCost:1], //285 allows 4 mana exceptional
                      //kill all minions
                      [[AbilityWrapper alloc] initWithAbility:
                       [[Ability alloc] initWithType:abilityKill castType:castOnSummon targetType:targetAllMinion withDuration:durationInstant withValue:0 withOtherValues:@[] withDescription:nil] elements:@[ELEMENT_DARK] rarity:cardRarityLegendary minPoints:440 maxPoints:440 maxCount:1 minCost:6],

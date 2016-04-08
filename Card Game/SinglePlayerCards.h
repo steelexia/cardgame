@@ -22,7 +22,8 @@
 +(DeckModel*) getPlayerCampaignDeckWithID:(NSString*)levelID;
 +(DeckModel*) getStartingDeck;
 +(DeckModel*) getElementDeck: (enum CardElement) element;
-
+/* ID in the format of dx_xxxx */
++(CardModel*) getCampaignCardWithFullID:(NSString*)cardID;
 + (void) loadCampaignCards;
 
 @end

@@ -125,7 +125,7 @@
         return 2.5 * points;
     if (targetType == targetAllEnemyMinions)
         return 2.25 * points;
-    if (targetType == targetOneFriendly || targetType == targetOneFriendlyMinion || targetType == targetSelf)
+    if (targetType == targetOneFriendly || targetType == targetOneFriendlyMinion || targetType == targetSelf || targetType == targetHeroFriendly)
         return -1 * points;
     if (targetType == targetOneFriendlyMinion)
         return -0.9 * points;
