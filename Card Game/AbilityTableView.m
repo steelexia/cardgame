@@ -118,8 +118,15 @@ int ABILITY_TABLE_VIEW_ROW_WIDTH;
     }
     
     if (!wrapper.enabled){
-        [cell.abilityText setTextColor:COLOUR_INTERFACE_GRAY_TRANSPARENT];
         
+        if ([wrapper.elements count] == 1)
+        {
+            [cell.abilityText setTextColor:COLOUR_INTERFACE_BLUE_TRANSPARENT];
+        }
+        else
+        {
+            [cell.abilityText setTextColor:COLOUR_INTERFACE_GRAY_TRANSPARENT];
+        }
         //mana icon becomes red if too mana too high for card
         if (wrapper.minCost > self.cevc.currentCardModel.cost)
         {
@@ -129,6 +136,13 @@ int ABILITY_TABLE_VIEW_ROW_WIDTH;
         
         [cell setUserInteractionEnabled:NO];
     }else{
+        
+        //unique ability for this element TODO temporary
+        if ([wrapper.elements count] == 1)
+        {
+            [cell.abilityText setTextColor:COLOUR_INTERFACE_BLUE_LIGHT];
+        }
+        
         [cell setUserInteractionEnabled:YES];
     }
     
