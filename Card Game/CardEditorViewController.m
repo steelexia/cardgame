@@ -2682,8 +2682,9 @@ bool shouldSetUpView = YES;
                          [elementDescriptionLabel removeFromSuperview];
                      }];
     
-    [self resetAbilityViews];
     [self updateExistingAbilityList];
+    [self resetAbilityViews];
+    
     //[self updateNewAbilityList];
     //[self loadAllValidAbilities];
     [self reloadCardView];

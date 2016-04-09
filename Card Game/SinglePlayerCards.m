@@ -3345,7 +3345,7 @@ NSMutableDictionary * campaignCards;
         
         //100% common efficiency, unique ability although equal to two light abilities (uncommon and exceptional), used to synergize with the fact that most fire cards have low health and high damage
         monster = [[MonsterCardModel alloc] initWithIdNumber:107 type:cardTypeStandard];
-        monster.name = @"Hellfire Lumberjack";
+        monster.name = @"Flame Pheonix";
         monster.element = elementFire;
         monster.damage = 12;
         monster.life = monster.maximumLife = 7;
