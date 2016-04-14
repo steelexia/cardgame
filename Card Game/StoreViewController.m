@@ -2714,7 +2714,9 @@ UIControlEventTouchUpInside];
     if (_storeCategoryTab == 0) {
         PFQuery *featuredCardQuery = [PFQuery queryWithClassName:@"Card"];
         
+        //TODO this needs fixing, need most popular card, no legacy cards
         [featuredCardQuery setLimit:1];
+        
         
         [featuredCardQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(!error){
@@ -2739,6 +2741,9 @@ UIControlEventTouchUpInside];
         
         PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
         [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(1)];
+        //[cardQuery whereKeyExists:@"idNumber"];
+        [cardQuery whereKey:@"isLegacy" equalTo:@(NO)]; //hide all legacy cards
+        cardQuery.cachePolicy = kPFCachePolicyIgnoreCache;
         [salesQuery     whereKey:@"card" matchesQuery:cardQuery];
         
         [salesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -2757,13 +2762,14 @@ UIControlEventTouchUpInside];
             }
         }];
         
+        //TODO not sure what this is
+        /*
         PFQuery *pendingCardQuery = [PFQuery queryWithClassName:@"Card"];
         [pendingCardQuery whereKey:@"adminPhotoCheck" equalTo:@(0)];
         [pendingCardQuery orderByDescending:@"createdAt"];
         
         [pendingCardQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(!error){
-                //load all sales without the cards
                 _currentPendingImageCards = [NSMutableArray arrayWithArray: objects];
                 
             }
@@ -2773,6 +2779,7 @@ UIControlEventTouchUpInside];
                 NSLog(@"ERROR SEARCHING SALES");
             }
         }];
+         */
     }
 
 }
@@ -2798,6 +2805,7 @@ UIControlEventTouchUpInside];
         [self applyFiltersToQuery:salesQuery];
         
         PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
+        [cardQuery whereKey:@"isLegacy" equalTo:@(NO)]; //hide all legacy cards
         [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(1)];
         [salesQuery     whereKey:@"card" matchesQuery:cardQuery];
         
@@ -2847,7 +2855,7 @@ UIControlEventTouchUpInside];
     for (PFObject *salePF in _currentLoadedSales)
     {
         PFObject *cardPF = salePF[@"card"];
-        
+
         BOOL shouldFilter = [self shouldFilterCardPF:cardPF withSalePF:salePF];
         
         NSLog(@"shouldFilter: %d %d", shouldFilter, [_cardsView.currentSales containsObject:salePF]);

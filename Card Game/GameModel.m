@@ -659,6 +659,7 @@ enum GameMode __gameMode; //because C functions cant access
     PFQuery *cardsQuery = [PFQuery queryWithClassName:@"Card"];
     
     //TODO needs mana curve
+    //TODO need to ignore legacy cards (once there's enough cards in database)
     
     /*
      Types of deck's element structures:
@@ -1961,6 +1962,8 @@ enum GameMode __gameMode; //because C functions cant access
         if (ability.targetType == targetHeroFriendly)
         {
             player.resource += [ability.value intValue];
+            
+            [_gameViewController updateHandsView:PLAYER_SIDE];
         }
         else if (ability.targetType == targetHeroEnemy)
         {
@@ -1970,6 +1973,8 @@ enum GameMode __gameMode; //because C functions cant access
         {
             player.resource += [ability.value intValue];
             opponent.resource += [ability.value intValue];
+            
+            [_gameViewController updateHandsView:PLAYER_SIDE];
         }
         [self.gameViewController updateResourceView: side];
         [self.gameViewController updateResourceView: oppositeSide];
