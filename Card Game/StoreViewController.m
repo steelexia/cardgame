@@ -64,14 +64,12 @@ NSArray *_products;
     return self;
 }
 
-
-
 -(void)viewDidLoad{
     [super viewDidLoad];
-    
+
     if ([userPF[@"storeTutorialDone"] boolValue] == NO)
         _isTutorial = YES;
-    
+
     SCREEN_WIDTH = [[UIScreen mainScreen] bounds].size.width;
     SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
     
@@ -479,7 +477,6 @@ NSArray *_products;
     
     [_cardInfoView setUserInteractionEnabled:YES];
     [_cardInfoView addGestureRecognizer:cardInfoTap];
-    
    
     
     _searchView = [[CFLabel alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-40, self.view.bounds.size.width, 260)];
@@ -1474,7 +1471,7 @@ UIControlEventTouchUpInside];
         
         [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             [_filterView setFrame:CGRectMake(filterViewFrame.origin.x, filterViewFrame.origin.y - filterViewFrame.size.height-20, filterViewFrame.size.width, filterViewFrame.size.height)];
+                             [_filterView setFrame:CGRectMake(filterViewFrame.origin.x, SCREEN_HEIGHT-_footerView.frame.size.height-_filterView.frame.size.height, filterViewFrame.size.width, filterViewFrame.size.height)];
                          }
                          completion:^(BOOL completed){
                              
@@ -1487,7 +1484,7 @@ UIControlEventTouchUpInside];
          [self.view bringSubviewToFront:_filterView];
         [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             [_filterView setFrame:CGRectMake(filterViewFrame.origin.x, filterViewFrame.origin.y + filterViewFrame.size.height+20, filterViewFrame.size.width, filterViewFrame.size.height)];
+                             [_filterView setFrame:CGRectMake(filterViewFrame.origin.x, SCREEN_HEIGHT, filterViewFrame.size.width, filterViewFrame.size.height)];
                          }
                          completion:^(BOOL completed){
                               _filterView.alpha = 0;
@@ -1518,13 +1515,13 @@ UIControlEventTouchUpInside];
         _searchResult.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/5);
         [self.view bringSubviewToFront:self.searchView];
         self.searchView.alpha = 1;
-        
+        NSLog(@"ON start at %f", _searchView.frame.origin.y);
         [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             [_searchView setFrame:CGRectMake(searchViewFrame.origin.x, searchViewFrame.origin.y - searchViewFrame.size.height-20, searchViewFrame.size.width, searchViewFrame.size.height)];
+                             [_searchView setFrame:CGRectMake(searchViewFrame.origin.x, SCREEN_HEIGHT-_footerView.frame.size.height-_searchView.frame.size.height, searchViewFrame.size.width, searchViewFrame.size.height)];
                          }
                          completion:^(BOOL completed){
-                             
+                             NSLog(@"ON now its at %f %f %f", _searchView.frame.origin.y, SCREEN_HEIGHT, _searchView.frame.size.height);
                          }];
     }
     else
@@ -1532,13 +1529,14 @@ UIControlEventTouchUpInside];
         _searchResult.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/2);
         [self.view bringSubviewToFront:self.searchView];
         
+        NSLog(@"OFF start at %f", _searchView.frame.origin.y);
         [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             [_searchView setFrame:CGRectMake(searchViewFrame.origin.x, searchViewFrame.origin.y + searchViewFrame.size.height+20, searchViewFrame.size.width, searchViewFrame.size.height)];
+                             [_searchView setFrame:CGRectMake(searchViewFrame.origin.x, SCREEN_HEIGHT, searchViewFrame.size.width, searchViewFrame.size.height)];
                          }
                          completion:^(BOOL completed){
                              self.searchView.alpha = 0;
-                             
+                             NSLog(@"OFF now its at %f", _searchView.frame.origin.y);
                          }];
     }
 }
@@ -1727,7 +1725,11 @@ UIControlEventTouchUpInside];
 
 -(void)createCardButtonPressed
 {
+    [self setSearchViewState:NO];
+    [self setFilterViewState:NO];
+    
     CardEditorViewController *viewController = [[CardEditorViewController alloc] initWithMode:cardEditorModeCreation WithCard:nil];
+    
     [self presentViewController:viewController animated:YES completion:nil];
 }
 
@@ -2983,6 +2985,7 @@ UIControlEventTouchUpInside];
     
     PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
     [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(1)];
+    [cardQuery whereKey:@"isLegacy" equalTo:@(NO)]; //hide all legacy cards
     [salesQuery     whereKey:@"card" matchesQuery:cardQuery];
     
     [salesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -3054,11 +3057,13 @@ UIControlEventTouchUpInside];
     [_searchNameField resignFirstResponder];
     [_searchTagsField resignFirstResponder];
     [_searchIDField resignFirstResponder];
+    
+    //moves screen back after keyboard hides
     [UIView animateWithDuration:0.15
                           delay:0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
-                         self.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+                         _searchView.frame = CGRectMake(0, SCREEN_HEIGHT-_footerView.frame.size.height-_searchView.frame.size.height, self.view.bounds.size.width, 260);
                      }
                      completion:nil];
     
@@ -3079,30 +3084,45 @@ UIControlEventTouchUpInside];
 {
     int height = keyboardSize.height;
     
+    NSLog(@"started");
+    
     [UIView animateWithDuration:0.4
                           delay:0.05
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
-                         self.view.frame = CGRectMake(0,-height, SCREEN_WIDTH, SCREEN_HEIGHT);
+                         
+                         _searchView.frame = CGRectMake(0, SCREEN_HEIGHT-_footerView.frame.size.height-_searchView.frame.size.height-height, self.view.bounds.size.width, 260);
                      }
                      completion:nil];
+    //self.view.frame = CGRectMake(0,-height, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 -(void)searchFieldFinished
 {
-    
+    //moves screen back after keyboard hides
+    [UIView animateWithDuration:0.15
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _searchView.frame = CGRectMake(0, SCREEN_HEIGHT-_footerView.frame.size.height-_searchView.frame.size.height, self.view.bounds.size.width, 260);
+                     }
+                     completion:nil];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+    
+    //moves screen back after keyboard hides
     [UIView animateWithDuration:0.15
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         self.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-                     }
-                     completion:nil];
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             _searchView.frame = CGRectMake(0, SCREEN_HEIGHT-_footerView.frame.size.height-_searchView.frame.size.height, self.view.bounds.size.width, 260);
+                         }
+                         completion:nil];
+    
+    
     return NO;
 }
 
@@ -3135,16 +3155,12 @@ UIControlEventTouchUpInside];
 
 -(void)tapRegistered
 {
+    
     [_searchNameField resignFirstResponder];
     [_searchTagsField resignFirstResponder];
     [_searchIDField resignFirstResponder];
-    [UIView animateWithDuration:0.15
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         self.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-                     }
-                     completion:nil];
+
+    
 }
 
 -(void)showActivityIndicatorWithBlock:(BOOL (^)())block loadingText:(NSString*)loadingText failedText:(NSString*)failedText
@@ -3222,6 +3238,11 @@ UIControlEventTouchUpInside];
 - (BOOL)prefersStatusBarHidden {return YES;}
 
 -(void)viewDidAppear:(BOOL) animated{
+    
+    //for some reason this becomes empty after view is reloaded
+    SCREEN_WIDTH = [[UIScreen mainScreen] bounds].size.width;
+    SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
+    
     [self getIAPData];
 }
 
