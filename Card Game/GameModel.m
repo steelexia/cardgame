@@ -2378,7 +2378,9 @@ uint32_t xor128(int side) {
 
 -(void)setOpponentTarget:(MonsterCardModel*)target
 {
+    NSLog(@"target was %@", target);
     opponentCurrentTarget = target;
+    NSLog(@"target now %@", target);
 }
 
 
