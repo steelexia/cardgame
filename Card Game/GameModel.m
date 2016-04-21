@@ -96,7 +96,22 @@ enum GameMode __gameMode; //because C functions cant access
             }
             if (_level.isTutorial)
                 self.aiPlayer.isTutorial = YES;
-            //levelDifficultyOffset
+            
+            //d1 cards are worse than the "standard", d2 roughly equal, and d3 better
+            if ([_level.levelID hasPrefix:@"d1"])
+            {
+                self.aiPlayer.levelDifficultyOffset = 0.25;
+            }
+            else if ([_level.levelID hasPrefix:@"d2"])
+            {
+                self.aiPlayer.levelDifficultyOffset = 0;
+            }
+            else if ([_level.levelID hasPrefix:@"d3"])
+            {
+                self.aiPlayer.levelDifficultyOffset = -0.1;
+            }
+            
+            
         }
         
         if (gameMode != GameModeMultiplayer)
@@ -924,7 +939,7 @@ enum GameMode __gameMode; //because C functions cant access
         
         //TODO honestly these two lines should only be called AFTER castAbility is resolved (a bit tricky to do, also includes spell cards)
         [self addCardToBattlefield:monsterCard side:side];
-        //update it first for better animations
+        
         //[self.gameViewController updateBattlefieldView: side];
         
         [self.gameViewController addAnimationCounter]; //the delayed cast counts as an animation
@@ -952,6 +967,12 @@ enum GameMode __gameMode; //because C functions cant access
     //remove card and use up cost
     [self.hands[side] removeObject:card];
     player.resource -= card.cost;
+    
+    //update again because some cards have effects on summon (e.g. charge will make it highlighted immediately)
+    if (side == PLAYER_SIDE)
+    {
+        [self.gameViewController updateBattlefieldView: side];
+    }
 }
 
 -(BOOL)addCardToHand: (CardModel*)card side:(char)side
@@ -1216,7 +1237,7 @@ enum GameMode __gameMode; //because C functions cant access
         
         for (Ability *ability in target.abilities)
         {
-            if (!ability.expired && ability.abilityType == abilityTaunt && ability.targetType == targetSelf)
+            if (!ability.expired && ability.abilityType == abilityTaunt && ability.targetType == targetSelf && ability.castType == castAlways)
             {
                 targetHasTaunt = YES;
                 break;
@@ -1233,7 +1254,7 @@ enum GameMode __gameMode; //because C functions cant access
                 if (monster != target)
                 {
                     for (Ability *ability in monster.abilities)
-                        if (!ability.expired && ability.abilityType == abilityTaunt && ability.targetType == targetSelf)
+                        if (!ability.expired && ability.abilityType == abilityTaunt && ability.targetType == targetSelf && ability.castType == castAlways)
                             return NO;
                 }
             }
@@ -1900,6 +1921,8 @@ enum GameMode __gameMode; //because C functions cant access
     else if (ability.abilityType == abilitySetCooldown)
     {
         monster.cooldown = [ability.value intValue];
+        
+        
     }
     else if (ability.abilityType == abilityAddCooldown)
     {

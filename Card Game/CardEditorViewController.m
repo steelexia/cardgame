@@ -164,19 +164,7 @@ bool shouldSetUpView = YES;
     [nameTextField addTarget:self action:@selector(nameTextFieldEdited) forControlEvents:UIControlEventEditingChanged];
     [nameTextField setMinimumFontSize:8.f];
     nameTextField.adjustsFontSizeToFitWidth = YES; //TODO doesn't work under 14
-    
-    if (_editorMode == cardEditorModeVoting)
-        [nameTextField setText:_currentCardModel.name];
-    
-    
-    if(_editorMode ==cardEditorModeRarityUpdate)
-    {
-        [nameTextField setText:_currentCardModel.name];
-         NSString *tagsList = [[_currentCardModel.tags copy] componentsJoinedByString:@" "];
-        [tagsField setText:tagsList];
-        
-    }
-    
+
     [nameTextField setDelegate:self];
     [self.view addSubview:nameTextField];
     
@@ -268,6 +256,34 @@ bool shouldSetUpView = YES;
     [abilityAddButton setEnabled:NO]; //start out nothing selected
     
     [self loadAllValidAbilities];
+    
+    //add existing abilities to the list
+    if (_editorMode == cardEditorModeRarityUpdate && _currentCardModel != nil)
+    {
+        for (int i = 0; i < [_currentCardModel.abilities count]; i++)
+        {
+            Ability *ability = _currentCardModel.abilities[i];
+            
+            AbilityWrapper *wrapper = [AbilityWrapper getWrapperWithId:[AbilityWrapper getIdWithAbility:ability]];
+            
+            if (wrapper != nil)
+            {
+                [abilityExistingTableView.currentAbilities addObject:wrapper];
+                wrapper.ability = ability;
+            }
+            else
+            {
+                //it should be impossible for a card getting updated to have an ability that's not a wrapper, since Parse can only store wrappers TODO maybe should just show error and not allow edit in first place
+                NSLog(@"ERROR: Current card has an ability that does not match any wrapper. Ability deleted.");
+                [_currentCardModel.abilities removeObjectAtIndex:i];
+                i--;
+            }
+        }
+        
+        [self updateExistingAbilityList];
+        [self updateNewAbilityList];
+        [abilityExistingTableView removeFromSuperview]; //hidden at first
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -481,10 +497,7 @@ bool shouldSetUpView = YES;
         [customizeCardButton setEnabled:NO];
         [customizeCardButton addTarget:self action:@selector(customizeButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
         //[self.view addSubview:customizeCardButton];
-        
-        if (_editorMode == cardEditorModeVoting)
-            [customizeCardButton setEnabled:NO];
-        
+   
         //customization view
         _customizeView = [[UIView alloc] initWithFrame:self.view.bounds];
         
@@ -1207,6 +1220,19 @@ bool shouldSetUpView = YES;
             
             [self.view addSubview:_tutLabel];
             [self.view addSubview:_tutOkButton];
+        }
+        else if(_editorMode == cardEditorModeRarityUpdate)
+        {
+            [nameTextField setText:_currentCardModel.name];
+            NSString *tagsList = [[_currentCardModel.tags copy] componentsJoinedByString:@" "];
+            [tagsField setText:tagsList];
+            
+            [customizeCardButton setEnabled:NO];
+            [monsterCardButton setEnabled:NO];
+            [spellCardButton setEnabled:NO];
+            [nameTextField setEnabled:NO];
+            [flavourButton setEnabled:NO];
+            [imageEditArea removeFromSuperview]; //cannot edit image
         }
         
         //UIView*damageEditArea, *lifeEditArea, *costEditArea, *cdEditArea, *imageEditArea, *elementEditArea, *abilityEditArea;
@@ -2822,7 +2848,7 @@ bool shouldSetUpView = YES;
     NSArray*allAbilities = [AbilityWrapper allAbilities];
     
     NSMutableArray*cardAbilitiesBackup;
-    if (_editorMode == cardEditorModeVoting)
+    if (_editorMode == cardEditorModeRarityUpdate)
     {
         //clear the abilities temporarily to prevent some abilities not added to the list
         cardAbilitiesBackup = self.currentCardModel.abilities;
@@ -2856,7 +2882,7 @@ bool shouldSetUpView = YES;
         }
     }
     
-    if (_editorMode == cardEditorModeVoting)
+    if (_editorMode == cardEditorModeRarityUpdate)
         self.currentCardModel.abilities = cardAbilitiesBackup;
     
     //sort the valid abilities
@@ -2922,17 +2948,17 @@ bool shouldSetUpView = YES;
     confirmErrorOkButton.alpha = 0;
     
     //check for errors
-    if ([nameTextField text].length == 0 && _editorMode != cardEditorModeVoting)
+    if ([nameTextField text].length == 0 && _editorMode != cardEditorModeRarityUpdate)
     {
         saveCardConfirmLabel.text = @"Please enter a name for your card.";
         [self.view addSubview:confirmErrorOkButton];
     }
-    else if (_currentCardView.cardImage.image == CARD_EDITOR_EMPTY_IMAGE && _editorMode != cardEditorModeVoting)
+    else if (_currentCardView.cardImage.image == CARD_EDITOR_EMPTY_IMAGE && _editorMode != cardEditorModeRarityUpdate)
     {
         saveCardConfirmLabel.text = @"Please choose an image for your card.";
         [self.view addSubview:confirmErrorOkButton];
     }
-    else if (noDupTags.count < 3 && _editorMode != cardEditorModeVoting)
+    else if (noDupTags.count < 3)
     {
         saveCardConfirmLabel.text = @"Please enter 3 or more different tags, separated by spaces.";
         [self.view addSubview:confirmErrorOkButton];
@@ -2943,9 +2969,9 @@ bool shouldSetUpView = YES;
             saveCardConfirmLabel.text = @"Warning: This card is not compatible with your last card and cannot be placed into the same deck after the tutorial. Are you sure you want to create it?";
         else if (_editorMode == cardEditorModeVoting)
             saveCardConfirmLabel.text = @"Are you sure you want to cast your vote? You will not be able to edit it again.";
-        else if(_editorMode ==cardEditorModeRarityUpdate)
+        else if(_editorMode == cardEditorModeRarityUpdate)
         {
-            saveCardConfirmLabel.text = @"Are you sure you want to update your card with these stats/abilities?";
+            saveCardConfirmLabel.text = @"Are you sure you want to update your card with these stats and abilities?";
         }
         else
             saveCardConfirmLabel.text = @"Are you sure you want to create this card? This will publish the card onto the store.";

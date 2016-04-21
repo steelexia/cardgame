@@ -329,23 +329,18 @@ NSArray *_products;
     _buyHintLabel.strokeColour = [UIColor blackColor];
     _buyHintLabel.center = CGPointMake(60, SCREEN_HEIGHT-55);
     [_cardInfoView addSubview:_buyHintLabel];
-    
-    _editButton = [[CFButton alloc] initWithFrame:CGRectMake(120, SCREEN_HEIGHT -(CARD_DETAIL_BUTTON_HEIGHT*2), CARD_DETAIL_BUTTON_WIDTH, CARD_DETAIL_BUTTON_HEIGHT)];
-    _editButton.label.text = @"Edit";
-    [_editButton setTextSize:CARD_NAME_SIZE +7];
-    [_editButton addTarget:self action:@selector(editButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    //[_cardInfoView addSubview:_editButton];
-    
+
     _restockButton = [[CFButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT -(CARD_DETAIL_BUTTON_HEIGHT*2), CARD_DETAIL_BUTTON_WIDTH, CARD_DETAIL_BUTTON_HEIGHT)];
     _restockButton.label.text = @"Restock";
     [_restockButton setTextSize:CARD_NAME_SIZE +3];
     [_restockButton addTarget:self action:@selector(restockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [_restockButton setEnabled:NO]; //TODO enable once implemented
     //[_cardInfoView addSubview:_buyButton];
     
-    _bumpButton = [[CFButton alloc] initWithFrame:CGRectMake(120, SCREEN_HEIGHT -(CARD_DETAIL_BUTTON_HEIGHT*2), 100, 60)];
-    _bumpButton.label.text = @"Upgrade";
-    [_bumpButton setTextSize:CARD_NAME_SIZE +7];
-    [_bumpButton addTarget:self action:@selector(bumpButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    _upgradeButton = [[CFButton alloc] initWithFrame:CGRectMake(120, SCREEN_HEIGHT -(CARD_DETAIL_BUTTON_HEIGHT*2), CARD_DETAIL_BUTTON_WIDTH, CARD_DETAIL_BUTTON_HEIGHT)];
+    _upgradeButton.label.text = @"Upgrade";
+    [_upgradeButton setTextSize:CARD_NAME_SIZE +1];
+    [_upgradeButton addTarget:self action:@selector(upgradeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     //[_cardInfoView addSubview:_sellButton];
     
     _editHintLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
@@ -2006,8 +2001,7 @@ UIControlEventTouchUpInside];
     [_sellButton removeFromSuperview];
     [_cardInfoView addSubview:_likeButton];
     [_cardInfoView addSubview:_reportButton];
-    //[_cardInfoView addSubview:_editButton];
-    
+
     PFObject *salePF = _cardsView.currentSales[currentCardIndex];
     
     //cannot buy if already owns it, or not enough gold
@@ -2053,23 +2047,12 @@ UIControlEventTouchUpInside];
         [_reportButton setEnabled:NO];
     }
     else
-        [_reportButton setEnabled:YES];
-    
-    if ([UserModel getLikedCard:cardModel] && ![UserModel getEditedCard:cardModel])
-    {
-        [_editButton setEnabled:YES];
-    }
-    else
-    {
-        //_editHintLabel.text = @"Like it first";
-        [_editButton setEnabled:NO];
-    }
-    
+        [_reportButton setEnabled:NO]; //TODO report system need to be reworked, disabled for now
+
     //do not get the three buttons if is the card's creator
     if ([_cardView.cardModel.creator isEqualToString:userPF.objectId])
     {
         [_buyButton removeFromSuperview];
-        [_editButton removeFromSuperview];
         [_sellButton removeFromSuperview];
         [_likeButton removeFromSuperview];
         [_reportButton removeFromSuperview];
@@ -2082,23 +2065,29 @@ UIControlEventTouchUpInside];
         [_cardInfoView addSubview: _restockButton];
         NSString *rarityUpdate = _cardView.cardModel.rarityUpdateAvailable;
         
-        if([rarityUpdate isEqualToString:@"YES"])
+        [_cardInfoView addSubview: _upgradeButton];
+        
+        //if([rarityUpdate isEqualToString:@"YES"])
         {
-            [_cardInfoView addSubview: _bumpButton];
+            [_upgradeButton setEnabled:YES];
         }
+        /*else
+        {
+            [_upgradeButton setEnabled:NO];
+        }*/
         
         [_cardInfoView addSubview:_buyHintLabel];
         [_cardInfoView addSubview:_editHintLabel];
         
         //lazy
-        _buyHintLabel.text = @"TODO gold";
-        _editHintLabel.text = @"TODO gold";
+        _buyHintLabel.text = @"WIP";
+        _editHintLabel.text = @"WIP";
         //TODO additional stuff in future, such as bumping to featured
     }
     else
     {
         [_restockButton removeFromSuperview];
-        [_bumpButton removeFromSuperview];
+        [_upgradeButton removeFromSuperview];
     }
     
     NSString*tagString = @"Tags:\n";
@@ -2661,7 +2650,7 @@ UIControlEventTouchUpInside];
     //TODO
 }
 
--(void)bumpButtonPressed
+-(void)upgradeButtonPressed
 {
     //TODO
     [self editButtonPressed];
@@ -2984,6 +2973,7 @@ UIControlEventTouchUpInside];
     [self applySearchFiltersToQuery:salesQuery];
     
     PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
+    //comment below two lines for debugging legacy cards
     [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(1)];
     [cardQuery whereKey:@"isLegacy" equalTo:@(NO)]; //hide all legacy cards
     [salesQuery     whereKey:@"card" matchesQuery:cardQuery];
