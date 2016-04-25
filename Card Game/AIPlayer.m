@@ -8,6 +8,7 @@
 
 #import "AIPlayer.h"
 #import "AIPlayer+Utility.h"
+#import "CardPointsUtility.h"
 
 @implementation AIPlayer
 
@@ -629,12 +630,12 @@ int enemyTotalStrength, friendlyTotalStrength;
                 if (points != VICTORY_MOVE)
                     if (ability.castType == castOnHit || ability.castType == castOnMove)
                         abilityPoint = abilityPoint / (monster.cooldown>0?monster.cooldown:1);
+                
+                NSLog(@"AI: Points so far %d", points);
+                NSLog(@"AI: Adding ability %@ with %d points (will divide by 2)", [Ability getDescription:ability fromCard:monster], abilityPoint);
+                points += abilityPoint / 2; //half as effective
+                NSLog(@"AI: New point after adding last ability %d", points);
             }
-            
-            NSLog(@"AI: Points so far %d", points);
-            NSLog(@"AI: Adding ability %@ with %d points (will divide by 2)", [Ability getDescription:ability fromCard:monster], abilityPoint);
-            points += abilityPoint / 2; //half as effective
-            NSLog(@"AI: New point after adding last ability %d", points);
         }
     }
     
@@ -1412,30 +1413,37 @@ int enemyTotalStrength, friendlyTotalStrength;
         }
         else
         {
-            points = 0;
-            points += target.life * 0.15 * STAT_POINT_MULTIPLIER;
-            points += target.damage * 0.15 * STAT_POINT_MULTIPLIER;
-            
-            PlayerModel*targetPlayer = self.gameModel.players[target.side];
-            
-            //player having low health makes taunt much much better
-            if (targetPlayer.playerMonster.life < 20)
+            if (![CardPointsUtility cardHasTaunt:target])
             {
-                NSLog(@"AI: hero low on life, bonus points %d", (int)((20 - targetPlayer.playerMonster.life) * 0.75 * STAT_POINT_MULTIPLIER));
-                
-                points += (20 - targetPlayer.playerMonster.life) * 0.75 * STAT_POINT_MULTIPLIER;
-            }
-            
-            //having other minions on field is even better
-            NSArray*battlefield = self.gameModel.battlefield[target.side];
-            if ([battlefield count] > 0)
-            {
+                points = 0;
                 points += target.life * 0.15 * STAT_POINT_MULTIPLIER;
                 points += target.damage * 0.15 * STAT_POINT_MULTIPLIER;
+                
+                PlayerModel*targetPlayer = self.gameModel.players[target.side];
+                
+                //player having low health makes taunt much much better
+                if (targetPlayer.playerMonster.life < 20)
+                {
+                    NSLog(@"AI: hero low on life, bonus points %d", (int)((20 - targetPlayer.playerMonster.life) * 0.75 * STAT_POINT_MULTIPLIER));
+                    
+                    points += (20 - targetPlayer.playerMonster.life) * 0.75 * STAT_POINT_MULTIPLIER;
+                }
+                
+                //having other minions on field is even better
+                NSArray*battlefield = self.gameModel.battlefield[target.side];
+                if ([battlefield count] > 0)
+                {
+                    points += target.life * 0.15 * STAT_POINT_MULTIPLIER;
+                    points += target.damage * 0.15 * STAT_POINT_MULTIPLIER;
+                }
+                
+                if (target.side != side)
+                    points = -points;
+            }
+            else{
+                points = USELESS_MOVE;
             }
             
-            if (target.side != side)
-                points = -points;
             
             NSLog(@"AI: ability taunt, %d final points", points);
         }
@@ -1754,7 +1762,7 @@ int enemyTotalStrength, friendlyTotalStrength;
     {
         NSArray *targets;
         
-        //if this is a selectable target type and target has already been chosen, cannot choose a different target. (e.g. +1000 life and +1000 damage to any minion can't be casted on two different minions)
+        //if this is a selectable target type and target has already been chosen, cannot choose a different target. (e.g. +1 life and +1 damage to any minion can't be casted on two different minions)
         if ([Ability abilityIsSelectableTargetType:ability] && [_gameModel getOpponentTarget]!=nil)
             targets = @[[_gameModel getOpponentTarget]];
         else
@@ -1813,7 +1821,7 @@ int enemyTotalStrength, friendlyTotalStrength;
     {
         if (selectableTargetPoints != VICTORY_MOVE)
         {
-            if (selectableTargetPoints != IMPOSSIBLE_MOVE)
+            if (selectableTargetPoints != IMPOSSIBLE_MOVE && selectableTargetPoints != USELESS_MOVE)
                 points -= selectableTargetPoints; //discard the selectable target's points
             
             NSLog(@"AI: discarding opponent current target since points is negative");

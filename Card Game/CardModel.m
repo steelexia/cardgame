@@ -19,6 +19,8 @@
 @synthesize idNumber = _idNumber;
 @synthesize name = _name;
 @synthesize cost = _cost;
+@synthesize version = _version;
+@synthesize isLegacy = _isLegacy;
 @synthesize rarity = _rarity;
 @synthesize abilities = _abilities;
 @synthesize type = _type;
@@ -57,6 +59,7 @@ const int CARD_ID_START = 1000;
         self.reports = 0;
         self.tags = [NSMutableArray array];
         self.flavourText = @"";
+        self.isLegacy = false;
     }
     
     return self;
@@ -114,7 +117,7 @@ const int CARD_ID_START = 1000;
         self.cardPF       = card.cardPF;
         self.flavourText  = card.flavourText;
         self.version      = card.version;
-        
+        self.isLegacy     = card.isLegacy;
         
         for (Ability*ability in card.abilities)
             [self.abilities addObject: [[Ability alloc] initWithAbility:ability]];
@@ -255,6 +258,8 @@ const int CARD_ID_START = 1000;
     NSString *flavourText = cardPF[@"flavourText"];
     NSNumber *version = cardPF[@"version"];
     NSString *rarityUpgradeAvailable = cardPF[@"rarityUpdateAvailable"];
+    bool isLegacy = [cardPF[@"isLegacy"] boolValue];
+    
     int adminPhotoCheck = [cardPF[@"adminPhotoCheck"] intValue];
     //TODO in future this should [probably] never be nil
     if (creator != nil && ![creator isEqualToString:@"Unknown"])
@@ -327,6 +332,7 @@ const int CARD_ID_START = 1000;
     card.version = [version intValue];
     card.rarityUpdateAvailable = rarityUpgradeAvailable;
     card.adminPhotoCheck = adminPhotoCheck;
+    card.isLegacy = isLegacy;
     
     if (flavourText != nil) //just for old cards that have no text
         card.flavourText = flavourText;
@@ -392,6 +398,7 @@ const int CARD_ID_START = 1000;
     cardPF[@"tags"] = card.tags;
     cardPF[@"image"] = imagePF;
     cardPF[@"flavourText"] = card.flavourText;
+    cardPF[@"isLegacy"] = @(card.isLegacy);
     
     cardPF[@"element"] = [NSNumber numberWithInt:card.element];
     

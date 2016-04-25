@@ -897,7 +897,7 @@ NSArray *allAbilities;
     
     //use this to print out all abilities for temp card design
     
-    
+    /*
     NSMutableArray *counts = [NSMutableArray arrayWithArray:@[@0,@0,@0,@0,@0,@0,@0]];
     
     for (int i = 0; i < [allAbilities count]; i++)
@@ -936,6 +936,7 @@ NSArray *allAbilities;
             }
         }
     //}
+     */
 }
 
 

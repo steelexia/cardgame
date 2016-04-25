@@ -44,7 +44,7 @@
 @property BOOL heroic;
 
 /** Used for AI to keep track of the original card when copying them for states. */
-@property (weak) MonsterCardModel*originalCard;
+@property (strong) MonsterCardModel*originalCard;
 
 //----------------Functions----------------//
 /**

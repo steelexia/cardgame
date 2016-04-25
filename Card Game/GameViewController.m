@@ -53,7 +53,7 @@ const float FIELD_CENTER_Y_RATIO = 3/8.f;
 /** UILabel used to darken the screen during card selections */
 UIView *darkFilter;
 
-/** TODO: temporary label for representing the attack line when targetting monsters */
+/** label for representing the attack line when targetting monsters (may improve visual in future) */
 UILabel *attackLine;
 
 /** stores array of two label for showing the current player's resource */
@@ -895,7 +895,7 @@ BOOL leftHandViewZone = NO;
                 //ability casted successfully
                 [self.currentAbilities removeAllObjects];
                 //[self updateBattlefieldView:OPPONENT_SIDE];
-                //[self updateBattlefieldView:PLAYER_SIDE];
+                [self updateBattlefieldView:PLAYER_SIDE]; //update player's highlights
                 [self updateHandsView:PLAYER_SIDE];
                 
                 //re-enable the disabled views
@@ -1557,7 +1557,7 @@ BOOL leftHandViewZone = NO;
         CGPoint p1 = currentCard.cardView.center;
         CGPoint p2 = [touch locationInView:self.view];
         
-        //TODO: temporary attack line, just a label with red background (red rect)
+        //attack line, just a label with red background (red rect)
         attackLine.center = CGPointAdd(p1, CGPointDivideScalar((CGPointSubtract(p2, p1)), 2));
         int length = (int)CGPointDistance(p1, p2);
         attackLine.bounds = CGRectMake(0,-10,(int)(length*1),4);

@@ -64,14 +64,12 @@ NSArray *_products;
     return self;
 }
 
-
-
 -(void)viewDidLoad{
     [super viewDidLoad];
-    
+
     if ([userPF[@"storeTutorialDone"] boolValue] == NO)
         _isTutorial = YES;
-    
+
     SCREEN_WIDTH = [[UIScreen mainScreen] bounds].size.width;
     SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
     
@@ -331,23 +329,18 @@ NSArray *_products;
     _buyHintLabel.strokeColour = [UIColor blackColor];
     _buyHintLabel.center = CGPointMake(60, SCREEN_HEIGHT-55);
     [_cardInfoView addSubview:_buyHintLabel];
-    
-    _editButton = [[CFButton alloc] initWithFrame:CGRectMake(120, SCREEN_HEIGHT -(CARD_DETAIL_BUTTON_HEIGHT*2), CARD_DETAIL_BUTTON_WIDTH, CARD_DETAIL_BUTTON_HEIGHT)];
-    _editButton.label.text = @"Edit";
-    [_editButton setTextSize:CARD_NAME_SIZE +7];
-    [_editButton addTarget:self action:@selector(editButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    //[_cardInfoView addSubview:_editButton];
-    
+
     _restockButton = [[CFButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT -(CARD_DETAIL_BUTTON_HEIGHT*2), CARD_DETAIL_BUTTON_WIDTH, CARD_DETAIL_BUTTON_HEIGHT)];
     _restockButton.label.text = @"Restock";
     [_restockButton setTextSize:CARD_NAME_SIZE +3];
     [_restockButton addTarget:self action:@selector(restockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [_restockButton setEnabled:NO]; //TODO enable once implemented
     //[_cardInfoView addSubview:_buyButton];
     
-    _bumpButton = [[CFButton alloc] initWithFrame:CGRectMake(120, SCREEN_HEIGHT -(CARD_DETAIL_BUTTON_HEIGHT*2), 100, 60)];
-    _bumpButton.label.text = @"Upgrade";
-    [_bumpButton setTextSize:CARD_NAME_SIZE +7];
-    [_bumpButton addTarget:self action:@selector(bumpButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    _upgradeButton = [[CFButton alloc] initWithFrame:CGRectMake(120, SCREEN_HEIGHT -(CARD_DETAIL_BUTTON_HEIGHT*2), CARD_DETAIL_BUTTON_WIDTH, CARD_DETAIL_BUTTON_HEIGHT)];
+    _upgradeButton.label.text = @"Upgrade";
+    [_upgradeButton setTextSize:CARD_NAME_SIZE +1];
+    [_upgradeButton addTarget:self action:@selector(upgradeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     //[_cardInfoView addSubview:_sellButton];
     
     _editHintLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
@@ -479,7 +472,6 @@ NSArray *_products;
     
     [_cardInfoView setUserInteractionEnabled:YES];
     [_cardInfoView addGestureRecognizer:cardInfoTap];
-    
    
     
     _searchView = [[CFLabel alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-40, self.view.bounds.size.width, 260)];
@@ -1474,7 +1466,7 @@ UIControlEventTouchUpInside];
         
         [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             [_filterView setFrame:CGRectMake(filterViewFrame.origin.x, filterViewFrame.origin.y - filterViewFrame.size.height-20, filterViewFrame.size.width, filterViewFrame.size.height)];
+                             [_filterView setFrame:CGRectMake(filterViewFrame.origin.x, SCREEN_HEIGHT-_footerView.frame.size.height-_filterView.frame.size.height, filterViewFrame.size.width, filterViewFrame.size.height)];
                          }
                          completion:^(BOOL completed){
                              
@@ -1487,7 +1479,7 @@ UIControlEventTouchUpInside];
          [self.view bringSubviewToFront:_filterView];
         [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             [_filterView setFrame:CGRectMake(filterViewFrame.origin.x, filterViewFrame.origin.y + filterViewFrame.size.height+20, filterViewFrame.size.width, filterViewFrame.size.height)];
+                             [_filterView setFrame:CGRectMake(filterViewFrame.origin.x, SCREEN_HEIGHT, filterViewFrame.size.width, filterViewFrame.size.height)];
                          }
                          completion:^(BOOL completed){
                               _filterView.alpha = 0;
@@ -1518,13 +1510,13 @@ UIControlEventTouchUpInside];
         _searchResult.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/5);
         [self.view bringSubviewToFront:self.searchView];
         self.searchView.alpha = 1;
-        
+        NSLog(@"ON start at %f", _searchView.frame.origin.y);
         [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             [_searchView setFrame:CGRectMake(searchViewFrame.origin.x, searchViewFrame.origin.y - searchViewFrame.size.height-20, searchViewFrame.size.width, searchViewFrame.size.height)];
+                             [_searchView setFrame:CGRectMake(searchViewFrame.origin.x, SCREEN_HEIGHT-_footerView.frame.size.height-_searchView.frame.size.height, searchViewFrame.size.width, searchViewFrame.size.height)];
                          }
                          completion:^(BOOL completed){
-                             
+                             NSLog(@"ON now its at %f %f %f", _searchView.frame.origin.y, SCREEN_HEIGHT, _searchView.frame.size.height);
                          }];
     }
     else
@@ -1532,13 +1524,14 @@ UIControlEventTouchUpInside];
         _searchResult.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/2);
         [self.view bringSubviewToFront:self.searchView];
         
+        NSLog(@"OFF start at %f", _searchView.frame.origin.y);
         [UIView animateWithDuration:0.4 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             [_searchView setFrame:CGRectMake(searchViewFrame.origin.x, searchViewFrame.origin.y + searchViewFrame.size.height+20, searchViewFrame.size.width, searchViewFrame.size.height)];
+                             [_searchView setFrame:CGRectMake(searchViewFrame.origin.x, SCREEN_HEIGHT, searchViewFrame.size.width, searchViewFrame.size.height)];
                          }
                          completion:^(BOOL completed){
                              self.searchView.alpha = 0;
-                             
+                             NSLog(@"OFF now its at %f", _searchView.frame.origin.y);
                          }];
     }
 }
@@ -1727,7 +1720,11 @@ UIControlEventTouchUpInside];
 
 -(void)createCardButtonPressed
 {
+    [self setSearchViewState:NO];
+    [self setFilterViewState:NO];
+    
     CardEditorViewController *viewController = [[CardEditorViewController alloc] initWithMode:cardEditorModeCreation WithCard:nil];
+    
     [self presentViewController:viewController animated:YES completion:nil];
 }
 
@@ -2004,8 +2001,7 @@ UIControlEventTouchUpInside];
     [_sellButton removeFromSuperview];
     [_cardInfoView addSubview:_likeButton];
     [_cardInfoView addSubview:_reportButton];
-    //[_cardInfoView addSubview:_editButton];
-    
+
     PFObject *salePF = _cardsView.currentSales[currentCardIndex];
     
     //cannot buy if already owns it, or not enough gold
@@ -2051,23 +2047,12 @@ UIControlEventTouchUpInside];
         [_reportButton setEnabled:NO];
     }
     else
-        [_reportButton setEnabled:YES];
-    
-    if ([UserModel getLikedCard:cardModel] && ![UserModel getEditedCard:cardModel])
-    {
-        [_editButton setEnabled:YES];
-    }
-    else
-    {
-        //_editHintLabel.text = @"Like it first";
-        [_editButton setEnabled:NO];
-    }
-    
+        [_reportButton setEnabled:NO]; //TODO report system need to be reworked, disabled for now
+
     //do not get the three buttons if is the card's creator
     if ([_cardView.cardModel.creator isEqualToString:userPF.objectId])
     {
         [_buyButton removeFromSuperview];
-        [_editButton removeFromSuperview];
         [_sellButton removeFromSuperview];
         [_likeButton removeFromSuperview];
         [_reportButton removeFromSuperview];
@@ -2080,23 +2065,29 @@ UIControlEventTouchUpInside];
         [_cardInfoView addSubview: _restockButton];
         NSString *rarityUpdate = _cardView.cardModel.rarityUpdateAvailable;
         
-        if([rarityUpdate isEqualToString:@"YES"])
+        [_cardInfoView addSubview: _upgradeButton];
+        
+        //if([rarityUpdate isEqualToString:@"YES"])
         {
-            [_cardInfoView addSubview: _bumpButton];
+            [_upgradeButton setEnabled:YES];
         }
+        /*else
+        {
+            [_upgradeButton setEnabled:NO];
+        }*/
         
         [_cardInfoView addSubview:_buyHintLabel];
         [_cardInfoView addSubview:_editHintLabel];
         
         //lazy
-        _buyHintLabel.text = @"TODO gold";
-        _editHintLabel.text = @"TODO gold";
+        _buyHintLabel.text = @"WIP";
+        _editHintLabel.text = @"WIP";
         //TODO additional stuff in future, such as bumping to featured
     }
     else
     {
         [_restockButton removeFromSuperview];
-        [_bumpButton removeFromSuperview];
+        [_upgradeButton removeFromSuperview];
     }
     
     NSString*tagString = @"Tags:\n";
@@ -2659,7 +2650,7 @@ UIControlEventTouchUpInside];
     //TODO
 }
 
--(void)bumpButtonPressed
+-(void)upgradeButtonPressed
 {
     //TODO
     [self editButtonPressed];
@@ -2714,7 +2705,9 @@ UIControlEventTouchUpInside];
     if (_storeCategoryTab == 0) {
         PFQuery *featuredCardQuery = [PFQuery queryWithClassName:@"Card"];
         
+        //TODO this needs fixing, need most popular card, no legacy cards
         [featuredCardQuery setLimit:1];
+        
         
         [featuredCardQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(!error){
@@ -2739,6 +2732,9 @@ UIControlEventTouchUpInside];
         
         PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
         [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(1)];
+        //[cardQuery whereKeyExists:@"idNumber"];
+        [cardQuery whereKey:@"isLegacy" equalTo:@(NO)]; //hide all legacy cards
+        cardQuery.cachePolicy = kPFCachePolicyIgnoreCache;
         [salesQuery     whereKey:@"card" matchesQuery:cardQuery];
         
         [salesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -2757,13 +2753,14 @@ UIControlEventTouchUpInside];
             }
         }];
         
+        //TODO not sure what this is
+        /*
         PFQuery *pendingCardQuery = [PFQuery queryWithClassName:@"Card"];
         [pendingCardQuery whereKey:@"adminPhotoCheck" equalTo:@(0)];
         [pendingCardQuery orderByDescending:@"createdAt"];
         
         [pendingCardQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if(!error){
-                //load all sales without the cards
                 _currentPendingImageCards = [NSMutableArray arrayWithArray: objects];
                 
             }
@@ -2773,6 +2770,7 @@ UIControlEventTouchUpInside];
                 NSLog(@"ERROR SEARCHING SALES");
             }
         }];
+         */
     }
 
 }
@@ -2798,6 +2796,7 @@ UIControlEventTouchUpInside];
         [self applyFiltersToQuery:salesQuery];
         
         PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
+        [cardQuery whereKey:@"isLegacy" equalTo:@(NO)]; //hide all legacy cards
         [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(1)];
         [salesQuery     whereKey:@"card" matchesQuery:cardQuery];
         
@@ -2847,7 +2846,7 @@ UIControlEventTouchUpInside];
     for (PFObject *salePF in _currentLoadedSales)
     {
         PFObject *cardPF = salePF[@"card"];
-        
+
         BOOL shouldFilter = [self shouldFilterCardPF:cardPF withSalePF:salePF];
         
         NSLog(@"shouldFilter: %d %d", shouldFilter, [_cardsView.currentSales containsObject:salePF]);
@@ -2974,7 +2973,9 @@ UIControlEventTouchUpInside];
     [self applySearchFiltersToQuery:salesQuery];
     
     PFQuery *cardQuery = [PFQuery queryWithClassName:@"Card"];
+    //comment below two lines for debugging legacy cards
     [cardQuery whereKey:@"adminPhotoCheck" equalTo:@(1)];
+    [cardQuery whereKey:@"isLegacy" equalTo:@(NO)]; //hide all legacy cards
     [salesQuery     whereKey:@"card" matchesQuery:cardQuery];
     
     [salesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -3046,11 +3047,13 @@ UIControlEventTouchUpInside];
     [_searchNameField resignFirstResponder];
     [_searchTagsField resignFirstResponder];
     [_searchIDField resignFirstResponder];
+    
+    //moves screen back after keyboard hides
     [UIView animateWithDuration:0.15
                           delay:0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
-                         self.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+                         _searchView.frame = CGRectMake(0, SCREEN_HEIGHT-_footerView.frame.size.height-_searchView.frame.size.height, self.view.bounds.size.width, 260);
                      }
                      completion:nil];
     
@@ -3071,30 +3074,45 @@ UIControlEventTouchUpInside];
 {
     int height = keyboardSize.height;
     
+    NSLog(@"started");
+    
     [UIView animateWithDuration:0.4
                           delay:0.05
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
-                         self.view.frame = CGRectMake(0,-height, SCREEN_WIDTH, SCREEN_HEIGHT);
+                         
+                         _searchView.frame = CGRectMake(0, SCREEN_HEIGHT-_footerView.frame.size.height-_searchView.frame.size.height-height, self.view.bounds.size.width, 260);
                      }
                      completion:nil];
+    //self.view.frame = CGRectMake(0,-height, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 -(void)searchFieldFinished
 {
-    
+    //moves screen back after keyboard hides
+    [UIView animateWithDuration:0.15
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _searchView.frame = CGRectMake(0, SCREEN_HEIGHT-_footerView.frame.size.height-_searchView.frame.size.height, self.view.bounds.size.width, 260);
+                     }
+                     completion:nil];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+    
+    //moves screen back after keyboard hides
     [UIView animateWithDuration:0.15
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         self.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-                     }
-                     completion:nil];
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             _searchView.frame = CGRectMake(0, SCREEN_HEIGHT-_footerView.frame.size.height-_searchView.frame.size.height, self.view.bounds.size.width, 260);
+                         }
+                         completion:nil];
+    
+    
     return NO;
 }
 
@@ -3127,16 +3145,12 @@ UIControlEventTouchUpInside];
 
 -(void)tapRegistered
 {
+    
     [_searchNameField resignFirstResponder];
     [_searchTagsField resignFirstResponder];
     [_searchIDField resignFirstResponder];
-    [UIView animateWithDuration:0.15
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         self.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-                     }
-                     completion:nil];
+
+    
 }
 
 -(void)showActivityIndicatorWithBlock:(BOOL (^)())block loadingText:(NSString*)loadingText failedText:(NSString*)failedText
@@ -3214,6 +3228,11 @@ UIControlEventTouchUpInside];
 - (BOOL)prefersStatusBarHidden {return YES;}
 
 -(void)viewDidAppear:(BOOL) animated{
+    
+    //for some reason this becomes empty after view is reloaded
+    SCREEN_WIDTH = [[UIScreen mainScreen] bounds].size.width;
+    SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
+    
     [self getIAPData];
 }
 
