@@ -39,7 +39,7 @@ CardView *originalCurrentCard;
 /** Index of currentCard in the collection */
 int currentIndex = -1;
 
-CFButton *addCardToDeckButton, *removeCardFromDeckButton;
+CFButton *addCardToDeckButton, *removeCardFromDeckButton, *sellCardButton;
 
 /** Shows the number of cards currently in the deck */
 UILabel *deckCountLabel;
@@ -218,16 +218,19 @@ DeckModel * allCards;
     darkFilter.backgroundColor = [[UIColor alloc]initWithHue:0 saturation:0 brightness:0 alpha:0.8];
     [darkFilter setUserInteractionEnabled:YES]; //blocks all interaction behind it
     
-    addCardToDeckButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 75, 75)];
-    addCardToDeckButton.center = CGPointMake(SCREEN_WIDTH - 45, SCREEN_HEIGHT-85);
+    addCardToDeckButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - CARD_DETAIL_BUTTON_WIDTH - 10, SCREEN_HEIGHT - CARD_DETAIL_BUTTON_WIDTH - 50, CARD_DETAIL_BUTTON_WIDTH, CARD_DETAIL_BUTTON_WIDTH)];
     [addCardToDeckButton setImage:[UIImage imageNamed:@"add_button"] forState:UIControlStateNormal];
     [addCardToDeckButton addTarget:self action:@selector(addCardToDeckPressed)    forControlEvents:UIControlEventTouchUpInside];
     
-    removeCardFromDeckButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 75, 75)];
-    removeCardFromDeckButton.center = CGPointMake(SCREEN_WIDTH - 50, SCREEN_HEIGHT-80);
+    removeCardFromDeckButton = [[CFButton alloc] initWithFrame:addCardToDeckButton.frame];
     [removeCardFromDeckButton setImage:[UIImage imageNamed:@"remove_button"] forState:UIControlStateNormal];
     
     [removeCardFromDeckButton addTarget:self action:@selector(removeCardFromDeckPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    sellCardButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - CARD_DETAIL_BUTTON_WIDTH - 10, 10, CARD_DETAIL_BUTTON_WIDTH, CARD_DETAIL_BUTTON_HEIGHT)];
+    sellCardButton.label.text = @"Sell";
+    [sellCardButton setTextSize:CARD_NAME_SIZE +7];
+    [sellCardButton addTarget:self action:@selector(sellCardButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
     //deck count label
     deckCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(SCREEN_WIDTH - 115, 8, 90, 40)];
@@ -888,9 +891,21 @@ DeckModel * allCards;
     {
         addCardToDeckButton.alpha = 0;
         cannotAddCardReasonLabel.alpha = 0;
+        sellCardButton.alpha = 0;
         [addCardToDeckButton setEnabled:YES];
         
         [self.view addSubview:addCardToDeckButton];
+        [self.view addSubview:sellCardButton];
+        
+        //is creator, or is starter card, cannot sell this card
+        if ([currentCard.cardModel.creator isEqualToString:userPF.objectId] || currentCard.cardModel.idNumber < CARD_ID_START)
+        {
+            [sellCardButton setEnabled:NO];
+        }
+        else
+        {
+            [sellCardButton setEnabled:YES];
+        }
         
         NSMutableArray*reasons = [self canAddCardToDeck:currentCard.cardModel];
         if (reasons.count > 0)
@@ -918,6 +933,7 @@ DeckModel * allCards;
                              darkFilter.alpha = 0.9;
                              addCardToDeckButton.alpha = 1;
                              cannotAddCardReasonLabel.alpha = 1;
+                             sellCardButton.alpha = 1;
                          }
                          completion:nil];
     }
@@ -933,6 +949,9 @@ DeckModel * allCards;
                          }
                          completion:nil];
     }
+    
+    
+    
 }
 
 -(void)unmaximizeCard:(enum CardCollectinViewMode)mode
@@ -944,10 +963,12 @@ DeckModel * allCards;
                              darkFilter.alpha = 0;
                              addCardToDeckButton.alpha = 0;
                              cannotAddCardReasonLabel.alpha = 0;
+                             sellCardButton.alpha = 0;
                          }
                          completion:^(BOOL completed){
                              [darkFilter removeFromSuperview];
                              [addCardToDeckButton removeFromSuperview];
+                             [sellCardButton removeFromSuperview];
                              if (cannotAddCardReasonLabel.superview!=nil)
                                  [cannotAddCardReasonLabel removeFromSuperview];
                          }];
@@ -1815,6 +1836,48 @@ DeckModel * allCards;
     }
     
     [self reloadCardsWithFilter];
+}
+
+-(void)sellCardButtonPressed
+{
+    //TODO more work needed later (confirmation dialog, show gold etc)
+    
+    [self showActivityIndicatorWithBlock:^BOOL{
+
+      int cost = [GameStore getCardSellPrice:currentCard.cardModel];
+      
+      NSError*error;
+      [PFCloud callFunction:@"sellCard"
+             withParameters:@{@"cardNumber" : @(currentCard.cardModel.idNumber),
+                              @"cost" : @(cost)}
+                      error:&error];
+      
+      if (!error)
+      {
+          userGold += cost;
+          [UserModel removeOwnedCard:currentCard.cardModel.idNumber];
+ 
+          [userPF fetch]; //can have error but it's not important
+          
+          [self.cardsView.currentCardModels removeObject:currentCard.cardModel];
+          [self.cardsView reloadInputViews];
+          [self.cardsView.collectionView reloadData];
+          
+          [currentCard removeFromSuperview];
+          currentCard = nil;
+          [self unmaximizeCard:cardCollectionAddCard];
+          
+          
+          return YES;
+      }
+      else
+      {
+          NSLog(@"%@", [error localizedDescription]);
+          return NO;
+      }
+
+        
+    } loadingText:@"Processing..." failedText:@"Error selling card."];
 }
 
 

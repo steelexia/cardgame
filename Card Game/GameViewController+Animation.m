@@ -22,7 +22,7 @@
 {
     self.currentNumberOfAnimations--;
     
-    if (self.currentNumberOfAnimations == 0)
+    if (self.currentNumberOfAnimations <= 0)
         [self setAllViews:YES];
 }
 

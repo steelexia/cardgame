@@ -1223,6 +1223,9 @@ bool shouldSetUpView = YES;
         }
         else if(_editorMode == cardEditorModeRarityUpdate)
         {
+            abilityExistingTableView.currentCard = _currentCardModel;
+            abilityNewTableView.currentCard = _currentCardModel;
+            
             [nameTextField setText:_currentCardModel.name];
             NSString *tagsList = [[_currentCardModel.tags copy] componentsJoinedByString:@" "];
             [tagsField setText:tagsList];

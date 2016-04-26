@@ -36,5 +36,6 @@
 +(BOOL)cardHasTaunt:(CardModel*)card;
 +(BOOL)cardHasAssassin:(CardModel*)card;
 +(BOOL)cardHasCharge:(CardModel*)card;
++(BOOL)cardHasPierce:(CardModel*)card;
 
 @end

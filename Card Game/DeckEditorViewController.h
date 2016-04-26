@@ -11,6 +11,7 @@
 #import "DeckTableView.h"
 #import "CFButton.h"
 #import "CFLabel.h"
+#import "GameStore.h"
 
 @interface DeckEditorViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate>
 

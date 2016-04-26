@@ -951,7 +951,7 @@ BOOL leftHandViewZone = NO;
                 }
             }
         
-        //TODO: remove for debugging
+        //DEBUG: remove for tapping on enemy hand's cards
         /*
          if (!tappedOnACard)
          for (CardModel*card in self.gameModel.hands[OPPONENT_SIDE])
@@ -968,6 +968,17 @@ BOOL leftHandViewZone = NO;
         {
             gameControlState = gameControlStateNone;
             [attackLine removeFromSuperview];
+            
+            //remove all the highlights on enemies
+            for (MonsterCardModel *enemy in self.gameModel.battlefield[OPPONENT_SIDE])
+                enemy.cardView.cardHighlightType = cardHighlightNone;
+            
+            if (!_level.isBossFight)
+            {
+                PlayerModel*opponent = self.gameModel.players[OPPONENT_SIDE];
+                opponent.playerMonster.cardView.cardHighlightType = cardHighlightNone;
+            }
+            
         }
     }
     if (hitView == self.viewingCardView)
@@ -1241,12 +1252,16 @@ BOOL leftHandViewZone = NO;
         }
         
         //show suggestion glow if it's player's turn and the card can be used, but no suggestion if targetting a spell
-        if (currentSide == PLAYER_SIDE && side == PLAYER_SIDE && [self.gameModel canAttack:card fromSide:side] && [self.currentAbilities count] == 0){
+        if (currentSide == PLAYER_SIDE && side == PLAYER_SIDE && [self.gameModel canAttack:card fromSide:side] && [self.currentAbilities count] == 0)
+        {
             card.cardView.cardHighlightType = cardHighlightSelect;
             self.battleMovementsLeft = YES;
         //if not currently trying to summon an ability, reset highlight to none
-        }else if ([self.currentAbilities count] == 0 || card.cardView.cardHighlightType != cardHighlightTarget)
+        }
+        else if ([self.currentAbilities count] == 0 || card.cardView.cardHighlightType != cardHighlightTarget)
+        {
             card.cardView.cardHighlightType = cardHighlightNone;
+        }
     }
     
     //update hero
@@ -1895,8 +1910,6 @@ BOOL leftHandViewZone = NO;
     //opponent summoning has extra animation: maximizes to the left to show the card
     if (side == OPPONENT_SIDE)
     {
-        
-        
         CardView*originalView = card.cardView;
         if (card.adminPhotoCheck != 1 && card.adminPhotoCheck != nil) {
             card.cardView.cardImage.image = placeHolderImage;
@@ -1933,7 +1946,7 @@ BOOL leftHandViewZone = NO;
     {
         //player side during multiplayer requires sending info to opponent
         NSMutableArray*hand = _gameModel.hands[PLAYER_SIDE];
-        _currentCardIndex = [hand indexOfObject:card];
+        _currentCardIndex = (int)[hand indexOfObject:card];
         
         [self.gameModel summonCard:card side:side];
         
