@@ -623,7 +623,7 @@ NSDictionary *singlePlayerCardImages;
             descriptionBG.alpha = 0.0f;
         }
         else{
-            descriptionBG.alpha = 1.0f;
+            descriptionBG.alpha = 0.8f;
         }
         descriptionBG.image = [UIImage imageNamed:@"CardDescription.png"];
         [_frontViews addSubview:descriptionBG];
@@ -987,11 +987,20 @@ NSDictionary *singlePlayerCardImages;
             }
             
             //update life label
+            //life buffed beyond max
             UIColor *newLifeColour;
             if (monsterCard.life > monsterCard.maximumLife || monsterCard.maximumLife > [monsterCard baseMaxLife])
+            {
                 newLifeColour = COLOUR_STAT_MODED;
+            }
+            else if (monsterCard.life < monsterCard.maximumLife)
+            {
+                //newLifeColour = COLOUR_
+            }
             else
+            {
                 newLifeColour = [UIColor whiteColor];
+            }
             
             NSString *newLifeString = [NSString stringWithFormat:@"%d", monsterCard.life];
             
