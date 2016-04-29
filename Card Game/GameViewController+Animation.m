@@ -181,7 +181,11 @@
         //[[cardView superview] sendSubviewToBack:cardView];
         [cardView setHidden:YES];
         
-        [self animateShapeBounds:shape OnView:cardView];
+        float destructionDuration = 0.4f;
+        
+        [NSThread sleepForTimeInterval:delay];
+        
+        [self animateShapeBounds:shape OnView:cardView forDuration:0.1];
         [self performSelector:@selector(hideShape:) withObject:shape afterDelay:0.1];
         
         CGPoint n_top_center = topImgView.center;
@@ -192,7 +196,9 @@
         n_bottom_center.x += 10;
         n_bottom_center.y += 10;
         
-        [UIView animateWithDuration:0.3 animations:^{
+        
+   
+        [UIView animateWithDuration:destructionDuration delay:0 options:UIViewAnimationOptionTransitionNone animations:^{
             topImgView.center = n_top_center;
             topImgView.alpha = 0.0;
             bottomImgView.center = n_bottom_center;
@@ -208,6 +214,7 @@
                 [bottomImgView removeFromSuperview];
             }  afterDelay:0.5];
         }];
+        
     }else{
         [cardView removeFromSuperview];
         [self performBlock:^{
@@ -235,7 +242,8 @@
     return shapeLayer;
 }
 
--(void)animateShapeBounds:(CAShapeLayer*)shape OnView:(CardView *)cardView{
+-(void)animateShapeBounds:(CAShapeLayer*)shape OnView:(CardView *)cardView forDuration:(float)duration
+{
     
     UIBezierPath *path = [UIBezierPath bezierPath];
     [path moveToPoint:CGPointMake(cardView.frame.origin.x + cardView.frame.size.width,cardView.frame.origin.y)];
@@ -243,7 +251,7 @@
     
     CABasicAnimation* pathAnim = [CABasicAnimation animationWithKeyPath:@"path"];
     pathAnim.toValue = (__bridge id _Nullable)([path CGPath]);
-    pathAnim.duration = 0.1;
+    pathAnim.duration = duration;
     pathAnim.cumulative = NO;
     pathAnim.repeatCount = 1.0;
     pathAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
@@ -426,7 +434,7 @@
     {
         //target died, update field view and remove it from screen
         if (((MonsterCardModel*)cardView.cardModel).dead)
-            [self animateCardDestruction:cardView fromSide:side withDelay: 0.4];
+            [self animateCardDestruction:cardView fromSide:side withDelay: 1.0];
 
         //[self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
         [self decAnimationCounter];
@@ -469,7 +477,7 @@
                              cardView.inDamageAnimation = NO;
                              //target died, update field view and remove it from screen
                              if (((MonsterCardModel*)cardView.cardModel).dead)
-                                 [self animateCardDestruction:cardView fromSide:side withDelay: 0.4];
+                                 [self animateCardDestruction:cardView fromSide:side withDelay: 1.0];
                              //not dead, move back to position
                              //else
                                 // [self animateCardIceDamage:cardView fromSide:side];
@@ -542,11 +550,11 @@
     lifePopup.textAlignment = NSTextAlignmentCenter;
     lifePopup.textColor = [UIColor greenColor];
     lifePopup.backgroundColor = [UIColor clearColor];
-    lifePopup.font = [UIFont fontWithName:cardMainFontBlack size:18];
+    lifePopup.font = [UIFont fontWithName:cardMainFontBlack size:CARD_DAMAGE_POPUP_SIZE];
     
     [self.uiView addSubview:lifePopup];
     [self zoomIn:lifePopup inDuration:0.15];
-    [self fadeOutAndRemove:lifePopup inDuration:0.5 withDelay:0.5];
+    [self fadeOutAndRemove:lifePopup inDuration:DAMAGE_POPUP_DURATION withDelay:0.5];
 }
 
 -(void) animatePlayerTurn

@@ -42,11 +42,14 @@
  float CARD_DRAGGING_SCALE = 1.0f;
 float CARD_GAMEPLAY_SCALE = 0.5f;
 
+float DAMAGE_POPUP_DURATION = 1.8f;
+
 
 int CARD_IMAGE_WIDTH;
 int CARD_IMAGE_HEIGHT;
 
 int CARD_NAME_SIZE;
+int CARD_DAMAGE_POPUP_SIZE;
 
 int CARD_DETAIL_BUTTON_WIDTH;
 int CARD_DETAIL_BUTTON_HEIGHT;
@@ -89,6 +92,7 @@ NSDictionary *singlePlayerCardImages;
         CARD_WIDTH = 57;
         CARD_HEIGHT = (CARD_WIDTH *  CARD_HEIGHT_RATIO / CARD_WIDTH_RATIO);
         CARD_NAME_SIZE = 15;
+        CARD_DAMAGE_POPUP_SIZE = 30;
         CARD_LIKE_ICON_WIDTH = 28;
         CARD_DETAIL_BUTTON_WIDTH = 80;
         CARD_DETAIL_BUTTON_HEIGHT = 60;
@@ -106,6 +110,7 @@ NSDictionary *singlePlayerCardImages;
         CARD_DEFAULT_SCALE = 0.8f;
         CARD_DRAGGING_SCALE = 2.0f;
         CARD_NAME_SIZE = 30;
+        CARD_DAMAGE_POPUP_SIZE = 45;
         CARD_NAME_SIZE_GAMEPLAY = 20;
         CARD_LIKE_ICON_WIDTH = 56;
         CARD_DETAIL_BUTTON_WIDTH = 160;
@@ -863,7 +868,7 @@ NSDictionary *singlePlayerCardImages;
         self.damagePopup.textAlignment = NSTextAlignmentCenter;
         self.damagePopup.textColor = [UIColor redColor];
         self.damagePopup.backgroundColor = [UIColor clearColor];
-        self.damagePopup.font = [UIFont fontWithName:cardMainFontBlack size:CARD_NAME_SIZE + 13];
+        self.damagePopup.font = [UIFont fontWithName:cardMainFontBlack size:CARD_NAME_SIZE + 17];
         //self.damagePopup.strokeOn = YES;
         //self.damagePopup.strokeColour = [UIColor blackColor];
         //self.damagePopup.strokeThickness = 2.5;
@@ -968,8 +973,10 @@ NSDictionary *singlePlayerCardImages;
             
             //update damage label
             UIColor *newDamageColour;
-            if (monsterCard.damage != monsterCard.baseDamage)
-                newDamageColour = COLOUR_STAT_MODED;
+            if (monsterCard.damage > monsterCard.baseDamage)
+                newDamageColour = COLOUR_STAT_BUFFED;
+            else if (monsterCard.damage < monsterCard.baseDamage)
+                newDamageColour = COLOUR_STAT_DEBUFFED;
             else
                 newDamageColour = [UIColor whiteColor];
             
@@ -989,13 +996,13 @@ NSDictionary *singlePlayerCardImages;
             //update life label
             //life buffed beyond max
             UIColor *newLifeColour;
-            if (monsterCard.life > monsterCard.maximumLife || monsterCard.maximumLife > [monsterCard baseMaxLife])
+            if (monsterCard.life > [monsterCard baseMaxLife])
             {
-                newLifeColour = COLOUR_STAT_MODED;
+                newLifeColour = COLOUR_STAT_BUFFED;
             }
             else if (monsterCard.life < monsterCard.maximumLife)
             {
-                //newLifeColour = COLOUR_
+                newLifeColour = COLOUR_STAT_DEBUFFED;
             }
             else
             {
@@ -1018,9 +1025,9 @@ NSDictionary *singlePlayerCardImages;
             //update cooldown label
             UIColor *newCooldownColour;
             if (monsterCard.cooldown == 0)
-                newCooldownColour = [UIColor greenColor]; //green when at 0 cooldown
+                newCooldownColour = COLOUR_STAT_READY; //green when at 0 cooldown
             else if (monsterCard.cooldown > monsterCard.maximumCooldown || monsterCard.cooldown > monsterCard.baseMaxCooldown || monsterCard.maximumCooldown > monsterCard.baseMaxCooldown)
-                newCooldownColour = COLOUR_STAT_MODED;
+                newCooldownColour = COLOUR_STAT_DEBUFFED;
             else
                 newCooldownColour = [UIColor whiteColor];
             
@@ -1323,13 +1330,13 @@ NSDictionary *singlePlayerCardImages;
     //new damage
     if ([self.damagePopup.text isEqualToString:@""])
     {
-        self.damagePopup.text = [NSString stringWithFormat:@"%d", damage];
+        self.damagePopup.text = [NSString stringWithFormat:@"-%d", damage];
     }
     //recently been damaged, update the label
     else
     {
-        int totalDamage = [self.damagePopup.text intValue] + damage;
-        self.damagePopup.text = [NSString stringWithFormat:@"%d", totalDamage];
+        int totalDamage = abs([self.damagePopup.text intValue]) + damage;
+        self.damagePopup.text = [NSString stringWithFormat:@"-%d", totalDamage];
         return;
     }
     
@@ -1344,7 +1351,7 @@ NSDictionary *singlePlayerCardImages;
                              self.damagePopup.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1,1);
                      }
                      completion:^(BOOL finished){
-                         [UIView animateWithDuration:0.5 delay:1.3 options:UIViewAnimationOptionCurveEaseInOut
+                         [UIView animateWithDuration:0.5 delay:DAMAGE_POPUP_DURATION options:UIViewAnimationOptionCurveEaseInOut
                                           animations:^{
                                               self.damagePopup.alpha = 0;
                                           }

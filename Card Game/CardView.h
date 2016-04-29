@@ -106,13 +106,16 @@
 
 -(UIColor*)getRarityColor;
 
--(void)switchFacingTo:(BOOL)isFront;
+//-(void)switchFacingTo:(BOOL)isFront;
 
 /** Flips the card with animation */
 -(void)flipCard;
 
 /** Loads images for drawing cards ahead of time */
 +(void) loadResources;
+
+/** Shows  */
+-(void)showDamageHint:(int)damage;
 
 
 @end
@@ -144,6 +147,9 @@ extern int CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT;
 
 extern int CARD_NAME_SIZE;
 extern int CARD_LIKE_ICON_WIDTH;
+
+extern int CARD_DAMAGE_POPUP_SIZE;
+extern float DAMAGE_POPUP_DURATION;
 
 extern int CARD_DETAIL_BUTTON_WIDTH;
 extern int CARD_DETAIL_BUTTON_HEIGHT;
