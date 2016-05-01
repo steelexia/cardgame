@@ -128,6 +128,9 @@
     [[cardView superview] bringSubviewToFront:cardView];
     
     if (![cardView.cardModel isKindOfClass:[SpellCardModel class]]) {
+        
+        [self performBlock:^{
+        
         CardView *topImgView =  [[CardView alloc] initWithModel:cardView.cardModel viewMode:cardViewModeEditor];
         CardView *bottomImgView = [[CardView alloc] initWithModel:cardView.cardModel viewMode:cardViewModeEditor];;
         
@@ -181,39 +184,45 @@
         //[[cardView superview] sendSubviewToBack:cardView];
         [cardView setHidden:YES];
         
-        float destructionDuration = 0.4f;
-        
-        [NSThread sleepForTimeInterval:delay];
-        
-        [self animateShapeBounds:shape OnView:cardView forDuration:0.1];
-        [self performSelector:@selector(hideShape:) withObject:shape afterDelay:0.1];
-        
-        CGPoint n_top_center = topImgView.center;
-        n_top_center.x -= 10;
-        n_top_center.y -= 10;
-        
-        CGPoint n_bottom_center = bottomImgView.center;
-        n_bottom_center.x += 10;
-        n_bottom_center.y += 10;
         
         
-   
-        [UIView animateWithDuration:destructionDuration delay:0 options:UIViewAnimationOptionTransitionNone animations:^{
-            topImgView.center = n_top_center;
-            topImgView.alpha = 0.0;
-            bottomImgView.center = n_bottom_center;
-            bottomImgView.alpha = 0.0;
+        
+            float destructionDuration = 0.4f;
             
-        } completion:^(BOOL finished) {
-            [cardView removeFromSuperview];
-            [self performBlock:^{
-                [self updateBattlefieldView:side];
-                [self decAnimationCounter];
-                //cardView.inDestructionAnimation = NO;
-                [topImgView removeFromSuperview];
-                [bottomImgView removeFromSuperview];
-            }  afterDelay:0.5];
-        }];
+            [self animateShapeBounds:shape OnView:cardView forDuration:0.1];
+            [self performSelector:@selector(hideShape:) withObject:shape afterDelay:0.1];
+            
+            CGPoint n_top_center = topImgView.center;
+            n_top_center.x -= 10;
+            n_top_center.y -= 10;
+            
+            CGPoint n_bottom_center = bottomImgView.center;
+            n_bottom_center.x += 10;
+            n_bottom_center.y += 10;
+            
+            
+            
+            
+            [UIView animateWithDuration:destructionDuration delay:0 options:UIViewAnimationOptionTransitionNone animations:^{
+                topImgView.center = n_top_center;
+                topImgView.alpha = 0.0;
+                bottomImgView.center = n_bottom_center;
+                bottomImgView.alpha = 0.0;
+                
+            } completion:^(BOOL finished) {
+                [cardView removeFromSuperview];
+                [self performBlock:^{
+                    [self updateBattlefieldView:side];
+                    [self decAnimationCounter];
+                    //cardView.inDestructionAnimation = NO;
+                    [topImgView removeFromSuperview];
+                    [bottomImgView removeFromSuperview];
+                }  afterDelay:0.5];
+            }];
+        } afterDelay:delay];
+        
+        
+        
         
     }else{
         [cardView removeFromSuperview];
@@ -477,11 +486,14 @@
                              cardView.inDamageAnimation = NO;
                              //target died, update field view and remove it from screen
                              if (((MonsterCardModel*)cardView.cardModel).dead)
+                             {
                                  [self animateCardDestruction:cardView fromSide:side withDelay: 1.0];
+                             }
                              //not dead, move back to position
-                             //else
-                                // [self animateCardIceDamage:cardView fromSide:side];
-                                 //[self animateMoveToWithBounce:cardView toPosition:originalPoint inDuration:0.25 withDelay:0.4];
+                             else
+                             {
+                                 [self animateMoveToWithBounce:cardView toPosition:originalPoint inDuration:0.25 withDelay:0.4];
+                             }
                              //[self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
                              [self decAnimationCounter];
                          }
@@ -805,4 +817,5 @@
         [self.counterView setHidden:NO];
     }
 }
+
 @end

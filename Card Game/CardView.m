@@ -27,6 +27,8 @@
 @synthesize cardViewMode = _cardViewMode;
 @synthesize mask = _mask;
 @synthesize frontFacing = _frontFacing;
+@synthesize combatHintView = _combatHintView;
+@synthesize isKillHintOn = _isKillHintOn;
 
  int CARD_WIDTH_RATIO = 5;
  int CARD_HEIGHT_RATIO = 8;
@@ -71,6 +73,8 @@ UIImage *backgroundMonsterOverlayImage, *selectHighlightImage, *targetHighlightI
 UIImage *cardBackImage;
 
 UIImage *heroPlaceHolderImage, *loadingImage;
+UIImage *killHintImage;
+
 
 /** 2D array of images. First array contains elements, second array contains rarity */
 NSArray*backgroundImages, *backgroundOverlayImages, *abilityIconImages;
@@ -340,6 +344,8 @@ NSDictionary *singlePlayerCardImages;
     loadingImage =[UIImage imageNamed:@"card_image_empty"];
     heroPlaceHolderImage = [UIImage imageNamed:@"card_image_placeholder"];
     cardBackImage = [UIImage imageNamed:@"card_back_default"];
+    
+    killHintImage = [UIImage imageNamed:@"card_ability_icon_cast_on_death"]; //TODO temporary image
     
     abilityTextParagrahStyle = [[NSMutableParagraphStyle alloc] init];
     //[abilityTextParagrahStyle setLineSpacing:];
@@ -717,6 +723,10 @@ NSDictionary *singlePlayerCardImages;
         
       
         self.elementLabel.text = [CardModel elementToString:cardModel.element];
+        
+        _combatHintView = [[UIImageView alloc] initWithFrame:self.bounds];
+        [_combatHintView setAlpha: 0.8f];
+        
         //NOTE added above other stuff
         
         //original value -10 for width
@@ -888,6 +898,7 @@ NSDictionary *singlePlayerCardImages;
         
         self.cardHighlightType = cardHighlightNone;
         self.cardViewState = cardViewStateNone;
+        self.isKillHintOn = NO;
     }
     
     
@@ -1453,6 +1464,42 @@ NSDictionary *singlePlayerCardImages;
             }
         }
     }
+}
+
+-(void)animateIsKillHintOn:(BOOL)isKilled
+{
+    
+    if (isKilled)
+    {
+        [_combatHintView setImage:killHintImage];
+        [_combatHintView setFrame:CGRectMake(0, 0, killHintImage.size.width, killHintImage.size.height)];
+        _combatHintView.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+        _combatHintView.transform = CGAffineTransformMakeScale(0.01, 0.01);
+        [self addSubview:_combatHintView];
+        
+        //TODO these should have duration but can't get properly working yet
+        [UIView animateWithDuration:0.0
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{_combatHintView.transform = CGAffineTransformMakeScale(1, 1);}
+                         completion:nil];
+    }
+    else
+    {
+        _combatHintView.transform = CGAffineTransformMakeScale(1, 1);
+        
+        [UIView animateWithDuration:0.0
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{_combatHintView.transform = CGAffineTransformMakeScale(0.01, 0.01);}
+                         completion:^(BOOL finished) {
+                             [_combatHintView removeFromSuperview];
+                             _combatHintView.transform = CGAffineTransformMakeScale(1, 1);
+                         }];
+        
+    }
+    
+    _isKillHintOn = isKilled;
 }
 
 -(void)loadImage

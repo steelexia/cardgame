@@ -109,6 +109,9 @@
 @property (strong) UIView *counterSubView;
 @property (assign) BOOL shouldCallEndTurn;
 
+/* list of monsters will visual hint during combat (e.g. will die from attacking) */
+@property (strong) NSMutableArray *hintedMonsters;
+
 /** updates the position of all hands with the gameModel, adding views to cards that don't have one yet */
 //-(void)updateHandsView;
 

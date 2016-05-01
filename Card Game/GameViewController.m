@@ -36,6 +36,7 @@
 @synthesize quickMatchDeck            = _quickMatchDeck;
 @synthesize quickMatchDeckLoaded      = _quickMatchDeckLoaded;
 @synthesize currentSpellCard;
+@synthesize hintedMonsters = _hintedMonsters;
 
 /** Screen dimension for convinience */
 int SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -125,6 +126,7 @@ BOOL leftHandViewZone = NO;
         
         //inits array
         self.currentAbilities = [NSMutableArray array];
+        self.hintedMonsters = [NSMutableArray array];
         
         _quickMatchDeckLoaded = FALSE;
         
@@ -1577,6 +1579,44 @@ BOOL leftHandViewZone = NO;
         int length = (int)CGPointDistance(p1, p2);
         attackLine.bounds = CGRectMake(0,-10,(int)(length*1),4);
         [attackLine setTransform: CGAffineTransformMakeRotation(CGPointAngle(p1,p2))];
+        
+        // Reset all hinted states to NO until checking all
+        for (MonsterCardModel* monster in _hintedMonsters)
+        {
+            monster.cardView.isKillHintOn = NO;
+        }
+        
+        //check if drag is over an attackable creature
+        MonsterCardModel * targetMonster = [self getMonsterAtPoint:currentPoint];
+        if (targetMonster != nil && [self.gameModel validAttack:currentCard target:targetMonster])
+        {
+            NSArray*deadMonsters = [_gameModel getDeadMonsterWithAttacker:(MonsterCardModel*)currentCard target:targetMonster];
+            for (MonsterCardModel* monster in deadMonsters)
+            {
+                //new monster not hinted yet
+                if (![_hintedMonsters containsObject:monster])
+                {
+                    [monster.cardView animateIsKillHintOn:YES];
+                    [_hintedMonsters addObject:monster];
+                }
+                //hinted in last update, just keep variable to YES
+                else
+                {
+                    monster.cardView.isKillHintOn = YES;
+                }
+            }
+        }
+        
+        //return to check all monsters, play unhint animation if still NO
+        for (int i = (int)_hintedMonsters.count - 1; i >= 0; i--)
+        {
+            MonsterCardModel* monster = _hintedMonsters [i];
+            if (!monster.cardView.isKillHintOn)
+            {
+                [monster.cardView animateIsKillHintOn:NO];
+                [_hintedMonsters removeObject:monster];
+            }
+        }
     }
 }
 
@@ -1670,15 +1710,24 @@ BOOL leftHandViewZone = NO;
             opponent.playerMonster.cardView.cardHighlightType = cardHighlightNone;
         }
         
+        //remove all hints
+        for (int i = (int)_hintedMonsters.count - 1; i >= 0; i--)
+        {
+            MonsterCardModel* monster = _hintedMonsters [i];
+            if (monster.cardView.isKillHintOn)
+            {
+                [monster.cardView animateIsKillHintOn:NO];
+            }
+            [_hintedMonsters removeObject:monster];
+        }
+        
+        MonsterCardModel * monster = [self getMonsterAtPoint:currentPoint];
         int oppositeSide = currentSide == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE;
         
-        //first step check enemy players
-        CardView* enemyHeroView = ((CardView*)self.playerHeroViews[oppositeSide]);
-        
-        CGPoint relativePoint = [self.playerHeroViews[oppositeSide] convertPoint:currentPoint fromView:self.view];
-        if (CGRectContainsPoint(enemyHeroView.bounds, relativePoint))
+        //if on a monster and can attack it
+        if (monster != nil && [self.gameModel validAttack:currentCard target:monster])
         {
-            if ([self.gameModel validAttack:currentCard target:(MonsterCardModel*)enemyHeroView.cardModel])
+            if (monster.type == cardTypePlayer)
             {
                 if (_gameModel.gameMode == GameModeMultiplayer)
                 {
@@ -1689,40 +1738,24 @@ BOOL leftHandViewZone = NO;
                     
                 }
                 
+                CardView* enemyHeroView = ((CardView*)self.playerHeroViews[oppositeSide]);
                 [self attackHero:currentCard target:(MonsterCardModel*) enemyHeroView.cardModel fromSide:currentSide];
                 [self cardAttacksTutorial];
             }
-        }
-        else
-        {
-            //then check for targetted an enemy monster card
-            for (CardModel *card in self.gameModel.battlefield[oppositeSide])
+            else
             {
-                CardView *cardView = card.cardView;
-                
-                //convert touch point to point relative to the card
-                CGPoint relativePoint = [cardView convertPoint:currentPoint fromView:self.view];
-                
-                //found enemy card
-                if (CGRectContainsPoint(cardView.bounds, relativePoint))
+                if (_gameModel.gameMode == GameModeMultiplayer)
                 {
-                    if ([self.gameModel validAttack:currentCard target:(MonsterCardModel*)card])
-                    {
-                        if (_gameModel.gameMode == GameModeMultiplayer)
-                        {
-                            int attackerPosition = [_gameModel getTargetIndex:(MonsterCardModel*)currentCard];
-                            int targetPosition = [_gameModel getTargetIndex:(MonsterCardModel*)card];
-                            
-                            //[_networkingEngine sendAttackCard:attackerPosition withTarget:targetPosition];
-                            [self.MPDataHandler sendAttackCard:attackerPosition withTarget:targetPosition];
-                            
-                        }
-                        
-                        [self attackCard:currentCard target:(MonsterCardModel*)card fromSide:currentSide];
-                        [self cardAttacksTutorial];
-                    }
-                    break;
+                    int attackerPosition = [_gameModel getTargetIndex:(MonsterCardModel*)currentCard];
+                    int targetPosition = [_gameModel getTargetIndex:monster];
+                    
+                    //[_networkingEngine sendAttackCard:attackerPosition withTarget:targetPosition];
+                    [self.MPDataHandler sendAttackCard:attackerPosition withTarget:targetPosition];
+                    
                 }
+                
+                [self attackCard:currentCard target:(MonsterCardModel*)monster fromSide:currentSide];
+                [self cardAttacksTutorial];
             }
         }
         
@@ -1740,6 +1773,42 @@ BOOL leftHandViewZone = NO;
        // [self endFlash:self.endTurnButton];
     }
 
+}
+
+/** TODO this only gets enemy creatures, need to do some reorganizing for friendly */
+-(MonsterCardModel*)getMonsterAtPoint:(CGPoint)currentPoint
+{
+    MonsterCardModel* monster = nil;
+    
+    int oppositeSide = currentSide == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE;
+    
+    //first step check enemy players
+    CardView* enemyHeroView = ((CardView*)self.playerHeroViews[oppositeSide]);
+    
+    CGPoint relativePoint = [self.playerHeroViews[oppositeSide] convertPoint:currentPoint fromView:self.view];
+    if (CGRectContainsPoint(enemyHeroView.bounds, relativePoint))
+    {
+        monster = (MonsterCardModel*)enemyHeroView.cardModel;
+    }
+    else
+    {
+        //then check for targeted an enemy monster card
+        for (CardModel *card in self.gameModel.battlefield[oppositeSide])
+        {
+            CardView *cardView = card.cardView;
+            
+            //convert touch point to point relative to the card
+            CGPoint relativePoint = [cardView convertPoint:currentPoint fromView:self.view];
+            
+            //found enemy card
+            if (CGRectContainsPoint(cardView.bounds, relativePoint))
+            {
+                monster = (MonsterCardModel*)card;
+            }
+        }
+    }
+    
+    return monster;
 }
 
 -(void) attackCard: (CardModel*) card target:(MonsterCardModel*)targetCard fromSide: (int) side

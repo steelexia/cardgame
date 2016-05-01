@@ -2231,6 +2231,28 @@ enum GameMode __gameMode; //because C functions cant access
     }
 }
 
+-(NSArray*)getDeadMonsterWithAttacker:(MonsterCardModel*)attacker target:(MonsterCardModel*)target;
+{
+    NSMutableArray*deadMonsters = [NSMutableArray array];
+    
+    //TODO lots of things to check, for now simple
+    
+    //if target dies
+    if (attacker.damage >= target.life)
+    {
+        [deadMonsters addObject:target];
+    }
+    
+    //if attacker dies
+    if (target.damage >= attacker.life)
+    {
+        [deadMonsters addObject:attacker];
+    }
+    //TODO reflect damage
+    
+    return deadMonsters;
+}
+
 //block delay functions
 - (void)performBlock:(void (^)())block
 {
