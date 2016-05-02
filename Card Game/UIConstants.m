@@ -48,7 +48,9 @@
     COLOUR_EXCEPTIONAL = [[UIColor alloc] initWithRed:232/255.f green:204/255.f blue:19/255.f alpha:1];
     COLOUR_LEGENDARY = [[UIColor alloc] initWithRed:207/255.f green:111/255.f blue:34/255.f alpha:1];
     
-    COLOUR_STAT_MODED = [[UIColor alloc] initWithRed:255/255.f green:191/255.f blue:191/255.f alpha:1];
+    COLOUR_STAT_DEBUFFED = [[UIColor alloc] initWithRed:255/255.f green:12/255.f blue:0/255.f alpha:1];
+    COLOUR_STAT_BUFFED = [[UIColor alloc] initWithRed:109/255.f green:213/255.f blue:255/255.f alpha:1];
+    COLOUR_STAT_READY = [UIColor greenColor];
     
     RESOURCE_ICON_IMAGE = [UIImage imageNamed:@"CardCreateGem"];
     POINTS_ICON_IMAGE = [UIImage imageNamed:@"CardCreateStar"];

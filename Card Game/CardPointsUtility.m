@@ -159,6 +159,15 @@ const int MIN_MONSTER_POINTS = 2 * STAT_MULTIPLIER;
     return NO;
 }
 
++(BOOL)cardHasPierce:(CardModel *)card
+{
+    if ([card isKindOfClass:[MonsterCardModel class]])
+        for (Ability *ability in card.abilities)
+            if (ability.abilityType == abilityPierce && ability.targetType == targetSelf && ability.castType == castAlways)
+                return YES;
+    return NO;
+}
+
 +(void)updateAbilityPoints:(CardModel*)card forWrapper:(AbilityWrapper*)wrapper withWrappers:(NSArray*)wrappers
 {
     int abilityCost = 0;

@@ -917,7 +917,7 @@ enum GameMode __gameMode; //because C functions cant access
     {
         MonsterCardModel *monsterCard = (MonsterCardModel*) card;
 
-        [self.gameViewController performBlock:^{
+        //[self.gameViewController performBlock:^{
             //CastType castOnSummon is casted here
             for (int i = 0; i < [monsterCard.abilities count]; i++) //castAbility may insert objects in end
             {
@@ -928,21 +928,21 @@ enum GameMode __gameMode; //because C functions cant access
                     [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:nil fromSide:side];
                 }
             }
-            [self.gameViewController decAnimationCounter];
+            //[self.gameViewController decAnimationCounter];
             
             //send multiplayer data on summon if no targets
             if (_gameMode == GameModeMultiplayer && side == PLAYER_SIDE && _gameViewController.currentAbilities.count == 0)
             {
                 [_gameViewController.MPDataHandler sendSummonCard:_gameViewController.currentCardIndex withTarget:positionNoPosition];
             }
-        } afterDelay:0.0];
+        //} afterDelay:0.0];
         
         //TODO honestly these two lines should only be called AFTER castAbility is resolved (a bit tricky to do, also includes spell cards)
         [self addCardToBattlefield:monsterCard side:side];
         
         //[self.gameViewController updateBattlefieldView: side];
         
-        [self.gameViewController addAnimationCounter]; //the delayed cast counts as an animation
+        //[self.gameViewController addAnimationCounter]; //the delayed cast counts as an animation
     }
     else if ([card isKindOfClass: [SpellCardModel class]])
     {
@@ -1209,7 +1209,7 @@ enum GameMode __gameMode; //because C functions cant access
     //these are mainly for AI due to synchronization with animation
     if (attacker.dead || !attacker.deployed)
         return NO;
-    
+
     //cannot attack if cooldown is above 0
     if (attacker.cooldown > 0)
         return NO;
@@ -2231,6 +2231,28 @@ enum GameMode __gameMode; //because C functions cant access
     }
 }
 
+-(NSArray*)getDeadMonsterWithAttacker:(MonsterCardModel*)attacker target:(MonsterCardModel*)target;
+{
+    NSMutableArray*deadMonsters = [NSMutableArray array];
+    
+    //TODO lots of things to check, for now simple
+    
+    //if target dies
+    if (attacker.damage >= target.life)
+    {
+        [deadMonsters addObject:target];
+    }
+    
+    //if attacker dies
+    if (target.damage >= attacker.life)
+    {
+        [deadMonsters addObject:attacker];
+    }
+    //TODO reflect damage
+    
+    return deadMonsters;
+}
+
 //block delay functions
 - (void)performBlock:(void (^)())block
 {
@@ -2401,9 +2423,7 @@ uint32_t xor128(int side) {
 
 -(void)setOpponentTarget:(MonsterCardModel*)target
 {
-    NSLog(@"target was %@", target);
     opponentCurrentTarget = target;
-    NSLog(@"target now %@", target);
 }
 
 

@@ -1413,7 +1413,8 @@ int enemyTotalStrength, friendlyTotalStrength;
         }
         else
         {
-            if (![CardPointsUtility cardHasTaunt:target])
+            //either giving taunt or creature with taunt
+            if (![CardPointsUtility cardHasTaunt:target] || castType == castAlways)
             {
                 points = 0;
                 points += target.life * 0.15 * STAT_POINT_MULTIPLIER;
@@ -1574,10 +1575,18 @@ int enemyTotalStrength, friendlyTotalStrength;
         }
         else
         {
-            points = [self getMonsterPerTurnValue:target]; //TODO not exactly correct since on move is not that relevant
+            //giving assassin to monster, or already has assassin
+            if (![CardPointsUtility cardHasAssassin:target] || castType == castAlways)
+            {
+                points = [self getMonsterPerTurnValue:target]; //TODO not exactly correct since on move is not that relevant
             
-            if (target.side != side)
-                points = -points;
+                if (target.side != side)
+                    points = -points;
+            }
+            else
+            {
+                points = USELESS_MOVE;
+            }
         }
     }
     else if (ability.abilityType == abilityPierce)
@@ -1589,9 +1598,17 @@ int enemyTotalStrength, friendlyTotalStrength;
         }
         else
         {
-            points = target.damage * STAT_POINT_MULTIPLIER / target.maximumCooldown / 2;
-            if (target.side != side)
-                points = -points;
+            //giving assassin to monster, or already has assassin
+            if (![CardPointsUtility cardHasPierce:target] || castType == castAlways)
+            {
+                points = target.damage * STAT_POINT_MULTIPLIER / target.maximumCooldown / 2;
+                if (target.side != side)
+                    points = -points;
+            }
+            else
+            {
+                points = USELESS_MOVE;
+            }
         }
     }
     else if (ability.abilityType == abilityFracture)
@@ -1629,16 +1646,22 @@ int enemyTotalStrength, friendlyTotalStrength;
             //TODO temporary
             points = [self getTargetTypeMultipliedPoints:ability.targetType points:3000];
         }
+        //muted card
+        else if (castType == castAlways && targetType == targetSelf)
+        {
+            //simple method, worth slightly higher than vanilla card, so muting a vanilla card is actually not good (although in practice it prevents opponent from buffing it, but thats too complicated)
+            points = 500;
+        }
         else
         {
-            int originalDamageValue = [self evaluateMonsterDamageValue:target];
+            int originalValue = [self evaluateMonsterValue:target]; //warning: this call is a little dangerous and can result in infinite recursion
             
             //clears all abilities and evaluate value again
             target.abilities = [NSMutableArray array];
             
-            int newDamageValue = [self evaluateMonsterDamageValue:target];
+            int newValue = [self evaluateMonsterValue:target];
             
-            points = originalDamageValue - newDamageValue;
+            points = originalValue - newValue;
             
             if (target.side == side)
                 points *= -1;

@@ -175,6 +175,9 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 -(MonsterCardModel*)getOpponentTarget;
 -(void)setOpponentTarget:(MonsterCardModel*)target;
 
+/* Returns a list of monsters that will die from this attack. It can only include the attacker, target, and either player hero */
+-(NSArray*)getDeadMonsterWithAttacker:(MonsterCardModel*)attacker target:(MonsterCardModel*)target;
+
 +(void)loadQuickMatchDeck:(DeckModel*)deck;
 +(enum CardPosition) getReversedPosition:(enum CardPosition)position;
 

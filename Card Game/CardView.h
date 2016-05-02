@@ -47,6 +47,9 @@
 
 @property (strong) NSMutableArray *abilityIcons;
 
+/** Overlay view used for showing combat hints such as if creature will die from attack */
+@property (strong) UIImageView *combatHintView;
+
 /** Overwritten center */
 @property CGPoint center;
 
@@ -66,6 +69,7 @@
 @property BOOL lifeViewNeedsUpdate;
 @property BOOL damageViewNeedsUpdate;
 @property BOOL cooldownViewNeedsUpdate;
+@property BOOL isKillHintOn;
 
 /** Sets the current mode of display for different purposes */
 @property enum CardViewMode cardViewMode;
@@ -106,13 +110,16 @@
 
 -(UIColor*)getRarityColor;
 
--(void)switchFacingTo:(BOOL)isFront;
+//-(void)switchFacingTo:(BOOL)isFront;
 
 /** Flips the card with animation */
 -(void)flipCard;
 
 /** Loads images for drawing cards ahead of time */
 +(void) loadResources;
+
+/** Shows hint for when dragging an attack causes a creature to be killed. */
+-(void)animateIsKillHintOn:(BOOL)isKilled;
 
 
 @end
@@ -144,6 +151,9 @@ extern int CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT;
 
 extern int CARD_NAME_SIZE;
 extern int CARD_LIKE_ICON_WIDTH;
+
+extern int CARD_DAMAGE_POPUP_SIZE;
+extern float DAMAGE_POPUP_DURATION;
 
 extern int CARD_DETAIL_BUTTON_WIDTH;
 extern int CARD_DETAIL_BUTTON_HEIGHT;

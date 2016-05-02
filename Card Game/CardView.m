@@ -27,6 +27,8 @@
 @synthesize cardViewMode = _cardViewMode;
 @synthesize mask = _mask;
 @synthesize frontFacing = _frontFacing;
+@synthesize combatHintView = _combatHintView;
+@synthesize isKillHintOn = _isKillHintOn;
 
  int CARD_WIDTH_RATIO = 5;
  int CARD_HEIGHT_RATIO = 8;
@@ -42,11 +44,14 @@
  float CARD_DRAGGING_SCALE = 1.0f;
 float CARD_GAMEPLAY_SCALE = 0.5f;
 
+float DAMAGE_POPUP_DURATION = 1.8f;
+
 
 int CARD_IMAGE_WIDTH;
 int CARD_IMAGE_HEIGHT;
 
 int CARD_NAME_SIZE;
+int CARD_DAMAGE_POPUP_SIZE;
 
 int CARD_DETAIL_BUTTON_WIDTH;
 int CARD_DETAIL_BUTTON_HEIGHT;
@@ -68,6 +73,8 @@ UIImage *backgroundMonsterOverlayImage, *selectHighlightImage, *targetHighlightI
 UIImage *cardBackImage;
 
 UIImage *heroPlaceHolderImage, *loadingImage;
+UIImage *killHintImage;
+
 
 /** 2D array of images. First array contains elements, second array contains rarity */
 NSArray*backgroundImages, *backgroundOverlayImages, *abilityIconImages;
@@ -89,6 +96,7 @@ NSDictionary *singlePlayerCardImages;
         CARD_WIDTH = 57;
         CARD_HEIGHT = (CARD_WIDTH *  CARD_HEIGHT_RATIO / CARD_WIDTH_RATIO);
         CARD_NAME_SIZE = 15;
+        CARD_DAMAGE_POPUP_SIZE = 30;
         CARD_LIKE_ICON_WIDTH = 28;
         CARD_DETAIL_BUTTON_WIDTH = 80;
         CARD_DETAIL_BUTTON_HEIGHT = 60;
@@ -106,6 +114,7 @@ NSDictionary *singlePlayerCardImages;
         CARD_DEFAULT_SCALE = 0.8f;
         CARD_DRAGGING_SCALE = 2.0f;
         CARD_NAME_SIZE = 30;
+        CARD_DAMAGE_POPUP_SIZE = 45;
         CARD_NAME_SIZE_GAMEPLAY = 20;
         CARD_LIKE_ICON_WIDTH = 56;
         CARD_DETAIL_BUTTON_WIDTH = 160;
@@ -335,6 +344,8 @@ NSDictionary *singlePlayerCardImages;
     loadingImage =[UIImage imageNamed:@"card_image_empty"];
     heroPlaceHolderImage = [UIImage imageNamed:@"card_image_placeholder"];
     cardBackImage = [UIImage imageNamed:@"card_back_default"];
+    
+    killHintImage = [UIImage imageNamed:@"card_ability_icon_cast_on_death"]; //TODO temporary image
     
     abilityTextParagrahStyle = [[NSMutableParagraphStyle alloc] init];
     //[abilityTextParagrahStyle setLineSpacing:];
@@ -623,7 +634,7 @@ NSDictionary *singlePlayerCardImages;
             descriptionBG.alpha = 0.0f;
         }
         else{
-            descriptionBG.alpha = 1.0f;
+            descriptionBG.alpha = 0.8f;
         }
         descriptionBG.image = [UIImage imageNamed:@"CardDescription.png"];
         [_frontViews addSubview:descriptionBG];
@@ -712,6 +723,10 @@ NSDictionary *singlePlayerCardImages;
         
       
         self.elementLabel.text = [CardModel elementToString:cardModel.element];
+        
+        _combatHintView = [[UIImageView alloc] initWithFrame:self.bounds];
+        [_combatHintView setAlpha: 0.8f];
+        
         //NOTE added above other stuff
         
         //original value -10 for width
@@ -863,7 +878,7 @@ NSDictionary *singlePlayerCardImages;
         self.damagePopup.textAlignment = NSTextAlignmentCenter;
         self.damagePopup.textColor = [UIColor redColor];
         self.damagePopup.backgroundColor = [UIColor clearColor];
-        self.damagePopup.font = [UIFont fontWithName:cardMainFontBlack size:CARD_NAME_SIZE + 13];
+        self.damagePopup.font = [UIFont fontWithName:cardMainFontBlack size:CARD_NAME_SIZE + 17];
         //self.damagePopup.strokeOn = YES;
         //self.damagePopup.strokeColour = [UIColor blackColor];
         //self.damagePopup.strokeThickness = 2.5;
@@ -883,6 +898,7 @@ NSDictionary *singlePlayerCardImages;
         
         self.cardHighlightType = cardHighlightNone;
         self.cardViewState = cardViewStateNone;
+        self.isKillHintOn = NO;
     }
     
     
@@ -968,8 +984,10 @@ NSDictionary *singlePlayerCardImages;
             
             //update damage label
             UIColor *newDamageColour;
-            if (monsterCard.damage != monsterCard.baseDamage)
-                newDamageColour = COLOUR_STAT_MODED;
+            if (monsterCard.damage > monsterCard.baseDamage)
+                newDamageColour = COLOUR_STAT_BUFFED;
+            else if (monsterCard.damage < monsterCard.baseDamage)
+                newDamageColour = COLOUR_STAT_DEBUFFED;
             else
                 newDamageColour = [UIColor whiteColor];
             
@@ -987,11 +1005,20 @@ NSDictionary *singlePlayerCardImages;
             }
             
             //update life label
+            //life buffed beyond max
             UIColor *newLifeColour;
-            if (monsterCard.life > monsterCard.maximumLife || monsterCard.maximumLife > [monsterCard baseMaxLife])
-                newLifeColour = COLOUR_STAT_MODED;
+            if (monsterCard.life > [monsterCard baseMaxLife])
+            {
+                newLifeColour = COLOUR_STAT_BUFFED;
+            }
+            else if (monsterCard.life < monsterCard.maximumLife)
+            {
+                newLifeColour = COLOUR_STAT_DEBUFFED;
+            }
             else
+            {
                 newLifeColour = [UIColor whiteColor];
+            }
             
             NSString *newLifeString = [NSString stringWithFormat:@"%d", monsterCard.life];
             
@@ -1009,9 +1036,9 @@ NSDictionary *singlePlayerCardImages;
             //update cooldown label
             UIColor *newCooldownColour;
             if (monsterCard.cooldown == 0)
-                newCooldownColour = [UIColor greenColor]; //green when at 0 cooldown
+                newCooldownColour = COLOUR_STAT_READY; //green when at 0 cooldown
             else if (monsterCard.cooldown > monsterCard.maximumCooldown || monsterCard.cooldown > monsterCard.baseMaxCooldown || monsterCard.maximumCooldown > monsterCard.baseMaxCooldown)
-                newCooldownColour = COLOUR_STAT_MODED;
+                newCooldownColour = COLOUR_STAT_DEBUFFED;
             else
                 newCooldownColour = [UIColor whiteColor];
             
@@ -1314,13 +1341,13 @@ NSDictionary *singlePlayerCardImages;
     //new damage
     if ([self.damagePopup.text isEqualToString:@""])
     {
-        self.damagePopup.text = [NSString stringWithFormat:@"%d", damage];
+        self.damagePopup.text = [NSString stringWithFormat:@"-%d", damage];
     }
     //recently been damaged, update the label
     else
     {
-        int totalDamage = [self.damagePopup.text intValue] + damage;
-        self.damagePopup.text = [NSString stringWithFormat:@"%d", totalDamage];
+        int totalDamage = abs([self.damagePopup.text intValue]) + damage;
+        self.damagePopup.text = [NSString stringWithFormat:@"-%d", totalDamage];
         return;
     }
     
@@ -1335,7 +1362,7 @@ NSDictionary *singlePlayerCardImages;
                              self.damagePopup.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1,1);
                      }
                      completion:^(BOOL finished){
-                         [UIView animateWithDuration:0.5 delay:1.3 options:UIViewAnimationOptionCurveEaseInOut
+                         [UIView animateWithDuration:0.5 delay:DAMAGE_POPUP_DURATION options:UIViewAnimationOptionCurveEaseInOut
                                           animations:^{
                                               self.damagePopup.alpha = 0;
                                           }
@@ -1437,6 +1464,42 @@ NSDictionary *singlePlayerCardImages;
             }
         }
     }
+}
+
+-(void)animateIsKillHintOn:(BOOL)isKilled
+{
+    
+    if (isKilled)
+    {
+        [_combatHintView setImage:killHintImage];
+        [_combatHintView setFrame:CGRectMake(0, 0, killHintImage.size.width, killHintImage.size.height)];
+        _combatHintView.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+        _combatHintView.transform = CGAffineTransformMakeScale(0.01, 0.01);
+        [self addSubview:_combatHintView];
+        
+        //TODO these should have duration but can't get properly working yet
+        [UIView animateWithDuration:0.0
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{_combatHintView.transform = CGAffineTransformMakeScale(1, 1);}
+                         completion:nil];
+    }
+    else
+    {
+        _combatHintView.transform = CGAffineTransformMakeScale(1, 1);
+        
+        [UIView animateWithDuration:0.0
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{_combatHintView.transform = CGAffineTransformMakeScale(0.01, 0.01);}
+                         completion:^(BOOL finished) {
+                             [_combatHintView removeFromSuperview];
+                             _combatHintView.transform = CGAffineTransformMakeScale(1, 1);
+                         }];
+        
+    }
+    
+    _isKillHintOn = isKilled;
 }
 
 -(void)loadImage

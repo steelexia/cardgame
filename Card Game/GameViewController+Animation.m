@@ -22,7 +22,7 @@
 {
     self.currentNumberOfAnimations--;
     
-    if (self.currentNumberOfAnimations == 0)
+    if (self.currentNumberOfAnimations <= 0)
         [self setAllViews:YES];
 }
 
@@ -128,6 +128,9 @@
     [[cardView superview] bringSubviewToFront:cardView];
     
     if (![cardView.cardModel isKindOfClass:[SpellCardModel class]]) {
+        
+        [self performBlock:^{
+        
         CardView *topImgView =  [[CardView alloc] initWithModel:cardView.cardModel viewMode:cardViewModeEditor];
         CardView *bottomImgView = [[CardView alloc] initWithModel:cardView.cardModel viewMode:cardViewModeEditor];;
         
@@ -181,33 +184,46 @@
         //[[cardView superview] sendSubviewToBack:cardView];
         [cardView setHidden:YES];
         
-        [self animateShapeBounds:shape OnView:cardView];
-        [self performSelector:@selector(hideShape:) withObject:shape afterDelay:0.1];
         
-        CGPoint n_top_center = topImgView.center;
-        n_top_center.x -= 10;
-        n_top_center.y -= 10;
         
-        CGPoint n_bottom_center = bottomImgView.center;
-        n_bottom_center.x += 10;
-        n_bottom_center.y += 10;
         
-        [UIView animateWithDuration:0.3 animations:^{
-            topImgView.center = n_top_center;
-            topImgView.alpha = 0.0;
-            bottomImgView.center = n_bottom_center;
-            bottomImgView.alpha = 0.0;
+            float destructionDuration = 0.4f;
             
-        } completion:^(BOOL finished) {
-            [cardView removeFromSuperview];
-            [self performBlock:^{
-                [self updateBattlefieldView:side];
-                [self decAnimationCounter];
-                //cardView.inDestructionAnimation = NO;
-                [topImgView removeFromSuperview];
-                [bottomImgView removeFromSuperview];
-            }  afterDelay:0.5];
-        }];
+            [self animateShapeBounds:shape OnView:cardView forDuration:0.1];
+            [self performSelector:@selector(hideShape:) withObject:shape afterDelay:0.1];
+            
+            CGPoint n_top_center = topImgView.center;
+            n_top_center.x -= 10;
+            n_top_center.y -= 10;
+            
+            CGPoint n_bottom_center = bottomImgView.center;
+            n_bottom_center.x += 10;
+            n_bottom_center.y += 10;
+            
+            
+            
+            
+            [UIView animateWithDuration:destructionDuration delay:0 options:UIViewAnimationOptionTransitionNone animations:^{
+                topImgView.center = n_top_center;
+                topImgView.alpha = 0.0;
+                bottomImgView.center = n_bottom_center;
+                bottomImgView.alpha = 0.0;
+                
+            } completion:^(BOOL finished) {
+                [cardView removeFromSuperview];
+                [self performBlock:^{
+                    [self updateBattlefieldView:side];
+                    [self decAnimationCounter];
+                    //cardView.inDestructionAnimation = NO;
+                    [topImgView removeFromSuperview];
+                    [bottomImgView removeFromSuperview];
+                }  afterDelay:0.5];
+            }];
+        } afterDelay:delay];
+        
+        
+        
+        
     }else{
         [cardView removeFromSuperview];
         [self performBlock:^{
@@ -235,7 +251,8 @@
     return shapeLayer;
 }
 
--(void)animateShapeBounds:(CAShapeLayer*)shape OnView:(CardView *)cardView{
+-(void)animateShapeBounds:(CAShapeLayer*)shape OnView:(CardView *)cardView forDuration:(float)duration
+{
     
     UIBezierPath *path = [UIBezierPath bezierPath];
     [path moveToPoint:CGPointMake(cardView.frame.origin.x + cardView.frame.size.width,cardView.frame.origin.y)];
@@ -243,7 +260,7 @@
     
     CABasicAnimation* pathAnim = [CABasicAnimation animationWithKeyPath:@"path"];
     pathAnim.toValue = (__bridge id _Nullable)([path CGPath]);
-    pathAnim.duration = 0.1;
+    pathAnim.duration = duration;
     pathAnim.cumulative = NO;
     pathAnim.repeatCount = 1.0;
     pathAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
@@ -426,7 +443,7 @@
     {
         //target died, update field view and remove it from screen
         if (((MonsterCardModel*)cardView.cardModel).dead)
-            [self animateCardDestruction:cardView fromSide:side withDelay: 0.4];
+            [self animateCardDestruction:cardView fromSide:side withDelay: 1.0];
 
         //[self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
         [self decAnimationCounter];
@@ -469,11 +486,14 @@
                              cardView.inDamageAnimation = NO;
                              //target died, update field view and remove it from screen
                              if (((MonsterCardModel*)cardView.cardModel).dead)
-                                 [self animateCardDestruction:cardView fromSide:side withDelay: 0.4];
+                             {
+                                 [self animateCardDestruction:cardView fromSide:side withDelay: 1.0];
+                             }
                              //not dead, move back to position
-                             //else
-                                // [self animateCardIceDamage:cardView fromSide:side];
-                                 //[self animateMoveToWithBounce:cardView toPosition:originalPoint inDuration:0.25 withDelay:0.4];
+                             else
+                             {
+                                 [self animateMoveToWithBounce:cardView toPosition:originalPoint inDuration:0.25 withDelay:0.4];
+                             }
                              //[self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
                              [self decAnimationCounter];
                          }
@@ -542,11 +562,11 @@
     lifePopup.textAlignment = NSTextAlignmentCenter;
     lifePopup.textColor = [UIColor greenColor];
     lifePopup.backgroundColor = [UIColor clearColor];
-    lifePopup.font = [UIFont fontWithName:cardMainFontBlack size:18];
+    lifePopup.font = [UIFont fontWithName:cardMainFontBlack size:CARD_DAMAGE_POPUP_SIZE];
     
     [self.uiView addSubview:lifePopup];
     [self zoomIn:lifePopup inDuration:0.15];
-    [self fadeOutAndRemove:lifePopup inDuration:0.5 withDelay:0.5];
+    [self fadeOutAndRemove:lifePopup inDuration:DAMAGE_POPUP_DURATION withDelay:0.5];
 }
 
 -(void) animatePlayerTurn
@@ -797,4 +817,5 @@
         [self.counterView setHidden:NO];
     }
 }
+
 @end
