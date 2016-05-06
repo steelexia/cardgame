@@ -10,6 +10,7 @@
 #import "GameViewController+Animation.h"
 #import "UserModel.h"
 #import "Campaign.h"
+#import "CardPointsUtility.h"
 
 @implementation GameModel
 {
@@ -2233,24 +2234,71 @@ enum GameMode __gameMode; //because C functions cant access
 
 -(NSArray*)getDeadMonsterWithAttacker:(MonsterCardModel*)attacker target:(MonsterCardModel*)target;
 {
-    NSMutableArray*deadMonsters = [NSMutableArray array];
+    NSMutableSet*deadMonsters = [NSMutableSet set];
     
-    //TODO lots of things to check, for now simple
+    BOOL attackerIsAssassin = [CardPointsUtility cardHasAssassin:attacker];
     
-    //if target dies
+    //if attacker more damage, should always cause death
     if (attacker.damage >= target.life)
     {
         [deadMonsters addObject:target];
     }
     
-    //if attacker dies
-    if (target.damage >= attacker.life)
+    //if target more damage, should always cause death except assassin
+    if (target.damage >= attacker.life && !attackerIsAssassin)
     {
         [deadMonsters addObject:attacker];
     }
-    //TODO reflect damage
     
-    return deadMonsters;
+    //NOTE: will only check for abilities that deal direct effects (e.g. checks for reflect damage to attacker but not reflect damage to all enemies)
+    
+    //reflect damage/kill
+    if (!attackerIsAssassin)
+    {
+        for (Ability *ability in target.abilities)
+        {
+            if (ability.abilityType == abilityLoseLife && ability.targetType == targetAttacker && ability.castType == castAlways)
+            {
+                if ((int)ability.value + target.damage >= attacker.life)
+                {
+                    [deadMonsters addObject:attacker];
+                    break;
+                }
+            }
+            //kill on death
+            else if (ability.abilityType == abilityKill && ability.targetType == targetAttacker && ability.castType == castAlways)
+            {
+                [deadMonsters addObject:attacker];
+                break;
+            }
+        }
+    }
+    
+    //pierce can cause a hero to die
+    if ([CardPointsUtility cardHasPierce:attacker])
+    {
+        int overkillAmount = attacker.damage > target.life;
+        
+        if (overkillAmount > 0 && overkillAmount >= [self.players[target.side] playerMonster].life)
+        {
+            [deadMonsters addObject:[self.players[target.side] playerMonster]];
+        }
+    }
+    
+    if ([CardPointsUtility cardHasPierce:target])
+    {
+        int overkillAmount = target.damage > attacker.life;
+        
+        if (overkillAmount > 0 && overkillAmount >= [self.players[attacker.side] playerMonster].life)
+        {
+            [deadMonsters addObject:[self.players[attacker.side] playerMonster]];
+        }
+    }
+    
+    //TODO lots of other specific abilities
+    
+    
+    return [deadMonsters allObjects];
 }
 
 //block delay functions

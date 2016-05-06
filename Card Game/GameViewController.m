@@ -2217,6 +2217,7 @@ BOOL leftHandViewZone = NO;
     opponent.playerMonster.cardView.cardHighlightType = cardHighlightNone;
     
     [self.currentAbilities removeAllObjects];
+    [self updateBattlefieldView:PLAYER_SIDE]; //update attack highlights
     
     //re-enable the disabled views
     [self.handsView setUserInteractionEnabled:YES];
