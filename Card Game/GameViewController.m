@@ -733,6 +733,29 @@ BOOL leftHandViewZone = NO;
     _rewardGoldLabel.center = CGPointMake(_rewardGoldImage.bounds.size.width/2, _rewardGoldImage.bounds.size.height*4/3);
     [_rewardGoldImage addSubview:_rewardGoldLabel];
     
+    _xpIncreaseLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 200, 50)];
+    _xpIncreaseLabel.textAlignment = NSTextAlignmentCenter;
+    _xpIncreaseLabel.textColor = [UIColor whiteColor];
+    _xpIncreaseLabel.font = [UIFont fontWithName:cardMainFont size:30];
+    _xpIncreaseLabel.strokeColour = [UIColor blackColor];
+    _xpIncreaseLabel.strokeThickness = 4;
+    _xpIncreaseLabel.strokeOn = YES;
+    _xpIncreaseLabel.text = @"400";
+    
+    _xpIncreaseLabel.center = CGPointMake(100,100);
+    [_gameOverScreen addSubview:_xpIncreaseLabel];
+    
+    _overallLevelLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,100,50)];
+    _overallLevelLabel.textAlignment = NSTextAlignmentCenter;
+    _overallLevelLabel.font = [UIFont fontWithName:cardMainFont size:40];
+    _overallLevelLabel.strokeColour = [UIColor blackColor];
+    _overallLevelLabel.strokeThickness = 4;
+    _overallLevelLabel.strokeOn = YES;
+    _overallLevelLabel.text = @"99";
+    _overallLevelLabel.center = CGPointMake(50,100);
+    _overallLevelLabel.backgroundColor = [UIColor whiteColor];
+    
+    
     _rewardCardImage = [[UIImageView alloc] initWithImage:CARD_ICON_IMAGE];
     _rewardCardImage.frame = CGRectMake(0, 0, 38, 60);
     
@@ -743,6 +766,8 @@ BOOL leftHandViewZone = NO;
     _rewardCardLabel.strokeColour = [UIColor blackColor];
     _rewardCardLabel.strokeThickness = 4;
     _rewardCardLabel.strokeOn = YES;
+    
+    
     
     _rewardCardLabel.center = CGPointMake(_rewardCardImage.bounds.size.width/2, _rewardCardImage.bounds.size.height * 4/3);
     [_rewardCardImage addSubview:_rewardCardLabel];
@@ -2356,6 +2381,11 @@ BOOL leftHandViewZone = NO;
             _rewardCardLabel.text = [NSString stringWithFormat:@"%d", cardReward];
             [rewards addObject:_rewardCardImage];
         }
+        
+        //brian May012016
+        //adding code for handling XP rewards based on cards used
+        
+        
         
         _resultsLabel.text = @"Victory!";
     }

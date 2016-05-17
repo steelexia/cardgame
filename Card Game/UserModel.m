@@ -1092,6 +1092,15 @@
     
 }
 
++(BOOL)updateUserXPAndLevels:(NSNumber *)overallXP withIceNumber:(NSNumber *)iceXP
+{
+    
+    
+    
+    return YES;
+    
+}
+
 +(BOOL)setLikedCard:(CardModel*)card
 {
     return [self setCardInteraction:card.idNumber atBit:0 state:YES];
