@@ -899,8 +899,6 @@ BOOL leftHandViewZone = NO;
                     int targetIndex = [self.gameModel getTargetIndex:target];
                     //[_networkingEngine sendSummonCard:_currentCardIndex withTarget:targetIndex];
                     [self.MPDataHandler sendSummonCard:_currentCardIndex withTarget:targetIndex];
-                    
-                    
                 }
                 
                 //cast all abilities at this card
@@ -910,6 +908,7 @@ BOOL leftHandViewZone = NO;
                 }
                 
                 //reset all cards' highlight back to none
+                
                 for (MonsterCardModel *card in self.gameModel.battlefield[PLAYER_SIDE])
                     card.cardView.cardHighlightType = cardHighlightNone;
                 for (MonsterCardModel *card in self.gameModel.battlefield[OPPONENT_SIDE])
@@ -991,7 +990,8 @@ BOOL leftHandViewZone = NO;
          }
          }
          */
-        if (tappedOnACard)
+        //will not remove highlights if selecting target of ability
+        if (tappedOnACard && self.currentAbilities.count == 0)
         {
             gameControlState = gameControlStateNone;
             [attackLine removeFromSuperview];
@@ -2242,6 +2242,7 @@ BOOL leftHandViewZone = NO;
     opponent.playerMonster.cardView.cardHighlightType = cardHighlightNone;
     
     [self.currentAbilities removeAllObjects];
+    [self updateBattlefieldView:PLAYER_SIDE]; //update attack highlights
     
     //re-enable the disabled views
     [self.handsView setUserInteractionEnabled:YES];
