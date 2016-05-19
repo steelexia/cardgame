@@ -216,8 +216,8 @@ enum GameMode __gameMode; //because C functions cant access
     spell.cost = 0;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:400000]]];
     //[playerHand addObject:spell];
+
     
-    /*
     MonsterCardModel*monster;
     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     monster.name = @"Nameless card";
@@ -226,10 +226,10 @@ enum GameMode __gameMode; //because C functions cant access
     monster.cost = 0;
     monster.cooldown = monster.maximumCooldown = 0;
     monster.side = PLAYER_SIDE;
-    [monster addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnDeath targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:2000]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomFriendlyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:5]]];
     
-    [playerHand addObject:monster];
-    
+    //[playerHand addObject:monster];
+    /*
     SpellCardModel*spell;
     
     spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
@@ -918,6 +918,15 @@ enum GameMode __gameMode; //because C functions cant access
     {
         MonsterCardModel *monsterCard = (MonsterCardModel*) card;
 
+        //TODO for now added before effects so it doesnt mess up some animations
+        //TODO honestly these two lines should only be called AFTER castAbility is resolved (a bit tricky to do, also includes spell cards)
+        [self addCardToBattlefield:monsterCard side:side];
+        
+        if (side == PLAYER_SIDE)
+        {
+            [self.gameViewController updateBattlefieldView: side];
+        }
+        
         //[self.gameViewController performBlock:^{
             //CastType castOnSummon is casted here
             for (int i = 0; i < [monsterCard.abilities count]; i++) //castAbility may insert objects in end
@@ -937,9 +946,6 @@ enum GameMode __gameMode; //because C functions cant access
                 [_gameViewController.MPDataHandler sendSummonCard:_gameViewController.currentCardIndex withTarget:positionNoPosition];
             }
         //} afterDelay:0.0];
-        
-        //TODO honestly these two lines should only be called AFTER castAbility is resolved (a bit tricky to do, also includes spell cards)
-        [self addCardToBattlefield:monsterCard side:side];
         
         //[self.gameViewController updateBattlefieldView: side];
         
@@ -2050,21 +2056,21 @@ enum GameMode __gameMode; //because C functions cant access
         
         if ([ability.value intValue] == 1)
         {
-            cost = ceil(cost*0.6);
-            damage = ceil(damage*0.6/100)*100;
-            life = ceil(life*0.6/100)*100;
+            cost = ceil(cost*0.8);
+            damage = ceil(damage*0.8);
+            life = ceil(life*0.8);
         }
         else if ([ability.value intValue] == 2)
         {
-            cost = ceil(cost*0.35);
-            damage = ceil(damage*0.35/100)*100;
-            life = ceil(life*0.35/100)*100;
+            cost = ceil(cost*0.4);
+            damage = ceil(damage*0.4);
+            life = ceil(life*0.4);
         }
         else if ([ability.value intValue] == 3)
         {
             cost = ceil(cost*0.3);
-            damage = ceil(damage*0.3/100)*100;
-            life = ceil(life*0.3/100)*100;
+            damage = ceil(damage*0.3);
+            life = ceil(life*0.3);
         }
         for (int i = 0 ; i < [ability.value intValue]; i++)
         {
@@ -2277,7 +2283,7 @@ enum GameMode __gameMode; //because C functions cant access
     //pierce can cause a hero to die
     if ([CardPointsUtility cardHasPierce:attacker])
     {
-        int overkillAmount = attacker.damage > target.life;
+        int overkillAmount = attacker.damage - target.life;
         
         if (overkillAmount > 0 && overkillAmount >= [self.players[target.side] playerMonster].life)
         {
@@ -2287,7 +2293,7 @@ enum GameMode __gameMode; //because C functions cant access
     
     if ([CardPointsUtility cardHasPierce:target])
     {
-        int overkillAmount = target.damage > attacker.life;
+        int overkillAmount = target.damage - attacker.life;
         
         if (overkillAmount > 0 && overkillAmount >= [self.players[attacker.side] playerMonster].life)
         {
@@ -2295,7 +2301,7 @@ enum GameMode __gameMode; //because C functions cant access
         }
     }
     
-    //TODO lots of other specific abilities
+    //TODO can add additional ones in future if needed
     
     
     return [deadMonsters allObjects];

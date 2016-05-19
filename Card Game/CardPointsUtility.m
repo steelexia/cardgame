@@ -209,8 +209,8 @@ const int MIN_MONSTER_POINTS = 2 * STAT_MULTIPLIER;
         {
             //base cost
             int cooldown = (monster.maximumCooldown == 0 ? 1 : monster.maximumCooldown);
-            abilityCost += monster.damage * STAT_MULTIPLIER / cooldown;
-            abilityCost += monster.life * STAT_MULTIPLIER;
+            abilityCost += monster.damage * 0.7f * STAT_MULTIPLIER / cooldown;
+            abilityCost += monster.life * 0.7f * STAT_MULTIPLIER;
             
             if (castType == castOnDamaged)
                 abilityCost *= 1.5;
