@@ -364,7 +364,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     else if (sender == _levelTwoButton)
         levelNumber = 2;
     else if (sender == _levelThreeButton)
-        levelNumber = 3; //DEBUG set to 4
+        levelNumber = 4; //DEBUG set to 4
     
     int chapterNumber = 0;
     for (UIButton*button in _chapterButtons)

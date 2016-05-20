@@ -291,7 +291,7 @@ const int MIN_MONSTER_POINTS = 2 * STAT_MULTIPLIER;
                 }
                 else if (abilityType == abilityPierce)
                 {
-                    abilityCost += monster.damage * STAT_MULTIPLIER * 0.3;
+                    abilityCost += monster.damage * STAT_MULTIPLIER * 0.4;
                     abilityCost = MAX(10,abilityCost); //costs at least 10
                 }
                 else if (abilityType == abilityRemoveAbility)
