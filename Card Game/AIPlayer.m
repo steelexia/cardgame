@@ -585,6 +585,9 @@ int enemyTotalStrength, friendlyTotalStrength;
 {
     int points = 0;
     
+
+    //TODO if monster has no attack and no abilities, its value should be ?negative or at least 0
+    
     //life of the minion is a function where having too high health is meaningless (abilities will kill it one hit or mute it anyways)
     points += [self evaluateMonsterLifeValue:monster];
     //NSLog(@"AI after life %d", points);
@@ -635,6 +638,24 @@ int enemyTotalStrength, friendlyTotalStrength;
                 NSLog(@"AI: Adding ability %@ with %d points (will divide by 2)", [Ability getDescription:ability fromCard:monster], abilityPoint);
                 points += abilityPoint / 2; //half as effective
                 NSLog(@"AI: New point after adding last ability %d", points);
+            }
+        }
+    }
+    
+    //if not a negative card, gain 3 stat worth of points per additional enemy creature up to 3, e.g. with an empty board against 3 enemy creatures, a 5/5 creature is worth equiv to a 9/10. only applies when less than 3 creatures on board
+    if (points > 0 && points != USELESS_MOVE && points != VICTORY_MOVE)
+    {
+        NSMutableArray*friendlyBattlefield = _gameModel.battlefield[monster.side];
+        int alliedMonsters = (int)friendlyBattlefield.count;
+        
+        if (alliedMonsters < 3)
+        {
+            NSMutableArray*enemyBattlefield = _gameModel.battlefield[monster.side == PLAYER_SIDE ?  OPPONENT_SIDE : PLAYER_SIDE];
+            int enemyMonsters = (int)enemyBattlefield.count;
+    
+            if (enemyMonsters - alliedMonsters > 0)
+            {
+                points += MIN(enemyMonsters - alliedMonsters, 3) * 3 * STAT_POINT_MULTIPLIER;
             }
         }
     }
