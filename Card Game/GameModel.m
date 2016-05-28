@@ -226,7 +226,7 @@ enum GameMode __gameMode; //because C functions cant access
     monster.cost = 0;
     monster.cooldown = monster.maximumCooldown = 0;
     monster.side = PLAYER_SIDE;
-    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomFriendlyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:5]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
     
     //[playerHand addObject:monster];
     /*
@@ -1366,7 +1366,7 @@ enum GameMode __gameMode; //because C functions cant access
         {
             if (side == PLAYER_SIDE)
             {
-                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
+                NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
                 [allTargets removeObject:attacker]; //remove itself
                 [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
                 [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
@@ -1411,7 +1411,7 @@ enum GameMode __gameMode; //because C functions cant access
         {
             if (side == PLAYER_SIDE)
             {
-                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
+                NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
                 [allTargets removeObject:attacker]; //remove itself
                 [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
                 
@@ -1456,7 +1456,7 @@ enum GameMode __gameMode; //because C functions cant access
         {
             if (side == PLAYER_SIDE)
             {
-                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
+                NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
                 [allTargets removeObject:attacker]; //remove itself
                 [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
                 
@@ -1499,7 +1499,7 @@ enum GameMode __gameMode; //because C functions cant access
         {
             if (side == PLAYER_SIDE)
             {
-                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
+                NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
                 [allTargets removeObject:attacker]; //remove itself
                 
                 for (MonsterCardModel *monster in allTargets)
@@ -1543,7 +1543,7 @@ enum GameMode __gameMode; //because C functions cant access
         {
             if (side == PLAYER_SIDE)
             {
-                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
+                NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[oppositeSide]];
                 [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
                 
                 for (MonsterCardModel *monster in allTargets)
@@ -1585,7 +1585,7 @@ enum GameMode __gameMode; //because C functions cant access
         {
             if (side == PLAYER_SIDE)
             {
-                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
+                NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[oppositeSide]];
                 
                 for (MonsterCardModel *monster in allTargets)
                 {
@@ -1621,53 +1621,53 @@ enum GameMode __gameMode; //because C functions cant access
     }
     else if (ability.targetType == targetAll)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
         [allTargets removeObject:attacker]; //remove itself
         [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
         [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
         [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
         
-        targets = [NSArray arrayWithArray:allTargets];
+        targets = [NSArray arrayWithArray:allTargets.allObjects];
     }
     else if (ability.targetType == targetAllMinion)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
         [allTargets removeObject:attacker]; //remove itself
         [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
         [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
-        targets = [NSArray arrayWithArray:allTargets];
+        targets = [NSArray arrayWithArray:allTargets.allObjects];
     }
     else if (ability.targetType == targetAllFriendly)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
         [allTargets removeObject:attacker]; //remove itself
         [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
         
-        targets = [NSArray arrayWithArray:allTargets];
+        targets = [NSArray arrayWithArray:allTargets.allObjects];
     }
     else if (ability.targetType == targetAllFriendlyMinions)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
         [allTargets removeObject:attacker]; //remove itself
         [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
-        targets = [NSArray arrayWithArray:allTargets];
+        targets = [NSArray arrayWithArray:allTargets.allObjects];
     }
     else if (ability.targetType == targetAllEnemy)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[oppositeSide]];
         [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
         
-        targets = [NSArray arrayWithArray:allTargets];
+        targets = [NSArray arrayWithArray:allTargets.allObjects];
     }
     else if (ability.targetType == targetAllEnemyMinions)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[oppositeSide]];
         [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
-        targets = [NSArray arrayWithArray:allTargets];
+        targets = [NSArray arrayWithArray:allTargets.allObjects];
     }
     else if (ability.targetType == targetOneRandomAny)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
         [allTargets removeObject:attacker]; //remove itself
         [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
         [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
@@ -1676,11 +1676,11 @@ enum GameMode __gameMode; //because C functions cant access
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(xor128(side)%allTargets.count)]];
+        targets = @[allTargets.allObjects[(int)(xor128(side)%allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomMinion)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
         [allTargets removeObject:attacker]; //remove itself
         [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
         [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
@@ -1688,47 +1688,47 @@ enum GameMode __gameMode; //because C functions cant access
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(xor128(side)%allTargets.count)]];
+        targets = @[allTargets.allObjects[(int)(xor128(side)%allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomFriendly)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
         [allTargets removeObject:attacker]; //remove itself
         [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
         
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(xor128(side)%allTargets.count)]];
+        targets = @[allTargets.allObjects[(int)(xor128(side)%allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomFriendlyMinion)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
         [allTargets removeObject:attacker]; //remove itself
         [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(xor128(side)%allTargets.count)]];
+        targets = @[allTargets.allObjects[(int)(xor128(side)%allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomEnemy)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[oppositeSide]];
         [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
         
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(xor128(side)%allTargets.count)]];
+        targets = @[allTargets.allObjects[(int)(xor128(side)%allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomEnemyMinion)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[oppositeSide]];
         [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(xor128(side)%allTargets.count)]];
+        targets = @[allTargets.allObjects[(int)(xor128(side)%allTargets.count)]];
     }
     else if (ability.targetType == targetHeroAny)
     {
@@ -1738,7 +1738,7 @@ enum GameMode __gameMode; //because C functions cant access
         {
             if (side == PLAYER_SIDE)
             {
-                NSMutableArray *allTargets = [NSMutableArray array];
+                NSMutableSet *allTargets = [NSMutableSet set];
                 [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
                 [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
                 

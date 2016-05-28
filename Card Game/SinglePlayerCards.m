@@ -107,15 +107,15 @@ NSMutableDictionary * campaignCards;
         monster.element = elementNeutral;
         monster.name = @"Skywhale Flagship"; //?
         monster.damage = 0;
-        monster.life = monster.maximumLife = 41000; //should be ~120
+        monster.life = monster.maximumLife = 140; //should be ~120
         monster.cost = 10;
         monster.cooldown = monster.maximumCooldown = 1;
         monster.heroic = YES;
         
         [monster addBaseAbility: [[Ability alloc] initWithType:abilityHeroic castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
         
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:2400]]];
-        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnMove targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:1800]]];
+        //[monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:2]]];
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnMove targetType:targetOneRandomEnemyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:6]]];
         
         return monster;
     }
@@ -2047,7 +2047,7 @@ NSMutableDictionary * campaignCards;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:8]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:8]]];
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:8]]];
-    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
     
     
     [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
@@ -2129,7 +2129,8 @@ NSMutableDictionary * campaignCards;
     monster.cooldown = monster.maximumCooldown = 1;
     
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:4]]];
-    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:2]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnHit targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:4]]];
+    
     
     [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
     
@@ -2186,7 +2187,7 @@ NSMutableDictionary * campaignCards;
     monster.life = monster.maximumLife = 3;
     monster.cost = 1;
     monster.cooldown = monster.maximumCooldown = 1;
-    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAssassin castType:castOnSummon targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAssassin castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
     
     [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d1_%d", monster.idNumber]];
     
@@ -2270,7 +2271,7 @@ NSMutableDictionary * campaignCards;
     spell.name = @"Proton Blaster";
     spell.cost = 2;
     
-    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetHeroFriendly withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:8]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetHeroFriendly withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:9]]];
     
     [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d1_%d", spell.idNumber]];
     
@@ -2711,7 +2712,7 @@ NSMutableDictionary * campaignCards;
     monster.rarity = cardRarityRare;
     monster.name = @"Cyborg Biker";
     monster.damage = 5;
-    monster.life = monster.maximumLife = 2;
+    monster.life = monster.maximumLife = 3;
     monster.cost = 2;
     monster.cooldown = monster.maximumCooldown = 1;
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseCooldown castType:castOnSummon targetType:targetOneFriendlyMinion withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
@@ -2722,7 +2723,7 @@ NSMutableDictionary * campaignCards;
     monster.element = elementFire;
     monster.rarity = cardRarityRare;
     monster.name = @"Sandbot";
-    monster.damage = 6;
+    monster.damage = 7;
     monster.life = monster.maximumLife = 12;
     monster.cost = 5;
     monster.cooldown = monster.maximumCooldown = 1;
@@ -2734,7 +2735,7 @@ NSMutableDictionary * campaignCards;
     monster.element = elementNeutral;
     monster.rarity = cardRarityRare;
     monster.name = @"Skywhale";
-    monster.damage = 5;
+    monster.damage = 6;
     monster.life = monster.maximumLife = 17;
     monster.cost = 7;
     monster.cooldown = monster.maximumCooldown = 1;
@@ -2749,7 +2750,7 @@ NSMutableDictionary * campaignCards;
     spell.name = @"Culverin Shot";
     spell.cost = 2;
     
-    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:2600]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:6]]];
     
     [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
@@ -2758,10 +2759,10 @@ NSMutableDictionary * campaignCards;
     monster.rarity = cardRarityUncommon;
     monster.name = @"? Bomb";
     monster.damage = 0;
-    monster.life = monster.maximumLife = 2100;
+    monster.life = monster.maximumLife = 5;
     monster.cost = 3;
     monster.cooldown = monster.maximumCooldown = 2;
-    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:2900]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:7]]];
     [monster addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnMove targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
     
     [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
@@ -2782,10 +2783,10 @@ NSMutableDictionary * campaignCards;
     spell.name = @"Broadside Volley";
     spell.cost = 6;
     
-    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
-    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
-    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:3200]]];
-    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:8]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:8]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetOneRandomEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:8]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddCooldown castType:castOnSummon targetType:targetHeroFriendly withDuration:durationInstant withValue:[NSNumber numberWithInt:2]]];
     
     [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     
@@ -2864,8 +2865,10 @@ NSMutableDictionary * campaignCards;
     monster.cost = 6;
     monster.cooldown = monster.maximumCooldown = 1;
     
-    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:6]]];
-    [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseDamage castType:castOnDeath targetType:targetAllEnemyMinions withDuration:durationForever withValue:[NSNumber numberWithInt:2]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnDamaged targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:5]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAddLife castType:castOnHit targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:5]]];
+    
+
     
     [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
     
@@ -2922,7 +2925,7 @@ NSMutableDictionary * campaignCards;
     monster.life = monster.maximumLife = 3;
     monster.cost = 1;
     monster.cooldown = monster.maximumCooldown = 1;
-    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAssassin castType:castOnSummon targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityAssassin castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
     
     [campaignCards setObject:monster forKey:[NSString stringWithFormat:@"d2_%d", monster.idNumber]];
     
@@ -3006,7 +3009,7 @@ NSMutableDictionary * campaignCards;
     spell.name = @"Proton Blaster";
     spell.cost = 2;
     
-    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetHeroFriendly withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:10]]];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetHeroFriendly withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:13]]];
     
     [campaignCards setObject:spell forKey:[NSString stringWithFormat:@"d2_%d", spell.idNumber]];
     

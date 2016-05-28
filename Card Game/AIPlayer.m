@@ -493,7 +493,7 @@ int enemyTotalStrength, friendlyTotalStrength;
             if (damageReceived > 0)
             {
                 points -= monster.damage*0.1* STAT_POINT_MULTIPLIER; //try to avoid losing health of a high damage minion
-                NSLog(@"AI: avoid losing high damage -%f points", monster.damage*0.25* STAT_POINT_MULTIPLIER);
+                NSLog(@"AI: avoid losing high damage -%f points", monster.damage*0.1* STAT_POINT_MULTIPLIER);
             }
         }
         else
@@ -502,8 +502,8 @@ int enemyTotalStrength, friendlyTotalStrength;
             points -= damageReceived * STAT_POINT_MULTIPLIER;
             NSLog(@"AI: damageReceived -%d points", damageReceived * STAT_POINT_MULTIPLIER);
             
-            points += overDamageReceived*0.5* STAT_POINT_MULTIPLIER; //receiving over damage is good
-            NSLog(@"AI: received overDamage +%f points", overDamageReceived*0.5* STAT_POINT_MULTIPLIER);
+            //points += overDamageReceived*0.5* STAT_POINT_MULTIPLIER; //receiving over damage is good
+            //NSLog(@"AI: received overDamage +%f points", overDamageReceived*0.5* STAT_POINT_MULTIPLIER);
             
             points -= monster.damage*0.33* STAT_POINT_MULTIPLIER; //losing a monster with high damage is bad
             NSLog(@"AI: losing monster with high damage -%f points", monster.damage*0.33* STAT_POINT_MULTIPLIER);
