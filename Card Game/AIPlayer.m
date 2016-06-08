@@ -134,6 +134,18 @@ int enemyTotalStrength, friendlyTotalStrength;
                     points += [self getCardBaseCost:card];
                 }
                 
+                //hardcoding for chapter 3, will never use up 5th slot (so fighters can spawn)
+                if ([_gameModel.level.levelID isEqualToString:@"d_1_c_3_l_4"] ||
+                    [_gameModel.level.levelID isEqualToString:@"d_2_c_3_l_4"] ||
+                    [_gameModel.level.levelID isEqualToString:@"d_3_c_3_l_4"])
+                {
+                    if (field.count >= 4)
+                    {
+                        if (points != VICTORY_MOVE && points != IMPOSSIBLE_MOVE)
+                            points = USELESS_MOVE;
+                    }
+                }
+                
                 if (points > bestPoints)
                 {
                     bestCard = card;
@@ -676,9 +688,20 @@ int enemyTotalStrength, friendlyTotalStrength;
 
     MonsterCardModel*friendlyHero = [self.gameModel.players[side] playerMonster];
     MonsterCardModel*enemyHero = [self.gameModel.players[oppositeSide] playerMonster];
+   
+    int damagePoints;
     
-    //damage points is linear because having high damage can result in one shotting the enemy hero, but capping at 25k (hero's life)
-    int damagePoints = monster.damage > HERO_MAX_LIFE ? HERO_MAX_LIFE : monster.damage;
+    //damage not capped if has pierce
+    if ([CardPointsUtility cardHasPierce:monster])
+    {
+        damagePoints = [monster damage];
+    }
+     //damage points is linear because having high damage can result in one shotting the enemy hero, but capping at max hero's life
+    else
+    {
+        damagePoints = [monster damage] > HERO_MAX_LIFE ? HERO_MAX_LIFE : [monster damage];
+    }
+    
     damagePoints /= 2; //damage and life are half as effective as points (i.e. 1000/1000 monster ~= 1000 points)
     
     //enemy hero having low life makes this more attractive

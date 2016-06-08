@@ -79,6 +79,7 @@ NSMutableDictionary * campaignCards;
         //[monster addBaseAbility: [[Ability alloc] initWithType:abilitySetDamage castType:castOnHit targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
         [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:2]]];
         [monster addBaseAbility: [[Ability alloc] initWithType:abilityAssassin castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityPierce castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
         
         return monster;
     }
@@ -134,7 +135,9 @@ NSMutableDictionary * campaignCards;
         [monster addBaseAbility: [[Ability alloc] initWithType:abilityHeroic castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
         //[monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:5]]];
         //[monster addBaseAbility: [[Ability alloc] initWithType:abilitySetDamage castType:castOnHit targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnDamaged targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:3]]];
         [monster addBaseAbility: [[Ability alloc] initWithType:abilityAssassin castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
+        [monster addBaseAbility: [[Ability alloc] initWithType:abilityPierce castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
         
         return monster;
     }
