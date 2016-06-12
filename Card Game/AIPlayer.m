@@ -134,6 +134,18 @@ int enemyTotalStrength, friendlyTotalStrength;
                     points += [self getCardBaseCost:card];
                 }
                 
+                //hardcoding for chapter 3, will never use up 5th slot (so fighters can spawn)
+                if ([_gameModel.level.levelID isEqualToString:@"d_1_c_3_l_4"] ||
+                    [_gameModel.level.levelID isEqualToString:@"d_2_c_3_l_4"] ||
+                    [_gameModel.level.levelID isEqualToString:@"d_3_c_3_l_4"])
+                {
+                    if (field.count >= 4)
+                    {
+                        if (points != VICTORY_MOVE && points != IMPOSSIBLE_MOVE)
+                            points = USELESS_MOVE;
+                    }
+                }
+                
                 if (points > bestPoints)
                 {
                     bestCard = card;
@@ -493,7 +505,7 @@ int enemyTotalStrength, friendlyTotalStrength;
             if (damageReceived > 0)
             {
                 points -= monster.damage*0.1* STAT_POINT_MULTIPLIER; //try to avoid losing health of a high damage minion
-                NSLog(@"AI: avoid losing high damage -%f points", monster.damage*0.25* STAT_POINT_MULTIPLIER);
+                NSLog(@"AI: avoid losing high damage -%f points", monster.damage*0.1* STAT_POINT_MULTIPLIER);
             }
         }
         else
@@ -502,8 +514,8 @@ int enemyTotalStrength, friendlyTotalStrength;
             points -= damageReceived * STAT_POINT_MULTIPLIER;
             NSLog(@"AI: damageReceived -%d points", damageReceived * STAT_POINT_MULTIPLIER);
             
-            points += overDamageReceived*0.5* STAT_POINT_MULTIPLIER; //receiving over damage is good
-            NSLog(@"AI: received overDamage +%f points", overDamageReceived*0.5* STAT_POINT_MULTIPLIER);
+            //points += overDamageReceived*0.5* STAT_POINT_MULTIPLIER; //receiving over damage is good
+            //NSLog(@"AI: received overDamage +%f points", overDamageReceived*0.5* STAT_POINT_MULTIPLIER);
             
             points -= monster.damage*0.33* STAT_POINT_MULTIPLIER; //losing a monster with high damage is bad
             NSLog(@"AI: losing monster with high damage -%f points", monster.damage*0.33* STAT_POINT_MULTIPLIER);
@@ -585,6 +597,9 @@ int enemyTotalStrength, friendlyTotalStrength;
 {
     int points = 0;
     
+
+    //TODO if monster has no attack and no abilities, its value should be ?negative or at least 0
+    
     //life of the minion is a function where having too high health is meaningless (abilities will kill it one hit or mute it anyways)
     points += [self evaluateMonsterLifeValue:monster];
     //NSLog(@"AI after life %d", points);
@@ -639,6 +654,24 @@ int enemyTotalStrength, friendlyTotalStrength;
         }
     }
     
+    //if not a negative card, gain 3 stat worth of points per additional enemy creature up to 3, e.g. with an empty board against 3 enemy creatures, a 5/5 creature is worth equiv to a 9/10. only applies when less than 3 creatures on board
+    if (points > 0 && points != USELESS_MOVE && points != VICTORY_MOVE)
+    {
+        NSMutableArray*friendlyBattlefield = _gameModel.battlefield[monster.side];
+        int alliedMonsters = (int)friendlyBattlefield.count;
+        
+        if (alliedMonsters < 3)
+        {
+            NSMutableArray*enemyBattlefield = _gameModel.battlefield[monster.side == PLAYER_SIDE ?  OPPONENT_SIDE : PLAYER_SIDE];
+            int enemyMonsters = (int)enemyBattlefield.count;
+    
+            if (enemyMonsters - alliedMonsters > 0)
+            {
+                points += MIN(enemyMonsters - alliedMonsters, 3) * 3 * STAT_POINT_MULTIPLIER;
+            }
+        }
+    }
+    
     return points;
 }
 
@@ -655,9 +688,20 @@ int enemyTotalStrength, friendlyTotalStrength;
 
     MonsterCardModel*friendlyHero = [self.gameModel.players[side] playerMonster];
     MonsterCardModel*enemyHero = [self.gameModel.players[oppositeSide] playerMonster];
+   
+    int damagePoints;
     
-    //damage points is linear because having high damage can result in one shotting the enemy hero, but capping at 25k (hero's life)
-    int damagePoints = monster.damage > HERO_MAX_LIFE ? HERO_MAX_LIFE : monster.damage;
+    //damage not capped if has pierce
+    if ([CardPointsUtility cardHasPierce:monster])
+    {
+        damagePoints = [monster damage];
+    }
+     //damage points is linear because having high damage can result in one shotting the enemy hero, but capping at max hero's life
+    else
+    {
+        damagePoints = [monster damage] > HERO_MAX_LIFE ? HERO_MAX_LIFE : [monster damage];
+    }
+    
     damagePoints /= 2; //damage and life are half as effective as points (i.e. 1000/1000 monster ~= 1000 points)
     
     //enemy hero having low life makes this more attractive

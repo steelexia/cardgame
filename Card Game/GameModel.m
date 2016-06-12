@@ -216,8 +216,8 @@ enum GameMode __gameMode; //because C functions cant access
     spell.cost = 0;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:400000]]];
     //[playerHand addObject:spell];
+
     
-    /*
     MonsterCardModel*monster;
     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     monster.name = @"Nameless card";
@@ -226,10 +226,12 @@ enum GameMode __gameMode; //because C functions cant access
     monster.cost = 0;
     monster.cooldown = monster.maximumCooldown = 0;
     monster.side = PLAYER_SIDE;
-    [monster addBaseAbility: [[Ability alloc] initWithType:abilityKill castType:castOnDeath targetType:targetAttacker withDuration:durationForever withValue:[NSNumber numberWithInt:2000]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
     
-    [playerHand addObject:monster];
+    //[playerHand addObject:monster];
     
+    
+    /*
     SpellCardModel*spell;
     
     spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
@@ -918,6 +920,15 @@ enum GameMode __gameMode; //because C functions cant access
     {
         MonsterCardModel *monsterCard = (MonsterCardModel*) card;
 
+        //TODO for now added before effects so it doesnt mess up some animations
+        //TODO honestly these two lines should only be called AFTER castAbility is resolved (a bit tricky to do, also includes spell cards)
+        [self addCardToBattlefield:monsterCard side:side];
+        
+        if (side == PLAYER_SIDE)
+        {
+            [self.gameViewController updateBattlefieldView: side];
+        }
+        
         //[self.gameViewController performBlock:^{
             //CastType castOnSummon is casted here
             for (int i = 0; i < [monsterCard.abilities count]; i++) //castAbility may insert objects in end
@@ -937,9 +948,6 @@ enum GameMode __gameMode; //because C functions cant access
                 [_gameViewController.MPDataHandler sendSummonCard:_gameViewController.currentCardIndex withTarget:positionNoPosition];
             }
         //} afterDelay:0.0];
-        
-        //TODO honestly these two lines should only be called AFTER castAbility is resolved (a bit tricky to do, also includes spell cards)
-        [self addCardToBattlefield:monsterCard side:side];
         
         //[self.gameViewController updateBattlefieldView: side];
         
@@ -1040,7 +1048,7 @@ enum GameMode __gameMode; //because C functions cant access
 -(int)calculateDamage: (MonsterCardModel*)attacker fromSide:(int) side dealtTo:(MonsterCardModel*)target
 {
     //damage already includes attacker's abilities
-    int damage = attacker.damage;
+    int damage = [attacker damage];
     
     //additional modifiers, especially from defender
     return damage;
@@ -1216,7 +1224,7 @@ enum GameMode __gameMode; //because C functions cant access
         return NO;
     
     //cannot attack if no damage value
-    if (attacker.damage <= 0)
+    if ([attacker damage] <= 0)
         return NO;
     
     return YES;
@@ -1360,8 +1368,10 @@ enum GameMode __gameMode; //because C functions cant access
         {
             if (side == PLAYER_SIDE)
             {
-                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
-                [allTargets removeObject:attacker]; //remove itself
+                NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
+                
+                if (attacker != nil)
+                    [allTargets removeObject:attacker]; //remove itself
                 [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
                 [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
                 [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
@@ -1405,8 +1415,9 @@ enum GameMode __gameMode; //because C functions cant access
         {
             if (side == PLAYER_SIDE)
             {
-                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
-                [allTargets removeObject:attacker]; //remove itself
+                NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
+                if (attacker != nil)
+                    [allTargets removeObject:attacker]; //remove itself
                 [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
                 
                 for (MonsterCardModel *monster in allTargets)
@@ -1450,8 +1461,9 @@ enum GameMode __gameMode; //because C functions cant access
         {
             if (side == PLAYER_SIDE)
             {
-                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
-                [allTargets removeObject:attacker]; //remove itself
+                NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
+                if (attacker != nil)
+                    [allTargets removeObject:attacker]; //remove itself
                 [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
                 
                 for (MonsterCardModel *monster in allTargets)
@@ -1493,8 +1505,9 @@ enum GameMode __gameMode; //because C functions cant access
         {
             if (side == PLAYER_SIDE)
             {
-                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
-                [allTargets removeObject:attacker]; //remove itself
+                NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
+                if (attacker != nil)
+                    [allTargets removeObject:attacker]; //remove itself
                 
                 for (MonsterCardModel *monster in allTargets)
                 {
@@ -1537,7 +1550,7 @@ enum GameMode __gameMode; //because C functions cant access
         {
             if (side == PLAYER_SIDE)
             {
-                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
+                NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[oppositeSide]];
                 [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
                 
                 for (MonsterCardModel *monster in allTargets)
@@ -1579,7 +1592,7 @@ enum GameMode __gameMode; //because C functions cant access
         {
             if (side == PLAYER_SIDE)
             {
-                NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
+                NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[oppositeSide]];
                 
                 for (MonsterCardModel *monster in allTargets)
                 {
@@ -1615,54 +1628,59 @@ enum GameMode __gameMode; //because C functions cant access
     }
     else if (ability.targetType == targetAll)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
-        [allTargets removeObject:attacker]; //remove itself
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
+        if (attacker != nil)
+            [allTargets removeObject:attacker]; //remove itself
         [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
         [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
         [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
         
-        targets = [NSArray arrayWithArray:allTargets];
+        targets = [NSArray arrayWithArray:allTargets.allObjects];
     }
     else if (ability.targetType == targetAllMinion)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
-        [allTargets removeObject:attacker]; //remove itself
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
+        if (attacker != nil)
+            [allTargets removeObject:attacker]; //remove itself
         [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
         [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
-        targets = [NSArray arrayWithArray:allTargets];
+        targets = [NSArray arrayWithArray:allTargets.allObjects];
     }
     else if (ability.targetType == targetAllFriendly)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
-        [allTargets removeObject:attacker]; //remove itself
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
+        if (attacker != nil)
+            [allTargets removeObject:attacker]; //remove itself
         [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
         
-        targets = [NSArray arrayWithArray:allTargets];
+        targets = [NSArray arrayWithArray:allTargets.allObjects];
     }
     else if (ability.targetType == targetAllFriendlyMinions)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
-        [allTargets removeObject:attacker]; //remove itself
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
+        if (attacker != nil)
+            [allTargets removeObject:attacker]; //remove itself
         [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
-        targets = [NSArray arrayWithArray:allTargets];
+        targets = [NSArray arrayWithArray:allTargets.allObjects];
     }
     else if (ability.targetType == targetAllEnemy)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[oppositeSide]];
         [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
         
-        targets = [NSArray arrayWithArray:allTargets];
+        targets = [NSArray arrayWithArray:allTargets.allObjects];
     }
     else if (ability.targetType == targetAllEnemyMinions)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[oppositeSide]];
         [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
-        targets = [NSArray arrayWithArray:allTargets];
+        targets = [NSArray arrayWithArray:allTargets.allObjects];
     }
     else if (ability.targetType == targetOneRandomAny)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
-        [allTargets removeObject:attacker]; //remove itself
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
+        if (attacker != nil)
+            [allTargets removeObject:attacker]; //remove itself
         [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
         [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
         [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
@@ -1670,59 +1688,130 @@ enum GameMode __gameMode; //because C functions cant access
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(xor128(side)%allTargets.count)]];
+        NSArray* allTargetsArray = [NSArray arrayWithArray:allTargets.allObjects];
+        
+        //remove monsters that are not valid targets (e.g. add attack to a muted card)
+        for (int i = (int)allTargetsArray.count - 1; i >= 0; i--)
+        {
+            MonsterCardModel*monster = allTargetsArray[i];
+            
+            if (![self canAddAbility:monster ability:ability])
+                [allTargets removeObject:monster];
+        }
+        
+        targets = @[allTargets.allObjects[(int)(xor128(side)%allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomMinion)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
-        [allTargets removeObject:attacker]; //remove itself
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
+        if (attacker != nil)
+            [allTargets removeObject:attacker]; //remove itself
         [allTargets addObjectsFromArray:self.battlefield[oppositeSide]];
         [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
         
+        NSArray* allTargetsArray = [NSArray arrayWithArray:allTargets.allObjects];
+        
+        //remove monsters that are not valid targets (e.g. add attack to a muted card)
+        for (int i = (int)allTargetsArray.count - 1; i >= 0; i--)
+        {
+            MonsterCardModel*monster = allTargetsArray[i];
+            
+            if (![self canAddAbility:monster ability:ability])
+                [allTargets removeObject:monster];
+        }
+        
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(xor128(side)%allTargets.count)]];
+        targets = @[allTargets.allObjects[(int)(xor128(side)%allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomFriendly)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
-        [allTargets removeObject:attacker]; //remove itself
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
+        if (attacker != nil)
+            [allTargets removeObject:attacker]; //remove itself
         [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
+        
+        NSArray* allTargetsArray = [NSArray arrayWithArray:allTargets.allObjects];
+        
+        //remove monsters that are not valid targets (e.g. add attack to a muted card)
+        for (int i = (int)allTargetsArray.count - 1; i >= 0; i--)
+        {
+            MonsterCardModel*monster = allTargetsArray[i];
+            
+            if (![self canAddAbility:monster ability:ability])
+                [allTargets removeObject:monster];
+        }
         
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(xor128(side)%allTargets.count)]];
+        targets = @[allTargets.allObjects[(int)(xor128(side)%allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomFriendlyMinion)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[side]];
-        [allTargets removeObject:attacker]; //remove itself
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[side]];
+        if (attacker != nil)
+            [allTargets removeObject:attacker]; //remove itself
         [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
+        
+        NSArray* allTargetsArray = [NSArray arrayWithArray:allTargets.allObjects];
+        
+        //remove monsters that are not valid targets (e.g. add attack to a muted card)
+        for (int i = (int)allTargetsArray.count - 1; i >= 0; i--)
+        {
+            MonsterCardModel*monster = allTargetsArray[i];
+            
+            if (![self canAddAbility:monster ability:ability])
+                [allTargets removeObject:monster];
+        }
+        
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(xor128(side)%allTargets.count)]];
+        targets = @[allTargets.allObjects[(int)(xor128(side)%allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomEnemy)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[oppositeSide]];
         [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
+        
+        NSArray* allTargetsArray = [NSArray arrayWithArray:allTargets.allObjects];
+        
+        //remove monsters that are not valid targets (e.g. add attack to a muted card)
+        for (int i = (int)allTargetsArray.count - 1; i >= 0; i--)
+        {
+            MonsterCardModel*monster = allTargetsArray[i];
+            
+            if (![self canAddAbility:monster ability:ability])
+                [allTargets removeObject:monster];
+        }
         
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(xor128(side)%allTargets.count)]];
+        targets = @[allTargets.allObjects[(int)(xor128(side)%allTargets.count)]];
     }
     else if (ability.targetType == targetOneRandomEnemyMinion)
     {
-        NSMutableArray *allTargets = [NSMutableArray arrayWithArray:self.battlefield[oppositeSide]];
+        NSMutableSet *allTargets = [NSMutableSet setWithArray:self.battlefield[oppositeSide]];
         [allTargets removeObject:[self.players[OPPONENT_SIDE] playerMonster]]; //happens in boss fights
+        
+        NSArray* allTargetsArray = [NSArray arrayWithArray:allTargets.allObjects];
+        
+        //remove monsters that are not valid targets (e.g. add attack to a muted card)
+        for (int i = (int)allTargetsArray.count - 1; i >= 0; i--)
+        {
+            MonsterCardModel*monster = allTargetsArray[i];
+            
+            if (![self canAddAbility:monster ability:ability])
+                [allTargets removeObject:monster];
+        }
+        
         if (allTargets.count == 0)
             return;
         
-        targets = @[allTargets[(int)(xor128(side)%allTargets.count)]];
+        targets = @[allTargets.allObjects[(int)(xor128(side)%allTargets.count)]];
     }
     else if (ability.targetType == targetHeroAny)
     {
@@ -1732,7 +1821,7 @@ enum GameMode __gameMode; //because C functions cant access
         {
             if (side == PLAYER_SIDE)
             {
-                NSMutableArray *allTargets = [NSMutableArray array];
+                NSMutableSet *allTargets = [NSMutableSet set];
                 [allTargets addObject:((PlayerModel*)self.players[side]).playerMonster];
                 [allTargets addObject:((PlayerModel*)self.players[oppositeSide]).playerMonster];
                 
@@ -1783,6 +1872,7 @@ enum GameMode __gameMode; //because C functions cant access
         
         targets = @[enemy.playerMonster];
     }
+    
     
     //---SPECIAL CASE ABILITIES HERE---//
     
@@ -2050,21 +2140,21 @@ enum GameMode __gameMode; //because C functions cant access
         
         if ([ability.value intValue] == 1)
         {
-            cost = ceil(cost*0.6);
-            damage = ceil(damage*0.6/100)*100;
-            life = ceil(life*0.6/100)*100;
+            cost = ceil(cost*0.8);
+            damage = ceil(damage*0.8);
+            life = ceil(life*0.8);
         }
         else if ([ability.value intValue] == 2)
         {
-            cost = ceil(cost*0.35);
-            damage = ceil(damage*0.35/100)*100;
-            life = ceil(life*0.35/100)*100;
+            cost = ceil(cost*0.4);
+            damage = ceil(damage*0.4);
+            life = ceil(life*0.4);
         }
         else if ([ability.value intValue] == 3)
         {
             cost = ceil(cost*0.3);
-            damage = ceil(damage*0.3/100)*100;
-            life = ceil(life*0.3/100)*100;
+            damage = ceil(damage*0.3);
+            life = ceil(life*0.3);
         }
         for (int i = 0 ; i < [ability.value intValue]; i++)
         {
@@ -2151,7 +2241,7 @@ enum GameMode __gameMode; //because C functions cant access
 {
     if (target.heroic)
     {
-        if (ability.abilityType == abilityTaunt || ability.abilityType == abilityAddMaxCooldown|| ability.abilityType == abilityAddMaxLife)
+        if (ability.abilityType == abilityTaunt || ability.abilityType == abilityAddMaxLife)
             return NO;
     }
     
@@ -2239,13 +2329,13 @@ enum GameMode __gameMode; //because C functions cant access
     BOOL attackerIsAssassin = [CardPointsUtility cardHasAssassin:attacker];
     
     //if attacker more damage, should always cause death
-    if (attacker.damage >= target.life)
+    if ([attacker damage] >= target.life)
     {
         [deadMonsters addObject:target];
     }
     
     //if target more damage, should always cause death except assassin
-    if (target.damage >= attacker.life && !attackerIsAssassin)
+    if ([target damage] >= attacker.life && !attackerIsAssassin)
     {
         [deadMonsters addObject:attacker];
     }
@@ -2259,7 +2349,7 @@ enum GameMode __gameMode; //because C functions cant access
         {
             if (ability.abilityType == abilityLoseLife && ability.targetType == targetAttacker && ability.castType == castAlways)
             {
-                if ((int)ability.value + target.damage >= attacker.life)
+                if ((int)ability.value + [target damage] >= attacker.life)
                 {
                     [deadMonsters addObject:attacker];
                     break;
@@ -2277,7 +2367,7 @@ enum GameMode __gameMode; //because C functions cant access
     //pierce can cause a hero to die
     if ([CardPointsUtility cardHasPierce:attacker])
     {
-        int overkillAmount = attacker.damage > target.life;
+        int overkillAmount = [attacker damage] - target.life;
         
         if (overkillAmount > 0 && overkillAmount >= [self.players[target.side] playerMonster].life)
         {
@@ -2287,7 +2377,7 @@ enum GameMode __gameMode; //because C functions cant access
     
     if ([CardPointsUtility cardHasPierce:target])
     {
-        int overkillAmount = target.damage > attacker.life;
+        int overkillAmount = [target damage] - attacker.life;
         
         if (overkillAmount > 0 && overkillAmount >= [self.players[attacker.side] playerMonster].life)
         {
@@ -2295,7 +2385,7 @@ enum GameMode __gameMode; //because C functions cant access
         }
     }
     
-    //TODO lots of other specific abilities
+    //TODO can add additional ones in future if needed
     
     
     return [deadMonsters allObjects];

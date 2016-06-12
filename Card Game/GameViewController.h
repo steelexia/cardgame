@@ -122,6 +122,9 @@
 /** Updates the views of the cards in hand */
 -(void)updateHandsView: (int)side;
 
+/** Gets X coordinate of a card on field  */
+-(float)getFieldCardXWithCount: (int)count withIndex:(int)i;
+
 /** Updates the views of the cards in field */
 -(void)updateBattlefieldView: (int)side;
 

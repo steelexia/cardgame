@@ -492,7 +492,29 @@
                              //not dead, move back to position
                              else
                              {
-                                 [self animateMoveToWithBounce:cardView toPosition:originalPoint inDuration:0.25 withDelay:0.4];
+                                 if (cardView.cardModel.type == cardTypePlayer)
+                                 {
+                                     [self animateMoveToWithBounce:cardView toPosition:originalPoint inDuration:0.25 withDelay:0.4];
+                                 }
+                                 else
+                                 {
+                                     NSArray*field = self.gameModel.battlefield[side];
+                                     int index = 0;
+                                     
+                                     for (int i = 0; i < field.count; i++)
+                                     {
+                                         if (field[i] == cardView.cardModel)
+                                         {
+                                             index = i;
+                                             break;
+                                         }
+                                     }
+                                     
+                                     CGPoint newPoint = CGPointMake([self getFieldCardXWithCount:(int)field.count withIndex:index], originalPoint.y);
+                                     [self animateMoveToWithBounce:cardView toPosition:newPoint inDuration:0.25 withDelay:0.4];
+                                 }
+
+                                 
                              }
                              //[self fadeOutAndRemove:damagePopup inDuration:0.5 withDelay:0.5];
                              [self decAnimationCounter];

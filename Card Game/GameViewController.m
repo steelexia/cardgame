@@ -1122,6 +1122,8 @@ BOOL leftHandViewZone = NO;
     if (currentSide == PLAYER_SIDE)
     {
         currentSide = OPPONENT_SIDE;
+        
+        //cancels all card
     }
     else
     {
@@ -1230,11 +1232,18 @@ BOOL leftHandViewZone = NO;
     }
 }
 
+-(float)getFieldCardXWithCount: (int)count withIndex:(int)i
+{
+    float battlefieldCenterIndex = count/2; //for positioning the cards
+    
+    return (i-battlefieldCenterIndex) * CARD_WIDTH + ((count+1)%2 * CARD_WIDTH/2) + SCREEN_WIDTH/2;
+}
+
 -(void)updateBattlefieldView: (int)side
 {
     NSArray *field = self.gameModel.battlefield[side];
     
-    float battlefieldCenterIndex = field.count/2; //for positioning the cards
+    
     
     //predetermine the y position of the card depending on which side it's on
     int height = 0;
@@ -1255,7 +1264,7 @@ BOOL leftHandViewZone = NO;
             continue;
         
         //positions the hand by laying them out from the center
-        CGPoint newCenter = CGPointMake((i-battlefieldCenterIndex) * CARD_WIDTH + ((field.count+1)%2 * CARD_WIDTH/2) + SCREEN_WIDTH/2, height);
+        CGPoint newCenter = CGPointMake([self getFieldCardXWithCount:(int)field.count withIndex:i], height);
         
         //if card has no view, create one
         if (card.cardView == nil)
@@ -1676,11 +1685,10 @@ BOOL leftHandViewZone = NO;
 {
     if (_gameModel.gameOver)
         return;
+    
     UITouch *touch = [touches anyObject];
     CGPoint currentPoint = [touch locationInView: self.view];
-    
-    UIView*view = [touch view];
-    
+
     //when dragging hand card, card is deployed
     if (gameControlState == gameControlStateDraggingHandCard)
     {
@@ -1799,6 +1807,7 @@ BOOL leftHandViewZone = NO;
     }
 
 }
+
 
 /** TODO this only gets enemy creatures, need to do some reorganizing for friendly */
 -(MonsterCardModel*)getMonsterAtPoint:(CGPoint)currentPoint
@@ -2004,6 +2013,7 @@ BOOL leftHandViewZone = NO;
     //opponent summoning has extra animation: maximizes to the left to show the card
     if (side == OPPONENT_SIDE)
     {
+        
         CardView*originalView = card.cardView;
         if (card.adminPhotoCheck != 1 && card.adminPhotoCheck != nil) {
             card.cardView.cardImage.image = placeHolderImage;
@@ -2022,6 +2032,7 @@ BOOL leftHandViewZone = NO;
           //  cardView.image = placeHolderImage;
         }
         [self.uiView addSubview:cardView];
+        
         
         [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
@@ -2080,7 +2091,8 @@ BOOL leftHandViewZone = NO;
     [self updateResourceView: side];
     
     card.cardView.cardViewState = cardViewStateNone;
-    gameControlState = gameControlStateNone;
+    if (side == PLAYER_SIDE)
+        gameControlState = gameControlStateNone;
     
     [self fadeOut:playerFieldHighlight inDuration:0.2];
     [self fadeOut:opponentFieldHighlight inDuration:0.2];
