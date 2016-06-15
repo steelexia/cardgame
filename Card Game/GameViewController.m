@@ -878,10 +878,34 @@ BOOL leftHandViewZone = NO;
                 
                 //cast all abilities at this card
                 for (Ability *ability in self.currentAbilities){
-                    [self.gameModel castAbility:ability byMonsterCard:nil toMonsterCard:target fromSide:PLAYER_SIDE];
+                    NSArray*targets = [self.gameModel castAbility:ability byMonsterCard:nil toMonsterCard:target fromSide:PLAYER_SIDE];
+                    
+                    //add all targets to current move history
+                    if (self.gameModel.currentMoveHistory != nil)
+                    {
+                        for (int i = 0; i < targets.count; i++)
+                            [self.gameModel.currentMoveHistory addTarget:targets[i]];
+                    }
+                    
                     [target.cardView updateView];
                 }
                 
+                [self.gameModel.currentMoveHistory updateAllValues];
+                
+                NSLog(@"==================HISTORY RECORDED==================");
+                NSLog(@"CASTER: %@", self.gameModel.currentMoveHistory.caster.name);
+                
+                for (int i = 0; i < self.gameModel.currentMoveHistory.targets.count; i++)
+                {
+                    NSLog(@"TARGET: %@, VALUE: %@", [self.gameModel.currentMoveHistory.targets[i] name], self.gameModel.currentMoveHistory.targetsValues[i]);
+                }
+                
+                NSLog(@"====================================================");
+                
+                //add history to list
+                [self.gameModel.moveHistories addObject:self.gameModel.currentMoveHistory];
+                self.gameModel.currentMoveHistory = nil;
+
                 //reset all cards' highlight back to none
                 
                 for (MonsterCardModel *card in self.gameModel.battlefield[PLAYER_SIDE])

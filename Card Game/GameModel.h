@@ -19,6 +19,7 @@
 #import <Parse/Parse.h>
 #import "AbilityWrapper.h"
 #import "Level.h"
+#import "MoveHistory.h"
 
 @class AIPlayer;
 @class GameViewController;
@@ -82,6 +83,10 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 /** Note that turn number increases every time end turn is pressed */
 @property int turnNumber;
 
+/** Array of MoveHistory objects saving all the moves */
+@property NSMutableArray* moveHistories;
+
+@property MoveHistory*currentMoveHistory;
 
 
 /** Initialies the GameModel with an attached controller for drawing */
@@ -158,7 +163,7 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 /** Performs actions needed for a card's death. This moves it to the graveyard, and performs any abilities that casts on death */
 -(void)cardDies: (CardModel*) card destroyedBy: (CardModel*) attacker fromSide: (int) side;
 
--(void)castAbility: (Ability*) ability byMonsterCard: (MonsterCardModel*) attacker toMonsterCard: (MonsterCardModel*) target fromSide: (int)side;
+-(NSArray*)castAbility: (Ability*) ability byMonsterCard: (MonsterCardModel*) attacker toMonsterCard: (MonsterCardModel*) target fromSide: (int)side;
 
 
 /** Checks if game is over */
