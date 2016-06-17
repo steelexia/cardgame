@@ -918,7 +918,6 @@ enum GameMode __gameMode; //because C functions cant access
 {
     PlayerModel *player = (PlayerModel*) self.players[side];
     
-    //TODO probably make this global
     _currentMoveHistory = [[MoveHistory alloc] initWithCaster:card withTargets:[NSMutableArray array] withMoveType:MoveTypeSummon withSide:side withBoardState:[self getAllMonstersOnField]];
     
     if ([card isKindOfClass: [MonsterCardModel class]])
@@ -1048,10 +1047,40 @@ enum GameMode __gameMode; //because C functions cant access
             Ability*ability = monsterCard.abilities[i];
             if (ability.castType == castOnMove)
             {
+                //currently no move history, add it
+                if (_currentMoveHistory == nil)
+                {
+                    _currentMoveHistory = [[MoveHistory alloc] initWithCaster:monsterCard withTargets:[NSMutableArray array] withMoveType:MoveTypeOnMove withSide:side withBoardState:[self getAllMonstersOnField]];
+                }
+                
                 [monsterCard.cardView castedAbility:ability];
-                [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:nil fromSide:side];
+                NSArray*targets = [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:nil fromSide:side];
+                
+                for (int i = 0; i < targets.count; i++)
+                {
+                    [_currentMoveHistory addTarget:(MonsterCardModel*)targets[i]];
+                }
             }
         }
+    }
+    
+    //had cast on move, save the history
+    if (_currentMoveHistory != nil)
+    {
+        [_currentMoveHistory updateAllValues];
+        
+        NSLog(@"==================HISTORY RECORDED==================");
+        NSLog(@"CASTER: %@, VALUE: %@", _currentMoveHistory.caster.name, _currentMoveHistory.casterValue);
+        
+        for (int i = 0; i < _currentMoveHistory.targets.count; i++)
+        {
+            NSLog(@"TARGET: %@, VALUE: %@", [_currentMoveHistory.targets[i] name], _currentMoveHistory.targetsValues[i]);
+        }
+        
+        NSLog(@"====================================================");
+        
+        [_moveHistories addObject:_currentMoveHistory];
+        _currentMoveHistory = nil;
     }
     
     monsterCard.turnEnded = NO;
@@ -1072,14 +1101,44 @@ enum GameMode __gameMode; //because C functions cant access
         Ability*ability = monsterCard.abilities[i];
         if (ability.castType == castOnEndOfTurn)
         {
+            //currently no move history, add it
+            if (_currentMoveHistory == nil)
+            {
+                _currentMoveHistory = [[MoveHistory alloc] initWithCaster:monsterCard withTargets:[NSMutableArray array] withMoveType:MoveTypeOnEndOfTurn withSide:side withBoardState:[self getAllMonstersOnField]];
+            }
+            
             [monsterCard.cardView castedAbility:ability];
-            [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:nil fromSide:side];
+            NSArray* targets = [self castAbility:ability byMonsterCard:monsterCard toMonsterCard:nil fromSide:side];
+            
+            for (int i = 0; i < targets.count; i++)
+            {
+                [_currentMoveHistory addTarget:(MonsterCardModel*)targets[i]];
+            }
         }
     }
     
     //check for dead
     if (monsterCard.dead)
         [self cardDies:monsterCard destroyedBy:nil fromSide:side];
+    
+    //had cast on move, save the history
+    if (_currentMoveHistory != nil)
+    {
+        [_currentMoveHistory updateAllValues];
+        
+        NSLog(@"==================HISTORY RECORDED==================");
+        NSLog(@"CASTER: %@, VALUE: %@", _currentMoveHistory.caster.name, _currentMoveHistory.casterValue);
+        
+        for (int i = 0; i < _currentMoveHistory.targets.count; i++)
+        {
+            NSLog(@"TARGET: %@, VALUE: %@", [_currentMoveHistory.targets[i] name], _currentMoveHistory.targetsValues[i]);
+        }
+        
+        NSLog(@"====================================================");
+        
+        [_moveHistories addObject:_currentMoveHistory];
+        _currentMoveHistory = nil;
+    }
     
     monsterCard.turnEnded = YES;
 }
@@ -1098,9 +1157,8 @@ enum GameMode __gameMode; //because C functions cant access
     if ([attacker isKindOfClass:[MonsterCardModel class]])
     {
         MonsterCardModel *attackerMonsterCard = (MonsterCardModel*)attacker;
-        //_currentMoveHistory = [[MoveHistory alloc] initWithCaster:attackerMonsterCard withTargets:[NSMutableArray array] withMoveType:MoveTypeAttack withSide:side];
-        //TODO
-
+        _currentMoveHistory = [[MoveHistory alloc] initWithCaster:attackerMonsterCard withTargets:[NSMutableArray arrayWithObject:target] withMoveType:MoveTypeAttack withSide:side withBoardState:[self getAllMonstersOnField]];
+        
         int oppositeSide = side == PLAYER_SIDE ? OPPONENT_SIDE : PLAYER_SIDE;
         
         int attackerDamage = [self calculateDamage:attackerMonsterCard fromSide:side dealtTo:target];
@@ -1145,6 +1203,7 @@ enum GameMode __gameMode; //because C functions cant access
                 if (willReceiveAttack)
                 {
                     [self castAbility:ability byMonsterCard:target toMonsterCard:attackerMonsterCard fromSide:oppositeSide];
+                    //note that these will not be recorded by move history
                 }
                 //assassin will dodge the targeting (but still get hit if for example it was deal damage to all)
                 else
@@ -1162,7 +1221,12 @@ enum GameMode __gameMode; //because C functions cant access
             if (ability.castType == castOnHit)
             {
                 [attackerMonsterCard.cardView castedAbility:ability];
-                [self castAbility:ability byMonsterCard:attackerMonsterCard toMonsterCard:target fromSide:side];
+                NSArray* targets = [self castAbility:ability byMonsterCard:attackerMonsterCard toMonsterCard:target fromSide:side];
+                
+                for (int i = 0; i < targets.count; i++)
+                {
+                    [_currentMoveHistory addTarget:(MonsterCardModel*)targets[i]];
+                }
             }
         }
         
@@ -1215,6 +1279,7 @@ enum GameMode __gameMode; //because C functions cant access
         if (attackerMonsterCard.dead)
         {
             [self cardDies:attackerMonsterCard destroyedBy:target fromSide:side];
+            //note: attacker dying's effect will also not be recorded
             
             //search for pierce damage
             if (attackerMonsterCard.type != cardTypePlayer)
@@ -1247,6 +1312,22 @@ enum GameMode __gameMode; //because C functions cant access
                 }
             }
         }
+        
+        //record the attack
+        [_currentMoveHistory updateAllValues];
+        
+        NSLog(@"==================HISTORY RECORDED==================");
+        NSLog(@"CASTER: %@, VALUE: %@", _currentMoveHistory.caster.name, _currentMoveHistory.casterValue);
+        
+        for (int i = 0; i < _currentMoveHistory.targets.count; i++)
+        {
+            NSLog(@"TARGET: %@, VALUE: %@", [_currentMoveHistory.targets[i] name], _currentMoveHistory.targetsValues[i]);
+        }
+        
+        NSLog(@"====================================================");
+        
+        [_moveHistories addObject:_currentMoveHistory];
+        _currentMoveHistory = nil;
         
         return @[[NSNumber numberWithInt:dealtDamageTarget],[NSNumber numberWithInt:dealtDamageAttacker]];
     }

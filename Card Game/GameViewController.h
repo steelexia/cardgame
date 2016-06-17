@@ -69,6 +69,11 @@
 /** Note that while level is the current level, nextLevel is the level that will be immediately played following the current level. This should only be the case for the 3rd level, where it goes straight to the boss fight */ 
 @property (strong)Level *level, *nextLevel;
 
+//move history screen stuff
+@property (strong)UIView*moveHistoryScreen;
+@property (strong)StrokedLabel*moveHistoryLabel;
+@property (strong)CFButton*moveHistoryBackButton;
+
 //victory screen stuff
 @property (strong)UIView*gameOverScreen;
 @property (strong)StrokedLabel*resultsLabel, *rewardsLabel, *rewardGoldLabel, *rewardCardLabel, *eloRating, *eloRatingDiff;

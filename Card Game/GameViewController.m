@@ -776,12 +776,35 @@ BOOL leftHandViewZone = NO;
     [_gameOverNoRetryButton addTarget:self action:@selector(gameOverNoRetryButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [_gameOverNoRetryButton setTextSize:15];
     
+    //------------------move history screen------------------//
+    _moveHistoryScreen = [[UIView alloc] initWithFrame:self.view.bounds];
+    
+    _moveHistoryLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
+    _moveHistoryLabel.center = CGPointMake(SCREEN_WIDTH/2, 100);
+    _moveHistoryLabel.textAlignment = NSTextAlignmentCenter;
+    _moveHistoryLabel.textColor = [UIColor whiteColor];
+    _moveHistoryLabel.font = [UIFont fontWithName:cardMainFontBlack size:30];
+    _moveHistoryLabel.strokeColour = [UIColor blackColor];
+    _moveHistoryLabel.strokeThickness = 4;
+    _moveHistoryLabel.strokeOn = YES;
+    [_moveHistoryLabel setText:@"Move History"];
+    [_moveHistoryScreen addSubview:_moveHistoryLabel];
+    
+    _moveHistoryBackButton = [[CFButton alloc]initWithFrame:CGRectMake(0, 0,  80, 40)];
+    _moveHistoryBackButton.label.text = @"Back";
+    _moveHistoryBackButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 60);
+    [_moveHistoryBackButton addTarget:self action:@selector(closeMoveHistoryScreen)    forControlEvents:UIControlEventTouchUpInside];
+    [_moveHistoryBackButton setTextSize:15];
+    [_moveHistoryScreen addSubview:_moveHistoryBackButton];
+    
     //for target selection
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
                                            initWithTarget:self
                                            action:@selector(tapRegistered:)];
     [tapGesture setCancelsTouchesInView:NO];
     [self.view addGestureRecognizer:tapGesture];
+    
+    [self openMoveHistoryScreen];
 }
 // ------------------------------------------------------------------------------------------------
 - (void) setTimerFrames
@@ -1351,7 +1374,7 @@ BOOL leftHandViewZone = NO;
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    if (_gameModel.gameOver)
+    if (_gameModel.gameOver || _viewsDisabled)
         return;
     
     UITouch *touch = [touches anyObject];
@@ -2507,6 +2530,37 @@ BOOL leftHandViewZone = NO;
                              
                          }
                          
+                     }];
+}
+
+-(void)openMoveHistoryScreen
+{
+    [self darkenScreen];
+    [self setAllViews:NO];
+    
+    _moveHistoryScreen.alpha = 0;
+    [self.view addSubview:_moveHistoryScreen];
+    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _moveHistoryScreen.alpha = 1;
+                     }
+                     completion:^(BOOL completed){
+                     }];
+     
+}
+
+-(void)closeMoveHistoryScreen
+{
+    [self undarkenScreen];
+    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _moveHistoryScreen.alpha = 0;
+                     }
+                     completion:^(BOOL completed){
+                         [self.view addSubview:_moveHistoryScreen];
+                         [self setAllViews:YES];
                      }];
 }
 

@@ -10,6 +10,8 @@
 #import "CardModel.h"
 #import "MonsterCardModel.h"
 
+const NSString* MOVE_HISTORY_VALUE_DEATH;
+
 @interface MoveHistory : NSObject
 
 @property (strong) CardModel*caster;
@@ -34,6 +36,7 @@
 /* Called once at the end of the move for cards to check against their original card to see the difference */
 -(void)updateAllValues;
 
+
 @end
 
 enum MoveType
@@ -42,6 +45,7 @@ enum MoveType
     MoveTypeAttack,
     MoveTypeOnMove,
     MoveTypeOnEndOfTurn,
-    MoveTypeOnDamaged,
-    MoveTypeOnDeath,
+    //these two might be pretty confusing since they can be trigged by another move type, so not adding
+    //MoveTypeOnDamaged,
+    //MoveTypeOnDeath,
 };

@@ -19,6 +19,8 @@
 @synthesize side = _side;
 @synthesize allMonsters = _allMonsters;
 
+const NSString* MOVE_HISTORY_VALUE_DEATH = @"DEAD";
+
 -(instancetype)init
 {
     self = [super init];
@@ -56,12 +58,13 @@
         }
 
         _casterValue = @"";
-        _targets = targets;
+        _targets = [NSMutableArray arrayWithCapacity:targets.count];
         _targetsValues = [NSMutableArray arrayWithCapacity:targets.count];
         
         _allMonsters = [NSMutableArray arrayWithCapacity:allMonsters.count];
         for (int i = 0; i < allMonsters.count; i++)
         {
+            //add copies of the current state of monsters with pointer to original card, so current state will store the "before"
             MonsterCardModel*monster = allMonsters[i];
             MonsterCardModel*monsterCopy = [[MonsterCardModel alloc]initWithCardModel:monster];
             monsterCopy.originalCard = monster;
@@ -73,6 +76,12 @@
         {
             _targetsValues[i] = @"";
         }
+        
+        for (int i = 0; i < targets.count; i++)
+        {
+            [self addTarget:targets[i]];
+        }
+        
         _moveType = moveType;
         _side = side;
     }
@@ -137,8 +146,13 @@
     int dmgChange = [newMonster damage] - [oldMonster damage];
     NSString*dmgChangeString = dmgChange > 0 ? [NSString stringWithFormat:@"+%d", dmgChange] : [NSString stringWithFormat:@"%d", dmgChange];
     
+    //draw death icon if dead
+    if (newMonster.dead)
+    {
+        return MOVE_HISTORY_VALUE_DEATH;
+    }
     //if damage changes, display as +-X/+-X, e.g. +3 attack would show as +3/0
-    if (dmgChange != 0)
+    else if (dmgChange != 0)
     {
         return [NSString stringWithFormat:@"%@/%@", dmgChangeString, lifeChangeString];
     }
