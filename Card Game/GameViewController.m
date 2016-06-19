@@ -513,7 +513,7 @@ BOOL leftHandViewZone = NO;
     backEndTurn.center =   CGPointMake(SCREEN_WIDTH - (SCREEN_WIDTH - playerFieldEdge.bounds.size.width)/2 - self.endTurnButton.frame.size.width/2, playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*2 + self.endTurnButton.frame.size.height/2);
     
     [self.backgroundView addSubview:backEndTurn];
-    
+
     
     ////// ADD COUNTER GREEN INDICATOR //////////////
     
@@ -595,8 +595,14 @@ BOOL leftHandViewZone = NO;
     _quitButton = [[CFButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
     [_quitButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
     [_quitButton addTarget:self action:@selector(quitButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-    
     [self.uiView addSubview:_quitButton];
+    
+    _moveHistoryButton = [[CFButton alloc] initWithFrame:CGRectMake(4, 4, 60, 32)];
+    _moveHistoryButton.label.text = @"History";
+    [_moveHistoryButton setTextSize:12];
+    [_moveHistoryButton addTarget:self action:@selector(openMoveHistoryScreen)    forControlEvents:UIControlEventTouchUpInside];
+    [self.uiView addSubview:_moveHistoryButton];
+   
     if (_level.isTutorial)
     {
         NSArray*completedLevels = userPF[@"completedLevels"];
@@ -780,7 +786,7 @@ BOOL leftHandViewZone = NO;
     _moveHistoryScreen = [[UIView alloc] initWithFrame:self.view.bounds];
     
     _moveHistoryLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
-    _moveHistoryLabel.center = CGPointMake(SCREEN_WIDTH/2, 100);
+    _moveHistoryLabel.center = CGPointMake(SCREEN_WIDTH/2, 50);
     _moveHistoryLabel.textAlignment = NSTextAlignmentCenter;
     _moveHistoryLabel.textColor = [UIColor whiteColor];
     _moveHistoryLabel.font = [UIFont fontWithName:cardMainFontBlack size:30];
@@ -797,14 +803,16 @@ BOOL leftHandViewZone = NO;
     [_moveHistoryBackButton setTextSize:15];
     [_moveHistoryScreen addSubview:_moveHistoryBackButton];
     
+    _moveHistoryTableView = [[MoveHistoryTableView alloc] initWithFrame:CGRectMake(10, 80, SCREEN_WIDTH - 20, SCREEN_HEIGHT - 80 - 100)];
+    [_moveHistoryScreen addSubview:_moveHistoryTableView];
+    _moveHistoryTableView.currentMoveHistories = _gameModel.moveHistories; //use same pointer
+    
     //for target selection
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
                                            initWithTarget:self
                                            action:@selector(tapRegistered:)];
     [tapGesture setCancelsTouchesInView:NO];
     [self.view addGestureRecognizer:tapGesture];
-    
-    [self openMoveHistoryScreen];
 }
 // ------------------------------------------------------------------------------------------------
 - (void) setTimerFrames
@@ -927,6 +935,9 @@ BOOL leftHandViewZone = NO;
                 
                 //add history to list
                 [self.gameModel.moveHistories addObject:self.gameModel.currentMoveHistory];
+                [_moveHistoryTableView.tableView reloadInputViews];
+                [_moveHistoryTableView.tableView reloadData];
+                
                 self.gameModel.currentMoveHistory = nil;
 
                 //reset all cards' highlight back to none

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F8958BC1D15F2B0009EBE30 /* MoveHistoryTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F8958BB1D15F2B0009EBE30 /* MoveHistoryTableView.m */; };
+		5F8958BE1D15F992009EBE30 /* MoveHistoryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F8958BD1D15F992009EBE30 /* MoveHistoryTableViewCell.m */; };
 		5FD2CBE91C6FBCF700692D88 /* card_3000.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBD81C6FBCF700692D88 /* card_3000.png */; };
 		5FD2CBEA1C6FBCF700692D88 /* card_3001.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBD91C6FBCF700692D88 /* card_3001.png */; };
 		5FD2CBEB1C6FBCF700692D88 /* card_3002.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBDA1C6FBCF700692D88 /* card_3002.png */; };
@@ -580,6 +582,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5F8958BA1D15F26E009EBE30 /* MoveHistoryTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveHistoryTableView.h; sourceTree = "<group>"; };
+		5F8958BB1D15F2B0009EBE30 /* MoveHistoryTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoveHistoryTableView.m; sourceTree = "<group>"; };
+		5F8958BD1D15F992009EBE30 /* MoveHistoryTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoveHistoryTableViewCell.m; sourceTree = "<group>"; };
+		5F8958BF1D15F9A6009EBE30 /* MoveHistoryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveHistoryTableViewCell.h; sourceTree = "<group>"; };
 		5FD2CBD81C6FBCF700692D88 /* card_3000.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3000.png; sourceTree = "<group>"; };
 		5FD2CBD91C6FBCF700692D88 /* card_3001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3001.png; sourceTree = "<group>"; };
 		5FD2CBDA1C6FBCF700692D88 /* card_3002.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3002.png; sourceTree = "<group>"; };
@@ -1811,6 +1817,10 @@
 				90F80F8019A14916007571F4 /* BossBattleScreenViewController.m */,
 				FACF46DC19ECCA7E00D334E0 /* MoveHistory.h */,
 				FACF46DD19ECCA7E00D334E0 /* MoveHistory.m */,
+				5F8958BA1D15F26E009EBE30 /* MoveHistoryTableView.h */,
+				5F8958BB1D15F2B0009EBE30 /* MoveHistoryTableView.m */,
+				5F8958BF1D15F9A6009EBE30 /* MoveHistoryTableViewCell.h */,
+				5F8958BD1D15F992009EBE30 /* MoveHistoryTableViewCell.m */,
 			);
 			name = "Game Battle Screen";
 			sourceTree = "<group>";
@@ -3259,6 +3269,7 @@
 				9032E12D19953EAE002A6725 /* CardVote.m in Sources */,
 				ECCD46EC1ACC881400804B06 /* PNWhereNowRequest.m in Sources */,
 				90DA434A195B271900E44AED /* CustomTableView.m in Sources */,
+				5F8958BE1D15F992009EBE30 /* MoveHistoryTableViewCell.m in Sources */,
 				9319F3831BD0377400F939FE /* StoreViewController+Animation.m in Sources */,
 				90456ECC198D4DB500B807DC /* DeckCell.m in Sources */,
 				90F7DB01199ACF0C00D4FD97 /* CampaignMenuViewController.m in Sources */,
@@ -3361,6 +3372,7 @@
 				90F80F8119A14916007571F4 /* BossBattleScreenViewController.m in Sources */,
 				907D9C05193247450037C0CF /* AIPlayer.m in Sources */,
 				ECCD46971ACC881400804B06 /* PubNub+Time.m in Sources */,
+				5F8958BC1D15F2B0009EBE30 /* MoveHistoryTableView.m in Sources */,
 				90DA43CD1969DD9000E44AED /* CDCardModel.m in Sources */,
 				ECCD469F1ACC881400804B06 /* PNActionResponseParser.m in Sources */,
 				8F4B0A3A1C6004CA00F90AAA /* PMValidationUnit.m in Sources */,

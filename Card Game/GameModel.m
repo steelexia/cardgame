@@ -1009,6 +1009,9 @@ enum GameMode __gameMode; //because C functions cant access
         NSLog(@"====================================================");
         
         [_moveHistories addObject:_currentMoveHistory];
+        [_gameViewController.moveHistoryTableView.tableView reloadInputViews];
+        [_gameViewController.moveHistoryTableView.tableView reloadData];
+        
         _currentMoveHistory = nil;
         
         
@@ -1080,6 +1083,9 @@ enum GameMode __gameMode; //because C functions cant access
         NSLog(@"====================================================");
         
         [_moveHistories addObject:_currentMoveHistory];
+        [_gameViewController.moveHistoryTableView.tableView reloadInputViews];
+        [_gameViewController.moveHistoryTableView.tableView reloadData];
+        
         _currentMoveHistory = nil;
     }
     
@@ -1137,6 +1143,9 @@ enum GameMode __gameMode; //because C functions cant access
         NSLog(@"====================================================");
         
         [_moveHistories addObject:_currentMoveHistory];
+        [_gameViewController.moveHistoryTableView.tableView reloadInputViews];
+        [_gameViewController.moveHistoryTableView.tableView reloadData];
+        
         _currentMoveHistory = nil;
     }
     
@@ -1327,6 +1336,9 @@ enum GameMode __gameMode; //because C functions cant access
         NSLog(@"====================================================");
         
         [_moveHistories addObject:_currentMoveHistory];
+        [_gameViewController.moveHistoryTableView.tableView reloadInputViews];
+        [_gameViewController.moveHistoryTableView.tableView reloadData];
+        
         _currentMoveHistory = nil;
         
         return @[[NSNumber numberWithInt:dealtDamageTarget],[NSNumber numberWithInt:dealtDamageAttacker]];

@@ -52,6 +52,9 @@
     COLOUR_STAT_BUFFED = [[UIColor alloc] initWithRed:109/255.f green:213/255.f blue:255/255.f alpha:1];
     COLOUR_STAT_READY = [UIColor greenColor];
     
+    COLOUR_ENEMY_TRANSPARENT = [[UIColor alloc] initWithRed:255/255.f green:0/255.f blue:0/255.f alpha:0.2];
+    COLOUR_FRIENDLY_TRANSPARENT = [[UIColor alloc] initWithRed:76/255.f green:255/255.f blue:0/255.f alpha:0.2];
+    
     RESOURCE_ICON_IMAGE = [UIImage imageNamed:@"CardCreateGem"];
     POINTS_ICON_IMAGE = [UIImage imageNamed:@"CardCreateStar"];
     GOLD_ICON_IMAGE = [UIImage imageNamed:@"gold_icon"];

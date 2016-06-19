@@ -15,6 +15,7 @@
 #import "CardEditorViewController.h"
 #import "MultiplayerNetworking.h"
 #import "multiplayerDataHandler.h"
+#import "MoveHistoryTableView.h"
 @class GameModel;
 
 /**
@@ -74,6 +75,8 @@
 @property (strong)StrokedLabel*moveHistoryLabel;
 @property (strong)CFButton*moveHistoryBackButton;
 
+@property (strong)MoveHistoryTableView*moveHistoryTableView;
+
 //victory screen stuff
 @property (strong)UIView*gameOverScreen;
 @property (strong)StrokedLabel*resultsLabel, *rewardsLabel, *rewardGoldLabel, *rewardCardLabel, *eloRating, *eloRatingDiff;
@@ -86,7 +89,7 @@
 @property (assign) bool battleMovementsLeft;
 @property (strong) CardModel* currentSpellCard;
 
-@property (strong)CFButton*quitButton;
+@property (strong)CFButton*quitButton, *moveHistoryButton;
 
 //tutorial stuff
 @property (strong) CFLabel *tutLabel;
