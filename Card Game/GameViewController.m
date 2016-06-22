@@ -297,15 +297,20 @@ BOOL leftHandViewZone = NO;
     uiView.bounds = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     backgroundView.bounds = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     
+    backgroundView.backgroundColor = [UIColor clearColor];
+    
+    
     [self.view addSubview:backgroundView];
     [self.view addSubview:fieldView];
     [self.view addSubview:handsView];
     [self.view addSubview:uiView];
     
+    /*
     battlefieldBackground  = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"battle_background_0"]];
     battlefieldBackground.center = self.view.center;
     battlefieldBackground.frame = self.view.frame;
     [backgroundView addSubview:battlefieldBackground];
+    */
     
     //----set up the attack line----//
     attackLine = [[UILabel alloc] initWithFrame:CGRectMake(0,0,0, 0)];

@@ -12,7 +12,8 @@
 #import "CampaignMenuViewController.h"
 #import "Campaign.h"
 #import "ChallengesViewController.h"
-
+#import "SceneObjCViewController.h"
+#import "cardgame-Swift.h"
 @interface SinglePlayerMenuViewController ()
 
 @end
@@ -82,7 +83,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     challengesButton.center = CGPointMake(self.view.bounds.size.width/3 - 5, self.view.bounds.size.height*2/3 + 58);
     [challengesButton setTitle:@"Challenges" forState:UIControlStateNormal];
     [challengesButton addTarget:self action:@selector(challengesButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-    [challengesButton setEnabled:FALSE];
+    [challengesButton setEnabled:TRUE];
     
     [self.view addSubview:challengesButton];
     
@@ -124,8 +125,16 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 -(void)challengesButtonPressed
 {
-    ChallengesViewController *viewController = [[ChallengesViewController alloc] init];
-    [self presentViewController:viewController animated:NO completion:nil];
+   // ChallengesViewController *viewController = [[ChallengesViewController alloc] init];
+   // [self presentViewController:viewController animated:NO completion:nil];
+    
+    /*
+    SceneTestViewController *customSceneTest = [[SceneTestViewController alloc] init];
+    [self presentViewController:customSceneTest animated:NO completion:nil];
+    */
+    SceneObjCViewController *objCTest = [[SceneObjCViewController alloc] init];
+    [self presentViewController:objCTest animated:NO completion:nil];
+    
 
 }
 

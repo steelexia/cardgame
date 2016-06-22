@@ -257,6 +257,10 @@
 		9247214E1C8D3AAE00167CD1 /* multi_woodbar_01.png in Resources */ = {isa = PBXBuildFile; fileRef = 924721451C8D3AAE00167CD1 /* multi_woodbar_01.png */; };
 		924721501C8D40B900167CD1 /* multiscreen_01.png in Resources */ = {isa = PBXBuildFile; fileRef = 9247214F1C8D40B900167CD1 /* multiscreen_01.png */; };
 		924721521C8D41D500167CD1 /* grilledcheese-btn.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 924721511C8D41D500167CD1 /* grilledcheese-btn.ttf */; };
+		929EA9DD1D18C39C0013D431 /* SceneKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929EA9DC1D18C39C0013D431 /* SceneKit.framework */; };
+		929EA9E31D1B2B4D0013D431 /* SceneTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929EA9E21D1B2B4D0013D431 /* SceneTestViewController.swift */; };
+		929EA9E61D1B30DE0013D431 /* SceneObjCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 929EA9E51D1B30DE0013D431 /* SceneObjCViewController.m */; };
+		929EA9E81D1B31150013D431 /* mug.dae in Resources */ = {isa = PBXBuildFile; fileRef = 929EA9E71D1B31150013D431 /* mug.dae */; };
 		92F8C8571CD6D3A90047BA32 /* menu_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 92F8C8501CD6D3A90047BA32 /* menu_bg.png */; };
 		92F8C8581CD6D3A90047BA32 /* menu_builddecks.png in Resources */ = {isa = PBXBuildFile; fileRef = 92F8C8511CD6D3A90047BA32 /* menu_builddecks.png */; };
 		92F8C8591CD6D3A90047BA32 /* menu_mail.png in Resources */ = {isa = PBXBuildFile; fileRef = 92F8C8521CD6D3A90047BA32 /* menu_mail.png */; };
@@ -923,6 +927,12 @@
 		924721451C8D3AAE00167CD1 /* multi_woodbar_01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = multi_woodbar_01.png; sourceTree = "<group>"; };
 		9247214F1C8D40B900167CD1 /* multiscreen_01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = multiscreen_01.png; sourceTree = "<group>"; };
 		924721511C8D41D500167CD1 /* grilledcheese-btn.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "grilledcheese-btn.ttf"; sourceTree = "<group>"; };
+		929EA9DC1D18C39C0013D431 /* SceneKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SceneKit.framework; path = System/Library/Frameworks/SceneKit.framework; sourceTree = SDKROOT; };
+		929EA9E11D1B2B4D0013D431 /* cardgame-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "cardgame-Bridging-Header.h"; sourceTree = "<group>"; };
+		929EA9E21D1B2B4D0013D431 /* SceneTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneTestViewController.swift; sourceTree = "<group>"; };
+		929EA9E41D1B30DE0013D431 /* SceneObjCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneObjCViewController.h; sourceTree = "<group>"; };
+		929EA9E51D1B30DE0013D431 /* SceneObjCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneObjCViewController.m; sourceTree = "<group>"; };
+		929EA9E71D1B31150013D431 /* mug.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = mug.dae; sourceTree = "<group>"; };
 		92F8C8501CD6D3A90047BA32 /* menu_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_bg.png; sourceTree = "<group>"; };
 		92F8C8511CD6D3A90047BA32 /* menu_builddecks.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_builddecks.png; sourceTree = "<group>"; };
 		92F8C8521CD6D3A90047BA32 /* menu_mail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_mail.png; sourceTree = "<group>"; };
@@ -1448,6 +1458,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				929EA9DD1D18C39C0013D431 /* SceneKit.framework in Frameworks */,
 				907D9C0B193E43640037C0CF /* AudioToolbox.framework in Frameworks */,
 				ECBEE57F1B23C2D200D131E7 /* CoreData.framework in Frameworks */,
 				FAFCC26F1A0185D600705584 /* Bolts.framework in Frameworks */,
@@ -1860,6 +1871,10 @@
 		90F3528A191595C200601130 = {
 			isa = PBXGroup;
 			children = (
+				929EA9E21D1B2B4D0013D431 /* SceneTestViewController.swift */,
+				929EA9E41D1B30DE0013D431 /* SceneObjCViewController.h */,
+				929EA9E51D1B30DE0013D431 /* SceneObjCViewController.m */,
+				929EA9E71D1B31150013D431 /* mug.dae */,
 				ECAB71C51B4F4532004D4E5C /* Images.xcassets */,
 				907D9BD719226B330037C0CF /* Assets */,
 				907020551992AC8100FDE444 /* GKClasses */,
@@ -1868,6 +1883,7 @@
 				90F352BE191595C300601130 /* Card GameTests */,
 				90F35295191595C200601130 /* Frameworks */,
 				90F35294191595C200601130 /* Products */,
+				929EA9E11D1B2B4D0013D431 /* cardgame-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1882,6 +1898,7 @@
 		90F35295191595C200601130 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				929EA9DC1D18C39C0013D431 /* SceneKit.framework */,
 				ECBEE57E1B23C2D200D131E7 /* CoreData.framework */,
 				FAFCC26E1A0185D600705584 /* Bolts.framework */,
 				FAFCC26C1A0185B600705584 /* Parse.framework */,
@@ -2838,6 +2855,7 @@
 		90F3528B191595C200601130 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0720;
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Content Games";
 				TargetAttributes = {
@@ -3190,6 +3208,7 @@
 				5FD2CBEF1C6FBCF700692D88 /* card_3006.png in Resources */,
 				FACF46C119EC852300D334E0 /* card_2005.png in Resources */,
 				9032E13E199918F8002A6725 /* category_tab_disabled.png in Resources */,
+				929EA9E81D1B31150013D431 /* mug.dae in Resources */,
 				90C52892199BE87500750C54 /* search_toggle_button.png in Resources */,
 				FACF46CC19EC852300D334E0 /* card_2300.png in Resources */,
 				9319F3AC1BD96D7A00F939FE /* CardCreateBackButton.png in Resources */,
@@ -3321,6 +3340,7 @@
 				90DA43D61969F6F200E44AED /* AbilityTableViewCell.m in Sources */,
 				EC3A5D751B6A93CB0064055F /* ChallengesViewController.m in Sources */,
 				90DA43CA1969DBDB00E44AED /* DeckChooserViewController.m in Sources */,
+				929EA9E31D1B2B4D0013D431 /* SceneTestViewController.swift in Sources */,
 				90DA435E195E45B500E44AED /* MainScreenViewController.m in Sources */,
 				ECCD46CF1ACC881400804B06 /* NSMutableSet+PNAdditions.m in Sources */,
 				8F4B0A331C6004B200F90AAA /* PMValidationUITextCompareType.m in Sources */,
@@ -3397,6 +3417,7 @@
 				90456ED6198D72AA00B807DC /* StoreCardsCollectionView.m in Sources */,
 				90DA43321959CDF900E44AED /* CardsCollectionView.m in Sources */,
 				ECCD46AF1ACC881400804B06 /* PNResponseParser.m in Sources */,
+				929EA9E61D1B30DE0013D431 /* SceneObjCViewController.m in Sources */,
 				D31E2CA819BF5BE8002E1934 /* GameKitHelper.m in Sources */,
 				ECCD46AB1ACC881400804B06 /* PNHereNowResponseParser.m in Sources */,
 				ECCD468D1ACC881400804B06 /* PubNub+APNS.m in Sources */,
@@ -3584,6 +3605,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				ENABLE_BITCODE = NO;
@@ -3596,10 +3618,13 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Card Game/cardgame-Prefix.pch";
 				INFOPLIST_FILE = "Card Game/cardgame-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = cardgame;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "cardgame-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3609,6 +3634,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				ENABLE_BITCODE = NO;
@@ -3621,10 +3647,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Card Game/cardgame-Prefix.pch";
 				INFOPLIST_FILE = "Card Game/cardgame-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = cardgame;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "cardgame-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
