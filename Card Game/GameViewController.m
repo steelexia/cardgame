@@ -2306,6 +2306,26 @@ BOOL leftHandViewZone = NO;
 
 -(void)noTargetButtonPressed
 {
+    [self.gameModel.currentMoveHistory updateAllValues];
+    
+    NSLog(@"==================HISTORY RECORDED==================");
+    NSLog(@"CASTER: %@", self.gameModel.currentMoveHistory.caster.name);
+    
+    for (int i = 0; i < self.gameModel.currentMoveHistory.targets.count; i++)
+    {
+        NSLog(@"TARGET: %@, VALUE: %@", [self.gameModel.currentMoveHistory.targets[i] name], self.gameModel.currentMoveHistory.targetsValues[i]);
+    }
+    
+    NSLog(@"====================================================");
+    
+    //add history to list
+    [self.gameModel.moveHistories addObject:self.gameModel.currentMoveHistory];
+    [_moveHistoryTableView.tableView reloadInputViews];
+    [_moveHistoryTableView.tableView reloadData];
+    
+    self.gameModel.currentMoveHistory = nil;
+
+    
     //reset all cards' highlight back to none
     for (MonsterCardModel *card in self.gameModel.battlefield[PLAYER_SIDE])
         card.cardView.cardHighlightType = cardHighlightNone;

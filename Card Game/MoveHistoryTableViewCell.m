@@ -17,6 +17,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         _moveHistory = nil;
+        _cardViews = [NSMutableArray array];
+        _targetCardsView = nil;
         
         //greatly improves performance but freezes scale?
         self.layer.shouldRasterize = YES;

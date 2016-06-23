@@ -217,21 +217,72 @@ enum GameMode __gameMode; //because C functions cant access
     spell.name = @"Insta Win";
     spell.cost = 0;
     [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetHeroEnemy withDuration:durationInstant withValue:[NSNumber numberWithInt:400000]]];
-    //[playerHand addObject:spell];
-
     
+    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    spell.element = elementLightning;
+    spell.name = @"Insta Win";
+    spell.cost = 0;
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAll withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
+    [playerHand addObject:spell];
+
+    /*
     MonsterCardModel*monster;
+    
     monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     monster.name = @"Nameless card";
-    monster.life = monster.maximumLife = 99999;
-    monster.damage = 99999;
+    monster.life = monster.maximumLife = 10;
+    monster.damage = 10;
     monster.cost = 0;
     monster.cooldown = monster.maximumCooldown = 0;
     monster.side = PLAYER_SIDE;
     [monster addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
     
-    //[playerHand addObject:monster];
+    [playerHand addObject:monster];
     
+    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster.name = @"Nameless card";
+    monster.life = monster.maximumLife = 10;
+    monster.damage = 10;
+    monster.cost = 0;
+    monster.cooldown = monster.maximumCooldown = 0;
+    monster.side = PLAYER_SIDE;
+    //[monster addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+    
+    [playerHand addObject:monster];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster.name = @"Nameless card";
+    monster.life = monster.maximumLife = 10;
+    monster.damage = 10;
+    monster.cost = 0;
+    monster.cooldown = monster.maximumCooldown = 0;
+    monster.side = PLAYER_SIDE;
+    //[monster addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+    
+    [playerHand addObject:monster];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster.name = @"Nameless card";
+    monster.life = monster.maximumLife = 10;
+    monster.damage = 10;
+    monster.cost = 0;
+    monster.cooldown = monster.maximumCooldown = 0;
+    monster.side = PLAYER_SIDE;
+    //[monster addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+    
+    [playerHand addObject:monster];
+    
+    monster = [[MonsterCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    monster.name = @"Nameless card";
+    monster.life = monster.maximumLife = 10;
+    monster.damage = 10;
+    monster.cost = 0;
+    monster.cooldown = monster.maximumCooldown = 0;
+    monster.side = PLAYER_SIDE;
+    //[monster addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+    
+    [playerHand addObject:monster];
+    */
     
     /*
     SpellCardModel*spell;

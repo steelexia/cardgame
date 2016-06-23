@@ -1251,6 +1251,11 @@ NSDictionary *singlePlayerCardImages;
     return _cardViewState;
 }
 
+-(void)setZoomScale:(float)scale
+{
+    super.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_DEFAULT_SCALE * scale, CARD_DEFAULT_SCALE * scale);
+}
+
 -(void)setCardViewState:(enum CardViewState)cardViewState
 {
     if (cardViewState == cardViewStateHighlighted)
