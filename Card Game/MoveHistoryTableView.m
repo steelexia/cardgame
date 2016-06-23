@@ -19,6 +19,8 @@
 
 @synthesize currentMoveHistories = _currentMoveHistories;
 
+int CELL_HEIGHT;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -34,7 +36,8 @@
         [_tableView registerClass:[MoveHistoryTableViewCell class] forCellReuseIdentifier:@"moveHistoryTableViewCell"];
         
         //[_tableView setBackgroundColor:COLOUR_INTERFACE_BLUE];
-        _tableView.rowHeight = 200;
+        CELL_HEIGHT = CARD_HEIGHT + 10 + 10;
+        _tableView.rowHeight = CELL_HEIGHT;
         
         [_tableView setDataSource:self];
         [_tableView setDelegate:self];
@@ -53,9 +56,10 @@
     return [_currentMoveHistories count];
 }
 
+/*
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 100;
-}
+    return CELL_HEIGHT;
+}*/
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -64,9 +68,16 @@
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     MoveHistoryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"moveHistoryTableViewCell" forIndexPath:indexPath];
+    //MoveHistoryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"moveHistoryTableViewCell"];
     
+    /*
+    if (cell == nil)
+    {
+        cell = [[MoveHistoryTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"moveHistoryTableViewCell"];
+        NSLog(@"CELL IS NIL????????????????????????????");
+    }*/
     
-    MoveHistory *moveHistory = _currentMoveHistories[indexPath.row];
+    MoveHistory *moveHistory = _currentMoveHistories[_currentMoveHistories.count - indexPath.row - 1];
     
     if (moveHistory.side == OPPONENT_SIDE)
         [cell setBackgroundColor:COLOUR_ENEMY_TRANSPARENT];
@@ -77,13 +88,100 @@
     //[cell setText:@"TEST"];
     
     CardModel*casterCard = moveHistory.caster;
-    CardView*casterCardView = [[CardView alloc] initWithModel:casterCard viewMode:cardViewModeEditor];
+    CardView*oldCardView = casterCard.cardView;
+    CardView*casterCardView;
+    
+    //NSLog(@"CELL COUNT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!%d", cell.cardViews.count);
+    
+    if (cell.cardViews != nil && cell.cardViews.count != 0)
+    {
+        //NSLog(@"%@", cell);
+        for (CardView*cardView in cell.cardViews)
+        {
+            [cardView removeFromSuperview];
+        }
+        //cell.cardViews
+    }
+    
+    cell.cardViews = [NSMutableArray array];
+    casterCardView = [[CardView alloc] initWithModel:casterCard viewMode:cardViewModeEditor];
+    [cell.cardViews addObject:casterCardView];
+    casterCard.cardView = oldCardView;
+    casterCardView.cardViewState = cardViewStateNone;
     
     [casterCardView updateView];
     casterCardView.center = CGPointMake(casterCardView.frame.size.width/2 + 10, cell.frame.size.height/2);
     [cell addSubview:casterCardView];
+    //NSLog(@"%@", cell);
 
-    //TODO
+
+    //taget cards
+    //wont draw more than 20 correctly, but logically there can only be 12 on board at once
+    
+    int targetCardsCount = MIN((int)moveHistory.targets.count, 20);
+    
+    if (targetCardsCount > 0)
+    {
+        if (cell.targetCardsView == nil)
+        {
+            cell.targetCardsView = [[UIView alloc] initWithFrame:CGRectMake(10 + CARD_WIDTH + 30, 10, cell.bounds.size.width - (10 + CARD_WIDTH + 30) - 10, cell.bounds.size.height - 10 - 10)];
+            [cell addSubview:cell.targetCardsView];
+        }
+        
+        UIView*targetCardsView = cell.targetCardsView;
+        
+        //[targetCardsView setBackgroundColor:COLOUR_FIRE];
+        //calculate how many columns needed
+        int currentColumnCount = 1;
+        int cardsPerColumn = 1;
+
+        while(true)
+        {
+            //current cards per column, may be too many
+            cardsPerColumn = ceil((float)targetCardsCount / currentColumnCount);
+            int totalWidth = (cardsPerColumn * (CARD_WIDTH / currentColumnCount)) + (cardsPerColumn-1)*10;
+            
+            //current column count fits
+            if (totalWidth < targetCardsView.bounds.size.width)
+            {
+                break;
+            }
+            //current column count doesn't fit, increase column count
+            else
+            {
+                currentColumnCount++;
+            }
+        }
+        
+        //fill as many cards possible per column
+        cardsPerColumn = targetCardsView.bounds.size.width / (CARD_WIDTH / currentColumnCount + 10);
+        
+        float cardScale = 1.0f / currentColumnCount;
+        int cardWidth = CARD_WIDTH / currentColumnCount;
+        
+        for (int i = 0; i < targetCardsCount; i++)
+        {
+            int row = i % cardsPerColumn;
+            int column = i / cardsPerColumn;
+            
+            CardModel*targetCard = moveHistory.targets[i];
+            CardView*oldCardView = targetCard.cardView;
+            CardView*targetCardView = [[CardView alloc] initWithModel:targetCard viewMode:cardViewModeEditor];
+            [cell.cardViews addObject:targetCardView];
+            targetCard.cardView = oldCardView;
+            targetCardView.cardViewState = cardViewStateNone;
+            
+            [targetCardView updateView];
+            
+            if (targetCard.type == cardTypePlayer)
+                [targetCardView setZoomScale:cardScale * 1.6f];
+            else
+                [targetCardView setZoomScale:cardScale];
+            
+            targetCardView.center = CGPointMake(row * (cardWidth + 10) + cardWidth/2, targetCardsView.bounds.size.height / (currentColumnCount + 1) * (column + 1));
+            [targetCardsView addSubview:targetCardView];
+        }
+    }
     
     return cell;
 }

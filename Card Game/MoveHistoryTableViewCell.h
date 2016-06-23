@@ -12,6 +12,8 @@
 @interface MoveHistoryTableViewCell : UITableViewCell
 
 @property MoveHistory*moveHistory;
-@property int cardIndex;
+@property UIView*targetCardsView;
+/* Array of card views being used, first one is caster */
+@property NSMutableArray*cardViews;
 
 @end

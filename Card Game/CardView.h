@@ -121,6 +121,8 @@
 /** Shows hint for when dragging an attack causes a creature to be killed. */
 -(void)animateIsKillHintOn:(BOOL)isKilled;
 
+/** Note that the scale will be relative to CARD_DEFAULT_SCALE, not 1. Also should not use this for any card on game board */
+-(void)setZoomScale:(float)scale;
 
 @end
 
