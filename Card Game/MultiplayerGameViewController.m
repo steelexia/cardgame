@@ -78,13 +78,16 @@ UIView *sureMatchView;
     [profileImageView setBackgroundColor:[UIColor redColor]];
    profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2;
     profileImageView.clipsToBounds = YES;
-    [self.view addSubview:profileImageView];
+    //[self.view addSubview:profileImageView];
     
     //x375,y380
     UILabel *playerNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(375/baseWidth*SCREEN_WIDTH,392/baseHeight*SCREEN_HEIGHT,490/baseWidth*SCREEN_WIDTH,70/baseHeight*SCREEN_HEIGHT)];
     playerNameLabel.text = @"Zeothul123LongName";
     playerNameLabel.textColor = [UIColor whiteColor];
     playerNameLabel.font = [UIFont fontWithName:@"GrilledCheeseBTN" size:20];
+    playerNameLabel.shadowColor = [UIColor blackColor];
+    playerNameLabel.shadowOffset = CGSizeMake(1.0f,1.0f);
+    
     
     [self.view addSubview:playerNameLabel];
     

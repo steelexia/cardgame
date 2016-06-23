@@ -66,7 +66,7 @@ UILabel *loadingLabel;
     [self.view addSubview:backgroundImageBottom];
     */
     
-    UIImageView *mainBackground = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"WoodBackgroundWithFrames"]];
+    UIImageView *mainBackground = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"menu_bg"]];
     mainBackground.frame = CGRectMake(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
     [self.view addSubview:mainBackground];
     
