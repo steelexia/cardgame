@@ -220,10 +220,18 @@ enum GameMode __gameMode; //because C functions cant access
     
     spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
     spell.element = elementLightning;
-    spell.name = @"Insta Win";
+    spell.name = @"DEBUG CARD";
     spell.cost = 0;
-    [spell addBaseAbility: [[Ability alloc] initWithType:abilityLoseLife castType:castOnSummon targetType:targetAll withDuration:durationInstant withValue:[NSNumber numberWithInt:1]]];
-    [playerHand addObject:spell];
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationUntilEndOfTurn withValue:[NSNumber numberWithInt:1]]];
+    //[playerHand addObject:spell];
+    
+    
+    spell = [[SpellCardModel alloc] initWithIdNumber:0 type:cardTypeSinglePlayer];
+    spell.element = elementLightning;
+    spell.name = @"DEBUG CARD";
+    spell.cost = 0;
+    [spell addBaseAbility: [[Ability alloc] initWithType:abilityAddDamage castType:castOnSummon targetType:targetOneAnyMinion withDuration:durationForever withValue:[NSNumber numberWithInt:1]]];
+    //[playerHand addObject:spell];
 
     /*
     MonsterCardModel*monster;

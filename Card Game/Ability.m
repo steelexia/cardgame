@@ -67,6 +67,7 @@
 {
     self = [self initWithType:ability.abilityType castType:ability.castType targetType:ability.targetType withDuration:ability.durationType withValue:ability.value withOtherValues:ability.otherValues withDescription:ability.description];
     self.isBaseAbility = ability.isBaseAbility;
+    self.expired = ability.expired;
     
     return self;
 }
