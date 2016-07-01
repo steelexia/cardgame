@@ -268,6 +268,9 @@
 		929EAA021D1C634B0013D431 /* menu_option.png in Resources */ = {isa = PBXBuildFile; fileRef = 929EA9FB1D1C634B0013D431 /* menu_option.png */; };
 		929EAA031D1C634B0013D431 /* menu_single.png in Resources */ = {isa = PBXBuildFile; fileRef = 929EA9FC1D1C634B0013D431 /* menu_single.png */; };
 		929EAA041D1C634B0013D431 /* menu_store.png in Resources */ = {isa = PBXBuildFile; fileRef = 929EA9FD1D1C634B0013D431 /* menu_store.png */; };
+		92CCA0491D26276E00A2F816 /* battleStuff.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 92CCA0481D26276E00A2F816 /* battleStuff.scnassets */; };
+		92CCA04B1D262BE600A2F816 /* battle_screen_01.scn in Resources */ = {isa = PBXBuildFile; fileRef = 92CCA04A1D262BE600A2F816 /* battle_screen_01.scn */; };
+		92CCA04D1D262BEF00A2F816 /* battle_page_01.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CCA04C1D262BEF00A2F816 /* battle_page_01.png */; };
 		9319F3831BD0377400F939FE /* StoreViewController+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9319F3821BD0377400F939FE /* StoreViewController+Animation.m */; };
 		9319F38E1BD164D200F939FE /* poof_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F3891BD164D200F939FE /* poof_1.png */; };
 		9319F38F1BD164D200F939FE /* poof_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F38A1BD164D200F939FE /* poof_2.png */; };
@@ -940,6 +943,9 @@
 		929EA9FB1D1C634B0013D431 /* menu_option.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_option.png; sourceTree = "<group>"; };
 		929EA9FC1D1C634B0013D431 /* menu_single.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_single.png; sourceTree = "<group>"; };
 		929EA9FD1D1C634B0013D431 /* menu_store.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_store.png; sourceTree = "<group>"; };
+		92CCA0481D26276E00A2F816 /* battleStuff.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = battleStuff.scnassets; sourceTree = "<group>"; };
+		92CCA04A1D262BE600A2F816 /* battle_screen_01.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; name = battle_screen_01.scn; path = battleStuff.scnassets/battle_screen_01.scn; sourceTree = "<group>"; };
+		92CCA04C1D262BEF00A2F816 /* battle_page_01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = battle_page_01.png; path = battleStuff.scnassets/battle_page_01.png; sourceTree = "<group>"; };
 		9319F3811BD0377400F939FE /* StoreViewController+Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "StoreViewController+Animation.h"; sourceTree = "<group>"; };
 		9319F3821BD0377400F939FE /* StoreViewController+Animation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "StoreViewController+Animation.m"; sourceTree = "<group>"; };
 		9319F3891BD164D200F939FE /* poof_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = poof_1.png; path = "Card Game/poof/poof_1.png"; sourceTree = "<group>"; };
@@ -1875,6 +1881,9 @@
 				929EA9E41D1B30DE0013D431 /* SceneObjCViewController.h */,
 				929EA9E51D1B30DE0013D431 /* SceneObjCViewController.m */,
 				929EA9E71D1B31150013D431 /* mug.dae */,
+				92CCA04A1D262BE600A2F816 /* battle_screen_01.scn */,
+				92CCA04C1D262BEF00A2F816 /* battle_page_01.png */,
+				92CCA0481D26276E00A2F816 /* battleStuff.scnassets */,
 				ECAB71C51B4F4532004D4E5C /* Images.xcassets */,
 				907D9BD719226B330037C0CF /* Assets */,
 				907020551992AC8100FDE444 /* GKClasses */,
@@ -2978,6 +2987,7 @@
 				EC42E86A1B5726B2005EDFD5 /* CoinPile003.png in Resources */,
 				90DA435B195E0BD900E44AED /* add_deck_button.png in Resources */,
 				90AB14FF196F2FF20008FCDD /* encode-sans.compressed-black.ttf in Resources */,
+				92CCA04B1D262BE600A2F816 /* battle_screen_01.scn in Resources */,
 				90C5289D199C369100750C54 /* filter_button_small_selected.png in Resources */,
 				EC42E86D1B5726B2005EDFD5 /* CoinPile006.png in Resources */,
 				EC7A74E11B28F86F00D3A53F /* cog.png in Resources */,
@@ -3082,6 +3092,7 @@
 				9070204D19915FD500FDE444 /* card_background_front_overlay_rare.png in Resources */,
 				924721491C8D3AAE00167CD1 /* multi_leaderboards_button_01.png in Resources */,
 				5FD2CBED1C6FBCF700692D88 /* card_3004.png in Resources */,
+				92CCA04D1D262BEF00A2F816 /* battle_page_01.png in Resources */,
 				90DA434E195C941400E44AED /* add_button_gray.png in Resources */,
 				ECCBF4861B48D2F6007C7594 /* titleGongSound.wav in Resources */,
 				FACF46DA19EC8A0300D334E0 /* hero_5.png in Resources */,
@@ -3130,6 +3141,7 @@
 				90DA43C01969D21500E44AED /* spell_button_gray.png in Resources */,
 				5FF0704B1CA9BF8500C76642 /* CardDescriptionEdge.png in Resources */,
 				FACF46D219EC852300D334E0 /* hero_c_2_l_2.png in Resources */,
+				92CCA0491D26276E00A2F816 /* battleStuff.scnassets in Resources */,
 				9319F3C21BDE646C00F939FE /* timer_background.png in Resources */,
 				90DA43BA1969D21500E44AED /* battle_button_gray.png in Resources */,
 				929EA9FF1D1C634B0013D431 /* menu_builddecks.png in Resources */,

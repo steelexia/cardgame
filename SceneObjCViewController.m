@@ -23,7 +23,14 @@
     myView.frame = self.view.frame;
    
     
-    myView.scene = [SCNScene sceneNamed:@"mug.dae"];
+    myView.scene = [SCNScene sceneNamed:@"battle_screen_01.scn"];
+    
+    SCNMaterial *material = [SCNMaterial material];
+    material.diffuse.contents = [UIImage imageNamed:@"battle_page_01.png"];
+    myView.scene.rootNode.geometry.materials = material.diffuse.contents;
+    
+    
+    
     myView.allowsCameraControl = YES;
     myView.autoenablesDefaultLighting = YES;
     myView.backgroundColor = [UIColor lightGrayColor];
