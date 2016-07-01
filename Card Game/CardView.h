@@ -50,6 +50,9 @@
 /** Overlay view used for showing combat hints such as if creature will die from attack */
 @property (strong) UIImageView *combatHintView;
 
+/** Pointer for keeping track of the move history value view in move history screen */
+@property (strong) UIView *moveHistoryValueView;
+
 /** Overwritten center */
 @property CGPoint center;
 
@@ -208,5 +211,6 @@ NSString *cardMainFontBlack, *cardFlavourTextFont;
 
 UIImage*placeHolderImage;
 UIImage*PLAYER_FIRST_CARD_IMAGE;
+UIImage *killHintImage;
 
 NSDictionary *campaignHeroImages;

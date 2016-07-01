@@ -73,7 +73,7 @@ UIImage *backgroundMonsterOverlayImage, *selectHighlightImage, *targetHighlightI
 UIImage *cardBackImage;
 
 UIImage *heroPlaceHolderImage, *loadingImage;
-UIImage *killHintImage;
+
 
 
 /** 2D array of images. First array contains elements, second array contains rarity */

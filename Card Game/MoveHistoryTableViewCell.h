@@ -13,6 +13,7 @@
 
 @property MoveHistory*moveHistory;
 @property UIView*targetCardsView;
+@property NSMutableArray*valueViews;
 /* Array of card views being used, first one is caster */
 @property NSMutableArray*cardViews;
 

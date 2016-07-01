@@ -95,6 +95,10 @@ CardModel* currentCard;
 
 /** Used to reduce amount of calculation needed for viewing hand cards via dragging. This flag is set when a touch enters/leaves the zone so it only needs to be updated once */
 BOOL leftHandViewZone = NO;
+
+/** remembers if move history is open */
+BOOL moveHistoryOpen = NO;
+
 // ------------------------------------------------------------------------------------------------
 - (instancetype) initWithGameMode: (enum GameMode)  gameMode
                         withLevel: (Level*)         level
@@ -1306,8 +1310,6 @@ BOOL leftHandViewZone = NO;
 {
     NSArray *field = self.gameModel.battlefield[side];
     
-    
-    
     //predetermine the y position of the card depending on which side it's on
     int height = 0;
     
@@ -1752,8 +1754,48 @@ BOOL leftHandViewZone = NO;
     UITouch *touch = [touches anyObject];
     CGPoint currentPoint = [touch locationInView: self.view];
 
+    //move history window open, may tap on card
+    if (moveHistoryOpen)
+    {
+        if ([[touch view] isKindOfClass:[CardView class]])
+        {
+            if (_moveHistoryTableView.currentCardView == nil)
+            {
+                CardView*cardView = (CardView*)[touch view];
+                CardModel*originalCardModel = cardView.cardModel;
+                _moveHistoryTableView.currentCardView = [[CardView alloc] initWithModel:cardView.cardModel viewMode:cardViewModeEditor];
+                _moveHistoryTableView.currentCardView.cardViewState = cardViewStateMaximize;
+            
+                if (originalCardModel.type == cardTypePlayer)
+                    [_moveHistoryTableView.currentCardView setZoomScale:3.0f];
+                
+                //TODO might be OK to not copy this view, but if so need a way to dup it
+                //[_moveHistoryTableView.currentCardView addSubview:cardView.moveHistoryValueView];
+                cardView.cardModel = originalCardModel;
+                
+                [_moveHistoryTableView darkenScreen];
+                
+                [self.moveHistoryScreen addSubview:_moveHistoryTableView.currentCardView];
+                [_moveHistoryTableView.currentCardView updateView];
+                [_moveHistoryTableView.currentCardView setCenter:CGPointMake(self.view.bounds.size.width/2, self.view.bounds.size.height/2)];
+                [_moveHistoryTableView.tableView setUserInteractionEnabled:NO];
+                
+            }
+        }
+        else
+        {
+            if (_moveHistoryTableView.currentCardView != nil)
+            {
+                [_moveHistoryTableView.currentCardView removeFromSuperview];
+                _moveHistoryTableView.currentCardView = nil;
+                [_moveHistoryTableView.tableView setUserInteractionEnabled:YES];
+                [_moveHistoryTableView undarkenScreen];
+            }
+        }
+        
+    }
     //when dragging hand card, card is deployed
-    if (gameControlState == gameControlStateDraggingHandCard)
+    else if (gameControlState == gameControlStateDraggingHandCard)
     {
         //TODO!!! These are only temporary while two-player is enabled, don't need it afterwards
         UIImageView *fieldRect;
@@ -1858,6 +1900,7 @@ BOOL leftHandViewZone = NO;
         //remove the attack line from view and revert states
         [attackLine removeFromSuperview];
     }
+    
     if (![self checkMovementsLeft]) {
         //NSLog(@"No movements Available");
         if (!self.shouldBlink) {
@@ -2612,6 +2655,7 @@ BOOL leftHandViewZone = NO;
                          _moveHistoryScreen.alpha = 1;
                      }
                      completion:^(BOOL completed){
+                         moveHistoryOpen = YES;
                      }];
      
 }
@@ -2627,6 +2671,7 @@ BOOL leftHandViewZone = NO;
                      completion:^(BOOL completed){
                          [self.view addSubview:_moveHistoryScreen];
                          [self setAllViews:YES];
+                         moveHistoryOpen = NO;
                      }];
 }
 

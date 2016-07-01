@@ -9,12 +9,20 @@
 
 #import <UIKit/UIKit.h>
 #import "CardModel.h"
+#import "CustomTableView.h"
 
 @interface MoveHistoryTableView :UIView <UITableViewDataSource, UITableViewDelegate>
 
-@property (strong) UITableView *tableView;
+@property (strong) CustomTableView *tableView;
 
 /** Stores MoveHistory's */
 @property (strong) NSMutableArray *currentMoveHistories;
+
+@property (strong) CardView*currentCardView;
+
+@property(strong)UIView*darkFilter;
+
+-(void)darkenScreen;
+-(void)undarkenScreen;
 
 @end

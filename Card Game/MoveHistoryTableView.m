@@ -12,6 +12,7 @@
 #import "MoveHistoryTableViewCell.h"
 #import "UIConstants.h"
 #import "GameModel.h"
+#import "StrokedLabel.h"
 
 @class SpellCardModel;
 
@@ -25,7 +26,7 @@ int CELL_HEIGHT;
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _tableView = [[UITableView alloc] initWithFrame:self.bounds];
+        _tableView = [[CustomTableView alloc] initWithFrame:self.bounds];
         [_tableView setBackgroundColor:[UIColor clearColor]];
 
         //_tableView.separatorColor = COLOUR_INTERFACE_GRAY_TRANSPARENT;
@@ -47,6 +48,11 @@ int CELL_HEIGHT;
         [self addSubview:_tableView];
         
         _currentMoveHistories = [NSMutableArray array];
+        
+        //set up UI
+        _darkFilter = [[UIView alloc] initWithFrame:_tableView.bounds];
+        _darkFilter.backgroundColor = [[UIColor alloc]initWithHue:0 saturation:0 brightness:0 alpha:0.8];
+        [_darkFilter setUserInteractionEnabled:YES]; //blocks all interaction behind it
     }
     return self;
 }
@@ -91,16 +97,12 @@ int CELL_HEIGHT;
     CardView*oldCardView = casterCard.cardView;
     CardView*casterCardView;
     
-    //NSLog(@"CELL COUNT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!%d", cell.cardViews.count);
-    
-    if (cell.cardViews != nil && cell.cardViews.count != 0)
+    if (cell.cardViews != nil)
     {
-        //NSLog(@"%@", cell);
         for (CardView*cardView in cell.cardViews)
         {
             [cardView removeFromSuperview];
         }
-        //cell.cardViews
     }
     
     cell.cardViews = [NSMutableArray array];
@@ -111,6 +113,10 @@ int CELL_HEIGHT;
     
     [casterCardView updateView];
     casterCardView.center = CGPointMake(casterCardView.frame.size.width/2 + 10, cell.frame.size.height/2);
+    UIView*valueView = [self getViewForValue:moveHistory.casterValue withCardModel:casterCardView.cardModel];
+    [casterCardView addSubview:valueView];
+    casterCardView.moveHistoryValueView = valueView;
+    valueView.center = CGPointMake(casterCardView.bounds.size.width/2, casterCardView.bounds.size.height/2);
     [cell addSubview:casterCardView];
     //NSLog(@"%@", cell);
 
@@ -154,7 +160,7 @@ int CELL_HEIGHT;
         }
         
         //fill as many cards possible per column
-        cardsPerColumn = targetCardsView.bounds.size.width / (CARD_WIDTH / currentColumnCount + 10);
+        cardsPerColumn = (targetCardsView.bounds.size.width + 10) / (CARD_WIDTH / currentColumnCount + 10);
         
         float cardScale = 1.0f / currentColumnCount;
         int cardWidth = CARD_WIDTH / currentColumnCount;
@@ -173,6 +179,11 @@ int CELL_HEIGHT;
             
             [targetCardView updateView];
             
+            UIView*valueView = [self getViewForValue:moveHistory.targetsValues[i] withCardModel:targetCardView.cardModel];
+            [targetCardView addSubview:valueView];
+            targetCardView.moveHistoryValueView = valueView;
+            valueView.center = CGPointMake(targetCardView.bounds.size.width/2, targetCardView.bounds.size.height/2);
+            
             if (targetCard.type == cardTypePlayer)
                 [targetCardView setZoomScale:cardScale * 1.6f];
             else
@@ -185,6 +196,85 @@ int CELL_HEIGHT;
     
     return cell;
 }
+
+-(UIView*)getViewForValue:(NSString*)value withCardModel:(CardModel*)cardModel
+{
+    if (value == MOVE_HISTORY_VALUE_DEATH)
+    {
+        UIImageView* killView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,killHintImage.size.width,killHintImage.size.height)];
+        [killView setImage:killHintImage];
+        
+        return killView;
+    }
+    else
+    {
+        StrokedLabel* label = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 200, 50)];
+        label.text = value;
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = [UIColor whiteColor];
+        label.font = [UIFont fontWithName:cardMainFontBlack size:50];
+        label.strokeColour = [UIColor blackColor];
+        label.strokeThickness = 6;
+        label.strokeOn = YES;
+    
+        //player views use a different scale
+        if (cardModel.type == cardTypePlayer)
+            label.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.6f, 0.6f);
+    
+        //TODO probably need a graphic here (i.e. background for the text)
+        return label;
+    }
+}
+
+
+-(void)darkenScreen
+{
+    _darkFilter.alpha = 0;
+    [_tableView addSubview:_darkFilter];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _darkFilter.alpha = 0.9;
+                     }
+                     completion:nil];
+}
+
+-(void)undarkenScreen
+{
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _darkFilter.alpha = 0;
+                     }
+                     completion:^(BOOL completed){
+                         [_darkFilter removeFromSuperview];
+                     }];
+}
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    if (self.superview)
+        [self.superview touchesBegan:touches withEvent:event];
+}
+
+-(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    if (self.superview)
+        [self.superview touchesMoved:touches withEvent:event];
+}
+
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    if (self.superview)
+    {
+        [self.superview touchesEnded:touches withEvent:event];
+    }
+}
+
+-(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    if (self.superview)
+        [self.superview touchesCancelled:touches withEvent:event];
+}
+
 
 
 @end
