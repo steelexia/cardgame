@@ -206,6 +206,13 @@ enum CardAbilityIcon
     abilityIconRemoveAbility,
 };
 
+enum CardOverlayObject
+{
+    cardOverlayObjectText,
+    cardOverlayObjectDeath,
+    cardOverlayObjectMulligan,
+};
+
 NSString *cardMainFont;
 NSString *cardMainFontBlack, *cardFlavourTextFont;
 
