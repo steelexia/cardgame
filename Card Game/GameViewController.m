@@ -1682,7 +1682,7 @@ BOOL moveHistoryOpen = NO;
         // Reset all hinted states to NO until checking all
         for (MonsterCardModel* monster in _hintedMonsters)
         {
-            monster.cardView.isKillHintOn = NO;
+            monster.cardView.cardOverlayObjectMode = cardOverlayObjectNone;
         }
         
         //check if drag is over an attackable creature
@@ -1695,13 +1695,13 @@ BOOL moveHistoryOpen = NO;
                 //new monster not hinted yet
                 if (![_hintedMonsters containsObject:monster])
                 {
-                    [monster.cardView animateIsKillHintOn:YES];
+                    [monster.cardView setCardOverlayObject: cardOverlayObjectDeath];
                     [_hintedMonsters addObject:monster];
                 }
                 //hinted in last update, just keep variable to YES
                 else
                 {
-                    monster.cardView.isKillHintOn = YES;
+                    monster.cardView.cardOverlayObjectMode = cardOverlayObjectDeath;
                 }
             }
         }
@@ -1710,9 +1710,9 @@ BOOL moveHistoryOpen = NO;
         for (int i = (int)_hintedMonsters.count - 1; i >= 0; i--)
         {
             MonsterCardModel* monster = _hintedMonsters [i];
-            if (!monster.cardView.isKillHintOn)
+            if (monster.cardView.cardOverlayObjectMode == cardOverlayObjectNone)
             {
-                [monster.cardView animateIsKillHintOn:NO];
+                [monster.cardView setCardOverlayObject: cardOverlayObjectNone];
                 [_hintedMonsters removeObject:monster];
             }
         }
@@ -1852,10 +1852,7 @@ BOOL moveHistoryOpen = NO;
         for (int i = (int)_hintedMonsters.count - 1; i >= 0; i--)
         {
             MonsterCardModel* monster = _hintedMonsters [i];
-            if (monster.cardView.isKillHintOn)
-            {
-                [monster.cardView animateIsKillHintOn:NO];
-            }
+            [monster.cardView setCardOverlayObject: cardOverlayObjectNone];
             [_hintedMonsters removeObject:monster];
         }
         

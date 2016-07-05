@@ -594,7 +594,7 @@
 -(void) animatePlayerTurn
 {
     StrokedLabel *newTurn = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 300, 60)];
-    newTurn.center = CGPointMake(self.view.bounds.size.width + 300, self.view.center.y);
+    newTurn.center = CGPointMake(SCREEN_WIDTH * 1.5f, SCREEN_HEIGHT * 2 / 5);
     newTurn.text = [NSString stringWithFormat:@"YOUR TURN"];
     newTurn.textAlignment = NSTextAlignmentCenter;
     newTurn.textColor = [UIColor whiteColor];
@@ -605,8 +605,47 @@
     
     [self.uiView addSubview:newTurn];
     
-    [self animateMoveToWithBounce:newTurn toPosition:self.view.center inDuration:0.5];
+    [self animateMoveToWithBounce:newTurn toPosition:CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT * 2 / 5) inDuration:0.5];
     [self fadeOutAndRemove:newTurn inDuration:0.5 withDelay:1.5];
+}
+
+-(void)animateDrawCard: (CardModel*)card side:(int)side onEnd:(void(^)(void))onEndBlock;
+{
+    CardView*cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeZoomedIngame];
+    cardView.frontFacing = NO;
+    
+    card.cardView = cardView;
+    
+    [self.handsView addSubview:card.cardView];
+    
+    if (side == OPPONENT_SIDE)
+    {
+        card.cardView.center = CGPointMake(SCREEN_WIDTH + CARD_WIDTH, CARD_HEIGHT);
+        //all that's needed for opponent's cards
+        onEndBlock();
+    }
+    else if (side == PLAYER_SIDE)
+    {
+        card.cardView.center = CGPointMake(SCREEN_WIDTH + CARD_WIDTH, SCREEN_HEIGHT-CARD_HEIGHT);
+        [cardView flipCard];
+        
+        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             cardView.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT-CARD_HEIGHT * 2);
+                             cardView.transform = CGAffineTransformMakeScale(CARD_DRAGGING_SCALE, CARD_DRAGGING_SCALE);
+                         }
+                         completion:^(BOOL finished) {
+                             [UIView animateWithDuration:1.0 delay:0 options:UIViewAnimationOptionCurveEaseInOut
+                                              animations:^{
+                                                  cardView.center = CGPointMake(SCREEN_WIDTH/2 - 0.5f, SCREEN_HEIGHT-CARD_HEIGHT * 2 - 0.7f);
+                                              }
+                                              completion:^(BOOL finished) {
+                                                  onEndBlock();
+                                              }];
+                         }];
+    }
+    
+    
 }
 
 - (void)hideViewBorder:(UIView *)view {

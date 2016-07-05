@@ -170,6 +170,8 @@
 -(void)opponentSummonedCard:(int)cardIndex withTarget:(int)target;
 -(void)setTimerFrames;
 
+
 @end
 
+int SCREEN_WIDTH, SCREEN_HEIGHT;
 
