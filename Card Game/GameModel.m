@@ -160,7 +160,7 @@ enum GameMode __gameMode; //because C functions cant access
             [self.gameViewController performBlock:^{
                 [self drawCard:side];
                 [self.gameViewController updateHandsView:side];
-            } afterDelay:0.5*(i+1)];
+            } afterDelay:1.2*(i+1)];
         }
     }
     
@@ -243,7 +243,7 @@ enum GameMode __gameMode; //because C functions cant access
     monster.cost = 0;
     monster.cooldown = monster.maximumCooldown = 0;
     monster.side = PLAYER_SIDE;
-    [monster addBaseAbility: [[Ability alloc] initWithType:abilitySetCooldown castType:castOnSummon targetType:targetSelf withDuration:durationInstant withValue:[NSNumber numberWithInt:0]]];
+    [monster addBaseAbility: [[Ability alloc] initWithType:abilityPierce castType:castAlways targetType:targetSelf withDuration:durationForever withValue:[NSNumber numberWithInt:0]]];
     
     [playerHand addObject:monster];
     
@@ -520,10 +520,16 @@ enum GameMode __gameMode; //because C functions cant access
             monster.side = side;
         }
         
-        [hand addObject: card];
+        [_gameViewController animateDrawCard:card side:side onEnd:^{
+            [hand addObject: card];
+            if (side == PLAYER_SIDE)
+                [_gameViewController updateHandsView:side];
+        }];
     }
-    
-    //TODO deal damage to player maybe
+    else
+    {
+        //TODO deal damage to player if no space maybe
+    }
     
     return NO;
 }
@@ -1331,6 +1337,8 @@ enum GameMode __gameMode; //because C functions cant access
                                 dealtDamage = overDamageTarget;
                             else
                                 dealtDamage = overDamageTarget - originalLife;
+                            
+                            [_currentMoveHistory addTarget:targetPlayer.playerMonster];
                             
                             [self.gameViewController performBlock:^{
                                 [self.gameViewController animateCardDamage:targetPlayer.playerMonster.cardView forDamage:dealtDamage  fromSide:attackerMonsterCard.side];

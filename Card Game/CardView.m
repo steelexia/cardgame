@@ -10,6 +10,7 @@
 #import "UIConstants.h"
 #import "StoreCardCell.h"
 #import "CustomCollectionView.h"
+#import "MoveHistory.h"
 
 @implementation CardView
 
@@ -27,8 +28,7 @@
 @synthesize cardViewMode = _cardViewMode;
 @synthesize mask = _mask;
 @synthesize frontFacing = _frontFacing;
-@synthesize combatHintView = _combatHintView;
-@synthesize isKillHintOn = _isKillHintOn;
+@synthesize cardOverlayView = _cardOverlayView;
 
  int CARD_WIDTH_RATIO = 5;
  int CARD_HEIGHT_RATIO = 8;
@@ -724,8 +724,8 @@ NSDictionary *singlePlayerCardImages;
       
         self.elementLabel.text = [CardModel elementToString:cardModel.element];
         
-        _combatHintView = [[UIImageView alloc] initWithFrame:self.bounds];
-        [_combatHintView setAlpha: 0.8f];
+        _cardOverlayView = [[UIImageView alloc] initWithFrame:self.bounds];
+        
         
         //NOTE added above other stuff
         
@@ -898,7 +898,7 @@ NSDictionary *singlePlayerCardImages;
         
         self.cardHighlightType = cardHighlightNone;
         self.cardViewState = cardViewStateNone;
-        self.isKillHintOn = NO;
+        self.cardOverlayObjectMode = cardOverlayObjectNone;
     }
     
     
@@ -1470,41 +1470,106 @@ NSDictionary *singlePlayerCardImages;
         }
     }
 }
-
+/*
 -(void)animateIsKillHintOn:(BOOL)isKilled
 {
     
     if (isKilled)
     {
-        [_combatHintView setImage:killHintImage];
-        [_combatHintView setFrame:CGRectMake(0, 0, killHintImage.size.width, killHintImage.size.height)];
-        _combatHintView.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
-        _combatHintView.transform = CGAffineTransformMakeScale(0.01, 0.01);
-        [self addSubview:_combatHintView];
+        [_cardOverlayView setImage:killHintImage];
+        [_cardOverlayView setFrame:CGRectMake(0, 0, killHintImage.size.width, killHintImage.size.height)];
+        _cardOverlayView.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+        _cardOverlayView.transform = CGAffineTransformMakeScale(0.01, 0.01);
+        [_cardOverlayView setAlpha: 0.8f];
+        [self addSubview:_cardOverlayView];
         
         //TODO these should have duration but can't get properly working yet
         [UIView animateWithDuration:0.0
                               delay:0
                             options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^{_combatHintView.transform = CGAffineTransformMakeScale(1, 1);}
+                         animations:^{_cardOverlayView.transform = CGAffineTransformMakeScale(1, 1);}
                          completion:nil];
     }
     else
     {
-        _combatHintView.transform = CGAffineTransformMakeScale(1, 1);
+        _cardOverlayView.transform = CGAffineTransformMakeScale(1, 1);
         
         [UIView animateWithDuration:0.0
                               delay:0
                             options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^{_combatHintView.transform = CGAffineTransformMakeScale(0.01, 0.01);}
+                         animations:^{_cardOverlayView.transform = CGAffineTransformMakeScale(0.01, 0.01);}
                          completion:^(BOOL finished) {
-                             [_combatHintView removeFromSuperview];
-                             _combatHintView.transform = CGAffineTransformMakeScale(1, 1);
+                             [_cardOverlayView removeFromSuperview];
+                             _cardOverlayView.transform = CGAffineTransformMakeScale(1, 1);
+                             [_cardOverlayView setAlpha: 1.0f];
                          }];
         
     }
     
-    _isKillHintOn = isKilled;
+    _cardOverlayObjectMode = isKilled ? cardOverlayObjectDeath : cardOverlayObjectNone;
+}*/
+
+-(void)setCardOverlayObject:(enum CardOverlayObject) cardOverlayObject
+{
+    if (cardOverlayObject == cardOverlayObjectNone)
+    {
+        _cardOverlayView.transform = CGAffineTransformMakeScale(1, 1);
+        
+        //TODO these should have duration but can't get properly working yet
+        [UIView animateWithDuration:0.0
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{_cardOverlayView.transform = CGAffineTransformMakeScale(0.01, 0.01);}
+                         completion:^(BOOL finished) {
+                             [_cardOverlayView removeFromSuperview];
+                             _cardOverlayView.transform = CGAffineTransformMakeScale(1, 1);
+                             [_cardOverlayView setAlpha: 1.0f];
+                         }];
+    }
+    else if (cardOverlayObject == cardOverlayObjectDeath)
+    {
+        [_cardOverlayView setImage:killHintImage];
+        [_cardOverlayView setFrame:CGRectMake(0, 0, killHintImage.size.width, killHintImage.size.height)];
+        _cardOverlayView.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+        _cardOverlayView.transform = CGAffineTransformMakeScale(0.01, 0.01);
+        [_cardOverlayView setAlpha: 0.8f];
+        [self addSubview:_cardOverlayView];
+        
+        //TODO these should have duration but can't get properly working yet
+        [UIView animateWithDuration:0.0
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{_cardOverlayView.transform = CGAffineTransformMakeScale(1, 1);}
+                         completion:nil];
+    }
+    else if (cardOverlayObject == cardOverlayObjectText)
+    {
+        //if text is death, switch to death
+        if (_cardOverlayText == MOVE_HISTORY_VALUE_DEATH)
+        {
+            [self setCardOverlayObject:cardOverlayObjectDeath];
+            return;
+        }
+        
+        StrokedLabel* label = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, 200, 50)];
+        label.text = _cardOverlayText;
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = [UIColor whiteColor];
+        label.font = [UIFont fontWithName:cardMainFontBlack size:50];
+        label.strokeColour = [UIColor blackColor];
+        label.strokeThickness = 6;
+        label.strokeOn = YES;
+        
+        //player views use a different scale
+        if (_cardModel.type == cardTypePlayer)
+            label.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.6f, 0.6f);
+        
+        [self addSubview:_cardOverlayView];
+        [_cardOverlayView addSubview:label];
+        label.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+    }
+    
+    _cardOverlayObjectMode = cardOverlayObject;
 }
 
 -(void)loadImage

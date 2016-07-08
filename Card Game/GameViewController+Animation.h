@@ -65,6 +65,8 @@
 
 -(void) animatePlayerTurn;
 
+-(void)animateDrawCard: (CardModel*)card side:(int)side  onEnd:(void(^)(void))onEndBlock;
+
 /** Blinking butttons **/
 
 - (void)flashOff:(UIView *)v;

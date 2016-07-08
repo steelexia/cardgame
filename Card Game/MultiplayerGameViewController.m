@@ -24,7 +24,6 @@
 @implementation MultiplayerGameViewController
 
 /** Screen dimension for convinience */
-float SCREEN_WIDTH, SCREEN_HEIGHT;
 float baseHeight, baseWidth;
 BOOL playerAuthenticated;
 BOOL alreadyLoadedMatch;
@@ -43,10 +42,7 @@ UIView *sureMatchView;
     //GrilledCheeseBTN
     
     
-    
-    SCREEN_WIDTH = [[UIScreen mainScreen] bounds].size.width;
-    SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
-    
+
     //base resolution of assets
     //2048h
     //1153w

@@ -113,10 +113,14 @@ int CELL_HEIGHT;
     
     [casterCardView updateView];
     casterCardView.center = CGPointMake(casterCardView.frame.size.width/2 + 10, cell.frame.size.height/2);
-    UIView*valueView = [self getViewForValue:moveHistory.casterValue withCardModel:casterCardView.cardModel];
-    [casterCardView addSubview:valueView];
-    casterCardView.moveHistoryValueView = valueView;
-    valueView.center = CGPointMake(casterCardView.bounds.size.width/2, casterCardView.bounds.size.height/2);
+    //UIView*valueView = [self getViewForValue:moveHistory.casterValue withCardModel:casterCardView.cardModel];
+    //[casterCardView addSubview:valueView];
+    //casterCardView.moveHistoryValueView = valueView;
+    //valueView.center = CGPointMake(casterCardView.bounds.size.width/2, casterCardView.bounds.size.height/2);
+    
+    [casterCardView setCardOverlayText:moveHistory.casterValue];
+    [casterCardView setCardOverlayObject:cardOverlayObjectText]; //do not need to check if dead
+    
     [cell addSubview:casterCardView];
     //NSLog(@"%@", cell);
 
@@ -179,10 +183,14 @@ int CELL_HEIGHT;
             
             [targetCardView updateView];
             
-            UIView*valueView = [self getViewForValue:moveHistory.targetsValues[i] withCardModel:targetCardView.cardModel];
+            /*UIView*valueView = [self getViewForValue:moveHistory.targetsValues[i] withCardModel:targetCardView.cardModel];
             [targetCardView addSubview:valueView];
             targetCardView.moveHistoryValueView = valueView;
-            valueView.center = CGPointMake(targetCardView.bounds.size.width/2, targetCardView.bounds.size.height/2);
+            valueView.center = CGPointMake(targetCardView.bounds.size.width/2, targetCardView.bounds.size.height/2);*/
+            
+            [targetCardView setCardOverlayText:moveHistory.targetsValues[i]];
+            [targetCardView setCardOverlayObject:cardOverlayObjectText]; //do not need to check if dead
+            
             
             if (targetCard.type == cardTypePlayer)
                 [targetCardView setZoomScale:cardScale * 1.6f];
@@ -197,6 +205,7 @@ int CELL_HEIGHT;
     return cell;
 }
 
+/*
 -(UIView*)getViewForValue:(NSString*)value withCardModel:(CardModel*)cardModel
 {
     if (value == MOVE_HISTORY_VALUE_DEATH)
@@ -224,7 +233,7 @@ int CELL_HEIGHT;
         //TODO probably need a graphic here (i.e. background for the text)
         return label;
     }
-}
+}*/
 
 
 -(void)darkenScreen

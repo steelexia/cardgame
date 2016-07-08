@@ -20,6 +20,10 @@
  The attached cardModel can be any of the child classes, such as MonsterCardModel or SpellCardModel.
  */
 @interface CardView : UIImageView
+{
+    @private
+    
+}
 
 /** Attached model for storing data of the card */
 @property (strong) CardModel *cardModel;
@@ -47,11 +51,8 @@
 
 @property (strong) NSMutableArray *abilityIcons;
 
-/** Overlay view used for showing combat hints such as if creature will die from attack */
-@property (strong) UIImageView *combatHintView;
-
-/** Pointer for keeping track of the move history value view in move history screen */
-@property (strong) UIView *moveHistoryValueView;
+/** Overlay view used for info such as combat hints, move history info, or mulligan cross etc. */
+@property (strong) UIImageView *cardOverlayView;
 
 /** Overwritten center */
 @property CGPoint center;
@@ -72,7 +73,6 @@
 @property BOOL lifeViewNeedsUpdate;
 @property BOOL damageViewNeedsUpdate;
 @property BOOL cooldownViewNeedsUpdate;
-@property BOOL isKillHintOn;
 
 /** Sets the current mode of display for different purposes */
 @property enum CardViewMode cardViewMode;
@@ -90,6 +90,10 @@
 
 /** When set to NO, card back is displayed instead */
 @property BOOL frontFacing;
+
+/* card overlay object mode, text is used for the appropriate modes */
+@property enum CardOverlayObject cardOverlayObjectMode;
+@property (strong) NSString* cardOverlayText;
 
 /** Initializes with attached CardModel, which should be one of its child classes */
 -(instancetype)initWithModel: (CardModel*)cardModel viewMode:(enum CardViewMode)cardViewMode;
@@ -122,7 +126,8 @@
 +(void) loadResources;
 
 /** Shows hint for when dragging an attack causes a creature to be killed. */
--(void)animateIsKillHintOn:(BOOL)isKilled;
+//-(void)animateIsKillHintOn:(BOOL)isKilled;
+-(void)setCardOverlayObject:(enum CardOverlayObject) cardOverlayObject;
 
 /** Note that the scale will be relative to CARD_DEFAULT_SCALE, not 1. Also should not use this for any card on game board */
 -(void)setZoomScale:(float)scale;
@@ -204,6 +209,14 @@ enum CardAbilityIcon
     abilityIconAssassin,
     abilityIconPierce,
     abilityIconRemoveAbility,
+};
+
+enum CardOverlayObject
+{
+    cardOverlayObjectNone,
+    cardOverlayObjectText,
+    cardOverlayObjectDeath,
+    cardOverlayObjectMulligan,
 };
 
 NSString *cardMainFont;
