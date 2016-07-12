@@ -41,6 +41,8 @@
 /** Screen dimension for convinience */
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
+float CARD_DRAW_DELAY = 1.2f;
+
 /** current side's turn, i.e. current player */
 int currentSide;
 
@@ -98,6 +100,8 @@ BOOL leftHandViewZone = NO;
 
 /** remembers if move history is open */
 BOOL moveHistoryOpen = NO;
+/** remembers if pick card/mulligan screen is open */
+BOOL pickingCards = NO;
 
 // ------------------------------------------------------------------------------------------------
 - (instancetype) initWithGameMode: (enum GameMode)  gameMode
@@ -841,6 +845,41 @@ BOOL moveHistoryOpen = NO;
     [_moveHistoryScreen addSubview:_moveHistoryTableView];
     _moveHistoryTableView.currentMoveHistories = _gameModel.moveHistories; //use same pointer
     
+    //------------------card picker screen------------------//
+    _cardPickerView = [[UIView alloc] initWithFrame:self.view.bounds];
+    
+    _cardPickerLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
+    _cardPickerLabel.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/5);
+    _cardPickerLabel.textAlignment = NSTextAlignmentCenter;
+    _cardPickerLabel.textColor = [UIColor whiteColor];
+    _cardPickerLabel.font = [UIFont fontWithName:cardMainFontBlack size:30];
+    _cardPickerLabel.strokeColour = [UIColor blackColor];
+    _cardPickerLabel.strokeThickness = 5;
+    _cardPickerLabel.strokeOn = YES;
+    [_cardPickerView addSubview:_cardPickerLabel];
+    
+    _cardPickerLabel2 = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
+    _cardPickerLabel2.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT*4/5);
+    _cardPickerLabel2.textAlignment = NSTextAlignmentCenter;
+    _cardPickerLabel2.textColor = [UIColor whiteColor];
+    _cardPickerLabel2.font = [UIFont fontWithName:cardMainFontBlack size:20];
+    _cardPickerLabel2.strokeColour = [UIColor blackColor];
+    _cardPickerLabel2.strokeThickness = 3;
+    _cardPickerLabel2.strokeOn = YES;
+    [_cardPickerView addSubview:_cardPickerLabel2];
+    
+    _cardPickerDoneButton = [[CFButton alloc]initWithFrame:CGRectMake(0, 0,  120, 50)];
+    _cardPickerDoneButton.label.text = @"Done";
+    _cardPickerDoneButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT*9/10);
+    [_cardPickerDoneButton addTarget:self action:@selector(cardPickerDoneButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    [_cardPickerDoneButton setTextSize:18];
+    //[_cardPickerView addSubview:_cardPickerDoneButton];
+    
+    _cardPickerToggleButton = [[CFButton alloc]initWithFrame:CGRectMake(0, 0,  80, 40)];
+    _cardPickerToggleButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT*3/5);
+    [_cardPickerToggleButton addTarget:self action:@selector(cardPickerToggleButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    [_cardPickerToggleButton setTextSize:16];
+    
     //for target selection
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
                                            initWithTarget:self
@@ -1142,6 +1181,217 @@ BOOL moveHistoryOpen = NO;
                      completion:^(BOOL finished){[self.viewingCardView setUserInteractionEnabled:YES];}];
 }
 
+-(void)mulliganCards:(NSMutableArray*)cards
+{
+    _currentPickingCards = cards;
+    pickingCards = YES;
+    [self darkenScreen];
+    [self setAllViews:NO];
+    [self.view addSubview:_cardPickerView];
+    
+    [_cardPickerLabel setText:@"Opening Hand"];
+    [_cardPickerLabel2 setText:@"Choose cards to replace"];
+    _cardPickerLabel.alpha = 0;
+    _cardPickerLabel2.alpha = 0;
+    
+    int borderInset = 10;
+    int cardDistance = (SCREEN_WIDTH - borderInset * 2) / (cards.count + 1);
+
+    for (int i = 0; i < cards.count; i++)
+    {
+        CardModel*card = cards[i];
+        CardView*cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeIngame];
+        cardView.frontFacing = NO;
+        
+        //positions the hand by laying them out from the center TODO use up available space!
+        CGPoint newCenter = CGPointMake(borderInset + ((i+1)*cardDistance), SCREEN_HEIGHT/2);
+        
+        card.cardView = cardView;
+        card.cardView.center = CGPointMake(SCREEN_WIDTH + CARD_WIDTH, SCREEN_HEIGHT-CARD_HEIGHT);
+        [_cardPickerView addSubview:cardView];
+        [cardView flipCard];
+        
+        [UIView animateWithDuration:0.5 delay:0.5f + i * 0.2f options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             cardView.center = newCenter;
+                             //cardView.transform = CGAffineTransformMakeScale(1, 1);
+                         }
+                         completion:^(BOOL finished) {
+                             [_cardPickerView addSubview:_cardPickerDoneButton];
+                         }];
+    }
+    
+    [UIView animateWithDuration:0.4 delay:0.5f + 0.2f * cards.count options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _cardPickerLabel.alpha = 1;
+                         _cardPickerLabel2.alpha = 1;
+                     }
+                     completion:^(BOOL finished) {
+                     }];
+    
+    //TODO WARNING NEED TO ADD MULTIPLAYER PART
+}
+
+-(void)cardPickerDoneButtonPressed
+{
+    pickingCards = NO;
+    [_cardPickerDoneButton removeFromSuperview];
+    [_cardPickerToggleButton removeFromSuperview];
+    
+    NSMutableArray*mulliganedCards = [NSMutableArray array];
+    
+    for (int i = 0; i < _currentPickingCards.count; i++)
+    {
+        
+        CardModel*card = _currentPickingCards[i];
+        if (card.cardView.cardOverlayObjectMode == cardOverlayObjectMulligan)
+        {
+            [mulliganedCards addObject:card];
+            _currentPickingCards[i] = [NSNull null]; //clear this array to be filled in later
+        }
+        else
+        {
+            //kept cards are moved to front
+            CardView* cardView = card.cardView;
+            [cardView removeFromSuperview];
+            [_cardPickerView addSubview:cardView];
+        }
+    }
+    
+    //TODO WARNING: need to wait for opponent in multiplayer
+    
+    //mulliganed cards leave
+    for (int i = 0; i < mulliganedCards.count; i++)
+    {
+        CardView*cardView = [mulliganedCards[i] cardView];
+        CGPoint newCenter = CGPointMake(SCREEN_WIDTH + CARD_WIDTH, SCREEN_HEIGHT-CARD_HEIGHT);
+        [cardView setZoomScale:1];
+        
+        [UIView animateWithDuration:0.4 delay:0.5f + i * 0.2f options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             cardView.center = newCenter;
+                         }
+                         completion:^(BOOL finished) {
+                             [cardView removeFromSuperview];
+                         }];
+    }
+    
+    [UIView animateWithDuration:0.4 delay:0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _cardPickerLabel2.alpha = 0;
+                     }
+                     completion:^(BOOL finished) {
+                         [_cardPickerLabel2 removeFromSuperview];
+                     }];
+    
+    NSMutableArray *swappedCards = [_gameModel swapCards:mulliganedCards side:PLAYER_SIDE];
+    
+    
+    float totalDelay = 0.5f + mulliganedCards.count * 0.2f;
+    //add some extra delay
+    totalDelay += 1.0f;
+    
+    //no delay if didn't mulligan
+    if (mulliganedCards.count == 0)
+        totalDelay = 0;
+    
+    [self performBlock:^{
+        
+        //put swapped cards back into currentPickingCards
+        int j = 0;
+        for (int i = 0; i < _currentPickingCards.count; i++)
+        {
+            if (_currentPickingCards[i] == [NSNull null])
+            {
+                _currentPickingCards[i] = swappedCards[j++];
+            }
+        }
+        
+        int borderInset = 10;
+        int cardDistance = (SCREEN_WIDTH - borderInset * 2) / (_currentPickingCards.count + 1);
+        
+        //swapped cards enter screen
+        for (int i = 0; i < _currentPickingCards.count; i++)
+        {
+            CardModel*card = _currentPickingCards[i];
+            if (card.cardView == nil)
+            {
+                CardView*cardView = [[CardView alloc] initWithModel:card viewMode:cardViewModeIngame];
+                cardView.frontFacing = NO;
+                cardView.center = CGPointMake(SCREEN_WIDTH + CARD_WIDTH, SCREEN_HEIGHT-CARD_HEIGHT);
+                
+                [_cardPickerView insertSubview:cardView atIndex:0]; //insert at 0 so they appear behind
+                [cardView flipCard];
+                
+                CGPoint newCenter = CGPointMake(borderInset + ((i+1)*cardDistance), SCREEN_HEIGHT/2);
+                
+                [UIView animateWithDuration:0.4 delay:i * 0.2f options:UIViewAnimationOptionCurveEaseInOut
+                                 animations:^{
+                                     cardView.center = newCenter;
+                                 }
+                                 completion:^(BOOL finished) {
+                                 }];
+            }
+            
+            
+        }
+        
+        [self performBlock:^{
+            //close mulligan views
+            
+            [self undarkenScreen];
+            
+            [UIView animateWithDuration:0.4 delay:0 options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 _cardPickerLabel.alpha = 0;
+                             }
+                             completion:^(BOOL finished) {
+                                 [_cardPickerLabel removeFromSuperview];
+                             }];
+            
+            [self performBlock:^{
+                //close mulligan views
+                //reorder all cards in order for hand
+                for (int i = 0; i < _currentPickingCards.count; i++)
+                {
+                    CardView*cardView = [_currentPickingCards[i] cardView];
+                    [cardView removeFromSuperview];
+                    [handsView addSubview:cardView];
+                }
+                
+                [_gameModel.hands[PLAYER_SIDE] addObjectsFromArray:_currentPickingCards];
+                [self updateHandsView:PLAYER_SIDE];
+                
+                [self performBlock:^{
+                    [_cardPickerView removeFromSuperview];
+                    [self setAllViews:YES];
+                    [self newGame];
+                } afterDelay:0.5f];
+            } afterDelay:0.4f]; //screen undarken delay
+            
+        } afterDelay:2.0f];
+
+    } afterDelay:totalDelay];
+    
+    
+}
+
+-(void)cardPickerToggleButtonPressed
+{
+    if (_cardPickerCardView != nil)
+    {
+        if (_cardPickerCardView.cardOverlayObjectMode == cardOverlayObjectMulligan)
+        {
+            [_cardPickerCardView setCardOverlayObject: cardOverlayObjectNone];
+            [_cardPickerToggleButton.label setText:@"Replace"];
+        }
+        else
+        {
+            [_cardPickerCardView setCardOverlayObject: cardOverlayObjectMulligan];
+            [_cardPickerToggleButton.label setText:@"Keep"];
+        }
+    }
+}
 
 -(void) endTurn{
     
@@ -1295,7 +1545,7 @@ BOOL moveHistoryOpen = NO;
             card.cardView.cardHighlightType = cardHighlightNone;
         
         //slerp to the position
-        [self animateMoveToWithBounce:card.cardView toPosition:newCenter inDuration:0.5];
+        [self animateMoveToWithBounce:card.cardView toPosition:newCenter inDuration:0.7];
     }
 }
 
@@ -1793,6 +2043,46 @@ BOOL moveHistoryOpen = NO;
             }
         }
         
+    }
+    else if (pickingCards)
+    {
+        if ([[touch view] isKindOfClass:[CardView class]])
+        {
+            CardView*cardView = (CardView*)[touch view];
+            
+            if (_cardPickerCardView != cardView)
+            {
+                if (_cardPickerCardView != nil)
+                {
+                    _cardPickerCardView.cardViewState = cardViewModeIngame;
+                    [_cardPickerCardView updateView];
+                }
+                
+                cardView.cardViewState = cardViewStateMaximize;
+                [cardView updateView];
+                _cardPickerCardView = cardView;
+                [_cardPickerCardView removeFromSuperview];
+                [_cardPickerView addSubview:_cardPickerCardView]; //re-add to move to front
+                [_cardPickerView addSubview:_cardPickerToggleButton];
+                _cardPickerToggleButton.center = CGPointMake(cardView.center.x, _cardPickerCardView.center.y + _cardPickerCardView.bounds.size.height/2 + 20);
+                
+                if (_cardPickerCardView.cardOverlayObjectMode == cardOverlayObjectMulligan)
+                {
+                    [_cardPickerToggleButton.label setText:@"Keep"];
+                }
+                else
+                {
+                    [_cardPickerToggleButton.label setText:@"Replace"];
+                }
+            }
+        }
+        else if (_cardPickerCardView != nil)
+        {
+            _cardPickerCardView.cardViewState = cardViewModeIngame;
+            [_cardPickerCardView updateView];
+            _cardPickerCardView = nil;
+            [_cardPickerToggleButton removeFromSuperview];
+        }
     }
     //when dragging hand card, card is deployed
     else if (gameControlState == gameControlStateDraggingHandCard)

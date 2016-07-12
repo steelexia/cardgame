@@ -224,6 +224,7 @@ NSString *cardMainFontBlack, *cardFlavourTextFont;
 
 UIImage*placeHolderImage;
 UIImage*PLAYER_FIRST_CARD_IMAGE;
-UIImage *killHintImage;
+UIImage *killHintImage, *mulliganImage;
+
 
 NSDictionary *campaignHeroImages;

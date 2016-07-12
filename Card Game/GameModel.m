@@ -19,7 +19,7 @@
 
 const int MAX_BATTLEFIELD_SIZE = 5;
 const int MAX_HAND_SIZE = 7;
-const char PLAYER_SIDE = 0, OPPONENT_SIDE = 1;
+const int PLAYER_SIDE = 0, OPPONENT_SIDE = 1;
 
 @synthesize gameViewController = _gameViewController;
 @synthesize battlefield = _battlefield;
@@ -155,18 +155,35 @@ enum GameMode __gameMode; //because C functions cant access
             cardDraw = 1;
         
         //draw 4 cards
-        for (int i = 0; i < cardDraw; i++)
+        if (side == OPPONENT_SIDE) //TODO WARNING need to replace with mulligan later
         {
-            [self.gameViewController performBlock:^{
-                [self drawCard:side];
-                [self.gameViewController updateHandsView:side];
-            } afterDelay:1.2*(i+1)];
+            for (int i = 0; i < cardDraw; i++)
+            {
+                [self.gameViewController performBlock:^{
+                    [self drawCard:side];
+                    [self.gameViewController updateHandsView:side];
+                } afterDelay:CARD_DRAW_DELAY*(i+1)];
+            }
         }
     }
     
     [self.gameViewController performBlock:^{
+        //TODO temporary
+        
+        NSMutableArray*cards = [NSMutableArray array];
+        
+        for (int i = 0; i < 4; i++)
+            [cards addObject:[self.decks[PLAYER_SIDE] removeCardAtIndex:0]];
+        
+        [_gameViewController mulliganCards:cards];
+        
+        //[self.gameViewController newGame]; //TODO should only begin when both player done
+    }afterDelay:0.1f];
+    /*
+    [self.gameViewController performBlock:^{
         [self.gameViewController newGame];
-    } afterDelay:0.5*(cardDraw+1)];
+    } afterDelay:CARD_DRAW_DELAY*(cardDraw+1)];
+    */
     
     //add a card to player hand for quick testing
     
@@ -534,6 +551,26 @@ enum GameMode __gameMode; //because C functions cant access
     return NO;
 }
 
+-(NSMutableArray*)swapCards:(NSMutableArray*)cards side:(int)side
+{
+    NSMutableArray*swappedCards = [NSMutableArray array];
+    DeckModel *deck = self.decks[side];
+    
+    //take next cards in deck
+    for (int i = 0; i < cards.count; i++)
+    {
+        [swappedCards addObject:[deck removeCardAtIndex:0]];
+    }
+    
+    //place mulligan cards randomly back into deck
+    for (int i = 0; i < cards.count; i++)
+    {
+        [deck.cards insertObject:cards[i] atIndex: (int)(xor128(side) % [deck count])];
+    }
+    
+    return swappedCards;
+}
+
 /** TODO this is a temporary function used to fill decks up with random cards for testing */
 -(void)loadDecks
 {
@@ -885,18 +922,19 @@ enum GameMode __gameMode; //because C functions cant access
         sleep(10);
 }
 
--(void)addCardToBattlefield: (MonsterCardModel*)monsterCard side:(char)side
+-(void)addCardToBattlefield: (MonsterCardModel*)monsterCard side:(int)side
 {
     [self.battlefield[side] addObject:monsterCard];
     monsterCard.deployed = YES;
+    monsterCard.side = side; //set again in case for cards that are added via ability
 }
 
--(BOOL) canSummonCard: (CardModel*)card side:(char)side
+-(BOOL) canSummonCard: (CardModel*)card side:(int)side
 {
     return [self canSummonCard:card side:side withAdditionalResource:0];
 }
 
--(BOOL) canSummonCard: (CardModel*)card side:(char)side withAdditionalResource:(int)resource
+-(BOOL) canSummonCard: (CardModel*)card side:(int)side withAdditionalResource:(int)resource
 {
     PlayerModel *player = (PlayerModel*) self.players[side];
     
@@ -979,7 +1017,7 @@ enum GameMode __gameMode; //because C functions cant access
     return YES;
 }
 
--(void)summonCard: (CardModel*)card side:(char)side
+-(void)summonCard: (CardModel*)card side:(int)side
 {
     PlayerModel *player = (PlayerModel*) self.players[side];
     
@@ -1083,7 +1121,7 @@ enum GameMode __gameMode; //because C functions cant access
     }
 }
 
--(BOOL)addCardToHand: (CardModel*)card side:(char)side
+-(BOOL)addCardToHand: (CardModel*)card side:(int)side
 {
     //has space for more cards
     NSArray *hand = self.hands[side];
@@ -2216,8 +2254,6 @@ enum GameMode __gameMode; //because C functions cant access
     else if (ability.abilityType == abilitySetCooldown)
     {
         monster.cooldown = [ability.value intValue];
-        
-        
     }
     else if (ability.abilityType == abilityAddCooldown)
     {
@@ -2240,7 +2276,7 @@ enum GameMode __gameMode; //because C functions cant access
                     [self drawCard:side];
                     [self.gameViewController updateHandsView:side];
                     [self.gameViewController decAnimationCounter];
-                } afterDelay:0.5*(i+1)];
+                } afterDelay:CARD_DRAW_DELAY*(i+1)];
             }
         }
         else if (ability.targetType == targetHeroEnemy)
