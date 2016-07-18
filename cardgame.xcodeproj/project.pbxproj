@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F847A621D36B41000FFC920 /* PlayerLevelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F847A611D36B41000FFC920 /* PlayerLevelView.m */; };
 		5F8958BC1D15F2B0009EBE30 /* MoveHistoryTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F8958BB1D15F2B0009EBE30 /* MoveHistoryTableView.m */; };
 		5F8958BE1D15F992009EBE30 /* MoveHistoryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F8958BD1D15F992009EBE30 /* MoveHistoryTableViewCell.m */; };
 		5FD2CBE91C6FBCF700692D88 /* card_3000.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBD81C6FBCF700692D88 /* card_3000.png */; };
@@ -606,6 +607,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5F847A611D36B41000FFC920 /* PlayerLevelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerLevelView.m; sourceTree = "<group>"; };
+		5F847A631D36B42A00FFC920 /* PlayerLevelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerLevelView.h; sourceTree = "<group>"; };
 		5F8958BA1D15F26E009EBE30 /* MoveHistoryTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveHistoryTableView.h; sourceTree = "<group>"; };
 		5F8958BB1D15F2B0009EBE30 /* MoveHistoryTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoveHistoryTableView.m; sourceTree = "<group>"; };
 		5F8958BD1D15F992009EBE30 /* MoveHistoryTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoveHistoryTableViewCell.m; sourceTree = "<group>"; };
@@ -1505,6 +1508,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5F847A601D36B30C00FFC920 /* UI Classes */ = {
+			isa = PBXGroup;
+			children = (
+				907D9BE5192446250037C0CF /* ViewLayer.h */,
+				907D9BE6192446250037C0CF /* ViewLayer.m */,
+				9069AAD619528A7B006D1D98 /* StrokedLabel.h */,
+				9069AAD719528A7B006D1D98 /* StrokedLabel.m */,
+				90DA4366195F6D0800E44AED /* StrokedTextField.h */,
+				90DA4367195F6D0800E44AED /* StrokedTextField.m */,
+				90DA436C195F833400E44AED /* CustomTextField.h */,
+				90DA436D195F833400E44AED /* CustomTextField.m */,
+				90DA4351195DF83D00E44AED /* UIConstants.h */,
+				90DA4352195DF83D00E44AED /* UIConstants.m */,
+			);
+			name = "UI Classes";
+			sourceTree = "<group>";
+		};
 		8F4B0A341C6004BB00F90AAA /* Validation Types */ = {
 			isa = PBXGroup;
 			children = (
@@ -1947,6 +1967,7 @@
 		90F3529C191595C200601130 /* Card Game */ = {
 			isa = PBXGroup;
 			children = (
+				5F847A601D36B30C00FFC920 /* UI Classes */,
 				ECCBF4841B48CE2E007C7594 /* Sounds */,
 				D31E2CA519BF5BBE002E1934 /* GameKit */,
 				90F80F8A19A27FA5007571F4 /* SSKeychain */,
@@ -1978,22 +1999,14 @@
 				90DA436A195F6E6000E44AED /* CGPointUtilities.m */,
 				90DA435F195E6EA800E44AED /* UserModel.h */,
 				90DA4360195E6EA800E44AED /* UserModel.m */,
-				907D9BE5192446250037C0CF /* ViewLayer.h */,
-				907D9BE6192446250037C0CF /* ViewLayer.m */,
-				9069AAD619528A7B006D1D98 /* StrokedLabel.h */,
-				9069AAD719528A7B006D1D98 /* StrokedLabel.m */,
-				90DA4366195F6D0800E44AED /* StrokedTextField.h */,
-				90DA4367195F6D0800E44AED /* StrokedTextField.m */,
-				90DA436C195F833400E44AED /* CustomTextField.h */,
-				90DA436D195F833400E44AED /* CustomTextField.m */,
-				90DA4351195DF83D00E44AED /* UIConstants.h */,
-				90DA4352195DF83D00E44AED /* UIConstants.m */,
 				90F80F9919A2BEFA007571F4 /* CustomView.h */,
 				90F80F9A19A2BEFA007571F4 /* CustomView.m */,
 				FA19FC8319B232F100B38943 /* IAPHelper.h */,
 				FA19FC8419B232F100B38943 /* IAPHelper.m */,
 				FA19FC8619B2336100B38943 /* PickIAPHelper.h */,
 				FA19FC8719B2336100B38943 /* PickIAPHelper.m */,
+				5F847A611D36B41000FFC920 /* PlayerLevelView.m */,
+				5F847A631D36B42A00FFC920 /* PlayerLevelView.h */,
 				90F3529D191595C200601130 /* Supporting Files */,
 			);
 			path = "Card Game";
@@ -3521,6 +3534,7 @@
 				8F4B0A301C6004B200F90AAA /* PMValidationRegexType.m in Sources */,
 				ECCD46C31ACC881400804B06 /* PNOperationStatus.m in Sources */,
 				FA4025971956331300FCCBAB /* DeckEditorViewController.m in Sources */,
+				5F847A621D36B41000FFC920 /* PlayerLevelView.m in Sources */,
 				ECCD46B11ACC881400804B06 /* PNWhereNowResponseParser.m in Sources */,
 				8F4B0A401C6004E300F90AAA /* DHConstraintUtility.m in Sources */,
 				90F80F9E19A3D28E007571F4 /* GameViewController+Tutorial.m in Sources */,

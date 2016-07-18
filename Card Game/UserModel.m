@@ -12,10 +12,24 @@
 #import "CDDeckModel.h"
 #import "AbilityWrapper.h"
 #import "UserCardVersion.h"
+
+int PLAYER_MAX_LEVEL = 99;
+
 @implementation UserModel
 
 +(void)setupUser
 {
+    NSMutableArray*tempExpTable = [NSMutableArray arrayWithCapacity:PLAYER_MAX_LEVEL];
+    tempExpTable[0] = @(10);
+    for (int i = 1; i < PLAYER_MAX_LEVEL; i++)
+    {
+        long prevExp = [tempExpTable[i-1] longValue];
+        tempExpTable[i] = [NSNumber numberWithLong:(long)(prevExp * 2.1)]; //TODO maybe improve the formula later
+        NSLog(@"%d, %@", i, tempExpTable[i]);
+    }
+    
+    expTable = tempExpTable;
+    
     userAllCards = [NSMutableArray array];
     userAllDecks = [NSMutableArray array];
     userAllCDCards = [NSMutableArray array];
@@ -104,14 +118,22 @@
          userDeckLimit = [userPF[@"maxDecks"] intValue];
          
          //brianupdateJan24
-         userXP = [userPF[@"userXP"] intValue];
+         userXP = [userPF[@"userXP"] longValue];
          userLevel = [userPF[@"userLevel"] intValue];
-         userEarthXP = [userPF[@"userEarthXP"] intValue];
+         if (userLevel <= 0) userLevel = 1;
+         userMaxXP = [UserModel getMaxXPAtLevel:userLevel];
+         userEarthXP = [userPF[@"userEarthXP"] longValue];
          userEarthLevel = [userPF[@"userEarthLevel"] intValue];
-         userFireXP = [userPF[@"userFireXP"] intValue];
+         if (userEarthLevel <= 0) userEarthLevel = 1;
+         userMaxEarthXP = [UserModel getMaxXPAtLevel:userEarthLevel];
+         userFireXP = [userPF[@"userFireXP"] longValue];
          userFireLevel = [userPF[@"userFireLevel"] intValue];
-         userIceXP = [userPF[@"userIceXP"] intValue];
+         if (userFireLevel <= 0) userFireLevel = 1;
+         userMaxFireXP = [UserModel getMaxXPAtLevel:userFireLevel];
+         userIceXP = [userPF[@"userIceXP"] longValue];
          userIceLevel = [userPF[@"userIceLevel"] intValue];
+         if (userIceLevel <= 0) userIceLevel = 1;
+         userMaxIceXP = [UserModel getMaxXPAtLevel:userIceLevel];
          
          [self loadAllCards]; //also loads decks
          
@@ -1099,6 +1121,14 @@
     
     return YES;
     
+}
+
++(long)getMaxXPAtLevel:(int)level
+{
+    if (level < 1 || level == PLAYER_MAX_LEVEL)
+        return -1;
+    else
+        return [expTable[level-1] longValue];
 }
 
 +(BOOL)setLikedCard:(CardModel*)card

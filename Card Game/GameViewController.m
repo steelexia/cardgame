@@ -1351,7 +1351,7 @@ BOOL pickingCards = NO;
             
             [self performBlock:^{
                 //close mulligan views
-                //reorder all cards in order for hand
+                //reorder all cards in order for hands
                 for (int i = 0; i < _currentPickingCards.count; i++)
                 {
                     CardView*cardView = [_currentPickingCards[i] cardView];

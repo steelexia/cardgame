@@ -18,6 +18,7 @@
 #import "PNImports.h"
 #import "AppDelegate.h"
 #import "CFPopupViewController.h"
+#import "PlayerLevelView.h"
 @import AudioToolbox;
 
 
@@ -33,6 +34,9 @@ UILabel *loadingLabel;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //prints all fonts
+    /*
     for (NSString* family in [UIFont familyNames])
     {
         NSLog(@"%@", family);
@@ -41,7 +45,7 @@ UILabel *loadingLabel;
         {
             NSLog(@"  %@", name);
         }
-    }
+    }*/
     
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
@@ -332,6 +336,10 @@ UILabel *loadingLabel;
     PFInstallation *installation = [PFInstallation currentInstallation];
     installation[@"user"] = [PFUser currentUser];
     [installation saveInBackground];
+    
+    //TODO temp debug testing player level view
+    //PlayerLevelView*plv = [[PlayerLevelView alloc] initWithFrame:self.view.bounds];
+    //[self.view addSubview:plv];
 }
 
 -(void) setPubNubConfigDetails

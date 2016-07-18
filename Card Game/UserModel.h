@@ -68,6 +68,8 @@ typedef NS_ENUM(NSInteger, UMXPGainType){
 
 + (BOOL)increaseUserXP:(UMXPGainType) gainType;
 
++(long)getMaxXPAtLevel:(int)level;
+
 +(void)logout;
 
 @end
@@ -81,14 +83,19 @@ DeckModel *userCurrentDeck;
 int userDeckLimit;
 int userGold;
 int userLevel;
-int userXP;
-int userEarthXP;
+long userXP, userMaxXP;
+long userEarthXP, userMaxEarthXP;
 int userEarthLevel;
-int userFireXP;
+long userFireXP, userMaxFireXP;
 int userFireLevel;
-int userIceXP;
+long userIceXP, userMaxIceXP;
 int userIceLevel;
 PFUser *userPF;
 BOOL userInfoLoaded;
 BOOL userInitError;
 NSString*userTutorialOneCardName;
+
+/* to reach level X,  */
+NSArray*expTable;
+
+int PLAYER_MAX_LEVEL;
