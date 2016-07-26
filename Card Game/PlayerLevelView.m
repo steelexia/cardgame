@@ -8,86 +8,189 @@
 
 #import "PlayerLevelView.h"
 #import "UIConstants.h"
-#import "CFLabel.h"
+
 #import "UserModel.h"
 #import "CardView.h"
 
+#import "CardModel.h"
+
 @implementation PlayerLevelView
 
-CFLabel*backgroundView;
-StrokedLabel*playerNameLabel, *playerLevelLabel, *playerLevelLabel2, *playerExpLabel;
-UIImageView*playerLevelBackground, *playerLevelView;
-UIImageView*playerImageView;
+UIImage*buttonOpenImage,*buttonCloseImage;
 
 //the frame is the entire screen size
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.frame = CGRectMake(0, 0, self.frame.size.width, 80);
+        self.frame = CGRectMake(0, 0, self.frame.size.width, 160);
         
-        backgroundView = [[CFLabel alloc] initWithFrame:self.bounds];
-        [self addSubview:backgroundView];
+        _elementViewOpen = NO;
         
-        playerImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"card_image_placeholder"]];
-        [playerImageView setFrame:CGRectMake(10, 10, 60, 60)];
-        [self addSubview:playerImageView];
+        //----main panel----//
+        _backgroundView = [[CFLabel alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 80)];
+        [self addSubview:_backgroundView];
         
-        playerLevelBackground = [[UIImageView alloc]initWithFrame:CGRectMake(115, 50, self.frame.size.width - 115 - 10, 15)];
-        [playerLevelBackground setBackgroundColor:COLOUR_DARK]; //TODO temp
-        [self addSubview:playerLevelBackground];
+        _playerImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"card_image_placeholder"]];
+        [_playerImageView setFrame:CGRectMake(10, 10, 60, 60)];
+        [_backgroundView addSubview:_playerImageView];
         
-        if (userMaxXP != -1)
-        {
-            int maxWidth = playerLevelBackground.frame.size.width - 4;
-            
-            playerLevelView = [[UIImageView alloc]initWithFrame:CGRectMake(115 + 2, 50 + 2, (int)((double)userXP/userMaxXP*maxWidth), 15 - 4)]; //TODO warning casting long into double
-        }
-        else
-        {
-            //max level reached, bar full
-            playerLevelView = [[UIImageView alloc]initWithFrame:CGRectMake(105 + 2, 50 + 2, self.frame.size.width - 105 - 10 - 4, 15 - 4)];
-        }
+        _playerNameLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(80-2, 10, self.frame.size.width - 80, 30)];
+        _playerNameLabel.text = [NSString stringWithFormat:@" %@", userPF.username];
+        _playerNameLabel.textAlignment = NSTextAlignmentLeft;
+        _playerNameLabel.textColor = [UIColor whiteColor];
+        _playerNameLabel.font = [UIFont fontWithName:cardMainFontBlack size:20];
+        _playerNameLabel.strokeColour = [UIColor blackColor];
+        _playerNameLabel.strokeThickness = 2;
+        _playerNameLabel.strokeOn = YES;
+        [_backgroundView addSubview:_playerNameLabel];
         
-        [playerLevelView setBackgroundColor:COLOUR_LEGENDARY]; //TODO temp
-        [self addSubview:playerLevelView];
+        _playerLevelLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(80-3 , 40, self.frame.size.width - 80, 30)];
+        _playerLevelLabel.text = [NSString stringWithFormat:@" %d", userLevel]; //add space to fix clipping issue
+        _playerLevelLabel.textAlignment = NSTextAlignmentLeft;
+        _playerLevelLabel.textColor = [UIColor whiteColor];
+        _playerLevelLabel.font = [UIFont fontWithName:cardMainFontBlack size:26];
+        _playerLevelLabel.strokeColour = [UIColor blackColor];
+        _playerLevelLabel.strokeThickness = 3;
+        _playerLevelLabel.strokeOn = YES;
+        [_backgroundView addSubview:_playerLevelLabel];
         
-        playerNameLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(80-2, 10, self.frame.size.width - 80, 30)];
-        playerNameLabel.text = [NSString stringWithFormat:@" %@", userPF.username];
-        playerNameLabel.textAlignment = NSTextAlignmentLeft;
-        playerNameLabel.textColor = [UIColor whiteColor];
-        playerNameLabel.font = [UIFont fontWithName:cardMainFontBlack size:20];
-        playerNameLabel.strokeColour = [UIColor blackColor];
-        playerNameLabel.strokeThickness = 2;
-        playerNameLabel.strokeOn = YES;
-        [self addSubview:playerNameLabel];
         
-        playerLevelLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(80-3 , 40, self.frame.size.width - 80, 30)];
-        playerLevelLabel.text = [NSString stringWithFormat:@" %d", userLevel]; //add space to fix clipping issue
-        playerLevelLabel.textAlignment = NSTextAlignmentLeft;
-        playerLevelLabel.textColor = [UIColor whiteColor];
-        playerLevelLabel.font = [UIFont fontWithName:cardMainFontBlack size:26];
-        playerLevelLabel.strokeColour = [UIColor blackColor];
-        playerLevelLabel.strokeThickness = 3;
-        playerLevelLabel.strokeOn = YES;
-        [self addSubview:playerLevelLabel];
+        _playerExpBar = [[CFExpBar alloc] initWithFrame:CGRectMake(115, 50, self.frame.size.width - 115 - 10, 20)];
+        _playerExpBar.maxValue = userMaxXP;
+        [_playerExpBar updateValue:userXP];
+        [_backgroundView addSubview:_playerExpBar];
 
-        playerExpLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0 , 0, playerLevelBackground.frame.size.width, playerLevelBackground.frame.size.height*2)];
-        playerExpLabel.center = CGPointMake(playerLevelBackground.center.x,playerLevelBackground.center.y + 5);
-        playerExpLabel.text = [NSString stringWithFormat:@"%ld/%ld", userXP, userMaxXP];
-        playerExpLabel.textAlignment = NSTextAlignmentCenter;
-        playerExpLabel.textColor = [UIColor whiteColor];
-        playerExpLabel.font = [UIFont fontWithName:cardMainFontBlack size:10];
-        playerExpLabel.strokeColour = [UIColor blackColor];
-        playerExpLabel.strokeThickness = 1;
-        playerExpLabel.strokeOn = YES;
-        [self addSubview:playerExpLabel];
+        //----elemental panel----//
+        _elementalBackgroundView = [[CFLabel alloc] initWithFrame:CGRectMake(0, _backgroundView.frame.size.height - 150, self.frame.size.width, 150)];
+        [self insertSubview:_elementalBackgroundView atIndex:0];
         
+        _levelLabelArray = [NSMutableArray arrayWithCapacity:6];
+        //@[fireLevelLabel, iceLevelLabel, lightningLevelLabel, earthLevelLabel, lightLevelLabel, darkLevelLabel];
+        _expBarArray = [NSMutableArray arrayWithCapacity:6];
+        //@[playerFireExpBar, playerIceExpBar, playerLightningExpBar, playerEarthExpBar, playerLightExpBar, playerDarkExpBar];
         
+        for (int j = 0 ; j < 3; j++)
+        {
+            for (int i = 0 ; i < 2; i++)
+            {
+                int index = j * 2 + i;
+                
+                CFExpBar*elementExpBar = [[CFExpBar alloc] initWithFrame:CGRectMake(40 + (i*self.frame.size.width/2), _elementalBackgroundView.bounds.size.height/4 * (j+1), self.frame.size.width/2 - 50, 15)];
+                //elementExpBar.maxValue = userMaxFireXP;
+                //[elementExpBar updateValue:userFireXP];
+                [_elementalBackgroundView addSubview:elementExpBar];
+                [_expBarArray addObject:elementExpBar];
+                
+                StrokedLabel*elementLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 30)];
+                elementLabel.text = [CardModel elementToString:elementFire+index];
+                elementLabel.textAlignment = NSTextAlignmentCenter;
+                elementLabel.textColor = [UIColor whiteColor];
+                elementLabel.font = [UIFont fontWithName:cardMainFontBlack size:14];
+                elementLabel.strokeColour = [UIColor blackColor];
+                elementLabel.strokeThickness = 2;
+                elementLabel.strokeOn = YES;
+                elementLabel.center = CGPointMake(elementExpBar.center.x, _elementalBackgroundView.bounds.size.height/4 * (j+1) - 12);
+                [_elementalBackgroundView addSubview:elementLabel];
+                
+                StrokedLabel *levelLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(10 + (i*self.frame.size.width/2), 25 + _elementalBackgroundView.bounds.size.height/4 * j, self.frame.size.width, 30)];
+                
+                //levelLabel.text = [NSString stringWithFormat:@" %d", userFireLevel];
+                levelLabel.textAlignment = NSTextAlignmentLeft;
+                levelLabel.textColor = [UIColor whiteColor];
+                levelLabel.font = [UIFont fontWithName:cardMainFontBlack size:18];
+                levelLabel.strokeColour = [UIColor blackColor];
+                levelLabel.strokeThickness = 2;
+                levelLabel.strokeOn = YES;
+                [_elementalBackgroundView addSubview:levelLabel];
+                [_levelLabelArray addObject: levelLabel];
+                
+                
+            }
+        }
         
-        //[self setBackgroundColor:COLOUR_ICE];
+        _playerElementalLevelButton = [[CFButton alloc] initWithFrame:CGRectMake(0, _backgroundView.frame.size.height- 10, 40, 25)];
+        [_playerElementalLevelButton setImage:[UIImage imageNamed:@"decrement_button"] forState:UIControlStateNormal];
+        [_playerElementalLevelButton setImage:[UIImage imageNamed:@"increment_button"] forState:UIControlStateSelected];
+        
+        [_playerElementalLevelButton addTarget:self action:@selector(elementButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_playerElementalLevelButton];
     }
     return self;
+}
+
+-(void)elementButtonPressed
+{
+    if (_elementViewOpen)
+    {
+        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             _elementalBackgroundView.center = CGPointMake(_backgroundView.frame.size.width/2, _backgroundView.frame.size.height - _elementalBackgroundView.frame.size.height/2);
+                         }
+                         completion:^(BOOL completed){
+                             _elementViewOpen = NO;
+                             [_playerElementalLevelButton setSelected:NO];
+                         }];
+        
+    }
+    else
+    {
+        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             _elementalBackgroundView.center = CGPointMake(_backgroundView.frame.size.width/2, _backgroundView.frame.size.height + _elementalBackgroundView.frame.size.height/2);
+                         }
+                         completion:^(BOOL completed){
+                             _elementViewOpen = YES;
+                             [_playerElementalLevelButton setSelected:YES];
+                         }];
+    }
+}
+
+-(void)updateValues
+{
+    for (int i = 0; i < 6; i++)
+    {
+        CFExpBar* expBar = _expBarArray[i];
+        StrokedLabel* levelLabel = _levelLabelArray[i];
+        
+        if (i == 0)
+        {
+            expBar.maxValue = userMaxFireXP;
+            [expBar updateValue:userFireXP];
+            [levelLabel setText: [NSString stringWithFormat:@" %d", userFireLevel]];
+        }
+        else if (i == 1)
+        {
+            expBar.maxValue = userMaxIceXP;
+            [expBar updateValue:userIceXP];
+            [levelLabel setText: [NSString stringWithFormat:@" %d", userIceLevel]];
+        }
+        else if (i == 2)
+        {
+            expBar.maxValue = userMaxEarthXP;
+            [expBar updateValue:userEarthXP];
+            [levelLabel setText: [NSString stringWithFormat:@" %d", userEarthLevel]];
+        }
+        //these 3 not yet implemented
+        else if (i == 3)
+        {
+            expBar.maxValue = 1;
+            [expBar updateValue:0];
+            [levelLabel setText: [NSString stringWithFormat:@" %d", 1]];
+        }
+        else if (i == 4)
+        {
+            expBar.maxValue = 1;
+            [expBar updateValue:0];
+            [levelLabel setText: [NSString stringWithFormat:@" %d", 1]];
+        }
+        else if (i == 5)
+        {
+            expBar.maxValue = 1;
+            [expBar updateValue:0];
+            [levelLabel setText: [NSString stringWithFormat:@" %d", 1]];
+        }
+    }
 }
 
 @end

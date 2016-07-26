@@ -10,6 +10,7 @@
 		5F847A621D36B41000FFC920 /* PlayerLevelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F847A611D36B41000FFC920 /* PlayerLevelView.m */; };
 		5F8958BC1D15F2B0009EBE30 /* MoveHistoryTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F8958BB1D15F2B0009EBE30 /* MoveHistoryTableView.m */; };
 		5F8958BE1D15F992009EBE30 /* MoveHistoryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F8958BD1D15F992009EBE30 /* MoveHistoryTableViewCell.m */; };
+		5F9D5CA81D42BCE7007BA8F7 /* CFExpBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F9D5CA71D42BCE7007BA8F7 /* CFExpBar.m */; };
 		5FD2CBE91C6FBCF700692D88 /* card_3000.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBD81C6FBCF700692D88 /* card_3000.png */; };
 		5FD2CBEA1C6FBCF700692D88 /* card_3001.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBD91C6FBCF700692D88 /* card_3001.png */; };
 		5FD2CBEB1C6FBCF700692D88 /* card_3002.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD2CBDA1C6FBCF700692D88 /* card_3002.png */; };
@@ -613,6 +614,8 @@
 		5F8958BB1D15F2B0009EBE30 /* MoveHistoryTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoveHistoryTableView.m; sourceTree = "<group>"; };
 		5F8958BD1D15F992009EBE30 /* MoveHistoryTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoveHistoryTableViewCell.m; sourceTree = "<group>"; };
 		5F8958BF1D15F9A6009EBE30 /* MoveHistoryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveHistoryTableViewCell.h; sourceTree = "<group>"; };
+		5F9D5CA61D42BCD6007BA8F7 /* CFExpBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFExpBar.h; sourceTree = "<group>"; };
+		5F9D5CA71D42BCE7007BA8F7 /* CFExpBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFExpBar.m; sourceTree = "<group>"; };
 		5FD2CBD81C6FBCF700692D88 /* card_3000.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3000.png; sourceTree = "<group>"; };
 		5FD2CBD91C6FBCF700692D88 /* card_3001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3001.png; sourceTree = "<group>"; };
 		5FD2CBDA1C6FBCF700692D88 /* card_3002.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = card_3002.png; sourceTree = "<group>"; };
@@ -2893,6 +2896,8 @@
 				90C528A6199D6CC100750C54 /* CFButton.m */,
 				921816E81C5ED4BB00E70F20 /* CFPopupViewController.h */,
 				921816E91C5ED4BB00E70F20 /* CFPopupViewController.m */,
+				5F9D5CA61D42BCD6007BA8F7 /* CFExpBar.h */,
+				5F9D5CA71D42BCE7007BA8F7 /* CFExpBar.m */,
 			);
 			name = CFViews;
 			sourceTree = "<group>";
@@ -3471,6 +3476,7 @@
 				ECCD468E1ACC881400804B06 /* PubNub+ChannelRegistry.m in Sources */,
 				ECCD469B1ACC881400804B06 /* PNChannelPresence.m in Sources */,
 				ECCD46D51ACC881400804B06 /* PNLogger.m in Sources */,
+				5F9D5CA81D42BCE7007BA8F7 /* CFExpBar.m in Sources */,
 				ECCD46BE1ACC881400804B06 /* PNError.m in Sources */,
 				ECCD46A61ACC881400804B06 /* PNChannelsForGroupResponseParser.m in Sources */,
 				90F80F9219A27FA5007571F4 /* SSKeychain.m in Sources */,

@@ -340,6 +340,7 @@ UILabel *loadingLabel;
     //TODO temp debug testing player level view
     //PlayerLevelView*plv = [[PlayerLevelView alloc] initWithFrame:self.view.bounds];
     //[self.view addSubview:plv];
+    //[plv updateValues];
 }
 
 -(void) setPubNubConfigDetails
