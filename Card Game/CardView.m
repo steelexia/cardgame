@@ -346,6 +346,7 @@ NSDictionary *singlePlayerCardImages;
     cardBackImage = [UIImage imageNamed:@"card_back_default"];
     
     killHintImage = [UIImage imageNamed:@"card_ability_icon_cast_on_death"]; //TODO temporary image
+    mulliganImage = [UIImage imageNamed:@"card_ability_icon_remove_ability"]; //TODO temporary image
     
     abilityTextParagrahStyle = [[NSMutableParagraphStyle alloc] init];
     //[abilityTextParagrahStyle setLineSpacing:];
@@ -1568,6 +1569,22 @@ NSDictionary *singlePlayerCardImages;
         [_cardOverlayView addSubview:label];
         label.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
     }
+    else if (cardOverlayObject == cardOverlayObjectMulligan)
+    {
+        [_cardOverlayView setImage:mulliganImage];
+        [_cardOverlayView setFrame:CGRectMake(0, 0, mulliganImage.size.width, mulliganImage.size.height)];
+        _cardOverlayView.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+        _cardOverlayView.transform = CGAffineTransformMakeScale(0.01, 0.01);
+        [_cardOverlayView setAlpha: 0.8f];
+        [self addSubview:_cardOverlayView];
+        
+        //TODO these should have duration but can't get properly working yet
+        [UIView animateWithDuration:0.0
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{_cardOverlayView.transform = CGAffineTransformMakeScale(1, 1);}
+                         completion:nil];
+    }
     
     _cardOverlayObjectMode = cardOverlayObject;
 }
@@ -1843,11 +1860,7 @@ NSDictionary *singlePlayerCardImages;
  */
 
 - (BOOL)thisCardAreInMyDecks:(NSNumber *)cardID{
-    
-    if ([cardID isEqual:[NSNumber numberWithInt:1419]]) {
-        NSLog(@"1419");
-    }
-    
+   
     for (PFObject *deck in [userPF objectForKey:@"decks"]) {
         NSArray *cards = [deck objectForKey:@"cards"];
         if ([cards containsObject:cardID]) {

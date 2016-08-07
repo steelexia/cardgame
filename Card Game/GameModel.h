@@ -31,7 +31,7 @@ const int MAX_BATTLEFIELD_SIZE;
 const int MAX_HAND_SIZE;
 
 /** Constants for representing sides */
-const char PLAYER_SIDE, OPPONENT_SIDE;
+const int PLAYER_SIDE, OPPONENT_SIDE;
 
 /** Stores all of the data and logic related to the card game, and performs functions such as calculating card attacks*/
 @interface GameModel : NSObject
@@ -108,15 +108,15 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
  Assumes canSummonCard returns YES
  NOTE: should use summonCard for general purposes
  */
--(void)addCardToBattlefield: (MonsterCardModel*)monsterCard side:(char)side;
+-(void)addCardToBattlefield: (MonsterCardModel*)monsterCard side:(int)side;
 
 /**
  Checks if a card can be summoned. It first checks if the player can afford the cost. If the card is a MonsterCardModel, it means to place it on the battlefield. If the card is a SpellCardModel, it means to use it.
  Returns NO if it can not summon it, such as if addCardToBattleField returns false, or if the player summoning does not have sufficient resources */
--(BOOL)canSummonCard: (CardModel*)card side:(char)side;
+-(BOOL)canSummonCard: (CardModel*)card side:(int)side;
 
 /** Lazy function for AI */
--(BOOL) canSummonCard: (CardModel*)card side:(char)side withAdditionalResource:(int)resource;
+-(BOOL) canSummonCard: (CardModel*)card side:(int)side withAdditionalResource:(int)resource;
 
 /** Checks if an ability has valid targets. caster can be nil, if casted by SpellCard. */
 -(BOOL)abilityHasValidTargets: (Ability*)ability castedBy:(CardModel*)caster side:(int)side;
@@ -124,7 +124,7 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 /**
  Summon a card. If the card is a MonsterCardModel, it will attempt to place it on the battlefield. If the card is a SpellCardModel, it will attempt to use it.
  Assumes canSummonCard: card side:side returns YES */
--(void)summonCard: (CardModel*)card side:(char)side;
+-(void)summonCard: (CardModel*)card side:(int)side;
 
 /**
  Adds a card to the hand of the specified player. side must be either PLAYER_SIDE or OPPONENT_SIDE.
@@ -132,7 +132,7 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
  Returns NO if hand reached maximum size.
  NOTE: should use drawCard for general purposes
  */
--(BOOL)addCardToHand: (CardModel*)card side:(char)side;
+-(BOOL)addCardToHand: (CardModel*)card side:(int)side;
 
 /** perform any new turn effects on a monsterCard, such as deducting cooldown, using abilities etc */
 -(void)cardNewTurn: (MonsterCardModel*) monsterCard fromSide: (int)side;
@@ -180,6 +180,9 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 -(MonsterCardModel*)getOpponentTarget;
 -(void)setOpponentTarget:(MonsterCardModel*)target;
 
+/* Given array of cards, will swap with deck and return swapped cards */
+-(NSMutableArray*)swapCards:(NSMutableArray*)cards side:(int)side;
+
 /* Returns a list of monsters that will die from this attack. It can only include the attacker, target, and either player hero */
 -(NSArray*)getDeadMonsterWithAttacker:(MonsterCardModel*)attacker target:(MonsterCardModel*)target;
 
@@ -189,6 +192,14 @@ const char PLAYER_SIDE, OPPONENT_SIDE;
 
 
 @end
+
+enum PickCardType
+{
+    //choose from cards to mulligan
+    PickCardTypeMulligan,
+    //choose one from several to keep
+    PickCardTypeOne,
+};
 
 enum GameMode
 {
@@ -213,5 +224,7 @@ enum CardPosition
     positionB4,
     positionB5,
 };
+
+
 
 extern const int INITIAL_CARD_DRAW;

@@ -165,6 +165,7 @@ enum CardType{
  */
 enum CardElement
 {
+    //WARNING do not change order
     elementNeutral,
     elementFire,
     elementIce,

@@ -119,6 +119,14 @@
 @property (strong) UIView *counterSubView;
 @property (assign) BOOL shouldCallEndTurn;
 
+/* Card picker stuff */
+@property (strong) UIView*cardPickerView;
+@property (strong) StrokedLabel*cardPickerLabel, *cardPickerLabel2;
+@property (strong) CardView*cardPickerCardView;
+@property (strong) CFButton*cardPickerDoneButton, *cardPickerToggleButton;
+//stores card models
+@property (strong) NSMutableArray*currentPickingCards;
+
 /* list of monsters will visual hint during combat (e.g. will die from attacking) */
 @property (strong) NSMutableArray *hintedMonsters;
 
@@ -170,8 +178,12 @@
 -(void)opponentSummonedCard:(int)cardIndex withTarget:(int)target;
 -(void)setTimerFrames;
 
+/* Note that this only exists for the player, will not see opponent picking */
+-(void)mulliganCards:(NSMutableArray*)cards;
 
 @end
 
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
+/* time between card draws when drawing multiple */
+float CARD_DRAW_DELAY;

@@ -629,7 +629,7 @@
         card.cardView.center = CGPointMake(SCREEN_WIDTH + CARD_WIDTH, SCREEN_HEIGHT-CARD_HEIGHT);
         [cardView flipCard];
         
-        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut
+        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
                              cardView.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT-CARD_HEIGHT * 2);
                              cardView.transform = CGAffineTransformMakeScale(CARD_DRAGGING_SCALE, CARD_DRAGGING_SCALE);
