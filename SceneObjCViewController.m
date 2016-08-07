@@ -32,11 +32,13 @@ SCNView *myView;
     
     SCNScene *cfButtonScene = [SCNScene sceneNamed:@"battle_button.dae"];
     SCNVector3 cfButtonVector = cfButtonScene.rootNode.position;
-    cfButtonVector.z +=400;
+    cfButtonVector.z +=00;
     [cfButtonScene.rootNode setPosition:cfButtonVector];
     
     [myView.scene.rootNode addChildNode:cfButtonScene.rootNode];
     
+    SCNScene *enemy_life = [SCNScene sceneNamed:@"battle_enemy_life.dae"];
+    [myView.scene.rootNode addChildNode:enemy_life.rootNode];
     
    
     SCNNode *cameraNode = [[SCNNode alloc] init];

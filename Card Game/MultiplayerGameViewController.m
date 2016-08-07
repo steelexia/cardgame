@@ -24,7 +24,8 @@
 @implementation MultiplayerGameViewController
 
 /** Screen dimension for convinience */
-float baseHeight, baseWidth;
+int SCREEN_WIDTH, SCREEN_HEIGHT;
+
 BOOL playerAuthenticated;
 BOOL alreadyLoadedMatch;
 MultiplayerNetworking *_networkingEngine;
@@ -38,100 +39,39 @@ UIView *sureMatchView;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-   //font-name
-    //GrilledCheeseBTN
+    SCREEN_WIDTH = [[UIScreen mainScreen] bounds].size.width;
+    SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
     
-    
-
-    //base resolution of assets
-    //2048h
-    //1153w
-    
-    baseHeight = 2048.0f;
-    baseWidth = 1153.0f;
-    
+    //iPhone 4S Values
     
     //background view
-    UIImageView*backgroundImageTotal = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"multiscreen_01"]];
-    backgroundImageTotal.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    [self.view addSubview:backgroundImageTotal];
+    UIImageView*backgroundImageTop = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_top"]];
+    backgroundImageTop.frame = CGRectMake(0, 0, SCREEN_WIDTH, 40);
+    [self.view addSubview:backgroundImageTop];
+    
+    UIImageView*backgroundImageMiddle = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_center"]];
+    backgroundImageMiddle.frame = CGRectMake(0, 40, SCREEN_WIDTH, SCREEN_HEIGHT - 40 - 40);
+    
+    [self.view addSubview:backgroundImageMiddle];
+    
+    UIImageView*backgroundImageBottom = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screen_background_bottom"]];
+    backgroundImageBottom.frame = CGRectMake(0, SCREEN_HEIGHT-40, SCREEN_WIDTH, 40);
+    [self.view addSubview:backgroundImageBottom];
     
     
-    /*
-    UILabel*MultiplayerTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,250,50)];
-    MultiplayerTitleLabel.center = CGPointMake(SCREEN_WIDTH/2,50);
-    MultiplayerTitleLabel.textAlignment = NSTextAlignmentCenter;
-    MultiplayerTitleLabel.font = [UIFont fontWithName:@"GrilledCheeseBTN" size:35];
-    MultiplayerTitleLabel.text = @"Multiplayer";
-    [self.view addSubview:MultiplayerTitleLabel];
-    */
-    
-    //setImageProfile
-    //210x210
-    //x131, y345
-    UIImageView *profileImageView = [[UIImageView alloc] initWithFrame:CGRectMake(131/baseWidth*SCREEN_WIDTH,345/baseHeight*SCREEN_HEIGHT,210/baseWidth*SCREEN_WIDTH,210/baseWidth*SCREEN_WIDTH)];
-    [profileImageView setImage:[UIImage imageNamed:@"angryorc.jpeg"]];
-    [profileImageView setBackgroundColor:[UIColor redColor]];
-   profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2;
-    profileImageView.clipsToBounds = YES;
-    //[self.view addSubview:profileImageView];
-    
-    //x375,y380
-    UILabel *playerNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(375/baseWidth*SCREEN_WIDTH,392/baseHeight*SCREEN_HEIGHT,490/baseWidth*SCREEN_WIDTH,70/baseHeight*SCREEN_HEIGHT)];
-    playerNameLabel.text = @"Zeothul123LongName";
-    playerNameLabel.textColor = [UIColor whiteColor];
-    playerNameLabel.font = [UIFont fontWithName:@"GrilledCheeseBTN" size:20];
-    playerNameLabel.shadowColor = [UIColor blackColor];
-    playerNameLabel.shadowOffset = CGSizeMake(1.0f,1.0f);
+    CFLabel*menuLogoBackground = [[CFLabel alloc] initWithFrame:CGRectMake(0,0,250,50)];
+    menuLogoBackground.center = CGPointMake(SCREEN_WIDTH/2, 50);
+    menuLogoBackground.label.textAlignment = NSTextAlignmentCenter;
+    [menuLogoBackground setTextSize:30];
+    menuLogoBackground.label.text = @"Multiplayer";
+    [self.view addSubview:menuLogoBackground];
     
     
-    [self.view addSubview:playerNameLabel];
-    
-    //405x 608y
-    UILabel *questTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(405/baseWidth*SCREEN_WIDTH,608/baseHeight*SCREEN_HEIGHT,500/baseWidth*SCREEN_WIDTH,50/baseHeight*SCREEN_HEIGHT)];
-    questTextLabel.textColor = [UIColor whiteColor];
-    questTextLabel.text = @"Win 3 Games";
-    questTextLabel.font = [UIFont fontWithName:@"GrilledCheeseBTN" size:15];
-    [self.view addSubview:questTextLabel];
-    
-    //112,700
-    UILabel *eloNumberLabel = [[UILabel alloc] initWithFrame:CGRectMake(112/baseWidth*SCREEN_WIDTH,706/baseHeight*SCREEN_HEIGHT,240/baseWidth*SCREEN_WIDTH,68/baseHeight*SCREEN_HEIGHT)];
-    eloNumberLabel.text = @"1234";
-    eloNumberLabel.font = [UIFont fontWithName:@"GrilledCheeseBTN" size:15];
-    eloNumberLabel.textColor = [UIColor yellowColor];
-    eloNumberLabel.textAlignment = NSTextAlignmentCenter;
-    
-    [self.view addSubview:eloNumberLabel];
+    self.quickMatchButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 200, 130)];
+    self.quickMatchButton.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT - 150);
+    //[self.quickMatchButton.label setText:@"Quick Match"];
     
     
-    //quickmatchButton--547x207
-    //x 300, y 878
-    self.quickMatchButton = [[UIButton alloc] initWithFrame:CGRectMake(300/baseWidth*SCREEN_WIDTH, 878/baseHeight*SCREEN_HEIGHT, 547/baseHeight*SCREEN_HEIGHT, 207/baseHeight*SCREEN_HEIGHT)];
-    [self.quickMatchButton setBackgroundImage:[UIImage imageNamed:@"multi_quickmatch_button_01"] forState:UIControlStateNormal];
-    
-    //222 w 194 height
-    //1845 y
-    //44x
-    UIButton* backButton = [[UIButton alloc] initWithFrame:CGRectMake(44/baseWidth*SCREEN_WIDTH, 1845/baseHeight*SCREEN_HEIGHT, 222/baseWidth*SCREEN_WIDTH, 194/baseHeight*SCREEN_HEIGHT)];
-    [backButton setImage:[UIImage imageNamed:@"multi_back_button_01"] forState:UIControlStateNormal];
-    [backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:backButton];
-    
-    //668x,1855y
-    //Pixel Height: 176
-    //Pixel Width: 474
-    UIButton* leaderboardButton = [[UIButton alloc] initWithFrame:CGRectMake(668/baseWidth*SCREEN_WIDTH, 1845/baseHeight*SCREEN_HEIGHT, 474/baseWidth*SCREEN_WIDTH, 176/baseHeight*SCREEN_HEIGHT)];
-    [leaderboardButton setImage:[UIImage imageNamed:@"multi_leaderboards_button_01"] forState:UIControlStateNormal];
-    [leaderboardButton addTarget:self action:@selector(viewLeaderboards)    forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:leaderboardButton];
-    
-    //300x, 1845y
-    //Pixel Height: 184
-    //Pixel Width: 345
-    UIButton *chatButton = [[UIButton alloc] initWithFrame:CGRectMake(300/baseWidth*SCREEN_WIDTH,1845/baseHeight*SCREEN_HEIGHT,345/baseWidth*SCREEN_WIDTH,184/baseHeight*SCREEN_HEIGHT)];
-    [chatButton setBackgroundImage:[UIImage imageNamed:@"multi_chat_button_01"] forState:UIControlStateNormal];
-    [chatButton addTarget:self action:@selector(viewChat)    forControlEvents:UIControlEventTouchUpInside];
-     [self.view addSubview:chatButton];
     //[startButton addTarget:self action:@selector(startGameCenterButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.quickMatchButton addTarget:self action:@selector(quickMatch)    forControlEvents:UIControlEventTouchUpInside];
     
@@ -144,17 +84,19 @@ UIView *sureMatchView;
     [connectButton addTarget:self action:@selector(startConnectingPubNub)    forControlEvents:UIControlEventTouchUpInside];
     
     //[self.view addSubview:connectButton];
-
     
-    //set MPLobbyTable Dimensions
-    //x68,y1125
-    //930x630
+    CFButton* leaderboardButton = [[CFButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
+    leaderboardButton.center = CGPointMake(SCREEN_WIDTH-70, SCREEN_HEIGHT - 45);
+    [leaderboardButton.label setText:@"Leaderboards"];
     
-    self.mpLobbyTableView = [[UITableView alloc] initWithFrame:CGRectMake(68/baseWidth*SCREEN_WIDTH,1125/baseHeight*SCREEN_HEIGHT,930/baseWidth*SCREEN_WIDTH,630/baseHeight*SCREEN_HEIGHT)];
-   self.mpLobbyTableView.delegate = self;
+    [leaderboardButton addTarget:self action:@selector(viewLeaderboards)    forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:leaderboardButton];
+    
+    self.mpLobbyTableView = [[UITableView alloc] initWithFrame:CGRectMake(20,80,SCREEN_WIDTH-40,150)];
+    self.mpLobbyTableView.delegate = self;
     self.mpLobbyTableView.dataSource = self;
     self.mpLobbyTableView.alpha = 0;
-    self.mpLobbyTableView.backgroundColor = [UIColor clearColor];
     self.mpLobbyTableView.tag = 88;
     self.mpLobbyTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.mpLobbyTableView.alwaysBounceVertical = NO;
@@ -162,7 +104,6 @@ UIView *sureMatchView;
     CALayer *mpLobbyLayer = self.mpLobbyTableView.layer;
     mpLobbyLayer.cornerRadius = 8.0f;
     mpLobbyLayer.masksToBounds = YES;
-    
     
     self.noPlayersAvailableLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 80, SCREEN_WIDTH-40,150)];
     [self.noPlayersAvailableLabel setText:@"Multiplayer Connection Verified, No Players Available."];
@@ -175,7 +116,7 @@ UIView *sureMatchView;
     
     
     [self.view addSubview:self.mpLobbyTableView];
-    //[self.view addSubview:self.noPlayersAvailableLabel];
+    [self.view addSubview:self.noPlayersAvailableLabel];
     
     self.chatTableView = [[UITableView alloc] initWithFrame:CGRectMake(20,240,SCREEN_WIDTH-40,100)];
     self.chatTableView.backgroundColor = [UIColor blackColor];
@@ -188,9 +129,9 @@ UIView *sureMatchView;
     chatTableLayer.cornerRadius = 8.0f;
     chatTableLayer.masksToBounds = YES;
     
-
     
-    /*
+    [self.view addSubview:self.mpLobbyTableView];
+    
     self.chatTableView.delegate = self;
     [self.view addSubview:self.chatTableView];
     
@@ -204,7 +145,6 @@ UIView *sureMatchView;
     chatFieldLayer.masksToBounds = YES;
     
     [self.view addSubview:self.chatField];
-    */
     
     self.chatSendButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-70,345,50,30)];
     //self.chatSendButton.backgroundColor = [UIColor blueColor];
@@ -225,7 +165,10 @@ UIView *sureMatchView;
     [self.chatTableView addGestureRecognizer:chatTapRecognizer];
     
     
-  
+    UIButton* backButton = [[CFButton alloc] initWithFrame:CGRectMake(35, SCREEN_HEIGHT - 32 - 30, 46, 32)];
+    [backButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
+    [backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:backButton];
     
     self.currentLoadStateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20,200,300,50)];
     self.currentLoadStateLabel.text = @"Default Text";
@@ -233,7 +176,7 @@ UIView *sureMatchView;
     self.numberOfPlayersLabel = [[UILabel alloc] initWithFrame:CGRectMake(20,300,300,50)];
     self.numberOfPlayersLabel.text = @"Num of Players Connected";
     
-   // [self.view addSubview:self.currentLoadStateLabel];
+    // [self.view addSubview:self.currentLoadStateLabel];
     //[self.view addSubview:self.numberOfPlayersLabel];
     
     self.chatMessages = [[NSMutableArray alloc] init];
@@ -290,17 +233,17 @@ UIView *sureMatchView;
     chatQuery.limit = 50;
     
     [chatQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-      //chat objects
-      
+        //chat objects
+        
         NSArray* reversedArray = [[objects reverseObjectEnumerator] allObjects];
         [self.chatMessages addObjectsFromArray:reversedArray];
         [self.chatTableView reloadData];
         
         
-            NSInteger rowNumbers = [self.chatTableView numberOfRowsInSection:0];
-            [self.chatTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:rowNumbers-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
-       
-       
+        NSInteger rowNumbers = [self.chatTableView numberOfRowsInSection:0];
+        [self.chatTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:rowNumbers-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+        
+        
     }];
     
 }
@@ -308,7 +251,7 @@ UIView *sureMatchView;
 
 -(void)startConnectingPubNub
 {
-
+    
     MPDataHandler = [multiplayerDataHandler sharedInstance];
     [MPDataHandler setPubnubConfigDetails];
     
@@ -321,8 +264,8 @@ UIView *sureMatchView;
     //[MPDataHandler getPubNubConnectedPlayers];
     //[self testMPFunction];
     
-   
-   
+    
+    
     
 }
 -(void)viewLeaderboards
@@ -336,23 +279,23 @@ UIView *sureMatchView;
 
 -(void)quickMatch
 {
-   // [MPDataHandler sendStartMatch];
+    // [MPDataHandler sendStartMatch];
     
     //show a loading bar..
     
-   /* _activityIndicator.alpha = 0;
-    _activityLabel.text = @"Finding Opponent...";
-    [_activityIndicator setColor:[UIColor whiteColor]];
-    [self.view addSubview:_activityIndicator];
-    [_activityIndicator startAnimating];
-    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         _activityIndicator.alpha = 1;
-                     }
-                     completion:^(BOOL completed){
-                     }];*/
+    /* _activityIndicator.alpha = 0;
+     _activityLabel.text = @"Finding Opponent...";
+     [_activityIndicator setColor:[UIColor whiteColor]];
+     [self.view addSubview:_activityIndicator];
+     [_activityIndicator startAnimating];
+     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+     animations:^{
+     _activityIndicator.alpha = 1;
+     }
+     completion:^(BOOL completed){
+     }];*/
     [self displayQuickMatchUI];
-
+    
     [MPDataHandler joinQuickMatchChannel];
     
 }
@@ -364,7 +307,7 @@ UIView *sureMatchView;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerAuthenticated)
                                                  name:LocalPlayerIsAuthenticated object:nil];
-
+    
     
     _activityIndicator.alpha = 0;
     _activityLabel.text = @"Loading Game Center...";
@@ -423,7 +366,7 @@ UIView *sureMatchView;
                        animated:YES
                      completion:^{
                          /*
-                         [self closeLoadingScreen];
+                          [self closeLoadingScreen];
                           */
                      }];
 }
@@ -451,20 +394,19 @@ UIView *sureMatchView;
     _networkingEngine = [[MultiplayerNetworking alloc] init];
     _networkingEngine.delegate = self;
     self.networkingEngine = _networkingEngine;
-     [[GameKitHelper sharedGameKitHelper] findMatchWithMinPlayers:2 maxPlayers:2 viewController:self delegate:_networkingEngine];
+    [[GameKitHelper sharedGameKitHelper] findMatchWithMinPlayers:2 maxPlayers:2 viewController:self delegate:_networkingEngine];
 }
 
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+ {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 - (void)setCurrentPlayerIndex:(NSUInteger)index {
     _currentPlayerIndex = index;
@@ -503,11 +445,11 @@ UIView *sureMatchView;
     _networkingEngine.gameDelegate = _gvc;
     
     /*
-    if ([_networkingEngine indexForLocalPlayer] == 0)
-        _dcvc.opponentName = _playerTwoAlias;
-    else
-        _dcvc.opponentName = _playerOneAlias;
-    */
+     if ([_networkingEngine indexForLocalPlayer] == 0)
+     _dcvc.opponentName = _playerTwoAlias;
+     else
+     _dcvc.opponentName = _playerOneAlias;
+     */
     //_dcvc.nextScreen = _gvc;
     
     //[self presentViewController:_dcvc animated:YES completion:nil];
@@ -555,39 +497,39 @@ UIView *sureMatchView;
     if (!error)
     {
         //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        
+        DeckModel *deck = [UserModel downloadDeckFromPF:deckPF];
+        NSArray*cards = deckPF[@"cards"];
+        NSLog(@"count PF: %d local: %d", [cards count], deck.count);
+        
+        if (deck != nil)
+        {
+            NSLog(@"finished downloading opponent deck");
             
-            DeckModel *deck = [UserModel downloadDeckFromPF:deckPF];
-            NSArray*cards = deckPF[@"cards"];
-            NSLog(@"count PF: %d local: %d", [cards count], deck.count);
+            [_gvc setOpponentDeck:deck];
             
-            if (deck != nil)
+            //[_dcvc receivedOpponentDeck];
+            //[self receivedOpponentDeck];
+            // [_networkingEngine sendReceivedDeck]; //tells other player deck is received
+            
+            // MPDataHandler
+            if(!MPDataHandler.opponentReceivedSeed)
             {
-                NSLog(@"finished downloading opponent deck");
-
-                [_gvc setOpponentDeck:deck];
-                
-                //[_dcvc receivedOpponentDeck];
-                //[self receivedOpponentDeck];
-               // [_networkingEngine sendReceivedDeck]; //tells other player deck is received
-                
-               // MPDataHandler
-                if(!MPDataHandler.opponentReceivedSeed)
-                {
-                    [MPDataHandler sendSeedMessage:nil];
-                    
-                }
-                
-                           }
-            else
-            {
-                //TODO ERROR
-                NSLog(@"getDeckFromPF returned nil");
+                [MPDataHandler sendSeedMessage:nil];
                 
             }
+            
+        }
+        else
+        {
+            //TODO ERROR
+            NSLog(@"getDeckFromPF returned nil");
+            
+        }
         //});
     }
     else{
-            //TODO ERROR
+        //TODO ERROR
         NSLog(@"Couldn't find deck");
     }
 }
@@ -690,9 +632,9 @@ UIView *sureMatchView;
         NSLog(@"start!");
         
         //dispatch_async(dispatch_get_main_queue(), ^{
-            [self presentViewController:_gvc animated:YES completion:^{
-                [self closeLoadingScreen];
-            }];
+        [self presentViewController:_gvc animated:YES completion:^{
+            [self closeLoadingScreen];
+        }];
         //});
     }
 }
@@ -707,10 +649,10 @@ UIView *sureMatchView;
     {
         NSLog(@"start!");
         //dispatch_async(dispatch_get_main_queue(), ^{
+        //[self closeLoadingScreen];
+        [self presentViewController:_gvc animated:YES completion:^{
             //[self closeLoadingScreen];
-            [self presentViewController:_gvc animated:YES completion:^{
-                //[self closeLoadingScreen];
-            }];
+        }];
         //});
     }
 }
@@ -742,14 +684,14 @@ UIView *sureMatchView;
         
         alreadyLoadedMatch = TRUE;
         
-    //dispatch_async(dispatch_get_main_queue(), ^{
-   // [self closeLoadingScreen];
-    [self presentViewController:_gvc animated:YES completion:^{
-        //[self closeLoadingScreen];
-        
-    }];
-}
-   
+        //dispatch_async(dispatch_get_main_queue(), ^{
+        // [self closeLoadingScreen];
+        [self presentViewController:_gvc animated:YES completion:^{
+            //[self closeLoadingScreen];
+            
+        }];
+    }
+    
 }
 
 -(void)sendEndTurn
@@ -771,10 +713,10 @@ UIView *sureMatchView;
 
 -(void)testMPFunction
 {
-     NSError* error;
+    NSError* error;
     [PFCloud callFunction:@"mpMatchComplete" withParameters:@{
                                                               @"User1" : [PFUser currentUser].objectId, @"User2" :@"IRh33iYFK9", @"User1Rating" :@800,@"User2Rating": @400
-                                                            } error:&error];
+                                                              } error:&error];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -788,9 +730,7 @@ UIView *sureMatchView;
     
     if(tableView.tag ==88)
     {
-      //return 40.0;
-        return 0;
-         
+        return 40.0;
     }
     else
     {
@@ -798,25 +738,22 @@ UIView *sureMatchView;
         
     }
 }
- /*
+
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-   
-    
     if(tableView.tag==88)
     {
-      
         
         UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,40)];
         
-    
+        
         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,320,40)];
         titleLabel.backgroundColor = [UIColor darkGrayColor];
-    
+        
         titleLabel.text = @"  USERNAME   RATING";
         titleLabel.textColor = [UIColor whiteColor];
         titleLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:13];
-    
+        
         UIButton *reloadButton = [[UIButton alloc] initWithFrame:CGRectMake(175,8,90,27)];
         reloadButton.backgroundColor = [UIColor greenColor];
         [reloadButton setTitle:@"Refresh" forState:UIControlStateNormal];
@@ -830,22 +767,21 @@ UIView *sureMatchView;
         [headerView addSubview:titleLabel];
         [headerView addSubview:reloadButton];
         
-    return headerView;
+        return headerView;
     }
     else
     {
         return nil;
         
     }
-     
 }
-*/
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     if(tableView.tag==88)
     {
-        //return self.connectedPlayers.count;
-        return 20;
+        return self.connectedPlayers.count;
+        
     }
     else
     {
@@ -856,78 +792,73 @@ UIView *sureMatchView;
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-   if(tableView.tag ==99)
-   {
-       /*
-       //check the length of the message
-       NSDictionary *msgIncomingDict = [self.chatMessages objectAtIndex:indexPath.row];
-       
-       NSString *chatMessage = [msgIncomingDict objectForKey:@"messageText"];
-       NSString *userName = [msgIncomingDict objectForKey:@"userName"];
-       NSDate *chatTime = [msgIncomingDict objectForKey:@"chatMsgDate"];
-       
-       NSString *fullChatString = [[[@"[" stringByAppendingString:userName] stringByAppendingString:@"]: "] stringByAppendingString:chatMessage];
-       
-       if([fullChatString length] <40)
-       {
-           return 15;
-       }
-       else if([fullChatString length] <80)
-       {
-            return 45;
-       }
-       else if([fullChatString length] <120)
-       {
-           return 65;
-           
-       }
-       else
-       {
-           return 75;
-           
-       }
-       */
-       
-       AutoSizeChatCellTableViewCell *cell = [[AutoSizeChatCellTableViewCell alloc] init];
-       
-       NSDictionary *msgIncomingDict = [self.chatMessages objectAtIndex:indexPath.row];
-       
-       NSString *chatMessage = [msgIncomingDict objectForKey:@"messageText"];
-       NSString *userName = [msgIncomingDict objectForKey:@"userName"];
-       NSDate *chatTime = [msgIncomingDict objectForKey:@"chatMsgDate"];
-       
-       NSString *fullChatString = [[[@"[" stringByAppendingString:userName] stringByAppendingString:@"]: "] stringByAppendingString:chatMessage];
-       
-       cell.textLabel.text = fullChatString;
-       cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
-       
-       // Do the layout pass on the cell, which will calculate the frames for all the views based on the constraints
-       // (Note that the preferredMaxLayoutWidth is set on multi-line UILabels inside the -[layoutSubviews] method
-       // in the UITableViewCell subclass
-       [cell setNeedsLayout];
-       [cell layoutIfNeeded];
-       
-       // Get the actual height required for the cell
-       CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
-       
-       // Add an extra point to the height to account for the cell separator, which is added between the bottom
-       // of the cell's contentView and the bottom of the table view cell.
-       height += 0;
-      // NSLog(@"height @%f",height);
-       
-       
-       return height;
-      
-   }
+    if(tableView.tag ==99)
+    {
+        /*
+         //check the length of the message
+         NSDictionary *msgIncomingDict = [self.chatMessages objectAtIndex:indexPath.row];
+         
+         NSString *chatMessage = [msgIncomingDict objectForKey:@"messageText"];
+         NSString *userName = [msgIncomingDict objectForKey:@"userName"];
+         NSDate *chatTime = [msgIncomingDict objectForKey:@"chatMsgDate"];
+         
+         NSString *fullChatString = [[[@"[" stringByAppendingString:userName] stringByAppendingString:@"]: "] stringByAppendingString:chatMessage];
+         
+         if([fullChatString length] <40)
+         {
+         return 15;
+         }
+         else if([fullChatString length] <80)
+         {
+         return 45;
+         }
+         else if([fullChatString length] <120)
+         {
+         return 65;
+         
+         }
+         else
+         {
+         return 75;
+         
+         }
+         */
+        
+        AutoSizeChatCellTableViewCell *cell = [[AutoSizeChatCellTableViewCell alloc] init];
+        
+        NSDictionary *msgIncomingDict = [self.chatMessages objectAtIndex:indexPath.row];
+        
+        NSString *chatMessage = [msgIncomingDict objectForKey:@"messageText"];
+        NSString *userName = [msgIncomingDict objectForKey:@"userName"];
+        NSDate *chatTime = [msgIncomingDict objectForKey:@"chatMsgDate"];
+        
+        NSString *fullChatString = [[[@"[" stringByAppendingString:userName] stringByAppendingString:@"]: "] stringByAppendingString:chatMessage];
+        
+        cell.textLabel.text = fullChatString;
+        cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        
+        // Do the layout pass on the cell, which will calculate the frames for all the views based on the constraints
+        // (Note that the preferredMaxLayoutWidth is set on multi-line UILabels inside the -[layoutSubviews] method
+        // in the UITableViewCell subclass
+        [cell setNeedsLayout];
+        [cell layoutIfNeeded];
+        
+        // Get the actual height required for the cell
+        CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+        
+        // Add an extra point to the height to account for the cell separator, which is added between the bottom
+        // of the cell's contentView and the bottom of the table view cell.
+        height += 0;
+        // NSLog(@"height @%f",height);
+        
+        
+        return height;
+        
+    }
     else
-        //this is for the non chat table view
-        //Pixel Height: 205
-        //Pixel Width: 974
         
     {
-    
-        float HeightForTableViewBar = 205/baseHeight*SCREEN_HEIGHT;
-      return HeightForTableViewBar;
+        return 25;
     }
     
 }
@@ -939,14 +870,14 @@ UIView *sureMatchView;
     {
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
         label.numberOfLines = 0;
-         label.lineBreakMode = NSLineBreakByWordWrapping;
+        label.lineBreakMode = NSLineBreakByWordWrapping;
         label.text = text;
         label.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:11];
         
         CGRect frame = label.frame;
         frame.size.width = self.chatTableView.frame.size.width;
         
-         frame.size = [label sizeThatFits:frame.size];
+        frame.size = [label sizeThatFits:frame.size];
         CGSize requiredSize = frame.size;
         
         int charSize = label.font.leading;
@@ -968,107 +899,86 @@ UIView *sureMatchView;
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   
-if(tableView.tag ==88)
-{
     
-    static NSString *MyIdentifier = @"leaderboardCell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MyIdentifier];
-    UILabel *userNameLabel;
-    UILabel *userStateLabel;
-    UILabel *userEloLabel;
-    UIButton *challengeButton;
-    if (cell == nil)
+    if(tableView.tag ==88)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                      reuseIdentifier:MyIdentifier];
         
-        //cell background
-        //Pixel Height: 205
-        //Pixel Width: 974
-        UIImageView *cellBackgroundImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,974/baseWidth*SCREEN_WIDTH,205/baseHeight*SCREEN_HEIGHT)];
+        static NSString *MyIdentifier = @"leaderboardCell";
         
-        [cellBackgroundImage setImage:[UIImage imageNamed:@"multi_woodbar_01"]];
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MyIdentifier];
+        UILabel *userNameLabel;
+        UILabel *userStateLabel;
+        UILabel *userEloLabel;
+        UIButton *challengeButton;
+        if (cell == nil)
+        {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                          reuseIdentifier:MyIdentifier];
+            userNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,100,25)];
+            userStateLabel = [[UILabel alloc] initWithFrame:CGRectMake(191,0,70,25)];
+            userEloLabel = [[UILabel alloc] initWithFrame:CGRectMake(105,0,40,25)];
+            challengeButton = [[UIButton alloc] initWithFrame:CGRectMake(175,2,90,21)];
+            [challengeButton setBackgroundColor:[UIColor blueColor]];
+            [challengeButton setTitle:@"Challenge" forState:UIControlStateNormal];
+            challengeButton.titleLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:12];
+            
+            [challengeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            CALayer *btnLayer = challengeButton.layer;
+            btnLayer.cornerRadius = 8.0f;
+            btnLayer.masksToBounds = YES;
+            
+            
+            [challengeButton addTarget:self action:@selector(challengePlayer:) forControlEvents:UIControlEventTouchUpInside];
+            userNameLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:10];
+            userEloLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:10];
+            userNameLabel.tag = 1;
+            [userNameLabel setTextAlignment:NSTextAlignmentCenter];
+            [userEloLabel setTextAlignment:NSTextAlignmentCenter];
+            [cell addSubview:userNameLabel];
+            userStateLabel.tag = 2;
+            [cell addSubview:userStateLabel];
+            userEloLabel.tag = 3;
+            [cell addSubview:userEloLabel];
+            challengeButton.tag = 1000+indexPath.row;
+            [cell addSubview:challengeButton];
+            
+            
+        }
         
-        [cell addSubview:cellBackgroundImage];
-        
-        
-        userNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,100,25)];
-        userStateLabel = [[UILabel alloc] initWithFrame:CGRectMake(191,0,70,25)];
-        userEloLabel = [[UILabel alloc] initWithFrame:CGRectMake(105,0,40,25)];
-        challengeButton = [[UIButton alloc] initWithFrame:CGRectMake(175,2,90,21)];
-        //challenge button stats
-        //button starts at row width-20 pixels
-        //Pixel Height: 157
-        //Pixel Width: 308
-        [challengeButton setBackgroundColor:[UIColor blueColor]];
-        [challengeButton setTitle:@"Challenge" forState:UIControlStateNormal];
-        
-        float chgButtonWidth = 308/baseWidth*SCREEN_WIDTH;
-        float chgButtonHeight = 157/baseHeight*SCREEN_HEIGHT;
-        [challengeButton setFrame:CGRectMake(cell.frame.size.width-240/baseWidth*SCREEN_WIDTH-chgButtonWidth,25/baseHeight*SCREEN_HEIGHT,chgButtonWidth,chgButtonHeight)];
-        [challengeButton setImage:[UIImage imageNamed:@"multi_battle_button_01"] forState:UIControlStateNormal];
-        
-        challengeButton.titleLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:12];
-        
-        [challengeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        CALayer *btnLayer = challengeButton.layer;
-        btnLayer.cornerRadius = 8.0f;
-        btnLayer.masksToBounds = YES;
-        
-        
-        [challengeButton addTarget:self action:@selector(challengePlayer:) forControlEvents:UIControlEventTouchUpInside];
-        userNameLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:10];
-        userEloLabel.font = [UIFont fontWithName:@"BookmanOldStyle-Bold" size:10];
-        userNameLabel.tag = 1;
-        [userNameLabel setTextAlignment:NSTextAlignmentCenter];
-        [userEloLabel setTextAlignment:NSTextAlignmentCenter];
-        [cell addSubview:userNameLabel];
-        userStateLabel.tag = 2;
-        [cell addSubview:userStateLabel];
-        userEloLabel.tag = 3;
-        [cell addSubview:userEloLabel];
-        challengeButton.tag = 1000+indexPath.row;
-        [cell addSubview:challengeButton];
+        // Here we use the provided setImageWithURL: method to load the web image
+        // Ensure you use a placeholder image otherwise cells will be initialized with no image
+        NSDictionary *userObjectAtIndex = [self.connectedPlayers objectAtIndex:indexPath.row];
         
         
+        NSNumber *playerElo = [userObjectAtIndex objectForKey:@"eloRating"];
+        NSString *playerName = [userObjectAtIndex objectForKey:@"usernameCustom"];
+        NSString *playerState = [userObjectAtIndex objectForKey:@"gameState"];
+        
+        userNameLabel = (UILabel *)[cell viewWithTag:1];
+        userStateLabel = (UILabel *)[cell viewWithTag:2];
+        userEloLabel = (UILabel *)[cell viewWithTag:3];
+        challengeButton = (UIButton *)[cell viewWithTag:1000+indexPath.row];
+        
+        
+        userStateLabel.text = playerState;
+        userNameLabel.text = playerName;
+        userEloLabel.text = [playerElo stringValue];
+        
+        if([userStateLabel.text isEqualToString:@"Lobby"])
+        {
+            userStateLabel.textColor = [UIColor greenColor];
+        }
+        else
+        {
+            userStateLabel.textColor = [UIColor blackColor];
+            
+        }
+        
+        //cell.textLabel.text =[playerElo stringValue];
+        
+        
+        return cell;
     }
-    
-    // Here we use the provided setImageWithURL: method to load the web image
-    // Ensure you use a placeholder image otherwise cells will be initialized with no image
-    NSDictionary *userObjectAtIndex = [self.connectedPlayers objectAtIndex:indexPath.row];
-    
-    
-    NSNumber *playerElo = [userObjectAtIndex objectForKey:@"eloRating"];
-    NSString *playerName = [userObjectAtIndex objectForKey:@"usernameCustom"];
-    NSString *playerState = [userObjectAtIndex objectForKey:@"gameState"];
-    
-    userNameLabel = (UILabel *)[cell viewWithTag:1];
-    userStateLabel = (UILabel *)[cell viewWithTag:2];
-    userEloLabel = (UILabel *)[cell viewWithTag:3];
-    challengeButton = (UIButton *)[cell viewWithTag:1000+indexPath.row];
-    
-   
-    userStateLabel.text = playerState;
-    userNameLabel.text = playerName;
-    userEloLabel.text = [playerElo stringValue];
-    
-    if([userStateLabel.text isEqualToString:@"Lobby"])
-    {
-        userStateLabel.textColor = [UIColor greenColor];
-    }
-    else
-    {
-        userStateLabel.textColor = [UIColor blackColor];
-        
-    }
-    
-    //cell.textLabel.text =[playerElo stringValue];
-    
-    
-    return cell;
-}
     else
     {
         //return chat cell
@@ -1079,12 +989,12 @@ if(tableView.tag ==88)
         
         if (cell == nil)
         {
-        cell = [[AutoSizeChatCellTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                          reuseIdentifier:MyIdentifier];
-        messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,250,70)];
+            cell = [[AutoSizeChatCellTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                                        reuseIdentifier:MyIdentifier];
+            messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,250,70)];
             //[cell addSubview:messageLabel];
             
-           cell.textLabel.textColor = [UIColor whiteColor];
+            cell.textLabel.textColor = [UIColor whiteColor];
             
             cell.backgroundColor = [UIColor blackColor];
             
@@ -1105,7 +1015,7 @@ if(tableView.tag ==88)
         NSString *fullChatString = [[[@"[" stringByAppendingString:userName] stringByAppendingString:@"]: "] stringByAppendingString:chatMessage];
         
         cell.textLabel.text = fullChatString;
-      
+        
         
         return cell;
         
@@ -1139,23 +1049,23 @@ if(tableView.tag ==88)
             }];
             
         }else{
-        
+            
             [self.chatField resignFirstResponder];
         }
-       /* else
-        {
-            
-            [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionTransitionCurlUp animations:^{
-                //Animation
-                [self.chatTableView setFrame:CGRectMake(20,240,SCREEN_WIDTH-40,100)];
-                self.chatField.alpha = 0;
-                self.chatSendButton.alpha = 0;
-                [self.chatField resignFirstResponder];
-                self.quickMatchButton.alpha = 1;
-            } completion:^(BOOL finished) {
-            }];
-            
-        }*/
+        /* else
+         {
+         
+         [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionTransitionCurlUp animations:^{
+         //Animation
+         [self.chatTableView setFrame:CGRectMake(20,240,SCREEN_WIDTH-40,100)];
+         self.chatField.alpha = 0;
+         self.chatSendButton.alpha = 0;
+         [self.chatField resignFirstResponder];
+         self.quickMatchButton.alpha = 1;
+         } completion:^(BOOL finished) {
+         }];
+         
+         }*/
     }
 }
 
@@ -1172,7 +1082,7 @@ if(tableView.tag ==88)
         [self.mpLobbyTableView setAlpha:1.0];
         [self.noPlayersAvailableLabel setAlpha:1.0];
     }
-
+    
     [self.mpLobbyTableView reloadData];
     [self.activityIndicator removeFromSuperview];
     
@@ -1193,7 +1103,7 @@ if(tableView.tag ==88)
     
     [self displayChallengeUI:playerObjAtIndex];
     
-   
+    
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
@@ -1409,7 +1319,7 @@ if(tableView.tag ==88)
     //check to see if there is a caseProfile for this caseID
     NSString *defaultMatchImgFileName = [[NSBundle mainBundle] pathForResource:@"angryorc" ofType:@"jpeg"];
     sureMatchImageView.image = [UIImage imageWithContentsOfFile:defaultMatchImgFileName];
-
+    
     [sureMatchView addSubview:sureMatchCaseNameLabel];
     [sureMatchView addSubview:sureMatchImageView];
     
@@ -1442,16 +1352,16 @@ if(tableView.tag ==88)
     bgDarkenView.alpha = 0.7;
     [self.view addSubview:bgDarkenView];
     [self.view addSubview:sureMatchView];
-
+    
 }
 
 -(void)startMatch:(id)sender
 {
-    //send an acceptance back through the MPDataHandler 
+    //send an acceptance back through the MPDataHandler
     [MPDataHandler acceptChallenge:self.challengerUserID];
-   
+    
     //[bgDarkenView removeFromSuperview];
-   // [sureMatchView removeFromSuperview];
+    // [sureMatchView removeFromSuperview];
     [[sureMatchView viewWithTag:101] removeFromSuperview];
     [[sureMatchView viewWithTag:102] removeFromSuperview];
     
@@ -1486,10 +1396,10 @@ if(tableView.tag ==88)
 
 //playerobj follows clientStateMutable on multiplayerDataHandler
 /*
-[clientStateMutable setObject:eloVal forKey:@"eloRating"];
-[clientStateMutable setObject:userName forKey:@"usernameCustom"];
-[clientStateMutable setObject:userObj.objectId forKey:@"userID"];
-[clientStateMutable setObject:@"Lobby" forKey:@"gameState"];
+ [clientStateMutable setObject:eloVal forKey:@"eloRating"];
+ [clientStateMutable setObject:userName forKey:@"usernameCustom"];
+ [clientStateMutable setObject:userObj.objectId forKey:@"userID"];
+ [clientStateMutable setObject:@"Lobby" forKey:@"gameState"];
  */
 -(void)displayChallengeUI:(NSDictionary *)playerObj
 {
@@ -1507,7 +1417,7 @@ if(tableView.tag ==88)
     sureMatchTitle.text = @"You Have Challenged A Player!";
     sureMatchTitle.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:24];
     sureMatchTitle.textAlignment = NSTextAlignmentCenter;
-
+    
     [sureMatchView addSubview:sureMatchTitle];
     
     
@@ -1528,16 +1438,16 @@ if(tableView.tag ==88)
     [sureMatchView addSubview:sureMatchCaseNameLabel];
     [sureMatchView addSubview:sureMatchImageView];
     
-     NSError* error;
+    NSError* error;
     NSString *eloDiff = [PFCloud callFunction:@"getELORatingOnWin" withParameters:@{
-                                                            @"User1Rating" : [userPF objectForKey:@"eloRating"] , @"User2Rating": eloRating
-                                                              } error:&error];
+                                                                                    @"User1Rating" : [userPF objectForKey:@"eloRating"] , @"User2Rating": eloRating
+                                                                                    } error:&error];
     
     
     if (!error){
         [userPF fetch];
         
-       // NSNumber *newSelfEloRating =  [userPF objectForKey:@"eloRating"];
+        // NSNumber *newSelfEloRating =  [userPF objectForKey:@"eloRating"];
         NSLog(@"ELO Rating diff: %@", eloDiff);
         
         UILabel *ELORatingOnWin = [[UILabel alloc] initWithFrame:CGRectMake(165, 120, 110, 150)];
@@ -1550,7 +1460,7 @@ if(tableView.tag ==88)
         [sureMatchView addSubview:ELORatingOnWin];
         
     }
-
+    
     
     //add two buttons for "Not Who I Wanted" and "Start a Conversation"
     UIButton *notWhoIWantedButton = [[UIButton alloc] initWithFrame:CGRectMake(10,300,sureMatchView.frame.size.width-20,50)];
@@ -1575,21 +1485,21 @@ if(tableView.tag ==88)
     [self.currentLoadStateLabel setText:@"Waiting for response..."];
     [sureMatchView addSubview:actIndicator];
     [sureMatchView addSubview:self.currentLoadStateLabel];
-     
-     [sureMatchView addSubview:_battleActivityLabel];
+    
+    [sureMatchView addSubview:_battleActivityLabel];
     [actIndicator startAnimating];
-
+    
     
     /*
-    UIButton *startConversationButton = [[UIButton alloc] initWithFrame:CGRectMake(10,360,sureMatchView.frame.size.width-20,50)];
-    
-    startConversationButton.backgroundColor = [UIColor blueColor];
-    startConversationButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
-    startConversationButton.titleLabel.textColor = [UIColor whiteColor];
-    startConversationButton.titleLabel.text = @"Start Conversation";
-    [startConversationButton setTitle:@"Start Match" forState:UIControlStateNormal];
-    
-    [startConversationButton addTarget:self action:@selector(startMatch:) forControlEvents:UIControlEventTouchUpInside];
+     UIButton *startConversationButton = [[UIButton alloc] initWithFrame:CGRectMake(10,360,sureMatchView.frame.size.width-20,50)];
+     
+     startConversationButton.backgroundColor = [UIColor blueColor];
+     startConversationButton.titleLabel.font = [UIFont fontWithName:@"Futura-CondensedMedium" size:20];
+     startConversationButton.titleLabel.textColor = [UIColor whiteColor];
+     startConversationButton.titleLabel.text = @"Start Conversation";
+     [startConversationButton setTitle:@"Start Match" forState:UIControlStateNormal];
+     
+     [startConversationButton addTarget:self action:@selector(startMatch:) forControlEvents:UIControlEventTouchUpInside];
      */
     [sureMatchView addSubview:notWhoIWantedButton];
     //[sureMatchView addSubview:startConversationButton];
@@ -1623,22 +1533,22 @@ if(tableView.tag ==88)
     
     
     /*UILabel *sureMatchCaseNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,70,300,50)];
-    
-    sureMatchCaseNameLabel.font =[UIFont fontWithName:@"Futura-CondensedMedium" size:25];
-    
-    
-    sureMatchCaseNameLabel.text = [[[playerUserName stringByAppendingString:@" ("] stringByAppendingString:eloRating] stringByAppendingString:@")"];
-    
-    
-    UIImageView *sureMatchImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10,120,150,150)];
-    
-    //check to see if there is a caseProfile for this caseID
-    NSString *defaultMatchImgFileName = [[NSBundle mainBundle] pathForResource:@"angryorc" ofType:@"jpeg"];
-    sureMatchImageView.image = [UIImage imageWithContentsOfFile:defaultMatchImgFileName];
-    
-    [sureMatchView addSubview:sureMatchCaseNameLabel];
-    [sureMatchView addSubview:sureMatchImageView];
-    */
+     
+     sureMatchCaseNameLabel.font =[UIFont fontWithName:@"Futura-CondensedMedium" size:25];
+     
+     
+     sureMatchCaseNameLabel.text = [[[playerUserName stringByAppendingString:@" ("] stringByAppendingString:eloRating] stringByAppendingString:@")"];
+     
+     
+     UIImageView *sureMatchImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10,120,150,150)];
+     
+     //check to see if there is a caseProfile for this caseID
+     NSString *defaultMatchImgFileName = [[NSBundle mainBundle] pathForResource:@"angryorc" ofType:@"jpeg"];
+     sureMatchImageView.image = [UIImage imageWithContentsOfFile:defaultMatchImgFileName];
+     
+     [sureMatchView addSubview:sureMatchCaseNameLabel];
+     [sureMatchView addSubview:sureMatchImageView];
+     */
     //add two buttons for "Not Who I Wanted" and "Start a Conversation"
     UIButton *notWhoIWantedButton = [[UIButton alloc] initWithFrame:CGRectMake(10,140,sureMatchView.frame.size.width-20,50)];
     notWhoIWantedButton.backgroundColor = [UIColor redColor];
@@ -1679,7 +1589,7 @@ if(tableView.tag ==88)
      
      [startConversationButton addTarget:self action:@selector(startMatch:) forControlEvents:UIControlEventTouchUpInside];
      
-    [sureMatchView addSubview:notWhoIWantedButton];*/
+     [sureMatchView addSubview:notWhoIWantedButton];*/
     //[sureMatchView addSubview:startConversationButton];
     
     [sureMatchView addSubview:notWhoIWantedButton];
