@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset><contributor><author></author><authoring_tool>FBX COLLADA exporter</authoring_tool><comments></comments></contributor><created>2016-08-11T07:06:50Z</created><keywords></keywords><modified>2016-08-11T07:06:50Z</modified><revision></revision><subject></subject><title></title><unit meter="0.010000" name="centimeter"></unit><up_axis>Y_UP</up_axis></asset>
+  <library_geometries>
+    <geometry id="Plane006-lib" name="Plane006Mesh">
+      <mesh>
+        <source id="Plane006-POSITION">
+          <float_array id="Plane006-POSITION-array" count="12">
+-254.087784 -116.919380 0.000000
+254.087784 -116.919380 0.000000
+-254.087784 51.836494 0.000000
+254.087784 51.836494 0.000000
+</float_array>
+          <technique_common>
+            <accessor source="#Plane006-POSITION-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane006-Normal0">
+          <float_array id="Plane006-Normal0-array" count="18">
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+</float_array>
+          <technique_common>
+            <accessor source="#Plane006-Normal0-array" count="6" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane006-UV0">
+          <float_array id="Plane006-UV0-array" count="8">
+0.000000 0.000000
+1.000000 0.000000
+0.000000 1.000000
+1.000000 1.000000
+</float_array>
+          <technique_common>
+            <accessor source="#Plane006-UV0-array" count="4" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Plane006-VERTEX">
+          <input semantic="POSITION" source="#Plane006-POSITION"/>
+        </vertices>
+        <triangles count="2"><input semantic="VERTEX" offset="0" source="#Plane006-VERTEX"/><input semantic="NORMAL" offset="1" source="#Plane006-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#Plane006-UV0"/><p> 3 0 3 2 1 2 0 2 0 3 3 3 0 4 0 1 5 1</p></triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_visual_scenes>
+    <visual_scene id="enemy_played_card" name="enemy_played_card">
+      <node name="battle_003" id="battle_003" sid="battle_003"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 -0.000000 0.000001 0.000000 0.000000 1.000000 -25.650967 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="Plane006" id="Plane006" sid="Plane006"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 -0.000000 208.377472 0.000000 0.000000 1.000000 -2.650734 0.000000 0.000000 0.000000 1.000000</matrix><instance_geometry url="#Plane006-lib"/><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra></node></node>
+      <extra><technique profile="MAX3D"><frame_rate>30.000000</frame_rate></technique><technique profile="FCOLLADA"><start_time>0.000000</start_time><end_time>3.333333</end_time></technique></extra>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#enemy_played_card"></instance_visual_scene>
+  </scene>
+</COLLADA>

@@ -387,10 +387,10 @@ BOOL pickingCards = NO;
     [self.uiView addSubview:resourceLabels[OPPONENT_SIDE]];
     
     //----set up the field highlights----//
-    playerFieldHighlight = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"field_highlight"]];
+    playerFieldHighlight = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"field_highligh"]];
     opponentFieldHighlight = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"field_highlight"]];
     
-    playerFieldEdge = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"GameBoardPlayedCardsBorder2.png"]];
+    playerFieldEdge = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"GameBoardPlayedCardsBorder2.pn"]];
     opponentFieldEdge = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"GameBoardPlayedCardsBorder2.png"]];
     
     //half of the distance between the two fields
