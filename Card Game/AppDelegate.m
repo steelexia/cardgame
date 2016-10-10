@@ -13,6 +13,8 @@
 #import "PickIAPHelper.h"
 #import "LoginViewController.h"
 #import "CFPopupViewController.h"
+#import <Parse/Parse.h>
+
 
 @implementation AppDelegate
 
@@ -21,7 +23,7 @@
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
 //TODO needs to move this probably to UserModel
-
+@synthesize gameMusicPlayer;
 
 const BOOL OFFLINE_DEBUGGING = NO;
 
@@ -29,8 +31,19 @@ const BOOL OFFLINE_DEBUGGING = NO;
 {
     srand48(time(0));
     
-    [Parse setApplicationId:@"yekARh373R6T7z42RzFD8R1ywZVYELpOS1gCVD5C"
-                  clientKey:@"Y46eRRr2QOFIu9kJGmmJldxV0xbPdtdbC6DJ7Q53"];
+    //start a background sound
+    NSString *soundFilePath = [[NSBundle mainBundle] pathForResource:@"maintitle" ofType: @"mp3"];
+    NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:soundFilePath ];
+    gameMusicPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:nil];
+    gameMusicPlayer.numberOfLoops = 1; //infinite loop
+    //[gameMusicPlayer play];
+
+    [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
+        configuration.applicationId = @"cardforgegame";
+        configuration.clientKey = @"Manatee93";
+        configuration.server = @"http://cardforge.herokuapp.com/parse";
+    }]];
+    
     
     [UIConstants loadResources];
     [AbilityWrapper loadAllAbilities];

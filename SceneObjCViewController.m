@@ -12,98 +12,172 @@
 @import SceneKit;
 @import SpriteKit;
 @interface SceneObjCViewController ()
+@property (nonatomic) SCNNode *cameraNode;
+@property (nonatomic) SCNCamera *firstCam;
+@property (nonatomic) SCNNode *secondaryCamera;
+@property (nonatomic) SCNCamera *secondCam;
+@property (nonatomic) SCNView *myView;
+@property (nonatomic) BOOL isZoomed;
 
 @end
 
 @implementation SceneObjCViewController
-SCNView *myView;
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    myView = [[SCNView alloc] init];
-    myView.frame = self.view.frame;
+    self.myView = [[SCNView alloc] init];
+    self.myView.frame = self.view.frame;
    
+    self.myView.scene = [SCNScene sceneNamed:@"battle_bg.dae"];
     
-    myView.scene = [SCNScene sceneNamed:@"battle_bg.dae"];
+    self.isZoomed = FALSE;
+    
+    self.secondaryCamera = [SCNNode node];
+    self.secondaryCamera.position = SCNVector3Make(0, 0, 440);
+    self.secondaryCamera.rotation = SCNVector4Zero;
+    self.secondCam = [SCNCamera camera];
+    self.secondCam.zNear = 109;
+    self.secondCam.zFar = 27350;
+    self.secondCam.yFov = 70;
+    self.secondaryCamera.camera = self.secondCam;
+    //self.cameraNode.camera.zNear = 109;
+    //self.cameraNode.camera.zFar = 27350;
+    [self.myView.scene.rootNode addChildNode:self.secondaryCamera];
+
+    self.cameraNode = [SCNNode node];
+    self.cameraNode.position = SCNVector3Make(0,0,840);
+    self.cameraNode.rotation = SCNVector4Zero;
+    self.cameraNode.camera = self.secondCam;
+    //self.cameraNode = self.myView.pointOfView;
+    [self.myView.scene.rootNode addChildNode:self.cameraNode];
+    
+    SCNNode *povNode = self.myView.pointOfView;
+    povNode.position = SCNVector3Make(0,0,840);
+    SCNCamera *checkCamDetails = povNode.camera;
+    
+    self.myView.pointOfView = povNode;
     
     SCNScene *cfButtonScene = [SCNScene sceneNamed:@"battle_button.dae"];
     SCNVector3 cfButtonVector = cfButtonScene.rootNode.position;
     cfButtonVector.z +=00;
     [cfButtonScene.rootNode setPosition:cfButtonVector];
     
-    [myView.scene.rootNode addChildNode:cfButtonScene.rootNode];
+    
+    for (SCNNode* objectNode in cfButtonScene.rootNode.childNodes)
+    {
+        [self.myView.scene.rootNode addChildNode:objectNode];
+    }
+    
     
     SCNScene *enemy_life = [SCNScene sceneNamed:@"battle_enemy_life.dae"];
-    [myView.scene.rootNode addChildNode:enemy_life.rootNode];
+    [self.myView.scene.rootNode addChildNode:enemy_life.rootNode];
     
     SCNScene *playerLife = [SCNScene sceneNamed:@"battle_player_life.dae"];
-    [myView.scene.rootNode addChildNode:playerLife.rootNode];
+    [self.myView.scene.rootNode addChildNode:playerLife.rootNode];
     
     SCNScene *enemyCardArea = [SCNScene sceneNamed:@"enemy_played_card.dae"];
-    [myView.scene.rootNode addChildNode:enemyCardArea.rootNode];
+    [self.myView.scene.rootNode addChildNode:enemyCardArea.rootNode];
     
+    SCNScene *enemyMana = [SCNScene sceneNamed:@"battle_enemy_mana.dae"];
+    [self.myView.scene.rootNode addChildNode:enemyMana.rootNode];
     
-    //SCNView *playerCardView = [[SCNView alloc] init];
-    //playerCardView.frame = self.view.frame;
-    //SCNScene *playerCardArea = [SCNScene sceneNamed:@"player_played_card.dae"];
-    //playerCardArea.rootNode.opacity = 0;
-    //playerCardView.scene = playerCardArea;
+    SCNScene *playerMana = [SCNScene sceneNamed:@"battle_player_mana.dae"];
+    [self.myView.scene.rootNode addChildNode:playerMana.rootNode];
     
+    SCNScene *playerPortrait = [SCNScene sceneNamed:@"battle_player_portrait.dae"];
+    [self.myView.scene.rootNode addChildNode:playerPortrait.rootNode];
     
-    SCNNode *cameraNode = [[SCNNode alloc] init];
-    SCNCamera *myNodeCamera = [[SCNCamera alloc] init];
- 
-    [myNodeCamera setXFov:90];
-    [myNodeCamera setYFov:90];
+    SCNScene *enemyPortrait = [SCNScene sceneNamed:@"battle_enemy_portrait.dae"];
+    [self.myView.scene.rootNode addChildNode:enemyPortrait.rootNode];
     
-    cameraNode.camera = myNodeCamera;
-    //cameraNode.position = SCNVector3Make(20, 2, 110);
-    
-    //[myView.scene.rootNode addChildNode:cameraNode];
-    
-    SCNNode *checkNode = myView.scene.rootNode;
-    
-    
-    NSArray *childNodes = myView.scene.rootNode.childNodes;
-    //myView.pointOfView = childNodes[1];
-    SCNCamera *povCamera = myView.pointOfView.camera;
-    //values kyoung liked
    //povCamera.xFov = 20;
    //povCamera.yFov = 95;
-    povCamera.xFov = 30;
-    povCamera.yFov = 100;
-    SCNNode *povNode = myView.pointOfView;
+    
+    SCNCamera *povCamera = self.myView.pointOfView.camera;
+
+    povCamera.xFov = 00;
+    povCamera.yFov = 70;
+
     //15,120,1400
     //7, 45, 8, 115, 1300
     //7,45,8, 85, 1300
     //7,45,8,175,13
     
     //meeting with kyoung: 20 xFov, y95Fov
-    SCNVector3 myCamPosition = SCNVector3Make(0,0,440);
     
-    [povNode setPosition:myCamPosition];
+    //aug 28 values
+    //pov x 10, y 70
+    //SCNVector3 myCamPosition = SCNVector3Make(10,100,840);
     
+    [self.myView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(screenTapped:)]];
     
-    //myView.allowsCameraControl = YES;
-    myView.autoenablesDefaultLighting = YES;
-    myView.backgroundColor = [UIColor lightGrayColor];
+    self.myView.allowsCameraControl = YES;
+    self.myView.autoenablesDefaultLighting = YES;
+    self.myView.backgroundColor = [UIColor lightGrayColor];
 
-     [self.view addSubview:myView];
+    [self.view addSubview:self.myView];
     
-   // [self.view addSubview:playerCardView];
-
-    //test adding cards over top
     Level*level = [Campaign getLevelWithDifficulty:1 withChapter:4 withLevel:1];
     
     GameViewController *gvc = [[GameViewController alloc] initWithGameMode:GameModeSingleplayer withLevel:level];
     gvc.noPreviousView = YES;
     
-    [myView addSubview:gvc.view];
+    //[self.myView addSubview:gvc.view];
     
 }
+
+-(void)screenTapped:(UITapGestureRecognizer *)tap
+{
+    //do stuff
+    
+    if(self.isZoomed == FALSE)
+    {
+        [SCNTransaction begin];
+        [SCNTransaction setAnimationDuration:2.5];
+        SCNNode *oldNode = self.myView.pointOfView;
+        SCNCamera *oldNodeCamera = oldNode.camera;
+        
+        self.myView.pointOfView = self.secondaryCamera;
+        SCNCamera *newCamera = self.secondaryCamera.camera;
+          self.isZoomed = TRUE;
+        [SCNTransaction commit];
+      
+    }
+    else
+    {
+        [SCNTransaction begin];
+        [SCNTransaction setAnimationDuration:2.5];
+        SCNNode *oldNode = self.myView.pointOfView;
+        SCNCamera *oldNodeCamera = oldNode.camera;
+        self.myView.pointOfView = self.cameraNode;
+        SCNCamera *newCamera = self.cameraNode.camera;
+        self.isZoomed = FALSE;
+        [SCNTransaction commit];
+        
+    }
+    
+}
+-(void)viewDidAppear:(BOOL)animated
+{
+    /*
+    [SCNTransaction begin];
+    [SCNTransaction setAnimationDuration:12.0];
+    SCNNode *povNode = myView.pointOfView;
+    SCNVector3 myCamPosition = SCNVector3Make(10,100,840);
+    povNode.position = myCamPosition;
+    
+    [SCNTransaction commit];
+     */
+    [super viewDidAppear:animated];
+}
+
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+   // SCNVector3 myCamPosition = SCNVector3Make(10,100,840);
+    
    
+    
     CGPoint location = [[touches anyObject] locationInView:self.view];
     CGRect fingerRect = CGRectMake(location.x-5, location.y-5, 10, 10);
     
@@ -117,8 +191,8 @@ SCNView *myView;
         
     }
 
-    SCNQuaternion myQuat =  myView.pointOfView.orientation;
-    SCNVector3 myPos = myView.pointOfView.position;
+    SCNQuaternion myQuat =  self.myView.pointOfView.orientation;
+    SCNVector3 myPos = self.myView.pointOfView.position;
     NSString *strX = [NSString stringWithFormat:@"%f", myPos.x];
  NSString *strY = [NSString stringWithFormat:@"%f", myPos.y];
      NSString *strZ = [NSString stringWithFormat:@"%f", myPos.z];
@@ -127,24 +201,14 @@ SCNView *myView;
       NSLog([@"positiony" stringByAppendingString:strY]);
     NSLog([@"positionZ" stringByAppendingString:strZ]);
     
-   double xFov=  myView.pointOfView.camera.xFov;
-    double yFov = myView.pointOfView.camera.yFov;
+   double xFov=  self.myView.pointOfView.camera.xFov;
+    double yFov = self.myView.pointOfView.camera.yFov;
     
     NSString *strfovY = [NSString stringWithFormat:@"%f", xFov];
     NSString *strfovZ = [NSString stringWithFormat:@"%f", yFov];
     
     NSLog([@"positiony" stringByAppendingString:strfovY]);
     NSLog([@"positionZ" stringByAppendingString:strfovZ]);
-    
-    SCNCamera *povCamera = myView.pointOfView.camera;
-   // povCamera.xFov = 7;
-    //povCamera.yFov = 45;
-    SCNNode *povNode = myView.pointOfView;
-    //15,120,1400
-    //7, 45, 8, 115, 1300
-    //7,45,8, 85, 1300
-    //7,45,8,175,1300
-    SCNVector3 myCamPosition = SCNVector3Make(15,120,1400);
     
     //[povNode setPosition:myCamPosition];
     //[myView.pointOfView setPosition:myCamPosition];

@@ -19,6 +19,7 @@
 #import "AbilityViewController.h"
 
 #import "GameStore.h"
+#import "AppDelegate.h"
 
 @interface CardEditorViewController ()
 
@@ -116,6 +117,8 @@ bool shouldSetUpView = YES;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+  
     
     SCREEN_WIDTH = self.view.bounds.size.width;
     SCREEN_HEIGHT = self.view.bounds.size.height;

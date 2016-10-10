@@ -19,6 +19,7 @@
 #import "AppDelegate.h"
 #import "CFPopupViewController.h"
 #import "PlayerLevelView.h"
+#import "AVFoundation/AVAudioPlayer.h"
 @import AudioToolbox;
 
 
@@ -46,6 +47,7 @@ UILabel *loadingLabel;
             NSLog(@"  %@", name);
         }
     }*/
+    
     
     [self.view setBackgroundColor:[UIColor whiteColor]];
     

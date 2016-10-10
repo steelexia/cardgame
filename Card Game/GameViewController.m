@@ -17,12 +17,21 @@
 #import "Campaign.h"
 #import "BossBattleScreenViewController.h"
 #import "DHConstraintUtility.h"
+@import SceneKit;
+@import SpriteKit;
 
+@interface GameViewController ()
 
-@interface GameViewController () 
+//brian Oct 9
+//new properties for tracking 3d scene
+@property (nonatomic) SCNNode *cameraNode;
+@property (nonatomic) SCNCamera *firstCam;
+@property (nonatomic) SCNNode *secondaryCamera;
+@property (nonatomic) SCNCamera *secondCam;
+@property (nonatomic) SCNView *myView;
+@property (nonatomic) BOOL isZoomed;
 
 @end
-
 
 @implementation GameViewController
 
@@ -37,6 +46,8 @@
 @synthesize quickMatchDeckLoaded      = _quickMatchDeckLoaded;
 @synthesize currentSpellCard;
 @synthesize hintedMonsters = _hintedMonsters;
+
+
 
 /** Screen dimension for convinience */
 int SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -92,8 +103,6 @@ enum GameControlState{
 
 /** Currently selected card. The actual card depends on gameControlState. E.g. during gameControlStateSelectedHandCard this card is a card in the hand */
 CardModel* currentCard;
-
-
 
 /** Used to reduce amount of calculation needed for viewing hand cards via dragging. This flag is set when a touch enters/leaves the zone so it only needs to be updated once */
 BOOL leftHandViewZone = NO;
@@ -289,6 +298,84 @@ BOOL pickingCards = NO;
 - (void) setupUI
 // ------------------------------------------------------------------------------------------------
 {
+    //brian oct 9 2016
+        //updating to add new 3d battle screen in background to main game view controller
+        self.myView = [[SCNView alloc] init];
+        self.myView.frame = self.view.frame;
+        self.myView.scene = [SCNScene sceneNamed:@"battle_bg.dae"];
+        self.isZoomed = FALSE;
+        
+        self.secondaryCamera = [SCNNode node];
+        self.secondaryCamera.position = SCNVector3Make(0, 0, 440);
+        self.secondaryCamera.rotation = SCNVector4Zero;
+        self.secondCam = [SCNCamera camera];
+        self.secondCam.zNear = 109;
+        self.secondCam.zFar = 27350;
+        self.secondCam.yFov = 70;
+        self.secondaryCamera.camera = self.secondCam;
+        //self.cameraNode.camera.zNear = 109;
+        //self.cameraNode.camera.zFar = 27350;
+        [self.myView.scene.rootNode addChildNode:self.secondaryCamera];
+        
+        self.cameraNode = [SCNNode node];
+        self.cameraNode.position = SCNVector3Make(0,0,840);
+        self.cameraNode.rotation = SCNVector4Zero;
+        self.cameraNode.camera = self.secondCam;
+        //self.cameraNode = self.myView.pointOfView;
+        [self.myView.scene.rootNode addChildNode:self.cameraNode];
+        
+        SCNNode *povNode = self.myView.pointOfView;
+        povNode.position = SCNVector3Make(0,0,840);
+        SCNCamera *checkCamDetails = povNode.camera;
+        
+        self.myView.pointOfView = povNode;
+        
+        SCNScene *cfButtonScene = [SCNScene sceneNamed:@"battle_button.dae"];
+        SCNVector3 cfButtonVector = cfButtonScene.rootNode.position;
+        cfButtonVector.z +=00;
+        [cfButtonScene.rootNode setPosition:cfButtonVector];
+        
+        for (SCNNode* objectNode in cfButtonScene.rootNode.childNodes)
+        {
+            [self.myView.scene.rootNode addChildNode:objectNode];
+        }
+        
+        SCNScene *enemy_life = [SCNScene sceneNamed:@"battle_enemy_life.dae"];
+        [self.myView.scene.rootNode addChildNode:enemy_life.rootNode];
+        
+        SCNScene *playerLife = [SCNScene sceneNamed:@"battle_player_life.dae"];
+        [self.myView.scene.rootNode addChildNode:playerLife.rootNode];
+        
+        SCNScene *enemyCardArea = [SCNScene sceneNamed:@"enemy_played_card.dae"];
+        [self.myView.scene.rootNode addChildNode:enemyCardArea.rootNode];
+        
+        SCNScene *enemyMana = [SCNScene sceneNamed:@"battle_enemy_mana.dae"];
+        [self.myView.scene.rootNode addChildNode:enemyMana.rootNode];
+        
+        SCNScene *playerMana = [SCNScene sceneNamed:@"battle_player_mana.dae"];
+        [self.myView.scene.rootNode addChildNode:playerMana.rootNode];
+        
+        SCNScene *playerPortrait = [SCNScene sceneNamed:@"battle_player_portrait.dae"];
+        [self.myView.scene.rootNode addChildNode:playerPortrait.rootNode];
+        
+        SCNScene *enemyPortrait = [SCNScene sceneNamed:@"battle_enemy_portrait.dae"];
+        [self.myView.scene.rootNode addChildNode:enemyPortrait.rootNode];
+        
+        SCNCamera *povCamera = self.myView.pointOfView.camera;
+        
+        povCamera.xFov = 00;
+        povCamera.yFov = 70;
+        
+        //[self.myView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(screenTapped:)]];
+        
+        self.myView.allowsCameraControl = NO;
+        self.myView.autoenablesDefaultLighting = YES;
+        self.myView.backgroundColor = [UIColor lightGrayColor];
+    
+    [self.view addSubview:self.myView];
+    
+    //end brian oct 9
+    
     //set up UI
     darkFilter = [[UIView alloc] initWithFrame:self.view.bounds];
     darkFilter.backgroundColor = [[UIColor alloc]initWithHue:0 saturation:0 brightness:0 alpha:0.8];
@@ -308,10 +395,10 @@ BOOL pickingCards = NO;
     backgroundView.backgroundColor = [UIColor clearColor];
     
     
-    [self.view addSubview:backgroundView];
-    [self.view addSubview:fieldView];
-    [self.view addSubview:handsView];
-    [self.view addSubview:uiView];
+    [self.myView addSubview:backgroundView];
+    [self.myView addSubview:fieldView];
+    [self.myView addSubview:handsView];
+    [self.myView addSubview:uiView];
     
     /*
     battlefieldBackground  = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"battle_background_0"]];
@@ -387,7 +474,7 @@ BOOL pickingCards = NO;
     [self.uiView addSubview:resourceLabels[OPPONENT_SIDE]];
     
     //----set up the field highlights----//
-    playerFieldHighlight = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"field_highligh"]];
+    playerFieldHighlight = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"field_highlight"]];
     opponentFieldHighlight = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"field_highlight"]];
     
     playerFieldEdge = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"GameBoardPlayedCardsBorder2.pn"]];
@@ -420,14 +507,13 @@ BOOL pickingCards = NO;
         opponentFieldEdge.bounds = CGRectMake(0,0,(CARD_GAMEPLAY_WIDTH*5) + CARD_GAMEPLAY_HEIGHT * 0.1, CARD_GAMEPLAY_HEIGHT + CARD_GAMEPLAY_HEIGHT * 0.1);
         opponentFieldEdge.center = CGPointMake(SCREEN_WIDTH/2, 450/1344.0f*SCREEN_HEIGHT) ;
         
-        /*
-         old code
+      
         playerFieldHighlight.bounds = CGRectMake(0,0,(CARD_WIDTH * 5)  + CARD_HEIGHT * 0.1, CARD_HEIGHT + CARD_HEIGHT * 0.1);
         playerFieldHighlight.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/3 + fieldsDistanceHalf + playerFieldHighlight.bounds.size.height/2 + fieldsYOffset) ;
         
         playerFieldEdge.bounds = CGRectMake(0,0,(CARD_WIDTH * 5)  + CARD_HEIGHT * 0.1, CARD_HEIGHT + CARD_HEIGHT * 0.1);
         playerFieldEdge.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/3 + fieldsDistanceHalf + playerFieldEdge.bounds.size.height/2 + fieldsYOffset) ;
-         */
+        
     }
     else if (IS_IPHONE)
     {
@@ -462,7 +548,7 @@ BOOL pickingCards = NO;
     CardView *playerHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[PLAYER_SIDE]).playerMonster viewMode:cardViewModeIngame];
     playerHeroView.frontFacing = YES;
     
-    playerHeroView.center = CGPointMake((SCREEN_WIDTH - playerFieldEdge.bounds.size.width)/2 + PLAYER_HERO_WIDTH/2, playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*6 + PLAYER_HERO_HEIGHT/2);
+    playerHeroView.center = CGPointMake((SCREEN_WIDTH/2), playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*6 + PLAYER_HERO_HEIGHT/2);
     playerHeroView.cardModel.name = userPF.username;
     [playerHeroView updateView];
     [self.fieldView addSubview:playerHeroView];
@@ -474,7 +560,7 @@ BOOL pickingCards = NO;
     
     CardView *opponentHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[OPPONENT_SIDE]).playerMonster viewMode:cardViewModeIngame];
     opponentHeroView.frontFacing = YES;
-    opponentHeroView.center = CGPointMake((SCREEN_WIDTH - opponentFieldEdge.bounds.size.width)/2 + PLAYER_HERO_WIDTH/2, opponentFieldEdge.center.y - opponentFieldEdge.bounds.size.height/2 - fieldsDistanceHalf*2 - PLAYER_HERO_HEIGHT/2);
+    opponentHeroView.center = CGPointMake((SCREEN_WIDTH/2), opponentFieldEdge.center.y - opponentFieldEdge.bounds.size.height/2 - fieldsDistanceHalf*2 - PLAYER_HERO_HEIGHT/2);
     
     if (_level != nil)
     {
@@ -610,7 +696,12 @@ BOOL pickingCards = NO;
     [_quitButton addTarget:self action:@selector(quitButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.uiView addSubview:_quitButton];
     
-    _moveHistoryButton = [[CFButton alloc] initWithFrame:CGRectMake(4, 4, 60, 32)];
+    //brian oct 9
+    //set dimensions for move history relative to screen size
+    //_moveHistoryButton = [[CFButton alloc] initWithFrame:CGRectMake(4, 104, 60, 32)];
+    
+   
+    _moveHistoryButton = [[CFButton alloc] initWithFrame:CGRectMake(4/baseScreenWidth*baseScreenWidth, 104/baseScreenHeight *baseScreenHeight, 60/baseScreenWidth*baseScreenWidth, 32/baseScreenHeight*baseScreenHeight)];
     _moveHistoryButton.label.text = @"History";
     [_moveHistoryButton setTextSize:12];
     [_moveHistoryButton addTarget:self action:@selector(openMoveHistoryScreen)    forControlEvents:UIControlEventTouchUpInside];
@@ -1497,7 +1588,8 @@ BOOL pickingCards = NO;
     if (side == PLAYER_SIDE)
         height = SCREEN_HEIGHT - CARD_HEIGHT/2;
     else if (side == OPPONENT_SIDE)
-        height = CARD_HEIGHT/2;
+        //height = CARD_HEIGHT/2;
+        height = CARD_HEIGHT/3;
     
     self.handMovementsLeft = NO;
     //iterate through all player's hand's cards and set their views correctly
@@ -1513,7 +1605,19 @@ BOOL pickingCards = NO;
         CardModel *card = hand[i];
         
         //positions the hand by laying them out from the center TODO use up available space!
-        CGPoint newCenter = CGPointMake((i-handCenterIndex+0.5) * CARD_WIDTH/2.3 + ((hand.count+1)%2 * CARD_WIDTH/4) + SCREEN_WIDTH/1.8, height + abs(distanceFromCenter) * 3);
+        //brian Oct 9
+        //repositioning opponent cards
+        CGPoint newCenter;
+        if(side== PLAYER_SIDE)
+        {
+             newCenter = CGPointMake((i-handCenterIndex+0.5) * CARD_WIDTH/2.3 + ((hand.count+1)%2 * CARD_WIDTH/4) + SCREEN_WIDTH/1.8, height + fabsf(distanceFromCenter) * 3);
+        }
+        else
+        {
+            newCenter = CGPointMake((i-handCenterIndex+0.5) * CARD_WIDTH/2.3 + ((hand.count+1)%2 * CARD_WIDTH/4) + SCREEN_WIDTH/2.3, height + fabsf(distanceFromCenter) * 3);
+            
+        }
+      
         
         //if card has no view, create one
         if (card.cardView == nil)
@@ -1528,6 +1632,7 @@ BOOL pickingCards = NO;
             if(side == PLAYER_SIDE)
                 card.cardView.center = CGPointMake(SCREEN_WIDTH + CARD_WIDTH, SCREEN_HEIGHT-CARD_HEIGHT);
             else if (side == OPPONENT_SIDE)
+                //card.cardView.center = CGPointMake(SCREEN_WIDTH + CARD_WIDTH, CARD_HEIGHT) ;
                 card.cardView.center = CGPointMake(SCREEN_WIDTH + CARD_WIDTH, CARD_HEIGHT) ;
         }
         
