@@ -72,6 +72,7 @@ UILabel *attackLine;
 
 /** stores array of two label for showing the current player's resource */
 NSArray *resourceLabels;
+NSArray *healthLabels;
 
 UIImageView *playerFieldHighlight, *opponentFieldHighlight, *playerFieldEdge, *opponentFieldEdge;
 
@@ -369,7 +370,7 @@ BOOL pickingCards = NO;
         //[self.myView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(screenTapped:)]];
         
         self.myView.allowsCameraControl = NO;
-        self.myView.autoenablesDefaultLighting = YES;
+        self.myView.autoenablesDefaultLighting = NO;
         self.myView.backgroundColor = [UIColor lightGrayColor];
     
     [self.view addSubview:self.myView];
@@ -435,8 +436,11 @@ BOOL pickingCards = NO;
         manaGemFont = iPhoneManaGemFont;
     }
     
+    //brian oct 9
+    //add dimension changes relative to screen size and move the mana icons
+    
     StrokedLabel*playerResourceLabel              = [[StrokedLabel alloc] initWithFrame: CGRectMake(0, 0, labelSizeWidth, labelSizeHeight)];
-    playerResourceLabel.center                    = CGPointMake(SCREEN_WIDTH - labelSizeWidth/2, SCREEN_HEIGHT - labelSizeHeight);
+    playerResourceLabel.center                    = CGPointMake(60/baseScreenWidth*SCREEN_WIDTH, SCREEN_HEIGHT - (60/baseScreenHeight*SCREEN_HEIGHT));
     playerResourceLabel.textAlignment             = NSTextAlignmentCenter;
     playerResourceLabel.textColor                 = [UIColor whiteColor];
     playerResourceLabel.backgroundColor           = [UIColor clearColor];
@@ -454,7 +458,7 @@ BOOL pickingCards = NO;
     playerResourceIcon.center                     = playerResourceLabel.center;
     
     StrokedLabel*opponentResourceLabel              = [[StrokedLabel alloc] initWithFrame: CGRectMake(0,0, labelSizeWidth, labelSizeHeight)];
-    opponentResourceLabel.center                    = CGPointMake(SCREEN_WIDTH - labelSizeWidth/2, labelSizeHeight);
+    opponentResourceLabel.center                    = CGPointMake(60/baseScreenWidth*SCREEN_WIDTH, 50/baseScreenHeight*SCREEN_HEIGHT);
     opponentResourceLabel.textAlignment             = NSTextAlignmentCenter;
     opponentResourceLabel.textColor                 = [UIColor whiteColor];
     opponentResourceLabel.backgroundColor           = [UIColor clearColor];
@@ -473,12 +477,58 @@ BOOL pickingCards = NO;
     [self.uiView addSubview:resourceLabels[PLAYER_SIDE]];
     [self.uiView addSubview:resourceLabels[OPPONENT_SIDE]];
     
+    //brian nov 13
+    //add player and opponent health icons/labels
+    StrokedLabel*playerHealthLabel              = [[StrokedLabel alloc] initWithFrame: CGRectMake(0, 0, labelSizeWidth, labelSizeHeight)];
+    playerHealthLabel.center                    = CGPointMake(315/baseScreenWidth*SCREEN_WIDTH, SCREEN_HEIGHT - (60/baseScreenHeight*SCREEN_HEIGHT));
+    playerHealthLabel.textAlignment             = NSTextAlignmentCenter;
+    playerHealthLabel.textColor                 = [UIColor whiteColor];
+    playerHealthLabel.backgroundColor           = [UIColor clearColor];
+    playerHealthLabel.font                      = [UIFont fontWithName:cardMainFont size:manaGemFont];
+    playerHealthLabel.adjustsFontSizeToFitWidth = YES;
+    playerHealthLabel.strokeColour              = [UIColor blackColor];
+    playerHealthLabel.strokeOn                  = YES;
+    playerHealthLabel.strokeThickness           = 3;
+    UIImageView *playerHealthIcon               = [[UIImageView alloc] initWithImage:RESOURCE_ICON_IMAGE];
+    
+    float playerHealthIconWidth = 45/baseScreenWidth*SCREEN_WIDTH;
+    float playerHealthIconHeight = 45/baseScreenWidth*SCREEN_WIDTH;
+    playerHealthIcon.frame                      = CGRectMake(0, 0, playerHealthIconWidth, playerHealthIconHeight);
+    
+    playerHealthIcon.center                     = playerHealthLabel.center;
+    
+    StrokedLabel*opponentHealthLabel              = [[StrokedLabel alloc] initWithFrame: CGRectMake(0,0, labelSizeWidth, labelSizeHeight)];
+    opponentHealthLabel.center                    = CGPointMake(315/baseScreenWidth*SCREEN_WIDTH, 50/baseScreenHeight*SCREEN_HEIGHT);
+    opponentHealthLabel.textAlignment             = NSTextAlignmentCenter;
+    opponentHealthLabel.textColor                 = [UIColor whiteColor];
+    opponentHealthLabel.backgroundColor           = [UIColor clearColor];
+    opponentHealthLabel.font                      = [UIFont fontWithName:cardMainFont size:manaGemFont];
+    opponentHealthLabel.adjustsFontSizeToFitWidth = YES;
+    opponentHealthLabel.strokeColour              = [UIColor blackColor];
+    opponentHealthLabel.strokeOn                  = YES;
+    opponentHealthLabel.strokeThickness           = 3;
+    UIImageView *opponentHealthIcon               = [[UIImageView alloc] initWithImage:RESOURCE_ICON_IMAGE];
+    opponentHealthIcon.frame                      = CGRectMake(0, 0, playerResourceIconWidth, playerResourceIconHeight);
+    opponentHealthIcon.center                     = opponentHealthLabel.center;
+    healthLabels                                  = @[playerHealthLabel,opponentHealthLabel];
+    
+    [self.uiView addSubview:playerHealthIcon];
+    [self.uiView addSubview:opponentHealthIcon];
+    [self.uiView addSubview:healthLabels[PLAYER_SIDE]];
+    [self.uiView addSubview:healthLabels[OPPONENT_SIDE]];
+    
+    
     //----set up the field highlights----//
     playerFieldHighlight = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"field_highlight"]];
     opponentFieldHighlight = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"field_highlight"]];
     
-    playerFieldEdge = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"GameBoardPlayedCardsBorder2.pn"]];
-    opponentFieldEdge = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"GameBoardPlayedCardsBorder2.png"]];
+    //brian oct 9 change to not show edges
+    //todo--find a better way to fix this than making these an unknown image.
+    //original images are pngs
+    
+    playerFieldEdge = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"GameBoardPlayedCardsBorder2.pnr"]];
+    opponentFieldEdge = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"GameBoardPlayedCardsBorder2.pnr"]];
+    
     
     //half of the distance between the two fields
     int fieldsDistanceHalf = 5;
@@ -547,8 +597,8 @@ BOOL pickingCards = NO;
     
     CardView *playerHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[PLAYER_SIDE]).playerMonster viewMode:cardViewModeIngame];
     playerHeroView.frontFacing = YES;
-    
-    playerHeroView.center = CGPointMake((SCREEN_WIDTH/2), playerFieldEdge.center.y + playerFieldEdge.bounds.size.height/2 + fieldsDistanceHalf*6 + PLAYER_HERO_HEIGHT/2);
+    float playerHeroYCenter = 545/baseScreenHeight*SCREEN_HEIGHT;
+    playerHeroView.center = CGPointMake((SCREEN_WIDTH/2), playerHeroYCenter);
     playerHeroView.cardModel.name = userPF.username;
     [playerHeroView updateView];
     [self.fieldView addSubview:playerHeroView];
@@ -560,7 +610,12 @@ BOOL pickingCards = NO;
     
     CardView *opponentHeroView = [[CardView alloc] initWithModel:((PlayerModel*)self.gameModel.players[OPPONENT_SIDE]).playerMonster viewMode:cardViewModeIngame];
     opponentHeroView.frontFacing = YES;
-    opponentHeroView.center = CGPointMake((SCREEN_WIDTH/2), opponentFieldEdge.center.y - opponentFieldEdge.bounds.size.height/2 - fieldsDistanceHalf*2 - PLAYER_HERO_HEIGHT/2);
+    float opponentHeroYCenter = 104/baseScreenHeight*SCREEN_HEIGHT;
+    opponentHeroView.center = CGPointMake((SCREEN_WIDTH/2), opponentHeroYCenter);
+    
+    //brian nov 13
+    //set exact position of opponent hero view
+    
     
     if (_level != nil)
     {
@@ -691,7 +746,11 @@ BOOL pickingCards = NO;
         [self.endTurnButton setEnabled:NO];
     
     //quit button
-    _quitButton = [[CFButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-36, 46, 32)];
+    //brian oct 9
+    //float baseScreenHeight = 1334.0f/2.0f;
+    //float baseScreenWidth = 750.0f/2.0f;
+    //rescaling button to screen size and moving to top right
+    _quitButton = [[CFButton alloc] initWithFrame:CGRectMake(290/baseScreenWidth *SCREEN_WIDTH, 105/baseScreenHeight*SCREEN_HEIGHT, 60/baseScreenWidth*SCREEN_WIDTH, 40/baseScreenHeight*SCREEN_HEIGHT)];
     [_quitButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
     [_quitButton addTarget:self action:@selector(quitButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
     [self.uiView addSubview:_quitButton];
@@ -701,7 +760,7 @@ BOOL pickingCards = NO;
     //_moveHistoryButton = [[CFButton alloc] initWithFrame:CGRectMake(4, 104, 60, 32)];
     
    
-    _moveHistoryButton = [[CFButton alloc] initWithFrame:CGRectMake(4/baseScreenWidth*baseScreenWidth, 104/baseScreenHeight *baseScreenHeight, 60/baseScreenWidth*baseScreenWidth, 32/baseScreenHeight*baseScreenHeight)];
+    _moveHistoryButton = [[CFButton alloc] initWithFrame:CGRectMake(4/baseScreenWidth*SCREEN_WIDTH, 104/baseScreenHeight *SCREEN_HEIGHT, 90/baseScreenWidth*SCREEN_WIDTH, 32/baseScreenHeight*SCREEN_HEIGHT)];
     _moveHistoryButton.label.text = @"History";
     [_moveHistoryButton setTextSize:12];
     [_moveHistoryButton addTarget:self action:@selector(openMoveHistoryScreen)    forControlEvents:UIControlEventTouchUpInside];
@@ -1589,7 +1648,7 @@ BOOL pickingCards = NO;
         height = SCREEN_HEIGHT - CARD_HEIGHT/2;
     else if (side == OPPONENT_SIDE)
         //height = CARD_HEIGHT/2;
-        height = CARD_HEIGHT/3;
+        height = CARD_HEIGHT/4;
     
     self.handMovementsLeft = NO;
     //iterate through all player's hand's cards and set their views correctly
@@ -1608,9 +1667,10 @@ BOOL pickingCards = NO;
         //brian Oct 9
         //repositioning opponent cards
         CGPoint newCenter;
+        //old x value 1.8
         if(side== PLAYER_SIDE)
         {
-             newCenter = CGPointMake((i-handCenterIndex+0.5) * CARD_WIDTH/2.3 + ((hand.count+1)%2 * CARD_WIDTH/4) + SCREEN_WIDTH/1.8, height + fabsf(distanceFromCenter) * 3);
+             newCenter = CGPointMake((i-handCenterIndex+0.5) * CARD_WIDTH/2.3 + ((hand.count+1)%2 * CARD_WIDTH/4) + SCREEN_WIDTH/2.3, height + fabsf(distanceFromCenter) * 3);
         }
         else
         {
@@ -1720,8 +1780,18 @@ BOOL pickingCards = NO;
         }
     }
     
+    //brian nov 13
+    CardView*player = (CardView*)self.playerHeroViews[PLAYER_SIDE];
+    CardView*opponent = (CardView*)self.playerHeroViews[OPPONENT_SIDE];
+    
+    MonsterCardModel *opponentmonster = (MonsterCardModel*)opponent.cardModel;
+    MonsterCardModel *heromonster = (MonsterCardModel*)player.cardModel;
+    
+    [self updateHealthView:PLAYER_SIDE newLife:heromonster.life newMax:heromonster.maximumLife];
+    [self updateHealthView:OPPONENT_SIDE newLife:opponentmonster.life newMax:opponentmonster.maximumLife];
+    
     //update hero
-    CardView*player = self.playerHeroViews[side];
+    //CardView*player = self.playerHeroViews[side];
     if ([self.currentAbilities count] == 0)
         player.cardHighlightType = cardHighlightNone;
 }
@@ -1761,6 +1831,13 @@ BOOL pickingCards = NO;
 {
     PlayerModel *player = self.gameModel.players[side];
     [resourceLabels[side] setText:[NSString stringWithFormat:@"%d/%d", player.resource, player.maxResource]];
+  
+}
+
+-(void)updateHealthView: (int)side newLife:(int)newLifeTotal newMax:(int)newLifeMax
+{
+    
+    [healthLabels[side] setText:[NSString stringWithFormat:@"%d/%d", newLifeTotal, newLifeMax]];
 }
 
 
@@ -2271,6 +2348,9 @@ BOOL pickingCards = NO;
                 CardView* enemyHeroView = ((CardView*)self.playerHeroViews[oppositeSide]);
                 [self attackHero:currentCard target:(MonsterCardModel*) enemyHeroView.cardModel fromSide:currentSide];
                 [self cardAttacksTutorial];
+                //brian nov 13
+                //update these functions to update the playerHealthLabels as well as the card
+                
             }
             else
             {
@@ -2383,6 +2463,15 @@ BOOL pickingCards = NO;
     [_playerHeroViews[PLAYER_SIDE] updateView];
     [_playerHeroViews[OPPONENT_SIDE] updateView];
     
+    CardView*player = (CardView*)self.playerHeroViews[PLAYER_SIDE];
+    CardView*opponent = (CardView*)self.playerHeroViews[OPPONENT_SIDE];
+    
+    MonsterCardModel *opponentmonster = (MonsterCardModel*)opponent.cardModel;
+    MonsterCardModel *heromonster = (MonsterCardModel*)player.cardModel;
+    
+    [self updateHealthView:PLAYER_SIDE newLife:heromonster.life newMax:heromonster.maximumLife];
+    [self updateHealthView:OPPONENT_SIDE newLife:opponentmonster.life newMax:opponentmonster.maximumLife];
+    
     if (side == PLAYER_SIDE)
     {
         gameControlState = gameControlStateNone;
@@ -2434,6 +2523,15 @@ BOOL pickingCards = NO;
     [card.cardView updateView];
     [targetCard.cardView updateView];
     
+    //brian nov 13 update resource label
+    CardView*player = (CardView*)self.playerHeroViews[PLAYER_SIDE];
+    CardView*opponent = (CardView*)self.playerHeroViews[OPPONENT_SIDE];
+    
+    MonsterCardModel *opponentmonster = (MonsterCardModel*)opponent.cardModel;
+    MonsterCardModel *heromonster = (MonsterCardModel*)player.cardModel;
+    
+    [self updateHealthView:PLAYER_SIDE newLife:heromonster.life newMax:heromonster.maximumLife];
+    [self updateHealthView:OPPONENT_SIDE newLife:opponentmonster.life newMax:opponentmonster.maximumLife];
     
     if (side == PLAYER_SIDE)
     {
@@ -2489,6 +2587,15 @@ BOOL pickingCards = NO;
     [self.currentAbilities addObject:ability];
     [self updateBattlefieldView:PLAYER_SIDE];
     
+    CardView*player = (CardView*)self.playerHeroViews[PLAYER_SIDE];
+    CardView*opponent = (CardView*)self.playerHeroViews[OPPONENT_SIDE];
+    
+    MonsterCardModel *opponentmonster = (MonsterCardModel*)opponent.cardModel;
+    MonsterCardModel *heromonster = (MonsterCardModel*)player.cardModel;
+    
+    [self updateHealthView:PLAYER_SIDE newLife:heromonster.life newMax:heromonster.maximumLife];
+    [self updateHealthView:OPPONENT_SIDE newLife:opponentmonster.life newMax:opponentmonster.maximumLife];
+    
     //disable all other views as player must choose a target (no cancelling, for now at least..)
     [self.handsView setUserInteractionEnabled:NO];
     //[self.uiView setUserInteractionEnabled:NO];
@@ -2531,6 +2638,14 @@ BOOL pickingCards = NO;
         }
         [self.uiView addSubview:cardView];
         
+        CardView*player = (CardView*)self.playerHeroViews[PLAYER_SIDE];
+        CardView*opponent = (CardView*)self.playerHeroViews[OPPONENT_SIDE];
+        
+        MonsterCardModel *opponentmonster = (MonsterCardModel*)opponent.cardModel;
+        MonsterCardModel *heromonster = (MonsterCardModel*)player.cardModel;
+        
+        [self updateHealthView:PLAYER_SIDE newLife:heromonster.life newMax:heromonster.maximumLife];
+        [self updateHealthView:OPPONENT_SIDE newLife:opponentmonster.life newMax:opponentmonster.maximumLife];
         
         [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
@@ -2597,6 +2712,18 @@ BOOL pickingCards = NO;
     
     //update hand's view at the end
     [self updateHandsView:side];
+    
+    //update player life totals
+    //brian nov 13 update resource label
+    //get hero cards
+    CardView*player = (CardView*)self.playerHeroViews[PLAYER_SIDE];
+    CardView*opponent = (CardView*)self.playerHeroViews[OPPONENT_SIDE];
+    
+    MonsterCardModel *opponentmonster = (MonsterCardModel*)opponent.cardModel;
+    MonsterCardModel *heromonster = (MonsterCardModel*)player.cardModel;
+    
+    [self updateHealthView:PLAYER_SIDE newLife:heromonster.life newMax:heromonster.maximumLife];
+    [self updateHealthView:OPPONENT_SIDE newLife:opponentmonster.life newMax:opponentmonster.maximumLife];
     
     if (_isTutorial)
         [self summonedCardTutorial:card fromSide:side];

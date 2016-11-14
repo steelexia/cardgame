@@ -446,9 +446,16 @@ NSDictionary *singlePlayerCardImages;
         //[_transformView setUserInteractionEnabled:YES];
         [self addSubview:_transformView];
         
-        _backgroundImageView = [[UIImageView alloc] initWithImage:elementArray[0]];
-        _backgroundImageView.bounds = CGRectMake(0, 0, CARD_FULL_WIDTH, CARD_FULL_HEIGHT);
-        _backgroundImageView.center = CGPointMake(CARD_FULL_WIDTH/2, CARD_FULL_HEIGHT/2);
+        //Brian Nov13
+        if (cardModel.type != cardTypePlayer)
+        {
+            _backgroundImageView = [[UIImageView alloc] initWithImage:elementArray[0]];
+            _backgroundImageView.bounds = CGRectMake(0, 0, CARD_FULL_WIDTH, CARD_FULL_HEIGHT);
+            _backgroundImageView.center = CGPointMake(CARD_FULL_WIDTH/2, CARD_FULL_HEIGHT/2);
+        }
+        
+        
+        
         [_transformView addSubview: _backgroundImageView];
         
         _frontViews = [[UIView alloc] initWithFrame:self.bounds];
@@ -757,17 +764,20 @@ NSDictionary *singlePlayerCardImages;
         {
             MonsterCardModel*monsterCard = (MonsterCardModel*)cardModel;
             
+            //brian nov 13 making edits to cardPlayerView
+            //made life label clear color
+            
             //player hero's card only has life (TODO maybe damage or spells in future)
             if (cardModel.type == cardTypePlayer)
             {
-                self.nameLabel.center = CGPointMake(PLAYER_HERO_WIDTH/2, 10);
+                self.nameLabel.center = CGPointMake(PLAYER_HERO_WIDTH/2, 95);
                 
                 self.lifeLabel = [[StrokedLabel alloc] initWithFrame:self.bounds];
                 self.lifeLabel.center = CGPointMake(PLAYER_HERO_WIDTH/2, PLAYER_HERO_HEIGHT - 10);
                 self.lifeLabel.textAlignment = NSTextAlignmentCenter;
-                self.lifeLabel.textColor = [UIColor whiteColor];
+                self.lifeLabel.textColor = [UIColor clearColor];
                 self.lifeLabel.backgroundColor = [UIColor clearColor];
-                self.lifeLabel.strokeOn = YES;
+                self.lifeLabel.strokeOn = NO;
                 self.lifeLabel.strokeColour = [UIColor blackColor];
                 self.lifeLabel.strokeThickness = 2.5;
                 self.lifeLabel.font = [UIFont fontWithName:cardMainFont size:20];
@@ -781,10 +791,15 @@ NSDictionary *singlePlayerCardImages;
                 self.cardImage.bounds = CGRectMake(5, 20, PLAYER_HERO_WIDTH - 20, (PLAYER_HERO_WIDTH-20) * CARD_IMAGE_RATIO);
                 self.cardImage.center = CGPointMake(PLAYER_HERO_WIDTH/2, self.cardImage.bounds.size.height/2 + self.cardImage.bounds.origin.y);
                 
+                self.cardImage.layer.cornerRadius = self.cardImage.frame.size.width / 2;
+                self.cardImage.clipsToBounds = YES;
+                
                 [self.costLabel removeFromSuperview];
                 
                 self.frame = CGRectMake(0,0,PLAYER_HERO_WIDTH,PLAYER_HERO_WIDTH);
                 _backgroundImageView.frame = CGRectMake(0,0,PLAYER_HERO_WIDTH,PLAYER_HERO_WIDTH);
+                _backgroundImageView.image = nil;
+                
                 
                 self.highlight.image = heroSelectHighlightImage;
                 //change the highlight size
@@ -1021,6 +1036,12 @@ NSDictionary *singlePlayerCardImages;
             else
             {
                 newLifeColour = [UIColor whiteColor];
+            }
+            
+            if (monsterCard.type == cardTypePlayer)
+            {
+                newLifeColour = [UIColor clearColor];
+                
             }
             
             NSString *newLifeString = [NSString stringWithFormat:@"%d", monsterCard.life];

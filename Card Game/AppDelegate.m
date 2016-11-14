@@ -36,12 +36,12 @@ const BOOL OFFLINE_DEBUGGING = NO;
     NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:soundFilePath ];
     gameMusicPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:nil];
     gameMusicPlayer.numberOfLoops = 1; //infinite loop
-    //[gameMusicPlayer play];
+    [gameMusicPlayer play];
 
     [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
         configuration.applicationId = @"cardforgegame";
         configuration.clientKey = @"Manatee93";
-        configuration.server = @"http://cardforge.herokuapp.com/parse";
+        configuration.server = @"https://cardforge.herokuapp.com/parse";
     }]];
     
     
