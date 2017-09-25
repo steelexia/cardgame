@@ -352,33 +352,40 @@ const int CARD_ID_START = 1000;
     PFFile *imageFile = [PFFile fileWithData:imageData];
     cardImage[@"image"] = imageFile;
     
-    NSError*imageSaveEror = nil;
-    [cardImage save:&imageSaveEror];
+    NSError*imageSaveError = nil;
+    [cardImage save:&imageSaveError];
     
-    if (imageSaveEror)
-        return imageSaveEror;
-    
-    PFObject*cardPF = [CardModel cardToCardPF:card withImage:cardImage];
-    
-    CardVote*cardVote = [[CardVote alloc] initWithCardModel:card];
-    [cardVote generatedVotedCard:card];
-    PFObject*cardVotePF = [PFObject objectWithClassName:@"CardVote"];
-    [cardVote updateToPFObject:cardVotePF];
-    
-    cardPF[@"cardVote"] = cardVotePF;
-    
-    NSError*cardSaveEror = nil;
-    [cardPF save:&cardSaveEror];
-    
-    if (cardSaveEror)
+    if (imageSaveError)
     {
-        [cardImage deleteEventually]; //attempt to delete the image that got uploaded
-        return cardSaveEror;
+        NSLog(@"error %@",imageSaveError.localizedDescription);
+        return imageSaveError;
     }
-    
-    card.cardPF = cardPF;
-    
-    return nil;
+    else
+        {
+        PFObject*cardPF = [CardModel cardToCardPF:card withImage:cardImage];
+        
+        CardVote*cardVote = [[CardVote alloc] initWithCardModel:card];
+        [cardVote generatedVotedCard:card];
+        PFObject*cardVotePF = [PFObject objectWithClassName:@"CardVote"];
+        [cardVote updateToPFObject:cardVotePF];
+        
+        cardPF[@"cardVote"] = cardVotePF;
+        
+        NSError*cardSaveEror = nil;
+        [cardPF save:&cardSaveEror];
+        
+        if (cardSaveEror)
+        {
+            NSLog(@"error %@",cardSaveEror.localizedDescription);
+            [cardImage deleteEventually]; //attempt to delete the image that got uploaded
+            return cardSaveEror;
+        }
+        
+        card.cardPF = cardPF;
+        
+        return nil;
+        }
+   
 }
 
 

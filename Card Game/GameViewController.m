@@ -307,26 +307,31 @@ BOOL pickingCards = NO;
         self.isZoomed = FALSE;
         
         self.secondaryCamera = [SCNNode node];
-        self.secondaryCamera.position = SCNVector3Make(0, 0, 440);
+    //old value 440
+    
+        self.secondaryCamera.position = SCNVector3Make(0, 0, 480);
         self.secondaryCamera.rotation = SCNVector4Zero;
         self.secondCam = [SCNCamera camera];
         self.secondCam.zNear = 109;
         self.secondCam.zFar = 27350;
-        self.secondCam.yFov = 70;
+    //70 before nov-30-2016
+        self.secondCam.yFov = 60;
         self.secondaryCamera.camera = self.secondCam;
         //self.cameraNode.camera.zNear = 109;
         //self.cameraNode.camera.zFar = 27350;
         [self.myView.scene.rootNode addChildNode:self.secondaryCamera];
         
         self.cameraNode = [SCNNode node];
-        self.cameraNode.position = SCNVector3Make(0,0,840);
+    //old value 840
+        self.cameraNode.position = SCNVector3Make(0,0,980);
         self.cameraNode.rotation = SCNVector4Zero;
         self.cameraNode.camera = self.secondCam;
         //self.cameraNode = self.myView.pointOfView;
         [self.myView.scene.rootNode addChildNode:self.cameraNode];
         
         SCNNode *povNode = self.myView.pointOfView;
-        povNode.position = SCNVector3Make(0,0,840);
+    
+        povNode.position = SCNVector3Make(0,0,980);
         SCNCamera *checkCamDetails = povNode.camera;
         
         self.myView.pointOfView = povNode;
@@ -365,7 +370,7 @@ BOOL pickingCards = NO;
         SCNCamera *povCamera = self.myView.pointOfView.camera;
         
         povCamera.xFov = 00;
-        povCamera.yFov = 70;
+        povCamera.yFov = 60;
         
         //[self.myView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(screenTapped:)]];
         

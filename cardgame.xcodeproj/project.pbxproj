@@ -2953,6 +2953,8 @@
 				ORGANIZATIONNAME = "Content Games";
 				TargetAttributes = {
 					90F35292191595C200601130 = {
+						DevelopmentTeam = U536PJZFA3;
+						LastSwiftMigration = 0830;
 						SystemCapabilities = {
 							com.apple.GameCenter = {
 								enabled = 0;
@@ -3649,6 +3651,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Brian Allen (XT9TWSX8D9)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Brian Allen (XT9TWSX8D9)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = U536PJZFA3;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -3692,6 +3695,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Brian Allen (XT9TWSX8D9)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Brian Allen (XT9TWSX8D9)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = U536PJZFA3;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -3733,7 +3737,8 @@
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "cardgame-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -3761,7 +3766,8 @@
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "cardgame-Bridging-Header.h";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

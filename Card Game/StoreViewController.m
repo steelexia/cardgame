@@ -2481,6 +2481,8 @@ UIControlEventTouchUpInside];
         
         NSLog(@"%@",  userPF.objectId);
         
+        //nov 29 could potentially reference creator within function, have creator on card already
+        //NkXn6BMNZQ
         NSError*error;
         [PFCloud callFunction:@"likeCard" withParameters:@{
                                                                @"cardID" : _cardView.cardModel.cardPF.objectId,
@@ -2754,7 +2756,7 @@ UIControlEventTouchUpInside];
         }];
         
         //TODO not sure what this is
-        /*
+        
         PFQuery *pendingCardQuery = [PFQuery queryWithClassName:@"Card"];
         [pendingCardQuery whereKey:@"adminPhotoCheck" equalTo:@(0)];
         [pendingCardQuery orderByDescending:@"createdAt"];
@@ -2770,7 +2772,7 @@ UIControlEventTouchUpInside];
                 NSLog(@"ERROR SEARCHING SALES");
             }
         }];
-         */
+        
     }
 
 }
