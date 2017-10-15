@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "GameInfoTableViewCell.h"
-#import "UIConstants.h"
 #import "MessageModel.h"
 
 @interface MessageTableView : UIView <UITableViewDataSource, UITableViewDelegate>

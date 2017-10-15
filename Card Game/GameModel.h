@@ -7,19 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CardModel.h"
-#import "CardView.h"
-#import "MonsterCardModel.h"
-#import "SpellCardModel.h"
-#import "PlayerModel.h"
-#import "DeckModel.h"
-#import "Ability.h"
-#import "SinglePlayerCards.h"
-#import "AIPlayer.h"
-#import <Parse/Parse.h>
-#import "AbilityWrapper.h"
-#import "Level.h"
-#import "MoveHistory.h"
+@class CardModel;
+@class CardView;
+@class MonsterCardModel;
+@class SpellCardModel;
+@class PlayerModel;
+@class DeckModel;
+@class Ability;
+@class SinglePlayerCards;
+@class AIPlayer;
+@class AbilityWrapper;
+@class Level;
+@class MoveHistory;
 
 @class AIPlayer;
 @class GameViewController;

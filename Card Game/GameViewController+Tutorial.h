@@ -7,8 +7,10 @@
 //
 
 #import "GameViewController.h"
-#import "CFLabel.h"
-#import "CFButton.h"
+@class CFLabel;
+@class CFButton;
+
+
 
 @interface GameViewController (Tutorial)
 

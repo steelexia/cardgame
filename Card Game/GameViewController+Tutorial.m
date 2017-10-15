@@ -12,6 +12,11 @@
 #import "UIConstants.h"
 #import "CardEditorViewController.h"
 #import "UserModel.h"
+#import "GameModel.h"
+#import "CFLabel.h"
+#import "CFButton.h"
+#import "StrokedLabel.h"
+#import "CardView.h"
 
 @implementation GameViewController (Tutorial)
 

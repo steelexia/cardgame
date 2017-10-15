@@ -9,6 +9,8 @@
 #import "SceneObjCViewController.h"
 #import "GameViewController.h"
 #import "Campaign.h"
+#import "GameModel.h"
+
 @import SceneKit;
 @import SpriteKit;
 @interface SceneObjCViewController ()

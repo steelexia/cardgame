@@ -11,10 +11,10 @@
 #import "UserModel.h"
 #import "SSKeychain.h"
 #import "LoginViewController.h"
-
-@interface PasswordViewController ()
-
-@end
+#import "UIConstants.h"
+#import "CFButton.h"
+#import "CFLabel.h"
+#import "StrokedLabel.h"
 
 @implementation PasswordViewController
 

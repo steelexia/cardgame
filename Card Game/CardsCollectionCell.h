@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CardView.h"
+//#import "CardView.h"
+@class CardView;
 
 @interface CardsCollectionCell : UICollectionViewCell
 

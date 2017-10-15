@@ -11,6 +11,7 @@
 #import "CardView.h"
 #import "DeckChooserViewController.h"
 #import "GameViewController.h"
+#import "GameModel.h"
 
 @interface ChallengesViewController ()
 

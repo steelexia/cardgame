@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CFButton.h"
+@class CFButton;
+
 #import <Parse/Parse.h>
 #import "SSKeychain.h"
 

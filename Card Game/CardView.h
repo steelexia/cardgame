@@ -7,14 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CardModel.h"
-#import "MonsterCardModel.h"
-#import "SpellCardModel.h"
-#import "Ability.h"
-#import "AbilityWrapper.h"
-#import "StrokedLabel.h"
-#import "CustomView.h"
-#import "UserModel.h"
+@class CardModel;
+@class MonsterCardModel;
+@class SpellCardModel;
+@class Ability;
+@class AbilityWrapper;
+@class StrokedLabel;
+@class CustomView;
+@class UserModel;
+
+
 /**
  Handles the view aspect of the card. Draws the card based on the model object.
  The attached cardModel can be any of the child classes, such as MonsterCardModel or SpellCardModel.
@@ -123,7 +125,7 @@
 -(void)flipCard;
 
 /** Loads images for drawing cards ahead of time */
-+(void) loadResources;
++(void) loadResourcesCardViews;
 
 /** Shows hint for when dragging an attack causes a creature to be killed. */
 //-(void)animateIsKillHintOn:(BOOL)isKilled;
@@ -131,6 +133,8 @@
 
 /** Note that the scale will be relative to CARD_DEFAULT_SCALE, not 1. Also should not use this for any card on game board */
 -(void)setZoomScale:(float)scale;
+
+@property (strong) NSString *cardMainFont;
 
 @end
 
@@ -167,6 +171,12 @@ extern float DAMAGE_POPUP_DURATION;
 
 extern int CARD_DETAIL_BUTTON_WIDTH;
 extern int CARD_DETAIL_BUTTON_HEIGHT;
+
+
+//extern NSString *cardMainFont;
+
+NSString *cardMainFont;
+NSString *cardMainFontBlack, *cardFlavourTextFont;
 
 /** State of the card's view for positioning */
 enum CardViewState{
@@ -219,8 +229,7 @@ enum CardOverlayObject
     cardOverlayObjectMulligan,
 };
 
-NSString *cardMainFont;
-NSString *cardMainFontBlack, *cardFlavourTextFont;
+
 
 UIImage*placeHolderImage;
 UIImage*PLAYER_FIRST_CARD_IMAGE;

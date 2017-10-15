@@ -26,7 +26,7 @@ Level*quickMatchLevel;
     return quickMatchLevel;
 }
 
-+(void)loadResources
++(void)loadResourcesCampaign
 {
     [SinglePlayerCards loadCampaignCards];
     

@@ -10,6 +10,9 @@
 #import "CardView.h"
 #import "DeckEditorViewController.h"
 #import "CFLabel.h"
+#import "UIConstants.h"
+#import "CustomCollectionView.h"
+#import "CardsCollectionCell.h"
 
 @implementation CardsCollectionView
 

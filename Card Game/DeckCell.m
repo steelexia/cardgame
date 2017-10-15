@@ -7,9 +7,12 @@
 //
 
 #import "DeckCell.h"
+
 #import "UIConstants.h"
 
 #import "CardView.h"
+#import "CardModel.h"
+#import "Ability.h"
 
 @implementation DeckCell
 @synthesize nameLabel = _nameLabel;
@@ -54,6 +57,7 @@
         for (int i = 0; i < 7; i++)
         {
             UIView *elementIcon = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 15, 15)];
+            
             [elementIcon setBackgroundColor:[UIConstants getElementColor:i]];
             elementIcon.layer.cornerRadius = 4;
             [elementIcon.layer setBorderColor:[UIConstants getElementOutlineColor:i].CGColor];

@@ -10,6 +10,7 @@
 #import "UIConstants.h"
 #import "CFLabel.h"
 #import "CFButton.h"
+#import "StrokedLabel.h"
 
 @interface BossBattleScreenViewController ()
 
@@ -34,8 +35,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
     
     SCREEN_WIDTH = self.view.bounds.size.width;
     SCREEN_HEIGHT = self.view.bounds.size.height;
-    
-    [self.view setBackgroundColor:COLOUR_BACKGROUND_GRAY];
+    UIColor *bgCol = COLOUR_BACKGROUND_GRAY;
+    [self.view setBackgroundColor:bgCol];
     
     CFLabel *messageLabel = [[CFLabel alloc] initWithFrame:CGRectMake(20,SCREEN_HEIGHT/4, SCREEN_WIDTH-40, SCREEN_HEIGHT/2)];
     messageLabel.label.text = _message;

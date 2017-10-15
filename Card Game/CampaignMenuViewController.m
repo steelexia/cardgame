@@ -11,6 +11,8 @@
 #import "CardView.h"
 #import "DeckChooserViewController.h"
 #import "GameViewController.h"
+#import "GameModel.h"
+#import "StrokedLabel.h"
 
 @interface CampaignMenuViewController ()
 

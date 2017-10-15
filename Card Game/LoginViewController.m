@@ -12,10 +12,9 @@
 #import "UIConstants.h"
 #import "MainScreenViewController.h"
 #import "AVFoundation/AVAudioPlayer.h"
+#import "CFButton.h"
+#import "CFLabel.h"
 
-@interface LoginViewController ()
-
-@end
 
 @implementation LoginViewController
 

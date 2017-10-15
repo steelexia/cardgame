@@ -8,6 +8,9 @@
 
 #import "MessageTableView.h"
 #import "MessagesViewController.h"
+#import "UIConstants.h"
+#import "GameInfoTableViewCell.h"
+#import "MessageModel.h"
 
 @implementation MessageTableView
 

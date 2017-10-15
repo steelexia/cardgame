@@ -9,8 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "PNImports.h"
 #import <Parse/Parse.h>
-#import "UserModel.h"
-@class multiplayerDataHandler;
+@class UserModel;
+
+//#import "UserModel.h"
+
+//@class multiplayerDataHandler;
 @protocol multiplayerDataHandlerDelegate
 - (void)startDownloadingOpponentDeck:(NSString *)deckID;
 - (void)startLoadingMatch;

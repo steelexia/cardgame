@@ -10,10 +10,10 @@
 #import "OptionsViewController.h"
 #import "UserModel.h"
 #import "PasswordViewController.h"
+#import "CFButton.h"
+#import "CFLabel.h"
+#import "StrokedLabel.h"
 
-@interface OptionsViewController ()
-
-@end
 
 @implementation OptionsViewController
 

@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, UMXPGainType){
 
 //+(void)saveCard:(CardModel*)card;
 /** Refreshes the parse user by querying from database */
-+(void)updateUser:(void (^)())onFinishBlock;
++(void)updateUser:(void (^)(void))onFinishBlock;
 /** Returns true if userAllCards contains a card with same ID */
 +(BOOL)ownsCardWithID:(int)idNumber;
 

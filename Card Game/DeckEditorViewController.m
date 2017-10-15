@@ -15,6 +15,9 @@
 #import "MainScreenViewController.h"
 #import "StrokedLabel.h"
 #import "UserCardVersion.h"
+#import "UIConstants.h"
+#import "CardsCollectionCell.h"
+#import "CustomCollectionView.h"
 
 @interface DeckEditorViewController ()
 

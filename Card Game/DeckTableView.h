@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "CustomTableView.h"
-#import "UIConstants.h"
-#import "StrokedLabel.h"
+@class UIConstants;
+@class StrokedLabel;
+
+
 
 /** This view doubles as a container for all decks a player as built, as well as a container for all cards in a deck that is currently being built. */
 @interface DeckTableView :UIView <UITableViewDataSource, UITableViewDelegate>

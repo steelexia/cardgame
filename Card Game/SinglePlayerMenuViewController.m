@@ -14,6 +14,8 @@
 #import "ChallengesViewController.h"
 #import "SceneObjCViewController.h"
 #import "cardgame-Swift.h"
+#import "GameModel.h"
+#import "StrokedLabel.h"
 @interface SinglePlayerMenuViewController ()
 
 @end

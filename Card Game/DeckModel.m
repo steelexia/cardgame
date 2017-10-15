@@ -8,7 +8,7 @@
 
 #import "DeckModel.h"
 #import "AbilityWrapper.h"
-
+#import "SpellCardModel.h"
 @implementation DeckModel
 
 @synthesize cards = _cards;

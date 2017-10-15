@@ -7,12 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "DeckEditorViewController.h"
-#import "GameViewController.h"
-#import "UserModel.h"
-#import "CFButton.h"
-#import "MessagesViewController.h"
-#import "OptionsViewController.h"
+@class DeckEditorViewController;
+@class GameViewController;
+@class UserModel;
+@class CFButton;
+@class MessagesViewController;
+@class OptionsViewController;
+@class StrokedLabel;
+
 #import "PNImports.h"
 
 @interface MainScreenViewController : UIViewController <PNDelegate>

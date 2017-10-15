@@ -9,6 +9,7 @@
 #import "multiplayerDataHandler.h"
 #include <stdlib.h>
 #import "GameModel.h"
+#import "UserModel.h"
 
 @implementation multiplayerDataHandler
 @synthesize connectedParseUser;

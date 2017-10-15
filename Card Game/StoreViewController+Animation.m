@@ -7,7 +7,8 @@
 //
 
 #import "StoreViewController+Animation.h"
-
+#import "UserModel.h"
+#import "CardView.h"
 
 @implementation StoreViewController (Animation)
 

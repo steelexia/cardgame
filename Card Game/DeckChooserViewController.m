@@ -10,7 +10,7 @@
 #import "UserModel.h"
 #import "UIConstants.h"
 #import "CardView.h"
-
+#import "StrokedLabel.h"
 
 @interface DeckChooserViewController ()
 /** Received opponent's deck */

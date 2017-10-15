@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CustomCollectionView.h"
-#import "UIConstants.h"
-#import "CardsCollectionCell.h"
+
+@class CustomCollectionView;
+@class UIConstants;
+@class CardsCollectionCell;
+
 
 @interface CardsCollectionView:UIView <UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, UICollectionViewDelegate>
 
@@ -27,7 +29,7 @@
 - (instancetype)initWithFrame:(CGRect)frame collectionViewLayout: (UICollectionViewLayout*)layout;
 
 
--(void)removeCellAt:(int)index onFinish:(void (^)())block;
+-(void)removeCellAt:(int)index onFinish:(void (^)(void))block;
 
 -(void)removeAllCells;
 

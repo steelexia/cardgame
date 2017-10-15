@@ -7,12 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "PlayerModel.h"
-#import "GameModel.h"
-#import "GameViewController.h"
+
+@class PlayerModel;
+
 
 @class GameViewController;
 @class GameModel;
+@class MonsterCardModel;
 
 /** The AI player used during single player games. It assumes that it is always on OPPONENT_SIDE. */
 @interface AIPlayer : NSObject

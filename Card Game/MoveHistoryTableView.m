@@ -13,6 +13,8 @@
 #import "UIConstants.h"
 #import "GameModel.h"
 #import "StrokedLabel.h"
+#import "CardModel.h"
+#import "CustomTableView.h"
 
 @class SpellCardModel;
 

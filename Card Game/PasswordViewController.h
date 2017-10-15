@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CFButton.h"
-#import "CFLabel.h"
-#import "UIConstants.h"
+@class CFButton;
+@class CFLabel;
+
+@class UIConstants;
+
 
 @interface PasswordViewController : UIViewController
 

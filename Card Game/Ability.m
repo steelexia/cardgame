@@ -8,6 +8,9 @@
 
 #import "Ability.h"
 #import "UIConstants.h"
+#import "CardModel.h"
+#import "SpellCardModel.h"
+#import "MonsterCardModel.h"
 
 @implementation Ability
 

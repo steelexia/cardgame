@@ -7,15 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CardModel.h"
-#import "CardView.h"
-#import "StrokedTextField.h"
-#import "CustomTextField.h"
-#import "AbilityTableView.h"
+@class CardModel;
+@class CardView;
+@class StrokedTextField;
+@class CustomTextField;
+@class AbilityTableView;
+@class GKImagePicker;
+@class CardVote;
+@class CFButton;
+@class CFLabel;
 #import "GKImagePicker.h"
-#import "CardVote.h"
-#import "CFButton.h"
-#import "CFLabel.h"
+#import "StrokedLabel.h"
+
 
 @protocol MyCardEditDelegate
 

@@ -11,7 +11,7 @@
 
 @interface Campaign : NSObject
 
-+(void)loadResources;
++(void)loadResourcesCampaign;
 +(Level*)getLevelWithDifficulty:(int)difficulty withChapter:(int)chapter withLevel:(int)level;
 +(Level*)getNextLevelWithLevelID:(NSString*)levelID;
 +(NSString*)getChapterDescription:(int)chapter;

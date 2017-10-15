@@ -11,10 +11,13 @@
 #import "Campaign.h"
 #import "SSKeychain.h"
 #import "PickIAPHelper.h"
-#import "LoginViewController.h"
+//#import "LoginViewController.h"
 #import "CFPopupViewController.h"
 #import <Parse/Parse.h>
-
+#import "UIConstants.h"
+#import "UserModel.h"
+#import "CardView.h"
+#import "DeckEditorViewController.h"
 
 @implementation AppDelegate
 
@@ -47,8 +50,8 @@ const BOOL OFFLINE_DEBUGGING = NO;
     
     [UIConstants loadResources];
     [AbilityWrapper loadAllAbilities];
-    [CardView loadResources];
-    [Campaign loadResources];
+    [CardView loadResourcesCardViews];
+    [Campaign loadResourcesCampaign];
     
     
     /* Instantiate PubNub */

@@ -10,6 +10,10 @@
 #import "CardView.h"
 #import "CardEditorViewController.h"
 #import "UserModel.h"
+#import "StrokedLabel.h"
+#import "CFLabel.h"
+#import "MessageTableView.h"
+#import "CFButton.h"
 
 @interface MessagesViewController ()
 

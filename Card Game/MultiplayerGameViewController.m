@@ -15,6 +15,8 @@
 #import "DeckChooserViewController.h"
 #import "LeaderboardsViewController.h"
 #import "AutoSizeChatCellTableViewCell.h"
+#import "GameModel.h"
+#import "StrokedLabel.h"
 
 @interface MultiplayerGameViewController () <MultiplayerNetworkingProtocol>
 

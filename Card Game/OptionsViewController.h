@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CFButton.h"
-#import "CFLabel.h"
+@class CFButton;
+@class CFLabel;
+
+//#import "CFLabel.h"
 
 #import "SSKeychain.h"
 

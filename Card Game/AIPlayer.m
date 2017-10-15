@@ -9,7 +9,11 @@
 #import "AIPlayer.h"
 #import "AIPlayer+Utility.h"
 #import "CardPointsUtility.h"
-
+#import "GameModel.h"
+#import "SpellCardModel.h"
+#import "GameViewController.h"
+#import "PlayerModel.h"
+#import "Ability.h"
 @implementation AIPlayer
 
 @synthesize playerModel = _playerModel;

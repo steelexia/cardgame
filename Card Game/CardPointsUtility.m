@@ -7,7 +7,7 @@
 //
 
 #import "CardPointsUtility.h"
-
+#import "SpellCardModel.h"
 @implementation CardPointsUtility
 
 /* stats multiplied by this number is its cost (life or attack) */

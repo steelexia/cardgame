@@ -8,11 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
+@class DeckEditorViewController;
 
-#import "DeckEditorViewController.h"
-#import "UIConstants.h"
-#import "CardView.h"
-#import "UserModel.h"
+
+//#import "UIConstants.h"
+//@class UIConstants.h;
+@class CardView;
+
+
+@class UserModel;
+//#import "UserModel.h"
 #import "CDCardModel.h"
 #import <CoreData/CoreData.h>
 #import "PNImports.h"

@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CFLabel.h"
-#import "MessageTableView.h"
-#import "CFButton.h"
-#import "MessageModel.h"
+@class CFLabel;
+@class MessageTableView;
+@class CFButton;
+
+
+@class PFObject;
+@class MessageModel;
 
 @interface MessagesViewController : UIViewController <UITextViewDelegate>
 @property (strong) MessageTableView *messageTableView;

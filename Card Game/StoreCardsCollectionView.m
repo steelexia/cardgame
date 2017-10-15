@@ -11,7 +11,7 @@
 #import "StorePackCell.h"
 #import "GameStore.h"
 #import "StoreViewController.h"
-
+#import "CardView.h"
 @implementation StoreCardsCollectionView
 
 @synthesize currentCards = _currentCards;

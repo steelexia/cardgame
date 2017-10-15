@@ -7,7 +7,10 @@
 //
 
 #import "AIPlayer+Utility.h"
-
+#import "GameModel.h"
+#import "Ability.h"
+#import "MonsterCardModel.h"
+#import "PlayerModel.h"
 @implementation AIPlayer (Utility)
 
 -(NSArray*)getAbilityTargets:(Ability*)ability attacker:(MonsterCardModel*)attacker target:(MonsterCardModel*)target fromSide:(int)side

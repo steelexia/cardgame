@@ -8,6 +8,7 @@
 
 #import "CustomCollectionView.h"
 #import "CardsCollectionView.h"
+#import "UIConstants.h"
 
 @implementation CustomCollectionView
 

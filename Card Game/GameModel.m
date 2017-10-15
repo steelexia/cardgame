@@ -6,11 +6,29 @@
 //  Copyright (c) 2014 Content Games. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
 #import "GameModel.h"
+#import "GameViewController.h"
 #import "GameViewController+Animation.h"
 #import "UserModel.h"
 #import "Campaign.h"
 #import "CardPointsUtility.h"
+#import "CustomTableView.h"
+#import "CardModel.h"
+#import "CardView.h"
+#import "MonsterCardModel.h"
+#import "SpellCardModel.h"
+#import "PlayerModel.h"
+#import "DeckModel.h"
+#import "Ability.h"
+#import "SinglePlayerCards.h"
+#import "AIPlayer.h"
+#import <Parse/Parse.h>
+#import "AbilityWrapper.h"
+#import "Level.h"
+#import "MoveHistory.h"
+#import "CFButton.h"
+#import "MoveHistoryTableView.h"
 
 @implementation GameModel
 {
@@ -1112,9 +1130,9 @@ enum GameMode __gameMode; //because C functions cant access
         NSLog(@"====================================================");
         
         [_moveHistories addObject:_currentMoveHistory];
+      
         [_gameViewController.moveHistoryTableView.tableView reloadInputViews];
         [_gameViewController.moveHistoryTableView.tableView reloadData];
-        
         _currentMoveHistory = nil;
         
         

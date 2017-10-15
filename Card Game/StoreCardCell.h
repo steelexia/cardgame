@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CardView.h"
-#import "StrokedLabel.h"
-#import "CFLabel.h"
+@class CardView;
+@class StrokedLabel;
+@class CFLabel;
 
 @interface StoreCardCell : UICollectionViewCell
 

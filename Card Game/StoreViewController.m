@@ -15,6 +15,12 @@
 #import "PickIAPHelper.h"
 #import "StorePackCell.h"
 #import <QuartzCore/QuartzCore.h>
+#import "CardEditorViewController.h"
+#import "StoreCardsCollectionView.h"
+#import "CardView.h"
+#import "StrokedLabel.h"
+#import "CFButton.h"
+#import "CFLabel.h"
 
 @interface StoreViewController ()
 
@@ -34,7 +40,7 @@ float SCREEN_WIDTH, SCREEN_HEIGHT;
 int STORE_INITIAL_LOAD_AMOUNT = 96;
 int STORE_ADDITIONAL_INCREMENT = 16;
 
-CGSize keyboardSize;
+CGSize keyboardSizeStore;
 
 
 
@@ -1075,7 +1081,7 @@ NSArray *_products;
     _searchResult.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/2);
     
     
-    keyboardSize = CGSizeMake(0, 216);
+    keyboardSizeStore = CGSizeMake(0, 216);
     
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
                                            initWithTarget:self
@@ -3069,12 +3075,12 @@ UIControlEventTouchUpInside];
 
 -(void)keyboardOnScreen:(NSNotification *)notification
 {
-    keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    keyboardSizeStore = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
 }
 
 -(void)searchFieldBegan
 {
-    int height = keyboardSize.height;
+    int height = keyboardSizeStore.height;
     
     NSLog(@"started");
     

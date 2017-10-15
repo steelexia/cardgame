@@ -20,6 +20,15 @@
 #import "CFPopupViewController.h"
 #import "PlayerLevelView.h"
 #import "AVFoundation/AVAudioPlayer.h"
+#import "GameModel.h"
+#import "DeckEditorViewController.h"
+#import "GameViewController.h"
+#import "UserModel.h"
+#import "CFButton.h"
+#import "MessagesViewController.h"
+#import "OptionsViewController.h"
+#import "CardView.h"
+
 @import AudioToolbox;
 
 

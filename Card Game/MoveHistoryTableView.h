@@ -8,8 +8,11 @@
 
 
 #import <UIKit/UIKit.h>
-#import "CardModel.h"
-#import "CustomTableView.h"
+@class CardModel;
+@class CustomTableView;
+@class CardView;
+//#import "CardModel.h"
+//#import "CustomTableView.h"
 
 @interface MoveHistoryTableView :UIView <UITableViewDataSource, UITableViewDelegate>
 

@@ -20,6 +20,19 @@
 
 #import "GameStore.h"
 #import "AppDelegate.h"
+#import "UIConstants.h"
+#import "UserModel.h"
+
+#import "CardModel.h"
+#import "CardView.h"
+#import "StrokedTextField.h"
+#import "CustomTextField.h"
+#import "AbilityTableView.h"
+#import "GKImagePicker.h"
+#import "CardVote.h"
+#import "CFButton.h"
+#import "CFLabel.h"
+#import "SpellCardModel.h"
 
 @interface CardEditorViewController ()
 
@@ -67,7 +80,7 @@ UIButton *abilityAddButton;
 UILabel*tagsLabel;
 UITextField*tagsField;
 
-CGSize keyboardSize;
+CGSize keyboardSizeEditor;
 
 /** Buttons for changing between card types */
 UIButton *monsterCardButton, *spellCardButton;
@@ -835,7 +848,7 @@ bool shouldSetUpView = YES;
         NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
         [center addObserver:self selector:@selector(keyboardOnScreen:) name:UIKeyboardDidShowNotification object:nil];
         
-        keyboardSize = CGSizeMake(0, 216);
+        keyboardSizeEditor = CGSizeMake(0, 216);
         
         [self updateCardTypeButtons];
         
@@ -1499,18 +1512,18 @@ bool shouldSetUpView = YES;
 
 -(void)keyboardOnScreen:(NSNotification *)notification
 {
-    keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    keyboardSizeEditor = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
 }
 
 -(void)tagsFieldBegan
 {
-    int height = keyboardSize.height;
+    int height = keyboardSizeEditor.height;
     
     [UIView animateWithDuration:0.4
                           delay:0.05
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
-                         self.view.frame = CGRectMake(0,-keyboardSize.height, SCREEN_WIDTH, SCREEN_HEIGHT);
+                         self.view.frame = CGRectMake(0,-keyboardSizeEditor.height, SCREEN_WIDTH, SCREEN_HEIGHT);
                      }
                      completion:nil];
 }

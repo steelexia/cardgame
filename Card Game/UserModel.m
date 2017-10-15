@@ -987,6 +987,8 @@ int PLAYER_MAX_LEVEL = 99;
         [userPF fetch];
         [card.cardPF fetch];
         card.idNumber = [card.cardPF[@"idNumber"] intValue];
+        
+          NSLog(@"card successfully uploaded!");
     }
     else
     {
@@ -1021,7 +1023,7 @@ int PLAYER_MAX_LEVEL = 99;
     
     //[self saveCard:card];
     
-    NSLog(@"card successfully uploaded!");
+  
     
     return YES;
 }

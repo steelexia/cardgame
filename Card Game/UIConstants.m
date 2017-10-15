@@ -7,14 +7,23 @@
 //
 
 #import "UIConstants.h"
+#import "Ability.h"
+#import "CardModel.h"
+
 
 @implementation UIConstants
 
+
+
 +(void)loadResources
 {
+  //UIColor *const COLOUR_INTERFACE_BLUE = [[UIColor alloc] initWithRed:0 green:0.45 blue:1 alpha:1];
+   
+    
     COLOUR_INTERFACE_BLUE = [[UIColor alloc] initWithRed:0 green:0.45 blue:1 alpha:1];
     COLOUR_INTERFACE_BLUE_DARK = [[UIColor alloc] initWithRed:51/255.f green:130/255.f blue:204/255.f alpha:1];
     COLOUR_INTERFACE_BLUE_PRESSED = [[UIColor alloc] initWithRed:21/255.f green:59/255.f blue:110/255.f alpha:1];
+
     COLOUR_INTERFACE_BLUE_TRANSPARENT = [[UIColor alloc] initWithRed:0 green:0.45 blue:1 alpha:0.5];
     COLOUR_INTERFACE_BLUE_TOGGLE = [[UIColor alloc] initWithRed:55/255.f green:100/255.f blue:160/255.f alpha:1];
     COLOUR_INTERFACE_BLUE_LIGHT = [[UIColor alloc] initWithRed:64/255.f green:163/255.f blue:255/255.f alpha:1];

@@ -7,15 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GameModel.h"
+
 #import "ViewLayer.h"
 #import "Level.h"
-#import "CFButton.h"
-#import "CFLabel.h"
-#import "CardEditorViewController.h"
-#import "MultiplayerNetworking.h"
+@class CFButton;
+@class CFLabel;
+@class CardEditorViewController;
+@class MultiplayerNetworking;
+@class multiplayerDataHandler;
+@class MoveHistoryTableView;
 #import "multiplayerDataHandler.h"
-#import "MoveHistoryTableView.h"
+#import "MultiplayerNetworking.h"
+@class StrokedLabel;
 @class GameModel;
 
 /**

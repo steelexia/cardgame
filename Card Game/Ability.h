@@ -7,9 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CardModel.h"
-#import "SpellCardModel.h"
-#import "MonsterCardModel.h"
+
+
+@class CardModel;
+@class SpellCardModel;
+@class MonsterCardModel;
 
 /** Represents an ability a card has. Can be a card's original ability, or added by a spell card or another card's ability */
 @interface Ability : NSObject

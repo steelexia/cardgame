@@ -7,6 +7,10 @@
 //
 
 #import "AIPlayer.h"
+@class MonsterCardModel;
+@class CardModel;
+#import "Ability.h"
+
 
 /** Extra utility functions that don't require constant changing/tweaking goes here */
 @interface AIPlayer (Utility)

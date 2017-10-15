@@ -7,11 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "StoreCardsCollectionView.h"
-#import "CardView.h"
-#import "StrokedLabel.h"
+@class PFObject;
+@class StoreCardsCollectionView;
+@class CardView;
+@class StrokedLabel;
+@class CFButton;
+
+@class UserModel;
 #import "CardEditorViewController.h"
-#import "CFButton.h"
 
 @interface StoreViewController : UIViewController <UITextFieldDelegate,MyCardEditDelegate>
 

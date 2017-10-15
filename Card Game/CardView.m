@@ -11,6 +11,14 @@
 #import "StoreCardCell.h"
 #import "CustomCollectionView.h"
 #import "MoveHistory.h"
+#import "CardModel.h"
+#import "MonsterCardModel.h"
+#import "SpellCardModel.h"
+#import "Ability.h"
+#import "AbilityWrapper.h"
+#import "StrokedLabel.h"
+#import "CustomView.h"
+#import "UserModel.h"
 
 @implementation CardView
 
@@ -89,7 +97,7 @@ NSString *cardFlavourTextFont = @"LiberationSans-BoldItalic";
 NSMutableDictionary *standardCardImages;
 NSDictionary *singlePlayerCardImages;
 
-+(void) loadResources
++(void) loadResourcesCardViews
 {
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
     {

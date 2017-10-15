@@ -8,6 +8,9 @@
 
 #import "GameViewController+Animation.h"
 #import "CardView.h"
+#import "GameModel.h"
+#import "StrokedLabel.h"
+#import "SpellCardModel.h"
 
 @implementation GameViewController (Animation)
 

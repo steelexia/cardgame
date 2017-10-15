@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "StrokedLabel.h"
+@class StrokedLabel;
+
+
 
 @interface CFLabel : UIView
 

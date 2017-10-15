@@ -8,6 +8,7 @@
 
 #import "LeaderboardsViewController.h"
 #import <Parse/Parse.h>
+#import "StrokedLabel.h"
 
 @interface LeaderboardsViewController ()
 

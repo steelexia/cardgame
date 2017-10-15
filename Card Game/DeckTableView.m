@@ -12,6 +12,8 @@
 #import "DeckCell.h"
 #import "DeckCardCell.h"
 #import "CFLabel.h"
+#import "UIConstants.h"
+#import "StrokedLabel.h"
 
 @implementation DeckTableView
 

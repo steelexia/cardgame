@@ -9,7 +9,7 @@
 #import "CFLabel.h"
 #import "UIConstants.h"
 #import "CardView.h"
-
+#import "StrokedLabel.h"
 @implementation CFLabel
 
 - (id)initWithFrame:(CGRect)frame

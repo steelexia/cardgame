@@ -10,7 +10,7 @@
 
 #import "AbilityWrapper.h"
 #import "Ability.h"
-
+#import "SpellCardModel.h"
 @implementation AbilityWrapper
 
 @synthesize ability = _ability;

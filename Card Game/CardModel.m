@@ -380,6 +380,10 @@ const int CARD_ID_START = 1000;
             [cardImage deleteEventually]; //attempt to delete the image that got uploaded
             return cardSaveEror;
         }
+        else
+        {
+            NSLog(@"card uploaded successfully to parse");
+        }
         
         card.cardPF = cardPF;
         
