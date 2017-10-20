@@ -133,9 +133,6 @@ NSArray *_products;
     [_featuredStore setAlpha:0];
    
     
-    
-    
-    
     [self.view addSubview:_headerView];
     
     //add the storeIcon

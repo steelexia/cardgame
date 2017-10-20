@@ -20,6 +20,9 @@
 @property (strong) DeckTableView *deckView;
 
 @property (strong)StrokedLabel*searchResult;
+@property (strong)StrokedLabel *makeCardsExplanationLabel;
+@property (strong)StrokedLabel *deckCreateExplanationLabel;
+@property (strong)StrokedLabel *deckCreateExplanationLabel2;
 
 @property (strong) CFButton *deleteDeckButton;
 
@@ -37,6 +40,19 @@
 @property (strong)CFButton*deckLimitationsButton;
 
 @property(strong)UIView*footerView;
+
+//new views for forge cards and update forge cards
+@property(strong)UIButton *MyForgedCardsButton;
+@property(strong)UIButton *ForgeNewCardButton;
+
+@property(strong)UIView *UserCoinBalanceView;
+@property(strong)UILabel *UserCoinBalanceLabel;
+@property(strong)UIButton *UserCoinBalanceButton;
+
+//buy gold view
+@property (strong) UIView*buyGoldViewDeck;
+@property (strong) NSMutableArray*buyGoldButtonsDeck;
+
 
 //view with properties of the deck, name and tags
 @property(strong)UIView*propertiesView;
@@ -63,6 +79,7 @@
 
 /** Set itself automatically */
 @property BOOL isTutorial;
+@property BOOL isForgeCardsMode;
 
 /** Made changes to the current deck. */
 @property BOOL hasMadeChange;

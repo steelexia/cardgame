@@ -36,9 +36,27 @@ const double DECK_EDITOR_CARD_SCALE = 0.6;
         _tableView.separatorColor = [UIColor clearColor];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         
-        CFLabel*background = [[CFLabel alloc] initWithFrame:self.bounds];
-        [background setBackgroundColor:COLOUR_INTERFACE_BLUE];
-        [_tableView setBackgroundView:background];
+        _tableView.backgroundColor = [UIColor clearColor];
+        
+        
+        //brian July 23 add right edge and background for store
+        //x445, width 200
+        UIImageView *storeRightEdge = [[UIImageView alloc] init];
+        
+        //float storeRightEdgeXRatio = 445/mockupWidth;
+        //float storeRightEdgeWidthRatio = 200/mockupWidth;
+        
+        storeRightEdge.frame = CGRectMake(0,0,200,200);
+        
+        [storeRightEdge setImage:[UIImage imageNamed:@"CardStoreRightRow.png"]];
+        
+      
+        
+        
+        
+       // CFLabel*background = [[CFLabel alloc] initWithFrame:self.bounds];
+        //[background setBackgroundColor:COLOUR_INTERFACE_BLUE];
+        [_tableView setBackgroundView:storeRightEdge];
         
         [_tableView registerClass:[DeckCardCell class] forCellReuseIdentifier:@"deckTableCardCell"];
         [_tableView registerClass:[DeckCell class] forCellReuseIdentifier:@"deckTableDeckCell"];
@@ -132,7 +150,6 @@ const double DECK_EDITOR_CARD_SCALE = 0.6;
             [cell addSubview:cell.invalidLabel];
         else
             [cell.invalidLabel removeFromSuperview];
-
         
         return cell;
     }

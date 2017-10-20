@@ -18,6 +18,7 @@
 #import "UIConstants.h"
 #import "CardsCollectionCell.h"
 #import "CustomCollectionView.h"
+#import "CardEditorViewController.h"
 
 @interface DeckEditorViewController ()
 
@@ -30,7 +31,7 @@
 
 //double CARD_VIEWER_SCALE = 0.8;
 /** Screen dimension for convinience */
-int SCREEN_WIDTH, SCREEN_HEIGHT;
+float SCREEN_WIDTH, SCREEN_HEIGHT;
 
 /** UILabel used to darken the screen during card selections */
 UILabel *darkFilter;
@@ -88,9 +89,15 @@ DeckModel * allCards;
     if ([userPF[@"deckTutorialDone"] boolValue] == NO)
         _isTutorial = YES;
     
-    SCREEN_WIDTH = self.view.bounds.size.width;
-    SCREEN_HEIGHT = self.view.bounds.size.height;
-   
+    _isForgeCardsMode = NO;
+    
+    SCREEN_WIDTH = [[UIScreen mainScreen] bounds].size.width;
+    SCREEN_HEIGHT = [[UIScreen mainScreen] bounds].size.height;
+    
+    UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,SCREEN_WIDTH,SCREEN_HEIGHT)];
+    backgroundImageView.image = [UIImage imageNamed:@"WoodBG.jpg"];
+    [self.view addSubview:backgroundImageView];
+    
     //cost 0 to 10
     _costFilter = [NSMutableArray arrayWithArray: @[@(YES),@(YES),@(YES),@(YES),@(YES),@(YES),@(YES),@(YES),@(YES),@(YES),@(YES)]];
     
@@ -188,14 +195,18 @@ DeckModel * allCards;
     //set up cards view
     UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc] init];
     [layout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
+    
+    
     self.cardsView = [[CardsCollectionView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-366-42, SCREEN_WIDTH-88, 366) collectionViewLayout:layout];
     self.cardsView.indexOfNewCards = self.indexOfNewCards;
     self.cardsView.indexOfStarterCards = self.indexOfStarterCards;
     
-    self.cardsView.parentViewController = self; //for callbacks
-    self.cardsView.backgroundColor = COLOUR_INTERFACE_BLUE_TRANSPARENT;
+    CGRect cardFrame = self.cardsView.frame;
     
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.cardsView.parentViewController = self; //for callbacks
+    self.cardsView.backgroundColor = [UIColor clearColor];
+    
+    self.view.backgroundColor = [UIColor clearColor];
     
     [self.view addSubview:self.cardsView];
     
@@ -204,9 +215,11 @@ DeckModel * allCards;
     
     //set up deck view
     self.deckView = [[DeckTableView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-90,0,90,SCREEN_HEIGHT-42)];
+    self.deckView.backgroundColor = [UIColor clearColor];
     
     [self.view addSubview:self.deckView];
     [self.deckView setUserInteractionEnabled:YES];
+    
     
     _footerView = [[UIView alloc]initWithFrame:CGRectMake(0,SCREEN_HEIGHT-44,SCREEN_WIDTH, 44)];
     //_footerView.backgroundColor = [UIColor whiteColor];
@@ -265,6 +278,110 @@ DeckModel * allCards;
     backButton = [[CFButton alloc] initWithFrame:CGRectMake(4, 8, 46, 32)];
     [backButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(backButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    
+    self.MyForgedCardsButton = [[UIButton alloc] initWithFrame:CGRectMake(15, 80, 200, 70)];
+    //self.MyForgedCardsButton.label.text = @"Forge Cards";
+    [self.MyForgedCardsButton addTarget:self action:@selector(ForgedButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [self.MyForgedCardsButton setTitle:@"Forge Cards" forState:UIControlStateNormal];
+    
+    //UIImageView *myCrdImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cardforgebuttonBURNED"]];
+    
+    //[myCrdImg setFrame:CGRectMake(55,100,300,100)];
+    
+    //[myCrdImg.layer setBorderColor:[[UIColor blackColor] CGColor]];
+    //[myCrdImg.layer setBorderWidth:5.0];
+    
+    //[self.view addSubview:myCrdImg];
+    
+    _makeCardsExplanationLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(72, 17, 140, 60)];
+    _makeCardsExplanationLabel.textColor = [UIColor whiteColor];
+    _makeCardsExplanationLabel.backgroundColor = [UIColor clearColor];
+    _makeCardsExplanationLabel.font = [UIFont fontWithName:cardMainFont size:20];
+    _makeCardsExplanationLabel.textAlignment = NSTextAlignmentCenter;
+    _makeCardsExplanationLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    _makeCardsExplanationLabel.numberOfLines = 0;
+    _makeCardsExplanationLabel.strokeOn = YES;
+    _makeCardsExplanationLabel.strokeColour = [UIColor blackColor];
+    _makeCardsExplanationLabel.strokeThickness = 3;
+    
+    _makeCardsExplanationLabel.text = @"Create & Sell Your Own Cards!";
+    
+    UIImage *CardForgeButtonImg = [UIImage imageNamed:@"CardStoreBlueButton"];
+    [self.MyForgedCardsButton setBackgroundImage:CardForgeButtonImg forState:UIControlStateNormal];
+    
+    self.ForgeNewCardButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 20, 100, 80)];
+    UIImage *PayToForgeImg = [UIImage imageNamed:@"FeaturedStorePurchaseButton"];
+    [self.ForgeNewCardButton setImage:PayToForgeImg forState:UIControlStateNormal];
+    self.ForgeNewCardButton.alpha = 0;
+    
+    //add button to featuredStoreDialogue
+    //-greenButton, 142x, 269H, 282 W,96H
+    //float purchaseButtonX = 142/mockupWidth*SCREEN_WIDTH;
+    //float purchaseButtonY = 240/mockupHeight*SCREEN_HEIGHT;
+    //float purchaseButtonW = 282/mockupWidth*SCREEN_WIDTH;
+    //float purchaseButtonH = 60/mockupWidth *SCREEN_HEIGHT;
+    
+    //self.ForgeNewCardButton.label.text = @"Forge A New Card";
+    
+    
+    
+    [self.ForgeNewCardButton addTarget:self action:@selector(ForgeNewCard) forControlEvents:UIControlEventTouchUpInside];
+    
+    //new buy view code
+    //-------------------buy gold view-------------------//
+    _buyGoldViewDeck = [[UIView alloc] initWithFrame:self.view.bounds];
+    _buyGoldViewDeck.alpha = 0;
+    
+    UIView *buyGoldDarkFilter = [[UIView alloc] initWithFrame:CGRectMake(0,0,SCREEN_WIDTH, SCREEN_HEIGHT-40)];
+    buyGoldDarkFilter.backgroundColor = [[UIColor alloc]initWithHue:0 saturation:0 brightness:0 alpha:0.8];
+    [buyGoldDarkFilter setUserInteractionEnabled:YES]; //blocks all interaction behind it
+    [_buyGoldViewDeck addSubview:buyGoldDarkFilter];
+    
+    StrokedLabel*buyGoldLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 40)];
+    buyGoldLabel.textAlignment = NSTextAlignmentCenter;
+    buyGoldLabel.textColor = [UIColor whiteColor];
+    buyGoldLabel.backgroundColor = [UIColor clearColor];
+    
+    buyGoldLabel.font = [UIFont fontWithName:cardMainFont size:CARD_NAME_SIZE +11];
+    buyGoldLabel.strokeOn = YES;
+    buyGoldLabel.strokeColour = [UIColor blackColor];
+    buyGoldLabel.strokeThickness = 5;
+    buyGoldLabel.text = @"Purchase additional gold:";
+    buyGoldLabel.center = CGPointMake(SCREEN_WIDTH/2, 100);
+    [_buyGoldViewDeck addSubview:buyGoldLabel];
+    
+    CFButton*buyGoldBackButton = [[CFButton alloc] initWithFrame:CGRectMake(4, SCREEN_HEIGHT-40-40 + 4, 46, 32)];
+    [buyGoldBackButton setImage:[UIImage imageNamed:@"back_button"] forState:UIControlStateNormal];
+    [buyGoldBackButton addTarget:self action:@selector(buyGoldBackButtonPressed)    forControlEvents:UIControlEventTouchUpInside];
+    [_buyGoldViewDeck addSubview:buyGoldBackButton];
+    
+    _buyGoldButtonsDeck = [NSMutableArray arrayWithCapacity:6];
+    
+
+    //code for coin balance buy button
+    self.UserCoinBalanceView = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-115, 15, 150, 200)];
+    UIImageView *coinBag = [[UIImageView alloc] init];
+    
+    //code
+    self.UserCoinBalanceButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 120, 120)];
+    UIImage *coinBagImg = [UIImage imageNamed:@"CardStoreCoins.png"];
+    
+    [self.UserCoinBalanceButton setImage:coinBagImg forState:UIControlStateNormal];
+    [self.UserCoinBalanceButton addTarget:self action:@selector(openBuyGoldView)    forControlEvents:UIControlEventTouchUpInside];
+    
+    self.UserCoinBalanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(40,90,50,50)];
+    self.UserCoinBalanceLabel.text = @"40";
+    
+    [self.UserCoinBalanceView addSubview:self.UserCoinBalanceButton];
+    [self.UserCoinBalanceView addSubview:self.UserCoinBalanceLabel];
+    
+    //set user CoinBalanceLabel value from user amount
+    self.UserCoinBalanceLabel.text = [NSString stringWithFormat:@"%d", userGold];
+    
+    
+    
+    //brian return point--need to add this coin balance button in front of other views--suggest adding somewhere else in code
+    //code
     
     self.deleteDeckButton = [[CFButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-50, 8, 46, 32)];
     [self.deleteDeckButton setImage:[UIImage imageNamed:@"remove_deck_button"] forState:UIControlStateNormal];
@@ -369,6 +486,40 @@ DeckModel * allCards;
     _searchResult.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/2);
    [self.view addSubview:_searchResult];
     
+    _deckCreateExplanationLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(10, self.cardsView.frame.size.height/2 - 35, self.cardsView.frame.size.width - 20, self.cardsView.frame.size.height)];
+    _deckCreateExplanationLabel.textColor = [UIColor whiteColor];
+    _deckCreateExplanationLabel.backgroundColor = [UIColor clearColor];
+    _deckCreateExplanationLabel.font = [UIFont fontWithName:cardMainFont size:20];
+    _deckCreateExplanationLabel.textAlignment = NSTextAlignmentCenter;
+    _deckCreateExplanationLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    _deckCreateExplanationLabel.numberOfLines = 0;
+    _deckCreateExplanationLabel.strokeOn = YES;
+    _deckCreateExplanationLabel.strokeColour = [UIColor blackColor];
+    _deckCreateExplanationLabel.strokeThickness = 3;
+    //_deckCreateExplanationLabel.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/2);
+    _deckCreateExplanationLabel.text = @"Decks Can Have Up To 5 FORGE Cards";
+    [self.view addSubview:_deckCreateExplanationLabel];
+    
+    _deckCreateExplanationLabel2 = [[StrokedLabel alloc] initWithFrame:CGRectMake(10, self.cardsView.frame.size.height/2 + 60, self.cardsView.frame.size.width - 20, self.cardsView.frame.size.height)];
+    _deckCreateExplanationLabel2.textColor = [UIColor whiteColor];
+    _deckCreateExplanationLabel2.backgroundColor = [UIColor clearColor];
+    _deckCreateExplanationLabel2.font = [UIFont fontWithName:cardMainFont size:20];
+    _deckCreateExplanationLabel2.textAlignment = NSTextAlignmentCenter;
+    _deckCreateExplanationLabel2.lineBreakMode = NSLineBreakByWordWrapping;
+    _deckCreateExplanationLabel2.numberOfLines = 0;
+    _deckCreateExplanationLabel2.strokeOn = YES;
+    _deckCreateExplanationLabel2.strokeColour = [UIColor blackColor];
+    _deckCreateExplanationLabel2.strokeThickness = 3;
+    //_deckCreateExplanationLabel.center = CGPointMake(_cardsView.bounds.size.width/2, _cardsView.bounds.size.height/2);
+    _deckCreateExplanationLabel2.text = @"Try Different Element Combinations For New Strategies";
+    [self.view addSubview:_deckCreateExplanationLabel2];
+    
+    //@property (strong)StrokedLabel *deckCreateExplanationLabel;
+    //@property (strong)StrokedLabel *deckCreateExplanationLabel2;
+    
+    
+    
+    
     invalidDeckButton = [[CFButton alloc] initWithFrame:CGRectMake(104,8,58, 32)];
     invalidDeckButton.buttonStyle = CFButtonStyleWarning;
     invalidDeckButton.label.text = @"Problems";
@@ -415,13 +566,26 @@ DeckModel * allCards;
     [_invalidDeckReasonsOkButton setTextSize:18];
     [_invalidDeckReasonsOkButton addTarget:self action:@selector(invalidDeckReasonsOkButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
-    //property view
+    //property view UIEDITBrian
+    
     _propertiesView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH-_deckView.frame.size.width, _cardsView.frame.origin.y)];
+    
     //_propertiesView.backgroundColor = [UIColor redColor];
     
+    /*
     CFLabel*propertiesBackground = [[CFLabel alloc] initWithFrame:CGRectMake(_propertiesView.frame.origin.x, _propertiesView.frame.origin.y - 8, _propertiesView.frame.size.width+2, _propertiesView.frame.size.height + 8)];
     [propertiesBackground setBackgroundColor:COLOUR_INTERFACE_BLUE_DARK];
     [self.view addSubview:propertiesBackground];
+    */
+    
+    UIImageView *propertyBackground = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, _propertiesView.frame.size.width, _propertiesView.frame.size.height)];
+    //UIImageView *propertyBackground = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, _propertiesView.frame.size.width, _propertiesView.frame.size.height-50)];
+    [propertyBackground setImage:[UIImage imageNamed:@"CardCreateDialog2"]];
+    //[propertyBackground setImage:[UIImage imageNamed:@"CardBackgroundLight"]];
+    [self.view addSubview:propertyBackground];
+    
+    //[_propertiesView addSubview:propertyBackground];
+    
     
     _tagsPopularButton = [[CFButton alloc] initWithFrame:CGRectMake(_propertiesView.frame.size.width - 52 - 4, _propertiesView.frame.size.height - 36, 50, 28)];
     
@@ -452,7 +616,7 @@ DeckModel * allCards;
     [_nameField.layer setBorderColor:[UIColor blackColor].CGColor];
     [_nameField.layer setBorderWidth:2];
     _nameField.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0);
-    [_nameField setBackgroundColor:COLOUR_INTERFACE_BLUE_LIGHT];
+    [_nameField setBackgroundColor:COLOUR_INTERFACE_RED];
     
     [_propertiesView addSubview:_nameField];
     
@@ -479,6 +643,9 @@ DeckModel * allCards;
         _tagsArea.frame = CGRectMake(59, 38, _propertiesView.frame.size.width - 55 - 12, _propertiesView.frame.size.height - 38 - 8);
     
     [_propertiesView addSubview:_tagsArea];
+    
+    
+    
     
     [self.view addSubview:_propertiesView];
     
@@ -591,6 +758,15 @@ DeckModel * allCards;
                                            action:@selector(tapRegistered)];
     [tapGesture setCancelsTouchesInView:NO];
     [self.view addGestureRecognizer:tapGesture];
+    
+    self.UserCoinBalanceView.alpha = 0;
+    [self.view addSubview:self.UserCoinBalanceView];
+    
+    UIImageView *myAnvilImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cardforgeanvilIconFiltered"]];
+    myAnvilImg.frame = CGRectMake(8,10,70,70);
+    [self.view addSubview:myAnvilImg];
+    
+    [self.view addSubview:_makeCardsExplanationLabel];
     
     [self resetAllViews];
     
@@ -879,6 +1055,48 @@ DeckModel * allCards;
                      completion:^(BOOL completed){
                          [darkFilter removeFromSuperview];
                      }];
+}
+
+
+-(void)openBuyGoldView
+{
+    [self.view insertSubview:_buyGoldViewDeck belowSubview:_footerView];
+    [backButton setUserInteractionEnabled:NO];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _buyGoldViewDeck.alpha = 1;
+                         backButton.alpha = 0;
+                     }
+                     completion:^(BOOL completed){
+                         [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                                          animations:^{
+                                              //_blankCardView.alpha = 0;
+                                          }completion:nil];
+                     }];
+}
+
+
+-(void)buyGoldBackButtonPressed
+{
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _buyGoldViewDeck.alpha = 0;
+                         backButton.alpha = 1;
+                     }
+                     completion:^(BOOL completed){
+                         [backButton setUserInteractionEnabled:YES];
+                         [_buyGoldViewDeck removeFromSuperview];
+                     }];
+}
+
+
+-(void)ForgeNewCard
+{
+    //bring up the screen to create a brand new card.
+    CardEditorViewController *viewController = [[CardEditorViewController alloc] initWithMode:cardEditorModeCreation WithCard:nil];
+    
+    [self presentViewController:viewController animated:YES completion:nil];
+    
 }
 
 -(void)maximizeCard:(enum CardCollectinViewMode)mode
@@ -1370,6 +1588,8 @@ DeckModel * allCards;
 /** Resets all views to when it's first opened */
 -(void)resetAllViews
 {
+    self.isForgeCardsMode = NO;
+    
     [self.deleteDeckButton removeFromSuperview];
     
     [self.cardsView removeAllCells];
@@ -1377,7 +1597,7 @@ DeckModel * allCards;
     currentDeck = nil;
     
     _searchResult.text = @"Select or create a deck to view your cards.";
-    _searchResult.frame = CGRectMake(10, self.cardsView.frame.size.height/2 - 40, self.cardsView.frame.size.width - 20, self.cardsView.frame.size.height);
+    _searchResult.frame = CGRectMake(10, self.cardsView.frame.size.height/2 + 20, self.cardsView.frame.size.width - 20, self.cardsView.frame.size.height);
     [_searchResult sizeToFit];
     
     [saveDeckButton removeFromSuperview];
@@ -1418,6 +1638,78 @@ DeckModel * allCards;
     [self.deckView.tableView reloadInputViews];
     [self.deckView.tableView reloadData];
     [self updateDeckCounterLabel];
+    
+    //add ForgeCardsButton to visible/invisible
+    [self.view addSubview:self.MyForgedCardsButton];
+    self.ForgeNewCardButton.alpha = 0;
+    [self.view addSubview:self.ForgeNewCardButton];
+    
+}
+
+/** Sets up the views for Creating and Viewing Forged Cards*/
+//Displays all forged cards in horizontal collection view
+//Displays Back Button
+//Displays Upgrade Button & Gold Cost of Upgarde When User Clicks on Card
+//Displays Total Gold Earned by Purchases of Card
+//Displays Large Button for Creating New Forged Card--Gold Cost Shows on Next Screen
+
+
+
+-(void)setupForgeCardsView
+{
+    //view cleanup code for this mode
+    [addDeckButton removeFromSuperview];
+    _searchResult.text = @"";
+    [self.MyForgedCardsButton removeFromSuperview];
+    
+    //set Forge Cards Mode so cardview shows only forged cards
+    _isForgeCardsMode = YES;
+    
+    _hasMadeChange = NO; //initialize
+    
+    //[backButton removeFromSuperview];
+    
+    for (UIView*view in _propertiesView.subviews)
+        view.alpha = 0;
+    
+    //brian return point.
+    //need to expand the horizontal collection view for forged cards
+    //need to work on UI to add a new background that deals with blank deckView object
+    //need to work on UI to show distinct sections of "My Forged Cards" and Forge New Card
+    //need to show coin balance at top right
+    //remove starter labels on forged cards view
+    
+    self.deckView.alpha = 0;
+    self.ForgeNewCardButton.alpha = 1;
+    
+    //set coin balance views as visible
+    
+    //original dimensions of self.cardsView(0, SCREEN_HEIGHT-366-42, SCREEN_WIDTH-88, 366) collectionViewLayout:layout];
+    CGRect cardViewFrame = self.cardsView.frame;
+    cardViewFrame.size.width = SCREEN_WIDTH;
+    [self.cardsView setFrame:cardViewFrame];
+    
+    CGRect collectViewFrame = CGRectMake(0,0,cardViewFrame.size.width,cardViewFrame.size.height);
+    
+    [self.cardsView.collectionView setFrame:collectViewFrame];
+    
+    
+    
+    
+    [self.deckView removeAllCells];
+    
+    self.deckView.viewMode = deckTableViewCards;
+    
+    [_footerView addSubview:_filterToggleButton];
+    
+    [self reloadCardsWithFilter];
+    
+    //[self updateCardsCounterLabel];
+    
+    self.cardsView.isScrolling = NO;
+    
+    //[self.cardsView.collectionView reloadData];
+    //[self.cardsView.collectionView reloadInputViews];
 }
 
 /** Setups the views for deck editing. If currentDeck is nil, assuming it's a new deck */
@@ -1477,6 +1769,7 @@ DeckModel * allCards;
     
     self.cardsView.isScrolling = NO;
     
+    
     //[self.cardsView.collectionView reloadData];
     //[self.cardsView.collectionView reloadInputViews];
 }
@@ -1523,6 +1816,12 @@ DeckModel * allCards;
     
     currentDeck = nil;
     [self setupDeckEditView];
+}
+-(void)ForgedButtonPressed
+{
+    //do stuff for forged cards
+    currentDeck = nil;
+    [self setupForgeCardsView];
 }
 
 -(void)backButtonPressed
@@ -1738,6 +2037,10 @@ DeckModel * allCards;
     
     [self.deckView.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
     
+    //testaddoct18
+    [self.deckView.tableView reloadData];
+    
+    
     //get the CardView of every card in the deck
     for (CardModel *card in allCards.cards)
     {
@@ -1758,6 +2061,19 @@ DeckModel * allCards;
             if ([_rarityFilter[card.rarity] boolValue] == NO)
                 continue;
         }
+        
+        //add a filter here when in forge mode, only add cards which are part of the set that are created by the user
+        if (self.isForgeCardsMode == YES)
+        {
+            //check if card is forged, if not dont add
+            PFUser *myUser = [PFUser currentUser];
+            NSString *myUserID = myUser.objectId;
+            NSString *cardCreator = card.creator;
+        
+            if(![cardCreator isEqualToString:myUserID])
+                continue;
+        }
+        
         
         [self updateCard:card];
         [self.cardsView.currentCardModels addObject:card];

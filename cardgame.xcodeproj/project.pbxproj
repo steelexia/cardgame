@@ -286,6 +286,9 @@
 		92D2639E1D753E8C0002A8EA /* battle_player_portrait.DAE in Resources */ = {isa = PBXBuildFile; fileRef = 92D263931D753E8C0002A8EA /* battle_player_portrait.DAE */; };
 		92D2639F1D753E8C0002A8EA /* enemy_cards_in_hand.DAE in Resources */ = {isa = PBXBuildFile; fileRef = 92D263941D753E8C0002A8EA /* enemy_cards_in_hand.DAE */; };
 		92D263A01D753E8C0002A8EA /* player_cards_in_hand.DAE in Resources */ = {isa = PBXBuildFile; fileRef = 92D263951D753E8C0002A8EA /* player_cards_in_hand.DAE */; };
+		92ED97D41F96A0D8004EBBBE /* cardforgebuttonPNG.png in Resources */ = {isa = PBXBuildFile; fileRef = 92ED97D31F96A0D8004EBBBE /* cardforgebuttonPNG.png */; };
+		92ED97D71F96A4CE004EBBBE /* cardforgebuttonBURNED.png in Resources */ = {isa = PBXBuildFile; fileRef = 92ED97D61F96A4CE004EBBBE /* cardforgebuttonBURNED.png */; };
+		92ED97D91F9A6FD5004EBBBE /* cardforgeanvilIconFiltered.png in Resources */ = {isa = PBXBuildFile; fileRef = 92ED97D81F9A6FD5004EBBBE /* cardforgeanvilIconFiltered.png */; };
 		9319F3831BD0377400F939FE /* StoreViewController+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9319F3821BD0377400F939FE /* StoreViewController+Animation.m */; };
 		9319F38E1BD164D200F939FE /* poof_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F3891BD164D200F939FE /* poof_1.png */; };
 		9319F38F1BD164D200F939FE /* poof_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 9319F38A1BD164D200F939FE /* poof_2.png */; };
@@ -976,6 +979,9 @@
 		92D263931D753E8C0002A8EA /* battle_player_portrait.DAE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = battle_player_portrait.DAE; sourceTree = "<group>"; };
 		92D263941D753E8C0002A8EA /* enemy_cards_in_hand.DAE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = enemy_cards_in_hand.DAE; sourceTree = "<group>"; };
 		92D263951D753E8C0002A8EA /* player_cards_in_hand.DAE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = player_cards_in_hand.DAE; sourceTree = "<group>"; };
+		92ED97D31F96A0D8004EBBBE /* cardforgebuttonPNG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cardforgebuttonPNG.png; sourceTree = "<group>"; };
+		92ED97D61F96A4CE004EBBBE /* cardforgebuttonBURNED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cardforgebuttonBURNED.png; path = ../../Desktop/cardforgebuttonBURNED.png; sourceTree = "<group>"; };
+		92ED97D81F9A6FD5004EBBBE /* cardforgeanvilIconFiltered.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cardforgeanvilIconFiltered.png; sourceTree = "<group>"; };
 		9319F3811BD0377400F939FE /* StoreViewController+Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "StoreViewController+Animation.h"; sourceTree = "<group>"; };
 		9319F3821BD0377400F939FE /* StoreViewController+Animation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "StoreViewController+Animation.m"; sourceTree = "<group>"; };
 		9319F3891BD164D200F939FE /* poof_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = poof_1.png; path = "Card Game/poof/poof_1.png"; sourceTree = "<group>"; };
@@ -2184,6 +2190,8 @@
 		924721391C8D37D700167CD1 /* mainScreen */ = {
 			isa = PBXGroup;
 			children = (
+				92ED97D61F96A4CE004EBBBE /* cardforgebuttonBURNED.png */,
+				92ED97D31F96A0D8004EBBBE /* cardforgebuttonPNG.png */,
 				9247213A1C8D37F000167CD1 /* mainpage_01-3.png */,
 			);
 			name = mainScreen;
@@ -2286,6 +2294,7 @@
 		9319F39B1BD96D5400F939FE /* CardCreate */ = {
 			isa = PBXGroup;
 			children = (
+				92ED97D81F9A6FD5004EBBBE /* cardforgeanvilIconFiltered.png */,
 				9319F3BC1BDA850900F939FE /* CardCreateDialog2.png */,
 				9319F39C1BD96D7A00F939FE /* CardCreateBackButton.png */,
 				9319F39D1BD96D7A00F939FE /* CardCreateBlueButton.png */,
@@ -3173,6 +3182,7 @@
 				9069AAE5195501AB006D1D98 /* card_background_front_light_common.png in Resources */,
 				ECFA3E911B657FA800C83EE1 /* IconLightning.png in Resources */,
 				90C52894199C00D000750C54 /* card_icon_gray.png in Resources */,
+				92ED97D41F96A0D8004EBBBE /* cardforgebuttonPNG.png in Resources */,
 				FACF46C919EC852300D334E0 /* card_2200.png in Resources */,
 				FACF46CA19EC852300D334E0 /* card_2201.png in Resources */,
 				9069AACE1951E734006D1D98 /* Main_iPhone.storyboard in Resources */,
@@ -3279,6 +3289,7 @@
 				5FD2CBEA1C6FBCF700692D88 /* card_3001.png in Resources */,
 				9319F3AD1BD96D7A00F939FE /* CardCreateBlueButton.png in Resources */,
 				EC42E85C1B572647005EDFD5 /* CardStorePlusButton.png in Resources */,
+				92ED97D91F9A6FD5004EBBBE /* cardforgeanvilIconFiltered.png in Resources */,
 				EC42E84A1B5725FB005EDFD5 /* CardStoreBackButton.png in Resources */,
 				9069AAE6195501AB006D1D98 /* card_background_front_lightning_common.png in Resources */,
 				907D9BDC192270DE0037C0CF /* field_edge.png in Resources */,
@@ -3363,6 +3374,7 @@
 				90F80FA319A63F4C007571F4 /* card_image_cardeditor_empty.png in Resources */,
 				9319F3AF1BD96D7A00F939FE /* CardCreateDividers.png in Resources */,
 				FACF46D019EC852300D334E0 /* card_2400.png in Resources */,
+				92ED97D71F96A4CE004EBBBE /* cardforgebuttonBURNED.png in Resources */,
 				92D2639D1D753E8C0002A8EA /* battle_player_mana.DAE in Resources */,
 				907D9BFD192FD35F0037C0CF /* card_glow_target.png in Resources */,
 				90456EE3198F1B9100B807DC /* buy_button_gray.png in Resources */,

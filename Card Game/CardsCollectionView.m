@@ -36,7 +36,9 @@
         
         //CFLabel*background = [[CFLabel alloc] initWithFrame:self.bounds];
         //[_collectionView setBackgroundView:background];
-        [_collectionView setBackgroundColor:COLOUR_INTERFACE_BLUE_LIGHT];
+        
+        
+        [_collectionView setBackgroundColor:[UIColor clearColor]];
         
         [self.collectionView setDataSource:self];
         [self.collectionView setDelegate:self];

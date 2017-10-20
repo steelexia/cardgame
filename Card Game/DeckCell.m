@@ -22,8 +22,13 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     
     if (self) {
+        
+        
+        
         UIView *background = [[UIView alloc] initWithFrame:self.bounds];
-        [background setBackgroundColor:COLOUR_NEUTRAL];
+        
+        
+        [background setBackgroundColor:COLOUR_ICE];
         background.layer.cornerRadius = 5;
         [background.layer setBorderColor:[UIColor blackColor].CGColor];
         [background.layer setBorderWidth:2];
