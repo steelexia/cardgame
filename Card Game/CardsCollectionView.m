@@ -94,10 +94,12 @@
     cell.cardView = [[CardView alloc] initWithModel:card viewMode:card.cardViewState viewState:card.cardViewState];
     cell.cardView.frontFacing = YES;
     cell.cardView.cardHighlightType = cardHighlightNone;
+    //cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_VIEWER_SCALE, CARD_VIEWER_SCALE);
     cell.cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_VIEWER_SCALE, CARD_VIEWER_SCALE);
     cell.cardView.center = cell.center;
-    cell.cardView.frame = CGRectMake(0,0,CARD_FULL_WIDTH,CARD_FULL_HEIGHT);
-    
+     cell.cardView.frame = CGRectMake(0,0,CARD_FULL_WIDTH,CARD_FULL_HEIGHT);
+    //cell.cardView.frame = CGRectMake(0,0,CARD_FULL_WIDTH,CARD_FULL_HEIGHT*0.2);
+
    if(newLabel==nil)
    {
        newLabel= [[UILabel alloc] initWithFrame:CGRectMake(CARD_FULL_WIDTH-60,CARD_FULL_HEIGHT-40,60,30)];
@@ -171,11 +173,16 @@
     
 }
 
-
-
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(CARD_FULL_WIDTH*CARD_VIEWER_SCALE,CARD_FULL_HEIGHT*CARD_VIEWER_SCALE);
+    //CGSize cardSize = CGSizeMake(CARD_FULL_WIDTH*CARD_VIEWER_SCALE,CARD_FULL_HEIGHT*CARD_VIEWER_SCALE);
+    
+    CGSize cardSize = CGSizeMake(CARD_FULL_WIDTH*CARD_VIEWER_SCALE,CARD_FULL_HEIGHT*CARD_VIEWER_SCALE);
+    
+    NSLog(@"cardSize");
+    
+    return cardSize;
+    
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {

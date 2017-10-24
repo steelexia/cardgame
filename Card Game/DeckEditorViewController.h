@@ -23,6 +23,18 @@
 @property (strong)StrokedLabel *makeCardsExplanationLabel;
 @property (strong)StrokedLabel *deckCreateExplanationLabel;
 @property (strong)StrokedLabel *deckCreateExplanationLabel2;
+@property (strong)StrokedLabel *createCostLabel;
+@property (strong) UIImageView *myAnvilImg;
+
+//UIView Collection For Coin Balance & Free Cards
+@property(strong)UIView *UserCoinBalanceView;
+@property(strong)StrokedLabel *UserCoinBalanceLabel;
+@property(strong)StrokedLabel *UserFreeCardsLabel;
+@property(strong)UIButton *UserCoinBalanceButton;
+@property(strong)UIImageView *myCoinBalanceFrame;
+@property(strong)UIImageView *myCoinPileImg;
+@property(strong)UIImageView *myFreeCardsImg;
+
 
 @property (strong) CFButton *deleteDeckButton;
 
@@ -42,12 +54,9 @@
 @property(strong)UIView*footerView;
 
 //new views for forge cards and update forge cards
+@property(strong) UIImageView *propertyBackground;
 @property(strong)UIButton *MyForgedCardsButton;
 @property(strong)UIButton *ForgeNewCardButton;
-
-@property(strong)UIView *UserCoinBalanceView;
-@property(strong)UILabel *UserCoinBalanceLabel;
-@property(strong)UIButton *UserCoinBalanceButton;
 
 //buy gold view
 @property (strong) UIView*buyGoldViewDeck;
