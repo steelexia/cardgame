@@ -50,7 +50,9 @@ const double DECK_EDITOR_CARD_SCALE = 0.6;
         
         [storeRightEdge setImage:[UIImage imageNamed:@"CardStoreRightRow.png"]];
         
-      
+        CFLabel*background = [[CFLabel alloc] initWithFrame:self.bounds];
+        [background setBackgroundColor:COLOUR_INTERFACE_BLUE];
+        //[_tableView setBackgroundView:background];
         
         
         
@@ -74,9 +76,11 @@ const double DECK_EDITOR_CARD_SCALE = 0.6;
     return self;
 }
 
--(int)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.currentCells count];
+    NSInteger cellCount = [self.currentCells count];
+    
+    return cellCount;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -103,6 +107,9 @@ const double DECK_EDITOR_CARD_SCALE = 0.6;
         cardView.transform = CGAffineTransformScale(CGAffineTransformIdentity, DECK_EDITOR_CARD_SCALE, DECK_EDITOR_CARD_SCALE);
         
         cardView.center = CGPointMake(cell.center.x, 68);
+        CGRect updateLeftFrame = cardView.frame;
+        updateLeftFrame.origin.x = 6.8;
+        cardView.frame = updateLeftFrame;
         cell.cardView = cardView;
         [cell addSubview:cardView];
         
@@ -153,7 +160,6 @@ const double DECK_EDITOR_CARD_SCALE = 0.6;
         
         return cell;
     }
-    
     
     
     //greatly improves performance but freezes scale?

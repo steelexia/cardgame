@@ -390,7 +390,6 @@ DeckModel * allCards;
     
 
     //code for coin balance view section, turn off section when not needed.
-    //broop
     self.UserCoinBalanceView = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*0.6, 0*DeckHRatio, SCREEN_WIDTH*0.4, 157*DeckHRatio)];
     //self.UserCoinBalanceView.backgroundColor = [UIColor redColor];
     
@@ -717,8 +716,6 @@ DeckModel * allCards;
     [_propertiesView addSubview:_tagsArea];
     
     
-    
-    
     [self.view addSubview:_propertiesView];
     
     //-------------------filter view------------------//
@@ -840,7 +837,6 @@ DeckModel * allCards;
     
     [self.view addSubview:_makeCardsExplanationLabel];
     
-    
     [self resetAllViews];
     
     
@@ -959,8 +955,7 @@ DeckModel * allCards;
                 {
                    [self.cardsView removeNewIndexNum:currentIndexNum];
                 }
-                
-                
+            
                 //store this card as currentCard
                 currentCard = newMaximizedView;
                 originalCurrentCard = cardView;
@@ -982,6 +977,10 @@ DeckModel * allCards;
                 
                 //[self.cardsView.collectionView scrollRectToVisible:CGRectMake(cardViewTopLeft.x, cardViewTopLeft.y, cardView.frame.size.width, cardView.frame.size.height) animated:YES];
                 
+                if(self.isForgeCardsMode)
+                {
+                      [self maximizeCardAnimation:newMaximizedView originalCard:cardView mode:cardCollectionForgeCard];
+                }
                 [self maximizeCardAnimation:newMaximizedView originalCard:cardView mode:cardCollectionAddCard];
                 if ([self isFilterOpen])
                     [self setFilterViewState:NO];
@@ -1181,6 +1180,81 @@ DeckModel * allCards;
     
     [self.view addSubview:darkFilter];
     
+    if (mode== cardCollectionForgeCard)
+    {
+        /*
+        @property (strong)UIButton *UpgradeConfirmButton;
+        @property (strong)StrokedLabel *TotalCardSalesLabel;
+        @property (strong)StrokedLabel *TotalCardLikesLabel;
+        @property (strong)StrokedLabel *TotalGoldEarnedLabel;
+        @property (strong)StrokedLabel *CardApprovalStatus;
+        @property (strong)StrokedLabel *CardRarityLabel;
+        @property (strong)StrokedLabel *CostToIncreaseToNextRarity;
+        @property (strong)UIImageView *CardSalesIcon;
+        @property (strong)UIImageView *CardLikesIcon;
+        @property (strong)UIImageView *GoldEarnedIcon;
+        */
+        self.UpgradeConfirmButton = [[UIButton alloc] initWithFrame:CGRectMake(75*DeckWRatio,400*DeckHRatio,289/1.2*DeckWRatio,107/1.3*DeckHRatio)];
+          UIImage *PayToForgeImg = [UIImage imageNamed:@"FeaturedStorePurchaseButton"];
+
+        [self.UpgradeConfirmButton setImage:PayToForgeImg forState:UIControlStateNormal];
+        //broop
+        [self.UpgradeConfirmButton addTarget:self action:@selector(UpgradeCard) forControlEvents:UIControlEventTouchUpInside];
+        
+        self.TotalCardSalesLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(400*DeckWRatio,20*DeckHRatio,150,40)];
+        self.TotalCardSalesLabel.textColor = [UIColor whiteColor];
+        self.TotalCardSalesLabel.backgroundColor = [UIColor clearColor];
+        self.TotalCardSalesLabel.font = [UIFont fontWithName:cardMainFont size:20];
+        self.TotalCardSalesLabel.textAlignment = NSTextAlignmentCenter;
+        self.TotalCardSalesLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        self.TotalCardSalesLabel.numberOfLines = 0;
+        self.TotalCardSalesLabel.strokeOn = YES;
+        self.TotalCardSalesLabel.strokeColour = [UIColor blackColor];
+        self.TotalCardSalesLabel.strokeThickness = 3;
+        self.TotalCardSalesLabel.text = @"400";
+        
+        self.TotalCardLikesLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(400*DeckWRatio,60*DeckHRatio,150,40)];
+        self.TotalCardLikesLabel.textColor = [UIColor whiteColor];
+        self.TotalCardLikesLabel.backgroundColor = [UIColor clearColor];
+        self.TotalCardLikesLabel.font = [UIFont fontWithName:cardMainFont size:20];
+        self.TotalCardLikesLabel.textAlignment = NSTextAlignmentCenter;
+        self.TotalCardLikesLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        self.TotalCardLikesLabel.numberOfLines = 0;
+        self.TotalCardLikesLabel.strokeOn = YES;
+        self.TotalCardLikesLabel.strokeColour = [UIColor blackColor];
+        self.TotalCardLikesLabel.strokeThickness = 3;
+        self.TotalCardLikesLabel.text = @"20";
+        
+        self.TotalGoldEarnedLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(400*DeckWRatio,60*DeckHRatio,150,40)];
+        self.TotalGoldEarnedLabel.textColor = [UIColor whiteColor];
+        self.TotalGoldEarnedLabel.backgroundColor = [UIColor clearColor];
+        self.TotalGoldEarnedLabel.font = [UIFont fontWithName:cardMainFont size:20];
+        self.TotalGoldEarnedLabel.textAlignment = NSTextAlignmentCenter;
+        self.TotalGoldEarnedLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        self.TotalGoldEarnedLabel.numberOfLines = 0;
+        self.TotalGoldEarnedLabel.strokeOn = YES;
+        self.TotalGoldEarnedLabel.strokeColour = [UIColor blackColor];
+        self.TotalGoldEarnedLabel.strokeThickness = 3;
+        self.TotalGoldEarnedLabel.text = @"170";
+        
+        self.CardSalesIcon = [[UIImageView alloc] initWithFrame:CGRectMake(350*DeckWRatio,20*DeckHRatio,50,50)];
+        self.CardSalesIcon.image = [UIImage imageNamed:@"CoinPile002.png"];
+        
+        
+        self.CardLikesIcon = [[UIImageView alloc] initWithFrame:CGRectMake(350*DeckWRatio,60*DeckHRatio,50,50)];
+        self.CardLikesIcon.image = [UIImage imageNamed:@"like_icon.png"];
+        
+        
+        [self.view addSubview:self.UpgradeConfirmButton];
+        [self.view addSubview:self.TotalCardSalesLabel];
+        [self.view addSubview:self.TotalCardLikesLabel];
+        [self.view addSubview:self.TotalGoldEarnedLabel];
+        [self.view addSubview:self.CardSalesIcon];
+        [self.view addSubview:self.CardLikesIcon];
+        
+    
+    }
+    
     if (mode == cardCollectionAddCard)
     {
         addCardToDeckButton.alpha = 0;
@@ -1244,8 +1318,11 @@ DeckModel * allCards;
                          completion:nil];
     }
     
-    
-    
+}
+
+-(void)UpgradeCard
+{
+    //
 }
 
 -(void)unmaximizeCard:(enum CardCollectinViewMode)mode
@@ -1300,7 +1377,7 @@ DeckModel * allCards;
 /** Inserts the card into the correct position in the deck view */
 -(void)addCardToDeckView: (CardModel*)card
 {
-    int insertionIndex = -1;
+    NSUInteger insertionIndex = -1;
     
     //insert at the first position where card < card at index
     for (int i = 0; i < [self.deckView.currentCells count]; i++)
@@ -1309,6 +1386,7 @@ DeckModel * allCards;
         if ([card compare:cellCard] == NSOrderedAscending)
         {
             insertionIndex = i;
+            
             break;
         }
     }
@@ -1320,8 +1398,10 @@ DeckModel * allCards;
     [self.deckView.currentCells insertObject:card atIndex:insertionIndex];
     
     NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:insertionIndex inSection:0];
+    
     [self.deckView.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
-    [self.deckView.tableView reloadInputViews];
+     [self.deckView.tableView reloadInputViews];
+    [self.deckView.tableView reloadData];
     
     //scroll to the newly inserted position
     [self.deckView.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:insertionIndex inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
@@ -1714,6 +1794,7 @@ DeckModel * allCards;
     [invalidDeckButton removeFromSuperview];
     [self.deckView.tableView reloadInputViews];
     [self.deckView.tableView reloadData];
+    
     [self updateDeckCounterLabel];
     
     //add ForgeCardsButton to visible/invisible
@@ -1810,18 +1891,21 @@ DeckModel * allCards;
 /** Setups the views for deck editing. If currentDeck is nil, assuming it's a new deck */
 -(void)setupDeckEditView
 {
+    self.isForgeCardsMode = NO;
+    
     _deckCreateExplanationLabel.alpha = 0;
     _deckCreateExplanationLabel2.alpha = 0;
     _makeCardsExplanationLabel.alpha = 0;
     _myAnvilImg.alpha = 0;
     self.MyForgedCardsButton.alpha = 0;
     
-    
     _hasMadeChange = NO; //initialize
     
     [backButton removeFromSuperview];
     
-    [self.deckView removeAllCells];
+    [self.deckView.currentCells removeAllObjects];
+    
+    //[self.deckView removeAllCells];
     
     self.deckView.viewMode = deckTableViewCards;
     
@@ -1857,7 +1941,11 @@ DeckModel * allCards;
     for (UIView*view in _propertiesView.subviews)
         view.alpha = 1;
     
+    
     [self reloadCardsWithFilter];
+    
+    [self.deckView.tableView reloadInputViews];
+    [self.deckView.tableView reloadData];
     
     [self updateCardsCounterLabel];
     
@@ -2137,10 +2225,11 @@ DeckModel * allCards;
 {
     [self.cardsView.currentCardModels removeAllObjects];
     
-    [self.deckView.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-    
+    //[self.deckView.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationLeft];
+
+
     //testaddoct18
-    [self.deckView.tableView reloadData];
+    //[self.deckView.tableView reloadData];
     
     
     //get the CardView of every card in the deck
@@ -2175,7 +2264,6 @@ DeckModel * allCards;
             if(![cardCreator isEqualToString:myUserID])
                 continue;
         }
-        
         
         [self updateCard:card];
         [self.cardsView.currentCardModels addObject:card];

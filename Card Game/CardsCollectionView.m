@@ -71,7 +71,9 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return [self.currentCardModels count];
+   NSInteger numCards = [self.currentCardModels count];
+    
+    return numCards;
 }
 
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
@@ -179,7 +181,7 @@
     
     CGSize cardSize = CGSizeMake(CARD_FULL_WIDTH*CARD_VIEWER_SCALE,CARD_FULL_HEIGHT*CARD_VIEWER_SCALE);
     
-    NSLog(@"cardSize");
+    //NSLog(@"cardSize");
     
     return cardSize;
     
@@ -198,7 +200,7 @@
     return UIEdgeInsetsMake(0,0,0,0); //removes insets
 }
 
--(void)removeCellAt:(int)index onFinish:(void (^)())block
+-(void)removeCellAt:(int)index onFinish:(void (^)(void))block
 {
     if (index < self.currentCardModels.count)
     {

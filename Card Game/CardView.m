@@ -923,6 +923,8 @@ NSDictionary *singlePlayerCardImages;
         self.cardHighlightType = cardHighlightNone;
         self.cardViewState = cardViewStateNone;
         self.cardOverlayObjectMode = cardOverlayObjectNone;
+        
+        
     }
     
     

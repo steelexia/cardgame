@@ -82,6 +82,19 @@
 @property (strong) UIView*modalFilter;
 @property BOOL isModal;
 
+//forge card maximize views & buttons
+@property (strong)UIButton *UpgradeConfirmButton;
+@property (strong)StrokedLabel *TotalCardSalesLabel;
+@property (strong)StrokedLabel *TotalCardLikesLabel;
+@property (strong)StrokedLabel *TotalGoldEarnedLabel;
+@property (strong)StrokedLabel *CardApprovalStatus;
+@property (strong)StrokedLabel *CardRarityLabel;
+@property (strong)StrokedLabel *CostToIncreaseToNextRarity;
+@property (strong)UIImageView *CardSalesIcon;
+@property (strong)UIImageView *CardLikesIcon;
+@property (strong)UIImageView *GoldEarnedIcon;
+
+
 
 @property (strong)NSMutableArray *indexOfNewCards;
 @property (strong)NSMutableArray *indexOfStarterCards;
@@ -101,5 +114,6 @@ enum CardCollectinViewMode
 {
     cardCollectionAddCard,
     cardCollectionRemoveCard,
+    cardCollectionForgeCard
 };
 
