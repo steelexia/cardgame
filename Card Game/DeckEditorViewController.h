@@ -84,15 +84,22 @@
 
 //forge card maximize views & buttons
 @property (strong)UIButton *UpgradeConfirmButton;
+@property (strong)UIButton *UpgradeExitButton;
 @property (strong)StrokedLabel *TotalCardSalesLabel;
 @property (strong)StrokedLabel *TotalCardLikesLabel;
 @property (strong)StrokedLabel *TotalGoldEarnedLabel;
+@property (strong)StrokedLabel *CardApprovalDescription;
 @property (strong)StrokedLabel *CardApprovalStatus;
+@property (strong)StrokedLabel *CardId;
+@property (strong)StrokedLabel *CardId2;
 @property (strong)StrokedLabel *CardRarityLabel;
-@property (strong)StrokedLabel *CostToIncreaseToNextRarity;
+@property (strong)StrokedLabel *CardRarityLabel2;
+@property (strong)StrokedLabel *CostToIncreaseToNextRarityLabel;
+@property (strong)StrokedLabel *UpgradeButtonCostLabel;
 @property (strong)UIImageView *CardSalesIcon;
 @property (strong)UIImageView *CardLikesIcon;
 @property (strong)UIImageView *GoldEarnedIcon;
+
 
 
 

@@ -1831,21 +1831,21 @@ NSDictionary *singlePlayerCardImages;
                      }];
 }
 
-- (void)performBlockInBackground:(void (^)())block {
+- (void)performBlockInBackground:(void (^)(void))block {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         block();
     });
 }
 
 //block delay functions
-- (void)performBlock:(void (^)())block
+- (void)performBlock:(void (^)(void))block
 {
     block();
 }
 
-- (void)performBlock:(void (^)())block afterDelay:(NSTimeInterval)delay
+- (void)performBlock:(void (^)(void))block afterDelay:(NSTimeInterval)delay
 {
-    void (^block_)() = [block copy]; // autorelease this if you're not using ARC
+    void (^block_)(void) = [block copy]; // autorelease this if you're not using ARC
     [self performSelector:@selector(performBlock:) withObject:block_ afterDelay:delay];
 }
 

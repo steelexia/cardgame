@@ -981,7 +981,11 @@ DeckModel * allCards;
                 {
                       [self maximizeCardAnimation:newMaximizedView originalCard:cardView mode:cardCollectionForgeCard];
                 }
-                [self maximizeCardAnimation:newMaximizedView originalCard:cardView mode:cardCollectionAddCard];
+                else
+                {
+                    [self maximizeCardAnimation:newMaximizedView originalCard:cardView mode:cardCollectionAddCard];
+                }
+                
                 if ([self isFilterOpen])
                     [self setFilterViewState:NO];
             }
@@ -1090,21 +1094,70 @@ DeckModel * allCards;
             //[currentCard setCardViewState:cardViewStateMaximize];
             
             //for the maximizing animation, the new card starts out in the same size and pos as the original card
-            currentCard.transform = originalCurrentCard.transform;
-            currentCard.center = [self.view convertPoint:originalCurrentCard.center fromView:originalCurrentCard];
             
-            //the new view is a maxed card for closing viewing
-            [self.view addSubview:currentCard];
+            if(mode == cardCollectionForgeCard)
+            {
+                //animate card going to top left instead
+                currentCard.transform = originalCurrentCard.transform;
+                currentCard.center = [self.view convertPoint:originalCurrentCard.center fromView:originalCurrentCard];
+                
+                //the new view is a maxed card for closing viewing
+                [self.view addSubview:currentCard];
+                
+                //animate the maximizing
+                [UIView animateWithDuration:.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                                 animations:^{
+                                    
+                                     if(SCREEN_HEIGHT<560)
+                                     {
+                                          currentCard.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_VIEWER_MAXED_SCALE*0.62, CARD_VIEWER_MAXED_SCALE*0.62);
+                                     }
+                                     else
+                                     {
+                                         currentCard.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_VIEWER_MAXED_SCALE*0.7, CARD_VIEWER_MAXED_SCALE*0.7);
+                                     }
+                                     [currentCard setFrame:CGRectMake(0,0,currentCard.frame.size.width,currentCard.frame.size.height)];
+                                     //currentCard.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 40);
+                                 }
+                                 completion:nil];
+            }
             
-            //animate the maximizing
-            [UIView animateWithDuration:.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                else
+                {
+                
+                currentCard.transform = originalCurrentCard.transform;
+                currentCard.center = [self.view convertPoint:originalCurrentCard.center fromView:originalCurrentCard];
+            
+                //the new view is a maxed card for closing viewing
+                [self.view addSubview:currentCard];
+            
+                //animate the maximizing
+                [UIView animateWithDuration:.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                              animations:^{
                                  currentCard.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_VIEWER_MAXED_SCALE, CARD_VIEWER_MAXED_SCALE);
                                  currentCard.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 40);
                              }
                              completion:nil];
+                }
         }
+        
+        
     } afterDelay:0.05];
+}
+
+-(void)unmaximizeCardFromForgeExitButton
+{
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         currentCard.transform = CGAffineTransformScale(CGAffineTransformIdentity, CARD_VIEWER_SCALE, CARD_VIEWER_SCALE);
+                         currentCard.center = [self.view convertPoint:originalCurrentCard.center fromView:originalCurrentCard];
+                     }
+                     completion:^(BOOL completed){
+                         [currentCard removeFromSuperview];
+                         currentCard = nil;
+                     }];
+    
+    [self unmaximizeCard:lastVCardCollectionViewMode];
 }
 
 -(void)darkenScreen
@@ -1194,56 +1247,144 @@ DeckModel * allCards;
         @property (strong)UIImageView *CardLikesIcon;
         @property (strong)UIImageView *GoldEarnedIcon;
         */
-        self.UpgradeConfirmButton = [[UIButton alloc] initWithFrame:CGRectMake(75*DeckWRatio,400*DeckHRatio,289/1.2*DeckWRatio,107/1.3*DeckHRatio)];
+        self.UpgradeConfirmButton = [[UIButton alloc] initWithFrame:CGRectMake(40*DeckWRatio,480*DeckHRatio,289/1.2*DeckWRatio,107/1.3*DeckHRatio)];
           UIImage *PayToForgeImg = [UIImage imageNamed:@"FeaturedStorePurchaseButton"];
 
         [self.UpgradeConfirmButton setImage:PayToForgeImg forState:UIControlStateNormal];
-        //broop
+      
         [self.UpgradeConfirmButton addTarget:self action:@selector(UpgradeCard) forControlEvents:UIControlEventTouchUpInside];
         
-        self.TotalCardSalesLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(400*DeckWRatio,20*DeckHRatio,150,40)];
+        self.TotalCardSalesLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(65*DeckWRatio,277*DeckHRatio,280*DeckWRatio,40*DeckHRatio)];
         self.TotalCardSalesLabel.textColor = [UIColor whiteColor];
         self.TotalCardSalesLabel.backgroundColor = [UIColor clearColor];
         self.TotalCardSalesLabel.font = [UIFont fontWithName:cardMainFont size:20];
-        self.TotalCardSalesLabel.textAlignment = NSTextAlignmentCenter;
+        self.TotalCardSalesLabel.textAlignment = NSTextAlignmentLeft;
         self.TotalCardSalesLabel.lineBreakMode = NSLineBreakByWordWrapping;
         self.TotalCardSalesLabel.numberOfLines = 0;
         self.TotalCardSalesLabel.strokeOn = YES;
         self.TotalCardSalesLabel.strokeColour = [UIColor blackColor];
         self.TotalCardSalesLabel.strokeThickness = 3;
-        self.TotalCardSalesLabel.text = @"400";
+        self.TotalCardSalesLabel.text = @"40 Community Sales";
         
-        self.TotalCardLikesLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(400*DeckWRatio,60*DeckHRatio,150,40)];
+        self.TotalCardLikesLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(65*DeckWRatio,215*DeckHRatio,280*DeckWRatio,40*DeckHRatio)];
         self.TotalCardLikesLabel.textColor = [UIColor whiteColor];
         self.TotalCardLikesLabel.backgroundColor = [UIColor clearColor];
         self.TotalCardLikesLabel.font = [UIFont fontWithName:cardMainFont size:20];
-        self.TotalCardLikesLabel.textAlignment = NSTextAlignmentCenter;
+        self.TotalCardLikesLabel.textAlignment = NSTextAlignmentLeft;
         self.TotalCardLikesLabel.lineBreakMode = NSLineBreakByWordWrapping;
         self.TotalCardLikesLabel.numberOfLines = 0;
         self.TotalCardLikesLabel.strokeOn = YES;
         self.TotalCardLikesLabel.strokeColour = [UIColor blackColor];
         self.TotalCardLikesLabel.strokeThickness = 3;
-        self.TotalCardLikesLabel.text = @"20";
+        self.TotalCardLikesLabel.text = @"20 Community Likes";
         
-        self.TotalGoldEarnedLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(400*DeckWRatio,60*DeckHRatio,150,40)];
+        self.TotalGoldEarnedLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(65*DeckWRatio,355*DeckHRatio,280*DeckWRatio,40*DeckHRatio)];
         self.TotalGoldEarnedLabel.textColor = [UIColor whiteColor];
         self.TotalGoldEarnedLabel.backgroundColor = [UIColor clearColor];
         self.TotalGoldEarnedLabel.font = [UIFont fontWithName:cardMainFont size:20];
-        self.TotalGoldEarnedLabel.textAlignment = NSTextAlignmentCenter;
+        self.TotalGoldEarnedLabel.textAlignment = NSTextAlignmentLeft;
         self.TotalGoldEarnedLabel.lineBreakMode = NSLineBreakByWordWrapping;
         self.TotalGoldEarnedLabel.numberOfLines = 0;
         self.TotalGoldEarnedLabel.strokeOn = YES;
         self.TotalGoldEarnedLabel.strokeColour = [UIColor blackColor];
         self.TotalGoldEarnedLabel.strokeThickness = 3;
-        self.TotalGoldEarnedLabel.text = @"170";
+        self.TotalGoldEarnedLabel.text = @"170 Gold Earned";
         
-        self.CardSalesIcon = [[UIImageView alloc] initWithFrame:CGRectMake(350*DeckWRatio,20*DeckHRatio,50,50)];
-        self.CardSalesIcon.image = [UIImage imageNamed:@"CoinPile002.png"];
+        //128 × 180 pixels--card dimensions
+        self.CardSalesIcon = [[UIImageView alloc] initWithFrame:CGRectMake(10*DeckWRatio,270*DeckHRatio,128*0.35*DeckWRatio,180*0.35*DeckHRatio)];
+        self.CardSalesIcon.image = [UIImage imageNamed:@"CardStoreCardIcon.png"];
+        
+        self.GoldEarnedIcon = [[UIImageView alloc] initWithFrame:CGRectMake(10*DeckWRatio,350*DeckHRatio,50*DeckWRatio,50*DeckHRatio)];
+         self.GoldEarnedIcon.image = [UIImage imageNamed:@"CoinPile002.png"];
         
         
-        self.CardLikesIcon = [[UIImageView alloc] initWithFrame:CGRectMake(350*DeckWRatio,60*DeckHRatio,50,50)];
+        self.CardLikesIcon = [[UIImageView alloc] initWithFrame:CGRectMake(10*DeckWRatio,210*DeckHRatio,50*DeckWRatio,50*DeckHRatio)];
         self.CardLikesIcon.image = [UIImage imageNamed:@"like_icon.png"];
         
+        self.CardApprovalStatus = [[StrokedLabel alloc] initWithFrame:CGRectMake(130*DeckWRatio,32*DeckHRatio,160*DeckWRatio,40*DeckHRatio)];
+        self.CardApprovalStatus.textColor = [UIColor whiteColor];
+        self.CardApprovalStatus.backgroundColor = [UIColor clearColor];
+        self.CardApprovalStatus.font = [UIFont fontWithName:cardMainFont size:18];
+        self.CardApprovalStatus.textAlignment = NSTextAlignmentCenter;
+        self.CardApprovalStatus.lineBreakMode = NSLineBreakByWordWrapping;
+        self.CardApprovalStatus.numberOfLines = 0;
+        self.CardApprovalStatus.strokeOn = YES;
+        self.CardApprovalStatus.strokeColour = [UIColor blackColor];
+        self.CardApprovalStatus.strokeThickness = 3;
+        self.CardApprovalStatus.text = @"In Progress";
+        
+        self.CardApprovalDescription = [[StrokedLabel alloc] initWithFrame:CGRectMake(130*DeckWRatio,-5*DeckHRatio,190*DeckWRatio,40*DeckHRatio)];
+        self.CardApprovalDescription.textColor = [UIColor whiteColor];
+        self.CardApprovalDescription.backgroundColor = [UIColor clearColor];
+        self.CardApprovalDescription.font = [UIFont fontWithName:cardMainFont size:20];
+        self.CardApprovalDescription.textAlignment = NSTextAlignmentLeft;
+        self.CardApprovalDescription.lineBreakMode = NSLineBreakByWordWrapping;
+        self.CardApprovalDescription.numberOfLines = 0;
+        self.CardApprovalDescription.strokeOn = YES;
+        self.CardApprovalDescription.strokeColour = [UIColor blackColor];
+        self.CardApprovalDescription.strokeThickness = 3;
+        self.CardApprovalDescription.text = @"Card Approval Status:";
+        
+        self.CardRarityLabel = [[StrokedLabel alloc] initWithFrame:CGRectMake(130*DeckWRatio,65*DeckHRatio,190*DeckWRatio,40*DeckHRatio)];
+        self.CardRarityLabel.textColor = [UIColor whiteColor];
+        self.CardRarityLabel.backgroundColor = [UIColor clearColor];
+        self.CardRarityLabel.font = [UIFont fontWithName:cardMainFont size:20];
+        self.CardRarityLabel.textAlignment = NSTextAlignmentLeft;
+        self.CardRarityLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        self.CardRarityLabel.numberOfLines = 0;
+        self.CardRarityLabel.strokeOn = YES;
+        self.CardRarityLabel.strokeColour = [UIColor blackColor];
+        self.CardRarityLabel.strokeThickness = 3;
+        self.CardRarityLabel.text = @"Card Rarity Level:";
+        
+        self.CardRarityLabel2 = [[StrokedLabel alloc] initWithFrame:CGRectMake(130*DeckWRatio,95*DeckHRatio,160*DeckWRatio,40*DeckHRatio)];
+        self.CardRarityLabel2.textColor = [UIColor whiteColor];
+        self.CardRarityLabel2.backgroundColor = [UIColor clearColor];
+        self.CardRarityLabel2.font = [UIFont fontWithName:cardMainFont size:18];
+        self.CardRarityLabel2.textAlignment = NSTextAlignmentCenter;
+        self.CardRarityLabel2.lineBreakMode = NSLineBreakByWordWrapping;
+        self.CardRarityLabel2.numberOfLines = 0;
+        self.CardRarityLabel2.strokeOn = YES;
+        self.CardRarityLabel2.strokeColour = [UIColor blackColor];
+        self.CardRarityLabel2.strokeThickness = 3;
+        self.CardRarityLabel2.textColor = [currentCard getRarityColor];
+        self.CardRarityLabel2.text = [CardModel getRarityText:currentCard.cardModel.rarity];
+        
+        
+        self.CostToIncreaseToNextRarityLabel= [[StrokedLabel alloc] initWithFrame:CGRectMake(10*DeckWRatio,415*DeckHRatio,300*DeckWRatio,60*DeckHRatio)];
+        self.CostToIncreaseToNextRarityLabel.textColor = [UIColor whiteColor];
+        self.CostToIncreaseToNextRarityLabel.backgroundColor = [UIColor clearColor];
+        self.CostToIncreaseToNextRarityLabel.font = [UIFont fontWithName:cardMainFont size:20];
+        self.CostToIncreaseToNextRarityLabel.textAlignment = NSTextAlignmentCenter;
+        self.CostToIncreaseToNextRarityLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        self.CostToIncreaseToNextRarityLabel.numberOfLines = 2;
+        self.CostToIncreaseToNextRarityLabel.strokeOn = YES;
+        self.CostToIncreaseToNextRarityLabel.strokeColour = [UIColor blackColor];
+        self.CostToIncreaseToNextRarityLabel.strokeThickness = 3;
+        self.CostToIncreaseToNextRarityLabel.text = @"Spend 400 Gold To Upgrade To Power Level RARE";
+        
+        self.UpgradeButtonCostLabel= [[StrokedLabel alloc] initWithFrame:CGRectMake(0,0,self.UpgradeConfirmButton.frame.size.width,self.UpgradeConfirmButton.frame.size.height)];
+        self.UpgradeButtonCostLabel.textColor = [UIColor whiteColor];
+        self.UpgradeButtonCostLabel.backgroundColor = [UIColor clearColor];
+        self.UpgradeButtonCostLabel.font = [UIFont fontWithName:cardMainFont size:20];
+        self.UpgradeButtonCostLabel.textAlignment = NSTextAlignmentCenter;
+        self.UpgradeButtonCostLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        self.UpgradeButtonCostLabel.numberOfLines = 2;
+        self.UpgradeButtonCostLabel.strokeOn = YES;
+        self.UpgradeButtonCostLabel.strokeColour = [UIColor blackColor];
+        self.UpgradeButtonCostLabel.strokeThickness = 3;
+        self.UpgradeButtonCostLabel.text = @"42400";
+        
+        [self.UpgradeConfirmButton addSubview:self.UpgradeButtonCostLabel];
+        
+        //broop
+        //add exit button
+        self.UpgradeExitButton = [[UIButton alloc] initWithFrame:CGRectMake(0*DeckWRatio,480*DeckHRatio,50/1.2*DeckWRatio,50/1.3*DeckHRatio)];
+        UIImage *BackImg = [UIImage imageNamed:@"CardStoreBackButton"];
+        
+        [self.UpgradeExitButton setImage:BackImg forState:UIControlStateNormal];
+        
+        [self.UpgradeExitButton addTarget:self action:@selector(unmaximizeCardFromForgeExitButton) forControlEvents:UIControlEventTouchUpInside];
         
         [self.view addSubview:self.UpgradeConfirmButton];
         [self.view addSubview:self.TotalCardSalesLabel];
@@ -1251,7 +1392,22 @@ DeckModel * allCards;
         [self.view addSubview:self.TotalGoldEarnedLabel];
         [self.view addSubview:self.CardSalesIcon];
         [self.view addSubview:self.CardLikesIcon];
+        [self.view addSubview:self.GoldEarnedIcon];
+        [self.view addSubview:self.CardApprovalDescription];
+        [self.view addSubview:self.CardApprovalStatus];
+        [self.view addSubview:self.CardRarityLabel];
+         [self.view addSubview:self.CardRarityLabel2];
+        [self.view addSubview:self.CostToIncreaseToNextRarityLabel];
+        [self.view addSubview:self.UpgradeExitButton];
         
+        
+        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                              darkFilter.backgroundColor = [[UIColor alloc]initWithHue:0 saturation:0 brightness:0 alpha:1];
+                             darkFilter.alpha = 1;
+                             self.UpgradeConfirmButton.alpha = 1.0;
+                         }
+                         completion:nil];
     
     }
     
@@ -1327,6 +1483,35 @@ DeckModel * allCards;
 
 -(void)unmaximizeCard:(enum CardCollectinViewMode)mode
 {
+   if (mode == cardCollectionForgeCard)
+   {
+       //
+       [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
+                        animations:^{
+                            darkFilter.alpha = 0;
+                         
+                        }
+                        completion:^(BOOL completed){
+                            [darkFilter removeFromSuperview];
+                            [self.UpgradeConfirmButton removeFromSuperview];
+                            [self.TotalCardSalesLabel removeFromSuperview];
+                            [self.TotalCardLikesLabel removeFromSuperview];
+                            [self.TotalGoldEarnedLabel removeFromSuperview];
+                            [self.CardSalesIcon removeFromSuperview];
+                            [self.GoldEarnedIcon removeFromSuperview];
+                            [self.CardLikesIcon removeFromSuperview];
+                            [self.UpgradeExitButton removeFromSuperview];
+                            [self.CardRarityLabel removeFromSuperview];
+                            [self.CardRarityLabel2 removeFromSuperview];
+                            [self.CardApprovalStatus removeFromSuperview];
+                            [self.CardApprovalDescription removeFromSuperview];
+                            [self.CostToIncreaseToNextRarityLabel removeFromSuperview];
+                            
+                            if (cannotAddCardReasonLabel.superview!=nil)
+                                [cannotAddCardReasonLabel removeFromSuperview];
+                        }];
+   }
+    
     if (mode == cardCollectionAddCard)
     {
         [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
